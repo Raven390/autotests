@@ -10,8 +10,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.microsoft.playwright:playwright:1.45.0'
     testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter' , "org.aeonbits.owner:owner:1.0.12"
+    implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.7'
+    "org.aeonbits.owner:owner:1.0.12"
 }
 
 test {
