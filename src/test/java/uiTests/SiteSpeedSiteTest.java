@@ -1,8 +1,8 @@
-package tests;
+package uiTests;
 
 import org.junit.jupiter.api.Test;
-import pages.SitespeedPage;
-import pages.WikiPage;
+import uiTests.pages.SitespeedPage;
+import uiTests.pages.WikiPage;
 
 public class SiteSpeedSiteTest extends TestBaseE2E {
 //public class tests.SiteSpeedSiteTest extends pages.SitespeedPage {
