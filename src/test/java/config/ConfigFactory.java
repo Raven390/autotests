@@ -6,13 +6,17 @@ public class ConfigFactory {
     private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
     public static final String
-            BASEURL = CONFIG.baseURL();
+            BASEURL = CONFIG.baseURL(),
+            BROWSER = CONFIG.browser();
 
     @Config.Sources({ "classpath:config/config.properties","system:properties"})
     public interface UserConfig extends Config {
 
         @Key("baseURL")
         String baseURL();
+
+        @Key("browser")
+        String browser();
 
         @Key("api.base.url")
         String apiBaseUrl();

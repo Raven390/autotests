@@ -15,7 +15,7 @@ public class WikiPage extends BasePage {
     }
 
     public WikiPage openMainPage() {
-        getPage().navigate("https://en.wikipedia.org/wiki/Playwright");
+        getPage().navigate("/wiki/Playwright");
         return this;
     }
 }

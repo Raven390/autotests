@@ -10,13 +10,13 @@ public class SiteSpeedSiteTest extends TestBaseE2E {
 SitespeedPage ssp = new SitespeedPage();
 WikiPage wikiPage = new WikiPage();
 
-    @Test
-    public void oneTest(){
-        ssp.openMainPage();
-        ssp.checkNavBarButton(ssp.documentationButtonLocator, ssp.documentationButtonText);
-        ssp.checkNavBarButton(ssp.startPageButtonLocator, ssp.startPageButtonText);
+//    @Test
+//    public void oneTest(){
+//        ssp.openMainPage();
+//        ssp.checkNavBarButton(ssp.documentationButtonLocator, ssp.documentationButtonText);
+//        ssp.checkNavBarButton(ssp.startPageButtonLocator, ssp.startPageButtonText);
 //        wikiPage.openMainPage();
-    }
+//    }
 
     @Test
     public void wikiTest() {

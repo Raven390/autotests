@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import uiTests.pages.BasePage;
 
 import static config.ConfigFactory.BASEURL;
+import static config.ConfigFactory.BROWSER;
 
 
 public class TestBaseE2E {
@@ -20,7 +21,18 @@ public class TestBaseE2E {
     @DisplayName("create browser for all tests in one class")
     static void launchBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
+        String browserName = BROWSER;
+        if (browserName.equals("chromium")) {
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        } else if (browserName.equals("firefox")) {
+            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        } else if (browserName.equals("webkit")) {
+            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+        } else {
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+
+        }
     }
 
     @AfterAll
