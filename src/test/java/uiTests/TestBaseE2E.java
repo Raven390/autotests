@@ -1,8 +1,8 @@
-package tests;
+package uiTests;
 
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
-import pages.BasePage;
+import uiTests.pages.BasePage;
 
 import static config.ConfigFactory.BASEURL;
 

@@ -1,8 +1,8 @@
-package pages;
+package uiTests.pages;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WikiPage  extends BasePage {
+public class WikiPage extends BasePage {
 
     private String
             startPageButtonLocator = ".mw-logo",
