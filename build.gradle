@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group = 'antifraud'
+version = '1.0'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.microsoft.playwright:playwright:1.45.0'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter' , "org.aeonbits.owner:owner:1.0.12"
+    implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.7'
+
+    //Config
+    implementation("org.aeonbits.owner:owner:1.0.12")
+
+    //Rest api
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    //Json parsing
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.17.2'")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.2'")
+
+    //
+    testImplementation ("org.hamcrest:hamcrest:3.0")
+}
+
+test {
+    useJUnitPlatform()
+}
