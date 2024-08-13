@@ -3,10 +3,7 @@ package uiTests;
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.*;
 import uiTests.pages.BasePage;
-
-import static config.ConfigFactory.BASEURL;
-import static config.ConfigFactory.BROWSER;
-
+import static config.ConfigFactory.*;
 
 public class TestBaseE2E {
 
@@ -18,41 +15,38 @@ public class TestBaseE2E {
     BrowserContext context;
 
     @BeforeAll
-    @DisplayName("create browser for all tests in one class")
+    @DisplayName("Create browser for all tests in one class")
     static void launchBrowser() {
         playwright = Playwright.create();
 
         String browserName = BROWSER;
         if (browserName.equals("chromium")) {
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
         } else if (browserName.equals("firefox")) {
-            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.firefox().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
         } else if (browserName.equals("webkit")) {
-            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(false));
+            browser = playwright.webkit().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
         } else {
-            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
-
+            browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
         }
     }
 
     @AfterAll
-    @DisplayName("close browser after completing all tests in one class")
+    @DisplayName("Close browser after completing all tests in one class")
     static void closeBrowser() {
         playwright.close();
     }
 
     @BeforeEach
-    @DisplayName("create new context for each test inside one browser")
+    @DisplayName("Create new context for each test inside one browser")
     void createContextAndPage() {
         context = browser.newContext(new Browser.NewContextOptions().setBaseURL(BASEURL));
         BasePage.setContext(context);
     }
 
     @AfterEach
-    @DisplayName("close (clear) context for each test inside one browser")
+    @DisplayName("Close (clear) context for each test inside one browser")
     void closeContext() {
         context.close();
     }
 }
-
-

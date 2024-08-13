@@ -25,6 +25,3 @@ public class SitespeedPage extends BasePage {
         return this;
     }
 }
-
-
-
