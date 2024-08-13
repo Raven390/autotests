@@ -8,6 +8,7 @@ public class ConfigFactory {
     public static final String
             BASEURL = CONFIG.baseURL(),
             BROWSER = CONFIG.browser();
+    public static final Boolean HEADLESS = CONFIG.headlessMode();
 
     @Config.Sources({ "classpath:config/config.properties","system:properties"})
     public interface UserConfig extends Config {
@@ -18,10 +19,13 @@ public class ConfigFactory {
         @Key("browser")
         String browser();
 
-        @Key("api.base.url")
+        @Key("headlessMode")
+        Boolean headlessMode();
+
+        @Key("apiBaseUrl")
         String apiBaseUrl();
 
-        @Key("api.path.get.user")
+        @Key("apiPathGetUser")
         String apiPathGetBaseUrl();
 
         String BASE_API_URL = CONFIG.apiBaseUrl();
