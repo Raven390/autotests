@@ -21,6 +21,8 @@ Repository for test automation of anti-fraud
 # Hot to run the uiTests:
     # ./gradlew test - runs all the tests
 
-    # allure generate - build allure report
+    # ./gradlew allureServe - build allure report
+
+    # ./gradlew allureReport --depends-on-tests - run all tests and generate reports
 
     # allure open - open allure report
