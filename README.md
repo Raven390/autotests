@@ -7,14 +7,14 @@ Repository for test automation of anti-fraud
     - playwright
 
 - api tests for backoffice:
-  - rest
     - junit
     - okhttp
+    - hamcrest
 
 - api tests for core project:
-- rest
     - junit
     - okhttp
+    - hamcrest
 -
 
 
