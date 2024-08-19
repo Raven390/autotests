@@ -2,8 +2,8 @@ package uiTests.tests;
 
 
 import org.junit.jupiter.api.Test;
-import uiTests.PageObjects.SearchPage;
-import uiTests.PageObjects.WikiPage;
+import uiTests.pageObjects.SearchPage;
+import uiTests.pageObjects.WikiPage;
 
 public class TestExample extends TestBaseE2E{
 

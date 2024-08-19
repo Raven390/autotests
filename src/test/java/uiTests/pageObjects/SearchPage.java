@@ -1,4 +1,4 @@
-package uiTests.PageObjects;
+package uiTests.pageObjects;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
