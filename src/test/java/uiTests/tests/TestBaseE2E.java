@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import static utils.ConfigFactory.HEADLESS;
+
 public class TestBaseE2E {
     // Shared between all tests in this class.
     static Playwright playwright;
@@ -18,7 +20,7 @@ public class TestBaseE2E {
     @BeforeAll
     static void launchBrowser() {
         playwright = Playwright.create();
-        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setSlowMo(4000));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setSlowMo(4000));
     }
 
     @AfterAll
