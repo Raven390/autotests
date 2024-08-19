@@ -1,9 +1,13 @@
 package uiTests;
 
-import com.microsoft.playwright.*;
+import com.microsoft.playwright.Browser;
+import com.microsoft.playwright.BrowserContext;
+import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.Playwright;
 import org.junit.jupiter.api.*;
 import uiTests.pages.BasePage;
-import static config.ConfigFactory.*;
+
+import static utils.ConfigFactory.*;
 
 public class TestBaseE2E {
 

@@ -1,16 +1,18 @@
 package apiTests;
 
 import api.payload.response.GetUser.GetUserResponse;
-import org.junit.jupiter.api.Test;
 import okhttp3.Request;
 import okhttp3.Response;
-import java.io.IOException;
-import static config.ConfigFactory.UserConfig.BASE_API_URL;
-import static config.ConfigFactory.UserConfig.PATH_GET_USER;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import org.junit.jupiter.api.Test;
 
-public class ApiExampleOkHttp extends BaseTestOkHttp{
+import java.io.IOException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static utils.ConfigFactory.BASE_API_URL;
+import static utils.ConfigFactory.PATH_GET_USER;
+
+public class ApiExampleOkHttp extends BaseTestOkHttp {
 
     @Test
     public void getUserTest() throws IOException {
@@ -29,7 +31,7 @@ public class ApiExampleOkHttp extends BaseTestOkHttp{
         System.out.println(response.code());
 
         //Hamcrest assertions
-        assertThat("Check response code",response.code(), is(200));
-        assertThat("Check user id",responseBody.data.id, is(2));
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check user id", responseBody.data.id, is(2));
     }
 }
