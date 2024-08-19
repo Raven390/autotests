@@ -10,7 +10,7 @@ public class WikiPage extends BasePage {
             startPageButtonLocator = ".mw-logo",
             documentationButtonLocator = "[role=\"navigation\"] li a[href=\"/documentation/\"]",
             startPageButtonText = "Start",
-            documentationButtonText ="Documentation" ;
+            documentationButtonText = "Documentation";
 
     @Step("check that start button is visible")
     public void startButtonShouldBeVisible() {
