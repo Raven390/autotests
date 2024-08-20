@@ -38,6 +38,4 @@ public class TestBaseE2E {
     void closeContext() {
         context.close();
     }
-
-
 }
