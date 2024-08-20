@@ -1,9 +1,9 @@
-package uiTests.tests;
+package uiTests.example.tests;
 
 
 import org.junit.jupiter.api.Test;
-import uiTests.pageObjects.SearchPage;
-import uiTests.pageObjects.WikiPage;
+import uiTests.example.PageObjects.SearchPage;
+import uiTests.example.PageObjects.WikiPage;
 
 public class TestExample extends TestBaseE2E {
 
