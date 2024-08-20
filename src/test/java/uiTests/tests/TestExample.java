@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import uiTests.pageObjects.SearchPage;
 import uiTests.pageObjects.WikiPage;
 
-public class TestExample extends TestBaseE2E{
+public class TestExample extends TestBaseE2E {
 
     @Test
     void shouldSearchWiki() {
@@ -16,6 +16,7 @@ public class TestExample extends TestBaseE2E{
         WikiPage wikiPage = new WikiPage(page);
         wikiPage.checkLogo();
     }
+
     @Test
     void navToGyouza() {
         WikiPage wikiPage = new WikiPage(page);

@@ -8,7 +8,7 @@ public class WikiPage {
     private final Locator wikiLogo;
     private final String GyozaURL = "https://en.wikipedia.org/wiki/Jiaozi";
 
-    public WikiPage (Page page) {
+    public WikiPage(Page page) {
         this.page = page;
         this.wikiLogo = page.locator(".central-textlogo__image.svg-Wikipedia_wordmark");
     }

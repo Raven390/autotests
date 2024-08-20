@@ -8,7 +8,7 @@ public class SearchPage {
     private final Locator searchTermInput;
     private final Locator firstResult;
 
-    public SearchPage (Page page) {
+    public SearchPage(Page page) {
         this.page = page;
         this.searchTermInput = page.locator("[aria-label='Enter your search term']");
         this.firstResult = page.locator(".b_topTitle").first();
@@ -23,7 +23,7 @@ public class SearchPage {
         searchTermInput.press("Enter");
     }
 
-    public void clickFirst(){
+    public void clickFirst() {
         firstResult.click();
     }
 }
