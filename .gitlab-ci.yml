@@ -1,7 +1,17 @@
 stages:
   - build
+  - test
 
 job_build:
   stage: build
+  image: gradle:8.10.0-jdk22
   script:
     - echo "Building the project"
+    - gradle installDeps
+    - gradle installChromium
+    - gradle build
+  artifacts:
+    when: always
+    paths:
+      - playwright-report
+    expire_in: 1 day

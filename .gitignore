@@ -1,4 +1,5 @@
 /.gradle/
 /.idea/
 /allure-results/
-/allure-reports/
+/allure-report/
+/playwright-report/

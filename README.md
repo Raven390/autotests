@@ -15,7 +15,7 @@ Repository for test automation of anti-fraud
     - junit
     - okhttp
     - hamcrest
--
+
 
 
 # Hot to run the uiTests:
@@ -26,3 +26,9 @@ Repository for test automation of anti-fraud
     # ./gradlew allureReport --depends-on-tests - run all tests and generate reports
 
     # allure open - open allure report
+
+# Other
+
+    # ./gradlew spotlessCheck - check code formatting
+
+    # ./gradlew spotlessApply - apply code auto formatting

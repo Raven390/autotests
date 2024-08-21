@@ -3,25 +3,25 @@ package utils;
 import org.aeonbits.owner.Config;
 
 public class ConfigFactory {
-    private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
+  private static final UserConfig CONFIG =
+      org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
-    public static final String
-            BASEURLE2E = CONFIG.baseURLE2E(),
-            BASEURL = CONFIG.baseURL(),
-            BROWSER = CONFIG.browser(),
-            BASE_API_URL = CONFIG.apiBaseUrl(),
-            PATH_GET_USER = CONFIG.apiPathGetBaseUrl(),
-            KAFKA_HOST = CONFIG.kafkaHost(),
-            KAFKA_PORT = CONFIG.kafkaPort(),
-            KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
-            KAFKA_CORE_OUTCOMING_TOPIC = CONFIG.kafkaCoreOutcomingTopic(),
-            POSTGRE_HOST = CONFIG.postgreLogin(),
-            POSTGRE_PASSWORD = CONFIG.postgrePassword(),
-            POSTGRE_LOGIN = CONFIG.postgreHost();
-    public static final Boolean HEADLESS = CONFIG.headlessMode();
+  public static final String BASEURL = CONFIG.baseURL(),
+      BROWSER = CONFIG.browser(),
+      BASEURLE2E = CONFIG.baseURLE2E(),
+      BASE_API_URL = CONFIG.apiBaseUrl(),
+      PATH_GET_USER = CONFIG.apiPathGetBaseUrl(),
+      KAFKA_HOST = CONFIG.kafkaHost(),
+      KAFKA_PORT = CONFIG.kafkaPort(),
+      KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
+      KAFKA_CORE_OUTCOMING_TOPIC = CONFIG.kafkaCoreOutcomingTopic(),
+      POSTGRE_HOST = CONFIG.postgreLogin(),
+      POSTGRE_PASSWORD = CONFIG.postgrePassword(),
+      POSTGRE_LOGIN = CONFIG.postgreHost();
+  public static final Boolean HEADLESS = CONFIG.headlessMode();
 
-    @Config.Sources({"classpath:config/config.properties", "system:properties"})
-    public interface UserConfig extends Config {
+  @Config.Sources({"classpath:config/config.properties", "system:properties"})
+  public interface UserConfig extends Config {
 
         @Key("baseURLE2E")
         String baseURLE2E();
