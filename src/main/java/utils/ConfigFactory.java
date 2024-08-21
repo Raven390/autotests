@@ -6,6 +6,7 @@ public class ConfigFactory {
     private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
     public static final String
+            BASEURLE2E = CONFIG.baseURLE2E(),
             BASEURL = CONFIG.baseURL(),
             BROWSER = CONFIG.browser(),
             BASE_API_URL = CONFIG.apiBaseUrl(),
@@ -21,6 +22,9 @@ public class ConfigFactory {
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
+
+        @Key("baseURLE2E")
+        String baseURLE2E();
 
         @Key("baseURL")
         String baseURL();
