@@ -25,13 +25,4 @@ public class KeycloackPage {
         passwordField.fill(userPass);
         loginConfirmButton.click();
     }
-
-    public void isLoggedIn (){
-        mainPageLogo.isVisible();
-    }
-
-    public void isNotLoggedIn (){
-        assertEquals(mainPageLogo.count(), 0);
-    }
-
 }

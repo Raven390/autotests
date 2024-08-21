@@ -4,6 +4,7 @@ package uiTests.backoffice.tests;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import uiTests.backoffice.tests.apiHelpers.KeycloackAPI;
 import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.MainPage;
 
@@ -27,5 +28,10 @@ public class BOTestDummies extends TestBaseE2E {
         KeycloackPage keycloackPage = new KeycloackPage(page);
         keycloackPage.loginWEB("WrongUserNameString", "userPassString"); //call the method for log in thought UI login form
         mainPage.isNotLoggedIn(); //check some simple and bulletproof marker of logging error
+    }
+
+    @Test
+    void attempt(){
+        KeycloackAPI.getAUTHtoken();
     }
 }

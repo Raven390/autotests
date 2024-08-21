@@ -11,28 +11,29 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeycloackAPI {
-    private Playwright playwright;
-    private APIRequestContext request;
+    private static Playwright playwright;
+    private static APIRequestContext request;
 
-    void createPlaywright() {
-        playwright = Playwright.create();
-    }
+//    void createPlaywright() {
+//        playwright = Playwright.create();
+//    }
 
-    void createAPIRequestContext() {
+    static void createAPIRequestContext() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/vnd.github.v3+json");
         headers.put("Authorization", "token " + "API_TOKEN");
 
-        request = playwright.request().newContext(new APIRequest.NewContextOptions()
+        request = Playwright.create().request().newContext(new APIRequest.NewContextOptions()
                 // All requests we send go to this API endpoint.
-                .setBaseURL("keycloackBaseURL")
+                .setBaseURL("https://playwright.dev")
                 .setExtraHTTPHeaders(headers));
     }
 
-    void getAUTHtoken() {
+    public static void getAUTHtoken() {
         createAPIRequestContext();
-        APIResponse token = request.post("/auth");
+        APIResponse token = request.get("/");
         assertTrue(token.ok());
+        System.out.println(token + "dunno");
         //need to parse header and save it for browser context
     }
 }
