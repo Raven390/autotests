@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeAll;
 
 public class BaseTestOkHttp extends BaseApiOkHttp {
 
-    @BeforeAll
-    public static void setUp() {
-        //setup
-    }
+  @BeforeAll
+  public static void setUp() {
+    // setup
+  }
 }
