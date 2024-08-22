@@ -14,20 +14,17 @@ public class KeycloackAPI {
     private static Playwright playwright;
     private static APIRequestContext request;
 
-//    void createPlaywright() {
-//        playwright = Playwright.create();
-//    }
-
     static void createAPIRequestContext() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/vnd.github.v3+json");
         headers.put("Authorization", "token " + "API_TOKEN");
         headers.put("shuba", "luba");
 
-        request = Playwright.create().request().newContext(new APIRequest.NewContextOptions()
+        request = Playwright.create()
+                .request()
+                .newContext(new APIRequest.NewContextOptions()
                 // All requests we send go to this API endpoint.
-                .setBaseURL("https://playwright.dev")
-                .setExtraHTTPHeaders(headers));
+                .setBaseURL("https://playwright.dev").setExtraHTTPHeaders(headers));
     }
 
     public static void getAUTHtoken() {
