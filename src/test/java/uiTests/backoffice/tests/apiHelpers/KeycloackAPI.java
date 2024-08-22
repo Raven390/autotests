@@ -22,6 +22,7 @@ public class KeycloackAPI {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/vnd.github.v3+json");
         headers.put("Authorization", "token " + "API_TOKEN");
+        headers.put("shuba", "luba");
 
         request = Playwright.create().request().newContext(new APIRequest.NewContextOptions()
                 // All requests we send go to this API endpoint.
@@ -33,7 +34,8 @@ public class KeycloackAPI {
         createAPIRequestContext();
         APIResponse token = request.get("/");
         assertTrue(token.ok());
-        System.out.println(token + "dunno");
+        System.out.println(token.text() + "dunno");
+//        System.out.println(token.headers() + "dunno");
         //need to parse header and save it for browser context
     }
 }
