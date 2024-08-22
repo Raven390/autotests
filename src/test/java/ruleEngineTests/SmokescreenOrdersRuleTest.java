@@ -15,11 +15,11 @@ public class SmokescreenOrdersRuleTest {
   @DisplayName("Check that user can be processed by the 'Smokescreen orders rule'")
   @Description(
       """
-            RULE DESCRIPTION:
-            \s
-            Number of trades before withdrawal attempt less than 10,\s
-            they have one or two trades whose lot size is at least 50x the average,\s
-            at least 2 other accounts linked by SmartID""")
+                    RULE DESCRIPTION:
+                    \s
+                    Number of trades before withdrawal attempt less than 10,\s
+                    they have one or two trades whose lot size is at least 50x the average,\s
+                    at least 2 other accounts linked by SmartID""")
   @AllureId("4")
   @Owner("Nikolai Koriagin")
   public void smokescreenOrdersTest() {

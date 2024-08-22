@@ -18,15 +18,15 @@ public class EmailAgeRuleTest {
   @DisplayName("Check that user can be processed by the 'Email age rule'")
   @Description(
       """
-            RULE DESCRIPTION:
+                    RULE DESCRIPTION:
 
-            Email age: less than 1 or 3 months for two accounts\s
-            that are connected by SmartID\s
-            OR the first 3 octets of the IP address,\s
-            both using a deposit bonus with crypto FTD,\s
-            both trading the same symbol,\s
-            opening and closing times are in pairs with less than 30 sec difference in both.
-            \s""")
+                    Email age: less than 1 or 3 months for two accounts\s
+                    that are connected by SmartID\s
+                    OR the first 3 octets of the IP address,\s
+                    both using a deposit bonus with crypto FTD,\s
+                    both trading the same symbol,\s
+                    opening and closing times are in pairs with less than 30 sec difference in both.
+                    \s""")
   @AllureId("2")
   @Owner("Nikolai Koriagin")
   public void emailAgeTest() {

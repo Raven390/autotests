@@ -29,6 +29,6 @@ Repository for test automation of anti-fraud
 
 # Other
 
-    # ./gradlew spotlessCheck - check code formatting
+    # ./gradlew verGJF - check code formatting
 
-    # ./gradlew spotlessApply - apply code auto formatting
+    # ./gradlew goJF - apply code auto formatting

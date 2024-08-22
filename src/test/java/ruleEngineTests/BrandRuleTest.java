@@ -17,14 +17,14 @@ public class BrandRuleTest {
   @DisplayName("Check that user can be processed by the 'Brand rule'")
   @Description(
       """
-            RULE DESCRIPTION:
-            \s
-            VJP,\s
-            Deposit: Crypto,\s
-            Users linked by device >5,\s
-            outlook/gmail emails,\s
-            email age >3months for all device linked accounts.\s
-            4 numbers in emails is a sub-pattern for this as well.""")
+                    RULE DESCRIPTION:
+                    \s
+                    VJP,\s
+                    Deposit: Crypto,\s
+                    Users linked by device >5,\s
+                    outlook/gmail emails,\s
+                    email age >3months for all device linked accounts.\s
+                    4 numbers in emails is a sub-pattern for this as well.""")
   @AllureId("2")
   @Owner("Nikolai Koriagin")
   public void brandRuleTest() {

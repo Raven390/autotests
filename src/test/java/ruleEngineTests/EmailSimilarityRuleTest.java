@@ -15,12 +15,12 @@ public class EmailSimilarityRuleTest {
   @DisplayName("Check that user can be processed by the 'Email similarity rule'")
   @Description(
       """
-            RULE DESCRIPTION:
-            \s
-            There are at least 5 accounts whose email addresses are less than a month old and similar to one another,
-            all of these are registrations.
-            IP addresses: either linked by IP or ISP, and they are all proxy IPs.
-            Crypto or bridger deposit, bonus claimed.""")
+                    RULE DESCRIPTION:
+                    \s
+                    There are at least 5 accounts whose email addresses are less than a month old and similar to one another,
+                    all of these are registrations.
+                    IP addresses: either linked by IP or ISP, and they are all proxy IPs.
+                    Crypto or bridger deposit, bonus claimed.""")
   @AllureId("3")
   @Owner("Nikolai Koriagin")
   public void emailSimilarityTest() {
