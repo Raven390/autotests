@@ -23,43 +23,43 @@ public class ConfigFactory {
   @Config.Sources({"classpath:config/config.properties", "system:properties"})
   public interface UserConfig extends Config {
 
-        @Key("baseURLE2E")
-        String baseURLE2E();
+    @Key("baseURLE2E")
+    String baseURLE2E();
 
-        @Key("baseURL")
-        String baseURL();
+    @Key("baseURL")
+    String baseURL();
 
-        @Key("browser")
-        String browser();
+    @Key("browser")
+    String browser();
 
-        @Key("headlessMode")
-        Boolean headlessMode();
+    @Key("headlessMode")
+    Boolean headlessMode();
 
-        @Key("apiBaseUrl")
-        String apiBaseUrl();
+    @Key("apiBaseUrl")
+    String apiBaseUrl();
 
-        @Key("apiPathGetUser")
-        String apiPathGetBaseUrl();
+    @Key("apiPathGetUser")
+    String apiPathGetBaseUrl();
 
-        @Key("kafkaHost")
-        String kafkaHost();
+    @Key("kafkaHost")
+    String kafkaHost();
 
-        @Key("kafkaPort")
-        String kafkaPort();
+    @Key("kafkaPort")
+    String kafkaPort();
 
-        @Key("kafkaCoreIncomingTopic")
-        String kafkaCoreIncomingTopic();
+    @Key("kafkaCoreIncomingTopic")
+    String kafkaCoreIncomingTopic();
 
-        @Key("kafkaCoreOutcomingTopic")
-        String kafkaCoreOutcomingTopic();
+    @Key("kafkaCoreOutcomingTopic")
+    String kafkaCoreOutcomingTopic();
 
-        @Key("postgreHost")
-        String postgreHost();
+    @Key("postgreHost")
+    String postgreHost();
 
-        @Key("postgreLogin")
-        String postgreLogin();
+    @Key("postgreLogin")
+    String postgreLogin();
 
-        @Key("postgrePassword")
-        String postgrePassword();
-    }
+    @Key("postgrePassword")
+    String postgrePassword();
+  }
 }
