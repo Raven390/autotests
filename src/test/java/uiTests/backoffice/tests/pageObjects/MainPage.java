@@ -2,6 +2,7 @@ package uiTests.backoffice.tests.pageObjects;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 import utils.ConfigFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,16 +25,22 @@ public class MainPage {
         this.mainPageLogo = page.locator("body .logo");
     }
 
+    @Step("Open the BackOffice main page")
     public void navigate() {
         page.navigate(BASEURLE2E);
     }
 
-    public void isLoggedIn (){
+    @Step("Check that user is logged in")
+    public void isLoggedIn() {
         mainPageLogo.isVisible();
     }
 
-    public void isNotLoggedIn (){
+    @Step("Check that user is logged in")
+    public void isNotLoggedIn() {
         assertEquals(mainPageLogo.count(), 0);
     }
+}
+
+
 
 }
