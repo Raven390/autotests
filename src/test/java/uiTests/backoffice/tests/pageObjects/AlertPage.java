@@ -7,7 +7,7 @@ import io.qameta.allure.Step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.ConfigFactory.BASEURLE2E;
 
-public class MainPage {
+public class AlertPage {
     private final Page page;
     private final Locator mainPageLogo;
     private final Locator alertList;
@@ -18,7 +18,7 @@ public class MainPage {
     private final Locator supportButton;
     private final Locator BugReportButton;
 
-    public MainPage(Page page) {
+    public AlertPage(Page page) {
         this.page = page;
         this.mainPageLogo = page.locator("body .logo");
         this.alertList = page.locator(".alertList");
@@ -46,7 +46,7 @@ public class MainPage {
     }
 
     @Step("Check is main page basic elements visible")
-    public void isMainPageBasicElementsVisible() {
+    public void isAlertPageBasicElementsVisible() {
         alertList.isVisible();
         soundButton.isVisible();
         refreshButton.isVisible();
