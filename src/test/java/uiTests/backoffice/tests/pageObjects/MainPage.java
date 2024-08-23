@@ -56,6 +56,11 @@ public class MainPage {
         BugReportButton.isVisible();
     }
 
+    @Step("Check is profile button on the main page bis visible")
+    public void isProfileButtonVisible() {
+        profileButton.isVisible();
+    }
+
     @Step("Click profile button")
     public void clickProfileButton() {
         profileButton.click();

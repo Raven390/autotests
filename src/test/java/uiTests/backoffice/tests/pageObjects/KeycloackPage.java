@@ -30,4 +30,10 @@ public class KeycloackPage {
   public void errorMessageIsShown() {
     errorScreen.isVisible();
   }
+
+  @Step("Check that user is logged out")
+  public void isLoggedOut() {
+    passwordField.isVisible();
+    loginField.isVisible();
+  }
 }

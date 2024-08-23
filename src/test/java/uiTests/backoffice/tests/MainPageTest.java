@@ -8,12 +8,12 @@ import uiTests.backoffice.tests.apiHelpers.KeycloackAPI;
 import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.MainPage;
 
-public class BOTestDummies extends TestBaseE2E {
+public class MainPageTest extends TestBaseE2E {
 
     @Disabled
     @Test
     @DisplayName("positive login test")
-    void PositiveloginUI() {
+    void PositiveloginUITest() {
         MainPage mainPage = new MainPage(page);
         mainPage.navigate();
         KeycloackPage keycloackPage = new KeycloackPage(page);
@@ -24,7 +24,7 @@ public class BOTestDummies extends TestBaseE2E {
     @Disabled
     @Test
     @DisplayName("negative login test")
-    void NegativeloginUI() {
+    void NegativeloginUITest() {
         MainPage mainPage = new MainPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         mainPage.navigate();
@@ -33,8 +33,27 @@ public class BOTestDummies extends TestBaseE2E {
         keycloackPage.errorMessageIsShown();
     }
 
+    @Disabled
     @Test
-    void attempt() {
-        KeycloackAPI.getAUTHtoken();
+    @DisplayName("main page rendered basic elements")
+    void MainPageRendersTest() {
+        MainPage mainPage = new MainPage(page);
+        KeycloackPage keycloackPage = new KeycloackPage(page);
+        mainPage.navigate();
+        keycloackPage.loginWEB("valid user name", "userPassString"); //call the method for log in thought UI login form
+        mainPage.isMainPageBasicElementsVisible();
     }
+
+    @Disabled
+    @Test
+    @DisplayName("user can go to profile page from main page")
+    void MainPAgeRenderesTest() {
+        MainPage mainPage = new MainPage(page);
+        KeycloackPage keycloackPage = new KeycloackPage(page);
+        mainPage.navigate();
+        keycloackPage.loginWEB("valid user name", "userPassString"); //call the method for log in thought UI login form
+        mainPage.isProfileButtonVisible();
+        mainPage.clickProfileButton();
+    }
+
 }
