@@ -9,7 +9,7 @@ import static utils.ConfigFactory.BASEURLE2E;
 
 public class AlertPage {
     private final Page page;
-    private final Locator mainPageLogo;
+    private final Locator PageLogo;
     private final Locator alertList;
     private final Locator soundButton;
     private final Locator refreshButton;
@@ -20,7 +20,7 @@ public class AlertPage {
 
     public AlertPage(Page page) {
         this.page = page;
-        this.mainPageLogo = page.locator("body .logo");
+        this.PageLogo = page.locator("body .logo");
         this.alertList = page.locator(".alertList");
         this.soundButton = page.locator(".soundButton");
         this.refreshButton = page.locator(".refreshButton");
@@ -30,22 +30,22 @@ public class AlertPage {
         this.BugReportButton = page.locator(".BugReportButton");
     }
 
-    @Step("Open the BackOffice main page")
+    @Step("Open the BackOffice alert page")
     public void navigate() {
         page.navigate(BASEURLE2E);
     }
 
     @Step("Check that user is logged in")
     public void isLoggedIn() {
-        mainPageLogo.isVisible();
+        PageLogo.isVisible();
     }
 
     @Step("Check that user is logged in")
     public void isNotLoggedIn() {
-        assertEquals(mainPageLogo.count(), 0);
+        assertEquals(PageLogo.count(), 0);
     }
 
-    @Step("Check is main page basic elements visible")
+    @Step("Check is  page basic elements visible")
     public void isAlertPageBasicElementsVisible() {
         alertList.isVisible();
         soundButton.isVisible();
@@ -56,7 +56,7 @@ public class AlertPage {
         BugReportButton.isVisible();
     }
 
-    @Step("Check is profile button on the main page bis visible")
+    @Step("Check is profile button on the  page bis visible")
     public void isProfileButtonVisible() {
         profileButton.isVisible();
     }
