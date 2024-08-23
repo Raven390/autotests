@@ -9,36 +9,36 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 public class TestBaseE2E {
-  // Shared between all tests in this class.
-  static Playwright playwright;
-  static Browser browser;
+    // Shared between all tests in this class.
+    static Playwright playwright;
+    static Browser browser;
 
-  // New instance for each test method.
-  BrowserContext context;
-  Page page;
+    // New instance for each test method.
+    BrowserContext context;
+    Page page;
 
-  @BeforeAll
-  static void launchBrowser() {
-    playwright = Playwright.create();
-    browser =
-        playwright
-            .chromium()
-            .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setSlowMo(4000));
-  }
+    @BeforeAll
+    static void launchBrowser() {
+        playwright = Playwright.create();
+        browser =
+                playwright
+                        .chromium()
+                        .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
+    }
 
-  @AfterAll
-  static void closeBrowser() {
-    playwright.close();
-  }
+    @AfterAll
+    static void closeBrowser() {
+        playwright.close();
+    }
 
-  @BeforeEach
-  void createContextAndPage() {
-    context = browser.newContext();
-    page = context.newPage();
-  }
+    @BeforeEach
+    void createContextAndPage() {
+        context = browser.newContext();
+        page = context.newPage();
+    }
 
-  @AfterEach
-  void closeContext() {
-    context.close();
-  }
+    @AfterEach
+    void closeContext() {
+        context.close();
+    }
 }
