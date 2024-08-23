@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.AlertPage;
+import uiTests.backoffice.tests.pageObjects.ProfilePage;
 
 public class AlertPageTest extends TestBaseE2E {
 
@@ -46,13 +47,15 @@ public class AlertPageTest extends TestBaseE2E {
     @Disabled
     @Test
     @DisplayName("user can go to profile page from alert page")
-    void alertPAgeRenderesTest() {
+    void alertPageOpenProfilePageTest() {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
+        ProfilePage profilePage = new ProfilePage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("valid user name", "userPassString"); //call the method for log in thought UI login form
         alertPage.isProfileButtonVisible();
         alertPage.clickProfileButton();
+        profilePage.isOnProfilePage();
     }
 
 }
