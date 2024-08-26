@@ -7,7 +7,7 @@ import uiTests.example.PageObjects.WikiPage;
 
 public class TestExample extends TestBaseE2E {
 
-    @Disabled("write roundabout around capcha is too costly")
+    @Disabled("write roundabout around captcha is too costly")
     @Test
     void shouldSearchWiki() {
         SearchPage searchPage = new SearchPage(page);

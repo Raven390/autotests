@@ -4,7 +4,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
-import static utils.ConfigFactory.BASEURLE2E;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class DashboardPage {
     private final Page page;
@@ -17,7 +17,7 @@ public class DashboardPage {
 
     @Step("Open the BackOffice dashboard page")
     public void navigate() {
-        page.navigate(BASEURLE2E + "/dashboard");
+        page.navigate(BASE_URL_E2E + "/dashboard");
         pageLogo.isVisible();
     }
 }

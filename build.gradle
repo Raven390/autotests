@@ -53,7 +53,7 @@ dependencies {
     implementation "org.postgresql:postgresql:$postgreVersion"
 
     //Allure for Junit 5 tests
-    testImplementation platform ("io.qameta.allure:allure-bom:$allureBomVersion")
+    testImplementation platform("io.qameta.allure:allure-bom:$allureBomVersion")
     testImplementation "io.qameta.allure:allure-junit5"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
@@ -70,7 +70,7 @@ test {
 
 task installChromium(type: JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
-    args = ['install','chromium']
+    args = ['install', 'chromium']
     classpath = sourceSets.main.runtimeClasspath
 }
 

@@ -4,7 +4,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
-import static utils.ConfigFactory.BASEURLE2E;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class ProfilePage {
     private final Page page;
@@ -21,7 +21,7 @@ public class ProfilePage {
 
     @Step("Open the BackOffice user profile page")
     public void navigate() {
-        page.navigate(BASEURLE2E + "/account");
+        page.navigate(BASE_URL_E2E + "/account");
     }
 
     @Step("check that user on profile page")
