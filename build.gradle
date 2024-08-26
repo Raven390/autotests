@@ -11,7 +11,7 @@ repositories {
 }
 
 def ownerVersion = '1.0.12'
-def playwrightVersion = '1.45.0'
+def playwrightVersion = '1.46.0'
 def okhttpVersion = '4.12.0'
 def hamcrestVersion = '3.0'
 def slf4jVersion = '2.0.12'
