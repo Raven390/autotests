@@ -1,4 +1,4 @@
-package uiTests.backoffice.tests;
+package uiTests.backoffice.tests.tests;
 
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.AfterAll;

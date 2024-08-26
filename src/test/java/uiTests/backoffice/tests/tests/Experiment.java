@@ -1,4 +1,4 @@
-package uiTests.backoffice.tests;
+package uiTests.backoffice.tests.tests;
 
 import org.junit.jupiter.api.Test;
 import uiTests.backoffice.tests.apiHelpers.KeycloackAPI;
