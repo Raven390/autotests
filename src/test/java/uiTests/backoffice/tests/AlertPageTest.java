@@ -4,8 +4,8 @@ package uiTests.backoffice.tests;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.AlertPage;
+import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.ProfilePage;
 
 public class AlertPageTest extends TestBaseE2E {

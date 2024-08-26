@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static utils.ConfigFactory.BASE_API_URL;
-import static utils.ConfigFactory.PATH_GET_USER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static utils.ConfigFactory.BASE_API_URL;
+import static utils.ConfigFactory.PATH_GET_USER;
 
 public class ApiExampleOkHttp extends BaseTestOkHttp {
 
