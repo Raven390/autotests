@@ -4,8 +4,8 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
+import static utils.ConfigFactory.BASE_URL_E2E;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static utils.ConfigFactory.BASEURLE2E;
 
 public class AlertPage {
     private final Page page;
@@ -32,7 +32,7 @@ public class AlertPage {
 
     @Step("Open the BackOffice alert page")
     public void navigate() {
-        page.navigate(BASEURLE2E);
+        page.navigate(BASE_URL_E2E);
     }
 
     @Step("Check that user is logged in")

@@ -1,7 +1,5 @@
 package uiTests.backoffice.tests.apiHelpers;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
@@ -9,6 +7,8 @@ import com.microsoft.playwright.Playwright;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeycloackAPI {
     private static Playwright playwright;

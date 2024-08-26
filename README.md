@@ -1,7 +1,9 @@
 # anti-fraud-test-automation
+
 Repository for test automation of anti-fraud
 
 # Used tech stack
+
 - ui tests for backoffice:
     - junit
     - playwright
@@ -16,9 +18,8 @@ Repository for test automation of anti-fraud
     - okhttp
     - hamcrest
 
-
-
 # Hot to run the uiTests:
+
     # ./gradlew test - runs all the tests
 
     # ./gradlew allureServe - build allure report
