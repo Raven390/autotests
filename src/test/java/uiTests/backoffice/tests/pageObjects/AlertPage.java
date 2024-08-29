@@ -16,7 +16,8 @@ public class AlertPage {
     private final Locator profileButton;
     private final Locator settingButton;
     private final Locator supportButton;
-    private final Locator BugReportButton;
+    private final Locator bugReportButton;
+    private final Locator breadcrumbs;
 
     public AlertPage(Page page) {
         this.page = page;
@@ -27,7 +28,8 @@ public class AlertPage {
         this.profileButton = page.locator(".profileButton");
         this.settingButton = page.locator(".settingButton");
         this.supportButton = page.locator(".supportButton");
-        this.BugReportButton = page.locator(".BugReportButton");
+        this.bugReportButton = page.locator(".BugReportButton");
+        this.breadcrumbs = page.locator(".breadcrumbs");
     }
 
     @Step("Open the BackOffice alert page")
@@ -53,7 +55,8 @@ public class AlertPage {
         profileButton.isVisible();
         settingButton.isVisible();
         supportButton.isVisible();
-        BugReportButton.isVisible();
+        bugReportButton.isVisible();
+        breadcrumbs.isVisible();
     }
 
     @Step("Check is profile button on the  page bis visible")

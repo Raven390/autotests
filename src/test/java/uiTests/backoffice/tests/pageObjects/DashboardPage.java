@@ -9,10 +9,12 @@ import static utils.ConfigFactory.BASE_URL_E2E;
 public class DashboardPage {
     private final Page page;
     private final Locator pageLogo;
+    private final Locator breadcrumbs;
 
     public DashboardPage(Page page) {
         this.page = page;
         this.pageLogo = page.locator("body .logo");
+        this.breadcrumbs = page.locator(".breadcrumps");
     }
 
     @Step("Open the BackOffice dashboard page")

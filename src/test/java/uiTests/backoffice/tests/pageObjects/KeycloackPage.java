@@ -10,6 +10,7 @@ public class KeycloackPage {
     private final Locator passwordField;
     private final Locator loginConfirmButton;
     private final Locator errorScreen;
+    private final Locator breadcrumbs;
 
     public KeycloackPage(Page page) {
         this.page = page;
@@ -17,6 +18,7 @@ public class KeycloackPage {
         this.passwordField = page.locator("input .password");
         this.loginConfirmButton = page.locator("button .submit");
         this.errorScreen = page.locator(".error_message");
+        this.breadcrumbs = page.locator(".breadcrumps");
     }
 
     @Step("Log In trough UI")
