@@ -1,10 +1,10 @@
 package uiTests.backoffice.tests.pageObjects;
 
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
-
-import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class DashboardPage {
     private final Page page;

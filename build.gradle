@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'com.github.sherter.google-java-format' version '0.9'
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'antifraud'
@@ -20,12 +20,6 @@ def allureBomVersion = '2.25.0'
 def jacksonVersion = '2.17.2'
 def postgreVersion = '42.1.4'
 def kafkaClientVersion = '3.6.0'
-def googleJavaFormatVersion = '1.23.0'
-
-googleJavaFormat {
-    toolVersion = "$googleJavaFormatVersion"
-    options style: 'GOOGLE'
-}
 
 dependencies {
     implementation platform("org.junit:junit-bom:$junitBomVersion")
@@ -62,6 +56,24 @@ dependencies {
 
     //Kafka
     implementation "org.apache.kafka:kafka-clients:$kafkaClientVersion"
+}
+
+spotless {
+    java {
+        removeUnusedImports()
+        cleanthat()
+            .addMutator('ErrorProneMutators')
+            .addMutator('PMDMutators')
+            .addMutator('SafeAndConsensual')
+            .addMutator('SonarMutators')
+            .addMutator('LocalVariableTypeInference')
+            .addMutator('RemoveExplicitCallToSuper')
+            .addMutator('UnnecessarySemicolon')
+            .addMutator('UseTextBlocks')
+            .addMutator('UseUnderscoresInNumericLiterals')
+        formatAnnotations()
+        palantirJavaFormat()
+    }
 }
 
 test {

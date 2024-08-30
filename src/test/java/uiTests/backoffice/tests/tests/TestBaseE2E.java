@@ -1,12 +1,12 @@
 package uiTests.backoffice.tests.tests;
 
+import static utils.ConfigFactory.HEADLESS;
+
 import com.microsoft.playwright.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import static utils.ConfigFactory.HEADLESS;
 
 public class TestBaseE2E {
     // Shared between all tests in this class.
@@ -20,10 +20,7 @@ public class TestBaseE2E {
     @BeforeAll
     static void launchBrowser() {
         playwright = Playwright.create();
-        browser =
-                playwright
-                        .chromium()
-                        .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS));
     }
 
     @AfterAll

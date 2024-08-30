@@ -19,7 +19,7 @@ public class EmailAgeRuleTest {
     @Description(
             """
                     RULE DESCRIPTION:
-                    
+
                     Email age: less than 1 or 3 months for two accounts\s
                     that are connected by SmartID\s
                     OR the first 3 octets of the IP address,\s
@@ -38,8 +38,7 @@ public class EmailAgeRuleTest {
         Allure.step("Create deposit with crypto FSD for user1");
         Allure.step("Make deposit with same parameters for user2");
         Allure.step("Create trade WITH Z pair AND opening time = X AND closing time = Y for user1");
-        Allure.step(
-                "Create trade WITH Z pair AND opening time = X+5sec AND closing time = Y+5sec for user2");
+        Allure.step("Create trade WITH Z pair AND opening time = X+5sec AND closing time = Y+5sec for user2");
         Allure.step("Execute test steps");
         Allure.step("Put in kafka incoming message with user1 to check this user");
         Allure.step("Make assertions:");

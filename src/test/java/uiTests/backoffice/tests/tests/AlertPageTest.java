@@ -1,6 +1,5 @@
 package uiTests.backoffice.tests.tests;
 
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,11 @@ public class AlertPageTest extends TestBaseE2E {
         AlertPage alertPage = new AlertPage(page);
         alertPage.navigate();
         KeycloackPage keycloackPage = new KeycloackPage(page);
-        keycloackPage.loginWEB("valid user name", "valid user password");// call the method for log in thought UI login form and check redirect into system
-        alertPage.isLoggedIn(); //check some simple and bulletproof marker of logging into the system
+        keycloackPage.loginWEB(
+                "valid user name",
+                "valid user password"); // call the method for log in thought UI login form and check redirect into
+        // system
+        alertPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
     @Disabled
@@ -28,8 +30,9 @@ public class AlertPageTest extends TestBaseE2E {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
-        keycloackPage.loginWEB("WrongUserNameString", "userPassString"); //call the method for log in thought UI login form
-        alertPage.isNotLoggedIn(); //check some simple and bulletproof marker of logging error
+        keycloackPage.loginWEB(
+                "WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
+        alertPage.isNotLoggedIn(); // check some simple and bulletproof marker of logging error
         keycloackPage.errorMessageIsShown();
     }
 
@@ -40,7 +43,7 @@ public class AlertPageTest extends TestBaseE2E {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
-        keycloackPage.loginWEB("valid user name", "userPassString"); //call the method for log in thought UI login form
+        keycloackPage.loginWEB("valid user name", "userPassString"); // call the method for log in thought UI login form
         alertPage.isAlertPageBasicElementsVisible();
     }
 
@@ -52,10 +55,9 @@ public class AlertPageTest extends TestBaseE2E {
         KeycloackPage keycloackPage = new KeycloackPage(page);
         ProfilePage profilePage = new ProfilePage(page);
         alertPage.navigate();
-        keycloackPage.loginWEB("valid user name", "userPassString"); //call the method for log in thought UI login form
+        keycloackPage.loginWEB("valid user name", "userPassString"); // call the method for log in thought UI login form
         alertPage.isProfileButtonVisible();
         alertPage.clickProfileButton();
         profilePage.isOnProfilePage();
     }
-
 }

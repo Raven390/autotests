@@ -1,11 +1,11 @@
 package uiTests.backoffice.tests.pageObjects;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static utils.ConfigFactory.BASE_URL_E2E;
+
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class AlertPage {
     private final Page page;
