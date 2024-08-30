@@ -11,7 +11,8 @@ public class SearchPage {
     public SearchPage(Page page) {
         this.page = page;
         this.searchTermInput = page.locator("input[aria-label=\"Search with DuckDuckGo\"]");
-        this.firstResult = page.locator("[data-testid=\"result-extras-url-link\"]").first();
+        this.firstResult =
+                page.locator("[data-testid=\"result-extras-url-link\"]").first();
     }
 
     public void navigate() {

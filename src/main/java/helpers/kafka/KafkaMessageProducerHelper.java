@@ -1,16 +1,15 @@
 package helpers.kafka;
 
+import static utils.ConfigFactory.KAFKA_HOST;
+import static utils.ConfigFactory.KAFKA_PORT;
+
+import java.util.Properties;
+import java.util.concurrent.Future;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
-
-import java.util.Properties;
-import java.util.concurrent.Future;
-
-import static utils.ConfigFactory.KAFKA_HOST;
-import static utils.ConfigFactory.KAFKA_PORT;
 
 public class KafkaMessageProducerHelper {
 

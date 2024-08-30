@@ -1,9 +1,9 @@
 package helpers.postgre;
 
+import static utils.ConfigFactory.*;
+
 import java.sql.*;
 import java.util.Properties;
-
-import static utils.ConfigFactory.*;
 
 public class PostgreHelper {
 

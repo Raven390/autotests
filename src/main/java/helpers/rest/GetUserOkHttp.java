@@ -1,4 +1,3 @@
 package helpers.rest;
 
-public class GetUserOkHttp extends BaseApiOkHttp {
-}
+public class GetUserOkHttp extends BaseApiOkHttp {}

@@ -1,14 +1,13 @@
 package uiTests.backoffice.tests.apiHelpers;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Playwright;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class KeycloackAPI {
     private static Playwright playwright;
@@ -20,14 +19,12 @@ public class KeycloackAPI {
         headers.put("Authorization", "token " + "API_TOKEN");
         headers.put("shuba", "luba");
 
-        request =
-                Playwright.create()
-                        .request()
-                        .newContext(
-                                new APIRequest.NewContextOptions()
-                                        // All requests we send go to this API endpoint.
-                                        .setBaseURL("https://playwright.dev")
-                                        .setExtraHTTPHeaders(headers));
+        request = Playwright.create()
+                .request()
+                .newContext(new APIRequest.NewContextOptions()
+                        // All requests we send go to this API endpoint.
+                        .setBaseURL("https://playwright.dev")
+                        .setExtraHTTPHeaders(headers));
     }
 
     public static void getAUTHtoken() {

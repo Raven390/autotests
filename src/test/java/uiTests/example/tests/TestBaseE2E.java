@@ -1,14 +1,13 @@
 package uiTests.example.tests;
 
+import static utils.ConfigFactory.HEADLESS;
+
 import com.microsoft.playwright.*;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.nio.file.Paths;
-
-import static utils.ConfigFactory.HEADLESS;
 
 public class TestBaseE2E {
     // Shared between all tests in this class.
@@ -22,10 +21,9 @@ public class TestBaseE2E {
     @BeforeAll
     static void launchBrowser() {
         playwright = Playwright.create();
-        browser =
-                playwright
-                        .chromium()
-                        .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setTimeout(60000));
+        browser = playwright
+                .chromium()
+                .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setTimeout(60_000));
     }
 
     @AfterAll
@@ -38,18 +36,18 @@ public class TestBaseE2E {
     @BeforeEach
     void createContextAndPage() {
         context = browser.newContext();
-        context
-                .tracing()
-                .start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true));
+        context.tracing()
+                .start(new Tracing.StartOptions()
+                        .setScreenshots(true)
+                        .setSnapshots(true)
+                        .setSources(true));
         page = context.newPage();
     }
 
     @AfterEach
     void closeContext() {
         if (context != null) {
-            context
-                    .tracing()
-                    .stop(new Tracing.StopOptions().setPath(Paths.get("playwright-report/trace.zip")));
+            context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get("playwright-report/trace.zip")));
             context.close();
         }
     }

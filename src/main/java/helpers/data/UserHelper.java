@@ -1,7 +1,6 @@
 package helpers.data;
 
 import helpers.postgre.PostgreHelper;
-
 import java.sql.SQLException;
 
 public class UserHelper {
