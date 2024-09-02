@@ -9,7 +9,7 @@ job_build:
     - echo "Building the project"
     - ./gradlew clean
     - ./gradlew build -x spotlessCheck -x test
-    - echo "SUCCESS"
+    - echo "BUILD SUCCESS"
 
 job_code_check:
   stage: build
@@ -18,7 +18,7 @@ job_code_check:
   script:
     - echo "Checking the code"
     - ./gradlew spotlessCheck
-    - echo "SUCCESS"
+    - echo "CODE CHECK SUCCESS"
 
 job_test:
   stage: test
@@ -30,7 +30,7 @@ job_test:
     - ./gradlew installDeps
     - ./gradlew installChromium
     - ./gradlew test -x spotlessCheck
-    - echo "SUCCESS"
+    - echo "TEST SUCCESS"
   artifacts:
     when: always
     paths:
