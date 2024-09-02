@@ -18,8 +18,7 @@ public class AlertPageTest extends TestBaseE2E {
         KeycloackPage keycloackPage = new KeycloackPage(page);
         keycloackPage.loginWEB(
                 "valid user name",
-                "valid user password"); // call the method for log in thought UI login form and check redirect into
-        // system
+                "valid user password");
         alertPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 

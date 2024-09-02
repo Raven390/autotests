@@ -35,4 +35,5 @@ job_test:
     when: always
     paths:
       - playwright-report
+      - build/reports/tests/test/index.html
     expire_in: 1 day
