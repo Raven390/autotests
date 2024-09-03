@@ -1,6 +1,7 @@
 package uiTests.example.tests;
 
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import uiTests.example.PageObjects.SearchPage;
 import uiTests.example.PageObjects.WikiPage;
@@ -19,6 +20,7 @@ public class TestExample extends TestBaseE2E {
     }
 
     @Test
+    @DisplayName("gyouva")
     void navToGyouza() {
         WikiPage wikiPage = new WikiPage(page);
         wikiPage.navigateGyoza();
