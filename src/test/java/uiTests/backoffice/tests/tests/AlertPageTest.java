@@ -16,9 +16,7 @@ public class AlertPageTest extends TestBaseE2E {
         AlertPage alertPage = new AlertPage(page);
         alertPage.navigate();
         KeycloackPage keycloackPage = new KeycloackPage(page);
-        keycloackPage.loginWEB(
-                "valid user name",
-                "valid user password");
+        keycloackPage.loginWEB("valid user name", "valid user password");
         alertPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
