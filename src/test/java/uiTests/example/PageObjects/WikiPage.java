@@ -2,6 +2,7 @@ package uiTests.example.PageObjects;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 
 public class WikiPage {
     private final Page page;
@@ -13,6 +14,7 @@ public class WikiPage {
         this.wikiLogo = page.locator(".central-textlogo__image.svg-Wikipedia_wordmark");
     }
 
+    @Step("navigate")
     public void navigateGyoza() {
         page.navigate(GyozaURL);
     }
