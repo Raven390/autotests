@@ -3,6 +3,7 @@ package uiTests.example.tests;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import uiTests.TestBaseE2E;
 import uiTests.example.PageObjects.SearchPage;
 import uiTests.example.PageObjects.WikiPage;
 
