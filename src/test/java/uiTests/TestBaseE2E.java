@@ -15,7 +15,7 @@ public class TestBaseE2E {
     static Browser browser;
 
     // New instance for each test method.
-    BrowserContext context;
+    static BrowserContext context;
     public Page page;
 
     @BeforeAll
@@ -28,6 +28,10 @@ public class TestBaseE2E {
 
     @AfterAll
     static void closeBrowser() {
+        if (context != null) {
+            context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get("playwright-report/trace.zip")));
+            context.close();
+        }
         if (playwright != null) {
             playwright.close();
         }
