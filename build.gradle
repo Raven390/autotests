@@ -11,7 +11,7 @@ repositories {
 }
 
 def ownerVersion = '1.0.12'
-def playwrightVersion = '1.46.0'
+def playwrightVersion = '1.45.0'
 def okhttpVersion = '4.12.0'
 def hamcrestVersion = '3.0'
 def slf4jVersion = '2.0.12'
@@ -19,6 +19,7 @@ def junitBomVersion = '5.10.2'
 def allureBomVersion = '2.25.0'
 def jacksonVersion = '2.17.2'
 def postgreVersion = '42.1.4'
+def mysqlVersion = '8.0.32'
 def kafkaClientVersion = '3.6.0'
 
 dependencies {
@@ -41,18 +42,19 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
 
     //Hamcrest matchers
-    testImplementation "org.hamcrest:hamcrest:$hamcrestVersion"
+    implementation "org.hamcrest:hamcrest:$hamcrestVersion"
 
     //Database
     implementation "org.postgresql:postgresql:$postgreVersion"
+    implementation "mysql:mysql-connector-java:$mysqlVersion"
 
     //Allure for Junit 5 tests
-    testImplementation platform("io.qameta.allure:allure-bom:$allureBomVersion")
-    testImplementation "io.qameta.allure:allure-junit5"
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testImplementation "org.slf4j:slf4j-simple:$slf4jVersion"
+    implementation platform("io.qameta.allure:allure-bom:$allureBomVersion")
+    implementation "io.qameta.allure:allure-junit5"
+    implementation "org.junit.jupiter:junit-jupiter-api"
+    runtimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    implementation "org.junit.jupiter:junit-jupiter"
+    implementation "org.slf4j:slf4j-simple:$slf4jVersion"
 
     //Kafka
     implementation "org.apache.kafka:kafka-clients:$kafkaClientVersion"
@@ -62,15 +64,14 @@ spotless {
     java {
         removeUnusedImports()
         cleanthat()
-            .addMutator('ErrorProneMutators')
-            .addMutator('PMDMutators')
-            .addMutator('SafeAndConsensual')
-            .addMutator('SonarMutators')
-            .addMutator('LocalVariableTypeInference')
-            .addMutator('RemoveExplicitCallToSuper')
-            .addMutator('UnnecessarySemicolon')
-            .addMutator('UseTextBlocks')
-            .addMutator('UseUnderscoresInNumericLiterals')
+                .addMutator('ErrorProneMutators')
+                .addMutator('PMDMutators')
+                .addMutator('SafeAndConsensual')
+                .addMutator('SonarMutators')
+                .addMutator('LocalVariableTypeInference')
+                .addMutator('RemoveExplicitCallToSuper')
+                .addMutator('UnnecessarySemicolon')
+                .addMutator('UseTextBlocks')
         formatAnnotations()
         palantirJavaFormat()
     }

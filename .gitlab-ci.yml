@@ -43,4 +43,5 @@ job_test:
       - playwright-report
       - build/reports/
       - allure-results
+      - videos
     expire_in: 1 day
