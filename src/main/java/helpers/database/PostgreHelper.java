@@ -1,4 +1,4 @@
-package helpers.postgre;
+package helpers.database;
 
 import static utils.ConfigFactory.*;
 
