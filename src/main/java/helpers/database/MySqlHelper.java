@@ -26,31 +26,25 @@ public class MySqlHelper {
     public static ResultSet makeQuery(String query, int maxAttempts)
             throws SQLException, ClassNotFoundException, InterruptedException {
         ResultSet result = null;
-        Connection connection = null;
-        Statement statement = null;
+        Connection connection;
+        Statement statement;
 
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                connection = getConnection();
-                System.out.println("Attempt " + attempt + ": Trying to get data");
+            connection = getConnection();
+            System.out.println("Attempt " + attempt + ": Trying to get data");
 
-                statement = connection.createStatement();
-                result = statement.executeQuery(query);
+            statement = connection.createStatement();
+            result = statement.executeQuery(query);
 
-                System.out.println("Data received on attempt " + attempt + ": " + result);
-                result.next();
+            System.out.println("Data received on attempt " + attempt + ": " + result);
+            result.next();
+            if (result != null) {
                 return result; // Exit the loop if successful
-            } catch (SQLException e) {
-                System.err.println("Attempt " + attempt + " failed: " + e.getMessage());
-
-                if (attempt == maxAttempts) {
-                    throw e; // Rethrow the exception if it's the last attempt
-                }
-
-                Thread.sleep(1000); // Wait 1 second before retrying
+            } else {
+                System.out.println("Data not received on attempt " + attempt);
+                Thread.sleep(1000);
             }
         }
-
         return null; // If it fails after all attempts
     }
 }
