@@ -3,6 +3,7 @@ package uiTests.backoffice.tests.tests;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import uiTests.TestBaseE2E;
 import uiTests.backoffice.tests.pageObjects.KeycloackPage;
 import uiTests.backoffice.tests.pageObjects.ProfilePage;
 

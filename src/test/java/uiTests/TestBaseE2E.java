@@ -1,4 +1,4 @@
-package uiTests.example.tests;
+package uiTests;
 
 import static utils.ConfigFactory.HEADLESS;
 
@@ -16,14 +16,14 @@ public class TestBaseE2E {
 
     // New instance for each test method.
     BrowserContext context;
-    Page page;
+    public Page page;
 
     @BeforeAll
     static void launchBrowser() {
         playwright = Playwright.create();
         browser = playwright
                 .chromium()
-                .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setTimeout(60_000));
+                .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setTimeout(30_000));
     }
 
     @AfterAll
@@ -35,7 +35,7 @@ public class TestBaseE2E {
 
     @BeforeEach
     void createContextAndPage() {
-        context = browser.newContext();
+        context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get("videos/")));
         context.tracing()
                 .start(new Tracing.StartOptions()
                         .setScreenshots(true)
