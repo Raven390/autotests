@@ -1,4 +1,4 @@
-package uiTests.backoffice.tests.pageObjects;
+package pageObjects.backofficePages;
 
 import static utils.ConfigFactory.BASE_URL_E2E;
 

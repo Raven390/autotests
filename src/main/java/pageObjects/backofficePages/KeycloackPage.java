@@ -1,4 +1,4 @@
-package uiTests.backoffice.tests.pageObjects;
+package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

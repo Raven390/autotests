@@ -1,11 +1,11 @@
-package uiTests.example.tests;
+package uiTests.example;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import pageObjects.examplePages.SearchPage;
+import pageObjects.examplePages.WikiPage;
 import uiTests.TestBaseE2E;
-import uiTests.example.PageObjects.SearchPage;
-import uiTests.example.PageObjects.WikiPage;
 
 public class TestExample extends TestBaseE2E {
 
@@ -21,8 +21,22 @@ public class TestExample extends TestBaseE2E {
     }
 
     @Test
-    @DisplayName("gyouva")
-    void navToGyouza() {
+    @DisplayName("gyouza1")
+    void navToGyouza1() {
+        WikiPage wikiPage = new WikiPage(page);
+        wikiPage.navigateGyoza();
+    }
+
+    @Test
+    @DisplayName("gyouza2")
+    void navToGyouza2() {
+        WikiPage wikiPage = new WikiPage(page);
+        wikiPage.navigateGyoza();
+    }
+
+    @Test
+    @DisplayName("gyouza3")
+    void navToGyouza3() {
         WikiPage wikiPage = new WikiPage(page);
         wikiPage.navigateGyoza();
     }

@@ -1,4 +1,4 @@
-package helpers.pageObjects.vantageUserAccount;
+package pageObjects.vantageUserAccountPages;
 
 import static utils.ConfigFactory.BASE_URL_VANTAGE_ACCOUNT;
 
