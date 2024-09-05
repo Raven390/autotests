@@ -1,4 +1,4 @@
-package uiTests.backoffice.tests.apiHelpers;
+package helpers.keycloack;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,7 +9,7 @@ import com.microsoft.playwright.Playwright;
 import java.util.HashMap;
 import java.util.Map;
 
-public class KeycloackAPI {
+public class KeycloackApiHelper {
     private static Playwright playwright;
     private static APIRequestContext request;
 

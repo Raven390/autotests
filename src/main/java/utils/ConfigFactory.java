@@ -6,11 +6,13 @@ public class ConfigFactory {
     private static final UserConfig CONFIG =
             org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
-    public static final String BASEURL = CONFIG.baseURL(),
+    public static final String
+            // URLs
             BASE_URL_E2E = CONFIG.baseURLE2E(),
             BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
             BASE_API_URL = CONFIG.apiBaseUrl(),
             PATH_GET_USER = CONFIG.apiPathGetBaseUrl(),
+            // KAFKA
             KAFKA_HOST = CONFIG.kafkaHost(),
             KAFKA_PORT = CONFIG.kafkaPort(),
             KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
@@ -38,23 +40,26 @@ public class ConfigFactory {
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
 
-        @Key("baseURLE2E")
+        // URLs
+
+        @Key("baseUrlE2e")
         String baseURLE2E();
 
         @Key("baseUrlVantageAccount")
         String baseUrlVantageAccount();
-
-        @Key("baseURL")
-        String baseURL();
-
-        @Key("headlessMode")
-        Boolean headlessMode();
 
         @Key("apiBaseUrl")
         String apiBaseUrl();
 
         @Key("apiPathGetUser")
         String apiPathGetBaseUrl();
+
+        // Settings
+
+        @Key("headlessMode")
+        Boolean headlessMode();
+
+        // Kafka
 
         @Key("kafkaHost")
         String kafkaHost();

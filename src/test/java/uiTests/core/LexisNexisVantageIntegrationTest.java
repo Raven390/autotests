@@ -1,18 +1,18 @@
 package uiTests.core;
 
-import static helpers.Constants.*;
 import static helpers.database.MySqlHelper.makeQuery;
 import static utils.ConfigFactory.*;
+import static utils.Constants.*;
 import static utils.Utils.getRandomEmail;
 import static utils.Utils.getRandomInt;
 
-import helpers.pageObjects.vantageUserAccount.StageRegistrationHelperPage;
-import helpers.pageObjects.vantageUserAccount.VantageUserAccountPage;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Owner;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.jupiter.api.*;
+import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
+import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
 import uiTests.TestBaseE2E;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseE2E {
