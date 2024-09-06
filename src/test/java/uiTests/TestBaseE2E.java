@@ -4,6 +4,7 @@ import static utils.ConfigFactory.HEADLESS;
 
 import com.microsoft.playwright.*;
 import java.nio.file.Paths;
+import java.time.Instant;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 
 public class TestBaseE2E {
     // Shared between all tests in this class.
+    public String timestamp = String.valueOf(Instant.now().getEpochSecond());
+    static int n = 1;
     static Playwright playwright;
     static Browser browser;
 
@@ -47,8 +50,11 @@ public class TestBaseE2E {
     @AfterEach
     void closeContext() {
         if (context != null) {
-            context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get("playwright-report/trace.zip")));
+            context.tracing()
+                    .stop(new Tracing.StopOptions()
+                            .setPath(Paths.get("playwright-report/trace" + timestamp + "_" + n + ".zip")));
             context.close();
+            n += 1;
         }
     }
 }

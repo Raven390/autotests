@@ -20,13 +20,13 @@ job_code_check:
     - ./gradlew spotlessCheck
     - echo "CODE CHECK SUCCESS"
 
-job_test:
+job_test_core:
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   variables:
     ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
-    ALLURE_PROJECT_ID: 6
+    ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
@@ -35,7 +35,34 @@ job_test:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean test
+    - ./allurectl watch -- gradle clean testSmokeCore
+
+    - echo "TEST SUCCESS"
+  artifacts:
+    when: always
+    paths:
+      - playwright-report
+      - build/reports/
+      - allure-results
+      - videos
+    expire_in: 1 day
+
+job_test_backoffice:
+  stage: test
+  needs: ["job_build"]
+  image: gradle:8.10.0-jdk22
+  variables:
+    ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
+    ALLURE_PROJECT_ID: 4
+    ALLURE_RESULTS: allure-results
+  before_script:
+    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
+    - chmod +x allurectl
+  script:
+    - echo "Running tests"
+    - ./gradlew installDeps
+    - ./gradlew installChromium
+    - ./allurectl watch -- gradle clean testSmokeBackoffice
     - echo "TEST SUCCESS"
   artifacts:
     when: always

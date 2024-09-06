@@ -92,3 +92,16 @@ task installDeps(type: JavaExec) {
     args = ['install-deps']
     classpath = sourceSets.main.runtimeClasspath
 }
+
+
+task testSmokeCore(type: Test) {
+    useJUnitPlatform(){
+        includeTags "team_core"
+    }
+}
+
+task testSmokeBackoffice(type: Test) {
+    useJUnitPlatform() {
+        includeTags 'team_backoffice'
+    }
+}

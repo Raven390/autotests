@@ -16,4 +16,5 @@ public class Constants {
     public static final String LAYER_MOBILE = "layer_mobile";
     // FEATURES
     public static final String FEATURE_LEXIS_NEXIS = "feature_lexis_nexis";
+    public static final String FEATURE_EXAMPLE = "feature_example";
 }
