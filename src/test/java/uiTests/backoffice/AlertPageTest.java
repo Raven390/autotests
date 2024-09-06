@@ -1,7 +1,12 @@
 package uiTests.backoffice;
 
+import static utils.Constants.*;
+
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Owner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pageObjects.backofficePages.AlertPage;
 import pageObjects.backofficePages.KeycloackPage;
@@ -12,6 +17,11 @@ public class AlertPageTest extends TestBaseE2E {
 
     @Disabled
     @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
     @DisplayName("positive login test")
     void PositiveloginUITest() {
         AlertPage alertPage = new AlertPage(page);
@@ -23,6 +33,11 @@ public class AlertPageTest extends TestBaseE2E {
 
     @Disabled
     @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
     @DisplayName("negative login test")
     void NegativeloginUITest() {
         AlertPage alertPage = new AlertPage(page);
@@ -36,6 +51,11 @@ public class AlertPageTest extends TestBaseE2E {
 
     @Disabled
     @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
     @DisplayName("alert page rendered basic elements")
     void alertPageRendersTest() {
         AlertPage alertPage = new AlertPage(page);
@@ -47,6 +67,11 @@ public class AlertPageTest extends TestBaseE2E {
 
     @Disabled
     @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
     @DisplayName("user can go to profile page from alert page")
     void alertPageOpenProfilePageTest() {
         AlertPage alertPage = new AlertPage(page);

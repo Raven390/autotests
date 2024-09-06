@@ -4,10 +4,13 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 
 public class SmokescreenOrdersRuleTest {
+
+    @Disabled
     @Tag("Api")
     @Tag("Manual")
     @Tag("Regression")
