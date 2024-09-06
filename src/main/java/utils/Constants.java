@@ -4,6 +4,9 @@ public class Constants {
     // TEAMS
     public static final String TEAM_CORE = "team_core";
     public static final String TEAM_BACKOFFICE = "team_backoffice";
+    // SUITE
+    public static final String SUITE_REGRESSION = "suite_regression";
+    public static final String SUITE_SMOKE = "suite_smoke";
     // OWNERS
     public static final String OWNER_NIKOLAI_KORIAGIN = "owner_nikolai_koriagin";
     public static final String OWNER_DMITRI_KALACHEV = "owner_dmitri_kalachev";
