@@ -1,22 +1,24 @@
 package ruleEngineTests;
 
+import static utils.Constants.*;
+
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class EmailAgeRuleTest {
 
-    @Disabled
     @Test
-    @Tag("Api")
-    @Tag("Manual")
-    @Tag("Regression")
-    @Tag("Core")
+    @AllureId("36")
+    @Owner(OWNER_NIKOLAI_KORIAGIN)
+    @Tag(LAYER_API)
+    @Tag(STATUS_MANUAL)
+    @Tag(SUITE_REGRESSION)
+    @Tag(TEAM_CORE)
     @DisplayName("Check that user can be processed by the 'Email age rule'")
     @Description(
             """
@@ -29,8 +31,6 @@ public class EmailAgeRuleTest {
                     both trading the same symbol,\s
                     opening and closing times are in pairs with less than 30 sec difference in both.
                     \s""")
-    @AllureId("2")
-    @Owner("Nikolai Koriagin")
     public void emailAgeTest() {
         Allure.step("Prepare test data:");
         Allure.step("Create user1 with SmartID=1");

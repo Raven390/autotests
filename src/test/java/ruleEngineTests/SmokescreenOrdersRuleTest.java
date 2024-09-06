@@ -1,20 +1,24 @@
 package ruleEngineTests;
 
+import static utils.Constants.*;
+
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 public class SmokescreenOrdersRuleTest {
 
-    @Disabled
-    @Tag("Api")
-    @Tag("Manual")
-    @Tag("Regression")
-    @Tag("Core")
+    @Test
+    @AllureId("40")
+    @Owner(OWNER_NIKOLAI_KORIAGIN)
+    @Tag(LAYER_API)
+    @Tag(STATUS_MANUAL)
+    @Tag(SUITE_REGRESSION)
+    @Tag(TEAM_CORE)
     @DisplayName("Check that user can be processed by the 'Smokescreen orders rule'")
     @Description(
             """
@@ -23,8 +27,6 @@ public class SmokescreenOrdersRuleTest {
                     Number of trades before withdrawal attempt less than 10,\s
                     they have one or two trades whose lot size is at least 50x the average,\s
                     at least 2 other accounts linked by SmartID""")
-    @AllureId("4")
-    @Owner("Nikolai Koriagin")
     public void smokescreenOrdersTest() {
         Allure.step("Prepare test data:");
         Allure.step("");

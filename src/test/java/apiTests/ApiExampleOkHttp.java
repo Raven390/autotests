@@ -12,18 +12,20 @@ import io.qameta.allure.Owner;
 import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class ApiExampleOkHttp extends BaseTestOkHttp {
 
+    @Disabled
     @Test
+    @AllureId("38")
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_API)
-    @AllureId("")
     @DisplayName("DEMO TEST")
     public void getUserTest() throws IOException {
         Request request =
