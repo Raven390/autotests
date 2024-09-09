@@ -35,7 +35,8 @@ public class VantageUserAccountPage {
         this.dobYear = page.locator("xpath=//input[@placeholder='Year']");
         this.dayValueDropdown = page.locator(
                 "xpath=//body/div[@class='el-select-dropdown el-popper']//*/ul[@class='el-scrollbar__view el-select-dropdown__list']/li[1]");
-        this.monthValueDropdown = page.locator("xpath=//body/div[8]/div[1]/div[1]/ul[1]/li[1]");
+        this.monthValueDropdown =
+                page.locator("xpath=//*[contains(@class,'el-select-dropdown__item') and @data-testid='01']");
         this.yearValueDropdown = page.locator("xpath=//*[@data-testid='1990']");
         this.userPhoneNumber = page.locator("xpath=//input[@id='mobile']");
         this.nextButton = page.locator("xpath=//button[@data-testid='next']");
@@ -68,10 +69,15 @@ public class VantageUserAccountPage {
 
     @Step("Close alert window")
     public void closeAlertWindow() {
-        page.getByText("Nancy test").waitFor();
+
+        if (page.getByText("Nancy test").isVisible()) {
+            page.getByText("Nancy test").waitFor();
+        }
         closeCookieBanner();
-        closeAlertButton.waitFor();
-        closeAlertButton.click();
+        if (closeAlertButton.isVisible()) {
+            closeAlertButton.waitFor();
+            closeAlertButton.click();
+        }
     }
 
     @Step("Wait for personal details window presented")

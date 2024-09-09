@@ -10,7 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-public class BOKafkaMessageProducerHelperAlertEvent {
+public class BackOfficeKafkaMessageProducerHelperAlertEvent {
 
     public void produceMessage(String key, String message, String topic) {
         // Set producer properties

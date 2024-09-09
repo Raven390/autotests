@@ -17,15 +17,13 @@ import uiTests.TestBaseE2E;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseE2E {
 
-    // TODO Enable after resolving issue with access from gitlab runner
-    @Disabled("Disabled due to lack of DB access from gitlab runner")
     @Test
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(STATUS_AUTOMATED)
     @Tag(FEATURE_LEXIS_NEXIS)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("1")
     @DisplayName("Register and wait till LexisNexis event")
     public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
         StageRegistrationHelperPage stageRegistrationHelperPage = new StageRegistrationHelperPage(page);
@@ -64,6 +62,8 @@ public class LexisNexisVantageIntegrationTest extends TestBaseE2E {
         vantageUserAccountPage.acceptTerms();
         vantageUserAccountPage.clickNextButton();
         // Make db query
+        // TODO remove sleep
+        Thread.sleep(3000);
         ResultSet result = makeQuery(
                 "SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%"
                         + email
