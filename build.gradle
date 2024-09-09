@@ -110,4 +110,10 @@ task testKafka(type: Test) {
     useJUnitPlatform() {
         includeTags 'kafka'
     }
+
+    task testSuiteSmoke(type: Test) {
+        useJUnitPlatform() {
+            includeTags 'suite_smoke'
+        }
+    }
 }

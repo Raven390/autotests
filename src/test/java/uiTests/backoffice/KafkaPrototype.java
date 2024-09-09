@@ -2,7 +2,7 @@ package uiTests.backoffice;
 
 import static utils.Constants.*;
 
-import helpers.kafka.BOKafkaMessageProducerHelperAlertEvent;
+import helpers.kafka.BackOfficeKafkaMessageProducerHelperAlertEvent;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,8 @@ public class KafkaPrototype extends TestBaseE2E {
     @Tag(LAYER_WEB)
     @AllureId("")
     void request() {
-        BOKafkaMessageProducerHelperAlertEvent alertEvent = new BOKafkaMessageProducerHelperAlertEvent();
+        BackOfficeKafkaMessageProducerHelperAlertEvent alertEvent =
+                new BackOfficeKafkaMessageProducerHelperAlertEvent();
         alertEvent.produceMessage("13", "rrr", "alert");
     }
 }
