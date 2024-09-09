@@ -105,3 +105,9 @@ task testSmokeBackoffice(type: Test) {
         includeTags 'team_backoffice'
     }
 }
+
+task testKafka(type: Test) {
+    useJUnitPlatform() {
+        includeTags 'kafka'
+    }
+}

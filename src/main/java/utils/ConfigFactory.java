@@ -17,6 +17,10 @@ public class ConfigFactory {
             KAFKA_PORT = CONFIG.kafkaPort(),
             KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
             KAFKA_CORE_OUTCOMING_TOPIC = CONFIG.kafkaCoreOutcomingTopic(),
+            BOKAFKAPUBLIC = CONFIG.BOKafkaPublic(),
+            BOKAFKAPRIVATE = CONFIG.BOKafkaPrivate(),
+            BOKAFKAPASS = CONFIG.BOKafkaPass(),
+
             // Databases
             POSTGRE_HOST = CONFIG.postgreLogin(),
             POSTGRE_PASSWORD = CONFIG.postgrePassword(),
@@ -72,6 +76,15 @@ public class ConfigFactory {
 
         @Key("kafkaCoreOutcomingTopic")
         String kafkaCoreOutcomingTopic();
+
+        @Key("BOKafkaPublic")
+        String BOKafkaPublic();
+
+        @Key("BOKafkaPrivate")
+        String BOKafkaPrivate();
+
+        @Key("BOKafkaPass")
+        String BOKafkaPass();
 
         // Databases
 
