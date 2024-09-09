@@ -28,6 +28,7 @@ job_test_core:
     ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
+    TAG: 'team_core'
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
     - chmod +x allurectl
