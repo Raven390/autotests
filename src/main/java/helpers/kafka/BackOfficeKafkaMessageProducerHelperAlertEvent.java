@@ -16,17 +16,17 @@ public class BackOfficeKafkaMessageProducerHelperAlertEvent {
         // Set producer properties
         Properties properties = new Properties();
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOKAFKAPRIVATE);
+            properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BACK_OFFICE_KAFKA_PRIVATE);
             properties.put(
                     "sasl.jaas.config",
                     "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
                             + System.getenv("BOKAFKAPASS") + "';");
         } else {
-            properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOKAFKAPUBLIC);
+            properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BACK_OFFICE_KAFKA_PUBLIC);
             properties.put(
                     "sasl.jaas.config",
                     "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
-                            + BOKAFKAPASS + "';");
+                            + BACK_OFFICE_KAFKA_PASSWORD + "';");
         }
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());

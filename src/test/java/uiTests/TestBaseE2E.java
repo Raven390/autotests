@@ -1,6 +1,6 @@
 package uiTests;
 
-import static utils.ConfigFactory.HEADLESS;
+import static utils.ConfigFactory.getHeadless;
 
 import com.microsoft.playwright.*;
 import java.nio.file.Paths;
@@ -26,7 +26,9 @@ public class TestBaseE2E {
         playwright = Playwright.create();
         browser = playwright
                 .chromium()
-                .launch(new BrowserType.LaunchOptions().setHeadless(HEADLESS).setTimeout(30_000));
+                .launch(new BrowserType.LaunchOptions()
+                        .setHeadless(getHeadless())
+                        .setTimeout(30_000));
     }
 
     @AfterAll
