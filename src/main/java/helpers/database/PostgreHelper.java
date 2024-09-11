@@ -29,4 +29,8 @@ public class PostgreHelper {
         statement.close();
         return rs;
     }
+
+    public static void insertUser() {}
+
+    public static void insertUserToAbuseRegistry() {}
 }
