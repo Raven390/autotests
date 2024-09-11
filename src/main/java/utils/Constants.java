@@ -19,5 +19,12 @@ public class Constants {
     public static final String LAYER_MOBILE = "layer_mobile";
     // FEATURES
     public static final String FEATURE_LEXIS_NEXIS = "feature_lexis_nexis";
+    public static final String FEATURE_RULE_ENGINE = "feature_lexis_nexis";
     public static final String FEATURE_EXAMPLE = "feature_example";
+    // PAYMENT TYPES
+    public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
+    public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
+    public static final String PAYMENT_TYPE_BONUS = "bonus";
+    // PAYMENT PROVIDERS
+    public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
 }
