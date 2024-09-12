@@ -8,9 +8,9 @@ import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import uiTests.TestBaseE2E;
+import uiTests.TestBaseWeb;
 
-public class KafkaPrototype extends TestBaseE2E {
+public class KafkaPrototype extends TestBaseWeb {
 
     @Test
     @Tag("kafka")

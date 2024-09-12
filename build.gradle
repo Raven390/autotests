@@ -93,10 +93,15 @@ task installDeps(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
-
 task testSmokeCore(type: Test) {
     useJUnitPlatform(){
         includeTags "team_core"
+    }
+}
+
+task testBuildCheck(type: Test) {
+    useJUnitPlatform(){
+        includeTags "build_check"
     }
 }
 

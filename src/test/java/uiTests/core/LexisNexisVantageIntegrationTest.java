@@ -13,9 +13,9 @@ import java.sql.SQLException;
 import org.junit.jupiter.api.*;
 import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
 import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
-import uiTests.TestBaseE2E;
+import uiTests.TestBaseWeb;
 
-public class LexisNexisVantageIntegrationTest extends TestBaseE2E {
+public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
     @Test
     @Owner(OWNER_NIKOLAI_KORIAGIN)
