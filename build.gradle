@@ -26,6 +26,7 @@ dependencies {
     implementation platform("org.junit:junit-bom:$junitBomVersion")
     implementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
     implementation group: 'commons-configuration', name: 'commons-configuration', version: '1.7'
+    implementation group: 'org.json', name: 'json', version: '20240303'
 
     //Playwright
     implementation "com.microsoft.playwright:playwright:$playwrightVersion"
@@ -40,6 +41,8 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    implementation group: 'org.json', name: 'json', version: '20090211'
+
 
     //Hamcrest matchers
     implementation "org.hamcrest:hamcrest:$hamcrestVersion"

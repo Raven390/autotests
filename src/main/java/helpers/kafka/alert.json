@@ -1,0 +1,38 @@
+{
+  "alert_id": "3f6b0b35-d5c5-4d78-9a55-07ec4b6b9f89",
+  "timestamp": "2024-08-22T13:45:56Z",
+  "un_cl_id":   "efs3b0b35-d5c5-4d78-9a55-07ec4b6dw32d",
+  "rules": [
+    {
+      "rule_id": "R001",
+      "rule_ver": "01",
+      "rule_name": "Check for High Value Transactions",
+      "rule_data": {
+        "field1": "value1",
+        "field2": "value2",
+        "field3": "value3"
+      }
+    },
+    {
+      "rule_id": "R002",
+      "rule_ver": "02.01",
+      "rule_name": "Check for Other Transactions",
+      "rule_data": {
+        "field1": "value1",
+        "field2": "value2",
+        "field3": "value3"
+    }
+  ],
+  "trigger": {
+    "type": "Registration",
+    "timestamp": "2024-08-22T14:30:00Z",
+    "account_id": 003093,
+    "trigger_data": {
+      "field1": "value1",
+      "field2": "value2",
+      "field3": "value3"
+    }
+  },
+  "amount_cur": 55555000.00,
+  "currency": "USD"
+}
