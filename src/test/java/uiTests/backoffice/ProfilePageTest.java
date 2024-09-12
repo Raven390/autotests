@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
-import uiTests.TestBaseE2E;
+import uiTests.TestBaseWeb;
 
-public class ProfilePageTest extends TestBaseE2E {
+public class ProfilePageTest extends TestBaseWeb {
 
     @Disabled
     @Test

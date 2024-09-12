@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 import pageObjects.backofficePages.AlertPage;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
-import uiTests.TestBaseE2E;
+import uiTests.TestBaseWeb;
 
-public class AlertPageTest extends TestBaseE2E {
+public class AlertPageTest extends TestBaseWeb {
 
     @Disabled
     @Test

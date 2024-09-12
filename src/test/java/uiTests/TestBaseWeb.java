@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
-public class TestBaseE2E {
+public class TestBaseWeb {
     // Shared between all tests in this class.
     public String timestamp = String.valueOf(Instant.now().getEpochSecond());
     static int n = 1;

@@ -11,8 +11,6 @@ public class ConfigFactory {
             // URLs
             BASE_URL_E2E = CONFIG.baseURLE2E(),
             BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
-            BASE_API_URL = CONFIG.apiBaseUrl(),
-            PATH_GET_USER = CONFIG.apiPathGetBaseUrl(),
             // KAFKA
             KAFKA_HOST = CONFIG.kafkaHost(),
             KAFKA_PORT = CONFIG.kafkaPort(),
@@ -50,12 +48,6 @@ public class ConfigFactory {
 
         @Key("baseUrlVantageAccount")
         String baseUrlVantageAccount();
-
-        @Key("apiBaseUrl")
-        String apiBaseUrl();
-
-        @Key("apiPathGetUser")
-        String apiPathGetBaseUrl();
 
         // Settings
 

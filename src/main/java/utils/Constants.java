@@ -27,4 +27,6 @@ public class Constants {
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     // PAYMENT PROVIDERS
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
+    // OTHER
+    public static final String TAG_BUILD_CHECK = "build_check";
 }

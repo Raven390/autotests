@@ -20,10 +20,26 @@ job_code_check:
     - ./gradlew spotlessCheck
     - echo "CODE CHECK SUCCESS"
 
+job_run_minimal_tests:
+  stage: test
+  needs: ["job_build"]
+  image: gradle:8.10.0-jdk22
+  script:
+    - echo "Run the minimal tests set to ensure that framework works"
+    - ./gradlew installDeps
+    - ./gradlew installChromium
+    - ./gradlew testBuildCheck
+    - echo "Run minimal tests set SUCCESS"
+
 job_test_core:
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: never  # Skip job on direct commits to main branch
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never  # Skip job on merge requests
   variables:
     ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
     ALLURE_PROJECT_ID: 3
@@ -37,7 +53,6 @@ job_test_core:
     - ./gradlew installDeps
     - ./gradlew installChromium
     - ./allurectl watch -- gradle clean testSmokeCore
-
     - echo "TEST SUCCESS"
   artifacts:
     when: always
@@ -52,6 +67,11 @@ job_test_backoffice:
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: never  # Skip job on direct commits to main branch
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never  # Skip job on merge requests
   variables:
     ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
     ALLURE_PROJECT_ID: 4
@@ -78,6 +98,11 @@ job_test_kafka:
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: never  # Skip job on direct commits to main branch
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never  # Skip job on merge requests
   variables:
     ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
     ALLURE_PROJECT_ID: 4
