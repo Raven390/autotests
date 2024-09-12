@@ -1,18 +1,21 @@
 package uiTests;
 
+import static utils.ConfigFactory.TIMEOUT;
 import static utils.ConfigFactory.getHeadless;
 
 import com.microsoft.playwright.*;
+import java.io.IOException;
 import java.nio.file.Paths;
-import java.time.Instant;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import utils.TestResultWatcher;
+import utils.TestUtils;
+import utils.Utils;
 
+@ExtendWith(TestResultWatcher.class)
 public class TestBaseWeb {
     // Shared between all tests in this class.
-    public String timestamp = String.valueOf(Instant.now().getEpochSecond());
+    public String timestamp = String.valueOf(Utils.getCurrentTimestamp());
     static int n = 1;
     static Playwright playwright;
     static Browser browser;
@@ -28,7 +31,7 @@ public class TestBaseWeb {
                 .chromium()
                 .launch(new BrowserType.LaunchOptions()
                         .setHeadless(getHeadless())
-                        .setTimeout(30_000));
+                        .setTimeout(TIMEOUT));
     }
 
     @AfterAll
@@ -50,13 +53,19 @@ public class TestBaseWeb {
     }
 
     @AfterEach
-    void closeContext() {
+    void closeContext() throws IOException {
+        String traceName = timestamp + n;
         if (context != null) {
             context.tracing()
-                    .stop(new Tracing.StopOptions()
-                            .setPath(Paths.get("playwright-report/trace" + timestamp + "_" + n + ".zip")));
-            context.close();
+                    .stop(new Tracing.StopOptions().setPath(Paths.get("playwright-report/trace" + traceName + ".zip")));
             n += 1;
+
+            // Start attach
+            TestUtils.attachPlaywrightTrace(traceName);
+            TestUtils.attachScreenshot(page);
+            // End attach
+
+            context.close();
         }
     }
 }

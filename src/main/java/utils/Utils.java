@@ -1,5 +1,8 @@
 package utils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class Utils {
@@ -14,5 +17,15 @@ public class Utils {
         String email = "testmail" + getRandomInt() + "@mail.com";
         System.out.println("Generated email: " + email);
         return email;
+    }
+
+    public static long getCurrentTimestamp() {
+        return Instant.now().getEpochSecond();
+    }
+
+    public static String getCurrentDateTime() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+        return formatter.format(currentDateTime);
     }
 }
