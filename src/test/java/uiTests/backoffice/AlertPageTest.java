@@ -27,11 +27,10 @@ public class AlertPageTest extends TestBaseWeb {
         AlertPage alertPage = new AlertPage(page);
         alertPage.navigate();
         KeycloackPage keycloackPage = new KeycloackPage(page);
-        keycloackPage.loginWEB("valid user name", "valid user password");
+        keycloackPage.loginWEB("DEV", "123");
         alertPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
-    @Disabled
     @Test
     @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)
@@ -49,7 +48,6 @@ public class AlertPageTest extends TestBaseWeb {
         keycloackPage.errorMessageIsShown();
     }
 
-    @Disabled
     @Test
     @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)
@@ -61,8 +59,58 @@ public class AlertPageTest extends TestBaseWeb {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
-        keycloackPage.loginWEB("valid user name", "userPassString"); // call the method for log in thought UI login form
+        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
         alertPage.isAlertPageBasicElementsVisible();
+    }
+
+    @Disabled
+    @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
+    @DisplayName("test that side menu folds")
+    void sideMenuTest() throws InterruptedException {
+        AlertPage alertPage = new AlertPage(page);
+        KeycloackPage keycloackPage = new KeycloackPage(page);
+        alertPage.navigate();
+        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        alertPage.sideMenuFoldButtonTest();
+    }
+
+    @Disabled
+    @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
+    @DisplayName("test that side menu folds")
+    void sidebarRenderTest() {
+        AlertPage alertPage = new AlertPage(page);
+        KeycloackPage keycloackPage = new KeycloackPage(page);
+        alertPage.navigate();
+        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        alertPage.foldSidebar();
+        // TODO test folded sidebar elements
+        alertPage.unfoldSidebar();
+        // TODO test unfolded sidebar elements
+    }
+
+    @Test
+    @Owner(OWNER_DMITRI_KALACHEV)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(STATUS_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("")
+    @DisplayName("test that color scheme is changing")
+    void colorThemeSwitch() {
+        AlertPage alertPage = new AlertPage(page);
+        KeycloackPage keycloackPage = new KeycloackPage(page);
+        alertPage.navigate();
+        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        alertPage.colorThemeSwitch();
     }
 
     @Disabled
