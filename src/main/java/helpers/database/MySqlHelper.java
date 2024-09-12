@@ -28,22 +28,20 @@ public class MySqlHelper {
         ResultSet result = null;
         Connection connection;
         Statement statement;
+        connection = getConnection();
 
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            connection = getConnection();
             System.out.println("Attempt " + attempt + ": Trying to get data");
-
             statement = connection.createStatement();
             result = statement.executeQuery(query);
-
             System.out.println("Data received on attempt " + attempt + ": " + result);
             result.next();
-            if (result != null) {
+            if (result.next() != false) {
                 return result; // Exit the loop if successful
             } else {
                 System.out.println("Data not received on attempt " + attempt);
-                Thread.sleep(1000);
             }
+            Thread.sleep(1000);
         }
         return null; // If it fails after all attempts
     }

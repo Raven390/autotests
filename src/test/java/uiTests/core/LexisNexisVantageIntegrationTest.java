@@ -61,9 +61,8 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         vantageUserAccountPage.chooseCurrency();
         vantageUserAccountPage.acceptTerms();
         vantageUserAccountPage.clickNextButton();
+
         // Make db query
-        // TODO remove sleep
-        Thread.sleep(3000);
         ResultSet result = makeQuery(
                 "SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%"
                         + email

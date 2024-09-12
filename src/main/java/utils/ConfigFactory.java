@@ -38,6 +38,8 @@ public class ConfigFactory {
             // Other
             COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
 
+    public static final Double TIMEOUT = CONFIG.waitTimeout();
+
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
 
@@ -54,6 +56,8 @@ public class ConfigFactory {
         @Key("headlessMode")
         Boolean headlessMode();
 
+        @Key("timeout")
+        Double waitTimeout();
         // Kafka
 
         @Key("kafkaHost")
