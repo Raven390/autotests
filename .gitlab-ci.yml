@@ -41,7 +41,7 @@ job_test_core:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never  # Skip job on merge requests
   variables:
-    ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
     TAG: 'team_core'
@@ -73,7 +73,7 @@ job_test_backoffice:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never  # Skip job on merge requests
   variables:
-    ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: allure-results
   before_script:
@@ -104,7 +104,7 @@ job_test_kafka:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never  # Skip job on merge requests
   variables:
-    ALLURE_ENDPOINT: http://k8s-testops-95dbc1706b-543857133.us-east-1.elb.amazonaws.com/
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: allure-results
   before_script:
