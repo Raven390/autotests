@@ -1,4 +1,4 @@
-package uiTests.core;
+package tests.uiTests.core;
 
 import static helpers.database.MySqlHelper.makeQuery;
 import static utils.ConfigFactory.*;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import org.junit.jupiter.api.*;
 import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
 import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
-import uiTests.TestBaseWeb;
+import tests.TestBaseWeb;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 

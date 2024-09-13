@@ -1,4 +1,4 @@
-package apiTests;
+package tests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;

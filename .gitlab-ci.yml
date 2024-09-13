@@ -60,7 +60,7 @@ job_test_core:
       - playwright-report
       - build/reports/
       - allure-results
-      - videos
+      - test-output/videos
     expire_in: 1 day
 
 job_test_backoffice:
@@ -91,7 +91,7 @@ job_test_backoffice:
       - playwright-report
       - build/reports/
       - allure-results
-      - videos
+      - test-output/videos
     expire_in: 1 day
 
 job_test_kafka:
@@ -122,5 +122,5 @@ job_test_kafka:
       - playwright-report
       - build/reports/
       - allure-results
-      - videos
+      - test-output/videos
     expire_in: 1 day

@@ -1,4 +1,4 @@
-package uiTests.backoffice;
+package tests.uiTests.backoffice;
 
 import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
-import uiTests.TestBaseWeb;
+import tests.TestBaseWeb;
 
 public class ProfilePageTest extends TestBaseWeb {
 

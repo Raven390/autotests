@@ -61,6 +61,10 @@ dependencies {
 
     //Kafka
     implementation "org.apache.kafka:kafka-clients:$kafkaClientVersion"
+
+    //Visual testing
+    implementation 'com.github.romankh3:image-comparison:4.4.0'
+
 }
 
 spotless {

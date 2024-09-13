@@ -1,4 +1,4 @@
-package uiTests.backoffice;
+package tests.uiTests.backoffice;
 
 import static utils.Constants.*;
 
@@ -8,7 +8,7 @@ import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import uiTests.TestBaseWeb;
+import tests.TestBaseWeb;
 
 public class KafkaPrototype extends TestBaseWeb {
 
