@@ -3,12 +3,20 @@ package pageObjects.backofficePages;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
+import com.github.romankh3.image.comparison.ImageComparison;
+import com.github.romankh3.image.comparison.ImageComparisonUtil;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
+import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
 import io.qameta.allure.Step;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.*;
+import utils.Utils;
 
 public class AlertPage {
     private final Page page;
@@ -43,6 +51,7 @@ public class AlertPage {
     private final Locator lightThemeButton;
     private final Locator darkBody;
     private final Locator lightBody;
+    private final Locator loaderAnimation;
 
     public AlertPage(Page page) {
         this.page = page;
@@ -59,13 +68,20 @@ public class AlertPage {
         this.statusRowHeader = page.locator(".g-table__head .v-alert-list__column_type_status");
         this.assigneeRowHeader = page.locator(".g-table__head .v-alert-list__column_type_assignee");
         this.tagRowHeader = page.locator(".g-table__body .v-alert-list__column_type_tag");
-        this.dateRowCell = page.locator(".g-table__body .v-alert-list__column_type_date");
-        this.amountRowCell = page.locator(".g-table__head .v-alert-list__column_type_amount");
-        this.ruleRowCell = page.locator(".g-table__body .v-alert-list__column_type_rule");
-        this.clientRowCell = page.locator(".g-table__body .v-alert-list__column_type_client");
-        this.statusRowCell = page.locator(".g-table__body .v-alert-list__column_type_status");
-        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee");
-        this.tagRowCell = page.locator(".g-table__body .v-alert-list__column_type_tag");
+        this.dateRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_date").first();
+        this.amountRowCell =
+                page.locator(".g-table__head .v-alert-list__column_type_amount").first();
+        this.ruleRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_rule").first();
+        this.clientRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_client").first();
+        this.statusRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_status").first();
+        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee")
+                .first();
+        this.tagRowCell =
+                page.locator(".g-table__body .v-alert-list__column_type_tag").first();
         this.soundButton = page.locator(".soundButton"); // not implemented
         this.refreshButton = page.locator(".refreshButton"); // not implemented
         this.profileButton = page.locator(".profileButton"); // not implemented-dummy
@@ -77,11 +93,13 @@ public class AlertPage {
         this.lightThemeButton = page.locator(".g-radio-button__option-control[value=\"light\"]");
         this.darkBody = page.locator(".g-root.g-root_theme_dark");
         this.lightBody = page.locator(".g-root.g-root_theme_light");
+        this.loaderAnimation = page.locator(".v-loader");
     }
 
     @Step("Open the BackOffice alert page")
     public void navigate() {
         page.navigate(BASE_URL_E2E);
+        isLoaded();
     }
 
     @Step("Open the MOCKED BackOffice alert page")
@@ -119,21 +137,27 @@ public class AlertPage {
                     .setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
+        isLoaded();
+        page.evaluate(
+                "document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Check that user is logged in")
     public void isLoggedIn() {
+        isLoaded();
         pageLogo.isVisible();
         userAvatar.isVisible();
     }
 
     @Step("Check that user is logged in")
     public void isNotLoggedIn() {
+        isLoaded();
         assertEquals(pageLogo.count(), 0);
     }
 
     @Step("Check is  page basic elements visible")
     public void isAlertPageBasicElementsVisible() {
+        isLoaded();
         alertList.isVisible();
         dateRowHeader.isVisible();
         amountRowHeader.isVisible();
@@ -207,8 +231,54 @@ public class AlertPage {
         profileButton.click();
     }
 
-    @Step("Find Proctor")
-    public void findProctor() {
-        page.getByText("Proctor");
+    @Step("make a screenshot")
+    public void makeScreenshot() {
+        isLoaded();
+        page.waitForTimeout(2000);
+        page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("screenshot.png")));
+    }
+
+    @Step("check if the page loaded")
+    public void isLoaded() {
+        int n = 0;
+        page.waitForTimeout(500);
+        while (loaderAnimation.isVisible() && n < 8)
+            ;
+        {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
+        page.waitForTimeout(500);
+        while (loaderAnimation.isVisible() && n < 8)
+            ;
+        {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
+    }
+
+    @Step("switch to the Light mode")
+    public void turnLightMode() {
+        lightThemeButton.click();
+        lightBody.isVisible();
+    }
+
+    @Step("switch to the Light mode")
+    public void turnDarkMode() {
+        darkThemeButton.click();
+        darkBody.isVisible();
+    }
+
+    @Step("compare elements")
+    public void compareElementScreenshot(Locator element, String pathToEtalone) {
+        isLoaded();
+        page.waitForTimeout(2000);
+        element.screenshot(new Locator.ScreenshotOptions().setPath(Paths.get("screenshot.png")));
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(pathToEtalone);
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("screenshot.png");
+        File resultDestination = new File("result" + String.valueOf(Utils.getCurrentTimestamp()) + ".png");
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
+        assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
     }
 }

@@ -1,4 +1,4 @@
-package ruleEngineTests;
+package tests.ruleEngineTests;
 
 import static utils.Constants.*;
 

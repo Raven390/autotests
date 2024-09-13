@@ -1,4 +1,4 @@
-package uiTests.backoffice;
+package tests.uiTests.backoffice;
 
 import static utils.Constants.*;
 
@@ -11,11 +11,10 @@ import org.junit.jupiter.api.Test;
 import pageObjects.backofficePages.AlertPage;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
-import uiTests.TestBaseWeb;
+import tests.TestBaseWeb;
 
 public class AlertPageTest extends TestBaseWeb {
 
-    @Disabled
     @Test
     @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)
@@ -38,7 +37,7 @@ public class AlertPageTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("negative login test")
-    void NegativeloginUITest() {
+    void NegativeLoginUITest() {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
@@ -71,7 +70,7 @@ public class AlertPageTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("test that side menu folds")
-    void sideMenuTest() throws InterruptedException {
+    void sideMenuFoldsTest() throws InterruptedException {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
@@ -105,7 +104,7 @@ public class AlertPageTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("test that color scheme is changing")
-    void colorThemeSwitch() {
+    void colorThemeSwitchTest() {
         AlertPage alertPage = new AlertPage(page);
         KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();

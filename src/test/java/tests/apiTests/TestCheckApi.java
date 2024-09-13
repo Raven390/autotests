@@ -1,4 +1,4 @@
-package apiTests;
+package tests.apiTests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseApi;
 
 public class TestCheckApi extends TestBaseApi {
 

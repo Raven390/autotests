@@ -1,10 +1,11 @@
-package uiTests;
+package tests.uiTests;
 
 import static utils.Constants.*;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseWeb;
 
 public class TestCheckWeb extends TestBaseWeb {
 
