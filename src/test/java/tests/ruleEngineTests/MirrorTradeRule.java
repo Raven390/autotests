@@ -4,7 +4,6 @@ import static utils.Constants.*;
 
 import helpers.data.PaymentHelper;
 import helpers.data.UserHelper;
-import helpers.kafka.KafkaMessageConsumerHelper;
 import io.qameta.allure.*;
 import java.sql.SQLException;
 import org.junit.jupiter.api.Disabled;
@@ -31,7 +30,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -58,7 +57,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -82,7 +81,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, PAYMENT_PROVIDER_FASAPAY, 100);
 
         // Checking message in kafka - normal withdrawal flow
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -121,7 +120,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - MANUAL INVESTIGATION
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -160,7 +159,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -199,7 +198,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -238,7 +237,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -277,7 +276,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -316,7 +315,7 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
     @Disabled
@@ -355,6 +354,6 @@ public class MirrorTradeRule {
         PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
-        KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 }
