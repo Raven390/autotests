@@ -29,4 +29,7 @@ public class Constants {
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
     // OTHER
     public static final String TAG_BUILD_CHECK = "build_check";
+    // KAFKA
+    public static final String KAFKA_TOPIC_INCOMING_CORE = "trigger";
+    public static final String KAFKA_TOPIC_INCOMING_BACK_OFFICE = "alert";
 }

@@ -16,9 +16,9 @@ public class ConfigFactory {
             KAFKA_PORT = CONFIG.kafkaPort(),
             KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
             KAFKA_CORE_OUTCOMING_TOPIC = CONFIG.kafkaCoreOutcomingTopic(),
-            BACK_OFFICE_KAFKA_PUBLIC = CONFIG.backOfficeKafkaPublic(),
-            BACK_OFFICE_KAFKA_PRIVATE = CONFIG.backOfficeKafkaPrivate(),
-            BACK_OFFICE_KAFKA_PASSWORD = CONFIG.backOfficeKafkaPassword(),
+            KAFKA_PUBLIC = CONFIG.backOfficeKafkaPublic(),
+            KAFKA_PRIVATE = CONFIG.backOfficeKafkaPrivate(),
+            KAFKA_PASSWORD = CONFIG.backOfficeKafkaPassword(),
 
             // Databases
             POSTGRE_HOST = CONFIG.postgreLogin(),
