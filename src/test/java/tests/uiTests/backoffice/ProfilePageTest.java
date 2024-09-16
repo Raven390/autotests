@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import pageObjects.backofficePages.KeycloackPage;
-import pageObjects.backofficePages.ProfilePage;
 import tests.TestBaseWeb;
 
 public class ProfilePageTest extends TestBaseWeb {
@@ -24,8 +22,6 @@ public class ProfilePageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("user can navigate to the profile page")
     void navigateToProfilePage() {
-        KeycloackPage keycloackPage = new KeycloackPage(page);
-        ProfilePage profilePage = new ProfilePage(page);
         profilePage.navigate();
         keycloackPage.loginWEB("userName", "userPass");
         profilePage.isOnProfilePage();
@@ -40,8 +36,6 @@ public class ProfilePageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("user can log out from the profile page")
     void LogOutFromProfilePage() {
-        KeycloackPage keycloackPage = new KeycloackPage(page);
-        ProfilePage profilePage = new ProfilePage(page);
         profilePage.navigate();
         keycloackPage.loginWEB("userName", "userPass");
         profilePage.clickLogoutButton();
