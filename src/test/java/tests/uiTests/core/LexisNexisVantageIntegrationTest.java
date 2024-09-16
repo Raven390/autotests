@@ -11,8 +11,6 @@ import io.qameta.allure.Owner;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.jupiter.api.*;
-import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
-import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
 import tests.TestBaseWeb;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
@@ -26,8 +24,6 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
     @AllureId("1")
     @DisplayName("Register and wait till LexisNexis event")
     public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
-        StageRegistrationHelperPage stageRegistrationHelperPage = new StageRegistrationHelperPage(page);
-        VantageUserAccountPage vantageUserAccountPage = new VantageUserAccountPage(page);
         // Test data
         String email = getRandomEmail();
         String country = COUNTRY_MALAYSIA;

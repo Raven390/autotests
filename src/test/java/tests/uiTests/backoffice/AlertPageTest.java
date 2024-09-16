@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import pageObjects.backofficePages.AlertPage;
-import pageObjects.backofficePages.KeycloackPage;
-import pageObjects.backofficePages.ProfilePage;
 import tests.TestBaseWeb;
 
 public class AlertPageTest extends TestBaseWeb {
@@ -23,9 +20,7 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("positive login test")
     void PositiveloginUITest() {
-        AlertPage alertPage = new AlertPage(page);
         alertPage.navigate();
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         keycloackPage.loginWEB("DEV", "123");
         alertPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
@@ -38,8 +33,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("negative login test")
     void NegativeLoginUITest() {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
         keycloackPage.loginWEB(
                 "WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
@@ -55,8 +48,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("alert page rendered basic elements")
     void alertPageRendersTest() {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
         alertPage.isAlertPageBasicElementsVisible();
@@ -71,8 +62,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("test that side menu folds")
     void sideMenuFoldsTest() throws InterruptedException {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
         alertPage.sideMenuFoldButtonTest();
@@ -87,8 +76,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("test that side menu folds")
     void sidebarRenderTest() {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
         alertPage.foldSidebar();
@@ -105,8 +92,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("test that color scheme is changing")
     void colorThemeSwitchTest() {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
         alertPage.colorThemeSwitch();
@@ -121,9 +106,6 @@ public class AlertPageTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("user can go to profile page from alert page")
     void alertPageOpenProfilePageTest() {
-        AlertPage alertPage = new AlertPage(page);
-        KeycloackPage keycloackPage = new KeycloackPage(page);
-        ProfilePage profilePage = new ProfilePage(page);
         alertPage.navigate();
         keycloackPage.loginWEB("valid user name", "userPassString"); // call the method for log in thought UI login form
         alertPage.isProfileButtonVisible();

@@ -16,6 +16,11 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pageObjects.backofficePages.AlertPage;
+import pageObjects.backofficePages.KeycloackPage;
+import pageObjects.backofficePages.ProfilePage;
+import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
+import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
 import utils.TestResultWatcher;
 import utils.TestUtils;
 import utils.Utils;
@@ -31,6 +36,12 @@ public class TestBaseWeb {
     // New instance for each test method.
     static BrowserContext context;
     public Page page;
+
+    public StageRegistrationHelperPage stageRegistrationHelperPage;
+    public VantageUserAccountPage vantageUserAccountPage;
+    public AlertPage alertPage;
+    public KeycloackPage keycloackPage;
+    public ProfilePage profilePage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -59,6 +70,14 @@ public class TestBaseWeb {
                         .setSnapshots(true)
                         .setSources(true));
         page = context.newPage();
+
+        // Core team pages
+        stageRegistrationHelperPage = new StageRegistrationHelperPage(page);
+        vantageUserAccountPage = new VantageUserAccountPage(page);
+        // Back office team pages
+        alertPage = new AlertPage(page);
+        keycloackPage = new KeycloackPage(page);
+        profilePage = new ProfilePage(page);
     }
 
     @AfterEach
