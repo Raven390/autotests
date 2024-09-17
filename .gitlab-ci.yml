@@ -63,6 +63,39 @@ job_test_core:
       - test-output/videos
     expire_in: 1 day
 
+job_core_nightly_run:
+  stage: test
+  needs: ["job_build"]
+  image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+      when: never  # Skip job on direct commits to main branch
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never  # Skip job on merge requests
+    - if: '$NIGHTLY_CORE == "true"'
+  variables:
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_PROJECT_ID: 3
+    ALLURE_RESULTS: allure-results
+    TAG: 'team_core'
+  before_script:
+    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
+    - chmod +x allurectl
+  script:
+    - echo "Running tests"
+    - ./gradlew installDeps
+    - ./gradlew installChromium
+    - ./allurectl watch -- gradle clean testSmokeCore
+    - echo "TEST SUCCESS"
+  artifacts:
+    when: always
+    paths:
+      - playwright-report
+      - build/reports/
+      - allure-results
+      - test-output/videos
+    expire_in: 1 day
+
 job_test_backoffice:
   stage: test
   needs: ["job_build"]
