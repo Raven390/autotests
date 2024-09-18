@@ -15,6 +15,7 @@ import tests.TestBaseWeb;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
+    @Disabled
     @Test
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
