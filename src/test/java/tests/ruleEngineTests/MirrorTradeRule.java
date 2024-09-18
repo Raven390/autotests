@@ -2,18 +2,15 @@ package tests.ruleEngineTests;
 
 import static utils.Constants.*;
 
-import helpers.data.PaymentHelper;
 import helpers.data.UserHelper;
 import io.qameta.allure.*;
 import java.sql.SQLException;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class MirrorTradeRule {
 
-    @Disabled
     @Test
     @DisplayName("""
             Hedge block flow IF Abuse registry check is YES
@@ -24,16 +21,15 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest1() throws SQLException {
-        UserHelper.createUser(true, "");
+        // UserHelper.createUser(true, "");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -50,17 +46,16 @@ public class MirrorTradeRule {
         UserHelper.createUser(false, "");
 
         // Create linked user with bonus payment
-        UserHelper.createLinkedUser();
-        PaymentHelper.createPayment(PAYMENT_TYPE_BONUS, "", 100);
+        //        UserHelper.createLinkedUser();
+        //        PaymentHelper.createPayment(PAYMENT_TYPE_BONUS, "", 100);
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -74,17 +69,16 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest3() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
 
         // Triggering the rule with withdrawal attempt
         // AND using risky payment method (adding 1 simple abuse points)
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, PAYMENT_PROVIDER_FASAPAY, 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, PAYMENT_PROVIDER_FASAPAY, 100);
 
         // Checking message in kafka - normal withdrawal flow
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -102,7 +96,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest4() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -117,13 +111,12 @@ public class MirrorTradeRule {
         Allure.step("NOT NUMBER OF STOP OUTS");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - MANUAL INVESTIGATION
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -141,7 +134,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest5() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -156,13 +149,12 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == true");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -180,7 +172,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest6() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -195,13 +187,12 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == true");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -219,7 +210,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest7() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -234,13 +225,12 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == true");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - HEDGE BLOCK FLOW
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -258,7 +248,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest8() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -273,13 +263,12 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == false");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -297,7 +286,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest9() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -312,13 +301,12 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == false");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
     }
 
-    @Disabled
     @Test
     @DisplayName(
             """
@@ -336,7 +324,7 @@ public class MirrorTradeRule {
     @Tag(LAYER_API)
     @AllureId("")
     public void mirrorTradeTest10() throws SQLException {
-        UserHelper.createUser(false, "");
+        // UserHelper.createUser(false, "");
         // create data for all simple abuse points
         Allure.step("Risky payment method");
         // next block in rule
@@ -351,7 +339,7 @@ public class MirrorTradeRule {
         Allure.step("Mirror trade check == false");
 
         // Triggering the rule with withdrawal attempt
-        PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
 
         // Checking message in kafka - Block withdrawal + manual investigation
         // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
