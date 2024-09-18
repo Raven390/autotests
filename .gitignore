@@ -4,6 +4,7 @@
 /allure-report/
 /playwright-report/
 /build/
-/test-output/*
 /test-output/screenshots/
 /test-output/videos/
+/visual-comparsion/current-screenshots/
+/visual-comparsion/result-screenshots/

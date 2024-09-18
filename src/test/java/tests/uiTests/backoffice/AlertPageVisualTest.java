@@ -7,8 +7,6 @@ import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import pageObjects.backofficePages.AlertPage;
-import pageObjects.backofficePages.KeycloackPage;
 import tests.TestBaseWeb;
 
 public class AlertPageVisualTest extends TestBaseWeb {
@@ -19,17 +17,15 @@ public class AlertPageVisualTest extends TestBaseWeb {
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
-    @DisplayName("compare Alert Page with etalon Dark Mode, Unfolded Sidebar")
-    void compareAScreenshotAPDMUS() throws InterruptedException {
-        AlertPage alertPage = new AlertPage(page);
+    @DisplayName("Compare Alert Page with baseline Dark Mode, Unfolded Sidebar")
+    void compareAScreenshotAPDMUS() {
         alertPage.navigate();
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         keycloackPage.loginWEB("DEV", "123");
         alertPage.isLoggedIn();
         alertPage.navigateMock();
-        alertPage.foldSidebar();
+        alertPage.unfoldSidebar();
         alertPage.turnDarkMode();
-        comparePageScreenshot("visual-comparsion/baseline-screenshots/AP_DM_US.png");
+        alertPage.compareAlertPageWithBaseline(page, "AP_DM_US.png");
     }
 
     @Test
@@ -38,15 +34,14 @@ public class AlertPageVisualTest extends TestBaseWeb {
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
-    @DisplayName("compare Alert Page with etalon Light Mode, Folded Sidebar")
-    void compareAScreenshotAPLMFS() throws InterruptedException {
-        AlertPage alertPage = new AlertPage(page);
+    @DisplayName("Compare Alert Page with baseline Light Mode, Folded Sidebar")
+    void compareAScreenshotAPLMFS() {
         alertPage.navigate();
-        KeycloackPage keycloackPage = new KeycloackPage(page);
         keycloackPage.loginWEB("DEV", "123");
         alertPage.isLoggedIn();
         alertPage.navigateMock();
         alertPage.foldSidebar();
         alertPage.turnLightMode();
+        alertPage.compareAlertPageWithBaseline(page, "AP_DM_FS.png");
     }
 }
