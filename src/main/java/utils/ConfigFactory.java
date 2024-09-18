@@ -11,7 +11,7 @@ public class ConfigFactory {
             // URLs
             BASE_URL_E2E = CONFIG.baseURLE2E(),
             BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
-            // KAFKA
+            // Kafka
             KAFKA_HOST = CONFIG.kafkaHost(),
             KAFKA_PORT = CONFIG.kafkaPort(),
             KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
@@ -19,7 +19,10 @@ public class ConfigFactory {
             KAFKA_PUBLIC = CONFIG.backOfficeKafkaPublic(),
             KAFKA_PRIVATE = CONFIG.backOfficeKafkaPrivate(),
             KAFKA_PASSWORD = CONFIG.backOfficeKafkaPassword(),
-
+            // Settings
+            PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(),
+            PATH_TRACE = CONFIG.pathTrace(),
+            PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot(),
             // Databases
             POSTGRE_HOST = CONFIG.postgreLogin(),
             POSTGRE_PASSWORD = CONFIG.postgrePassword(),
@@ -58,6 +61,16 @@ public class ConfigFactory {
 
         @Key("timeout")
         Double waitTimeout();
+
+        @Key("pathTraceVideo")
+        String pathTraceVideo();
+
+        @Key("pathTrace")
+        String pathTrace();
+
+        @Key("pathBaselineScreenshot")
+        String pathBaselineScreenshot();
+
         // Kafka
 
         @Key("kafkaHost")

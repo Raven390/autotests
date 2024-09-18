@@ -2,21 +2,14 @@ package pageObjects.backofficePages;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
-import com.github.romankh3.image.comparison.ImageComparison;
-import com.github.romankh3.image.comparison.ImageComparisonUtil;
-import com.github.romankh3.image.comparison.model.ImageComparisonResult;
-import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
 import io.qameta.allure.Step;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.*;
-import utils.Utils;
 
 public class AlertPage {
     private final Page page;
@@ -99,7 +92,7 @@ public class AlertPage {
     @Step("Open the BackOffice alert page")
     public void navigate() {
         page.navigate(BASE_URL_E2E);
-        isLoaded();
+        isAlertPageLoaded();
     }
 
     @Step("Open the MOCKED BackOffice alert page")
@@ -137,27 +130,27 @@ public class AlertPage {
                     .setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
-        isLoaded();
+        isAlertPageLoaded();
         page.evaluate(
                 "document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Check that user is logged in")
     public void isLoggedIn() {
-        isLoaded();
+        isAlertPageLoaded();
         pageLogo.isVisible();
         userAvatar.isVisible();
     }
 
     @Step("Check that user is logged in")
     public void isNotLoggedIn() {
-        isLoaded();
+        isAlertPageLoaded();
         assertEquals(pageLogo.count(), 0);
     }
 
     @Step("Check is  page basic elements visible")
     public void isAlertPageBasicElementsVisible() {
-        isLoaded();
+        isAlertPageLoaded();
         alertList.isVisible();
         dateRowHeader.isVisible();
         amountRowHeader.isVisible();
@@ -213,7 +206,7 @@ public class AlertPage {
         }
     }
 
-    @Step("check color scheme switcher")
+    @Step("Check color scheme switcher")
     public void colorThemeSwitch() {
         lightThemeButton.click();
         lightBody.isVisible();
@@ -231,54 +224,31 @@ public class AlertPage {
         profileButton.click();
     }
 
-    @Step("make a screenshot")
-    public void makeScreenshot() {
-        isLoaded();
-        page.waitForTimeout(2000);
-        page.screenshot(new Page.ScreenshotOptions().setPath(Paths.get("screenshot.png")));
-    }
-
-    @Step("check if the page loaded")
-    public void isLoaded() {
+    @Step("Check if the Alert page loaded")
+    public void isAlertPageLoaded() {
         int n = 0;
-        page.waitForTimeout(500);
-        while (loaderAnimation.isVisible() && n < 8)
-            ;
-        {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
-        page.waitForTimeout(500);
-        while (loaderAnimation.isVisible() && n < 8)
-            ;
-        {
+        page.waitForTimeout(2000);
+        while (loaderAnimation.isVisible() && n < 8) {
             page.waitForTimeout(2000);
             n += 1;
         }
     }
 
-    @Step("switch to the Light mode")
+    @Step("Switch to the Light mode")
     public void turnLightMode() {
         lightThemeButton.click();
         lightBody.isVisible();
     }
 
-    @Step("switch to the Light mode")
+    @Step("Switch to the Light mode")
     public void turnDarkMode() {
         darkThemeButton.click();
         darkBody.isVisible();
     }
 
-    @Step("compare elements")
-    public void compareElementScreenshot(Locator element, String pathToEtalone) {
-        isLoaded();
-        page.waitForTimeout(2000);
-        element.screenshot(new Locator.ScreenshotOptions().setPath(Paths.get("screenshot.png")));
-        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(pathToEtalone);
-        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("screenshot.png");
-        File resultDestination = new File("result" + String.valueOf(Utils.getCurrentTimestamp()) + ".png");
-        ImageComparisonResult imageComparisonResult =
-                new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
-        assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
+    @Step("Compare alert page with baseline screenshots")
+    public void compareAlertPageWithBaseline(Page page, String baselinePath) {
+        isAlertPageLoaded();
+        comparePageScreenshotWithBaseline(page, baselinePath);
     }
 }
