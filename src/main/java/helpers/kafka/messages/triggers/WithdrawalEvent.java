@@ -1,4 +1,4 @@
-package helpers.kafka.messages;
+package helpers.kafka.messages.triggers;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;

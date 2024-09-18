@@ -2,7 +2,7 @@ import static utils.Constants.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
-import helpers.kafka.messages.WithdrawalEvent;
+import helpers.kafka.messages.triggers.WithdrawalEvent;
 import java.io.IOException;
 import java.util.Date;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
