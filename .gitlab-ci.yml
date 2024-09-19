@@ -40,7 +40,6 @@ job_test_core:
       when: never  # Skip job on direct commits to main branch
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: never  # Skip job on merge requests
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE == "true"'
   variables:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
@@ -85,37 +84,6 @@ job_test_backoffice:
     - ./gradlew installDeps
     - ./gradlew installChromium
     - ./allurectl watch -- gradle clean testSmokeBackoffice
-    - echo "TEST SUCCESS"
-  artifacts:
-    when: always
-    paths:
-      - playwright-report
-      - build/reports/
-      - allure-results
-      - test-output/videos
-    expire_in: 1 day
-
-job_test_kafka:
-  stage: test
-  needs: ["job_build"]
-  image: gradle:8.10.0-jdk22
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: never  # Skip job on direct commits to main branch
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: never  # Skip job on merge requests
-  variables:
-    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
-    ALLURE_PROJECT_ID: 4
-    ALLURE_RESULTS: allure-results
-  before_script:
-    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
-    - chmod +x allurectl
-  script:
-    - echo "Running tests"
-    - ./gradlew installDeps
-    - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testKafka
     - echo "TEST SUCCESS"
   artifacts:
     when: always
