@@ -2,6 +2,22 @@ stages:
   - build
   - test
 
+workflow:
+  rules:
+   # Rule for nightly job
+   - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+     when: always
+   - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+     when: always
+   # Rule for jobs run on MR
+   - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+     when: always  # Pipeline runs on merge requests
+   # Push pipeline workflow (excluding main branch)
+   - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
+     when: always  # Pipeline runs on non-main branch pushes
+   # Default: Disable pipeline for other scenarios
+   - when: never
+
 job_build:
   stage: build
   image: gradle:8.10.0-jdk22
@@ -24,6 +40,9 @@ job_run_minimal_tests:
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
   script:
     - echo "Run the minimal tests set to ensure that framework works"
     - ./gradlew installDeps
@@ -36,10 +55,7 @@ job_test_core:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: never  # Skip job on direct commits to main branch
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: never  # Skip job on merge requests
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
   variables:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
@@ -68,10 +84,7 @@ job_test_backoffice:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
-      when: never  # Skip job on direct commits to main branch
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      when: never  # Skip job on merge requests
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
   variables:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
