@@ -19,7 +19,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("56")
     public void mirrorTradeTest1() throws SQLException {
         // UserHelper.createUser(true, "");
 
@@ -41,7 +41,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("47")
     public void mirrorTradeTest2() throws SQLException {
         UserHelper.createUser(false, "");
 
@@ -67,7 +67,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("55")
     public void mirrorTradeTest3() throws SQLException {
         // UserHelper.createUser(false, "");
 
@@ -94,7 +94,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("49")
     public void mirrorTradeTest4() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -132,7 +132,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("54")
     public void mirrorTradeTest5() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -170,7 +170,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("48")
     public void mirrorTradeTest6() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -208,7 +208,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("52")
     public void mirrorTradeTest7() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -246,7 +246,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("51")
     public void mirrorTradeTest8() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -284,7 +284,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("53")
     public void mirrorTradeTest9() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
@@ -322,7 +322,7 @@ public class MirrorTradeRuleTest {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("")
+    @AllureId("50")
     public void mirrorTradeTest10() throws SQLException {
         // UserHelper.createUser(false, "");
         // create data for all simple abuse points
