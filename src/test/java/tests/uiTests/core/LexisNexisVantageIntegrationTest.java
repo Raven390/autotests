@@ -22,8 +22,8 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
     @Tag(STATUS_AUTOMATED)
     @Tag(FEATURE_LEXIS_NEXIS)
     @Tag(LAYER_API)
-    @AllureId("1")
     @DisplayName("Register and wait till LexisNexis event")
+    @AllureId("57")
     public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
         // Test data
         String email = getRandomEmail();
