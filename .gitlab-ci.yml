@@ -57,6 +57,7 @@ job_test_core:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
   variables:
+    ALLURE_LAUNCH_NAME: "[Core team] Nighly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
@@ -86,6 +87,7 @@ job_test_backoffice:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
   variables:
+    ALLURE_LAUNCH_NAME: "[Backoffice team] Nighly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: allure-results
