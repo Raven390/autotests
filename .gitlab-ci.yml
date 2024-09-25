@@ -2,6 +2,10 @@ stages:
   - build
   - test
 
+variables:
+  # Set Playwright environment variable to skip installing Firefox and WebKit
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "true"
+
 workflow:
   rules:
    # Rule for nightly job
