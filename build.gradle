@@ -118,14 +118,8 @@ task testSmokeBackoffice(type: Test) {
     }
 }
 
-task testKafka(type: Test) {
+task testSuiteSmoke(type: Test) {
     useJUnitPlatform() {
-        includeTags 'kafka'
-    }
-
-    task testSuiteSmoke(type: Test) {
-        useJUnitPlatform() {
-            includeTags 'suite_smoke'
-        }
+        includeTags 'suite_smoke'
     }
 }

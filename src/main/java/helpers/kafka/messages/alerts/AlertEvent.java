@@ -26,4 +26,23 @@ public class AlertEvent {
 
     @JsonProperty("currency")
     public String currency;
+
+    public static AlertEvent alertEvent(
+            String alertId,
+            Date timestamp,
+            String unClId,
+            List<AlertRules> rules,
+            List<AlertTrigger> trigger,
+            Double amount,
+            String currency) {
+        AlertEvent alertEvent = new AlertEvent();
+        alertEvent.alertId = alertId;
+        alertEvent.timestamp = timestamp;
+        alertEvent.unClId = unClId;
+        alertEvent.rules = rules;
+        alertEvent.trigger = trigger;
+        alertEvent.amount = amount;
+        alertEvent.currency = currency;
+        return alertEvent;
+    }
 }
