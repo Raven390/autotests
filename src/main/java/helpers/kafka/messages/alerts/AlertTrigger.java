@@ -15,4 +15,14 @@ public class AlertTrigger {
 
     @JsonProperty("trigger_data")
     public List<AlertTriggerData> triggerData;
+
+    public static AlertTrigger alertTrigger(
+            String type, String timestamp, String accountId, List<AlertTriggerData> triggerData) {
+        AlertTrigger alertTrigger = new AlertTrigger();
+        alertTrigger.type = type;
+        alertTrigger.timestamp = timestamp;
+        alertTrigger.accountId = accountId;
+        alertTrigger.triggerData = triggerData;
+        return alertTrigger;
+    }
 }

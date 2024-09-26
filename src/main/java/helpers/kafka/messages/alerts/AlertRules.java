@@ -15,4 +15,13 @@ public class AlertRules {
 
     @JsonProperty("rule_data")
     public List<AlertRuleData> ruleData;
+
+    public static AlertRules alertRules(String ruleId, String ruleVer, String ruleName, List<AlertRuleData> ruleData) {
+        AlertRules alertRules = new AlertRules();
+        alertRules.ruleId = ruleId;
+        alertRules.ruleVer = ruleVer;
+        alertRules.ruleName = ruleName;
+        alertRules.ruleData = ruleData;
+        return alertRules;
+    }
 }
