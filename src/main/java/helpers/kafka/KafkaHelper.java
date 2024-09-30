@@ -76,7 +76,7 @@ public class KafkaHelper {
         return properties;
     }
 
-    public ConsumerRecord<String, String> consumeMessages(String topic, long offset) {
+    public ConsumerRecord<String, String> consumeMessages(String topic) {
         ConsumerRecords<String, String> records;
         // Set up the consumer properties and create a new Kafka consumer
         Properties properties = getKafkaConsumerProperties();
@@ -85,7 +85,6 @@ public class KafkaHelper {
         // Subscribe to the topic
         consumer.subscribe(Collections.singletonList(topic));
 
-        // Infinite loop to continuously listen for new messages
         try {
             while (true) {
                 // Poll the Kafka broker for new records
@@ -94,11 +93,9 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
-                            "Consumed message: key = %s, value = %s, partition = %d, offset = %d%n",
-                            record.key(), record.value(), record.partition(), record.offset());
-                    if (record.offset() == offset) {
-                        return record;
-                    }
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                            topic, record.key(), record.value(), record.partition(), record.offset());
+                    return record;
                 }
             }
         } finally {

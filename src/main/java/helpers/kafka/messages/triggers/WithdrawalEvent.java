@@ -8,6 +8,9 @@ import java.util.Date;
  */
 public class WithdrawalEvent {
 
+    @JsonProperty("uuid")
+    public String uuid;
+
     @JsonProperty("create_time")
     public Date createTime;
 
@@ -29,15 +32,21 @@ public class WithdrawalEvent {
     @JsonProperty("payment_method_code")
     public String paymentMethodCode;
 
+    @JsonProperty("type")
+    public String type;
+
     public static WithdrawalEvent withdrawalEvent(
+            String traceId,
             Date createTime,
             int transferId,
             int userId,
             int mtAccount,
             String brand,
             String regulator,
-            String paymentMethodCode) {
+            String paymentMethodCode,
+            String type) {
         WithdrawalEvent withdrawalEvent = new WithdrawalEvent();
+        withdrawalEvent.uuid = traceId;
         withdrawalEvent.createTime = createTime;
         withdrawalEvent.transferId = transferId;
         withdrawalEvent.userId = userId;
@@ -45,6 +54,7 @@ public class WithdrawalEvent {
         withdrawalEvent.brand = brand;
         withdrawalEvent.regulator = regulator;
         withdrawalEvent.paymentMethodCode = paymentMethodCode;
+        withdrawalEvent.type = type;
         return withdrawalEvent;
     }
 }

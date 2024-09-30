@@ -1,6 +1,7 @@
 package helpers.kafka.messages.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 
 public class AlertTrigger {
@@ -8,7 +9,7 @@ public class AlertTrigger {
     public String type;
 
     @JsonProperty("timestamp")
-    public String timestamp;
+    public Date timestamp;
 
     @JsonProperty("account_id")
     public String accountId;
@@ -17,7 +18,7 @@ public class AlertTrigger {
     public List<AlertTriggerData> triggerData;
 
     public static AlertTrigger alertTrigger(
-            String type, String timestamp, String accountId, List<AlertTriggerData> triggerData) {
+            String type, Date timestamp, String accountId, List<AlertTriggerData> triggerData) {
         AlertTrigger alertTrigger = new AlertTrigger();
         alertTrigger.type = type;
         alertTrigger.timestamp = timestamp;
