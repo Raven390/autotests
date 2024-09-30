@@ -33,11 +33,6 @@ public class ConfigFactory {
             // Registration helper
             REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin(),
             REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword(),
-            REGISTRATION_HELPER_FIRST_NAME = CONFIG.registrationHelperFirstName(),
-            REGISTRATION_HELPER_SECOND_NAME = CONFIG.registrationHelperSecondName(),
-            REGISTRATION_HELPER_REGULATOR = CONFIG.registrationHelperRegulator(),
-            REGISTRATION_HELPER_WID = CONFIG.registrationHelperWid(),
-            REGISTRATION_HELPER_REG_INTERFACE = CONFIG.registrationHelperRegistrationInterface(),
             // Other
             COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
 
@@ -121,21 +116,6 @@ public class ConfigFactory {
 
         @Key("registrationHelperPassword")
         String registrationHelperPassword();
-
-        @Key("registrationHelperFirstName")
-        String registrationHelperFirstName();
-
-        @Key("registrationHelperSecondName")
-        String registrationHelperSecondName();
-
-        @Key("registrationHelperRegulator")
-        String registrationHelperRegulator();
-
-        @Key("registrationHelperWid")
-        String registrationHelperWid();
-
-        @Key("registrationHelperRegistrationInterface")
-        String registrationHelperRegistrationInterface();
 
         // Other
 

@@ -1,48 +1,40 @@
 package helpers.kafka.messages.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
 import java.util.List;
 
 public class AlertEvent {
 
-    @JsonProperty("alert_id")
+    @JsonProperty("uuid")
+    public String uuid;
+
+    @JsonProperty("alertId")
     public String alertId;
 
     @JsonProperty("timestamp")
-    public Date timestamp;
+    public Float timestamp;
 
-    @JsonProperty("un_cl_id")
-    public String unClId;
+    @JsonProperty("ucid")
+    public String ucid;
 
-    @JsonProperty("rules")
-    public List<AlertRules> rules;
+    @JsonProperty("rule")
+    public List<AlertRules> rule;
 
     @JsonProperty("trigger")
-    public List<AlertTrigger> trigger;
+    public String trigger;
 
-    @JsonProperty("amount_cur")
-    public Double amount;
-
-    @JsonProperty("currency")
-    public String currency;
+    @JsonProperty("ruleAttributes")
+    public List<AlertRuleData> ruleAttributes;
 
     public static AlertEvent alertEvent(
-            String alertId,
-            Date timestamp,
-            String unClId,
-            List<AlertRules> rules,
-            List<AlertTrigger> trigger,
-            Double amount,
-            String currency) {
+            String traceId, String alertId, Float timestamp, String unClId, List<AlertRules> rule, String trigger) {
         AlertEvent alertEvent = new AlertEvent();
+        alertEvent.uuid = traceId;
         alertEvent.alertId = alertId;
         alertEvent.timestamp = timestamp;
-        alertEvent.unClId = unClId;
-        alertEvent.rules = rules;
+        alertEvent.ucid = unClId;
+        alertEvent.rule = rule;
         alertEvent.trigger = trigger;
-        alertEvent.amount = amount;
-        alertEvent.currency = currency;
         return alertEvent;
     }
 }

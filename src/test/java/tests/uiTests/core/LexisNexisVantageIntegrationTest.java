@@ -42,9 +42,9 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         stageRegistrationHelperPage.fillEmail(email);
         stageRegistrationHelperPage.fillEmailVerificationCode(emailVerificationCode);
         stageRegistrationHelperPage.fillPassword(password);
-        stageRegistrationHelperPage.chooseRegulator(REGISTRATION_HELPER_REGULATOR);
-        stageRegistrationHelperPage.fillWid(REGISTRATION_HELPER_WID);
-        stageRegistrationHelperPage.chooseRegisterInterface(REGISTRATION_HELPER_REG_INTERFACE);
+        stageRegistrationHelperPage.chooseRegulator(REGISTRATION_HELPER_REGULATOR_VFSC2);
+        stageRegistrationHelperPage.fillWid(REGISTRATION_HELPER_WID_VANTAGE);
+        stageRegistrationHelperPage.chooseRegisterInterface(REGISTRATION_HELPER_INTERFACE);
         stageRegistrationHelperPage.clickSendFormButton();
 
         // Pass form after account creation
