@@ -76,7 +76,7 @@ public class KafkaHelper {
         return properties;
     }
 
-    public ConsumerRecord<String, String> consumeMessages(String topic) {
+    public ConsumerRecord<String, String> consumeMessages(String topic, String id) {
         ConsumerRecords<String, String> records;
         // Set up the consumer properties and create a new Kafka consumer
         Properties properties = getKafkaConsumerProperties();
@@ -95,7 +95,9 @@ public class KafkaHelper {
                     System.out.printf(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
                             topic, record.key(), record.value(), record.partition(), record.offset());
-                    return record;
+                    if (record.value().contains(id)) {
+                        return record;
+                    }
                 }
             }
         } finally {

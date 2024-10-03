@@ -1,27 +1,35 @@
 package helpers.kafka.messages.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
 public class AlertRules {
-    @JsonProperty("rule_id")
-    public String ruleId;
+    @JsonProperty("code")
+    public int code;
 
-    @JsonProperty("rule_ver")
-    public String ruleVer;
+    @JsonProperty("ver")
+    public String ver;
 
-    @JsonProperty("rule_name")
-    public String ruleName;
+    @JsonProperty("name")
+    public String name;
 
-    @JsonProperty("rule_data")
-    public List<AlertRuleData> ruleData;
+    @JsonProperty("trigger")
+    public String trigger;
 
-    public static AlertRules alertRules(String ruleId, String ruleVer, String ruleName, List<AlertRuleData> ruleData) {
+    @JsonProperty("fraudType")
+    public String fraudType;
+
+    @JsonProperty("attributes")
+    public RuleAttributes attributes;
+
+    public static AlertRules alertRules(
+            int code, String ver, String name, String trigger, String fraudType, RuleAttributes attributes) {
         AlertRules alertRules = new AlertRules();
-        alertRules.ruleId = ruleId;
-        alertRules.ruleVer = ruleVer;
-        alertRules.ruleName = ruleName;
-        alertRules.ruleData = ruleData;
+        alertRules.code = code;
+        alertRules.ver = ver;
+        alertRules.name = name;
+        alertRules.trigger = trigger;
+        alertRules.fraudType = fraudType;
+        alertRules.attributes = attributes;
         return alertRules;
     }
 }
