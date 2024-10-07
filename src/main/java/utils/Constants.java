@@ -20,6 +20,7 @@ public class Constants {
     // FEATURES
     public static final String FEATURE_LEXIS_NEXIS = "feature_lexis_nexis";
     public static final String FEATURE_RULE_ENGINE = "feature_lexis_nexis";
+    public static final String FEATURE_CLICKHOUSE_API_SERVICE = "Clickhouse api service";
     public static final String FEATURE_EXAMPLE = "feature_example";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
