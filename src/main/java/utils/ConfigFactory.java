@@ -33,6 +33,13 @@ public class ConfigFactory {
             // Registration helper
             REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin(),
             REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword(),
+            // Clickhouse api
+            CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath(),
+            CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath(),
+            // Clickhouse database
+            CLICKHOUSE_HOST = CONFIG.clickhouseHost(),
+            CLICKHOUSE_USER = CONFIG.clickhouseUser(),
+            CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword(),
             // Other
             COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
 
@@ -116,6 +123,25 @@ public class ConfigFactory {
 
         @Key("registrationHelperPassword")
         String registrationHelperPassword();
+
+        // Clickhouse database
+
+        @Key("clickhouseHost")
+        String clickhouseHost();
+
+        @Key("clickhouseUser")
+        String clickhouseUser();
+
+        @Key("clickhousePassword")
+        String clickhousePassword();
+
+        // Clickhouse api helper
+
+        @Key("clickhouseBasePath")
+        String clickhouseBasePath();
+
+        @Key("clickhouseGetClientPath")
+        String clickhouseGetClientPath();
 
         // Other
 
