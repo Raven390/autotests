@@ -16,6 +16,9 @@ public class GetClientResponse {
     @JsonProperty("phoneNum")
     public String phoneNum;
 
+    @JsonProperty("phoneCountryCode")
+    public String phoneCountryCode;
+
     @JsonProperty("updateTime")
     public String updateTime;
 
@@ -42,4 +45,7 @@ public class GetClientResponse {
 
     @JsonProperty("birthday")
     public String birthday;
+
+    @JsonProperty("registrationDate")
+    public String registrationDate;
 }
