@@ -1,10 +1,10 @@
-package helpers.kafka.messages.alerts;
+package helpers.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AlertRules {
     @JsonProperty("code")
-    public int code;
+    public Integer code;
 
     @JsonProperty("ver")
     public String ver;
@@ -19,10 +19,10 @@ public class AlertRules {
     public String fraudType;
 
     @JsonProperty("attributes")
-    public RuleAttributes attributes;
+    public AlertRuleAttributes attributes;
 
     public static AlertRules alertRules(
-            int code, String ver, String name, String trigger, String fraudType, RuleAttributes attributes) {
+            Integer code, String ver, String name, String trigger, String fraudType, AlertRuleAttributes attributes) {
         AlertRules alertRules = new AlertRules();
         alertRules.code = code;
         alertRules.ver = ver;

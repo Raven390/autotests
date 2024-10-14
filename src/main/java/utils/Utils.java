@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.UUID;
 
 public class Utils {
 
@@ -11,6 +12,10 @@ public class Utils {
         Random random = new Random();
         int randomInt = random.nextInt(Integer.MAX_VALUE);
         return randomInt;
+    }
+
+    public static String getRandomUuidString() {
+        return UUID.randomUUID().toString();
     }
 
     public static String getRandomEmail() {

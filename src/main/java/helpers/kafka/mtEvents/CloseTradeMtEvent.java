@@ -1,4 +1,4 @@
-package helpers.kafka.messages.triggers;
+package helpers.kafka.mtEvents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1096351889/Close+trade
  */
-public class CloseTrade {
+public class CloseTradeMtEvent {
     @JsonProperty("close_time")
     public Date closeTime;
 
@@ -25,15 +25,15 @@ public class CloseTrade {
     @JsonProperty("server_id")
     public int serverId;
 
-    public static CloseTrade closeTrade(
+    public static CloseTradeMtEvent closeTrade(
             Date closeTime, int tradeId, int mtAccount, int volume, String symbol, int serverId) {
-        CloseTrade closeTrade = new CloseTrade();
-        closeTrade.closeTime = closeTime;
-        closeTrade.tradeId = tradeId;
-        closeTrade.mtAccount = mtAccount;
-        closeTrade.volume = volume;
-        closeTrade.symbol = symbol;
-        closeTrade.serverId = serverId;
-        return closeTrade;
+        CloseTradeMtEvent event = new CloseTradeMtEvent();
+        event.closeTime = closeTime;
+        event.tradeId = tradeId;
+        event.mtAccount = mtAccount;
+        event.volume = volume;
+        event.symbol = symbol;
+        event.serverId = serverId;
+        return event;
     }
 }

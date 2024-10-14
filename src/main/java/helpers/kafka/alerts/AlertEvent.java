@@ -1,4 +1,4 @@
-package helpers.kafka.messages.alerts;
+package helpers.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

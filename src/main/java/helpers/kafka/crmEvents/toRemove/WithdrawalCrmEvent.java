@@ -1,4 +1,4 @@
-package helpers.kafka.messages.triggers;
+package helpers.kafka.crmEvents.toRemove;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1079902238/Withdrawal
  */
-public class WithdrawalEvent {
+public class WithdrawalCrmEvent {
 
     @JsonProperty("uuid")
     public String uuid;
@@ -15,13 +15,13 @@ public class WithdrawalEvent {
     public Date createTime;
 
     @JsonProperty("transfer_id")
-    public int transferId;
+    public Integer transferId;
 
     @JsonProperty("user_id")
-    public int userId;
+    public Integer userId;
 
     @JsonProperty("mt_account")
-    public int mtAccount;
+    public Integer mtAccount;
 
     @JsonProperty("brand")
     public String brand;
@@ -35,26 +35,26 @@ public class WithdrawalEvent {
     @JsonProperty("type")
     public String type;
 
-    public static WithdrawalEvent withdrawalEvent(
+    public static WithdrawalCrmEvent withdrawalCrmEvent(
             String traceId,
             Date createTime,
-            int transferId,
-            int userId,
-            int mtAccount,
+            Integer transferId,
+            Integer userId,
+            Integer mtAccount,
             String brand,
             String regulator,
             String paymentMethodCode,
             String type) {
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent();
-        withdrawalEvent.uuid = traceId;
-        withdrawalEvent.createTime = createTime;
-        withdrawalEvent.transferId = transferId;
-        withdrawalEvent.userId = userId;
-        withdrawalEvent.mtAccount = mtAccount;
-        withdrawalEvent.brand = brand;
-        withdrawalEvent.regulator = regulator;
-        withdrawalEvent.paymentMethodCode = paymentMethodCode;
-        withdrawalEvent.type = type;
-        return withdrawalEvent;
+        WithdrawalCrmEvent event = new WithdrawalCrmEvent();
+        event.uuid = traceId;
+        event.createTime = createTime;
+        event.transferId = transferId;
+        event.userId = userId;
+        event.mtAccount = mtAccount;
+        event.brand = brand;
+        event.regulator = regulator;
+        event.paymentMethodCode = paymentMethodCode;
+        event.type = type;
+        return event;
     }
 }

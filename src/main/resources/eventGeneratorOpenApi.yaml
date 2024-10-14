@@ -1,0 +1,237 @@
+openapi: 3.1.0
+info:
+  title: Events Data API
+  version: '1.0'
+components:
+  schemas:
+    EventMetadata:
+      type: object
+      properties:
+        timestamp:
+          type: string
+        record-type:
+          type: string
+        operation:
+          type: string
+        partition-key-type:
+          type: string
+        schema-name:
+          type: string
+        table-name:
+          type: string
+    InboundWithdrawalEvent:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            create_time:
+              type: string
+            id:
+              type: integer
+            user_id:
+              type: integer
+            mt4_account:
+              type: integer
+            mt4Account_no:
+              type: integer
+            brand:
+              type: string
+            regulator:
+              type: string
+            payment_method_code:
+              type: string
+            withdraw_type:
+              type: integer
+            withdraw_amount:
+              type: number
+            fee:
+              type: number
+            actual_amount:
+              type: number
+            payment_amount:
+              type: number
+            settlement_amount:
+              type: number
+            card_number:
+              type: string
+            bankcard_no:
+              type: string
+            is_del:
+              type: integer
+            update_time:
+              type: string
+            cps_attach_variable:
+              type: string
+            order_number:
+              type: string
+            order_no:
+              type: string
+            cps_mandatory_field:
+              type: string
+            is_remember_info:
+              type: integer
+            upi_account_name:
+              type: string
+            deduct_credit:
+              type: number
+            user_sales_id:
+              type: integer
+            account_sales_id:
+              type: integer
+            order_currency:
+              type: string
+            settlement_currency:
+              type: string
+            checking_status:
+              type: integer
+            withdraw_status:
+              type: integer
+            is_trade:
+              type: integer
+            rate:
+              type: number
+            is_non_app:
+              type: integer
+            to_usd_rate:
+              type: number
+        metadata:
+          $ref: '#/components/schemas/EventMetadata'
+    OutboundWithdrawalEvent:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            UUID:
+              type: string
+            create_time:
+              type: string
+            transfer_id:
+              type: integer
+            user_id:
+              type: integer
+            mt_account:
+              type: integer
+            brand:
+              type: string
+            regulator:
+              type: string
+            payment_method_code:
+              type: string
+            withdraw_type:
+              type: integer
+            withdraw_amount:
+              type: number
+            fee:
+              type: number
+            actual_amount:
+              type: number
+            payment_amount:
+              type: number
+            card_number:
+              type: string
+            wd_is_del:
+              type: integer
+            update_time:
+              type: string
+            cps_attach_variable:
+              type: string
+            order_number:
+              type: string
+            cps_mandatory_field:
+              type: string
+            wd_is_remember_info:
+              type: integer
+            upi_account_name:
+              type: string
+            deduct_credit:
+              type: number
+            user_sales_id:
+              type: integer
+            account_sales_id:
+              type: integer
+            order_currency:
+              type: string
+            checking_status:
+              type: integer
+            is_trade:
+              type: integer
+            rate:
+              type: number
+            is_non_app:
+              type: integer
+            to_usd_rate:
+              type: number
+    InboundRegistrationEvent:
+      properties:
+        data:
+          type: object
+          properties:
+            create_time:
+              type: string
+            user_id:
+              type: integer
+            brand:
+              type: string
+            regulator:
+              type: string
+            mt4_account:
+              type: integer
+        metadata:
+          $ref: '#/components/schemas/EventMetadata'
+    OutboundRegistrationEvent:
+      properties:
+        data:
+          type: object
+          properties:
+            UUID:
+              type: string
+            create_time:
+              type: string
+            user_id:
+              type: integer
+            brand:
+              type: string
+            regulator:
+              type: string
+            mt_account:
+              type: integer
+    InboundLoginEvent:
+      properties:
+        data:
+          type: object
+          properties:
+            login_datetime:
+              type: string
+            user_id:
+              type: integer
+            brand:
+              type: string
+            ip_address:
+              type: string
+            ua_string:
+              type: string
+            cookie:
+              type: string
+        metadata:
+          $ref: '#/components/schemas/EventMetadata'
+    OutboundLoginEvent:
+      properties:
+        data:
+          type: object
+          properties:
+            UUID:
+              type: string
+            login_time:
+              type: string
+            user_id:
+              type: integer
+            brand:
+              type: string
+            ip_address:
+              type: string
+            cid:
+              type: string
+            cookie:
+              type: string

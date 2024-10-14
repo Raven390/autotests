@@ -1,4 +1,4 @@
-package tests.ruleEngineTests;
+package tests.ruleEngineServiceTests;
 
 import static utils.Constants.*;
 
@@ -15,7 +15,7 @@ public class MirrorTradeRuleTest {
     @DisplayName("""
             Hedge block flow IF Abuse registry check is YES
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -37,7 +37,7 @@ public class MirrorTradeRuleTest {
             IF Abuse registry check is NO AND Connection search:
             Linked new accounts with bonus found - exact match YES
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -63,7 +63,7 @@ public class MirrorTradeRuleTest {
             IF user NOT in abuse registry
             AND not linked account AND Less than 4 simple abuse point
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -90,7 +90,7 @@ public class MirrorTradeRuleTest {
             AND NOT large spikes in real exposure
             AND NOT number of stop outs
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -128,7 +128,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -166,7 +166,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -204,7 +204,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -242,7 +242,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -280,7 +280,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -318,7 +318,7 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE)
+    @Feature(FEATURE_RULE_ENGINE_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)

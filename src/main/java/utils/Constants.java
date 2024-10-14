@@ -18,10 +18,14 @@ public class Constants {
     public static final String LAYER_WEB = "layer_web";
     public static final String LAYER_MOBILE = "layer_mobile";
     // FEATURES
-    public static final String FEATURE_LEXIS_NEXIS = "feature_lexis_nexis";
-    public static final String FEATURE_RULE_ENGINE = "feature_lexis_nexis";
+    public static final String FEATURE_LEXIS_NEXIS = "Lexis Nexis integration";
+    public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
     public static final String FEATURE_CLICKHOUSE_API_SERVICE = "Clickhouse api service";
-    public static final String FEATURE_EXAMPLE = "feature_example";
+    public static final String FEATURE_EVENT_GENERATOR_SERVICE = "Event generator service";
+    public static final String FEATURE_EVENT_GENERATOR_SERVICE_EVENT_LOGIN = "Event generator service. Login event";
+    public static final String FEATURE_EVENT_GENERATOR_SERVICE_EVENT_REGISTRATION =
+            "Event generator. Registration event";
+    public static final String FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL = "Event generator. Withdrawal event";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -32,7 +36,9 @@ public class Constants {
     public static final String TAG_BUILD_CHECK = "build_check";
     // KAFKA
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
+    public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";
     public static final String KAFKA_TOPIC_MT_EVENTS = "mt-events";
+    public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
