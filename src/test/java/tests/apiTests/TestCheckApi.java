@@ -21,7 +21,6 @@ public class TestCheckApi extends TestBaseApi {
                         .url("https://reqres.in/api/users/2")
                         .build())
                 .execute();
-
         assertThat("Check response code", response.code(), is(200));
     }
 }

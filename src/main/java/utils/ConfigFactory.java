@@ -12,13 +12,9 @@ public class ConfigFactory {
             BASE_URL_E2E = CONFIG.baseURLE2E(),
             BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
             // Kafka
-            KAFKA_HOST = CONFIG.kafkaHost(),
-            KAFKA_PORT = CONFIG.kafkaPort(),
-            KAFKA_CORE_INCOMING_TOPIC = CONFIG.kafkaCoreIncomingTopic(),
-            KAFKA_CORE_OUTCOMING_TOPIC = CONFIG.kafkaCoreOutcomingTopic(),
-            KAFKA_PUBLIC = CONFIG.backOfficeKafkaPublic(),
-            KAFKA_PRIVATE = CONFIG.backOfficeKafkaPrivate(),
-            KAFKA_PASSWORD = CONFIG.backOfficeKafkaPassword(),
+            KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic(),
+            KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate(),
+            KAFKA_PASSWORD = CONFIG.testClusterKafkaPassword(),
             // Settings
             PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(),
             PATH_TRACE = CONFIG.pathTrace(),
@@ -75,26 +71,14 @@ public class ConfigFactory {
 
         // Kafka
 
-        @Key("kafkaHost")
-        String kafkaHost();
+        @Key("testClusterKafkaPublic")
+        String testClusterKafkaPublic();
 
-        @Key("kafkaPort")
-        String kafkaPort();
+        @Key("testClusterKafkaPrivate")
+        String testClusterKafkaPrivate();
 
-        @Key("kafkaCoreIncomingTopic")
-        String kafkaCoreIncomingTopic();
-
-        @Key("kafkaCoreOutcomingTopic")
-        String kafkaCoreOutcomingTopic();
-
-        @Key("backOfficeKafkaPublic")
-        String backOfficeKafkaPublic();
-
-        @Key("backOfficeKafkaPrivate")
-        String backOfficeKafkaPrivate();
-
-        @Key("backOfficeKafkaPassword")
-        String backOfficeKafkaPassword();
+        @Key("testClusterKafkaPassword")
+        String testClusterKafkaPassword();
 
         // Databases
 

@@ -13,7 +13,7 @@ public class KeycloackApiHelper {
     private static Playwright playwright;
     private static APIRequestContext request;
 
-    static void createAPIRequestContext() {
+    static void createApiRequestContext() {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/vnd.github.v3+json");
         headers.put("Authorization", "token " + "API_TOKEN");
@@ -27,8 +27,8 @@ public class KeycloackApiHelper {
                         .setExtraHTTPHeaders(headers));
     }
 
-    public static void getAUTHtoken() {
-        createAPIRequestContext();
+    public static void getAuthtoken() {
+        createApiRequestContext();
         APIResponse token = request.get("/");
         assertTrue(token.ok());
         System.out.println(token.text() + "dunno");

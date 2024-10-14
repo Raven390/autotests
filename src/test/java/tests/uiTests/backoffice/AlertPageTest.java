@@ -53,7 +53,6 @@ public class AlertPageTest extends TestBaseWeb {
         alertPage.isAlertPageBasicElementsVisible();
     }
 
-    @Disabled
     @Test
     @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)

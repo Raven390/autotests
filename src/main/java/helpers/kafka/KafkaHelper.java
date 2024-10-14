@@ -76,32 +76,40 @@ public class KafkaHelper {
         return properties;
     }
 
-    public ConsumerRecord<String, String> consumeMessages(String topic, String id) {
+    public String consumeMessages(String topic, int id) throws InterruptedException {
         ConsumerRecords<String, String> records;
-        // Set up the consumer properties and create a new Kafka consumer
         Properties properties = getKafkaConsumerProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic
         consumer.subscribe(Collections.singletonList(topic));
 
+        int maxAttempts = 25; // Limit to 50 tries
+        int attempts = 0;
+
         try {
-            while (true) {
-                // Poll the Kafka broker for new records
+            while (attempts < maxAttempts) {
+                // Poll the Kafka broker for new records (with a timeout of 500 ms)
                 records = consumer.poll(Duration.ofMillis(500));
+                attempts++; // Increment the attempt count
+                Thread.sleep(500);
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
                             topic, record.key(), record.value(), record.partition(), record.offset());
-                    if (record.value().contains(id)) {
-                        return record;
+
+                    // If the record contains the specified id, return it
+                    if (record.value() != null && record.value().contains(String.valueOf(id))) {
+                        return record.value();
                     }
                 }
             }
+            // After 50 attempts, if no matching message is found, return null
+            return "Max attempts reached without finding a matching message.";
         } finally {
-            consumer.close();
+            consumer.close(); // Ensure the consumer is closed
         }
     }
 
@@ -120,8 +128,8 @@ public class KafkaHelper {
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
             System.out.printf(
-                    "Sent message to topic:%s partition:%d offset:%d%n",
-                    metadata.topic(), metadata.partition(), metadata.offset());
+                    "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                    topic, record.key(), record.value(), record.partition(), metadata.offset());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
