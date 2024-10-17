@@ -1,11 +1,11 @@
 package tests.uiTests.core;
 
-import static helpers.database.MySqlHelper.makeQuery;
 import static utils.ConfigFactory.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomEmail;
 import static utils.Utils.getRandomInt;
 
+import helpers.database.MySqlHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Owner;
 import java.sql.ResultSet;
@@ -15,7 +15,6 @@ import tests.TestBaseWeb;
 
 public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
-    @Disabled
     @Test
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
@@ -60,7 +59,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         vantageUserAccountPage.clickNextButton();
 
         // Make db query
-        ResultSet result = makeQuery(
+        ResultSet result = MySqlHelper.makeQuery(
                 "SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%"
                         + email
                         + "%'",
@@ -71,9 +70,9 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         // Assertions
         Assertions.assertTrue(raw_result.contains("\"account_email\":\"" + email + "\""));
         Assertions.assertTrue(raw_result.contains("\"account_date_of_birth\":\"19900101\""));
-        Assertions.assertTrue(raw_result.contains("\"account_first_name\":\"" + firstName + "\""));
+        Assertions.assertTrue(raw_result.contains("\"account_first_name\":\"" + firstName.toLowerCase() + "\""));
         Assertions.assertTrue(raw_result.contains("\"account_gender\":\"male\""));
-        Assertions.assertTrue(raw_result.contains("\"account_last_name\":\"" + secondName + "\""));
+        Assertions.assertTrue(raw_result.contains("\"account_last_name\":\"" + secondName.toLowerCase() + "\""));
         Assertions.assertTrue(raw_result.contains("\"event_type\":\"account_creation\""));
     }
 }

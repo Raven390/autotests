@@ -19,14 +19,12 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class EventGeneratorRegistrationTests {
 
-    @Disabled
     @Test
     @DisplayName("Generate registration event with event generator service")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_REGISTRATION)

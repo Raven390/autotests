@@ -35,14 +35,13 @@ public class MySqlHelper {
             statement = connection.createStatement();
             result = statement.executeQuery(query);
             System.out.println("Data received on attempt " + attempt + ": " + result);
-            result.next();
-            if (result.next() != false) {
-                return result; // Exit the loop if successful
+            if (result.next()) {
+                break; // Exit the loop if successful
             } else {
                 System.out.println("Data not received on attempt " + attempt);
             }
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
-        return null; // If it fails after all attempts
+        return result; // If it fails after all attempts
     }
 }
