@@ -16,7 +16,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
-import utils.Utils;
 
 public class GetClientTest extends TestBaseApi {
 
@@ -27,19 +26,21 @@ public class GetClientTest extends TestBaseApi {
     @Tag(TEAM_CORE)
     @AllureId("59")
     public void getClientSuccessTest() throws IOException, SQLException, ClassNotFoundException, InterruptedException {
-        int clientId = Utils.getRandomInt();
-        String query = String.format(
-                """
-                INSERT INTO crm___tb_user (client_id, brand, regulator, user_id, ucid, email, phone_num,
-                phone_country_code, is_two_fa_user, authentication, first_name, last_name, create_time,
-                registration_date, birthday, `language`, country_code, iso_country_code, country, website_user_type,
-                last_updated)
-                VALUES('5409aecb-1d7e-43ec-b1ab-352cc326a3d2', 'Vantage', 'VFSC2', 599265, 'vantage-%d-vfsc2',
-                'DKaaOhjtAfr+BSEiyb7diG9o9kWHhVUI', 'yLpIAt4i4gDlEmHTEhFPuQ==', 60, 0, '[]', 'Yew Meng', 'Woo',
-                '2020-11-09 06:02:32.000', '2020-11-09', '1974-02-23', 'en_US', '5015', 'MY', 'MALAYSIA', 2,
-                '2024-08-22 02:29:11.000')""",
-                clientId);
-        System.out.println(query);
+        // int clientId = Utils.getRandomInt();
+        //        String query = String.format(
+        //                """
+        //                INSERT INTO crm___tb_user (client_id, brand, regulator, user_id, ucid, email, phone_num,
+        //                phone_country_code, is_two_fa_user, authentication, first_name, last_name, create_time,
+        //                registration_date, birthday, `language`, country_code, iso_country_code, country,
+        // website_user_type,
+        //                last_updated)
+        //                VALUES('5409aecb-1d7e-43ec-b1ab-352cc326a3d2', 'Vantage', 'VFSC2', 599265, 'vantage-%d-vfsc2',
+        //                'DKaaOhjtAfr+BSEiyb7diG9o9kWHhVUI', 'yLpIAt4i4gDlEmHTEhFPuQ==', 60, 0, '[]', 'Yew Meng',
+        // 'Woo',
+        //                '2020-11-09 06:02:32.000', '2020-11-09', '1974-02-23', 'en_US', '5015', 'MY', 'MALAYSIA', 2,
+        //                '2024-08-22 02:29:11.000')""",
+        //                clientId);
+        //        System.out.println(query);
         // ClickhouseHelper.makeQuery(query);
 
         Response response = getClient("AlphaTick-" + 11 + "-SVG");
@@ -64,7 +65,7 @@ public class GetClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client not found(404)")
+    @DisplayName("Clickhouse Api. Get client not found (404)")
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
     @Tag(TEAM_CORE)
@@ -79,7 +80,7 @@ public class GetClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client bad request(400)")
+    @DisplayName("Clickhouse Api. Get client bad request (400)")
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
     @Tag(TEAM_CORE)
@@ -96,7 +97,7 @@ public class GetClientTest extends TestBaseApi {
 
     @Disabled
     @Test
-    @DisplayName("Clickhouse Api. Get client internal error(500)")
+    @DisplayName("Clickhouse Api. Get client internal error (500)")
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
     @Tag(TEAM_CORE)

@@ -16,11 +16,11 @@ public class RegistrationDbEventData {
     @JsonProperty("regulator")
     public String regulator;
 
-    @JsonProperty("mt_account")
-    public String mtAccount;
+    @JsonProperty("mt4_account")
+    public Integer mtAccount;
 
     public static RegistrationDbEventData getRegistrationDbEventData(
-            String createTime, Integer userId, String brand, String regulator, String mtAccount) {
+            String createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
         RegistrationDbEventData event = new RegistrationDbEventData();
         event.createTime = createTime;
         event.userId = userId;

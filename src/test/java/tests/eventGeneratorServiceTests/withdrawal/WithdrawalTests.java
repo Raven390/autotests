@@ -22,17 +22,17 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class WithdrawalTests {
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw table")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("67")
     public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         // Create test data
         int id = getRandomInt();
@@ -135,7 +135,7 @@ public class WithdrawalTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, id);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
         WithdrawalEvent withdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
 
         Allure.step("Verify that message was written correctly");
