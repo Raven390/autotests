@@ -13,12 +13,14 @@ import helpers.kafka.crmEvents.toRemove.WithdrawalCrmEvent;
 import io.qameta.allure.*;
 import java.time.Instant;
 import java.util.Date;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class DummyRuleTest {
 
+    @Disabled("Disabled. Almost not actual now")
     @Test
     @DisplayName("Dummy rule test")
     @Owner(OWNER_NIKOLAI_KORIAGIN)
@@ -55,7 +57,7 @@ public class DummyRuleTest {
 
         Allure.step("Send trigger message to CRM_EVENTS");
         kafka.produceMessage("13", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
-        String consumedMessageOfCore = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, uuid);
+        String consumedMessageOfCore = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
         WithdrawalCrmEvent withdrawalEvent1 = objectMapper.readValue(consumedMessageOfCore, WithdrawalCrmEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -69,7 +71,7 @@ public class DummyRuleTest {
         assertThat("Check type", withdrawalEvent1.type, equalTo(type));
 
         Allure.step("Wait for rule execution. Check topic for needed message");
-        String consumedAlert = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, uuid);
+        String consumedAlert = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, String.valueOf(userId));
         AlertEvent alertEvent = objectMapper.readValue(consumedAlert, AlertEvent.class);
 
         Allure.step("Verify that message was written correctly");

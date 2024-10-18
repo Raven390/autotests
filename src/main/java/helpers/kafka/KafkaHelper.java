@@ -67,7 +67,7 @@ public class KafkaHelper {
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "coretest");
 
         // Auto-offset configuration: read from the earliest offset if no previous offset is found
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
 
         // Security configurations
         properties.put("security.protocol", "SASL_SSL");
@@ -76,7 +76,7 @@ public class KafkaHelper {
         return properties;
     }
 
-    public String consumeMessages(String topic, int id) throws InterruptedException {
+    public String consumeMessages(String topic, String id) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
@@ -84,15 +84,14 @@ public class KafkaHelper {
         // Subscribe to the topic
         consumer.subscribe(Collections.singletonList(topic));
 
-        int maxAttempts = 25; // Limit to 50 tries
+        int maxAttempts = 25;
         int attempts = 0;
 
         try {
             while (attempts < maxAttempts) {
                 // Poll the Kafka broker for new records (with a timeout of 500 ms)
-                records = consumer.poll(Duration.ofMillis(500));
+                records = consumer.poll(Duration.ofMillis(1000));
                 attempts++; // Increment the attempt count
-                Thread.sleep(500);
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
@@ -101,12 +100,12 @@ public class KafkaHelper {
                             topic, record.key(), record.value(), record.partition(), record.offset());
 
                     // If the record contains the specified id, return it
-                    if (record.value() != null && record.value().contains(String.valueOf(id))) {
+                    if (record.value() != null && record.value().contains(id)) {
                         return record.value();
                     }
                 }
             }
-            // After 50 attempts, if no matching message is found, return null
+            // After X attempts, if no matching message is found, return null
             return "Max attempts reached without finding a matching message.";
         } finally {
             consumer.close(); // Ensure the consumer is closed
@@ -128,7 +127,7 @@ public class KafkaHelper {
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
             System.out.printf(
-                    "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                    "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d%n",
                     topic, record.key(), record.value(), record.partition(), metadata.offset());
         } catch (Exception e) {
             e.printStackTrace();

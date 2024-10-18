@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegistrationEventData {
     @JsonProperty("UUID")
-    public String UUID;
+    public String uuid;
 
     @JsonProperty("create_time")
     public String create_time;

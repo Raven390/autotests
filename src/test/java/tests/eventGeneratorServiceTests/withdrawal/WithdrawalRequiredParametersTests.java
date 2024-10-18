@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class WithdrawalRequiredParametersTests {
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     // Create test data
     int id = getRandomInt();
@@ -74,14 +76,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with user_id=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("68")
     public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -135,7 +135,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, id);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -144,14 +144,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with create_time=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("69")
     public void generateWithdrawalEventTest1() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -205,7 +203,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, id);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -214,14 +212,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with transfer_id=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("70")
     public void generateWithdrawalEventTest2() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 null,
@@ -275,7 +271,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -284,14 +280,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with brand=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("71")
     public void generateWithdrawalEventTest3() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -345,7 +339,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -354,14 +348,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with regulator=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("72")
     public void generateWithdrawalEventTest4() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -415,7 +407,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -424,14 +416,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with metadata=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("73")
     public void generateWithdrawalEventTest5() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -472,7 +462,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -481,14 +471,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with data=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("74")
     public void generateWithdrawalEventTest6() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
                 timestamp,
@@ -509,7 +497,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
@@ -518,14 +506,12 @@ public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with table_name=null parameter")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE_EVENT_WITHDRAWAL)
+    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("81")
     public void generateWithdrawalEventTest12() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         WithdrawalDbEventData data = getWithdrawalDbEventData(
                 id,
@@ -579,7 +565,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat(
