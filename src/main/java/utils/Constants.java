@@ -10,6 +10,7 @@ public class Constants {
     // OWNERS
     public static final String OWNER_NIKOLAI_KORIAGIN = "NikolaiKoriagin";
     public static final String OWNER_DMITRI_KALACHEV = "DmitriKalachev";
+    public static final String OWNER_FEDOR_NESTEROVICH = "FedorNesterovich";
     // TEST CASE STATUSES
     public static final String STATUS_MANUAL = "status_manual";
     public static final String STATUS_AUTOMATED = "status_automated";
