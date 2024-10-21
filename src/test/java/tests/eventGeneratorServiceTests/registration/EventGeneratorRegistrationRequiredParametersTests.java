@@ -18,7 +18,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     // Prepare metadata object
     static String timestamp = getCurrentDateTime();
     static String recordType = "data";
-    static String operation = "login";
+    static String operation = "registration";
     static String partitionKeyType = "attribute-name";
     static String schemaName = "dev_m_regulator_vfsc";
     static String tableName = "tb_account_mt4";
@@ -70,7 +69,6 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         return Stream.of(Arguments.of(timestamp, recordType, operation, partitionKeyType, schemaName, null));
     }
 
-    @Disabled
     @Test
     @DisplayName("Generate registration event with data=null parameter")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
@@ -90,10 +88,9 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime);
 
         Allure.step("Verify that message was not found");
-        assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
+        assertThat(consumedMessage, containsString(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("registrationDbEventDataRequiredParameters")
     @DisplayName("Generate registration event with data required parameters=null")
@@ -118,10 +115,9 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, timestamp);
 
         Allure.step("Verify that message was not found");
-        assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
+        assertThat(consumedMessage, containsString(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
-    @Disabled
     @Test
     @DisplayName("Generate registration event with metadata=null parameter")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
@@ -141,10 +137,9 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime);
 
         Allure.step("Verify that message was not found");
-        assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
+        assertThat(consumedMessage, containsString(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("registrationDbEventMetadataRequiredParameters")
     @DisplayName("Generate registration event with data required parameters=null")
@@ -174,13 +169,12 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId.toString());
 
         Allure.step("Verify that message was not found");
-        assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
+        assertThat(consumedMessage, containsString(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
-    @Disabled
     @ParameterizedTest
     @MethodSource("registrationDbEventMetadataNotRequiredParameters")
-    @DisplayName("Generate registration event with data required parameters=null")
+    @DisplayName("Generate registration event with metadata not required parameters=null")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
@@ -194,6 +188,8 @@ public class EventGeneratorRegistrationRequiredParametersTests {
             String schemaName,
             String tableName)
             throws JsonProcessingException, InterruptedException {
+        Integer userId = getRandomInt();
+        System.out.println(userId);
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
         RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
@@ -204,9 +200,9 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, userId.toString());
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId), 30);
 
         Allure.step("Verify that message was not found");
-        assertThat("Check message", consumedMessage, containsString(createTime));
+        assertThat("Check message", consumedMessage, containsString(String.valueOf(userId)));
     }
 }

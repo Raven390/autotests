@@ -19,7 +19,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,6 @@ public class EventGeneratorRegistrationTests {
     String schemaName = "dev_m_regulator_vfsc";
     String tableName = "tb_account_mt4";
 
-    @Disabled
     @Test
     @DisplayName("Generate registration event with event generator service")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
@@ -62,7 +60,7 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -74,7 +72,6 @@ public class EventGeneratorRegistrationTests {
         assertThat("Check mtAccount", RegistrationCrmEvent.data.mt_account, equalTo(mtAccount));
     }
 
-    @Disabled
     @Test
     @DisplayName("Generate registration event two times for the same user")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
@@ -93,7 +90,7 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime);
+        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");

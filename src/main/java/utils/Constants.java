@@ -36,6 +36,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_MT_EVENTS = "mt-events";
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
+    public static final String KAFKA_NO_MESSAGE_FOUND_ERROR = "Max attempts reached without finding a matching message";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_SECOND_NAME = "User";
