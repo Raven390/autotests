@@ -31,8 +31,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Hedge block flow
             IF Abuse registry check is NO AND Connection search:
             Linked new accounts with bonus found - exact match YES
@@ -57,8 +56,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Normal withdrawal flow
             IF user NOT in abuse registry
             AND not linked account AND Less than 4 simple abuse point
@@ -80,8 +78,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Manual investigation
             IF user NOT in abuse registry
             AND not linked account
@@ -118,8 +115,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Hedge block flow
             IF user NOT in abuse registry
             AND not linked account
@@ -156,8 +152,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Hedge block flow
             IF user NOT in abuse registry
             AND not linked account
@@ -194,8 +189,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Hedge block flow
             IF user NOT in abuse registry
             AND not linked account
@@ -232,8 +226,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Block withdrawal + manual investigation~
             IF user NOT in abuse registry
             AND not linked account
@@ -270,8 +263,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Block withdrawal + manual investigation
             IF user NOT in abuse registry
             AND not linked account
@@ -308,8 +300,7 @@ public class MirrorTradeRuleTest {
     }
 
     @Test
-    @DisplayName(
-            """
+    @DisplayName("""
             Block withdrawal + manual investigation
             IF user NOT in abuse registry
             AND not linked account

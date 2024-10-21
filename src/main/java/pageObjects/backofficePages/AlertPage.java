@@ -61,20 +61,13 @@ public class AlertPage {
         this.statusRowHeader = page.locator(".g-table__head .v-alert-list__column_type_status");
         this.assigneeRowHeader = page.locator(".g-table__head .v-alert-list__column_type_assignee");
         this.tagRowHeader = page.locator(".g-table__body .v-alert-list__column_type_tag");
-        this.dateRowCell =
-                page.locator(".g-table__body .v-alert-list__column_type_date").first();
-        this.amountRowCell =
-                page.locator(".g-table__head .v-alert-list__column_type_amount").first();
-        this.ruleRowCell =
-                page.locator(".g-table__body .v-alert-list__column_type_rule").first();
-        this.clientRowCell =
-                page.locator(".g-table__body .v-alert-list__column_type_client").first();
-        this.statusRowCell =
-                page.locator(".g-table__body .v-alert-list__column_type_status").first();
-        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee")
-                .first();
-        this.tagRowCell =
-                page.locator(".g-table__body .v-alert-list__column_type_tag").first();
+        this.dateRowCell = page.locator(".g-table__body .v-alert-list__column_type_date").first();
+        this.amountRowCell = page.locator(".g-table__head .v-alert-list__column_type_amount").first();
+        this.ruleRowCell = page.locator(".g-table__body .v-alert-list__column_type_rule").first();
+        this.clientRowCell = page.locator(".g-table__body .v-alert-list__column_type_client").first();
+        this.statusRowCell = page.locator(".g-table__body .v-alert-list__column_type_status").first();
+        this.assigneeRowCell = page.locator(".g-table__body .v-alert-list__column_type_assignee").first();
+        this.tagRowCell = page.locator(".g-table__body .v-alert-list__column_type_tag").first();
         this.soundButton = page.locator(".soundButton"); // not implemented
         this.refreshButton = page.locator(".refreshButton"); // not implemented
         this.profileButton = page.locator(".profileButton"); // not implemented-dummy
@@ -98,41 +91,15 @@ public class AlertPage {
     @Step("Open the MOCKED BackOffice alert page")
     public void navigateMock() {
         page.route("**/api/alerts", route -> {
-            String alert = "{\n" + "        \"id\": 1518,\n"
-                    + "        \"uuid\": \"c6b6af2e-43a2-425d-bf87-ee2b6141e267\",\n"
-                    + "        \"date\": \"2024-09-12T07:57:46.713048Z\",\n"
-                    + "        \"amount\": {\n"
-                    + "            \"value\": -235331367481903743,\n"
-                    + "            \"currency\": \"Monica\"\n"
-                    + "        },\n"
-                    + "        \"rule\": [\n"
-                    + "            \"ProctorMan\",\n"
-                    + "            \"Marquez\",\n"
-                    + "            \"Ramirez\",\n"
-                    + "            \"Simpson\",\n"
-                    + "            \"McFadden\",\n"
-                    + "            \"Farley\"\n"
-                    + "        ],\n"
-                    + "        \"client\": {\n"
-                    + "            \"id\": null,\n"
-                    + "            \"regulator\": null,\n"
-                    + "            \"brand\": null\n"
-                    + "        },\n"
-                    + "        \"status\": \"NEW\",\n"
-                    + "        \"tag\": []\n"
-                    + "    }";
+            String alert = "{\n" + "        \"id\": 1518,\n" + "        \"uuid\": \"c6b6af2e-43a2-425d-bf87-ee2b6141e267\",\n" + "        \"date\": \"2024-09-12T07:57:46.713048Z\",\n" + "        \"amount\": {\n" + "            \"value\": -235331367481903743,\n" + "            \"currency\": \"Monica\"\n" + "        },\n" + "        \"rule\": [\n" + "            \"ProctorMan\",\n" + "            \"Marquez\",\n" + "            \"Ramirez\",\n" + "            \"Simpson\",\n" + "            \"McFadden\",\n" + "            \"Farley\"\n" + "        ],\n" + "        \"client\": {\n" + "            \"id\": null,\n" + "            \"regulator\": null,\n" + "            \"brand\": null\n" + "        },\n" + "        \"status\": \"NEW\",\n" + "        \"tag\": []\n" + "    }";
             APIResponse response = route.fetch();
             String body = response.text();
             Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions()
-                    .setResponse(response)
-                    .setBody(alert)
-                    .setHeaders(headers));
+            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody(alert).setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
         isAlertPageLoaded();
-        page.evaluate(
-                "document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
+        page.evaluate("document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Check that user is logged in")

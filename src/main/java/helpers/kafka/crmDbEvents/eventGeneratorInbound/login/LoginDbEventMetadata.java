@@ -21,13 +21,7 @@ public class LoginDbEventMetadata {
     @JsonProperty("table-name")
     public String tableName;
 
-    public static LoginDbEventMetadata getLoginDbEventMetadata(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName) {
+    public static LoginDbEventMetadata getLoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
         LoginDbEventMetadata event = new LoginDbEventMetadata();
         event.timestamp = timestamp;
         event.recordType = recordType;

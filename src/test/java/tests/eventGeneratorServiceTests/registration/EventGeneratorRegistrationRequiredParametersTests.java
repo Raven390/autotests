@@ -46,22 +46,12 @@ public class EventGeneratorRegistrationRequiredParametersTests {
 
     // Provide combinations of parameters for required LoginDbEventData fields
     private static Stream<Arguments> registrationDbEventDataRequiredParameters() {
-        return Stream.of(
-                Arguments.of(null, userId, brand, regulator, mtAccount),
-                Arguments.of(createTime, null, brand, regulator, mtAccount),
-                Arguments.of(createTime, userId, null, regulator, mtAccount),
-                Arguments.of(createTime, userId, brand, null, mtAccount),
-                Arguments.of(createTime, userId, brand, regulator, null));
+        return Stream.of(Arguments.of(null, userId, brand, regulator, mtAccount), Arguments.of(createTime, null, brand, regulator, mtAccount), Arguments.of(createTime, userId, null, regulator, mtAccount), Arguments.of(createTime, userId, brand, null, mtAccount), Arguments.of(createTime, userId, brand, regulator, null));
     }
 
     // Provide combinations for non-required LoginDbEventMetadata fields
     private static Stream<Arguments> registrationDbEventMetadataNotRequiredParameters() {
-        return Stream.of(
-                Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, recordType, operation, null, schemaName, tableName),
-                Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
+        return Stream.of(Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, operation, null, schemaName, tableName), Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
     }
 
     // Provide combinations for required LoginDbEventMetadata fields
@@ -77,8 +67,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Tag(LAYER_API)
     @AllureId("101")
     public void generateRegistrationEventTest1() throws JsonProcessingException, InterruptedException {
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(null, metadata);
@@ -98,14 +87,11 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("104")
-    public void generateRegistrationEventTest2(
-            String createTime, Integer userId, String brand, String regulator, Integer mtAccount)
-            throws JsonProcessingException, InterruptedException {
+    @AllureId("102")
+    public void generateRegistrationEventTest2(String createTime, Integer userId, String brand, String regulator, Integer mtAccount) throws JsonProcessingException, InterruptedException {
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
@@ -124,7 +110,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("102")
+    @AllureId("103")
     public void generateRegistrationEventTest3() throws JsonProcessingException, InterruptedException {
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
@@ -148,18 +134,10 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("104")
-    public void generateRegistrationEventTest4(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName)
-            throws JsonProcessingException, InterruptedException {
+    public void generateRegistrationEventTest4(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) throws JsonProcessingException, InterruptedException {
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
@@ -180,20 +158,12 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("105")
-    public void generateRegistrationEventTest5(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName)
-            throws JsonProcessingException, InterruptedException {
+    public void generateRegistrationEventTest5(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) throws JsonProcessingException, InterruptedException {
         Integer userId = getRandomInt();
         System.out.println(userId);
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);

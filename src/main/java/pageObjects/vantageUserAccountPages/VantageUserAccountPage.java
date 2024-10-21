@@ -33,10 +33,8 @@ public class VantageUserAccountPage {
         this.dobDay = page.locator("xpath=//input[@id='dob']");
         this.dobMonth = page.locator("xpath=//input[@placeholder='Month']");
         this.dobYear = page.locator("xpath=//input[@placeholder='Year']");
-        this.dayValueDropdown = page.locator(
-                "xpath=//body/div[@class='el-select-dropdown el-popper']//*/ul[@class='el-scrollbar__view el-select-dropdown__list']/li[1]");
-        this.monthValueDropdown =
-                page.locator("xpath=//*[contains(@class,'el-select-dropdown__item') and @data-testid='01']");
+        this.dayValueDropdown = page.locator("xpath=//body/div[@class='el-select-dropdown el-popper']//*/ul[@class='el-scrollbar__view el-select-dropdown__list']/li[1]");
+        this.monthValueDropdown = page.locator("xpath=//*[contains(@class,'el-select-dropdown__item') and @data-testid='01']");
         this.yearValueDropdown = page.locator("xpath=//*[@data-testid='1990']");
         this.userPhoneNumber = page.locator("xpath=//input[@id='mobile']");
         this.nextButton = page.locator("xpath=//button[@data-testid='next']");

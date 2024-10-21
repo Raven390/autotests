@@ -12,8 +12,7 @@ public class MySqlHelper {
         // Load the MySQL JDBC driver and establish connection
         Class.forName("com.mysql.cj.jdbc.Driver");
         System.out.println("Connecting to Database");
-        connection = DriverManager.getConnection(
-                MYSQL_STAGING_CRM_HOST, MYSQL_STAGING_CRM_LOGIN, MYSQL_STAGING_CRM_PASSWORD);
+        connection = DriverManager.getConnection(MYSQL_STAGING_CRM_HOST, MYSQL_STAGING_CRM_LOGIN, MYSQL_STAGING_CRM_PASSWORD);
         // Check if the connection is successful
         if (connection == null) {
             System.out.println("Database Connection Failed");
@@ -23,8 +22,7 @@ public class MySqlHelper {
         return connection;
     }
 
-    public static ResultSet makeQuery(String query, int maxAttempts)
-            throws SQLException, ClassNotFoundException, InterruptedException {
+    public static ResultSet makeQuery(String query, int maxAttempts) throws SQLException, ClassNotFoundException, InterruptedException {
         ResultSet result = null;
         Connection connection;
         Statement statement;

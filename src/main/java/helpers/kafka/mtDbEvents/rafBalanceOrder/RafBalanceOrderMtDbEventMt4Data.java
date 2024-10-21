@@ -26,7 +26,7 @@ public class RafBalanceOrderMtDbEventMt4Data {
     public Integer serverId;
 
     public RafBalanceOrderMtDbEventMt4Data(
-            String openTime, Integer tradeId, Integer mtAccount, String comment, Integer cmd, Integer serverId) {
+                                           String openTime, Integer tradeId, Integer mtAccount, String comment, Integer cmd, Integer serverId) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;
@@ -40,12 +40,7 @@ public class RafBalanceOrderMtDbEventMt4Data {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RafBalanceOrderMtDbEventMt4Data that = (RafBalanceOrderMtDbEventMt4Data) o;
-        return Objects.equals(openTime, that.openTime)
-                && Objects.equals(tradeId, that.tradeId)
-                && Objects.equals(mtAccount, that.mtAccount)
-                && Objects.equals(comment, that.comment)
-                && Objects.equals(cmd, that.cmd)
-                && Objects.equals(serverId, that.serverId);
+        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(comment, that.comment) && Objects.equals(cmd, that.cmd) && Objects.equals(serverId, that.serverId);
     }
 
     @Override
@@ -55,12 +50,6 @@ public class RafBalanceOrderMtDbEventMt4Data {
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtDbEventMt4Data{" + "openTime='"
-                + openTime + '\'' + ", tradeId="
-                + tradeId + ", mtAccount="
-                + mtAccount + ", comment='"
-                + comment + '\'' + ", cmd="
-                + cmd + ", serverId="
-                + serverId + '}';
+        return "RafBalanceOrderMtDbEventMt4Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", comment='" + comment + '\'' + ", cmd=" + cmd + ", serverId=" + serverId + '}';
     }
 }

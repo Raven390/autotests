@@ -14,10 +14,7 @@ import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEvent;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEventData;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEventMetadata;
 import helpers.kafka.crmEvents.eventGeneratorOutboundEvents.LoginEvent;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -29,6 +26,7 @@ public class EventGeneratorLoginTests {
     @Test
     @DisplayName("Generate login event with event generator service")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)

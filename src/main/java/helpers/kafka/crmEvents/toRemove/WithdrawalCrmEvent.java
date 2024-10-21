@@ -35,16 +35,7 @@ public class WithdrawalCrmEvent {
     @JsonProperty("type")
     public String type;
 
-    public static WithdrawalCrmEvent withdrawalCrmEvent(
-            String traceId,
-            Date createTime,
-            Integer transferId,
-            Integer userId,
-            Integer mtAccount,
-            String brand,
-            String regulator,
-            String paymentMethodCode,
-            String type) {
+    public static WithdrawalCrmEvent withdrawalCrmEvent(String traceId, Date createTime, Integer transferId, Integer userId, Integer mtAccount, String brand, String regulator, String paymentMethodCode, String type) {
         WithdrawalCrmEvent event = new WithdrawalCrmEvent();
         event.uuid = traceId;
         event.createTime = createTime;

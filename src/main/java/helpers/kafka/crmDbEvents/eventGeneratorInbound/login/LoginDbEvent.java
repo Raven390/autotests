@@ -10,8 +10,7 @@ public class LoginDbEvent {
     @JsonProperty("metadata")
     public LoginDbEventMetadata metadata;
 
-    public static LoginDbEvent getLoginDbEvent(
-            LoginDbEventData LoginEventData, LoginDbEventMetadata LoginEventMetadata) {
+    public static LoginDbEvent getLoginDbEvent(LoginDbEventData LoginEventData, LoginDbEventMetadata LoginEventMetadata) {
         LoginDbEvent event = new LoginDbEvent();
         event.data = LoginEventData;
         event.metadata = LoginEventMetadata;

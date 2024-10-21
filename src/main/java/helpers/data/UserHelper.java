@@ -16,5 +16,6 @@ public class UserHelper {
         Allure.step(String.format("Created user with parameter isAbuser=%b and email=%s", isAbuser, email));
     }
 
-    public static void createLinkedUser() {}
+    public static void createLinkedUser() {
+    }
 }

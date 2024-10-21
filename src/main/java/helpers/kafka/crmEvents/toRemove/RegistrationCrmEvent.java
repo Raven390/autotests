@@ -26,8 +26,7 @@ public class RegistrationCrmEvent {
     @JsonProperty("mt_account")
     public Integer mtAccount;
 
-    public static RegistrationCrmEvent registrationEvent(
-            String uuid, Date createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
+    public static RegistrationCrmEvent registrationEvent(String uuid, Date createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
         RegistrationCrmEvent event = new RegistrationCrmEvent();
         event.uuid = uuid;
         event.createTime = createTime;

@@ -14,18 +14,10 @@ public class GetClientRequest {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     public static Response getClient(String clientId) throws IOException {
-        return httpClient
-                .newCall(new Request.Builder()
-                        .url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId)
-                        .build())
-                .execute();
+        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
     }
 
     public static Response getClient(int clientId) throws IOException {
-        return httpClient
-                .newCall(new Request.Builder()
-                        .url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId)
-                        .build())
-                .execute();
+        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
     }
 }

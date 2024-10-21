@@ -26,12 +26,7 @@ public class OpenTradeMtDbEventMetadata {
     public String tableName;
 
     public OpenTradeMtDbEventMetadata(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName) {
+                                      String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -45,12 +40,7 @@ public class OpenTradeMtDbEventMetadata {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OpenTradeMtDbEventMetadata that = (OpenTradeMtDbEventMetadata) o;
-        return Objects.equals(timestamp, that.timestamp)
-                && Objects.equals(recordType, that.recordType)
-                && Objects.equals(operation, that.operation)
-                && Objects.equals(partitionKeyType, that.partitionKeyType)
-                && Objects.equals(schemaName, that.schemaName)
-                && Objects.equals(tableName, that.tableName);
+        return Objects.equals(timestamp, that.timestamp) && Objects.equals(recordType, that.recordType) && Objects.equals(operation, that.operation) && Objects.equals(partitionKeyType, that.partitionKeyType) && Objects.equals(schemaName, that.schemaName) && Objects.equals(tableName, that.tableName);
     }
 
     @Override
@@ -60,12 +50,6 @@ public class OpenTradeMtDbEventMetadata {
 
     @Override
     public String toString() {
-        return "OpenTradeMtDbEventMetadata{" + "timestamp='"
-                + timestamp + '\'' + ", recordType='"
-                + recordType + '\'' + ", operation='"
-                + operation + '\'' + ", partitionKeyType='"
-                + partitionKeyType + '\'' + ", schemaName='"
-                + schemaName + '\'' + ", tableName='"
-                + tableName + '\'' + '}';
+        return "OpenTradeMtDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\'' + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\'' + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + '}';
     }
 }

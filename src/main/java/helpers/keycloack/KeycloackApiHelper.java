@@ -19,12 +19,9 @@ public class KeycloackApiHelper {
         headers.put("Authorization", "token " + "API_TOKEN");
         headers.put("shuba", "luba");
 
-        request = Playwright.create()
-                .request()
-                .newContext(new APIRequest.NewContextOptions()
-                        // All requests we send go to this API endpoint.
-                        .setBaseURL("https://playwright.dev")
-                        .setExtraHTTPHeaders(headers));
+        request = Playwright.create().request().newContext(new APIRequest.NewContextOptions()
+                // All requests we send go to this API endpoint.
+                .setBaseURL("https://playwright.dev").setExtraHTTPHeaders(headers));
     }
 
     public static void getAuthtoken() {

@@ -22,8 +22,7 @@ public class LoginDbEventData {
     @JsonProperty("cookie")
     public String cookie;
 
-    public static LoginDbEventData getLoginDbEventData(
-            String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) {
+    public static LoginDbEventData getLoginDbEventData(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) {
         LoginDbEventData event = new LoginDbEventData();
         event.loginDatetime = loginDatetime;
         event.userId = userId;

@@ -14,10 +14,8 @@ import helpers.kafka.KafkaHelper;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEvent;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEventData;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.login.LoginDbEventMetadata;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
+
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -48,18 +46,14 @@ public class EventGeneratorLoginRequiredParametersTests {
 
     // Provide combinations of parameters for required LoginDbEventData fields
     private static Stream<Arguments> loginDbEventDataRequiredParameters() {
-        return Stream.of(
-                Arguments.of(null, getRandomInt(), brand, ipAddress, uaString, cookie),
-                Arguments.of(loginDatetime, null, brand, ipAddress, uaString, cookie),
-                Arguments.of(loginDatetime, getRandomInt(), null, ipAddress, uaString, cookie));
+        return Stream.of(Arguments.of(null, getRandomInt(), brand, ipAddress, uaString, cookie), Arguments.of(
+                loginDatetime, null, brand, ipAddress, uaString, cookie), Arguments.of(loginDatetime, getRandomInt(), null, ipAddress, uaString, cookie));
     }
 
     // Provide combinations for non-required LoginDbEventData fields
     private static Stream<Arguments> loginDbEventDataNotRequiredParameters() {
-        return Stream.of(
-                Arguments.of(loginDatetime, getRandomInt(), brand, null, uaString, cookie),
-                Arguments.of(loginDatetime, getRandomInt(), brand, ipAddress, null, cookie),
-                Arguments.of(loginDatetime, getRandomInt(), brand, ipAddress, uaString, null));
+        return Stream.of(Arguments.of(loginDatetime, getRandomInt(), brand, null, uaString, cookie), Arguments.of(
+                loginDatetime, getRandomInt(), brand, ipAddress, null, cookie), Arguments.of(loginDatetime, getRandomInt(), brand, ipAddress, uaString, null));
     }
 
     // Provide combinations of parameters for required LoginDbEventMetadata fields
@@ -69,29 +63,22 @@ public class EventGeneratorLoginRequiredParametersTests {
 
     // Provide combinations for non-required LoginDbEventMetadata fields
     private static Stream<Arguments> loginDbEventMetadataNotRequiredParameters() {
-        return Stream.of(
-                Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName),
-                Arguments.of(timestamp, recordType, operation, null, schemaName, tableName),
-                Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
+        return Stream.of(Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, operation, null, schemaName, tableName), Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
     }
 
     @ParameterizedTest
     @MethodSource("loginDbEventDataRequiredParameters")
     @DisplayName("Generate login event with required data parameters = null")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("111")
-    public void generateLoginEventTest1(
-            String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie)
-            throws JsonProcessingException, InterruptedException {
+    public void generateLoginEventTest1(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) throws JsonProcessingException, InterruptedException {
 
         LoginDbEventData data = getLoginDbEventData(loginDatetime, userId, brand, ipAddress, uaString, cookie);
-        LoginDbEventMetadata metadata =
-                getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        LoginDbEventMetadata metadata = getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         LoginDbEvent crmDbEvent = LoginDbEvent.getLoginDbEvent(data, metadata);
@@ -101,25 +88,23 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @ParameterizedTest
     @MethodSource("loginDbEventDataNotRequiredParameters")
     @DisplayName("Generate login event with not required data parameters = null")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("112")
-    public void generateLoginEventTest2(
-            String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie)
-            throws JsonProcessingException, InterruptedException {
+    public void generateLoginEventTest2(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) throws JsonProcessingException, InterruptedException {
 
         LoginDbEventData data = getLoginDbEventData(loginDatetime, userId, brand, ipAddress, uaString, cookie);
-        LoginDbEventMetadata metadata =
-                getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        LoginDbEventMetadata metadata = getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         LoginDbEvent crmDbEvent = LoginDbEvent.getLoginDbEvent(data, metadata);
@@ -135,14 +120,14 @@ public class EventGeneratorLoginRequiredParametersTests {
     @Test
     @DisplayName("Generate login event with data=null object")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("93")
     public void generateLoginEventTest3() throws JsonProcessingException, InterruptedException {
 
-        LoginDbEventMetadata metadata =
-                getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        LoginDbEventMetadata metadata = getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         LoginDbEvent crmDbEvent = LoginDbEvent.getLoginDbEvent(null, metadata);
@@ -152,13 +137,14 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
     @DisplayName("Generate login event with metadata=null object")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
@@ -175,31 +161,24 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @ParameterizedTest
     @MethodSource("loginDbEventMetadataRequiredParameters")
     @DisplayName("Generate login event with required metadata parameters = null")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("113")
-    public void generateLoginEventTest5(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName)
-            throws JsonProcessingException, InterruptedException {
+    public void generateLoginEventTest5(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) throws JsonProcessingException, InterruptedException {
         Integer userId = getRandomInt();
 
         LoginDbEventData data = getLoginDbEventData(loginDatetime, userId, brand, ipAddress, uaString, cookie);
-        LoginDbEventMetadata metadata =
-                getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        LoginDbEventMetadata metadata = getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         LoginDbEvent crmDbEvent = LoginDbEvent.getLoginDbEvent(data, metadata);
@@ -209,30 +188,23 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @ParameterizedTest
     @MethodSource("loginDbEventMetadataNotRequiredParameters")
     @DisplayName("Generate login event with not required metadata parameters = null")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("114")
-    public void generateLoginEventTest6(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName)
-            throws JsonProcessingException, InterruptedException {
+    public void generateLoginEventTest6(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) throws JsonProcessingException, InterruptedException {
 
         LoginDbEventData data = getLoginDbEventData(loginDatetime, userId, brand, ipAddress, uaString, cookie);
-        LoginDbEventMetadata metadata =
-                getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        LoginDbEventMetadata metadata = getLoginDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         LoginDbEvent crmDbEvent = LoginDbEvent.getLoginDbEvent(data, metadata);

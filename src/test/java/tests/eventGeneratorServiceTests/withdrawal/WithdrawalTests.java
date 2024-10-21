@@ -53,8 +53,7 @@ public class WithdrawalTests {
         String updateTime = "2024-09-30T19:24:26Z";
         String cpsAttachVariable = "{\"card_name\":\"nouse\",\"card_number\":\"nouse\"}";
         String orderNumber = "VU80431768720240930192426";
-        String cpsMandatoryField =
-                "address,amount,birthday,card_name,card_number,city,email,first_name,last_name,notify_url,order_currency,order_id,payment_method,phone,profiles,province,state,submit_time,timestamp,transaction_type,user_id,zip";
+        String cpsMandatoryField = "address,amount,birthday,card_name,card_number,city,email,first_name,last_name,notify_url,order_currency,order_id,payment_method,phone,profiles,province,state,submit_time,timestamp,transaction_type,user_id,zip";
         int isRememberInfo = 0;
         String upiAccountName = "nouse";
         String deductCredit = "0000000000000000000000000000.00000000";
@@ -81,54 +80,9 @@ public class WithdrawalTests {
         String prevTransactionId = "1.84742436101607e+15";
         String prevTransactionRecordId = "1";
         String commitTimestamp = "2024-10-02T09:34:20.000000Z";
-        String streamPosition =
-                "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                userId,
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        String streamPosition = "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, userId, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);

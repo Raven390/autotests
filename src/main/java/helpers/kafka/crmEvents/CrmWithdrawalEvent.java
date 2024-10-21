@@ -66,28 +66,7 @@ public class CrmWithdrawalEvent {
     @JsonProperty("walletAddress")
     public String walletAddress;
 
-    public static CrmWithdrawalEvent getWithdrawalEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            String withdrawalId,
-            String eventDate,
-            String withdrawalCurrency,
-            Double withdrawalAmount,
-            Integer clientId,
-            String paymentMethodCode,
-            String paymentChannelCode,
-            String paymentChannelName,
-            String cardHash,
-            String binNumber,
-            String expDate,
-            String fullName,
-            String iban,
-            String bankAccountHolderName,
-            String bankName,
-            String walletAddress) {
+    public static CrmWithdrawalEvent getWithdrawalEvent(String schemaVersion, String brand, String regulator, String type, String id, String withdrawalId, String eventDate, String withdrawalCurrency, Double withdrawalAmount, Integer clientId, String paymentMethodCode, String paymentChannelCode, String paymentChannelName, String cardHash, String binNumber, String expDate, String fullName, String iban, String bankAccountHolderName, String bankName, String walletAddress) {
         CrmWithdrawalEvent event = new CrmWithdrawalEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

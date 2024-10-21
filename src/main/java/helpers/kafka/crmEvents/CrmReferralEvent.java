@@ -33,17 +33,7 @@ public class CrmReferralEvent {
     @JsonProperty("eventDate")
     public String eventDate;
 
-    public static CrmReferralEvent getReferralEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            Integer clientId,
-            Float bonusAmount,
-            String currency,
-            String bonusType,
-            String eventDate) {
+    public static CrmReferralEvent getReferralEvent(String schemaVersion, String brand, String regulator, String type, String id, Integer clientId, Float bonusAmount, String currency, String bonusType, String eventDate) {
         CrmReferralEvent event = new CrmReferralEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

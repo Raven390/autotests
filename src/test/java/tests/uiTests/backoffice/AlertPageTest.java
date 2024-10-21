@@ -34,8 +34,7 @@ public class AlertPageTest extends TestBaseWeb {
     @DisplayName("negative login test")
     void NegativeLoginUITest() {
         alertPage.navigate();
-        keycloackPage.loginWEB(
-                "WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
+        keycloackPage.loginWEB("WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
         alertPage.isNotLoggedIn(); // check some simple and bulletproof marker of logging error
         keycloackPage.errorMessageIsShown();
     }

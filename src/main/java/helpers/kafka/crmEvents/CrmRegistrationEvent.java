@@ -60,26 +60,7 @@ public class CrmRegistrationEvent {
     @JsonProperty("metaTraderAccountType")
     public String metaTraderAccountType;
 
-    public static CrmRegistrationEvent getRegistrationEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            Integer clientId,
-            Integer referrerId,
-            Integer metaTraderAccount,
-            String ipAddress,
-            String firstName,
-            String lastName,
-            String email,
-            String phoneNumber,
-            String nationalityCode,
-            String residencyCode,
-            String createTime,
-            String birthday,
-            String currency,
-            String metaTraderAccountType) {
+    public static CrmRegistrationEvent getRegistrationEvent(String schemaVersion, String brand, String regulator, String type, String id, Integer clientId, Integer referrerId, Integer metaTraderAccount, String ipAddress, String firstName, String lastName, String email, String phoneNumber, String nationalityCode, String residencyCode, String createTime, String birthday, String currency, String metaTraderAccountType) {
         CrmRegistrationEvent event = new CrmRegistrationEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

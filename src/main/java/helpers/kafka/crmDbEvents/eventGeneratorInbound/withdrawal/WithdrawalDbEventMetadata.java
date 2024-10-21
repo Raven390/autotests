@@ -39,19 +39,7 @@ public class WithdrawalDbEventMetadata {
     @JsonProperty("stream-position")
     public String streamPosition;
 
-    public static WithdrawalDbEventMetadata getWithdrawalDbEventMetadata(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName,
-            String transactionId,
-            String transactionRecordId,
-            String prevTransactionId,
-            String prevTransactionRecordId,
-            String commitTimestamp,
-            String streamPosition) {
+    public static WithdrawalDbEventMetadata getWithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName, String transactionId, String transactionRecordId, String prevTransactionId, String prevTransactionRecordId, String commitTimestamp, String streamPosition) {
         WithdrawalDbEventMetadata event = new WithdrawalDbEventMetadata();
         event.timestamp = timestamp;
         event.recordType = recordType;

@@ -9,12 +9,7 @@ public class RafBalanceOrderMtDbEventFactory {
 
     private static RafBalanceOrderMtDbEventMetadata generateRafBalanceOrderMtDbEventMetadata() {
         return new RafBalanceOrderMtDbEventMetadata(
-                Instant.now().toString(),
-                "test_record_type",
-                "insert",
-                "test_partition_key_type",
-                "test_schema_name",
-                null);
+                Instant.now().toString(), "test_record_type", "insert", "test_partition_key_type", "test_schema_name", null);
     }
 
     private static RafBalanceOrderMtDbEventMetadata generateRafBalanceOrderMtDbEventMetadataMt4() {

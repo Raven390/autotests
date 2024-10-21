@@ -19,8 +19,7 @@ public class AlertEvent {
     @JsonProperty("rule")
     public AlertRules rule;
 
-    public static AlertEvent alertEvent(
-            String traceId, String alertId, Float timestamp, String unClId, AlertRules rule) {
+    public static AlertEvent alertEvent(String traceId, String alertId, Float timestamp, String unClId, AlertRules rule) {
         AlertEvent alertEvent = new AlertEvent();
         alertEvent.uuid = traceId;
         alertEvent.alertId = alertId;

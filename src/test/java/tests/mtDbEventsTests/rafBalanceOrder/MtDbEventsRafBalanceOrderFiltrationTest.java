@@ -26,7 +26,7 @@ public class MtDbEventsRafBalanceOrderFiltrationTest {
 
     @Test
     @DisplayName(
-            "Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
+        "Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_FEDOR_NESTEROVICH)
     @Tag(TEAM_CORE)
@@ -45,10 +45,8 @@ public class MtDbEventsRafBalanceOrderFiltrationTest {
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId1 = generateRafBalanceOrderMtDbEventMt4();
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId2 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTradeIdAccountServerId2.data.tradeId =
-                rafBalanceOrderEventTradeIdAccountServerId1.data.tradeId;
-        rafBalanceOrderEventTradeIdAccountServerId2.data.mtAccount =
-                rafBalanceOrderEventTradeIdAccountServerId1.data.mtAccount;
+        rafBalanceOrderEventTradeIdAccountServerId2.data.tradeId = rafBalanceOrderEventTradeIdAccountServerId1.data.tradeId;
+        rafBalanceOrderEventTradeIdAccountServerId2.data.mtAccount = rafBalanceOrderEventTradeIdAccountServerId1.data.mtAccount;
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd1 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventMt4Cmd1.data.cmd = -1;
@@ -71,13 +69,9 @@ public class MtDbEventsRafBalanceOrderFiltrationTest {
         kafka.produceMessage(
                 "13", objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), KAFKA_TOPIC_MT_DB_EVENTS);
         kafka.produceMessage(
-                "13",
-                objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1),
-                KAFKA_TOPIC_MT_DB_EVENTS);
+                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), KAFKA_TOPIC_MT_DB_EVENTS);
         kafka.produceMessage(
-                "13",
-                objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2),
-                KAFKA_TOPIC_MT_DB_EVENTS);
+                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), KAFKA_TOPIC_MT_DB_EVENTS);
         kafka.produceMessage(
                 "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), KAFKA_TOPIC_MT_DB_EVENTS);
         kafka.produceMessage(
@@ -91,21 +85,10 @@ public class MtDbEventsRafBalanceOrderFiltrationTest {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS,
-                rafBalanceOrderEventTestAccount1.data.openTime,
-                rafBalanceOrderEventTestAccount2.data.openTime,
-                rafBalanceOrderEventTradeIdAccountServerId1.data.openTime,
-                rafBalanceOrderEventTradeIdAccountServerId2.data.openTime,
-                rafBalanceOrderEventMt4Cmd1.data.openTime,
-                rafBalanceOrderEventMt4Cmd2.data.openTime,
-                rafBalanceOrderEventMt4Comment.data.openTime,
-                rafBalanceOrderEventMt5Action1.data.openTime,
-                rafBalanceOrderEventMt5Action2.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventTestAccount1.data.openTime, rafBalanceOrderEventTestAccount2.data.openTime, rafBalanceOrderEventTradeIdAccountServerId1.data.openTime, rafBalanceOrderEventTradeIdAccountServerId2.data.openTime, rafBalanceOrderEventMt4Cmd1.data.openTime, rafBalanceOrderEventMt4Cmd2.data.openTime, rafBalanceOrderEventMt4Comment.data.openTime, rafBalanceOrderEventMt5Action1.data.openTime, rafBalanceOrderEventMt5Action2.data.openTime);
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
-                isAnyMatchPresentInMessages.matchResult(),
-                equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }

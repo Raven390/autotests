@@ -23,8 +23,7 @@ public class LoginCrmEvent {
     @JsonProperty("ip_address")
     public Integer ipAddress;
 
-    public static LoginCrmEvent loginEvent(
-            String uuid, Date loginTime, Integer userId, String brand, Integer ipAddress) {
+    public static LoginCrmEvent loginEvent(String uuid, Date loginTime, Integer userId, String brand, Integer ipAddress) {
         LoginCrmEvent event = new LoginCrmEvent();
         event.uuid = uuid;
         event.loginTime = loginTime;

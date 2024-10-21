@@ -33,17 +33,7 @@ public class CrmLoginEvent {
     @JsonProperty("loginType")
     public String loginType;
 
-    public static CrmLoginEvent getLoginEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            Integer loginId,
-            Integer clientId,
-            String ipAddress,
-            String eventDate,
-            String loginType) {
+    public static CrmLoginEvent getLoginEvent(String schemaVersion, String brand, String regulator, String type, String id, Integer loginId, Integer clientId, String ipAddress, String eventDate, String loginType) {
         CrmLoginEvent event = new CrmLoginEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

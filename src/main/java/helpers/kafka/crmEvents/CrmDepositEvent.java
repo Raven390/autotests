@@ -67,28 +67,7 @@ public class CrmDepositEvent {
     @JsonProperty("walletAddress")
     public String walletAddress;
 
-    public static CrmDepositEvent getDepositEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            String depositId,
-            String eventDate,
-            String depositCurrency,
-            Double depositAmount,
-            Integer clientId,
-            String paymentMethodCode,
-            String paymentChannelCode,
-            String paymentChannelName,
-            String cardHash,
-            String binNumber,
-            String expDate,
-            String fullName,
-            String iban,
-            String bankAccountHolderName,
-            String bankName,
-            String walletAddress) {
+    public static CrmDepositEvent getDepositEvent(String schemaVersion, String brand, String regulator, String type, String id, String depositId, String eventDate, String depositCurrency, Double depositAmount, Integer clientId, String paymentMethodCode, String paymentChannelCode, String paymentChannelName, String cardHash, String binNumber, String expDate, String fullName, String iban, String bankAccountHolderName, String bankName, String walletAddress) {
         CrmDepositEvent event = new CrmDepositEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

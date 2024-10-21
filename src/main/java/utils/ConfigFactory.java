@@ -4,24 +4,19 @@ import java.util.Objects;
 import org.aeonbits.owner.Config;
 
 public class ConfigFactory {
-    private static final UserConfig CONFIG =
-            org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
+    private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
     public static final String
-            // URLs
-            BASE_URL_E2E = CONFIG.baseURLE2E(),
-            BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
+    // URLs
+    BASE_URL_E2E = CONFIG.baseURLE2E(), BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
             // Kafka
-            KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic(),
-            KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate(),
+            KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic(), KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate(),
             KAFKA_PASSWORD = CONFIG.testClusterKafkaPassword(),
             // Settings
-            PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(),
-            PATH_TRACE = CONFIG.pathTrace(),
+            PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(), PATH_TRACE = CONFIG.pathTrace(),
             PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot(),
             // Databases
-            POSTGRE_HOST = CONFIG.postgreLogin(),
-            POSTGRE_PASSWORD = CONFIG.postgrePassword(),
+            POSTGRE_HOST = CONFIG.postgreLogin(), POSTGRE_PASSWORD = CONFIG.postgrePassword(),
             POSTGRE_LOGIN = CONFIG.postgreHost(),
             MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost(),
             MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin(),
@@ -33,8 +28,7 @@ public class ConfigFactory {
             CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath(),
             CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath(),
             // Clickhouse database
-            CLICKHOUSE_HOST = CONFIG.clickhouseHost(),
-            CLICKHOUSE_USER = CONFIG.clickhouseUser(),
+            CLICKHOUSE_HOST = CONFIG.clickhouseHost(), CLICKHOUSE_USER = CONFIG.clickhouseUser(),
             CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword(),
             // Other
             COUNTRY_MALAYSIA = CONFIG.countryMalaysia();

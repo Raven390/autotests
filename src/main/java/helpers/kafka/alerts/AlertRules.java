@@ -21,8 +21,7 @@ public class AlertRules {
     @JsonProperty("attributes")
     public AlertRuleAttributes attributes;
 
-    public static AlertRules alertRules(
-            Integer code, String ver, String name, String trigger, String fraudType, AlertRuleAttributes attributes) {
+    public static AlertRules alertRules(Integer code, String ver, String name, String trigger, String fraudType, AlertRuleAttributes attributes) {
         AlertRules alertRules = new AlertRules();
         alertRules.code = code;
         alertRules.ver = ver;

@@ -21,7 +21,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
     @Tag(STATUS_AUTOMATED)
     @Tag(FEATURE_LEXIS_NEXIS)
     @Tag(LAYER_API)
-    @DisplayName("Register and wait till LexisNexis event")
+    @DisplayName("Vantage. Registration Lexis Nexis event")
     @AllureId("57")
     public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
         // Test data
@@ -59,11 +59,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         vantageUserAccountPage.clickNextButton();
 
         // Make db query
-        ResultSet result = MySqlHelper.makeQuery(
-                "SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%"
-                        + email
-                        + "%'",
-                30);
+        ResultSet result = MySqlHelper.makeQuery("SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%" + email + "%'", 30);
         String raw_result = result.getString("raw_result");
         System.out.println("raw_result: " + raw_result);
 

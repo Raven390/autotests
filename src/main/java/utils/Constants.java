@@ -23,6 +23,8 @@ public class Constants {
     public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
     public static final String FEATURE_CLICKHOUSE_API_SERVICE = "Clickhouse api service";
     public static final String FEATURE_EVENT_GENERATOR_SERVICE = "Event generator service";
+    // STORIES
+    public static final String FEATURE_EVENT_GENERATOR_SERVICE_LOGIN = "Login event in Event Generator";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
