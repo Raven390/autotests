@@ -12,6 +12,8 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -175,6 +177,53 @@ public class KafkaHelper {
         }
     }
 
+    public MessageWithHeaders consumeMessages(String topic, String id, boolean getHeaders) throws InterruptedException {
+        if (!getHeaders) {
+            return new MessageWithHeaders(consumeMessages(topic, id), new HashMap<>());
+        } else {
+            ConsumerRecords<String, String> records;
+            Properties properties = getKafkaConsumerProperties();
+            KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+            // Subscribe to the topic
+            consumer.subscribe(Collections.singletonList(topic));
+
+            int maxAttempts = 25;
+            int attempts = 0;
+
+            try {
+                while (attempts < maxAttempts) {
+                    // Poll the Kafka broker for new records (with a timeout of 500 ms)
+                    records = consumer.poll(Duration.ofMillis(1000));
+                    attempts++; // Increment the attempt count
+
+                    // Process each record
+                    for (ConsumerRecord<String, String> record : records) {
+                        System.out.printf(
+                                "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                                topic, record.key(), record.value(), record.partition(), record.offset());
+
+                        // If the record contains the specified id, return it
+                        if (record.value() != null && record.value().contains(id)) {
+                            Headers headers = record.headers();
+                            // Convert headers to a HashMap
+                            Map<String, String> headersMap = new HashMap<>();
+                            for (Header header : headers) {
+                                headersMap.put(header.key(), new String(header.value()));
+                            }
+                            return new MessageWithHeaders(record.value(), headersMap);
+                        }
+                    }
+                }
+                // After X attempts, if no matching message is found, return null
+                return new MessageWithHeaders(
+                        "Max attempts reached without finding a matching message.", new HashMap<>());
+            } finally {
+                consumer.close(); // Ensure the consumer is closed
+            }
+        }
+    }
+
     public RecordMetadata produceMessage(String key, String message, String topic) {
         RecordMetadata metadata = null;
         // Set producer properties and create a new Kafka producer
@@ -198,5 +247,90 @@ public class KafkaHelper {
             producer.close();
         }
         return metadata;
+    }
+
+    public MatchResultWithMessage isAnyMatchPresentInMessages(String topic, String... textToSearchList) {
+        ConsumerRecords<String, String> records;
+        Properties properties = getKafkaConsumerProperties();
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Subscribe to the topic
+        try (consumer) {
+            consumer.subscribe(Collections.singletonList(topic));
+            int maxAttempts = 25;
+            int attempts = 0;
+            // Ensure there are no null values in the textToSearchList
+            if (textToSearchList == null || textToSearchList.length == 0) {
+                return new MatchResultWithMessage(false, "No search parameters provided.");
+            }
+            while (attempts < maxAttempts) {
+                // Poll the Kafka broker for new records (with a timeout of 1000 ms)
+                records = consumer.poll(Duration.ofMillis(1000));
+                attempts++; // Increment the attempt count
+                // If no records are found, continue polling
+                if (records.isEmpty()) {
+                    continue;
+                }
+                // Process each record
+                for (ConsumerRecord<String, String> record : records) {
+                    // Ensure record.value() is not null
+                    if (record.value() == null) {
+                        continue; // Skip records with null value
+                    }
+                    // Check if any of the search text is present in the message value
+                    for (String text : textToSearchList) {
+                        // Ensure text is not null
+                        if (text != null && record.value().contains(text)) {
+                            return new MatchResultWithMessage(
+                                    true,
+                                    "Matching Record Found: " + record.value() + ". Based on search with: " + text);
+                        }
+                    }
+                }
+            }
+            // After max attempts, if no matching message is found, return false
+            return new MatchResultWithMessage(false, "Max attempts reached without finding a matching message.");
+        }
+    }
+
+    public MatchResultWithMessage areAllParamsPresentInMessages(String topic, String... textToSearchList) {
+        ConsumerRecords<String, String> records;
+        Properties properties = getKafkaConsumerProperties();
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Subscribe to the topic
+
+        try (consumer) {
+            consumer.subscribe(Collections.singletonList(topic));
+            int maxAttempts = 25;
+            int attempts = 0;
+            while (attempts < maxAttempts) {
+                // Poll the Kafka broker for new records (with a timeout of 500 ms)
+                records = consumer.poll(Duration.ofMillis(1000));
+                attempts++; // Increment the attempt count
+
+                // Track which texts are found across all messages
+                Set<String> foundTexts = new HashSet<>();
+
+                // Process each record
+                for (ConsumerRecord<String, String> record : records) {
+                    System.out.printf(
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                            topic, record.key(), record.value(), record.partition(), record.offset());
+                    // Check if each textToSearch is present in the message value
+                    for (String text : textToSearchList) {
+                        if (record.value() != null && record.value().contains(text)) {
+                            foundTexts.add(text); // Mark this text as found
+                        }
+                    }
+                    // If all texts are found, we can stop searching
+                    if (foundTexts.size() == textToSearchList.length) {
+                        return new MatchResultWithMessage(true, "All the parameters were found in messages.");
+                    }
+                }
+            }
+            // If we exit the loop, it means some parameters were not found
+            return new MatchResultWithMessage(false, "Some of the parameters were not found in messages.");
+        }
     }
 }

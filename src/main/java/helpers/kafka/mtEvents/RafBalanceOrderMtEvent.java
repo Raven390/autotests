@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
- * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1104118020/Open+trade
+ * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1112440834/RAF+balance+order
  */
-public class OpenTradeMtEvent {
+public class RafBalanceOrderMtEvent {
     @JsonProperty("uuid")
     public String uuid;
 
@@ -19,11 +19,8 @@ public class OpenTradeMtEvent {
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
 
-    @JsonProperty("volume")
-    public Double volume;
-
-    @JsonProperty("symbol")
-    public String symbol;
+    @JsonProperty("comment")
+    public String comment;
 
     @JsonProperty("serverId")
     public Integer serverId;
@@ -31,38 +28,24 @@ public class OpenTradeMtEvent {
     @JsonProperty("type")
     public String type;
 
-    public OpenTradeMtEvent() {}
+    public RafBalanceOrderMtEvent() {}
 
-    public OpenTradeMtEvent(
-            String uuid,
-            String openTime,
-            Integer tradeId,
-            Integer tradingAccount,
-            Double volume,
-            String symbol,
-            Integer serverId) {
+    public RafBalanceOrderMtEvent(
+            String uuid, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
         this.uuid = uuid;
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
-        this.volume = volume;
-        this.symbol = symbol;
+        this.comment = comment;
         this.serverId = serverId;
     }
 
-    public OpenTradeMtEvent(
-            String openTime,
-            Integer tradeId,
-            Integer tradingAccount,
-            Double volume,
-            String symbol,
-            Integer serverId,
-            String type) {
+    public RafBalanceOrderMtEvent(
+            String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
-        this.volume = volume;
-        this.symbol = symbol;
+        this.comment = comment;
         this.serverId = serverId;
         this.type = type;
     }
@@ -71,30 +54,28 @@ public class OpenTradeMtEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        OpenTradeMtEvent that = (OpenTradeMtEvent) o;
+        RafBalanceOrderMtEvent that = (RafBalanceOrderMtEvent) o;
         return Objects.equals(openTime, that.openTime)
                 && Objects.equals(tradeId, that.tradeId)
                 && Objects.equals(tradingAccount, that.tradingAccount)
-                && Objects.equals(volume, that.volume)
-                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(comment, that.comment)
                 && Objects.equals(serverId, that.serverId)
                 && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(openTime, tradeId, tradingAccount, volume, symbol, serverId, type);
+        return Objects.hash(openTime, tradeId, tradingAccount, comment, serverId, type);
     }
 
     @Override
     public String toString() {
-        return "OpenTradeMtEvent{" + "uuid='"
+        return "RafBalanceOrderMtEvent{" + "uuid='"
                 + uuid + '\'' + ", openTime='"
                 + openTime + '\'' + ", tradeId="
                 + tradeId + ", tradingAccount="
-                + tradingAccount + ", volume="
-                + volume + ", symbol='"
-                + symbol + '\'' + ", serverId="
+                + tradingAccount + ", comment='"
+                + comment + '\'' + ", serverId="
                 + serverId + ", type='"
                 + type + '\'' + '}';
     }

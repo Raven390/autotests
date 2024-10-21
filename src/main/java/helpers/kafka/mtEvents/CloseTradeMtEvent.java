@@ -1,39 +1,101 @@
 package helpers.kafka.mtEvents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Date;
+import java.util.Objects;
 
 /**
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1096351889/Close+trade
  */
 public class CloseTradeMtEvent {
-    @JsonProperty("close_time")
-    public Date closeTime;
+    @JsonProperty("uuid")
+    public String uuid;
 
-    @JsonProperty("trade_id")
-    public int tradeId;
+    @JsonProperty("closeTime")
+    public String closeTime;
 
-    @JsonProperty("mt_account")
-    public int mtAccount;
+    @JsonProperty("tradeId")
+    public Integer tradeId;
+
+    @JsonProperty("tradingAccount")
+    public Integer tradingAccount;
 
     @JsonProperty("volume")
-    public int volume;
+    public Double volume;
 
     @JsonProperty("symbol")
     public String symbol;
 
-    @JsonProperty("server_id")
-    public int serverId;
+    @JsonProperty("serverId")
+    public Integer serverId;
 
-    public static CloseTradeMtEvent closeTrade(
-            Date closeTime, int tradeId, int mtAccount, int volume, String symbol, int serverId) {
-        CloseTradeMtEvent event = new CloseTradeMtEvent();
-        event.closeTime = closeTime;
-        event.tradeId = tradeId;
-        event.mtAccount = mtAccount;
-        event.volume = volume;
-        event.symbol = symbol;
-        event.serverId = serverId;
-        return event;
+    @JsonProperty("type")
+    public String type;
+
+    public CloseTradeMtEvent() {}
+
+    public CloseTradeMtEvent(
+            String uuid,
+            String closeTime,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId) {
+        this.uuid = uuid;
+        this.closeTime = closeTime;
+        this.tradeId = tradeId;
+        this.tradingAccount = tradingAccount;
+        this.volume = volume;
+        this.symbol = symbol;
+        this.serverId = serverId;
+    }
+
+    public CloseTradeMtEvent(
+            String closeTime,
+            Integer tradeId,
+            Integer tradingAccount,
+            Double volume,
+            String symbol,
+            Integer serverId,
+            String type) {
+        this.closeTime = closeTime;
+        this.tradeId = tradeId;
+        this.tradingAccount = tradingAccount;
+        this.volume = volume;
+        this.symbol = symbol;
+        this.serverId = serverId;
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CloseTradeMtEvent that = (CloseTradeMtEvent) o;
+        return Objects.equals(closeTime, that.closeTime)
+                && Objects.equals(tradeId, that.tradeId)
+                && Objects.equals(tradingAccount, that.tradingAccount)
+                && Objects.equals(volume, that.volume)
+                && Objects.equals(symbol, that.symbol)
+                && Objects.equals(serverId, that.serverId)
+                && Objects.equals(type, that.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(closeTime, tradeId, tradingAccount, volume, symbol, serverId, type);
+    }
+
+    @Override
+    public String toString() {
+        return "CloseTradeMtEvent{" + "uuid='"
+                + uuid + '\'' + ", closeTime='"
+                + closeTime + '\'' + ", tradeId="
+                + tradeId + ", tradingAccount="
+                + tradingAccount + ", volume="
+                + volume + ", symbol='"
+                + symbol + '\'' + ", serverId="
+                + serverId + ", type='"
+                + type + '\'' + '}';
     }
 }

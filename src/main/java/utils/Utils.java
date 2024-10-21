@@ -3,15 +3,16 @@ package utils;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Utils {
 
     public static Integer getRandomInt() {
-        Random random = new Random();
-        int randomInt = random.nextInt(Integer.MAX_VALUE);
-        return randomInt;
+        return new Random().nextInt();
     }
 
     public static String getRandomUuidString() {
@@ -32,5 +33,57 @@ public class Utils {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
         return formatter.format(currentDateTime);
+    }
+
+    public static Integer getRandomIntNotInRange(int lowerBound, int upperBound) {
+        if (lowerBound < upperBound) {
+            int randomInt;
+            do {
+                randomInt = new Random().nextInt();
+            } while (randomInt > lowerBound && randomInt < upperBound);
+            return randomInt;
+        } else {
+            return null;
+        }
+    }
+
+    public static String removeKeyFromJson(String jsonString, String keyToRemove) {
+        // Parse the input string as a JSONObject
+        JSONObject jsonObject = new JSONObject(jsonString);
+
+        // Recursively remove the key from the JSON object
+        removeKeyRecursively(jsonObject, keyToRemove);
+
+        // Return the updated JSON string
+        return jsonObject.toString();
+    }
+
+    // Helper method to recursively remove a key from a JSONObject
+    private static void removeKeyRecursively(JSONObject jsonObject, String keyToRemove) {
+        // Use an iterator to avoid ConcurrentModificationException
+        Iterator<String> keys = jsonObject.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            Object value = jsonObject.get(key);
+
+            // If the key matches the key to remove, remove it
+            if (key.equals(keyToRemove)) {
+                keys.remove();
+            }
+            // If the value is a JSONObject, recurse into it
+            else if (value instanceof JSONObject) {
+                removeKeyRecursively((JSONObject) value, keyToRemove);
+            }
+            // If the value is a JSONArray, check for JSONObjects inside it
+            else if (value instanceof JSONArray array) {
+                for (int i = 0; i < array.length(); i++) {
+                    Object arrayElement = array.get(i);
+                    if (arrayElement instanceof JSONObject) {
+                        removeKeyRecursively((JSONObject) arrayElement, keyToRemove);
+                    }
+                }
+            }
+        }
     }
 }
