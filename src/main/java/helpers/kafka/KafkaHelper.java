@@ -1,19 +1,17 @@
 package helpers.kafka;
 
 import static utils.ConfigFactory.*;
+import static utils.Constants.KAFKA_NO_MESSAGE_FOUND_ERROR;
 
 import java.time.Duration;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.Future;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -67,7 +65,7 @@ public class KafkaHelper {
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "coretest");
 
         // Auto-offset configuration: read from the earliest offset if no previous offset is found
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         // Security configurations
         properties.put("security.protocol", "SASL_SSL");
@@ -81,17 +79,32 @@ public class KafkaHelper {
         Properties properties = getKafkaConsumerProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
-        // Subscribe to the topic
+        // Subscribe to the topic and poll once to assign partitions
         consumer.subscribe(Collections.singletonList(topic));
+        consumer.poll(Duration.ofMillis(100)); // Initial poll to get the assignment
 
-        int maxAttempts = 25;
+        // Get the partitions assigned to the consumer for this topic
+        Set<TopicPartition> partitions = consumer.assignment();
+
+        // Get the latest (end) offset for each partition
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
+
+        // Seek to the previous 50 messages for each partition
+        for (TopicPartition partition : partitions) {
+            long endOffset = endOffsets.get(partition);
+            long startOffset = Math.max(0, endOffset - 50);
+            consumer.seek(partition, startOffset);
+        }
+
+        int maxAttempts = 30;
         int attempts = 0;
 
         try {
             while (attempts < maxAttempts) {
-                // Poll the Kafka broker for new records (with a timeout of 500 ms)
+                // Poll the Kafka broker for new records (with a timeout of 1000 ms)
                 records = consumer.poll(Duration.ofMillis(1000));
                 attempts++; // Increment the attempt count
+                Thread.sleep(500);
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
@@ -105,8 +118,58 @@ public class KafkaHelper {
                     }
                 }
             }
-            // After X attempts, if no matching message is found, return null
-            return "Max attempts reached without finding a matching message.";
+            // After maxAttempts, if no matching message is found, return message
+            return KAFKA_NO_MESSAGE_FOUND_ERROR;
+        } finally {
+            consumer.close(); // Ensure the consumer is closed
+        }
+    }
+
+    public String consumeMessages(String topic, String id, Integer maxAttempts) throws InterruptedException {
+        ConsumerRecords<String, String> records;
+        Properties properties = getKafkaConsumerProperties();
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Subscribe to the topic and poll once to assign partitions
+        consumer.subscribe(Collections.singletonList(topic));
+        consumer.poll(Duration.ofMillis(100)); // Initial poll to get the assignment
+
+        // Get the partitions assigned to the consumer for this topic
+        Set<TopicPartition> partitions = consumer.assignment();
+
+        // Get the latest (end) offset for each partition
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
+
+        // Seek to the previous 50 messages for each partition
+        for (TopicPartition partition : partitions) {
+            long endOffset = endOffsets.get(partition);
+            long startOffset = Math.max(0, endOffset - 50);
+            consumer.seek(partition, startOffset);
+        }
+
+        int attempts = 0;
+
+        try {
+            while (attempts < maxAttempts) {
+                // Poll the Kafka broker for new records (with a timeout of 1000 ms)
+                records = consumer.poll(Duration.ofMillis(1000));
+                attempts++; // Increment the attempt count
+                Thread.sleep(500);
+
+                // Process each record
+                for (ConsumerRecord<String, String> record : records) {
+                    System.out.printf(
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                            topic, record.key(), record.value(), record.partition(), record.offset());
+
+                    // If the record contains the specified id, return it
+                    if (record.value() != null && record.value().contains(id)) {
+                        return record.value();
+                    }
+                }
+            }
+            // After maxAttempts, if no matching message is found, return message
+            return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
             consumer.close(); // Ensure the consumer is closed
         }
