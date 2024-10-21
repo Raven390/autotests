@@ -21,13 +21,7 @@ public class RegistrationDbEventMetadata {
     @JsonProperty("table-name")
     public String tableName;
 
-    public static RegistrationDbEventMetadata getRegistrationDbEventMetadata(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName) {
+    public static RegistrationDbEventMetadata getRegistrationDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
         RegistrationDbEventMetadata event = new RegistrationDbEventMetadata();
         event.timestamp = timestamp;
         event.recordType = recordType;

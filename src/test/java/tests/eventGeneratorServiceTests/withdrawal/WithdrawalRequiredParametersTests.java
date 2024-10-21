@@ -43,8 +43,7 @@ public class WithdrawalRequiredParametersTests {
     String updateTime = "2024-09-30T19:24:26Z";
     String cpsAttachVariable = "{\"card_name\":\"nouse\",\"card_number\":\"nouse\"}";
     String orderNumber = "VU80431768720240930192426";
-    String cpsMandatoryField =
-            "address,amount,birthday,card_name,card_number,city,email,first_name,last_name,notify_url,order_currency,order_id,payment_method,phone,profiles,province,state,submit_time,timestamp,transaction_type,user_id,zip";
+    String cpsMandatoryField = "address,amount,birthday,card_name,card_number,city,email,first_name,last_name,notify_url,order_currency,order_id,payment_method,phone,profiles,province,state,submit_time,timestamp,transaction_type,user_id,zip";
     int isRememberInfo = 0;
     String upiAccountName = "nouse";
     String deductCredit = "0000000000000000000000000000.00000000";
@@ -71,8 +70,7 @@ public class WithdrawalRequiredParametersTests {
     String prevTransactionId = "1.84742436101607e+15";
     String prevTransactionRecordId = "1";
     String commitTimestamp = "2024-10-02T09:34:20.000000Z";
-    String streamPosition =
-            "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
+    String streamPosition = "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
 
     @Test
     @DisplayName("Generate withdrawal event with user_id=null parameter")
@@ -83,52 +81,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("68")
     public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                null,
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, null, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -138,8 +92,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -151,52 +105,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("69")
     public void generateWithdrawalEventTest1() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                null,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, null, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -206,8 +116,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -219,52 +129,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("70")
     public void generateWithdrawalEventTest2() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                null,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(null, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -274,8 +140,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -287,52 +153,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("71")
     public void generateWithdrawalEventTest3() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                null,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, null, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -342,8 +164,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -355,52 +177,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("72")
     public void generateWithdrawalEventTest4() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                null);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, null);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -410,8 +188,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -423,39 +201,7 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("73")
     public void generateWithdrawalEventTest5() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                null);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, null);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, null);
@@ -465,8 +211,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -478,19 +224,7 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("74")
     public void generateWithdrawalEventTest6() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                tableName,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(null, metadata);
@@ -500,8 +234,8 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 
     @Test
@@ -513,52 +247,8 @@ public class WithdrawalRequiredParametersTests {
     @AllureId("81")
     public void generateWithdrawalEventTest12() throws JsonProcessingException, InterruptedException {
 
-        WithdrawalDbEventData data = getWithdrawalDbEventData(
-                id,
-                String.valueOf(userId),
-                mt4Account,
-                accountName,
-                currency,
-                status,
-                withdrawType,
-                withdrawAmount,
-                fee,
-                actualAmount,
-                paymentAmount,
-                cardNumber,
-                isDel,
-                createTime,
-                updateTime,
-                cpsAttachVariable,
-                orderNumber,
-                cpsMandatoryField,
-                isRememberInfo,
-                upiAccountName,
-                deductCredit,
-                userSalesId,
-                accountSalesId,
-                orderCurrency,
-                paymentMethodCode,
-                checkingStatus,
-                isTrade,
-                rate,
-                isNonApp,
-                toUsdRate,
-                brand,
-                regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(
-                timestamp,
-                recordType,
-                operation,
-                partitionKeyType,
-                schemaName,
-                null,
-                transactionId,
-                transactionRecordId,
-                prevTransactionId,
-                prevTransactionRecordId,
-                commitTimestamp,
-                streamPosition);
+        WithdrawalDbEventData data = getWithdrawalDbEventData(id, String.valueOf(userId), mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, null, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
         WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
@@ -568,7 +258,7 @@ public class WithdrawalRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat(
-                "Check message", consumedMessage, equalTo("Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(
+                "Max attempts reached without finding a matching message."));
     }
 }

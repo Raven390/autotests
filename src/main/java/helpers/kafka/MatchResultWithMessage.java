@@ -1,3 +1,4 @@
 package helpers.kafka;
 
-public record MatchResultWithMessage(boolean matchResult, String message) {}
+public record MatchResultWithMessage(boolean matchResult, String message) {
+}

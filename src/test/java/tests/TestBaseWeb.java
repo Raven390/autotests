@@ -37,11 +37,8 @@ public class TestBaseWeb {
     @BeforeAll
     static void setupBrowser() {
         playwright = Playwright.create();
-        browser = playwright
-                .chromium()
-                .launch(new BrowserType.LaunchOptions()
-                        .setHeadless(getHeadless())
-                        .setTimeout(TIMEOUT));
+        browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(getHeadless()).setTimeout(
+                TIMEOUT));
     }
 
     @AfterAll
@@ -54,11 +51,7 @@ public class TestBaseWeb {
     @BeforeEach
     void setupContextAndPage() {
         context = browser.newContext(new Browser.NewContextOptions().setRecordVideoDir(Paths.get(PATH_TRACE_VIDEO)));
-        context.tracing()
-                .start(new Tracing.StartOptions()
-                        .setScreenshots(true)
-                        .setSnapshots(true)
-                        .setSources(true));
+        context.tracing().start(new Tracing.StartOptions().setScreenshots(true).setSnapshots(true).setSources(true));
         page = context.newPage();
 
         // Core team pages

@@ -72,8 +72,7 @@ public class GetClientTest extends TestBaseApi {
     @AllureId("61")
     public void getClientNotFoundTest() throws IOException {
         Response response = getClient("AlphaTick-999-SVG");
-        GetClientResponseError responseBody =
-                objectMapper.readValue(response.body().string(), GetClientResponseError.class);
+        GetClientResponseError responseBody = objectMapper.readValue(response.body().string(), GetClientResponseError.class);
         assertThat("Assert that code is 404", response.code(), is(404));
         assertThat("Assert that code is 400", responseBody.status, is("404"));
         assertThat("Assert that code is 400", responseBody.error, is("Client not found."));
@@ -87,8 +86,7 @@ public class GetClientTest extends TestBaseApi {
     @AllureId("62")
     public void getClientBadRequestTest() throws IOException {
         Response response = getClient(1);
-        GetClientResponseError responseBody =
-                objectMapper.readValue(response.body().string(), GetClientResponseError.class);
+        GetClientResponseError responseBody = objectMapper.readValue(response.body().string(), GetClientResponseError.class);
 
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", responseBody.status, is("400"));

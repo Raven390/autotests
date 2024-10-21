@@ -100,39 +100,7 @@ public class WithdrawalDbEventData {
     @JsonProperty(value = "regulator", required = true)
     public String regulator;
 
-    public static WithdrawalDbEventData getWithdrawalDbEventData(
-            Integer id,
-            String userId,
-            Integer mt4account,
-            String accountName,
-            String currency,
-            Integer status,
-            Integer withdrawType,
-            String withdrawAmount,
-            String fee,
-            String actualAmount,
-            String paymentAmount,
-            String cardNumber,
-            Integer isDel,
-            String createTime,
-            String updateTime,
-            String cpsAttachVariable,
-            String orderNumber,
-            String cpsMandatoryField,
-            Integer isRememberInfo,
-            String upiAccountName,
-            String deductCredit,
-            Integer userSalesId,
-            Integer accountSalesId,
-            String orderCurrency,
-            String paymentMethodCode,
-            Integer checkingStatus,
-            Integer isTrade,
-            String rate,
-            Integer isNonApp,
-            String toUsdRate,
-            String brand,
-            String regulator) {
+    public static WithdrawalDbEventData getWithdrawalDbEventData(Integer id, String userId, Integer mt4account, String accountName, String currency, Integer status, Integer withdrawType, String withdrawAmount, String fee, String actualAmount, String paymentAmount, String cardNumber, Integer isDel, String createTime, String updateTime, String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo, String upiAccountName, String deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency, String paymentMethodCode, Integer checkingStatus, Integer isTrade, String rate, Integer isNonApp, String toUsdRate, String brand, String regulator) {
         WithdrawalDbEventData event = new WithdrawalDbEventData();
         event.id = id;
         event.userId = userId;

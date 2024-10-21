@@ -16,11 +16,7 @@ public class TestCheckApi extends TestBaseApi {
     @Test
     @Owner(TAG_BUILD_CHECK)
     public void getUserTest() throws IOException {
-        Response response = httpClient
-                .newCall(new Request.Builder()
-                        .url("https://reqres.in/api/users/2")
-                        .build())
-                .execute();
+        Response response = httpClient.newCall(new Request.Builder().url("https://reqres.in/api/users/2").build()).execute();
         assertThat("Check response code", response.code(), is(200));
     }
 }

@@ -32,14 +32,7 @@ public class OpenTradeMtDbEventMt4Data {
     public Integer serverId;
 
     public OpenTradeMtDbEventMt4Data(
-            String openTime,
-            Integer tradeId,
-            Integer mtAccount,
-            Double volume,
-            String symbol,
-            Integer cmd,
-            String closeTime,
-            Integer serverId) {
+                                     String openTime, Integer tradeId, Integer mtAccount, Double volume, String symbol, Integer cmd, String closeTime, Integer serverId) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;
@@ -55,14 +48,7 @@ public class OpenTradeMtDbEventMt4Data {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OpenTradeMtDbEventMt4Data that = (OpenTradeMtDbEventMt4Data) o;
-        return Objects.equals(openTime, that.openTime)
-                && Objects.equals(tradeId, that.tradeId)
-                && Objects.equals(mtAccount, that.mtAccount)
-                && Objects.equals(volume, that.volume)
-                && Objects.equals(symbol, that.symbol)
-                && Objects.equals(cmd, that.cmd)
-                && Objects.equals(closeTime, that.closeTime)
-                && Objects.equals(serverId, that.serverId);
+        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(volume, that.volume) && Objects.equals(symbol, that.symbol) && Objects.equals(cmd, that.cmd) && Objects.equals(closeTime, that.closeTime) && Objects.equals(serverId, that.serverId);
     }
 
     @Override
@@ -72,14 +58,6 @@ public class OpenTradeMtDbEventMt4Data {
 
     @Override
     public String toString() {
-        return "OpenTradeMtDbEventMt4Data{" + "openTime='"
-                + openTime + '\'' + ", tradeId="
-                + tradeId + ", mtAccount="
-                + mtAccount + ", volume="
-                + volume + ", symbol='"
-                + symbol + '\'' + ", cmd="
-                + cmd + ", closeTime='"
-                + closeTime + '\'' + ", serverId="
-                + serverId + '}';
+        return "OpenTradeMtDbEventMt4Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", cmd=" + cmd + ", closeTime='" + closeTime + '\'' + ", serverId=" + serverId + '}';
     }
 }

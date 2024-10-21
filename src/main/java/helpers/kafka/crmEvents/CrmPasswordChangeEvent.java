@@ -27,15 +27,7 @@ public class CrmPasswordChangeEvent {
     @JsonProperty("eventDate")
     public String eventDate;
 
-    public static CrmPasswordChangeEvent getPasswordChangeEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            Integer clientId,
-            String ipAddress,
-            String eventDate) {
+    public static CrmPasswordChangeEvent getPasswordChangeEvent(String schemaVersion, String brand, String regulator, String type, String id, Integer clientId, String ipAddress, String eventDate) {
         CrmPasswordChangeEvent event = new CrmPasswordChangeEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

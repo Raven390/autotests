@@ -39,19 +39,7 @@ public class WithdrawalDbEventMetadataCpsTable {
     @JsonProperty("stream-position")
     public String streamPosition;
 
-    public static WithdrawalDbEventMetadataCpsTable getWithdrawalDbEventMetadataCpsTable(
-            String timestamp,
-            String recordType,
-            String operation,
-            String partitionKeyType,
-            String schemaName,
-            String tableName,
-            String transactionId,
-            String transactionRecordId,
-            String prevTransactionId,
-            String prevTransactionRecordId,
-            String commitTimestamp,
-            String streamPosition) {
+    public static WithdrawalDbEventMetadataCpsTable getWithdrawalDbEventMetadataCpsTable(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName, String transactionId, String transactionRecordId, String prevTransactionId, String prevTransactionRecordId, String commitTimestamp, String streamPosition) {
         WithdrawalDbEventMetadataCpsTable event = new WithdrawalDbEventMetadataCpsTable();
         event.timestamp = timestamp;
         event.recordType = recordType;

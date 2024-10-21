@@ -42,20 +42,12 @@ public class MtDbEventsOpenTradeTest {
         kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeMtDbEventMt4), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage =
-                kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt4.data.openTime, true);
-        OpenTradeMtEvent retrievedOpenTradeMtEvent =
-                objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
+        MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt4.data.openTime, true);
+        OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
         retrievedOpenTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
-                openTradeMtDbEventMt4.data.openTime,
-                openTradeMtDbEventMt4.data.tradeId,
-                openTradeMtDbEventMt4.data.mtAccount,
-                openTradeMtDbEventMt4.data.volume,
-                openTradeMtDbEventMt4.data.symbol,
-                openTradeMtDbEventMt4.data.serverId,
-                "openTrade");
+                openTradeMtDbEventMt4.data.openTime, openTradeMtDbEventMt4.data.tradeId, openTradeMtDbEventMt4.data.mtAccount, openTradeMtDbEventMt4.data.volume, openTradeMtDbEventMt4.data.symbol, openTradeMtDbEventMt4.data.serverId, "openTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check uuid", retrievedOpenTradeMtEvent.uuid, notNullValue());
@@ -78,20 +70,12 @@ public class MtDbEventsOpenTradeTest {
         kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeMtDbEventMt5), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage =
-                kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt5.data.openTime, true);
-        OpenTradeMtEvent retrievedOpenTradeMtEvent =
-                objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
+        MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt5.data.openTime, true);
+        OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
         retrievedOpenTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
-                openTradeMtDbEventMt5.data.openTime,
-                openTradeMtDbEventMt5.data.tradeId,
-                openTradeMtDbEventMt5.data.mtAccount,
-                openTradeMtDbEventMt5.data.volume,
-                openTradeMtDbEventMt5.data.symbol,
-                openTradeMtDbEventMt5.data.serverId,
-                "openTrade");
+                openTradeMtDbEventMt5.data.openTime, openTradeMtDbEventMt5.data.tradeId, openTradeMtDbEventMt5.data.mtAccount, openTradeMtDbEventMt5.data.volume, openTradeMtDbEventMt5.data.symbol, openTradeMtDbEventMt5.data.serverId, "openTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check uuid", retrievedOpenTradeMtEvent.uuid, notNullValue());

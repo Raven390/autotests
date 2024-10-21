@@ -52,8 +52,7 @@ public class EventGeneratorRegistrationTests {
     public void generateRegistrationEventTest1() throws JsonProcessingException, InterruptedException {
 
         RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
@@ -80,10 +79,8 @@ public class EventGeneratorRegistrationTests {
     @Tag(LAYER_API)
     @AllureId("128")
     public void generateRegistrationEventTest2() throws JsonProcessingException, InterruptedException {
-        RegistrationDbEventData data =
-                getRegistrationDbEventData(createTime, getRandomInt(), brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(
-                timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEventData data = getRegistrationDbEventData(createTime, getRandomInt(), brand, regulator, mtAccount);
+        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
 
         Allure.step("Write message to crm-db-events topic");
         RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);

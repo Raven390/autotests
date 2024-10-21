@@ -24,15 +24,11 @@ public class KafkaHelper {
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
             properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PRIVATE);
             properties.put(
-                    "sasl.jaas.config",
-                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
-                            + System.getenv("KAFKA_PASSWORD") + "';");
+                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + System.getenv("KAFKA_PASSWORD") + "';");
         } else {
             properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PUBLIC);
             properties.put(
-                    "sasl.jaas.config",
-                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
-                            + KAFKA_PASSWORD + "';");
+                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + KAFKA_PASSWORD + "';");
         }
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -47,16 +43,12 @@ public class KafkaHelper {
             // Private Kafka setup for CI environment
             properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PRIVATE);
             properties.put(
-                    "sasl.jaas.config",
-                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
-                            + System.getenv("KAFKA_PASSWORD") + "';");
+                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + System.getenv("KAFKA_PASSWORD") + "';");
         } else {
             // Public Kafka setup for local environment
             properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PUBLIC);
             properties.put(
-                    "sasl.jaas.config",
-                    "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='"
-                            + KAFKA_PASSWORD + "';");
+                    "sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username='kafkaclient' password='" + KAFKA_PASSWORD + "';");
         }
 
         // Deserializers for key and value
@@ -111,8 +103,7 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                            topic, record.key(), record.value(), record.partition(), record.offset());
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
 
                     // If the record contains the specified id, return it
                     if (record.value() != null && record.value().contains(id)) {
@@ -161,8 +152,7 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                            topic, record.key(), record.value(), record.partition(), record.offset());
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
 
                     // If the record contains the specified id, return it
                     if (record.value() != null && record.value().contains(id)) {
@@ -200,8 +190,7 @@ public class KafkaHelper {
                     // Process each record
                     for (ConsumerRecord<String, String> record : records) {
                         System.out.printf(
-                                "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                                topic, record.key(), record.value(), record.partition(), record.offset());
+                                "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
 
                         // If the record contains the specified id, return it
                         if (record.value() != null && record.value().contains(id)) {
@@ -239,8 +228,7 @@ public class KafkaHelper {
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
             System.out.printf(
-                    "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                    topic, record.key(), record.value(), record.partition(), metadata.offset());
+                    "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), metadata.offset());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -282,8 +270,7 @@ public class KafkaHelper {
                         // Ensure text is not null
                         if (text != null && record.value().contains(text)) {
                             return new MatchResultWithMessage(
-                                    true,
-                                    "Matching Record Found: " + record.value() + ". Based on search with: " + text);
+                                    true, "Matching Record Found: " + record.value() + ". Based on search with: " + text);
                         }
                     }
                 }
@@ -315,8 +302,7 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                            topic, record.key(), record.value(), record.partition(), record.offset());
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
                     // Check if each textToSearch is present in the message value
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {

@@ -88,22 +88,10 @@ public class MtDbEventsOpenTradeFiltrationTest {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS,
-                openTradeEventTestAccount1.data.openTime,
-                openTradeEventTestAccount2.data.openTime,
-                openTradeEventTradeIdAccountServerId2.data.openTime,
-                openTradeEventTestCloseTime.data.openTime,
-                openTradeEventMt4Cmd1.data.openTime,
-                openTradeEventMt4Cmd2.data.openTime,
-                openTradeEventMt5Entry1.data.openTime,
-                openTradeEventMt5Entry2.data.openTime,
-                openTradeEventMt5Action1.data.openTime,
-                openTradeEventMt5Action2.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, openTradeEventTestAccount1.data.openTime, openTradeEventTestAccount2.data.openTime, openTradeEventTradeIdAccountServerId2.data.openTime, openTradeEventTestCloseTime.data.openTime, openTradeEventMt4Cmd1.data.openTime, openTradeEventMt4Cmd2.data.openTime, openTradeEventMt5Entry1.data.openTime, openTradeEventMt5Entry2.data.openTime, openTradeEventMt5Action1.data.openTime, openTradeEventMt5Action2.data.openTime);
 
         Allure.step("Verify that no matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(),
-                isAnyMatchPresentInMessages.matchResult(),
-                equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }

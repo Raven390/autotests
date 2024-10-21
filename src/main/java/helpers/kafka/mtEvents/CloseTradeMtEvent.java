@@ -31,16 +31,11 @@ public class CloseTradeMtEvent {
     @JsonProperty("type")
     public String type;
 
-    public CloseTradeMtEvent() {}
+    public CloseTradeMtEvent() {
+    }
 
     public CloseTradeMtEvent(
-            String uuid,
-            String closeTime,
-            Integer tradeId,
-            Integer tradingAccount,
-            Double volume,
-            String symbol,
-            Integer serverId) {
+                             String uuid, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
         this.uuid = uuid;
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -51,13 +46,7 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-            String closeTime,
-            Integer tradeId,
-            Integer tradingAccount,
-            Double volume,
-            String symbol,
-            Integer serverId,
-            String type) {
+                             String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId, String type) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -72,13 +61,7 @@ public class CloseTradeMtEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CloseTradeMtEvent that = (CloseTradeMtEvent) o;
-        return Objects.equals(closeTime, that.closeTime)
-                && Objects.equals(tradeId, that.tradeId)
-                && Objects.equals(tradingAccount, that.tradingAccount)
-                && Objects.equals(volume, that.volume)
-                && Objects.equals(symbol, that.symbol)
-                && Objects.equals(serverId, that.serverId)
-                && Objects.equals(type, that.type);
+        return Objects.equals(closeTime, that.closeTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(volume, that.volume) && Objects.equals(symbol, that.symbol) && Objects.equals(serverId, that.serverId) && Objects.equals(type, that.type);
     }
 
     @Override
@@ -88,14 +71,6 @@ public class CloseTradeMtEvent {
 
     @Override
     public String toString() {
-        return "CloseTradeMtEvent{" + "uuid='"
-                + uuid + '\'' + ", closeTime='"
-                + closeTime + '\'' + ", tradeId="
-                + tradeId + ", tradingAccount="
-                + tradingAccount + ", volume="
-                + volume + ", symbol='"
-                + symbol + '\'' + ", serverId="
-                + serverId + ", type='"
-                + type + '\'' + '}';
+        return "CloseTradeMtEvent{" + "uuid='" + uuid + '\'' + ", closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

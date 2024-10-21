@@ -44,16 +44,7 @@ public class DummyRuleTest {
         String type = "withdrawal";
 
         Allure.step("Build withdrawal message to send to crm_events");
-        WithdrawalCrmEvent withdrawalEvent = WithdrawalCrmEvent.withdrawalCrmEvent(
-                String.valueOf(uuid),
-                createTime,
-                transferId,
-                userId,
-                mtAccount,
-                brand,
-                regulator,
-                paymentMethodCode,
-                type);
+        WithdrawalCrmEvent withdrawalEvent = WithdrawalCrmEvent.withdrawalCrmEvent(String.valueOf(uuid), createTime, transferId, userId, mtAccount, brand, regulator, paymentMethodCode, type);
 
         Allure.step("Send trigger message to CRM_EVENTS");
         kafka.produceMessage("13", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);

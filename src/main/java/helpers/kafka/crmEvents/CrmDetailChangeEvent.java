@@ -63,27 +63,7 @@ public class CrmDetailChangeEvent {
     @JsonProperty("metaTraderAccountType")
     public String metaTraderAccountType;
 
-    public static CrmDetailChangeEvent getDetailChangeEvent(
-            String schemaVersion,
-            String brand,
-            String regulator,
-            String type,
-            String id,
-            Integer clientId,
-            Integer metaTraderAccount,
-            Boolean proofOfAddressStatus,
-            Boolean proofOfIdentityStatus,
-            String lastName,
-            String firstName,
-            String email,
-            String phoneNumber,
-            String nationalityCode,
-            String residencyCode,
-            String idNumber,
-            String eventTime,
-            String birthday,
-            String currency,
-            String metaTraderAccountType) {
+    public static CrmDetailChangeEvent getDetailChangeEvent(String schemaVersion, String brand, String regulator, String type, String id, Integer clientId, Integer metaTraderAccount, Boolean proofOfAddressStatus, Boolean proofOfIdentityStatus, String lastName, String firstName, String email, String phoneNumber, String nationalityCode, String residencyCode, String idNumber, String eventTime, String birthday, String currency, String metaTraderAccountType) {
         CrmDetailChangeEvent event = new CrmDetailChangeEvent();
         event.schemaVersion = schemaVersion;
         event.brand = brand;

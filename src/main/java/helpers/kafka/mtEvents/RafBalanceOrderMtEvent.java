@@ -28,10 +28,11 @@ public class RafBalanceOrderMtEvent {
     @JsonProperty("type")
     public String type;
 
-    public RafBalanceOrderMtEvent() {}
+    public RafBalanceOrderMtEvent() {
+    }
 
     public RafBalanceOrderMtEvent(
-            String uuid, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
+                                  String uuid, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
         this.uuid = uuid;
         this.openTime = openTime;
         this.tradeId = tradeId;
@@ -41,7 +42,7 @@ public class RafBalanceOrderMtEvent {
     }
 
     public RafBalanceOrderMtEvent(
-            String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
+                                  String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -55,12 +56,7 @@ public class RafBalanceOrderMtEvent {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RafBalanceOrderMtEvent that = (RafBalanceOrderMtEvent) o;
-        return Objects.equals(openTime, that.openTime)
-                && Objects.equals(tradeId, that.tradeId)
-                && Objects.equals(tradingAccount, that.tradingAccount)
-                && Objects.equals(comment, that.comment)
-                && Objects.equals(serverId, that.serverId)
-                && Objects.equals(type, that.type);
+        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(comment, that.comment) && Objects.equals(serverId, that.serverId) && Objects.equals(type, that.type);
     }
 
     @Override
@@ -70,13 +66,6 @@ public class RafBalanceOrderMtEvent {
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtEvent{" + "uuid='"
-                + uuid + '\'' + ", openTime='"
-                + openTime + '\'' + ", tradeId="
-                + tradeId + ", tradingAccount="
-                + tradingAccount + ", comment='"
-                + comment + '\'' + ", serverId="
-                + serverId + ", type='"
-                + type + '\'' + '}';
+        return "RafBalanceOrderMtEvent{" + "uuid='" + uuid + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

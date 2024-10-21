@@ -30,7 +30,9 @@ public class PostgreHelper {
         return rs;
     }
 
-    public static void insertUser() {}
+    public static void insertUser() {
+    }
 
-    public static void insertUserToAbuseRegistry() {}
+    public static void insertUserToAbuseRegistry() {
+    }
 }

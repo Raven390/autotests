@@ -14,7 +14,7 @@ public class RafBalanceOrderMtDbEventMt4 {
     public RafBalanceOrderMtDbEventMetadata metadata;
 
     public RafBalanceOrderMtDbEventMt4(
-            RafBalanceOrderMtDbEventMt4Data data, RafBalanceOrderMtDbEventMetadata metadata) {
+                                       RafBalanceOrderMtDbEventMt4Data data, RafBalanceOrderMtDbEventMetadata metadata) {
         this.data = data;
         this.metadata = metadata;
     }

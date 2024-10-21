@@ -10,8 +10,7 @@ public class RegistrationDbEvent {
     @JsonProperty("metadata")
     public RegistrationDbEventMetadata metadata;
 
-    public static RegistrationDbEvent getRegistrationDbEvent(
-            RegistrationDbEventData RegistrationEventData, RegistrationDbEventMetadata RegistrationEventMetadata) {
+    public static RegistrationDbEvent getRegistrationDbEvent(RegistrationDbEventData RegistrationEventData, RegistrationDbEventMetadata RegistrationEventMetadata) {
         RegistrationDbEvent event = new RegistrationDbEvent();
         event.data = RegistrationEventData;
         event.metadata = RegistrationEventMetadata;

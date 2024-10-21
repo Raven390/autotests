@@ -9,8 +9,7 @@ public class WithdrawalDbEvent {
     @JsonProperty(value = "metadata", required = true)
     public WithdrawalDbEventMetadata metadata;
 
-    public static WithdrawalDbEvent getWithdrawalDbEvent(
-            WithdrawalDbEventData withdrawalEventData, WithdrawalDbEventMetadata withdrawalEventMetadata) {
+    public static WithdrawalDbEvent getWithdrawalDbEvent(WithdrawalDbEventData withdrawalEventData, WithdrawalDbEventMetadata withdrawalEventMetadata) {
         WithdrawalDbEvent event = new WithdrawalDbEvent();
         event.data = withdrawalEventData;
         event.metadata = withdrawalEventMetadata;

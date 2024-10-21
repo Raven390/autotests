@@ -40,20 +40,12 @@ public class MtDbEventsCloseTradeTest {
         kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtDbEventMt4), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage =
-                kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt4.data.closeTime, true);
-        CloseTradeMtEvent retrievedCloseTradeMtEvent =
-                objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
+        MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt4.data.closeTime, true);
+        CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
         retrievedCloseTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt4.data.closeTime,
-                closeTradeMtDbEventMt4.data.tradeId,
-                closeTradeMtDbEventMt4.data.mtAccount,
-                closeTradeMtDbEventMt4.data.volume,
-                closeTradeMtDbEventMt4.data.symbol,
-                closeTradeMtDbEventMt4.data.serverId,
-                "closeTrade");
+                closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId, closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, "closeTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check uuid", retrievedCloseTradeMtEvent.uuid, notNullValue());
@@ -76,20 +68,12 @@ public class MtDbEventsCloseTradeTest {
         kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtDbEventMt5), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage =
-                kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt5.data.closeTime, true);
-        CloseTradeMtEvent retrievedCloseTradeMtEvent =
-                objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
+        MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt5.data.closeTime, true);
+        CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
         retrievedCloseTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt5.data.closeTime,
-                closeTradeMtDbEventMt5.data.tradeId,
-                closeTradeMtDbEventMt5.data.mtAccount,
-                closeTradeMtDbEventMt5.data.volume,
-                closeTradeMtDbEventMt5.data.symbol,
-                closeTradeMtDbEventMt5.data.serverId,
-                "closeTrade");
+                closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId, closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, "closeTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check uuid", retrievedCloseTradeMtEvent.uuid, notNullValue());
