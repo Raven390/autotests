@@ -206,7 +206,7 @@ public class KafkaHelper {
                 }
                 // After X attempts, if no matching message is found, return null
                 return new MessageWithHeaders(
-                        "Max attempts reached without finding a matching message.", new HashMap<>());
+                        KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
             } finally {
                 consumer.close(); // Ensure the consumer is closed
             }
@@ -276,7 +276,7 @@ public class KafkaHelper {
                 }
             }
             // After max attempts, if no matching message is found, return false
-            return new MatchResultWithMessage(false, "Max attempts reached without finding a matching message.");
+            return new MatchResultWithMessage(false, KAFKA_NO_MESSAGE_FOUND_ERROR);
         }
     }
 
