@@ -321,4 +321,8 @@ public class KafkaHelper {
             return new MatchResultWithMessage(false, "Some of the parameters were not found in messages.");
         }
     }
+
+    public static String getEventTypeFromHeaders(MessageWithHeaders messageWithHeaders) {
+        return messageWithHeaders.headers().get("__TypeId__");
+    }
 }

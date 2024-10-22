@@ -1,5 +1,6 @@
 package tests.mtDbEventsTests.closeTrade;
 
+import static helpers.kafka.KafkaHelper.getEventTypeFromHeaders;
 import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +43,7 @@ public class MtDbEventsCloseTradeTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt4.data.closeTime, true);
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
-        retrievedCloseTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
+        retrievedCloseTradeMtEvent.type = getEventTypeFromHeaders(consumedMessage);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
                 closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId, closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, "closeTrade");
@@ -70,7 +71,7 @@ public class MtDbEventsCloseTradeTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt5.data.closeTime, true);
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
-        retrievedCloseTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
+        retrievedCloseTradeMtEvent.type = getEventTypeFromHeaders(consumedMessage);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
                 closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId, closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, "closeTrade");

@@ -1,5 +1,6 @@
 package tests.mtDbEventsTests.openTrade;
 
+import static helpers.kafka.KafkaHelper.getEventTypeFromHeaders;
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +43,7 @@ public class MtDbEventsOpenTradeTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt4.data.openTime, true);
         OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
-        retrievedOpenTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
+        retrievedOpenTradeMtEvent.type = getEventTypeFromHeaders(consumedMessage);
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
                 openTradeMtDbEventMt4.data.openTime, openTradeMtDbEventMt4.data.tradeId, openTradeMtDbEventMt4.data.mtAccount, openTradeMtDbEventMt4.data.volume, openTradeMtDbEventMt4.data.symbol, openTradeMtDbEventMt4.data.serverId, "openTrade");
@@ -70,7 +71,7 @@ public class MtDbEventsOpenTradeTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeMtDbEventMt5.data.openTime, true);
         OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
-        retrievedOpenTradeMtEvent.type = consumedMessage.headers().get("__TypeId__");
+        retrievedOpenTradeMtEvent.type = getEventTypeFromHeaders(consumedMessage);
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
                 openTradeMtDbEventMt5.data.openTime, openTradeMtDbEventMt5.data.tradeId, openTradeMtDbEventMt5.data.mtAccount, openTradeMtDbEventMt5.data.volume, openTradeMtDbEventMt5.data.symbol, openTradeMtDbEventMt5.data.serverId, "openTrade");

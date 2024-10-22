@@ -1,5 +1,6 @@
 package tests.mtDbEventsTests.openTrade;
 
+import static helpers.kafka.KafkaHelper.getEventTypeFromHeaders;
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -95,7 +96,7 @@ public class MtDbEventsOpenTradeFiltrationTest {
                 "13", objectMapper.writeValueAsString(openTradeEventTestCloseTime), KAFKA_TOPIC_MT_DB_EVENTS);
         Allure.step("Verify that event with close time was recognized as close trade");
         MessageWithHeaders consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, openTradeEventTestCloseTime.data.closeTime, true);
-        String eventType = consumedMessage.headers().get("__TypeId__");
+        String eventType = getEventTypeFromHeaders(consumedMessage);
         assertThat("Check that the event was recognized as close event.", eventType, equalTo("closeTrade"));
     }
 }
