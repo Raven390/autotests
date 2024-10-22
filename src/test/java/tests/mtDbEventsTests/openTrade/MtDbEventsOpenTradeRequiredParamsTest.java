@@ -17,12 +17,10 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 public class MtDbEventsOpenTradeRequiredParamsTest {
 
     @Test
@@ -147,28 +145,28 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
 
         //        Creation of close trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventOpenTimeObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventOpenTime = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventOpenTimeObject), "open_time");
+        String openTradeEventOpenTime = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventOpenTimeObject), "OPEN_TIME");
 
         OpenTradeMtDbEventMt4 openTradeEventTradeIdObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventTradeId = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTradeIdObject), "trade_id");
+        String openTradeEventTradeId = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTradeIdObject), "TICKET");
 
         OpenTradeMtDbEventMt4 openTradeEventMtAccountObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventMtAccount = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMtAccountObject), "mt_account");
+        String openTradeEventMtAccount = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMtAccountObject), "LOGIN");
 
         OpenTradeMtDbEventMt4 openTradeEventServerIdObject = generateOpenTradeMtDbEventMt4();
         String openTradeEventServerId = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventServerIdObject), "ServerID");
 
         OpenTradeMtDbEventMt4 openTradeEventMt4CmdObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventMt4Cmd = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt4CmdObject), "cmd");
+        String openTradeEventMt4Cmd = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt4CmdObject), "CMD");
 
         OpenTradeMtDbEventMt5 openTradeEventMt5EntryObject = generateOpenTradeMtDbEventMt5();
-        String openTradeEventMt5Entry = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt5EntryObject), "entry");
+        String openTradeEventMt5Entry = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt5EntryObject), "Entry");
 
         OpenTradeMtDbEventMt5 openTradeEventMt5ActionObject = generateOpenTradeMtDbEventMt5();
-        String openTradeEventMt5Action = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt5ActionObject), "action");
+        String openTradeEventMt5Action = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt5ActionObject), "Action");
 
         OpenTradeMtDbEventMt4 openTradeEventCloseTimeObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventCloseTime = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventCloseTimeObject), "close_time");
+        String openTradeEventCloseTime = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventCloseTimeObject), "CLOSE_TIME");
 
         OpenTradeMtDbEventMt4 openTradeEventTableNameObject = generateOpenTradeMtDbEventMt4();
         String openTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTableNameObject), "table-name");

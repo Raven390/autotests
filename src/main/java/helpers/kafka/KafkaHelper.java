@@ -291,13 +291,13 @@ public class KafkaHelper {
             consumer.subscribe(Collections.singletonList(topic));
             int maxAttempts = 25;
             int attempts = 0;
+            // Track which texts are found across all messages
+            Set<String> foundTexts = new HashSet<>();
+
             while (attempts < maxAttempts) {
                 // Poll the Kafka broker for new records (with a timeout of 500 ms)
                 records = consumer.poll(Duration.ofMillis(1000));
                 attempts++; // Increment the attempt count
-
-                // Track which texts are found across all messages
-                Set<String> foundTexts = new HashSet<>();
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
@@ -307,6 +307,8 @@ public class KafkaHelper {
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {
                             foundTexts.add(text); // Mark this text as found
+                            System.out.println("text size: " + foundTexts.size());
+                            System.out.println("search length: " + textToSearchList.length);
                         }
                     }
                     // If all texts are found, we can stop searching
