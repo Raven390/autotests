@@ -88,8 +88,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat("Check message", consumedMessage, equalTo(
-                "Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
     @ParameterizedTest
@@ -137,8 +136,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat("Check message", consumedMessage, equalTo(
-                "Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
     @Test
@@ -161,8 +159,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat("Check message", consumedMessage, equalTo(
-                "Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
     @ParameterizedTest
@@ -188,8 +185,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
-        assertThat("Check message", consumedMessage, equalTo(
-                "Max attempts reached without finding a matching message."));
+        assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
     }
 
     @ParameterizedTest
