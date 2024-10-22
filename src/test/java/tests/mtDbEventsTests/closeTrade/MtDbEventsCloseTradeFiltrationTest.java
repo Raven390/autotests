@@ -56,7 +56,7 @@ public class MtDbEventsCloseTradeFiltrationTest {
         closeTradeEventMt4Cmd2.data.cmd = 2;
 
         CloseTradeMtDbEventMt5 closeTradeEventMt5Entry1 = generateCloseTradeMtDbEventMt5();
-        closeTradeEventMt5Entry1.data.entry = 0;
+        closeTradeEventMt5Entry1.data.entry = -1;
 
         CloseTradeMtDbEventMt5 closeTradeEventMt5Entry2 = generateCloseTradeMtDbEventMt5();
         closeTradeEventMt5Entry2.data.entry = 2;
@@ -93,7 +93,7 @@ public class MtDbEventsCloseTradeFiltrationTest {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, closeTradeEventTestAccount1.data.closeTime, closeTradeEventTestAccount2.data.closeTime, closeTradeEventMt4CloseTimeNull.data.closeTime, closeTradeEventMt4CloseTimeEmpty.data.closeTime, closeTradeEventMt4CloseTimeZero.data.closeTime, closeTradeEventMt4Cmd1.data.closeTime, closeTradeEventMt4Cmd2.data.closeTime, closeTradeEventMt5Entry1.data.closeTime, closeTradeEventMt5Entry2.data.closeTime, closeTradeEventMt5Entry3.data.closeTime, closeTradeEventMt5Action1.data.closeTime, closeTradeEventMt5Action2.data.closeTime);
+                KAFKA_TOPIC_MT_EVENTS, closeTradeEventTestAccount1.data.closeTime, closeTradeEventTestAccount2.data.closeTime, closeTradeEventMt4CloseTimeNull.metadata.timestamp, closeTradeEventMt4CloseTimeEmpty.metadata.timestamp, closeTradeEventMt4CloseTimeZero.metadata.timestamp, closeTradeEventMt4Cmd1.data.closeTime, closeTradeEventMt4Cmd2.data.closeTime, closeTradeEventMt5Entry1.data.closeTime, closeTradeEventMt5Entry2.data.closeTime, closeTradeEventMt5Entry3.data.closeTime, closeTradeEventMt5Action1.data.closeTime, closeTradeEventMt5Action2.data.closeTime);
 
         Allure.step("Verify that no matched results were found");
         assertThat(
