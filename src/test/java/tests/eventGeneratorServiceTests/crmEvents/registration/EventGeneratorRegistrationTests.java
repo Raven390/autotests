@@ -1,4 +1,4 @@
-package tests.eventGeneratorServiceTests.registration;
+package tests.eventGeneratorServiceTests.crmEvents.registration;
 
 import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventData.getRegistrationDbEventData;
 import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventMetadata.getRegistrationDbEventMetadata;
@@ -59,7 +59,7 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -87,7 +87,7 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -98,7 +98,7 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, createTime);
+        consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
         assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
     }
 }

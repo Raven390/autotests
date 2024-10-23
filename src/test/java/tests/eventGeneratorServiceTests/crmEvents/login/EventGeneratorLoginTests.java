@@ -1,4 +1,4 @@
-package tests.eventGeneratorServiceTests.login;
+package tests.eventGeneratorServiceTests.crmEvents.login;
 
 import static helpers.eventGeneratorService.EventLoginDataHelper.getLoginEventData;
 import static helpers.eventGeneratorService.EventLoginDataHelper.getLoginEventMetadata;
@@ -42,7 +42,7 @@ public class EventGeneratorLoginTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(data.userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(data.userId));
         LoginEvent loginCrmEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
         Allure.step("Verify that message was written correctly");
         assertThat("Check UUID", loginCrmEvent.uuid, notNullValue());

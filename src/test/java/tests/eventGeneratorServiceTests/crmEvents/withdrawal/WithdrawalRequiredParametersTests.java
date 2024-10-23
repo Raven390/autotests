@@ -1,4 +1,4 @@
-package tests.eventGeneratorServiceTests.withdrawal;
+package tests.eventGeneratorServiceTests.crmEvents.withdrawal;
 
 import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventData.getWithdrawalDbEventData;
 import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventMetadata.getWithdrawalDbEventMetadata;
@@ -89,7 +89,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(
@@ -113,7 +113,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -136,7 +136,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -159,7 +159,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -182,7 +182,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -204,7 +204,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -226,7 +226,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));
@@ -249,7 +249,7 @@ public class WithdrawalRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, equalTo(KAFKA_NO_MESSAGE_FOUND_ERROR));

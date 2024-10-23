@@ -1,4 +1,4 @@
-package tests.mtDbEventsTests.closeTrade;
+package tests.eventGeneratorServiceTests.mtEvents.closeTrade;
 
 import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
@@ -63,14 +63,7 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
         closeTradeEventTableName.metadata.tableName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventCloseTime), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventTradeId), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventMtAccount), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventServerId), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventMt4Cmd), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventMt5Entry), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventMt5Action), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventTableName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(closeTradeEventCloseTime), objectMapper.writeValueAsString(closeTradeEventTradeId), objectMapper.writeValueAsString(closeTradeEventMtAccount), objectMapper.writeValueAsString(closeTradeEventServerId), objectMapper.writeValueAsString(closeTradeEventMt4Cmd), objectMapper.writeValueAsString(closeTradeEventMt5Entry), objectMapper.writeValueAsString(closeTradeEventMt5Action), objectMapper.writeValueAsString(closeTradeEventTableName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -89,11 +82,11 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("117")
-    public void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException {
+    public void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //        Creation of close trade events that should be filtered out by the filtration rules
+//                Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventVolume = generateCloseTradeMtDbEventMt4();
         closeTradeEventVolume.data.volume = null;
 
@@ -116,16 +109,7 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
         closeTradeEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventVolume), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventSymbol), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventTimestamp), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(closeTradeEventRecordType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeEventOperation), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(closeTradeEventPartitionKeyType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(closeTradeEventSchemaName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(closeTradeEventVolume), objectMapper.writeValueAsString(closeTradeEventSymbol), objectMapper.writeValueAsString(closeTradeEventTimestamp), objectMapper.writeValueAsString(closeTradeEventRecordType), objectMapper.writeValueAsString(closeTradeEventOperation), objectMapper.writeValueAsString(closeTradeEventPartitionKeyType), objectMapper.writeValueAsString(closeTradeEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
@@ -174,14 +158,7 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
         String closeTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(closeTradeEventTableNameObject), "table-name");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", closeTradeEventCloseTime, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventTradeId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventMtAccount, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventServerId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventMt4Cmd, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventMt5Entry, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventMt5Action, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", closeTradeEventTableName, KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, closeTradeEventCloseTime, closeTradeEventTradeId, closeTradeEventMtAccount, closeTradeEventServerId, closeTradeEventMt4Cmd, closeTradeEventMt5Entry, closeTradeEventMt5Action, closeTradeEventTableName);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

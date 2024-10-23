@@ -1,4 +1,4 @@
-package tests.mtDbEventsTests.rafBalanceOrder;
+package tests.eventGeneratorServiceTests.mtEvents.rafBalanceOrder;
 
 import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt5;
@@ -60,20 +60,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
         rafBalanceOrderEventTableName.metadata.tableName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventOpenTime), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTradeId), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMtAccount), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventComment), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTableName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventOpenTime), objectMapper.writeValueAsString(rafBalanceOrderEventTradeId), objectMapper.writeValueAsString(rafBalanceOrderEventMtAccount), objectMapper.writeValueAsString(rafBalanceOrderEventComment), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action), objectMapper.writeValueAsString(rafBalanceOrderEventTableName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -114,17 +101,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
         rafBalanceOrderEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTimestamp), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventRecordType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventOperation), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventPartitionKeyType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventSchemaName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTimestamp), objectMapper.writeValueAsString(rafBalanceOrderEventRecordType), objectMapper.writeValueAsString(rafBalanceOrderEventOperation), objectMapper.writeValueAsString(rafBalanceOrderEventPartitionKeyType), objectMapper.writeValueAsString(rafBalanceOrderEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
@@ -172,14 +149,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
         String rafBalanceOrderEventComment = removeKeyFromJson(objectMapper.writeValueAsString(rafBalanceOrderEventCommentObject), "COMMENT");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", rafBalanceOrderEventOpenTime, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventTradeId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventMtAccount, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventServerId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventMt4Cmd, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventMt5Action, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventTableName, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", rafBalanceOrderEventComment, KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, rafBalanceOrderEventOpenTime, rafBalanceOrderEventTradeId, rafBalanceOrderEventMtAccount, rafBalanceOrderEventServerId, rafBalanceOrderEventMt4Cmd, rafBalanceOrderEventMt5Action, rafBalanceOrderEventTableName, rafBalanceOrderEventComment);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

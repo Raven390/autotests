@@ -48,7 +48,7 @@ public class DummyRuleTest {
 
         Allure.step("Send trigger message to CRM_EVENTS");
         kafka.produceMessage("13", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
-        String consumedMessageOfCore = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
+        String consumedMessageOfCore = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
         WithdrawalCrmEvent withdrawalEvent1 = objectMapper.readValue(consumedMessageOfCore, WithdrawalCrmEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -62,7 +62,7 @@ public class DummyRuleTest {
         assertThat("Check type", withdrawalEvent1.type, equalTo(type));
 
         Allure.step("Wait for rule execution. Check topic for needed message");
-        String consumedAlert = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, String.valueOf(userId));
+        String consumedAlert = kafka.consumeMessage(KAFKA_TOPIC_ALERTS, String.valueOf(userId));
         AlertEvent alertEvent = objectMapper.readValue(consumedAlert, AlertEvent.class);
 
         Allure.step("Verify that message was written correctly");
