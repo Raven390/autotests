@@ -2,8 +2,7 @@ package tests.uiTests.core;
 
 import static utils.ConfigFactory.*;
 import static utils.Constants.*;
-import static utils.Utils.getRandomEmail;
-import static utils.Utils.getRandomInt;
+import static utils.Utils.*;
 
 import helpers.database.MySqlHelper;
 import io.qameta.allure.AllureId;
@@ -52,7 +51,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         vantageUserAccountPage.waitPersonalDetailsWindowPresented();
         vantageUserAccountPage.chooseGender();
         vantageUserAccountPage.selectDateOfBirth("1", "1", "1990");
-        vantageUserAccountPage.fillPhoneNumber(getRandomInt().toString());
+        vantageUserAccountPage.fillPhoneNumber(getRandomIntPositive().toString());
         vantageUserAccountPage.clickNextButton();
         vantageUserAccountPage.chooseCurrency();
         vantageUserAccountPage.acceptTerms();

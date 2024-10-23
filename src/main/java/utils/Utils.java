@@ -15,6 +15,10 @@ public class Utils {
         return new Random().nextInt();
     }
 
+    public static Integer getRandomIntPositive() {
+        return new Random().nextInt(Integer.MAX_VALUE) + 1;
+    }
+
     public static String getRandomUuidString() {
         return UUID.randomUUID().toString();
     }
