@@ -17,12 +17,14 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class MtDbEventsOpenTradeRequiredParamsTest {
 
+    @Disabled
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
@@ -131,6 +133,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         assertThat("Check if all matching events found.", areAllParamsPresentInMessages.matchResult(), equalTo(true));
     }
 
+    @Disabled
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")

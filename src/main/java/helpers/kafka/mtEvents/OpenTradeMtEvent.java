@@ -7,8 +7,8 @@ import java.util.Objects;
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1104118020/Open+trade
  */
 public class OpenTradeMtEvent {
-    @JsonProperty("uuid")
-    public String uuid;
+    @JsonProperty("id")
+    public String id;
 
     @JsonProperty("openTime")
     public String openTime;
@@ -35,8 +35,8 @@ public class OpenTradeMtEvent {
     }
 
     public OpenTradeMtEvent(
-                            String uuid, String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
-        this.uuid = uuid;
+                            String id, String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
+        this.id = id;
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -71,6 +71,6 @@ public class OpenTradeMtEvent {
 
     @Override
     public String toString() {
-        return "OpenTradeMtEvent{" + "uuid='" + uuid + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
+        return "OpenTradeMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

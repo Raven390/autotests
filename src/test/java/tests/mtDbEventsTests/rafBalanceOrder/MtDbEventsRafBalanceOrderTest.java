@@ -49,10 +49,8 @@ public class MtDbEventsRafBalanceOrderTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage1 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        retrievedRafBalanceOrderMtEvent1.type = consumedMessage1.headers().get("__TypeId__");
         MessageWithHeaders consumedMessage2 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
-        retrievedRafBalanceOrderMtEvent2.type = consumedMessage2.headers().get("__TypeId__");
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");
@@ -61,14 +59,14 @@ public class MtDbEventsRafBalanceOrderTest {
                 rafBalanceOrderMtDbEvent2.data.openTime, rafBalanceOrderMtDbEvent2.data.tradeId, rafBalanceOrderMtDbEvent2.data.mtAccount, rafBalanceOrderMtDbEvent2.data.comment, rafBalanceOrderMtDbEvent2.data.serverId, "raf");
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check uuid", retrievedRafBalanceOrderMtEvent1.uuid, notNullValue());
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.id, notNullValue());
         assertThat(
-                "Check all fields except uuid", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
+                "Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check uuid", retrievedRafBalanceOrderMtEvent2.uuid, notNullValue());
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.id, notNullValue());
         assertThat(
-                "Check all fields except uuid", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
+                "Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
     }
 
     @Test
@@ -94,10 +92,8 @@ public class MtDbEventsRafBalanceOrderTest {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage1 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        retrievedRafBalanceOrderMtEvent1.type = consumedMessage1.headers().get("__TypeId__");
         MessageWithHeaders consumedMessage2 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
-        retrievedRafBalanceOrderMtEvent2.type = consumedMessage2.headers().get("__TypeId__");
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");
@@ -106,13 +102,13 @@ public class MtDbEventsRafBalanceOrderTest {
                 rafBalanceOrderMtDbEvent2.data.openTime, rafBalanceOrderMtDbEvent2.data.tradeId, rafBalanceOrderMtDbEvent2.data.mtAccount, rafBalanceOrderMtDbEvent2.data.comment, rafBalanceOrderMtDbEvent2.data.serverId, "raf");
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check uuid", retrievedRafBalanceOrderMtEvent1.uuid, notNullValue());
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.id, notNullValue());
         assertThat(
-                "Check all fields except uuid", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
+                "Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check uuid", retrievedRafBalanceOrderMtEvent2.uuid, notNullValue());
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.id, notNullValue());
         assertThat(
-                "Check all fields except uuid", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
+                "Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
     }
 }
