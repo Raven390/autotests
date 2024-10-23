@@ -7,8 +7,8 @@ import java.util.Objects;
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1096351889/Close+trade
  */
 public class CloseTradeMtEvent {
-    @JsonProperty("uuid")
-    public String uuid;
+    @JsonProperty("id")
+    public String id;
 
     @JsonProperty("closeTime")
     public String closeTime;
@@ -35,8 +35,8 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-                             String uuid, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
-        this.uuid = uuid;
+                             String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
+        this.id = id;
         this.closeTime = closeTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -71,6 +71,6 @@ public class CloseTradeMtEvent {
 
     @Override
     public String toString() {
-        return "CloseTradeMtEvent{" + "uuid='" + uuid + '\'' + ", closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
+        return "CloseTradeMtEvent{" + "id='" + id + '\'' + ", closeTime='" + closeTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", symbol='" + symbol + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }

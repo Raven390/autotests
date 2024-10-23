@@ -7,8 +7,8 @@ import java.util.Objects;
  * Confluence link - https://vantagefx-hytechs.atlassian.net/wiki/spaces/AntiFraud/pages/1112440834/RAF+balance+order
  */
 public class RafBalanceOrderMtEvent {
-    @JsonProperty("uuid")
-    public String uuid;
+    @JsonProperty("id")
+    public String id;
 
     @JsonProperty("openTime")
     public String openTime;
@@ -32,8 +32,8 @@ public class RafBalanceOrderMtEvent {
     }
 
     public RafBalanceOrderMtEvent(
-                                  String uuid, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
-        this.uuid = uuid;
+                                  String id, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
+        this.id = id;
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -66,6 +66,6 @@ public class RafBalanceOrderMtEvent {
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtEvent{" + "uuid='" + uuid + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
+        return "RafBalanceOrderMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + '}';
     }
 }
