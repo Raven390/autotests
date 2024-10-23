@@ -1,4 +1,4 @@
-package tests.mtDbEventsTests.rafBalanceOrder;
+package tests.eventGeneratorServiceTests.mtEvents.rafBalanceOrder;
 
 import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt5;
@@ -47,9 +47,9 @@ public class MtDbEventsRafBalanceOrderTest {
                 "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage1 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
+        MessageWithHeaders consumedMessage1 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        MessageWithHeaders consumedMessage2 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
+        MessageWithHeaders consumedMessage2 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
@@ -90,9 +90,9 @@ public class MtDbEventsRafBalanceOrderTest {
                 "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage1 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
+        MessageWithHeaders consumedMessage1 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        MessageWithHeaders consumedMessage2 = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
+        MessageWithHeaders consumedMessage2 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
         RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(

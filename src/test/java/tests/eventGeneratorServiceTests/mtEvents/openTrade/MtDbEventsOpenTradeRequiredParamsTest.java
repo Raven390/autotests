@@ -1,4 +1,4 @@
-package tests.mtDbEventsTests.openTrade;
+package tests.eventGeneratorServiceTests.mtEvents.openTrade;
 
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
 import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
@@ -63,14 +63,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         openTradeEventTableName.metadata.tableName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventOpenTime), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventTradeId), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventMtAccount), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventServerId), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventMt4Cmd), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventMt5Entry), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventMt5Action), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventTableName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventOpenTime), objectMapper.writeValueAsString(openTradeEventTradeId), objectMapper.writeValueAsString(openTradeEventMtAccount), objectMapper.writeValueAsString(openTradeEventServerId), objectMapper.writeValueAsString(openTradeEventMt4Cmd), objectMapper.writeValueAsString(openTradeEventMt5Entry), objectMapper.writeValueAsString(openTradeEventMt5Action), objectMapper.writeValueAsString(openTradeEventTableName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -116,14 +109,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         openTradeEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventVolume), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventSymbol), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventTimestamp), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventRecordType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventOperation), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(openTradeEventPartitionKeyType), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(openTradeEventSchemaName), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
@@ -175,15 +161,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         String openTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTableNameObject), "table-name");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage("13", openTradeEventOpenTime, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventTradeId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventMtAccount, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventServerId, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventMt4Cmd, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventMt5Entry, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventMt5Action, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventCloseTime, KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage("13", openTradeEventTableName, KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, openTradeEventOpenTime, openTradeEventTradeId, openTradeEventMtAccount, openTradeEventServerId, openTradeEventMt4Cmd, openTradeEventMt5Entry, openTradeEventMt5Action, openTradeEventCloseTime, openTradeEventTableName);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

@@ -68,7 +68,7 @@ public class KafkaHelper {
         return properties;
     }
 
-    public String consumeMessages(String topic, String id) throws InterruptedException {
+    public String consumeMessage(String topic, String id) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
@@ -118,7 +118,7 @@ public class KafkaHelper {
         }
     }
 
-    public String consumeMessages(String topic, String id, Integer maxAttempts) throws InterruptedException {
+    public String consumeMessage(String topic, String id, Integer maxAttempts) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
@@ -167,21 +167,20 @@ public class KafkaHelper {
         }
     }
 
-    public MessageWithHeaders consumeMessages(String topic, String id, boolean getHeaders) throws InterruptedException {
+    public MessageWithHeaders consumeMessage(String topic, String id, boolean getHeaders) throws InterruptedException {
         if (!getHeaders) {
-            return new MessageWithHeaders(consumeMessages(topic, id), new HashMap<>());
+            return new MessageWithHeaders(consumeMessage(topic, id), new HashMap<>());
         } else {
             ConsumerRecords<String, String> records;
             Properties properties = getKafkaConsumerProperties();
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
             // Subscribe to the topic
-            consumer.subscribe(Collections.singletonList(topic));
 
-            int maxAttempts = 25;
-            int attempts = 0;
-
-            try {
+            try (consumer) {
+                consumer.subscribe(Collections.singletonList(topic));
+                int maxAttempts = 25;
+                int attempts = 0;
                 while (attempts < maxAttempts) {
                     // Poll the Kafka broker for new records (with a timeout of 500 ms)
                     records = consumer.poll(Duration.ofMillis(1000));
@@ -207,9 +206,66 @@ public class KafkaHelper {
                 // After X attempts, if no matching message is found, return null
                 return new MessageWithHeaders(
                         KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
-            } finally {
-                consumer.close(); // Ensure the consumer is closed
             }
+            // Ensure the consumer is closed
+        }
+    }
+
+    public Map<String, String> consumeMessages(String topic, String... idList) throws InterruptedException {
+        ConsumerRecords<String, String> records;
+        Properties properties = getKafkaConsumerProperties();
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Subscribe to the topic and poll once to assign partitions
+        consumer.subscribe(Collections.singletonList(topic));
+        consumer.poll(Duration.ofMillis(100)); // Initial poll to get the assignment
+
+        // Get the partitions assigned to the consumer for this topic
+        Set<TopicPartition> partitions = consumer.assignment();
+
+        // Get the latest (end) offset for each partition
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
+
+        // Seek to the previous 50 messages for each partition
+        for (TopicPartition partition : partitions) {
+            long endOffset = endOffsets.get(partition);
+            long startOffset = Math.max(0, endOffset - 50);
+            consumer.seek(partition, startOffset);
+        }
+
+        int maxAttempts = 30;
+        int attempts = 0;
+        Map<String, String> foundMessages = new HashMap<>(); // Store the messages corresponding to each id
+
+        try {
+            while (attempts < maxAttempts && foundMessages.size() < idList.length) {
+                // Poll the Kafka broker for new records (with a timeout of 1000 ms)
+                records = consumer.poll(Duration.ofMillis(1000));
+                attempts++; // Increment the attempt count
+                Thread.sleep(500);
+
+                // Process each record
+                for (ConsumerRecord<String, String> record : records) {
+                    System.out.printf(
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
+
+                    // Check each id in the idList for a match in the record value
+                    for (String id : idList) {
+                        if (!foundMessages.containsKey(id) && record.value() != null && record.value().contains(id)) {
+                            foundMessages.put(id, record.value()); // Store the found message
+                        }
+                    }
+                }
+            }
+
+            // If some ids are not found after maxAttempts, map them to a null
+            for (String id : idList) {
+                foundMessages.putIfAbsent(id, null);
+            }
+
+            return foundMessages; // Return the map of found messages
+        } finally {
+            consumer.close(); // Ensure the consumer is closed
         }
     }
 
@@ -218,12 +274,11 @@ public class KafkaHelper {
         // Set producer properties and create a new Kafka producer
         Properties properties = getKafkaProducerProperties();
         System.out.println(properties.get(""));
-        KafkaProducer producer = new KafkaProducer<>(properties);
 
         // Create a producer record
-        ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, message);
 
-        try {
+        try (KafkaProducer<Object, Object> producer = new KafkaProducer<>(properties)) {
+            ProducerRecord<Object, Object> record = new ProducerRecord<>(topic, key, message);
             // Send the record and get the metadata about the sent record
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
@@ -231,10 +286,31 @@ public class KafkaHelper {
                     "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), metadata.offset());
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            producer.close();
         }
         return metadata;
+    }
+
+    public void produceMessages(String key, String topic, String... messagesList) {
+        // Set producer properties and create a new Kafka producer
+        Properties properties = getKafkaProducerProperties();
+
+        try (KafkaProducer<Object, Object> producer = new KafkaProducer<>(properties)) {
+            // Loop through all messages and send each one
+            for (String message : messagesList) {
+                ProducerRecord<Object, Object> record = new ProducerRecord<>(topic, key, message);
+                try {
+                    // Send the record and print metadata about the sent record
+                    Future<RecordMetadata> future = producer.send(record);
+                    RecordMetadata metadata = future.get();
+                    System.out.printf(
+                            "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), metadata.partition(), metadata.offset());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public MatchResultWithMessage isAnyMatchPresentInMessages(String topic, String... textToSearchList) {

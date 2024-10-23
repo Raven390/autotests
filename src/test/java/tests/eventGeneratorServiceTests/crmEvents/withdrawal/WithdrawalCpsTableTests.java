@@ -1,11 +1,12 @@
-package tests.eventGeneratorServiceTests.withdrawal;
+package tests.eventGeneratorServiceTests.crmEvents.withdrawal;
 
-import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventData.getWithdrawalDbEventData;
-import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventMetadata.getWithdrawalDbEventMetadata;
+import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventCpsTable.getWithdrawalDbEventCpsTable;
+import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventDataCpsTable.getWithdrawalDbEventDataCpsTable;
+import static helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEventMetadataCpsTable.getWithdrawalDbEventMetadataCpsTable;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
-import static utils.Constants.TEAM_CORE;
 import static utils.Utils.getRandomInt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,18 +22,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-public class WithdrawalTests {
+public class WithdrawalCpsTableTests {
     KafkaHelper kafka = new KafkaHelper();
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw table")
+    @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw_cps table")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
-    @AllureId("67")
-    public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
+    @AllureId("66")
+    public void generateWithdrawalEventTest1() throws JsonProcessingException, InterruptedException {
 
         // Create test data
         int id = getRandomInt();
@@ -74,22 +75,22 @@ public class WithdrawalTests {
         String operation = "update";
         String partitionKeyType = "attribute-name";
         String schemaName = "dev_m_regulator_vfsc";
-        String tableName = "tb_payment_withdraw";
+        String tableName = "tb_payment_withdraw_cps";
         String transactionId = "1847424366774639";
         String transactionRecordId = "1";
         String prevTransactionId = "1.84742436101607e+15";
         String prevTransactionRecordId = "1";
         String commitTimestamp = "2024-10-02T09:34:20.000000Z";
         String streamPosition = "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
-        WithdrawalDbEventData data = getWithdrawalDbEventData(id, userId, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
-        WithdrawalDbEventMetadata metadata = getWithdrawalDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
+        WithdrawalDbEventDataCpsTable data = getWithdrawalDbEventDataCpsTable(id, userId, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventMetadataCpsTable metadata = getWithdrawalDbEventMetadataCpsTable(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
-        WithdrawalDbEvent crmDbEvent = WithdrawalDbEvent.getWithdrawalDbEvent(data, metadata);
+        WithdrawalDbEventCpsTable crmDbEvent = getWithdrawalDbEventCpsTable(data, metadata);
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessages(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(id));
         WithdrawalEvent withdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
 
         Allure.step("Verify that message was written correctly");
@@ -98,7 +99,7 @@ public class WithdrawalTests {
         assertThat("Check transfer_id", withdrawalEvent.data.transfer_id, equalTo(id));
         assertThat("Check brand", withdrawalEvent.data.brand, equalTo(brand));
         assertThat("Check regulator", withdrawalEvent.data.regulator, equalTo(regulator));
-        assertThat("Check payment_method_code", withdrawalEvent.data.payment_method_code, equalTo(paymentMethodCode));
+        assertThat("Check payment_method_code", withdrawalEvent.data.payment_method_code, equalTo("UnionPay"));
         assertThat("Check withdraw_type", withdrawalEvent.data.withdraw_type, equalTo(withdrawType));
         assertThat("Check withdraw_amount", withdrawalEvent.data.withdraw_amount, equalTo(withdrawAmount));
         assertThat("Check fee", withdrawalEvent.data.fee, equalTo(fee));
