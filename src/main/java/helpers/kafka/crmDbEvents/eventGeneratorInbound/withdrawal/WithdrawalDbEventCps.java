@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class WithdrawalDbEvent {
-    @JsonProperty(value = "data")
-    public WithdrawalDbEventData data;
+public class WithdrawalDbEventCps {
 
-    @JsonProperty(value = "metadata")
+    @JsonProperty("data")
+    public WithdrawalDbEventCpsData data;
+
+    @JsonProperty("metadata")
     public WithdrawalDbEventMetadata metadata;
 
-    public WithdrawalDbEvent() {
+    public WithdrawalDbEventCps() {
     }
 
-    public WithdrawalDbEvent(WithdrawalDbEventData data, WithdrawalDbEventMetadata metadata) {
+    public WithdrawalDbEventCps(WithdrawalDbEventCpsData data, WithdrawalDbEventMetadata metadata) {
         this.data = data;
         this.metadata = metadata;
     }
@@ -23,7 +24,7 @@ public class WithdrawalDbEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WithdrawalDbEvent that = (WithdrawalDbEvent) o;
+        WithdrawalDbEventCps that = (WithdrawalDbEventCps) o;
         return Objects.equals(data, that.data) && Objects.equals(metadata, that.metadata);
     }
 
@@ -34,7 +35,7 @@ public class WithdrawalDbEvent {
 
     @Override
     public String toString() {
-        return "WithdrawalDbEvent{" +
+        return "WithdrawalDbEventCps{" +
                 "data=" + data +
                 ", metadata=" + metadata +
                 '}';
