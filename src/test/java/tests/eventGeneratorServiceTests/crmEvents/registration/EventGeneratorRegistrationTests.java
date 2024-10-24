@@ -1,19 +1,15 @@
 package tests.eventGeneratorServiceTests.crmEvents.registration;
 
-import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventData.getRegistrationDbEventData;
-import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventMetadata.getRegistrationDbEventMetadata;
+import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventFactory.generateRegistrationDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentDateTime;
-import static utils.Utils.getRandomInt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
+import helpers.kafka.MatchResultWithMessage;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEvent;
-import helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventData;
-import helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventMetadata;
 import helpers.kafka.crmEvents.eventGeneratorOutboundEvents.RegistrationEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -24,23 +20,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class EventGeneratorRegistrationTests {
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    // Prepare data object
-    String createTime = getCurrentDateTime();
-    Integer userId = getRandomInt();
-    String brand = "Vantage";
-    String regulator = "VFSC";
-    Integer mtAccount = getRandomInt();
-
-    // Prepare metadata object
-    String timestamp = "2024-09-30T16:24:35.142706Z";
-    String recordType = "data";
-    String operation = "insert";
-    String partitionKeyType = "attribute-name";
-    String schemaName = "dev_m_regulator_vfsc";
-    String tableName = "tb_account_mt4";
 
     @Test
     @DisplayName("Generate registration event with event generator service")
@@ -49,27 +28,31 @@ public class EventGeneratorRegistrationTests {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("64")
-    public void generateRegistrationEventTest1() throws JsonProcessingException, InterruptedException {
+    public void generateRegistrationEventTest() throws JsonProcessingException, InterruptedException {
+        KafkaHelper kafka = new KafkaHelper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        RegistrationDbEventData data = getRegistrationDbEventData(createTime, userId, brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+        RegistrationDbEvent registrationDbEvent = generateRegistrationDbEvent();
 
         Allure.step("Write message to crm-db-events topic");
-        RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        kafka.produceMessage("13", objectMapper.writeValueAsString(registrationDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
-        RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent.data.userId.toString());
+        RegistrationEvent retrievedRegistrationEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
+
+        RegistrationEvent expectedRegistrationEvent = new RegistrationEvent(
+                registrationDbEvent.data.createTime,
+                registrationDbEvent.data.userId,
+                registrationDbEvent.data.brand,
+                registrationDbEvent.data.regulator,
+                registrationDbEvent.data.mtAccount,
+                "clientRegistration"
+        );
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.id, notNullValue());
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.createTime, equalTo(createTime));
-        assertThat("Check userId", RegistrationCrmEvent.clientId, equalTo(userId));
-        assertThat("Check brand", RegistrationCrmEvent.brand, equalTo(brand));
-        assertThat("Check regulator", RegistrationCrmEvent.regulator, equalTo(regulator));
-        assertThat("Check mtAccount", RegistrationCrmEvent.metaTraderAccount, equalTo(mtAccount));
-        assertThat("Check type", RegistrationCrmEvent.type, equalTo("clientRegistration"));
+        assertThat("Check id", retrievedRegistrationEvent.id, notNullValue());
+        assertThat("Check all fields except id", retrievedRegistrationEvent, equalTo(expectedRegistrationEvent));
     }
 
     @Test
@@ -79,27 +62,23 @@ public class EventGeneratorRegistrationTests {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("128")
-    public void generateRegistrationEventTest2() throws JsonProcessingException, InterruptedException {
-        RegistrationDbEventData data = getRegistrationDbEventData(createTime, getRandomInt(), brand, regulator, mtAccount);
-        RegistrationDbEventMetadata metadata = getRegistrationDbEventMetadata(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+    public void verifyRegistrationEventIsFilteredOutTest() throws JsonProcessingException, InterruptedException {
+        KafkaHelper kafka = new KafkaHelper();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        Allure.step("Write message to crm-db-events topic");
-        RegistrationDbEvent crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        RegistrationDbEvent registrationDbEvent1 = generateRegistrationDbEvent();
+        RegistrationDbEvent registrationDbEvent2 = generateRegistrationDbEvent();
+        registrationDbEvent2.data.userId = registrationDbEvent1.data.userId;
 
-        Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
-        RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
-
-        Allure.step("Verify that message was written correctly");
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.id, notNullValue());
-
-        Allure.step("Write second message to crm-db-events topic");
-        crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);
-        kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        Allure.step("Write messages to crm-db-events topic");
+        kafka.produceMessages("13", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1), objectMapper.writeValueAsString(registrationDbEvent2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
-        assertThat(consumedMessage, containsString("Max attempts reached without finding a matching message"));
+        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
+                KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent2.data.createTime);
+
+        Allure.step("Verify that no matched results were found");
+        assertThat(
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }
