@@ -2,49 +2,51 @@ package helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class WithdrawalDbEventData {
 
-    @JsonProperty(value = "id", required = true)
+    @JsonProperty(value = "create_time")
+    public String createTime;
+
+    @JsonProperty(value = "id")
     public Integer id;
 
-    @JsonProperty(value = "user_id", required = true)
-    public String userId;
+    @JsonProperty(value = "user_id")
+    public Integer userId;
 
     @JsonProperty("mt4_account")
     public Integer mt4Account;
 
-    @JsonProperty("account_name")
-    public String accountName;
+    @JsonProperty(value = "brand")
+    public String brand;
 
-    @JsonProperty("currency")
-    public String currency;
+    @JsonProperty(value = "regulator")
+    public String regulator;
 
-    @JsonProperty("status")
-    public Integer status;
+    @JsonProperty("payment_method_code")
+    public String paymentMethodCode;
 
     @JsonProperty("withdraw_type")
     public Integer withdrawType;
 
     @JsonProperty("withdraw_amount")
-    public String withdrawAmount;
+    public Double withdrawAmount;
 
     @JsonProperty("fee")
-    public String fee;
+    public Double fee;
 
     @JsonProperty("actual_amount")
-    public String actualAmount;
+    public Double actualAmount;
 
     @JsonProperty("payment_amount")
-    public String paymentAmount;
+    public Double paymentAmount;
 
     @JsonProperty("card_number")
     public String cardNumber;
 
     @JsonProperty("is_del")
     public Integer isDel;
-
-    @JsonProperty(value = "create_time", required = true)
-    public String createTime;
 
     @JsonProperty("update_time")
     public String updateTime;
@@ -65,7 +67,7 @@ public class WithdrawalDbEventData {
     public String upiAccountName;
 
     @JsonProperty("deduct_credit")
-    public String deductCredit;
+    public Double deductCredit;
 
     @JsonProperty("user_sales_id")
     public Integer userSalesId;
@@ -76,9 +78,6 @@ public class WithdrawalDbEventData {
     @JsonProperty("order_currency")
     public String orderCurrency;
 
-    @JsonProperty("payment_method_code")
-    public String paymentMethodCode;
-
     @JsonProperty("checking_status")
     public Integer checkingStatus;
 
@@ -86,54 +85,94 @@ public class WithdrawalDbEventData {
     public Integer isTrade;
 
     @JsonProperty("rate")
-    public String rate;
+    public Double rate;
 
     @JsonProperty("is_non_app")
     public Integer isNonApp;
 
     @JsonProperty("to_usd_rate")
-    public String toUsdRate;
+    public Double toUsdRate;
 
-    @JsonProperty(value = "brand", required = true)
-    public String brand;
+    public WithdrawalDbEventData() {
+    }
 
-    @JsonProperty(value = "regulator", required = true)
-    public String regulator;
+    public WithdrawalDbEventData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawAmount, Double fee, Double actualAmount, Double paymentAmount, String cardNumber, Integer isDel, String updateTime, String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo, String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency, Integer checkingStatus, Integer isTrade, Double rate, Integer isNonApp, Double toUsdRate) {
+        this.createTime = createTime;
+        this.id = id;
+        this.userId = userId;
+        this.mt4Account = mt4Account;
+        this.brand = brand;
+        this.regulator = regulator;
+        this.paymentMethodCode = paymentMethodCode;
+        this.withdrawType = withdrawType;
+        this.withdrawAmount = withdrawAmount;
+        this.fee = fee;
+        this.actualAmount = actualAmount;
+        this.paymentAmount = paymentAmount;
+        this.cardNumber = cardNumber;
+        this.isDel = isDel;
+        this.updateTime = updateTime;
+        this.cpsAttachVariable = cpsAttachVariable;
+        this.orderNumber = orderNumber;
+        this.cpsMandatoryField = cpsMandatoryField;
+        this.isRememberInfo = isRememberInfo;
+        this.upiAccountName = upiAccountName;
+        this.deductCredit = deductCredit;
+        this.userSalesId = userSalesId;
+        this.accountSalesId = accountSalesId;
+        this.orderCurrency = orderCurrency;
+        this.checkingStatus = checkingStatus;
+        this.isTrade = isTrade;
+        this.rate = rate;
+        this.isNonApp = isNonApp;
+        this.toUsdRate = toUsdRate;
+    }
 
-    public static WithdrawalDbEventData getWithdrawalDbEventData(Integer id, String userId, Integer mt4account, String accountName, String currency, Integer status, Integer withdrawType, String withdrawAmount, String fee, String actualAmount, String paymentAmount, String cardNumber, Integer isDel, String createTime, String updateTime, String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo, String upiAccountName, String deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency, String paymentMethodCode, Integer checkingStatus, Integer isTrade, String rate, Integer isNonApp, String toUsdRate, String brand, String regulator) {
-        WithdrawalDbEventData event = new WithdrawalDbEventData();
-        event.id = id;
-        event.userId = userId;
-        event.mt4Account = mt4account;
-        event.accountName = accountName;
-        event.currency = currency;
-        event.status = status;
-        event.withdrawType = withdrawType;
-        event.withdrawAmount = withdrawAmount;
-        event.fee = fee;
-        event.actualAmount = actualAmount;
-        event.paymentAmount = paymentAmount;
-        event.cardNumber = cardNumber;
-        event.isDel = isDel;
-        event.createTime = createTime;
-        event.updateTime = updateTime;
-        event.cpsAttachVariable = cpsAttachVariable;
-        event.orderNumber = orderNumber;
-        event.cpsMandatoryField = cpsMandatoryField;
-        event.isRememberInfo = isRememberInfo;
-        event.upiAccountName = upiAccountName;
-        event.deductCredit = deductCredit;
-        event.userSalesId = userSalesId;
-        event.accountSalesId = accountSalesId;
-        event.orderCurrency = orderCurrency;
-        event.paymentMethodCode = paymentMethodCode;
-        event.checkingStatus = checkingStatus;
-        event.isTrade = isTrade;
-        event.rate = rate;
-        event.isNonApp = isNonApp;
-        event.toUsdRate = toUsdRate;
-        event.brand = brand;
-        event.regulator = regulator;
-        return event;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WithdrawalDbEventData that = (WithdrawalDbEventData) o;
+        return Objects.equals(createTime, that.createTime) && Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(mt4Account, that.mt4Account) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawAmount, that.withdrawAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardNumber, that.cardNumber) && Objects.equals(isDel, that.isDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(cpsAttachVariable, that.cpsAttachVariable) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(isRememberInfo, that.isRememberInfo) && Objects.equals(upiAccountName, that.upiAccountName) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(orderCurrency, that.orderCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(isTrade, that.isTrade) && Objects.equals(rate, that.rate) && Objects.equals(isNonApp, that.isNonApp) && Objects.equals(toUsdRate, that.toUsdRate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(createTime, id, userId, mt4Account, brand, regulator, paymentMethodCode, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, checkingStatus, isTrade, rate, isNonApp, toUsdRate);
+    }
+
+    @Override
+    public String toString() {
+        return "WithdrawalDbEventData{" +
+                "createTime='" + createTime + '\'' +
+                ", id=" + id +
+                ", userId='" + userId + '\'' +
+                ", mt4Account=" + mt4Account +
+                ", brand='" + brand + '\'' +
+                ", regulator='" + regulator + '\'' +
+                ", paymentMethodCode='" + paymentMethodCode + '\'' +
+                ", withdrawType=" + withdrawType +
+                ", withdrawAmount=" + withdrawAmount +
+                ", fee=" + fee +
+                ", actualAmount=" + actualAmount +
+                ", paymentAmount=" + paymentAmount +
+                ", cardNumber='" + cardNumber + '\'' +
+                ", isDel=" + isDel +
+                ", updateTime='" + updateTime + '\'' +
+                ", cpsAttachVariable='" + cpsAttachVariable + '\'' +
+                ", orderNumber='" + orderNumber + '\'' +
+                ", cpsMandatoryField='" + cpsMandatoryField + '\'' +
+                ", isRememberInfo=" + isRememberInfo +
+                ", upiAccountName='" + upiAccountName + '\'' +
+                ", deductCredit=" + deductCredit +
+                ", userSalesId=" + userSalesId +
+                ", accountSalesId=" + accountSalesId +
+                ", orderCurrency='" + orderCurrency + '\'' +
+                ", checkingStatus=" + checkingStatus +
+                ", isTrade=" + isTrade +
+                ", rate=" + rate +
+                ", isNonApp=" + isNonApp +
+                ", toUsdRate=" + toUsdRate +
+                '}';
     }
 }
