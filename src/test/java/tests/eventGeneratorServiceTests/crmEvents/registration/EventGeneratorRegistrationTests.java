@@ -59,16 +59,17 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.data.uuid, notNullValue());
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.data.create_time, equalTo(createTime));
-        assertThat("Check userId", RegistrationCrmEvent.data.user_id, equalTo(userId));
-        assertThat("Check brand", RegistrationCrmEvent.data.brand, equalTo(brand));
-        assertThat("Check regulator", RegistrationCrmEvent.data.regulator, equalTo(regulator));
-        assertThat("Check mtAccount", RegistrationCrmEvent.data.mt_account, equalTo(mtAccount));
+        assertThat("Check RegistrationTime", RegistrationCrmEvent.id, notNullValue());
+        assertThat("Check RegistrationTime", RegistrationCrmEvent.createTime, equalTo(createTime));
+        assertThat("Check userId", RegistrationCrmEvent.clientId, equalTo(userId));
+        assertThat("Check brand", RegistrationCrmEvent.brand, equalTo(brand));
+        assertThat("Check regulator", RegistrationCrmEvent.regulator, equalTo(regulator));
+        assertThat("Check mtAccount", RegistrationCrmEvent.metaTraderAccount, equalTo(mtAccount));
+        assertThat("Check type", RegistrationCrmEvent.type, equalTo("clientRegistration"));
     }
 
     @Test
@@ -87,11 +88,11 @@ public class EventGeneratorRegistrationTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime, 60);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, createTime);
         RegistrationEvent RegistrationCrmEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check RegistrationTime", RegistrationCrmEvent.data.uuid, notNullValue());
+        assertThat("Check RegistrationTime", RegistrationCrmEvent.id, notNullValue());
 
         Allure.step("Write second message to crm-db-events topic");
         crmDbEvent = RegistrationDbEvent.getRegistrationDbEvent(data, metadata);

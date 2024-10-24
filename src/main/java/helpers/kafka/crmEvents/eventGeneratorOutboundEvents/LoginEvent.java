@@ -3,26 +3,29 @@ package helpers.kafka.crmEvents.eventGeneratorOutboundEvents;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginEvent {
-    @JsonProperty("uuid")
-    public String uuid;
+    @JsonProperty("id")
+    public String id;
 
-    @JsonProperty("login_time")
-    public String login_time;
+    @JsonProperty("eventDate")
+    public String eventDate;
 
-    @JsonProperty("user_id")
-    public Integer user_id;
+    @JsonProperty("clientId")
+    public Integer clientId;
 
     @JsonProperty("brand")
     public String brand;
 
-    @JsonProperty("ip_address")
-    public String ip_address;
+    @JsonProperty("ipAddress")
+    public String ipAddress;
 
     @JsonProperty("cid")
     public String cid;
 
     @JsonProperty("cookie")
     public String cookie;
+
+    @JsonProperty("loginType")
+    public String loginType;
 
     @JsonProperty("type")
     public String type;

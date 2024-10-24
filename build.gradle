@@ -90,7 +90,6 @@ spotless {
                 .addMutator('UnnecessarySemicolon')
                 .addMutator('UseTextBlocks')
         formatAnnotations()
-        eclipse().configFile('src/main/resources/eclipse-code-style.xml')
     }
 }
 
