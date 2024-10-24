@@ -46,17 +46,28 @@ public class EventGeneratorRegistrationRequiredParametersTests {
 
     // Provide combinations of parameters for required LoginDbEventData fields
     private static Stream<Arguments> registrationDbEventDataRequiredParameters() {
-        return Stream.of(Arguments.of(null, userId, brand, regulator, mtAccount), Arguments.of(createTime, null, brand, regulator, mtAccount), Arguments.of(createTime, userId, null, regulator, mtAccount), Arguments.of(createTime, userId, brand, null, mtAccount), Arguments.of(createTime, userId, brand, regulator, null));
+        return Stream.of(
+                Arguments.of(null, userId, brand, regulator, mtAccount),
+                Arguments.of(createTime, null, brand, regulator, mtAccount),
+                Arguments.of(createTime, userId, null, regulator, mtAccount),
+                Arguments.of(createTime, userId, brand, null, mtAccount),
+                Arguments.of(createTime, userId, brand, regulator, null));
     }
 
     // Provide combinations for non-required LoginDbEventMetadata fields
     private static Stream<Arguments> registrationDbEventMetadataNotRequiredParameters() {
-        return Stream.of(Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName), Arguments.of(timestamp, recordType, operation, null, schemaName, tableName), Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
+        return Stream.of(
+                Arguments.of(null, recordType, operation, partitionKeyType, schemaName, tableName),
+                Arguments.of(timestamp, null, operation, partitionKeyType, schemaName, tableName),
+                Arguments.of(timestamp, recordType, null, partitionKeyType, schemaName, tableName),
+                Arguments.of(timestamp, recordType, operation, null, schemaName, tableName),
+                Arguments.of(timestamp, recordType, operation, partitionKeyType, null, tableName));
     }
 
     // Provide combinations for required LoginDbEventMetadata fields
     private static Stream<Arguments> registrationDbEventMetadataRequiredParameters() {
-        return Stream.of(Arguments.of(timestamp, recordType, operation, partitionKeyType, schemaName, null));
+        return Stream.of(
+                Arguments.of(timestamp, recordType, operation, partitionKeyType, schemaName, null));
     }
 
     @Test
@@ -170,7 +181,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
         kafka.produceMessage("13", objectMapper.writeValueAsString(crmDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId), 30);
+        String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(userId));
 
         Allure.step("Verify that message was not found");
         assertThat("Check message", consumedMessage, containsString(String.valueOf(userId)));

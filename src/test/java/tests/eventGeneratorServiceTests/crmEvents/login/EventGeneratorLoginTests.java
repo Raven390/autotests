@@ -44,14 +44,16 @@ public class EventGeneratorLoginTests {
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, String.valueOf(data.userId));
         LoginEvent loginCrmEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
+        System.out.println(loginCrmEvent);
         Allure.step("Verify that message was written correctly");
-        assertThat("Check UUID", loginCrmEvent.uuid, notNullValue());
-        assertThat("Check loginTime", loginCrmEvent.login_time, equalTo(data.loginDatetime));
-        assertThat("Check user_id", loginCrmEvent.user_id, equalTo(data.userId));
+        assertThat("Check id", loginCrmEvent.id, notNullValue());
+        assertThat("Check eventDate", loginCrmEvent.eventDate, equalTo(data.loginDatetime));
+        assertThat("Check clientId", loginCrmEvent.clientId, equalTo(data.userId));
         assertThat("Check brand", loginCrmEvent.brand, equalTo(data.brand));
-        assertThat("Check ip_address", loginCrmEvent.ip_address, equalTo(data.ipAddress));
+        assertThat("Check ipAddress", loginCrmEvent.ipAddress, equalTo(data.ipAddress));
         assertThat("Check cid", loginCrmEvent.cid, equalTo(data.uaString));
         assertThat("Check cookie", loginCrmEvent.cookie, equalTo(data.cookie));
-        assertThat("Check type", loginCrmEvent.type, equalTo("websiteLogin"));
+        assertThat("Check loginType", loginCrmEvent.loginType, equalTo("websiteLogin"));
+        assertThat("Check type", loginCrmEvent.type, equalTo("loginToWeb"));
     }
 }

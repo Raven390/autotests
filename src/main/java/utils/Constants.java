@@ -33,6 +33,7 @@ public class Constants {
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
     // OTHER
     public static final String TAG_BUILD_CHECK = "build_check";
+    public static final String TAG_AUTOMATION = "Automation tests";
     // KAFKA
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";

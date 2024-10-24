@@ -38,7 +38,7 @@ public class WithdrawalCpsTableTests {
         // Create test data
         int id = getRandomInt();
         System.out.println("Generated id: " + id);
-        String userId = "10076317";
+        String clientId = "10076317";
         int mt4Account = 804_317_687;
         String accountName = "nouse";
         String currency = "USD";
@@ -65,6 +65,7 @@ public class WithdrawalCpsTableTests {
         int checkingStatus = 0;
         int isTrade = 0;
         String rate = "1.000000";
+        String cardHash = "nouse";
         int isNonApp = 1;
         String toUsdRate = "1.000000";
         String brand = "Vantage";
@@ -82,7 +83,7 @@ public class WithdrawalCpsTableTests {
         String prevTransactionRecordId = "1";
         String commitTimestamp = "2024-10-02T09:34:20.000000Z";
         String streamPosition = "mysql-bin-changelog.430137:18975760:0:18976975:1847424366774639:mysql-bin-changelog.430137:18975513";
-        WithdrawalDbEventDataCpsTable data = getWithdrawalDbEventDataCpsTable(id, userId, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
+        WithdrawalDbEventDataCpsTable data = getWithdrawalDbEventDataCpsTable(id, clientId, mt4Account, accountName, currency, status, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, createTime, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, paymentMethodCode, checkingStatus, isTrade, rate, isNonApp, toUsdRate, brand, regulator);
         WithdrawalDbEventMetadataCpsTable metadata = getWithdrawalDbEventMetadataCpsTable(timestamp, recordType, operation, partitionKeyType, schemaName, tableName, transactionId, transactionRecordId, prevTransactionId, prevTransactionRecordId, commitTimestamp, streamPosition);
 
         Allure.step("Write message to crm-db-events topic");
@@ -94,31 +95,36 @@ public class WithdrawalCpsTableTests {
         WithdrawalEvent withdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check UUID", withdrawalEvent.data.UUID, notNullValue());
-        assertThat("Check create_time", withdrawalEvent.data.create_time, equalTo(createTime));
-        assertThat("Check transfer_id", withdrawalEvent.data.transfer_id, equalTo(id));
-        assertThat("Check brand", withdrawalEvent.data.brand, equalTo(brand));
-        assertThat("Check regulator", withdrawalEvent.data.regulator, equalTo(regulator));
-        assertThat("Check payment_method_code", withdrawalEvent.data.payment_method_code, equalTo("UnionPay"));
-        assertThat("Check withdraw_type", withdrawalEvent.data.withdraw_type, equalTo(withdrawType));
-        assertThat("Check withdraw_amount", withdrawalEvent.data.withdraw_amount, equalTo(withdrawAmount));
-        assertThat("Check fee", withdrawalEvent.data.fee, equalTo(fee));
-        assertThat("Check actual_amount", withdrawalEvent.data.actual_amount, equalTo(actualAmount));
-        assertThat("Check payment_amount", withdrawalEvent.data.payment_amount, equalTo(paymentAmount));
-        assertThat("Check wd_is_del", withdrawalEvent.data.wd_is_del, equalTo(isDel));
-        assertThat("Check update_time", withdrawalEvent.data.update_time, equalTo(updateTime));
-        assertThat("Check cps_attach_variable", withdrawalEvent.data.cps_attach_variable, equalTo(cpsAttachVariable));
-        assertThat("Check order_number", withdrawalEvent.data.order_number, equalTo(orderNumber));
-        assertThat("Check cps_mandatory_field", withdrawalEvent.data.cps_mandatory_field, equalTo(cpsMandatoryField));
-        assertThat("Check wd_is_remember_info", withdrawalEvent.data.wd_is_remember_info, equalTo(isRememberInfo));
-        assertThat("Check upi_account_name", withdrawalEvent.data.upi_account_name, equalTo(upiAccountName));
-        assertThat("Check user_sales_id", withdrawalEvent.data.user_sales_id, equalTo(userSalesId));
-        assertThat("Check account_sales_id", withdrawalEvent.data.account_sales_id, equalTo(accountSalesId));
-        assertThat("Check order_currency", withdrawalEvent.data.order_currency, equalTo(orderCurrency));
-        assertThat("Check checking_status", withdrawalEvent.data.checking_status, equalTo(checkingStatus));
-        assertThat("Check is_trade", withdrawalEvent.data.is_trade, equalTo(isTrade));
-        assertThat("Check rate", withdrawalEvent.data.rate, equalTo(rate));
-        assertThat("Check is_non_app", withdrawalEvent.data.is_non_app, equalTo(isNonApp));
-        assertThat("Check to_usd_rate", withdrawalEvent.data.to_usd_rate, equalTo(toUsdRate));
+        assertThat("Check id", withdrawalEvent.id, notNullValue());
+        assertThat("Check eventDate", withdrawalEvent.eventDate, equalTo(createTime));
+        assertThat("Check withdrawalId", withdrawalEvent.withdrawalId, equalTo(id));
+        assertThat("Check clientId", withdrawalEvent.clientId, equalTo(Integer.parseInt(clientId)));
+        assertThat("Check metaTraderAccount", withdrawalEvent.metaTraderAccount, equalTo(mt4Account));
+        assertThat("Check brand", withdrawalEvent.brand, equalTo(brand));
+        assertThat("Check regulator", withdrawalEvent.regulator, equalTo(regulator));
+        assertThat("Check paymentMethodCode", withdrawalEvent.paymentMethodCode, equalTo("UnionPay"));
+        assertThat("Check withdrawType", withdrawalEvent.withdrawType, equalTo(withdrawType));
+        assertThat("Check withdrawalAmount", withdrawalEvent.withdrawalAmount, equalTo(withdrawAmount));
+        assertThat("Check fee", withdrawalEvent.fee, equalTo(fee));
+        assertThat("Check actualAmount", withdrawalEvent.actualAmount, equalTo(actualAmount));
+        assertThat("Check paymentAmount", withdrawalEvent.paymentAmount, equalTo(paymentAmount));
+        assertThat("Check cardHash", withdrawalEvent.cardHash, equalTo(cardHash));
+        assertThat("Check wdIsDel", withdrawalEvent.wdIsDel, equalTo(isDel));
+        assertThat("Check updateTime", withdrawalEvent.updateTime, equalTo(updateTime));
+        assertThat("Check cpsAttachVariable", withdrawalEvent.cpsAttachVariable, equalTo(cpsAttachVariable));
+        assertThat("Check orderNumber", withdrawalEvent.orderNumber, equalTo(orderNumber));
+        assertThat("Check cpsMandatoryField", withdrawalEvent.cpsMandatoryField, equalTo(cpsMandatoryField));
+        assertThat("Check wdIsRememberInfo", withdrawalEvent.wdIsRememberInfo, equalTo(isRememberInfo));
+        assertThat("Check upiAccountName", withdrawalEvent.upiAccountName, equalTo(upiAccountName));
+        assertThat("Check deductCredit", withdrawalEvent.deductCredit, equalTo("0E-8"));
+        assertThat("Check userSalesId", withdrawalEvent.userSalesId, equalTo(userSalesId));
+        assertThat("Check accountSalesId", withdrawalEvent.accountSalesId, equalTo(accountSalesId));
+        assertThat("Check withdrawalCurrency", withdrawalEvent.withdrawalCurrency, equalTo(orderCurrency));
+        assertThat("Check checkingStatus", withdrawalEvent.checkingStatus, equalTo(checkingStatus));
+        assertThat("Check wdIsTrade", withdrawalEvent.wdIsTrade, equalTo(isTrade));
+        assertThat("Check rate", withdrawalEvent.rate, equalTo(rate));
+        assertThat("Check wdIsNonApp", withdrawalEvent.wdIsNonApp, equalTo(isNonApp));
+        assertThat("Check toUsdRate", withdrawalEvent.toUsdRate, equalTo(toUsdRate));
+        assertThat("Check type", withdrawalEvent.type, equalTo("withdrawal"));
     }
 }
