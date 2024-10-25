@@ -38,12 +38,12 @@ public class GetClientTest extends TestBaseApi {
         assertThat("Check regulator", client.regulator, is("SVG"));
         assertThat("Check phoneNum", client.phoneNum, is("BjrbbdAHkwhBFLnPclfvbg=="));
         assertThat("Check phoneNum", client.phoneCountryCode, is("543"));
-        assertThat("Check updateTime", client.updateTime, is("2024-10-18T13:44:21.819Z"));
+        assertThat("Check updateTime", client.updateTime, is("2024-10-25T11:15:27.082Z"));
         assertThat("Check lastName", client.lastName, is("Johnson"));
         assertThat("Check twoFaUser", client.twoFaUser, is("false"));
         assertThat("Check firstName", client.firstName, is("Michael"));
         assertThat("Check email", client.email, is("DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS"));
-        assertThat("Check countryCode", client.countryCode, is("AU"));
+        assertThat("Check countryCode", client.countryCode, is("593"));
         assertThat("Check brand", client.brand, is("VT"));
         assertThat("Check birthday", client.birthday, is("1975-05-17"));
         assertThat("Check registrationDate", client.registrationDate, is("2024-04-09"));
