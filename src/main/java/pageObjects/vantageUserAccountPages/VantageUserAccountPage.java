@@ -68,9 +68,6 @@ public class VantageUserAccountPage {
     @Step("Close alert window")
     public void closeAlertWindow() {
 
-        if (page.getByText("Nancy test").isVisible()) {
-            page.getByText("Nancy test").waitFor();
-        }
         closeCookieBanner();
         if (closeAlertButton.isVisible()) {
             closeAlertButton.waitFor();
