@@ -17,7 +17,7 @@ public class GetClientRequest {
         return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
     }
 
-    public static Response getClient(int clientId) throws IOException {
+    public static Response getClient(Integer clientId) throws IOException {
         return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
     }
 }
