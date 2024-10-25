@@ -4,7 +4,6 @@ import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.Regis
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
-import static utils.Utils.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("101")
-    public void generateRegistrationEventsWithoutMandatoryParamsTest() throws JsonProcessingException, InterruptedException {
+    public void generateRegistrationEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,13 +68,13 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     }
 
     @Test
-    @DisplayName("Generate open event with any of the optional parameters = null and verify that the Event Generator produced the event")
+    @DisplayName("Generate Registration event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
     @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(TEAM_CORE)
     @Tag(LAYER_API)
     @AllureId("102")
-    public void generateOpenTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException, InterruptedException {
+    public void generateRegistrationEventsWithoutOptionalParamsTest() throws JsonProcessingException {
 
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();

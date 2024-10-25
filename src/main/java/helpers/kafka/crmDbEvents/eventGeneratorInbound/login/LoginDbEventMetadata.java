@@ -2,6 +2,8 @@ package helpers.kafka.crmDbEvents.eventGeneratorInbound.login;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class LoginDbEventMetadata {
     @JsonProperty("timestamp")
     public String timestamp;
@@ -21,14 +23,40 @@ public class LoginDbEventMetadata {
     @JsonProperty("table-name")
     public String tableName;
 
-    public static LoginDbEventMetadata getLoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
-        LoginDbEventMetadata event = new LoginDbEventMetadata();
-        event.timestamp = timestamp;
-        event.recordType = recordType;
-        event.operation = operation;
-        event.partitionKeyType = partitionKeyType;
-        event.schemaName = schemaName;
-        event.tableName = tableName;
-        return event;
+    public LoginDbEventMetadata() {
+    }
+
+    public LoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
+        this.timestamp = timestamp;
+        this.recordType = recordType;
+        this.operation = operation;
+        this.partitionKeyType = partitionKeyType;
+        this.schemaName = schemaName;
+        this.tableName = tableName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoginDbEventMetadata that = (LoginDbEventMetadata) o;
+        return Objects.equals(timestamp, that.timestamp) && Objects.equals(recordType, that.recordType) && Objects.equals(operation, that.operation) && Objects.equals(partitionKeyType, that.partitionKeyType) && Objects.equals(schemaName, that.schemaName) && Objects.equals(tableName, that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timestamp, recordType, operation, partitionKeyType, schemaName, tableName);
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDbEventMetadata{" +
+                "timestamp='" + timestamp + '\'' +
+                ", recordType='" + recordType + '\'' +
+                ", operation='" + operation + '\'' +
+                ", partitionKeyType='" + partitionKeyType + '\'' +
+                ", schemaName='" + schemaName + '\'' +
+                ", tableName='" + tableName + '\'' +
+                '}';
     }
 }
