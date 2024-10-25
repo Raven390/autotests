@@ -27,6 +27,10 @@ public class ConfigFactory {
             // Clickhouse api
             CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath(),
             CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath(),
+            // Connection search
+            CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath(),
+            CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient(),
+            CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes(),
             // Clickhouse database
             CLICKHOUSE_HOST = CONFIG.clickhouseHost(), CLICKHOUSE_USER = CONFIG.clickhouseUser(),
             CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword(),
@@ -120,6 +124,17 @@ public class ConfigFactory {
 
         @Key("clickhouseGetClientPath")
         String clickhouseGetClientPath();
+
+        // Connection search
+
+        @Key("connectionSearchBasePath")
+        String connectionSearchBasePath();
+
+        @Key("connectionSearchGetConnectionsByClient")
+        String connectionSearchGetConnectionsByClient();
+
+        @Key("connectionSearchGetConnectionsByAttributes")
+        String connectionSearchGetConnectionsByAttributes();
 
         // Other
 
