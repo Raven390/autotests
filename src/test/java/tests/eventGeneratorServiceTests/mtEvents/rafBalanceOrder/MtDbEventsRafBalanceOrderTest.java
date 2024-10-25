@@ -10,7 +10,6 @@ import static utils.Constants.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
-import helpers.kafka.MessageWithHeaders;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt4;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt5;
 import helpers.kafka.mtEvents.RafBalanceOrderMtEvent;
@@ -18,12 +17,12 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Disabled
+import java.util.Map;
+
 public class MtDbEventsRafBalanceOrderTest {
 
     @Test
@@ -47,10 +46,9 @@ public class MtDbEventsRafBalanceOrderTest {
                 "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage1 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        MessageWithHeaders consumedMessage2 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
+        Map<String, String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent2.data.openTime);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent1.data.openTime), RafBalanceOrderMtEvent.class);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent2.data.openTime), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");
@@ -90,10 +88,9 @@ public class MtDbEventsRafBalanceOrderTest {
                 "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MessageWithHeaders consumedMessage1 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, true);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessage1.message(), RafBalanceOrderMtEvent.class);
-        MessageWithHeaders consumedMessage2 = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent2.data.openTime, true);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessage2.message(), RafBalanceOrderMtEvent.class);
+        Map<String, String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent2.data.openTime);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent1.data.openTime), RafBalanceOrderMtEvent.class);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent2.data.openTime), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
                 rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");

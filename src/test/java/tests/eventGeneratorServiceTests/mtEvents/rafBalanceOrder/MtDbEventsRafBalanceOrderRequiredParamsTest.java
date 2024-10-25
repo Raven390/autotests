@@ -22,9 +22,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 public class MtDbEventsRafBalanceOrderRequiredParamsTest {
 
+    @Disabled
     @Test
     @DisplayName(
         "Generate RAF balance order event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
@@ -111,6 +111,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
         assertThat("Check if all matching events found", areAllParamsPresentInMessages.matchResult(), equalTo(true));
     }
 
+    @Disabled
     @Test
     @DisplayName(
         "Generate RAF balance order event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")

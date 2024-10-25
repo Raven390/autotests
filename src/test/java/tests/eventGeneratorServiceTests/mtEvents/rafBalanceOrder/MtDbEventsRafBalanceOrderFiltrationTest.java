@@ -64,24 +64,7 @@ public class MtDbEventsRafBalanceOrderFiltrationTest {
         rafBalanceOrderEventMt5Action2.data.action = 99;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd2), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt4Comment), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action2), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount1), objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Comment), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action1), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
