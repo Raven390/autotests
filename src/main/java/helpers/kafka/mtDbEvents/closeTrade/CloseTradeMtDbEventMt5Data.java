@@ -16,7 +16,7 @@ public class CloseTradeMtDbEventMt5Data {
     @JsonProperty("Login")
     public Integer mtAccount;
 
-    @JsonProperty("VolumeClosedExt")
+    @JsonProperty("Volume")
     public Double volume;
 
     @JsonProperty("Symbol")

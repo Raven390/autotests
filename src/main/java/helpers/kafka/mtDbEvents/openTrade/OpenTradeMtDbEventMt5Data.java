@@ -16,7 +16,7 @@ public class OpenTradeMtDbEventMt5Data {
     @JsonProperty("Login")
     public Integer mtAccount;
 
-    @JsonProperty("VolumeExt")
+    @JsonProperty("Volume")
     public Double volume;
 
     @JsonProperty("Symbol")
