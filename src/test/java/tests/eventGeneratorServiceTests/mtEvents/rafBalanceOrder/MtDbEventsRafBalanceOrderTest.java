@@ -13,24 +13,21 @@ import helpers.kafka.KafkaHelper;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt4;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt5;
 import helpers.kafka.mtEvents.RafBalanceOrderMtEvent;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class MtDbEventsRafBalanceOrderTest {
 
     @Test
     @DisplayName("Generate RAF balance order with event generator service from MT4 source with all fields populated")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("123")
     public void generateMt4RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
@@ -69,10 +66,6 @@ public class MtDbEventsRafBalanceOrderTest {
 
     @Test
     @DisplayName("Generate RAF balance order with event generator service from MT5 source with all fields populated")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("124")
     public void generateMt5RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();

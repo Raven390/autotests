@@ -4,7 +4,6 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -15,7 +14,6 @@ public class ProfilePageTest extends TestBaseWeb {
 
     @Disabled
     @Test
-    @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -29,7 +27,6 @@ public class ProfilePageTest extends TestBaseWeb {
 
     @Disabled
     @Test
-    @Owner(OWNER_DMITRI_KALACHEV)
     @Tag(TEAM_BACKOFFICE)
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_WEB)

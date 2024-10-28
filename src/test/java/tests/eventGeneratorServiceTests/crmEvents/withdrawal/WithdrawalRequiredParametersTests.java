@@ -10,24 +10,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal.WithdrawalDbEvent;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_WITHDRAWAL)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class WithdrawalRequiredParametersTests {
 
     @Test
     @DisplayName("Generate withdrawal event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("68")
-    public void generateWithdrawalEventsWithoutMandatoryParamsTest() throws JsonProcessingException, InterruptedException {
+    public void generateWithdrawalEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();

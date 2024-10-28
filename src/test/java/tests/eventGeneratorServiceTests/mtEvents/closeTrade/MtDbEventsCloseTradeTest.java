@@ -14,22 +14,19 @@ import helpers.kafka.MessageWithHeaders;
 import helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt4;
 import helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt5;
 import helpers.kafka.mtEvents.CloseTradeMtEvent;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class MtDbEventsCloseTradeTest {
 
     @Test
     @DisplayName("Generate close event with event generator service from MT4 source with all fields populated")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("109")
     public void generateMt4CloseTradeEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
@@ -53,10 +50,6 @@ public class MtDbEventsCloseTradeTest {
 
     @Test
     @DisplayName("Generate close event with event generator service from MT5 source with all fields populated")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("110")
     public void generateMt5CloseTradeEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();

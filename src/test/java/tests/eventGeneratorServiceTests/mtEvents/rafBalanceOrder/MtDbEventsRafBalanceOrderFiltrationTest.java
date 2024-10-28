@@ -12,23 +12,20 @@ import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt4;
 import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt5;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class MtDbEventsRafBalanceOrderFiltrationTest {
 
     @Test
     @DisplayName(
         "Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("125")
     public void generateRafBalanceOrderEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();

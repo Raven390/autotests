@@ -7,7 +7,6 @@ import static utils.Utils.*;
 import helpers.database.MySqlHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.junit.jupiter.api.*;
@@ -19,7 +18,6 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
     @Disabled
     @Test
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
     @Tag(STATUS_AUTOMATED)
     @Tag(LAYER_API)
     @DisplayName("Vantage. Registration Lexis Nexis event")

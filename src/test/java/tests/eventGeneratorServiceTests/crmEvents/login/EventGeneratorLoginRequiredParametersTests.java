@@ -16,15 +16,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_LOGIN)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class EventGeneratorLoginRequiredParametersTests {
 
     @Test
     @DisplayName("Generate login event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("111")
     public void generateLoginEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
@@ -63,11 +62,6 @@ public class EventGeneratorLoginRequiredParametersTests {
 
     @Test
     @DisplayName("Generate login event with any of the optional parameters = null and verify that the Event Generator produced the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("112")
     public void generateLoginEventsWithoutOptionalParamsTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();

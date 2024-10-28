@@ -27,6 +27,7 @@ public class ConfigFactory {
             // Clickhouse api
             CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath(),
             CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath(),
+            CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH = CONFIG.clickhouseGetLexisNexisPath(),
             // Connection search
             CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath(),
             CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient(),
@@ -124,6 +125,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetClientPath")
         String clickhouseGetClientPath();
+
+        @Key("clickhouseGetLexisNexisPath")
+        String clickhouseGetLexisNexisPath();
 
         // Connection search
 

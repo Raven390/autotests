@@ -1,7 +1,7 @@
 package helpers.kafka;
 
 import static utils.ConfigFactory.*;
-import static utils.Constants.KAFKA_NO_MESSAGE_FOUND_ERROR;
+import static utils.Constants.*;
 
 import java.time.Duration;
 import java.util.*;
@@ -273,7 +273,6 @@ public class KafkaHelper {
         RecordMetadata metadata = null;
         // Set producer properties and create a new Kafka producer
         Properties properties = getKafkaProducerProperties();
-        System.out.println(properties.get(""));
 
         // Create a producer record
 
@@ -325,7 +324,7 @@ public class KafkaHelper {
             int attempts = 0;
             // Ensure there are no null values in the textToSearchList
             if (textToSearchList == null || textToSearchList.length == 0) {
-                return new MatchResultWithMessage(false, "No search parameters provided.");
+                return new MatchResultWithMessage(false, KAFKA_NO_PARAMETERS_PROVIDED);
             }
             while (attempts < maxAttempts) {
                 // Poll the Kafka broker for new records (with a timeout of 1000 ms)
@@ -383,18 +382,18 @@ public class KafkaHelper {
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {
                             foundTexts.add(text); // Mark this text as found
-                            System.out.println("text size: " + foundTexts.size());
-                            System.out.println("search length: " + textToSearchList.length);
+                            System.out.println("Text size: " + foundTexts.size());
+                            System.out.println("Search length: " + textToSearchList.length);
                         }
                     }
                     // If all texts are found, we can stop searching
                     if (foundTexts.size() == textToSearchList.length) {
-                        return new MatchResultWithMessage(true, "All the parameters were found in messages.");
+                        return new MatchResultWithMessage(true, KAFKA_ALL_PARAMETERS_FOUND);
                     }
                 }
             }
             // If we exit the loop, it means some parameters were not found
-            return new MatchResultWithMessage(false, "Some of the parameters were not found in messages.");
+            return new MatchResultWithMessage(false, KAFKA_SOME_PARAMETERS_FOUND);
         }
     }
 

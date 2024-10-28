@@ -13,25 +13,22 @@ import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt4;
 import helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt5;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AllureId;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class MtDbEventsOpenTradeRequiredParamsTest {
 
     @Disabled
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("121")
     public void generateOpenTradeEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();
@@ -77,10 +74,6 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
     @Test
     @DisplayName(
         "Generate open event with any of the optional parameters = null and verify that the Event Generator produced the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("122")
     public void generateOpenTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();
@@ -123,10 +116,6 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("130")
     public void generateOpenTradeEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();

@@ -15,19 +15,19 @@ import helpers.kafka.crmEvents.eventGeneratorOutboundEvents.WithdrawalEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_WITHDRAWAL)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class WithdrawalTests {
 
     @Test
     @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw table")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("67")
     public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
@@ -81,10 +81,6 @@ public class WithdrawalTests {
 
     @Test
     @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw_cps table")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("66")
     public void generateWithdrawalEventCpsTest() throws JsonProcessingException, InterruptedException {
 
