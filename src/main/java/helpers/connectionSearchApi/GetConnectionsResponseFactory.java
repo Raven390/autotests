@@ -4,8 +4,8 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsResponseSuccess(){
         return new GetConnectionsResponse(
-                "10079042_vantage",
-                "1282484_vantage",
+                "vantage-10079042",
+                "vantage-10077705",
                 1.0,
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",

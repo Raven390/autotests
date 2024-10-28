@@ -35,7 +35,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("145")
     public void getConnectionsByClientSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", "10079042_vantage");
+        queryParams.put("clientId", "vantage-10079042");
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -59,7 +59,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("146")
     public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", "10079042_vantage");
+        queryParams.put("clientId", "vantage-10079042");
         queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -106,7 +106,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("148")
     public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", "10079042_vantage");
+        queryParams.put("clientId", "vantage-10079042");
         queryParams.put("connectionDepth", 99);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -151,7 +151,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("150")
     public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", "10079042_vantage");
+        queryParams.put("clientId", "vantage-10079042");
         queryParams.put("connectionDepth", "test");
 
         Response response = getConnectionsByClientId(queryParams);
