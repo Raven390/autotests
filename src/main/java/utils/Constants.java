@@ -7,10 +7,6 @@ public class Constants {
     // SUITE
     public static final String SUITE_REGRESSION = "suite_regression";
     public static final String SUITE_SMOKE = "suite_smoke";
-    // OWNERS
-    public static final String OWNER_NIKOLAI_KORIAGIN = "NikolaiKoriagin";
-    public static final String OWNER_DMITRI_KALACHEV = "DmitriKalachev";
-    public static final String OWNER_FEDOR_NESTEROVICH = "FedorNesterovich";
     // TEST CASE STATUSES
     public static final String STATUS_MANUAL = "status_manual";
     public static final String STATUS_AUTOMATED = "status_automated";
@@ -25,7 +21,17 @@ public class Constants {
     public static final String FEATURE_EVENT_GENERATOR_SERVICE = "Event generator service";
     public static final String FEATURE_CONNECTION_SEARCH_API_SERVICE = "Connection search api service";
     // STORIES
-    public static final String FEATURE_EVENT_GENERATOR_SERVICE_LOGIN = "Login event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_LOGIN = "Login event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_REGISTRATION = "Registration event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_WITHDRAWAL = "Withdrawal event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE = "Open trade event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE = "Close trade event in Event Generator";
+    public static final String STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE = "Raf balance trade event in Event Generator";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS = "Clickhouse api. Get lexis nexis data by client request";
+    public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
+    public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -42,6 +48,9 @@ public class Constants {
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
     public static final String KAFKA_NO_MESSAGE_FOUND_ERROR = "Max attempts reached without finding a matching message";
+    public static final String KAFKA_ALL_PARAMETERS_FOUND = "All the parameters were found in messages.";
+    public static final String KAFKA_SOME_PARAMETERS_FOUND = "Some of the parameters were not found in messages.";
+    public static final String KAFKA_NO_PARAMETERS_PROVIDED = "No search parameters provided.";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_SECOND_NAME = "User";

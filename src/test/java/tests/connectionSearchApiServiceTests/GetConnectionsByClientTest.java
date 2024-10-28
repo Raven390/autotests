@@ -1,10 +1,10 @@
-package tests.connectionSearchApiTests;
+package tests.connectionSearchApiServiceTests;
 
 import helpers.connectionSearchApi.GetConnectionsResponse;
 import helpers.connectionSearchApi.GetConnectionsResponseError;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -22,6 +22,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
+@Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
+@Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class GetConnectionsByClientTest extends TestBaseApi {
 
     public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess();
@@ -29,9 +33,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId success(200)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("145")
     public void getConnectionsByClientSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -53,9 +54,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId and connectionDepth success(200)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("146")
     public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -78,9 +76,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection by not existing clientId success(200)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("147")
     public void getConnectionsNoSuchClientIdSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -100,9 +95,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection by not existing connectionDepth for the client success(200)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("148")
     public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -122,9 +114,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection without clientId Bad Request(400)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("149")
     public void getConnectionsNoClientIdBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -145,9 +134,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionDepth not int Bad Request(400)")
-    @Owner(OWNER_FEDOR_NESTEROVICH)
-    @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-    @Tag(TEAM_CORE)
     @AllureId("150")
     public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();

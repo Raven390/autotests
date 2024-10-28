@@ -1,8 +1,8 @@
-package helpers.clickhouseApiService;
+package helpers.clickhouseApiService.getLexisNexis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GetClientResponseError {
+public class GetLexisNexisResponseError {
 
     @JsonProperty("error")
     public String error;

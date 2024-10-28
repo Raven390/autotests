@@ -14,19 +14,19 @@ import helpers.kafka.crmEvents.eventGeneratorOutboundEvents.RegistrationEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Owner;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_REGISTRATION)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class EventGeneratorRegistrationTests {
 
     @Test
     @DisplayName("Generate registration event with event generator service")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("64")
     public void generateRegistrationEventTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
@@ -57,10 +57,6 @@ public class EventGeneratorRegistrationTests {
 
     @Test
     @DisplayName("Generate registration event two times for the same user")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("128")
     public void verifyRegistrationEventIsFilteredOutTest() throws JsonProcessingException, InterruptedException {
         KafkaHelper kafka = new KafkaHelper();

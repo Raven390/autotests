@@ -1,4 +1,4 @@
-package helpers.clickhouseApiService;
+package helpers.clickhouseApiService.getClient;
 
 import static utils.ConfigFactory.CLICKHOUSE_API_BASE_PATH;
 import static utils.ConfigFactory.CLICKHOUSE_API_GET_CLIENT_PATH;

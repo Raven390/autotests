@@ -16,15 +16,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_EVENT_GENERATOR_SERVICE)
+@Story(STORY_EVENT_GENERATOR_SERVICE_LOGIN)
+@Tag(LAYER_API)
+@Tag(TEAM_CORE)
 public class EventGeneratorLoginTests {
 
     @Test
     @DisplayName("Generate login event with event generator service")
-    @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-    @Story(FEATURE_EVENT_GENERATOR_SERVICE_LOGIN)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("65")
     public void generateLoginEventTest() throws JsonProcessingException, InterruptedException {
 

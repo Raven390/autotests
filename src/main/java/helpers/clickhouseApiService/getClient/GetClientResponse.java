@@ -1,4 +1,4 @@
-package helpers.clickhouseApiService;
+package helpers.clickhouseApiService.getClient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +10,12 @@ public class GetClientResponse {
     @JsonProperty("clientId")
     public String clientId;
 
+    @JsonProperty("userId")
+    public String userId;
+
+    @JsonProperty("gender")
+    public String gender;
+
     @JsonProperty("regulator")
     public String regulator;
 
@@ -19,14 +25,14 @@ public class GetClientResponse {
     @JsonProperty("phoneCountryCode")
     public String phoneCountryCode;
 
-    @JsonProperty("updateTime")
-    public String updateTime;
-
     @JsonProperty("lastName")
     public String lastName;
 
     @JsonProperty("twoFaUser")
     public String twoFaUser;
+
+    @JsonProperty("authentication")
+    public String authentication;
 
     @JsonProperty("firstName")
     public String firstName;
@@ -40,6 +46,18 @@ public class GetClientResponse {
     @JsonProperty("countryCode")
     public String countryCode;
 
+    @JsonProperty("language")
+    public String language;
+
+    @JsonProperty("nationality")
+    public String nationality;
+
+    @JsonProperty("isoCountryCode")
+    public String isoCountryCode;
+
+    @JsonProperty("country")
+    public String country;
+
     @JsonProperty("brand")
     public String brand;
 
@@ -48,4 +66,26 @@ public class GetClientResponse {
 
     @JsonProperty("registrationDate")
     public String registrationDate;
+
+    @JsonProperty("emailVerificationDate")
+    public String emailVerificationDate;
+
+    @JsonProperty("phoneVerificationDate")
+    public String phoneVerificationDate;
+
+    @JsonProperty("ibId")
+    public String ibId;
+
+    @JsonProperty("cpaId")
+    public String cpaId;
+
+    @JsonProperty("rafReferrerId")
+    public String rafReferrerId;
+
+    @JsonProperty("lastUpdated")
+    public String lastUpdated;
+
+    @JsonProperty("kycStatus")
+    public String kycStatus;
+
 }

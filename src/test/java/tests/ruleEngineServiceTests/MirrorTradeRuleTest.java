@@ -9,16 +9,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Feature(FEATURE_RULE_ENGINE_SERVICE)
+@Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
 public class MirrorTradeRuleTest {
 
     @Test
     @DisplayName("""
             Hedge block flow IF Abuse registry check is YES
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
+
     @AllureId("56")
     public void mirrorTradeTest1() throws SQLException {
         // UserHelper.createUser(true, "");
@@ -36,10 +37,6 @@ public class MirrorTradeRuleTest {
             IF Abuse registry check is NO AND Connection search:
             Linked new accounts with bonus found - exact match YES
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("47")
     public void mirrorTradeTest2() throws SQLException {
         UserHelper.createUser(false, "");
@@ -61,10 +58,6 @@ public class MirrorTradeRuleTest {
             IF user NOT in abuse registry
             AND not linked account AND Less than 4 simple abuse point
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("55")
     public void mirrorTradeTest3() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -87,10 +80,6 @@ public class MirrorTradeRuleTest {
             AND NOT large spikes in real exposure
             AND NOT number of stop outs
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("49")
     public void mirrorTradeTest4() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -124,10 +113,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("54")
     public void mirrorTradeTest5() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -161,10 +146,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("48")
     public void mirrorTradeTest6() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -198,10 +179,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS true
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("52")
     public void mirrorTradeTest7() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -235,10 +212,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("51")
     public void mirrorTradeTest8() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -272,10 +245,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("53")
     public void mirrorTradeTest9() throws SQLException {
         // UserHelper.createUser(false, "");
@@ -309,10 +278,6 @@ public class MirrorTradeRuleTest {
             AND mirror trade check
             IS false
             """)
-    @Feature(FEATURE_RULE_ENGINE_SERVICE)
-    @Owner(OWNER_NIKOLAI_KORIAGIN)
-    @Tag(TEAM_CORE)
-    @Tag(LAYER_API)
     @AllureId("50")
     public void mirrorTradeTest10() throws SQLException {
         // UserHelper.createUser(false, "");
