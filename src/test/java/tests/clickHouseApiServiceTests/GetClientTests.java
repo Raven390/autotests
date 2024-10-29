@@ -1,16 +1,16 @@
 package tests.clickHouseApiServiceTests;
 
-import static helpers.clickhouseApiService.getClient.GetClientRequest.getClient;
+import static businessObjects.api.clickhouseApiService.getClient.GetClientRequest.getClient;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.dbObjects.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUserId;
+import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUserId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
-import helpers.clickhouseApiService.getClient.GetClientResponse;
-import helpers.clickhouseApiService.getClient.GetClientResponseError;
-import helpers.database.dbObjects.crmTbUserTable.CrmTbUserObject;
+import businessObjects.api.clickhouseApiService.getClient.GetClientResponse;
+import businessObjects.api.clickhouseApiService.getClient.GetClientResponseError;
+import businessObjects.db.crmTbUserTable.CrmTbUserObject;
 import io.qameta.allure.*;
 import java.io.IOException;
 import java.sql.SQLException;

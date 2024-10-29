@@ -1,7 +1,7 @@
 package tests.eventGeneratorServiceTests.mtEvents.openTrade;
 
-import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
-import static helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
+import static businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
+import static businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt4;
-import helpers.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt5;
+import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt4;
+import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt5;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

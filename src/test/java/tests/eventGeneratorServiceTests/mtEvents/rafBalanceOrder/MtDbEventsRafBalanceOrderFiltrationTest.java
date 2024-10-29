@@ -1,7 +1,7 @@
 package tests.eventGeneratorServiceTests.mtEvents.rafBalanceOrder;
 
-import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt4;
-import static helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt5;
+import static businessObjects.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt4;
+import static businessObjects.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -10,8 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt4;
-import helpers.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt5;
+import businessObjects.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt4;
+import businessObjects.kafka.mtDbEvents.rafBalanceOrder.RafBalanceOrderMtDbEventMt5;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

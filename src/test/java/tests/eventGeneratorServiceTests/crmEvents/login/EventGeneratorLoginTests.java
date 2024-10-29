@@ -1,6 +1,6 @@
 package tests.eventGeneratorServiceTests.crmEvents.login;
 
-import static helpers.kafka.crmDbEvents.login.LoginDbEventFactory.generateLoginDbEvent;
+import static businessObjects.kafka.crmDbEvents.login.LoginDbEventFactory.generateLoginDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -9,8 +9,8 @@ import static utils.Constants.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
-import helpers.kafka.crmDbEvents.login.LoginDbEvent;
-import helpers.kafka.crmEvents.LoginEvent;
+import businessObjects.kafka.crmDbEvents.login.LoginDbEvent;
+import businessObjects.kafka.crmEvents.LoginEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

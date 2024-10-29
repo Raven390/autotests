@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
-import helpers.clickhouseApiService.getLexisNexis.GetLexisNexisResponse;
-import helpers.database.dbObjects.LnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisResponse;
+import businessObjects.db.LnSessionParsedTable.LnSessionParsedObject;
 import io.qameta.allure.*;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -17,9 +17,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static helpers.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
+import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.dbObjects.LnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static businessObjects.db.LnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
