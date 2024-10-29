@@ -33,6 +33,12 @@ public class Utils {
         return Instant.now().getEpochSecond();
     }
 
+    public static String getCurrentTimestampDbFormat() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
+    }
+
     public static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
@@ -90,4 +96,5 @@ public class Utils {
             }
         }
     }
+
 }

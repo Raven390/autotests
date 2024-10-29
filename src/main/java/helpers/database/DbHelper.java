@@ -9,7 +9,7 @@ import java.util.StringJoiner;
 
 import static utils.ConfigFactory.*;
 
-public class ObjectToDb {
+public class DbHelper {
 
     public static <T> void insertObjectsToDb(String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
@@ -24,6 +24,18 @@ public class ObjectToDb {
     public static <T> void insertObjectToDb(String tableName, T object) throws SQLException, ReflectiveOperationException {
         try (Connection connection = createConnection()) {
             insertSingleObject(connection, tableName, object);
+        }
+    }
+
+    public static void deleteEntryFromDb(String tableName, String where) throws SQLException {
+        if (where == null || where.trim().isEmpty()) {
+            throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
+        }
+        String deleteQuery = String.format("DELETE FROM %s WHERE %s", tableName, where);
+        try (Connection connection = createConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            System.out.println("Executing delete query: " + deleteQuery);
+            statement.executeUpdate();
         }
     }
 
