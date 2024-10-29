@@ -4,73 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class GetLexisNexisResponse {
 
-//    {
-//            "uid": "123e4567-e89b-12d3-a456-426614174000",
-//            "id": 987654321,
-//            "brand": "example_brand",
-//            "sessionId": "example_session_id",
-//            "userId": 98765,
-//            "email": "example_email@example.com",
-//            "mobileCode": "1",
-//            "mobile": "1234567890",
-//            "eventType": "example_event_type",
-//            "isFromApp": true,
-//            "createTime": "2024-10-24T13:02:01Z",
-//            "policyScore": 7,
-//            "riskRating": "high",
-//            "deviceId": "example_device_id",
-//            "digitalId": "example_digital_id",
-//            "eventDatetime": "2024-10-24T13:02:01Z",
-//            "eventId": 1234,
-//            "proxyIp": "193.13.54.22",
-//            "proxyIpActivities": "example_proxy_ip_activities",
-//            "proxyIpAttributes": ["attr1", "attr2"],
-//            "proxyIpCity": "example_city",
-//            "proxyIpConnectionType": "example_connection_type",
-//            "proxyIpFirstSeen": "2024-01-01",
-//            "proxyIpGeo": "example_geo",
-//            "proxyIpHome": "example_home",
-//            "proxyIpIsp": "example_isp",
-//            "proxyIpLatitude": 37.77490,
-//            "proxyIpLongitude": -122.41940,
-//            "proxyIpOrganization": "example_organization",
-//            "proxyIpOrganizationType": "example_organization_type",
-//            "proxyIpPostalCode": "94103",
-//            "proxyIpRegion": "example_region",
-//            "proxyIpResult": "example_result",
-//            "proxyIpRoutingType": "example_routing_type",
-//            "proxyIpScore": 6,
-//            "proxyIpWorstScore": 2,
-//            "proxyIpv6": "example_ipv6",
-//            "proxyName": "example_proxy_name",
-//            "proxyScore": 78.56,
-//            "proxyType": "example_proxy_type",
-//            "trueIp": null,
-//            "trueIpActivities": "example_true_ip_activities",
-//            "trueIpAttributes": ["attr3", "attr4"],
-//            "trueIpCity": "example_true_ip_city",
-//            "trueIpCountryConfidence": 95,
-//            "trueIpFirstSeen": "2023-01-01",
-//            "trueIpGeo": "example_true_ip_geo",
-//            "trueIpIsp": "example_true_ip_isp",
-//            "trueIpLastEvent": "2023-12-01",
-//            "trueIpOrganization": "example_true_ip_organization",
-//            "trueIpOrganizationType": "example_true_ip_organization_type",
-//            "trueIpPostalCode": "94103",
-//            "trueIpRegion": "example_true_ip_region",
-//            "trueIpResult": "example_true_ip_result",
-//            "trueIpRoutingType": "example_true_ip_routing_type",
-//            "trueIpScore": 5,
-//            "trueIpWorstScore": 3,
-//            "trueIpv6": "example_true_ipv6",
-//            "vpnScore": 100
-//    }
-
     @JsonProperty("uid")
     public String uid;
 
     @JsonProperty("id")
-    public long id;
+    public int id;
 
     @JsonProperty("brand")
     public String brand;
@@ -79,7 +17,7 @@ public class GetLexisNexisResponse {
     public String sessionId;
 
     @JsonProperty("userId")
-    public long userId;
+    public int userId;
 
     @JsonProperty("email")
     public String email;

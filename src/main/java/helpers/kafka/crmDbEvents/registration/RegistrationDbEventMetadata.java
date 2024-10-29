@@ -1,10 +1,10 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.login;
+package helpers.kafka.crmDbEvents.registration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class LoginDbEventMetadata {
+public class RegistrationDbEventMetadata {
     @JsonProperty("timestamp")
     public String timestamp;
 
@@ -23,10 +23,10 @@ public class LoginDbEventMetadata {
     @JsonProperty("table-name")
     public String tableName;
 
-    public LoginDbEventMetadata() {
+    public RegistrationDbEventMetadata() {
     }
 
-    public LoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
+    public RegistrationDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -39,7 +39,7 @@ public class LoginDbEventMetadata {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LoginDbEventMetadata that = (LoginDbEventMetadata) o;
+        RegistrationDbEventMetadata that = (RegistrationDbEventMetadata) o;
         return Objects.equals(timestamp, that.timestamp) && Objects.equals(recordType, that.recordType) && Objects.equals(operation, that.operation) && Objects.equals(partitionKeyType, that.partitionKeyType) && Objects.equals(schemaName, that.schemaName) && Objects.equals(tableName, that.tableName);
     }
 
@@ -50,7 +50,7 @@ public class LoginDbEventMetadata {
 
     @Override
     public String toString() {
-        return "LoginDbEventMetadata{" +
+        return "RegistrationDbEventMetadata{" +
                 "timestamp='" + timestamp + '\'' +
                 ", recordType='" + recordType + '\'' +
                 ", operation='" + operation + '\'' +

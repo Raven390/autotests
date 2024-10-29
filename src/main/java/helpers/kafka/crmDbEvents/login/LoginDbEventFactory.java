@@ -1,4 +1,4 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.login;
+package helpers.kafka.crmDbEvents.login;
 
 
 import java.time.Instant;

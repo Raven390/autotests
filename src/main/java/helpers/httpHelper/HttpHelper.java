@@ -34,8 +34,8 @@ public class HttpHelper {
         }
 
         Request request = requestBuilder.build();
+        System.out.println("Request to execute: "+ request);
 
-        // Execute the request and return the response
         return client.newCall(request).execute();
     }
 }

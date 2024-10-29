@@ -1,6 +1,4 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal;
-
-import helpers.kafka.mtDbEvents.closeTrade.*;
+package helpers.kafka.crmDbEvents.withdrawal;
 
 import java.time.Instant;
 

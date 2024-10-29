@@ -1,21 +1,21 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.login;
+package helpers.kafka.crmDbEvents.registration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class LoginDbEvent {
+public class RegistrationDbEvent {
 
     @JsonProperty("data")
-    public LoginDbEventData data;
+    public RegistrationDbEventData data;
 
     @JsonProperty("metadata")
-    public LoginDbEventMetadata metadata;
+    public RegistrationDbEventMetadata metadata;
 
-    public LoginDbEvent() {
+    public RegistrationDbEvent() {
     }
 
-    public LoginDbEvent(LoginDbEventData data, LoginDbEventMetadata metadata) {
+    public RegistrationDbEvent(RegistrationDbEventData data, RegistrationDbEventMetadata metadata) {
         this.data = data;
         this.metadata = metadata;
     }
@@ -24,7 +24,7 @@ public class LoginDbEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LoginDbEvent that = (LoginDbEvent) o;
+        RegistrationDbEvent that = (RegistrationDbEvent) o;
         return Objects.equals(data, that.data) && Objects.equals(metadata, that.metadata);
     }
 
@@ -35,7 +35,7 @@ public class LoginDbEvent {
 
     @Override
     public String toString() {
-        return "LoginDbEvent{" +
+        return "RegistrationDbEvent{" +
                 "data=" + data +
                 ", metadata=" + metadata +
                 '}';

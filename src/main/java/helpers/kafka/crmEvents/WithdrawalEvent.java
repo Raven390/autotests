@@ -1,4 +1,4 @@
-package helpers.kafka.crmEvents.eventGeneratorOutboundEvents;
+package helpers.kafka.crmEvents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

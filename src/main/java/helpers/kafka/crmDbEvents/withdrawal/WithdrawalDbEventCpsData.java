@@ -1,4 +1,4 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.withdrawal;
+package helpers.kafka.crmDbEvents.withdrawal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

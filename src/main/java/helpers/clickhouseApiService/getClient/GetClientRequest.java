@@ -1,13 +1,13 @@
 package helpers.clickhouseApiService.getClient;
 
-import static utils.ConfigFactory.CLICKHOUSE_API_BASE_PATH;
-import static utils.ConfigFactory.CLICKHOUSE_API_GET_CLIENT_PATH;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static utils.ConfigFactory.*;
 
 public class GetClientRequest {
     public static OkHttpClient httpClient = new OkHttpClient();
