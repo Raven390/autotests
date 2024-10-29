@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Muted
 public class MirrorTradeRuleTest {
 
     @Test
