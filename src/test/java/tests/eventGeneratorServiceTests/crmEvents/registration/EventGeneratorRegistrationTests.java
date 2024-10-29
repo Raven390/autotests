@@ -1,6 +1,6 @@
 package tests.eventGeneratorServiceTests.crmEvents.registration;
 
-import static helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEventFactory.generateRegistrationDbEvent;
+import static helpers.kafka.crmDbEvents.registration.RegistrationDbEventFactory.generateRegistrationDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -9,8 +9,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.crmDbEvents.eventGeneratorInbound.registration.RegistrationDbEvent;
-import helpers.kafka.crmEvents.eventGeneratorOutboundEvents.RegistrationEvent;
+import helpers.kafka.crmDbEvents.registration.RegistrationDbEvent;
+import helpers.kafka.crmEvents.RegistrationEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;

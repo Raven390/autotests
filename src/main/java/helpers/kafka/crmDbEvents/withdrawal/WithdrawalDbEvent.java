@@ -1,21 +1,20 @@
-package helpers.kafka.crmDbEvents.eventGeneratorInbound.registration;
+package helpers.kafka.crmDbEvents.withdrawal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class RegistrationDbEvent {
+public class WithdrawalDbEvent {
+    @JsonProperty(value = "data")
+    public WithdrawalDbEventData data;
 
-    @JsonProperty("data")
-    public RegistrationDbEventData data;
+    @JsonProperty(value = "metadata")
+    public WithdrawalDbEventMetadata metadata;
 
-    @JsonProperty("metadata")
-    public RegistrationDbEventMetadata metadata;
-
-    public RegistrationDbEvent() {
+    public WithdrawalDbEvent() {
     }
 
-    public RegistrationDbEvent(RegistrationDbEventData data, RegistrationDbEventMetadata metadata) {
+    public WithdrawalDbEvent(WithdrawalDbEventData data, WithdrawalDbEventMetadata metadata) {
         this.data = data;
         this.metadata = metadata;
     }
@@ -24,7 +23,7 @@ public class RegistrationDbEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RegistrationDbEvent that = (RegistrationDbEvent) o;
+        WithdrawalDbEvent that = (WithdrawalDbEvent) o;
         return Objects.equals(data, that.data) && Objects.equals(metadata, that.metadata);
     }
 
@@ -35,7 +34,7 @@ public class RegistrationDbEvent {
 
     @Override
     public String toString() {
-        return "RegistrationDbEvent{" +
+        return "WithdrawalDbEvent{" +
                 "data=" + data +
                 ", metadata=" + metadata +
                 '}';
