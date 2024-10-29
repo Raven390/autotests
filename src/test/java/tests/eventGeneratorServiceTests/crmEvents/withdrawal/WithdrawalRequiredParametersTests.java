@@ -1,6 +1,6 @@
 package tests.eventGeneratorServiceTests.crmEvents.withdrawal;
 
-import static helpers.kafka.crmDbEvents.withdrawal.WithdrawalDbEventFactory.generateWithdrawalDbEvent;
+import static businessObjects.kafka.crmDbEvents.withdrawal.WithdrawalDbEventFactory.generateWithdrawalDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.crmDbEvents.withdrawal.WithdrawalDbEvent;
+import businessObjects.kafka.crmDbEvents.withdrawal.WithdrawalDbEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;

@@ -4,14 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.crmDbEvents.login.LoginDbEvent;
+import businessObjects.kafka.crmDbEvents.login.LoginDbEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 
-import static helpers.kafka.crmDbEvents.login.LoginDbEventFactory.generateLoginDbEvent;
+import static businessObjects.kafka.crmDbEvents.login.LoginDbEventFactory.generateLoginDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;

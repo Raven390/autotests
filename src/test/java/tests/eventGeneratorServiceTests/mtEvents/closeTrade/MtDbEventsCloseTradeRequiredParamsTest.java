@@ -1,7 +1,7 @@
 package tests.eventGeneratorServiceTests.mtEvents.closeTrade;
 
-import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
-import static helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
+import static businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
+import static businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -11,8 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
-import helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt4;
-import helpers.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt5;
+import businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt4;
+import businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt5;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
