@@ -25,8 +25,8 @@ public class CrmTbUserObject {
     public String is_two_fa_user;
     public String authentication;
     public String website_user_type;
-    public String email_verification_date;
-    public String phone_verification_date;
+    public String email_verification_mark;
+    public String phone_verification_mark;
     public String ib_id;
     public String cpa_id;
     public String raf_referrer_id;
@@ -38,8 +38,8 @@ public class CrmTbUserObject {
             String first_name, String last_name, String gender, String birthday, String country,
             String country_code, String iso_country_code, String language, String nationality,
             String email, String phone_num, String phone_country_code, String is_two_fa_user,
-            String authentication, String website_user_type, String email_verification_date,
-            String phone_verification_date, String ib_id, String cpa_id, String raf_referrer_id,
+            String authentication, String website_user_type, String email_verification_mark,
+            String phone_verification_mark, String ib_id, String cpa_id, String raf_referrer_id,
             String kyc_status, String last_updated) {
         this.id = id;
         this.user_id = user_id;
@@ -62,8 +62,8 @@ public class CrmTbUserObject {
         this.is_two_fa_user = is_two_fa_user;
         this.authentication = authentication;
         this.website_user_type = website_user_type;
-        this.email_verification_date = email_verification_date;
-        this.phone_verification_date = phone_verification_date;
+        this.email_verification_mark = email_verification_mark;
+        this.phone_verification_mark = phone_verification_mark;
         this.ib_id = ib_id;
         this.cpa_id = cpa_id;
         this.raf_referrer_id = raf_referrer_id;
@@ -76,12 +76,12 @@ public class CrmTbUserObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbUserObject that = (CrmTbUserObject) o;
-        return user_id == that.user_id && Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registration_date, that.registration_date) && Objects.equals(first_name, that.first_name) && Objects.equals(last_name, that.last_name) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(country_code, that.country_code) && Objects.equals(iso_country_code, that.iso_country_code) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phone_num, that.phone_num) && Objects.equals(phone_country_code, that.phone_country_code) && Objects.equals(is_two_fa_user, that.is_two_fa_user) && Objects.equals(authentication, that.authentication) && Objects.equals(website_user_type, that.website_user_type) && Objects.equals(email_verification_date, that.email_verification_date) && Objects.equals(phone_verification_date, that.phone_verification_date) && Objects.equals(ib_id, that.ib_id) && Objects.equals(cpa_id, that.cpa_id) && Objects.equals(raf_referrer_id, that.raf_referrer_id) && Objects.equals(kyc_status, that.kyc_status) && Objects.equals(last_updated, that.last_updated);
+        return user_id == that.user_id && Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registration_date, that.registration_date) && Objects.equals(first_name, that.first_name) && Objects.equals(last_name, that.last_name) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(country_code, that.country_code) && Objects.equals(iso_country_code, that.iso_country_code) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phone_num, that.phone_num) && Objects.equals(phone_country_code, that.phone_country_code) && Objects.equals(is_two_fa_user, that.is_two_fa_user) && Objects.equals(authentication, that.authentication) && Objects.equals(website_user_type, that.website_user_type) && Objects.equals(email_verification_mark, that.email_verification_mark) && Objects.equals(phone_verification_mark, that.phone_verification_mark) && Objects.equals(ib_id, that.ib_id) && Objects.equals(cpa_id, that.cpa_id) && Objects.equals(raf_referrer_id, that.raf_referrer_id) && Objects.equals(kyc_status, that.kyc_status) && Objects.equals(last_updated, that.last_updated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user_id, ucid, brand, regulator, registration_date, first_name, last_name, gender, birthday, country, country_code, iso_country_code, language, nationality, email, phone_num, phone_country_code, is_two_fa_user, authentication, website_user_type, email_verification_date, phone_verification_date, ib_id, cpa_id, raf_referrer_id, kyc_status, last_updated);
+        return Objects.hash(id, user_id, ucid, brand, regulator, registration_date, first_name, last_name, gender, birthday, country, country_code, iso_country_code, language, nationality, email, phone_num, phone_country_code, is_two_fa_user, authentication, website_user_type, email_verification_mark, phone_verification_mark, ib_id, cpa_id, raf_referrer_id, kyc_status, last_updated);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class CrmTbUserObject {
                 ", is_two_fa_user='" + is_two_fa_user + '\'' +
                 ", authentication='" + authentication + '\'' +
                 ", website_user_type='" + website_user_type + '\'' +
-                ", email_verification_date='" + email_verification_date + '\'' +
-                ", phone_verification_date='" + phone_verification_date + '\'' +
+                ", email_verification_date='" + email_verification_mark + '\'' +
+                ", phone_verification_date='" + phone_verification_mark + '\'' +
                 ", ib_id='" + ib_id + '\'' +
                 ", cpa_id='" + cpa_id + '\'' +
                 ", raf_referrer_id='" + raf_referrer_id + '\'' +

@@ -28,6 +28,7 @@ public class Constants {
     public static final String STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE = "Close trade event in Event Generator";
     public static final String STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE = "Raf balance trade event in Event Generator";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS = "Clickhouse api. Get client by trading account & server ID";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS = "Clickhouse api. Get lexis nexis data by client request";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
@@ -59,6 +60,8 @@ public class Constants {
     public static final String REGISTRATION_HELPER_WID_VANTAGE = "AU";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
     // TABLES
+    public static final String CRM_USER_TABLE_NAME = "vindex_test.crm__tb_user";
+    public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
     public static final String CONNECTIONS_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
     public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";
