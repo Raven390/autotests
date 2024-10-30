@@ -1,13 +1,11 @@
 package tests.ruleEngineServiceTests;
 
-import static utils.Constants.*;
-
-import helpers.data.UserHelper;
 import io.qameta.allure.*;
-import java.sql.SQLException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
@@ -17,288 +15,211 @@ import org.junit.jupiter.api.Test;
 public class MirrorTradeRuleTest {
 
     @Test
-    @DisplayName("""
-            Hedge block flow IF Abuse registry check is YES
-            """)
-
-    @AllureId("56")
-    public void mirrorTradeTest1() throws SQLException {
-        // UserHelper.createUser(true, "");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - HEDGE BLOCK FLOW
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_1")
+    @AllureId("179")
+    public void mirrorTradeRuleExitEventEnd1Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is False");
+        Allure.step("Dummy trades is False");
+        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 is False");
+        Allure.step("count(balanceOrdersWithTypeWO) > 0 is True");
+        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is True");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Hedge block flow
-            IF Abuse registry check is NO AND Connection search:
-            Linked new accounts with bonus found - exact match YES
-            """)
-    @AllureId("47")
-    public void mirrorTradeTest2() throws SQLException {
-        UserHelper.createUser(false, "");
-
-        // Create linked user with bonus payment
-        //        UserHelper.createLinkedUser();
-        //        PaymentHelper.createPayment(PAYMENT_TYPE_BONUS, "", 100);
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - HEDGE BLOCK FLOW
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_7_1")
+    @AllureId("178")
+    public void mirrorTradeRuleExitEventEnd7_1Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is False");
+        Allure.step("Dummy trades is False");
+        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 is False");
+        Allure.step("count(balanceOrdersWithTypeWO) > 0 is True");
+        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is False");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Normal withdrawal flow
-            IF user NOT in abuse registry
-            AND not linked account AND Less than 4 simple abuse point
-            """)
-    @AllureId("55")
-    public void mirrorTradeTest3() throws SQLException {
-        // UserHelper.createUser(false, "");
-
-        // Triggering the rule with withdrawal attempt
-        // AND using risky payment method (adding 1 simple abuse points)
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, PAYMENT_PROVIDER_FASAPAY, 100);
-
-        // Checking message in kafka - normal withdrawal flow
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_7_2")
+    @AllureId("177")
+    public void mirrorTradeRuleExitEventEnd7_2Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is True");
+        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is False");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Manual investigation
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND NOT trading on news
-            AND NOT large spikes in real exposure
-            AND NOT number of stop outs
-            """)
-    @AllureId("49")
-    public void mirrorTradeTest4() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // next block in rule - Detailed trade check
-        Allure.step("NOT Trading on news");
-        Allure.step("NOT LARGE SPIKES IN REAL EXPOSURE");
-        Allure.step("NOT NUMBER OF STOP OUTS");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - MANUAL INVESTIGATION
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_7_3")
+    @AllureId("176")
+    public void mirrorTradeRuleExitEventEnd7_3Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is False");
+        Allure.step("Dummy trades is True");
+        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is False");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Hedge block flow
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND trading on news
-            AND mirror trade check
-            IS true
-            """)
-    @AllureId("54")
-    public void mirrorTradeTest5() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Trading on news");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == true");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - HEDGE BLOCK FLOW
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_7_4")
+    @AllureId("175")
+    public void mirrorTradeRuleExitEventEnd7_4Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is False");
+        Allure.step("Dummy trades is False");
+        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 is True");
+        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is False");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Hedge block flow
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND large spikes in real exposure
-            AND mirror trade check
-            IS true
-            """)
-    @AllureId("48")
-    public void mirrorTradeTest6() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Large spikes in real exposure");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == true");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - HEDGE BLOCK FLOW
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_7_5")
+    @AllureId("174")
+    public void mirrorTradeRuleExitEventEnd7_5Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5");
+        Allure.step("TradingOnNewsPeriods is False");
+        Allure.step("Dummy trades is False");
+        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 is False");
+        Allure.step("count(balanceOrdersWithTypeWO) > 0 is False");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
     }
 
     @Test
-    @DisplayName("""
-            Hedge block flow
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND number of stop outs
-            AND mirror trade check
-            IS true
-            """)
-    @AllureId("52")
-    public void mirrorTradeTest7() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Number of stop outs");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == true");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - HEDGE BLOCK FLOW
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_6")
+    @AllureId("173")
+    public void mirrorTradeRuleExitEventEnd6Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Sum of abuse score > 4");
+        Allure.step("RiskFreeRevenueRatio > 0.5 is False");
+        Allure.step("Exit without alert");
     }
 
     @Test
-    @DisplayName("""
-            Block withdrawal + manual investigation~
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND trading on news
-            AND mirror trade check
-            IS false
-            """)
-    @AllureId("51")
-    public void mirrorTradeTest8() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Trading on news");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == false");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - Block withdrawal + manual investigation
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_5_1")
+    @AllureId("181")
+    public void mirrorTradeRuleExitEventEnd5_1Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("Payment method is on the gray list. + 1 abuse score");
+        Allure.step("tdBonus.amount/ ftdDeposit.amount >= 0.3. + 1 abuse score");
+        Allure.step("trades.groupBySymbol < 5. + 1 abuse score");
+        Allure.step("Registration country != last login login country. + 1 abuse score");
+        Allure.step("Sum of abuse score > 4 is False");
+        Allure.step("Exit without alert");
     }
 
     @Test
-    @DisplayName("""
-            Block withdrawal + manual investigation
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND Large spikes in real exposure
-            AND mirror trade check
-            IS false
-            """)
-    @AllureId("53")
-    public void mirrorTradeTest9() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Large spikes in real exposure");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == false");
-
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
-
-        // Checking message in kafka - Block withdrawal + manual investigation
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @DisplayName("Mirror trading rule exit Event_End_5_2")
+    @AllureId("182")
+    public void mirrorTradeRuleExitEventEnd5_2Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7");
+        Allure.step("Client use payment method from a gray list");
+        Allure.step("lexisNexis.riskRating in ('high', 'medium'). + 2 abuse score");
+        Allure.step("now() -client.dateRegistration < 168h. + 1 abuse score");
+        Allure.step("Sum of abuse score > 4 is False");
+        Allure.step("Exit without alert");
     }
 
     @Test
-    @DisplayName("""
-            Block withdrawal + manual investigation
-            IF user NOT in abuse registry
-            AND not linked account
-            AND More than 4 simple abuse point
-            AND number of stop outs
-            AND mirror trade check
-            IS false
-            """)
-    @AllureId("50")
-    public void mirrorTradeTest10() throws SQLException {
-        // UserHelper.createUser(false, "");
-        // create data for all simple abuse points
-        Allure.step("Risky payment method");
-        // next block in rule
-        Allure.step("FTD bonus = 50%");
-        Allure.step("Dummy trades");
-        Allure.step("LN mid/high risk score");
-        Allure.step("New account? Registered/FTD-d in the last week");
-        Allure.step("Dormant account login");
-        // Next block in rule - Detailed trade check
-        Allure.step("IS Number of stop outs");
-        // Next block in rule - Mirror trade check
-        Allure.step("Mirror trade check == false");
+    @DisplayName("Mirror trading rule exit Event_End_4_1")
+    @AllureId("183")
+    public void mirrorTradeRuleExitEventEnd4Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit is False");
+        Allure.step("Exit without alert");
+    }
 
-        // Triggering the rule with withdrawal attempt
-        // PaymentHelper.createPayment(PAYMENT_TYPE_WITHDRAWAL, "", 100);
+    @Test
+    @DisplayName("Mirror trading rule exit Event_End_4_2")
+    @AllureId("184")
+    public void mirrorTradeRuleExitEventEnd4_2Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
+        Allure.step("Account has a credit");
+        Allure.step("CreditEquityRatio > 0.7 is False");
+        Allure.step("Exit without alert");
+    }
 
-        // Checking message in kafka - Block withdrawal + manual investigation
-        // KafkaMessageConsumerHelper.consumeMessages("rule producer topic");
+    @Test
+    @DisplayName("Mirror trading rule exit Event_End_3_1")
+    @AllureId("185")
+    public void mirrorTradeRuleExitEventEnd3_1Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has mirror trading abuse connected account");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
+    }
+
+    @Test
+    @DisplayName("Mirror trading rule exit Event_End_3_2")
+    @AllureId("186")
+    public void mirrorTradeRuleExitEventEnd3_2Test() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client doesn't has mirror trading abuse connected account");
+        Allure.step("Client has connected account with bonuses");
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
+    }
+
+    @Test
+    @DisplayName("Mirror trading rule exit Event_End_2")
+    @AllureId("187")
+    public void mirrorTradeRuleExitEventEnd2Test() {
+        Allure.step("Client has previous restrictions");
+        Allure.step("Exit without alert");
     }
 }
