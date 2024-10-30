@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import pageObjects.backofficePages.AlertPage;
+import pageObjects.backofficePages.InvestigationPage;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
 import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
@@ -30,7 +30,7 @@ public class TestBaseWeb {
 
     public StageRegistrationHelperPage stageRegistrationHelperPage;
     public VantageUserAccountPage vantageUserAccountPage;
-    public AlertPage alertPage;
+    public InvestigationPage investigationPage;
     public KeycloackPage keycloackPage;
     public ProfilePage profilePage;
 
@@ -58,7 +58,7 @@ public class TestBaseWeb {
         stageRegistrationHelperPage = new StageRegistrationHelperPage(page);
         vantageUserAccountPage = new VantageUserAccountPage(page);
         // Back office team pages
-        alertPage = new AlertPage(page);
+        investigationPage = new InvestigationPage(page);
         keycloackPage = new KeycloackPage(page);
         profilePage = new ProfilePage(page);
     }
