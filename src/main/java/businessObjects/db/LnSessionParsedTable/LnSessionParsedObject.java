@@ -1,4 +1,4 @@
-package businessObjects.db.LnSessionParsedTable;
+package businessObjects.db.lnSessionParsedTable;
 
 public class LnSessionParsedObject {
     public String uid;
