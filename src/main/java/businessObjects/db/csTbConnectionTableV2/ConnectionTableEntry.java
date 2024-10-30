@@ -3,6 +3,7 @@ package businessObjects.db.csTbConnectionTableV2;
 import java.util.Objects;
 
 public class ConnectionTableEntry {
+
     public String userFrom;
     public String userTo;
     public Integer level;

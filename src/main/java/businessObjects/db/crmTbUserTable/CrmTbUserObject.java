@@ -1,5 +1,7 @@
 package businessObjects.db.crmTbUserTable;
 
+import java.util.Objects;
+
 public class CrmTbUserObject {
     // Declare variables
     public String id;
@@ -67,5 +69,52 @@ public class CrmTbUserObject {
         this.raf_referrer_id = raf_referrer_id;
         this.kyc_status = kyc_status;
         this.last_updated = last_updated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CrmTbUserObject that = (CrmTbUserObject) o;
+        return user_id == that.user_id && Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registration_date, that.registration_date) && Objects.equals(first_name, that.first_name) && Objects.equals(last_name, that.last_name) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(country_code, that.country_code) && Objects.equals(iso_country_code, that.iso_country_code) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phone_num, that.phone_num) && Objects.equals(phone_country_code, that.phone_country_code) && Objects.equals(is_two_fa_user, that.is_two_fa_user) && Objects.equals(authentication, that.authentication) && Objects.equals(website_user_type, that.website_user_type) && Objects.equals(email_verification_date, that.email_verification_date) && Objects.equals(phone_verification_date, that.phone_verification_date) && Objects.equals(ib_id, that.ib_id) && Objects.equals(cpa_id, that.cpa_id) && Objects.equals(raf_referrer_id, that.raf_referrer_id) && Objects.equals(kyc_status, that.kyc_status) && Objects.equals(last_updated, that.last_updated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user_id, ucid, brand, regulator, registration_date, first_name, last_name, gender, birthday, country, country_code, iso_country_code, language, nationality, email, phone_num, phone_country_code, is_two_fa_user, authentication, website_user_type, email_verification_date, phone_verification_date, ib_id, cpa_id, raf_referrer_id, kyc_status, last_updated);
+    }
+
+    @Override
+    public String toString() {
+        return "CrmTbUserObject{" +
+                "id='" + id + '\'' +
+                ", user_id=" + user_id +
+                ", ucid='" + ucid + '\'' +
+                ", brand='" + brand + '\'' +
+                ", regulator='" + regulator + '\'' +
+                ", registration_date='" + registration_date + '\'' +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", gender='" + gender + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", country='" + country + '\'' +
+                ", country_code='" + country_code + '\'' +
+                ", iso_country_code='" + iso_country_code + '\'' +
+                ", language='" + language + '\'' +
+                ", nationality='" + nationality + '\'' +
+                ", email='" + email + '\'' +
+                ", phone_num='" + phone_num + '\'' +
+                ", phone_country_code='" + phone_country_code + '\'' +
+                ", is_two_fa_user='" + is_two_fa_user + '\'' +
+                ", authentication='" + authentication + '\'' +
+                ", website_user_type='" + website_user_type + '\'' +
+                ", email_verification_date='" + email_verification_date + '\'' +
+                ", phone_verification_date='" + phone_verification_date + '\'' +
+                ", ib_id='" + ib_id + '\'' +
+                ", cpa_id='" + cpa_id + '\'' +
+                ", raf_referrer_id='" + raf_referrer_id + '\'' +
+                ", kyc_status='" + kyc_status + '\'' +
+                ", last_updated='" + last_updated + '\'' +
+                '}';
     }
 }

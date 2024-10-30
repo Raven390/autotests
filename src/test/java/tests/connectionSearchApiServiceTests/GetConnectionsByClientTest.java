@@ -16,11 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByClientId;
-import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.getConnectionsResponseErrorBadRequest;
-import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.getConnectionsResponseSuccess;
+import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static businessObjects.db.csTbConnectionTableV2.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static businessObjects.db.csTbConnectionTableV2.ConnectionTableEntryFactory.getConnectionTableEntryByClient;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -31,10 +30,10 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 public class GetConnectionsByClientTest extends TestBaseApi {
 
-    public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess();
+    public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsByClientResponseSuccess();
     public final GetConnectionsResponseError getConnectionsResponseError = getConnectionsResponseErrorBadRequest();
     public static final String TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
-    public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry();
+    public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntryByClient();
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
@@ -46,7 +45,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("145")
     public void getConnectionsByClientSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", getConnectionsResponseSuccess.clientIdFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -67,8 +66,8 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("146")
     public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", getConnectionsResponseSuccess.clientIdFrom);
-        queryParams.put("connectionDepth", getConnectionsResponseSuccess.connectionDepth);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
+        queryParams.put("connectionDepth", connectionTableEntry.level);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -89,8 +88,8 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("147")
     public void getConnectionsNoSuchClientIdSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", "test_not_existing_client");
-        queryParams.put("connectionDepth", getConnectionsResponseSuccess.connectionDepth);
+        queryParams.put("clientId", "test-12345");
+        queryParams.put("connectionDepth", connectionTableEntry.level);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -108,7 +107,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("148")
     public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", getConnectionsResponseSuccess.clientIdFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", 99);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -127,7 +126,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("149")
     public void getConnectionsNoClientIdBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("connectionDepth", getConnectionsResponseSuccess.connectionDepth);
+        queryParams.put("connectionDepth", connectionTableEntry.level);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
@@ -143,11 +142,30 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     }
 
     @Test
+    @DisplayName("Connection search by client Api. Get connection by clientId with incorrect format success(400)")
+    @AllureId("180")
+    public void getConnectionsIncorrectClientIdFormatBadRequestTest() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", "incorrect_client_format");
+        queryParams.put("connectionDepth", connectionTableEntry.level);
+
+        Response response = getConnectionsByClientId(queryParams);
+        GetConnectionsResponseError responseBody = objectMapper.readValue(
+                response.body().string(),
+                GetConnectionsResponseError.class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(400));
+
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorClientIdBadRequest()));
+    }
+
+    @Test
     @DisplayName("Connection search by client Api. Get connection with connectionDepth not int Bad Request(400)")
     @AllureId("150")
     public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", getConnectionsResponseSuccess.clientIdFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", "test");
 
         Response response = getConnectionsByClientId(queryParams);

@@ -2,10 +2,10 @@ package businessObjects.api.connectionSearchApi;
 
 public class GetConnectionsResponseFactory {
 
-    public static GetConnectionsResponse getConnectionsResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByClientResponseSuccess(){
         return new GetConnectionsResponse(
-                "vantage-autotest1",
-                "vantage-autotest2",
+                "vantage-99996",
+                "vantage-99999",
                 1.0,
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
@@ -20,6 +20,114 @@ public class GetConnectionsResponseFactory {
                 400,
                 "Bad Request",
                 "/v1/connections/byClientId"
+        );
+    }
+
+    public static GetConnectionsResponseError getConnectionsResponseErrorClientIdBadRequest(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "ClientId must be in format <brand>-<user-id>",
+                null
+        );
+    }
+
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentTypeBadRequest(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "DocumentType must be specified once DocumentNumber or DocumentCountryId provided",
+                null
+        );
+    }
+
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentNumberBadRequest(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "DocumentNumber must be specified once DocumentType or DocumentCountryId provided",
+                null
+        );
+    }
+
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdBadRequest(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "DocumentCountryId must be specified once DocumentType or DocumentNumber provided",
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99991",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                1,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99991",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                2,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99992",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                1,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99993",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                1,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99994",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                1,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99995",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                1,
+                null
         );
     }
 }

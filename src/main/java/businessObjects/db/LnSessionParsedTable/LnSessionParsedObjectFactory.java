@@ -1,4 +1,4 @@
-package businessObjects.db.LnSessionParsedTable;
+package businessObjects.db.lnSessionParsedTable;
 
 public class LnSessionParsedObjectFactory {
     public static LnSessionParsedObject generateLexisNexisDataForUserId(String uid, Integer userId, Integer eventId) {

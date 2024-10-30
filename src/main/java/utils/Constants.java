@@ -58,4 +58,11 @@ public class Constants {
     public static final String REGISTRATION_HELPER_REGULATOR_VFSC2 = "VFSC2";
     public static final String REGISTRATION_HELPER_WID_VANTAGE = "AU";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
+    // TABLES
+    public static final String CONNECTIONS_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
+    public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
+    public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";
+    public static final String IP_TABLE_NAME = "vindex_test.cs__tb_ip_table";
+    public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
+    public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
 }
