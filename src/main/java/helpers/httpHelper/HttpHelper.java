@@ -1,5 +1,6 @@
 package helpers.httpHelper;
 
+import io.qameta.allure.Step;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,6 +17,7 @@ public class HttpHelper {
         this.client = new OkHttpClient();
     }
 
+    @Step("Send request: {url}, {headersMap}, {queryParamsMap}")
     public Response sendGetRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap) throws IOException {
         // Build the URL with query parameters
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();

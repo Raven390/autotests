@@ -6,6 +6,8 @@ import static utils.Constants.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Future;
+
+import io.qameta.allure.Step;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -68,6 +70,7 @@ public class KafkaHelper {
         return properties;
     }
 
+    @Step("Consume message")
     public String consumeMessage(String topic, String id) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
@@ -118,6 +121,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Consume message")
     public String consumeMessage(String topic, String id, Integer maxAttempts) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
@@ -167,6 +171,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Consume single message from {topic}")
     public MessageWithHeaders consumeMessage(String topic, String id, boolean getHeaders) throws InterruptedException {
         if (!getHeaders) {
             return new MessageWithHeaders(consumeMessage(topic, id), new HashMap<>());
@@ -211,6 +216,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Consume messages from {topic}")
     public Map<String, String> consumeMessages(String topic, String... idList) throws InterruptedException {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
@@ -269,6 +275,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Produce {message} to the {topic}")
     public RecordMetadata produceMessage(String key, String message, String topic) {
         RecordMetadata metadata = null;
         // Set producer properties and create a new Kafka producer
@@ -289,6 +296,7 @@ public class KafkaHelper {
         return metadata;
     }
 
+    @Step("Produce multiple {messagesList} to the {topic}")
     public void produceMessages(String key, String topic, String... messagesList) {
         // Set producer properties and create a new Kafka producer
         Properties properties = getKafkaProducerProperties();
@@ -312,6 +320,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Check that {textToSearchList} presented in topic")
     public MatchResultWithMessage isAnyMatchPresentInMessages(String topic, String... textToSearchList) {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
@@ -355,6 +364,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Check that all params {textToSearchList} presented in topic")
     public MatchResultWithMessage areAllParamsPresentInMessages(String topic, String... textToSearchList) {
         ConsumerRecords<String, String> records;
         Properties properties = getKafkaConsumerProperties();
@@ -397,6 +407,7 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Get event type from headers")
     public static String getEventTypeFromHeaders(MessageWithHeaders messageWithHeaders) {
         return messageWithHeaders.headers().get("__TypeId__");
     }

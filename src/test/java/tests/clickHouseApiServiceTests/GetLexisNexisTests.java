@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
+import static businessObjects.db.LnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
