@@ -1,5 +1,7 @@
 package helpers.database;
 
+import io.qameta.allure.Step;
+
 import static utils.ConfigFactory.*;
 
 import java.sql.*;
@@ -22,6 +24,7 @@ public class MySqlHelper {
         return connection;
     }
 
+    @Step("Make query: {query}")
     public static ResultSet makeQuery(String query, int maxAttempts) throws SQLException, ClassNotFoundException, InterruptedException {
         ResultSet result = null;
         Connection connection;

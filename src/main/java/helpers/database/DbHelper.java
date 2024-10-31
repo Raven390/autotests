@@ -1,5 +1,7 @@
 package helpers.database;
 
+import io.qameta.allure.Step;
+
 import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,6 +13,7 @@ import static utils.ConfigFactory.*;
 
 public class DbHelper {
 
+    @Step("Insert objects: {objects}")
     public static <T> void insertObjectsToDb(String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
 
@@ -21,12 +24,14 @@ public class DbHelper {
         }
     }
 
+    @Step("Insert single object: {object}")
     public static <T> void insertObjectToDb(String tableName, T object) throws SQLException, ReflectiveOperationException {
         try (Connection connection = createConnection()) {
             insertSingleObject(connection, tableName, object);
         }
     }
 
+    @Step("Delete {where} from {tableName}")
     public static void deleteEntryFromDb(String tableName, String where) throws SQLException {
         if (where == null || where.trim().isEmpty()) {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
@@ -43,6 +48,7 @@ public class DbHelper {
         return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
     }
 
+    @Step("Insert single object: {obj}")
     private static <T> void insertSingleObject(Connection connection, String tableName, T obj) throws SQLException, ReflectiveOperationException {
         String insertQuery = buildInsertQuery(tableName, obj);
         String insertQueryToPrint = insertQuery;
@@ -69,6 +75,7 @@ public class DbHelper {
         }
     }
 
+    @Step("Build query for: {obj}")
     private static <T> String buildInsertQuery(String tableName, T obj) throws IllegalAccessException {
         StringJoiner columnNames = new StringJoiner(", ");
         StringJoiner placeholders = new StringJoiner(", ");
@@ -93,6 +100,8 @@ public class DbHelper {
                 result.append(ch);
             }
         }
-        return result.toString();
+        String resultString = result.toString();
+        //TODO refactor
+        return resultString.replace("crm_tb_user_id", "crm__tb_user_id");
     }
 }

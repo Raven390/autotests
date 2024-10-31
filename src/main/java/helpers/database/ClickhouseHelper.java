@@ -1,5 +1,7 @@
 package helpers.database;
 
+import io.qameta.allure.Step;
+
 import static utils.ConfigFactory.*;
 
 import java.sql.Connection;
@@ -8,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class ClickhouseHelper {
+
+    @Step("Make query: {query}")
     public static ResultSet makeQuery(String query) {
         // JDBC URL for ClickHouse
         String url = CLICKHOUSE_HOST; // Replace with your ClickHouse URL

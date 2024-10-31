@@ -1,8 +1,12 @@
-package businessObjects.db.lnSessionParsedTable;
+package businessObjects.db.LnSessionParsedTable;
+
+import io.qameta.allure.Step;
 
 public class LnSessionParsedObjectFactory {
-    public static LnSessionParsedObject generateLexisNexisDataForUserId(String uid, Integer userId, Integer eventId) {
-        return new LnSessionParsedObject(
+
+    @Step("Generate lexis nexis object for user")
+    public static businessObjects.db.lnSessionParsedTable.LnSessionParsedObject generateLexisNexisDataForUserId(String uid, Integer userId, Integer eventId) {
+        return new businessObjects.db.lnSessionParsedTable.LnSessionParsedObject(
                 uid, 123, "vt", "sessionId", userId,
                 "email@email.com", "60", "123456", "registration", true,
                 "1970-01-01 00:00:00", 0,"12","device_id","12345",

@@ -1,12 +1,16 @@
 package businessObjects.kafka.crmDbEvents.login;
 
 
+import io.qameta.allure.Step;
+
 import java.time.Instant;
 
 import static utils.Utils.getRandomIntPositive;
 
+
 public class LoginDbEventFactory {
 
+    @Step("Generate login db event Metadata")
     private static LoginDbEventMetadata generateLoginDbEventMetadata() {
         return new LoginDbEventMetadata(
                 Instant.now().toString(),
@@ -18,7 +22,7 @@ public class LoginDbEventFactory {
                 );
     }
 
-
+    @Step("Generate login db event Data")
     private static LoginDbEventData generateLoginDbEventData() {
         return new LoginDbEventData(
                 Instant.now().toString(),
@@ -30,6 +34,7 @@ public class LoginDbEventFactory {
                 );
     }
 
+    @Step("Generate login db event")
     public static LoginDbEvent generateLoginDbEvent() {
         return new LoginDbEvent(
                 generateLoginDbEventData(), generateLoginDbEventMetadata());

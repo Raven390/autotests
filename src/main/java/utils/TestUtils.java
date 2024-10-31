@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class TestUtils {
+    @Step("Attach screenshot")
     public static void attachScreenshot(Page page) throws IOException {
         String resultName = Utils.getCurrentDateTime();
         Path screenshotPath = Paths.get("test-output/screenshots/" + resultName + ".png");
@@ -29,6 +30,7 @@ public class TestUtils {
         attachScreenshotToAllureReport(resultName, screenshotPath);
     }
 
+    @Step("Attach traces")
     public static void attachPlaywrightTrace(String traceName) throws IOException {
         Path tracePath = Paths.get(PATH_TRACE + traceName + ".zip");
         attachPlaywrightTraceToAllureReport(traceName, tracePath);

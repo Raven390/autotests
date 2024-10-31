@@ -16,7 +16,8 @@ public class ConfigFactory {
             PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(), PATH_TRACE = CONFIG.pathTrace(),
             PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot(),
             // Databases
-            POSTGRE_HOST = CONFIG.postgreLogin(), POSTGRE_PASSWORD = CONFIG.postgrePassword(),
+            POSTGRE_HOST = CONFIG.postgreLogin(),
+            POSTGRE_PASSWORD = CONFIG.postgrePassword(),
             POSTGRE_LOGIN = CONFIG.postgreHost(),
             MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost(),
             MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin(),
