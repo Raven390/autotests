@@ -14,7 +14,6 @@ import helpers.kafka.MatchResultWithMessage;
 import businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt4;
 import businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt5;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.Test;
 @Tag(LAYER_API)
 public class MtDbEventsCloseTradeRequiredParamsTest {
 
-    @Disabled
     @Test
     @DisplayName(
         "Generate close event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
@@ -112,7 +110,6 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
         assertThat("Check if all matching events found", areAllParamsPresentInMessages.matchResult(), equalTo(true));
     }
 
-    @Disabled
     @Test
     @DisplayName(
         "Generate close event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")

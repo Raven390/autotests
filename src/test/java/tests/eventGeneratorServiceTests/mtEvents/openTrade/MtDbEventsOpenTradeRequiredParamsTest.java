@@ -14,7 +14,6 @@ import helpers.kafka.MatchResultWithMessage;
 import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt4;
 import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt5;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import org.junit.jupiter.api.Test;
 @Tag(LAYER_API)
 public class MtDbEventsOpenTradeRequiredParamsTest {
 
-    @Disabled
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
@@ -86,6 +84,9 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         OpenTradeMtDbEventMt4 openTradeEventSymbol = generateOpenTradeMtDbEventMt4();
         openTradeEventSymbol.data.symbol = null;
 
+        OpenTradeMtDbEventMt4 openTradeEventCloseTime = generateOpenTradeMtDbEventMt4();
+        openTradeEventCloseTime.data.closeTime = null;
+
         OpenTradeMtDbEventMt4 openTradeEventTimestamp = generateOpenTradeMtDbEventMt4();
         openTradeEventTimestamp.metadata.timestamp = null;
 
@@ -102,17 +103,16 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         openTradeEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventCloseTime), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, openTradeEventVolume.data.openTime, openTradeEventSymbol.data.openTime, openTradeEventTimestamp.data.openTime, openTradeEventRecordType.data.openTime, openTradeEventOperation.data.openTime, openTradeEventPartitionKeyType.data.openTime, openTradeEventSchemaName.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, openTradeEventVolume.data.openTime, openTradeEventSymbol.data.openTime, openTradeEventCloseTime.data.openTime, openTradeEventTimestamp.data.openTime, openTradeEventRecordType.data.openTime, openTradeEventOperation.data.openTime, openTradeEventPartitionKeyType.data.openTime, openTradeEventSchemaName.data.openTime);
 
         Allure.step("Verify that all events without optional params were found in the messages");
         assertThat("Check if all matching events found.", areAllParamsPresentInMessages.matchResult(), equalTo(true));
     }
 
-    @Disabled
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
@@ -143,18 +143,15 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         OpenTradeMtDbEventMt5 openTradeEventMt5ActionObject = generateOpenTradeMtDbEventMt5();
         String openTradeEventMt5Action = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventMt5ActionObject), "Action");
 
-        OpenTradeMtDbEventMt4 openTradeEventCloseTimeObject = generateOpenTradeMtDbEventMt4();
-        String openTradeEventCloseTime = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventCloseTimeObject), "CLOSE_TIME");
-
         OpenTradeMtDbEventMt4 openTradeEventTableNameObject = generateOpenTradeMtDbEventMt4();
         String openTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTableNameObject), "table-name");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, openTradeEventOpenTime, openTradeEventTradeId, openTradeEventMtAccount, openTradeEventServerId, openTradeEventMt4Cmd, openTradeEventMt5Entry, openTradeEventMt5Action, openTradeEventCloseTime, openTradeEventTableName);
+        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, openTradeEventOpenTime, openTradeEventTradeId, openTradeEventMtAccount, openTradeEventServerId, openTradeEventMt4Cmd, openTradeEventMt5Entry, openTradeEventMt5Action, openTradeEventTableName);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, openTradeEventOpenTimeObject.metadata.timestamp, openTradeEventTradeIdObject.data.openTime, openTradeEventMtAccountObject.data.openTime, openTradeEventServerIdObject.data.openTime, openTradeEventMt4CmdObject.data.openTime, openTradeEventMt5EntryObject.data.openTime, openTradeEventMt5ActionObject.data.openTime, openTradeEventCloseTimeObject.data.openTime, openTradeEventTableNameObject.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, openTradeEventOpenTimeObject.metadata.timestamp, openTradeEventTradeIdObject.data.openTime, openTradeEventMtAccountObject.data.openTime, openTradeEventServerIdObject.data.openTime, openTradeEventMt4CmdObject.data.openTime, openTradeEventMt5EntryObject.data.openTime, openTradeEventMt5ActionObject.data.openTime, openTradeEventTableNameObject.data.openTime);
 
         Allure.step("Verify that no matched results for events without mandatory params were found");
         assertThat(
