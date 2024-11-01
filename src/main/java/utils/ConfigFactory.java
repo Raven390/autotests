@@ -34,6 +34,11 @@ public class ConfigFactory {
             CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath(),
             CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient(),
             CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes(),
+            // Mitigation service
+            MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath(),
+            MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog(),
+            MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions(),
+            MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction(),
             // Clickhouse database
             CLICKHOUSE_HOST = CONFIG.clickhouseHost(), CLICKHOUSE_USER = CONFIG.clickhouseUser(),
             CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword(),
@@ -144,6 +149,20 @@ public class ConfigFactory {
 
         @Key("connectionSearchGetConnectionsByAttributes")
         String connectionSearchGetConnectionsByAttributes();
+
+        // Mitigation service
+
+        @Key("mitigationServiceBasePath")
+        String mitigationServiceBasePath();
+
+        @Key("mitigationServiceGetRestrictionCatalog")
+        String mitigationServiceGetRestrictionCatalog();
+
+        @Key("mitigationServiceRestrictions")
+        String mitigationServiceRestrictions();
+
+        @Key("mitigationServiceCancelRestriction")
+        String mitigationServiceCancelRestriction();
 
         // Other
 

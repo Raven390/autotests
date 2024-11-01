@@ -1,0 +1,28 @@
+package businessObjects.api.mitigationService;
+
+import helpers.httpHelper.HttpHelper;
+import okhttp3.Response;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static utils.ConfigFactory.*;
+
+public class MitigationServiceRequest {
+
+    public static Response getRestrictionCatalog() throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_GET_RESTRICTION_CATALOG, null, null);
+    }
+
+    public static Response postRestriction(GetRestrictionResponseBody getRestrictionResponseBody) throws IOException {
+        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, getRestrictionResponseBody);
+    }
+
+    public static Response getRestrictionsByUcid(String ucid) throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
+    }
+
+    public static Response cancelRestrictionById(String id) throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, null, Map.of("id", id));
+    }
+}
