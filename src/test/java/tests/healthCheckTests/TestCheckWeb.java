@@ -1,4 +1,4 @@
-package tests.uiTests;
+package tests.healthCheckTests;
 
 import static utils.Constants.*;
 

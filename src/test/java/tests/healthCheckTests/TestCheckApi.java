@@ -1,4 +1,4 @@
-package tests.apiTests;
+package tests.healthCheckTests;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

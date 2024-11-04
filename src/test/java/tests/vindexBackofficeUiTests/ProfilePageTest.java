@@ -1,4 +1,4 @@
-package tests.uiTests.backoffice;
+package tests.vindexBackofficeUiTests;
 
 import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
