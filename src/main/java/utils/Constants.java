@@ -7,6 +7,11 @@ public class Constants {
     // SUITE
     public static final String SUITE_REGRESSION = "suite_regression";
     public static final String SUITE_SMOKE = "suite_smoke";
+    public static final String SUITE_CLICKHOUSE_API_SERVICE = "suite_clickhouse_api_service";
+    public static final String SUITE_CONNECTION_SEARCH_SERVICE = "suite_connection_search_service";
+    public static final String SUITE_EVENT_GENERATOR_SERVICE = "suite_event_generator_service";
+    public static final String SUITE_MITIGATION_SERVICE = "suite_mitigation_service";
+    public static final String SUITE_RULE_ENGINE_SERVICE = "suite_rule_engine_service";
     // TEST CASE STATUSES
     public static final String STATUS_MANUAL = "status_manual";
     public static final String STATUS_AUTOMATED = "status_automated";

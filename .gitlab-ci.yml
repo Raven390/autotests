@@ -8,6 +8,9 @@ variables:
 
 workflow:
   rules:
+   # Rule for Clickhouse webhook
+   - if: '$RUN_CLICKHOUSE_TESTS == "true"'
+     when: always
    # Rule for nightly job
    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
      when: always
@@ -31,6 +34,7 @@ job_build:
     - ./gradlew build -x test -x spotlessCheck
     - echo "BUILD SUCCESS"
 
+#Jobe for checking code format with spotless
 job_code_check:
   stage: build
   needs: ["job_build"]
@@ -40,6 +44,7 @@ job_code_check:
     - ./gradlew spotlessCheck
     - echo "CODE CHECK SUCCESS"
 
+#Job to check that base tests are working
 job_run_minimal_tests:
   stage: test
   needs: ["job_build"]
@@ -54,6 +59,7 @@ job_run_minimal_tests:
     - ./gradlew testBuildCheck
     - echo "Run minimal tests set SUCCESS"
 
+#Job for core team nightly tests
 job_test_core:
   stage: test
   needs: ["job_build"]
@@ -84,6 +90,7 @@ job_test_core:
       - test-output/videos
     expire_in: 1 day
 
+#Job for backoffice team nightly tests
 job_test_backoffice:
   stage: test
   needs: ["job_build"]
@@ -111,4 +118,30 @@ job_test_backoffice:
       - build/reports/
       - allure-results
       - test-output/videos
+    expire_in: 1 day
+
+#Job to launch tests by webhook from Clickhouse api service
+job_test_clickhouse_api_service:
+  stage: test
+  image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$RUN_CLICKHOUSE_TESTS == "true"'
+      when: always
+  variables:
+    ALLURE_LAUNCH_NAME: "[Core team] Triggered by Clickhouse api"
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_PROJECT_ID: 3
+    ALLURE_RESULTS: allure-results
+  before_script:
+    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
+    - chmod +x allurectl
+  script:
+    - echo "Running tests"
+    - ./allurectl watch -- gradle clean testClickhouseApiService
+    - echo "TEST SUCCESS"
+  artifacts:
+    when: always
+    paths:
+      - build/reports/
+      - allure-results
     expire_in: 1 day

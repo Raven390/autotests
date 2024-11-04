@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 @Story(STORY_EVENT_GENERATOR_SERVICE_REGISTRATION)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_EVENT_GENERATOR_SERVICE)
 public class EventGeneratorRegistrationRequiredParametersTests {
 
     @Test

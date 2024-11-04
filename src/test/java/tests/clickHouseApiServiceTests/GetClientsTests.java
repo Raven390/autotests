@@ -35,6 +35,7 @@ import static utils.Constants.*;
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetClientsTests extends TestBaseApi {
 
     @Test

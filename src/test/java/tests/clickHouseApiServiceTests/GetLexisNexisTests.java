@@ -28,6 +28,7 @@ import static utils.Constants.*;
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetLexisNexisTests extends TestBaseApi {
 
     static String brand = "vt";
@@ -128,7 +129,6 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventType", eventTypeRegistration);
         queryParams.put("eventId", eventId);
         Response response = getLexisNexis(queryParams);
-        //GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(response.body().string(), GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
     }
@@ -142,7 +142,6 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventType", eventTypeRegistration);
         queryParams.put("eventId", eventId);
         Response response = getLexisNexis(queryParams);
-        //GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(response.body().string(), GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
     }

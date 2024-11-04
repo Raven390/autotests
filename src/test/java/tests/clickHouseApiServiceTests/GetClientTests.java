@@ -29,6 +29,7 @@ import utils.Utils;
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetClientTests extends TestBaseApi {
 
     @Test

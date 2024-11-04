@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 @Story(STORY_EVENT_GENERATOR_SERVICE_LOGIN)
 @Tag(LAYER_API)
 @Tag(TEAM_CORE)
+@Tag(SUITE_EVENT_GENERATOR_SERVICE)
 public class EventGeneratorLoginTests {
 
     @Test

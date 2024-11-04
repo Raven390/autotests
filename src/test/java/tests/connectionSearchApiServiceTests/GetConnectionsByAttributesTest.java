@@ -39,6 +39,7 @@ import static utils.Constants.*;
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     // Expected responses

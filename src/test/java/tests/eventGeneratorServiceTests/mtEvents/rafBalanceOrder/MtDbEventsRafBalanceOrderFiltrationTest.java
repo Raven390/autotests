@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 @Story(STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_EVENT_GENERATOR_SERVICE)
 public class MtDbEventsRafBalanceOrderFiltrationTest {
 
     @Test
