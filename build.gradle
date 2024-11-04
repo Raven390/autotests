@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.25.0'
-    id 'org.openapi.generator' version '7.8.0'
 }
 
 group = 'antifraud'
@@ -132,6 +131,11 @@ task testSmokeCore(type: Test) {
         includeTags "team_core"
     }
 }
+task testClickhouseApiService(type: Test) {
+    useJUnitPlatform(){
+        includeTags "suite_clickhouse_api_service"
+    }
+}
 
 sourceSets {
     main {
@@ -139,42 +143,4 @@ sourceSets {
             srcDir "${buildDir}/generated/src/main/java"
         }
     }
-}
-
-task codegenEventGenerator(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
-    def packageName = "com.hytechc.antifraud.EventGenerator.events"
-    generatorName.set("java")
-    library.set("native")
-    inputSpec.set("$projectDir/src/main/resources/eventGeneratorOpenApi.yaml")
-    outputDir.set("$buildDir/generated")
-    invokerPackage.set(packageName)
-    apiPackage.set(packageName)
-    modelPackage.set(packageName)
-    generateApiTests.set(false)
-    generateModelTests.set(false)
-    generateApiDocumentation.set(false)
-    configOptions.putAll([
-            "dateLibrary": "java8",
-            "useJakartaEe": "true",
-            "openApiNullable": "false",
-    ])
-}
-
-task codegenClickhouseApi(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
-    def packageName = "com.hytechc.antifraud.EventGenerator.events"
-    generatorName.set("java")
-    library.set("native")
-    inputSpec.set("$projectDir/src/main/resources/clickhouseApiOpenApi.yaml.yaml")
-    outputDir.set("$buildDir/generated")
-    invokerPackage.set(packageName)
-    apiPackage.set(packageName)
-    modelPackage.set(packageName)
-    generateApiTests.set(false)
-    generateModelTests.set(false)
-    generateApiDocumentation.set(false)
-    configOptions.putAll([
-            "dateLibrary": "java8",
-            "useJakartaEe": "true",
-            "openApiNullable": "false",
-    ])
 }

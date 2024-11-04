@@ -12,6 +12,7 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_REGISTRATION_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_RULE_ENGINE_SERVICE)
 @Muted
 public class RegistrationRuleTest {
 

@@ -20,6 +20,7 @@ import static utils.Constants.*;
 @Story(STORY_EVENT_GENERATOR_SERVICE_LOGIN)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_EVENT_GENERATOR_SERVICE)
 public class EventGeneratorLoginRequiredParametersTests {
 
     @Test

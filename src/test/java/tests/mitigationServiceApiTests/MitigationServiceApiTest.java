@@ -19,6 +19,7 @@ import static utils.Constants.*;
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_MITIGATION_SERVICE)
 public class MitigationServiceApiTest extends TestBaseApi {
 
     @Test

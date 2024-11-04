@@ -28,6 +28,7 @@ import static utils.Constants.*;
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
+@Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 public class GetConnectionsByClientTest extends TestBaseApi {
 
     public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsByClientResponseSuccess();
