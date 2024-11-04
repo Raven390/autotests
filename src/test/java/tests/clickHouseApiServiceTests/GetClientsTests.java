@@ -4,6 +4,7 @@ import businessObjects.api.clickhouseApiService.getClients.GetClientsResponse;
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponseError;
 import businessObjects.db.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.mtTbUser.MtTbUserObject;
+import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
 import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUuidAndUserId;
@@ -41,55 +41,48 @@ public class GetClientsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client by trading account & server ID")
     @AllureId("200")
     public void getClientSuccessTest() throws IOException, ReflectiveOperationException, SQLException {
-        Integer userId = Utils.getRandomIntPositive();
-        String uuid = Utils.getRandomUuidString();
-        int tradingAccount = Utils.getRandomIntPositive();
-        int serverId = new Random().nextInt(1,50);
-        String ucid = "vantage-"+userId;
+        // Create an instance of ClientHelper
+        ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(uuid,userId);
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),uuid,tradingAccount, serverId);
+        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", tradingAccount);
-        queryParams.put("serverId", serverId);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
 
         GetClientsResponse clients = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
-        System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response code", clients.clientId, is(ucid));
+        assertThat("Check response code", clients.clientId, is(client.getUcid()));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account & server ID=null (400 error)")
     @AllureId("201")
     public void getClientSuccessTest2() throws IOException, ReflectiveOperationException, SQLException {
-        Integer userId = Utils.getRandomIntPositive();
-        String uuid = Utils.getRandomUuidString();
-        int tradingAccount = Utils.getRandomIntPositive();
-        int serverId = new Random().nextInt(1,50);
+        // Create an instance of ClientHelper
+        ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(uuid,userId);
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),uuid,tradingAccount, serverId);
+        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", tradingAccount);
+        queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
-        System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
@@ -101,21 +94,19 @@ public class GetClientsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client by trading account=null & server ID (400 error)")
     @AllureId("202")
     public void getClientSuccessTest3() throws IOException, ReflectiveOperationException, SQLException {
-        Integer userId = Utils.getRandomIntPositive();
-        String uuid = Utils.getRandomUuidString();
-        int tradingAccount = Utils.getRandomIntPositive();
-        int serverId = new Random().nextInt(1,50);
+        // Create an instance of ClientHelper
+        ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(uuid,userId);
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),uuid,tradingAccount, serverId);
+        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("serverId", serverId);
+        queryParams.put("serverId", client.getServerId());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
         System.out.println(response);
@@ -154,7 +145,6 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("serverId", 1);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
-        System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
@@ -173,7 +163,6 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("serverId", serverId);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
-        System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
