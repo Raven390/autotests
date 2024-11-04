@@ -1,4 +1,4 @@
-package tests.uiTests.core;
+package tests.lexisNexisIntegrationTests;
 
 import static utils.ConfigFactory.*;
 import static utils.Constants.*;

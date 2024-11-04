@@ -26,7 +26,10 @@ public class HttpHelper {
         Request request = buildRequestWithHeaders(httpUrl, headersMap).get().build();
 
         System.out.println("Request to execute: " + request);
-        return client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        System.out.println("Response : " + response);
+        System.out.println("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        return response;
     }
 
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
@@ -39,7 +42,11 @@ public class HttpHelper {
         Request request = buildRequestWithHeaders(httpUrl, headersMap).post(body).build();
 
         System.out.println("Request to execute: " + request);
-        return client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        System.out.println("Response : " + response);
+        System.out.println("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+
+        return response;
     }
 
     private HttpUrl buildUrlWithQueryParams(String url, Map<String, Object> queryParamsMap) {
