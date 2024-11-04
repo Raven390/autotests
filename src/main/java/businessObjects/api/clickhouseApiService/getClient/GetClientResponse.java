@@ -67,11 +67,11 @@ public class GetClientResponse {
     @JsonProperty("registrationDate")
     public String registrationDate;
 
-    @JsonProperty("emailVerificationDate")
-    public String emailVerificationDate;
+    @JsonProperty("emailVerificationMark")
+    public String emailVerificationMark;
 
-    @JsonProperty("phoneVerificationDate")
-    public String phoneVerificationDate;
+    @JsonProperty("phoneVerificationMark")
+    public String phoneVerificationMark;
 
     @JsonProperty("ibId")
     public String ibId;
