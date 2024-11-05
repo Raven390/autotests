@@ -24,6 +24,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
 import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUuidAndUserId;
 import static businessObjects.db.mtTbUser.MtTbUserObjectFactory.generateMtTbUserData;
+import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -42,7 +43,7 @@ public class GetClientsTests extends TestBaseApi {
     @AllureId("200")
     public void getClientSuccessTest() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
-        ClientHelper client = new ClientHelper();
+        ClientHelper client = getRandomClient();
 
         // Insert in crm user table
         CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
@@ -69,7 +70,7 @@ public class GetClientsTests extends TestBaseApi {
     @AllureId("201")
     public void getClientSuccessTest2() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
-        ClientHelper client = new ClientHelper();
+        ClientHelper client = getRandomClient();
 
         // Insert in crm user table
         CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
@@ -95,7 +96,7 @@ public class GetClientsTests extends TestBaseApi {
     @AllureId("202")
     public void getClientSuccessTest3() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
-        ClientHelper client = new ClientHelper();
+        ClientHelper client = getRandomClient();
 
         // Insert in crm user table
         CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());

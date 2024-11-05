@@ -69,8 +69,8 @@ public class DbHelper {
                     } else {
                         statement.setObject(parameterIndex++, value);
                     }
+                    insertQueryToPrint = insertQueryToPrint.replaceFirst("\\?", "'" + value + "'");
                 }
-                insertQueryToPrint = insertQueryToPrint.replaceFirst("\\?", "'" + (value != null ? value.toString() : "null") + "'");
             }
             System.out.println(insertQueryToPrint);
             statement.executeUpdate();
