@@ -12,7 +12,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_SERVICE)
-@Muted
+@Tag(TAG_MANUAL)
 public class MirrorTradeRuleTest {
 
     @Test

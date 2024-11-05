@@ -106,9 +106,14 @@ task installDeps(type: JavaExec) {
 }
 
 tasks.withType(Test).configureEach {
-    retry {
-        maxRetries = 2
-        failOnPassedAfterRetry = false // If true, fails the build if a test passes after retrying
+    if (System.getenv("IS_GITLAB_CI") == "true") {
+        retry {
+            maxRetries = 2
+            failOnPassedAfterRetry = false // If true, fails the build if a test passes after retrying
+        }
+    }
+    useJUnitPlatform {
+        excludeTags 'manual' // Exclude tests tagged with "manual"
     }
 }
 
