@@ -32,6 +32,9 @@ public class CrmTbUserObject {
     public String kycStatus;
     public String lastUpdated;
 
+    public CrmTbUserObject() {
+    }
+
     // Constructor to initialize all fields
     public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String registrationDate,
             String firstName, String lastName, String gender, String birthday, String country,

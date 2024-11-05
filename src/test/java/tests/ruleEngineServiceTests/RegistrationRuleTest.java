@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -15,6 +14,14 @@ import static utils.Constants.*;
 @Tag(SUITE_RULE_ENGINE_SERVICE)
 @Tag(TAG_MANUAL)
 public class RegistrationRuleTest {
+
+//    @Test
+//    @DisplayName("Debug")
+//    public void sometest() throws ReflectiveOperationException, SQLException {
+//        LnSessionParsedObject object = registrationRuleExitEventEnd1LNDbObject();
+//        insertObjectToDb("vindex_test.ln__session_parsed", object);
+//        deleteEntryFromDb("vindex_test.ln__session_parsed", String.format("user_id=%s", object.userId));
+//    }
 
     @Test
     @DisplayName("Registration rule exit Event_End_1")
