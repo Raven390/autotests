@@ -15,10 +15,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
-import static businessObjects.db.LnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -76,7 +77,7 @@ public class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response eventDateTime", lexisNexisResponse.eventDatetime, is("1971-01-01T00:00:00Z"));
         assertThat("Check response eventId", lexisNexisResponse.eventId, is(123));
         assertThat("Check response proxyIp", lexisNexisResponse.proxyIp, is("127.0.0.1"));
-        assertThat("Check response proxyIpActivities", lexisNexisResponse.proxyIpActivities, is("proxyIpActivities"));
+        assertThat("Check response proxyIpActivities", Arrays.asList(lexisNexisResponse.proxyIpActivities), is(List.of("proxyIpActivities")));
         assertThat("Check response proxyIpAttributes", Arrays.asList(lexisNexisResponse.proxyIpAttributes), is(Arrays.asList("String_1", "String_2")));
         assertThat("Check response proxyIpCity", lexisNexisResponse.proxyIpCity, is("proxyIpCity"));
         assertThat("Check response proxyIpConnectionType", lexisNexisResponse.proxyIpConnectionType, is("proxyIpConnection"));
