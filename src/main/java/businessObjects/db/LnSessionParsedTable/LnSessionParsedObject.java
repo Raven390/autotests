@@ -1,186 +1,736 @@
 package businessObjects.db.lnSessionParsedTable;
 
-public class LnSessionParsedObject {
-    public String uid;
-    public int id;
-    public String brand;
-    public String session_id;
-    public int user_id;
-    public String email;
-    public String mobile_code;
-    public String mobile;
-    public String event_type;
-    public boolean is_from_app;
-    public String create_time;
-    public int policy_score;
-    public String risk_rating;
-    public String device_id;
-    public String digital_id;
-    public String event_datetime;
-    public int event_id;
-    public String proxy_ip;
-    public String proxy_ip_activities;
-    public String[] proxy_ip_attributes;
-    public String proxy_ip_city;
-    public String proxy_ip_connection_type;
-    public String proxy_ip_first_seen;
-    public String proxy_ip_geo;
-    public String proxy_ip_home;
-    public String proxy_ip_isp;
-    public double proxy_ip_latitude;
-    public double proxy_ip_longitude;
-    public String proxy_ip_organization;
-    public String proxy_ip_organization_type;
-    public String proxy_ip_postal_code;
-    public String proxy_ip_region;
-    public String proxy_ip_result;
-    public String proxy_ip_routing_type;
-    public int proxy_ip_score;
-    public int proxy_ip_worst_score;
-    public String proxy_ipv6;
-    public String proxy_name;
-    public double proxy_score;
-    public String proxy_type;
-    public String true_ip;
-    public String true_ip_activities;
-    public String[] true_ip_attributes;
-    public String true_ip_city;
-    public int true_ip_country_confidence;
-    public String true_ip_first_seen;
-    public String true_ip_geo;
-    public String true_ip_isp;
-    public String true_ip_last_event;
-    public String true_ip_organization;
-    public String true_ip_organization_type;
-    public String true_ip_postal_code;
-    public String true_ip_region;
-    public String true_ip_result;
-    public String true_ip_routing_type;
-    public int true_ip_score;
-    public int true_ip_worst_score;
-    public String true_ipv6;
-    public int vpn_score;
+import java.util.Arrays;
+import java.util.Objects;
 
-    // Constructor to initialize all fields
-    public LnSessionParsedObject(
-            String uid,
-            int id,
-            String brand,
-            String session_id,
-            int user_id,
-            String email,
-            String mobile_code,
-            String mobile,
-            String event_type,
-            boolean is_from_app,
-            String create_time,
-            int policy_score,
-            String risk_rating,
-            String device_id,
-            String digital_id,
-            String event_datetime,
-            int event_id,
-            String proxy_ip,
-            String proxy_ip_activities,
-            String[] proxy_ip_attributes,
-            String proxy_ip_city,
-            String proxy_ip_connection_type,
-            String proxy_ip_first_seen,
-            String proxy_ip_geo,
-            String proxy_ip_home,
-            String proxy_ip_isp,
-            double proxy_ip_latitude,
-            double proxy_ip_longitude,
-            String proxy_ip_organization,
-            String proxy_ip_organization_type,
-            String proxy_ip_postal_code,
-            String proxy_ip_region,
-            String proxy_ip_result,
-            String proxy_ip_routing_type,
-            int proxy_ip_score,
-            int proxy_ip_worst_score,
-            String proxy_ipv6,
-            String proxy_name,
-            double proxy_score,
-            String proxy_type,
-            String true_ip,
-            String true_ip_activities,
-            String[] true_ip_attributes,
-            String true_ip_city,
-            int true_ip_country_confidence,
-            String true_ip_first_seen,
-            String true_ip_geo,
-            String true_ip_isp,
-            String true_ip_last_event,
-            String true_ip_organization,
-            String true_ip_organization_type,
-            String true_ip_postal_code,
-            String true_ip_region,
-            String true_ip_result,
-            String true_ip_routing_type,
-            int true_ip_score,
-            int true_ip_worst_score,
-            String true_ipv6,
-            int vpn_score
-    ) {
+public class LnSessionParsedObject {
+
+    public String uid;
+    public Integer id;
+    public String brand;
+    public String sessionId;
+    public Integer userId;
+    public String email;
+    public Integer mobileCode;
+    public String mobile;
+    public String eventType;
+    public Boolean isFromApp;
+    public String createTime;
+    public Integer policyScore;
+    public String riskRating;
+    public String reviewStatus;
+    public String requestResult;
+    public String accountAddress;
+    public String accountAddressActivities;
+    public String accountAddressAttributes;
+    public String accountAddressCity;
+    public String accountAddressCountry;
+    public String accountAddressFirstSeen;
+    public String accountAddressResult;
+    public Integer accountAddressScore;
+    public String accountAddressState;
+    public String accountAddressStreet1;
+    public Integer accountAddressWorstScore;
+    public String accountAddressZip;
+    public String accountDateOfBirth;
+    public String accountEmail;
+    public String accountEmailActivities;
+    public String accountEmailAttributes;
+    public String accountEmailDomain;
+    public String accountEmailFirstSeen;
+    public String accountEmailResult;
+    public Integer accountEmailScore;
+    public Integer accountEmailWorstScore;
+    public String accountFirstName;
+    public String accountGender;
+    public String accountLastName;
+    public String accountLexIdActivities;
+    public String accountLexIdAttributes;
+    public String accountLexIdFirstSeen;
+    public String accountLexIdNumber;
+    public String accountLexIdResult;
+    public Integer accountLexIdScore;
+    public Integer accountLexIdWorstScore;
+    public String accountLogin;
+    public String accountLoginActivities;
+    public String accountLoginAttributes;
+    public String accountLoginFirstSeen;
+    public String accountLoginResult;
+    public Integer accountLoginScore;
+    public Integer accountLoginWorstScore;
+    public String accountName;
+    public String accountNameActivities;
+    public String accountNameAttributes;
+    public String accountNameFirstSeen;
+    public String accountNameResult;
+    public Integer accountNameScore;
+    public Integer accountNameWorstScore;
+    public String accountTelephone;
+    public String accountTelephoneActivities;
+    public String accountTelephoneAttributes;
+    public Integer accountTelephoneCountryCode;
+    public String accountTelephoneFirstSeen;
+    public String accountTelephoneGeo;
+    public String accountTelephoneIsPossible;
+    public String accountTelephoneIsValid;
+    public String accountTelephoneResult;
+    public Integer accountTelephoneScore;
+    public String accountTelephoneType;
+    public Integer accountTelephoneWorstScore;
+    public String agentBssidActivities;
+    public String agentBssidAttributes;
+    public String agentBssidFirstSeen;
+    public String agentBssidResult;
+    public Integer agentBssidScore;
+    public Integer agentBssidWorstScore;
+    public String agentSsidClear;
+    public String appIntegrityScore;
+    public String audioContext;
+    public Double batteryStatusLevel;
+    public String batteryStatus;
+    public String bbAnomalyRating;
+    public String bbAnomalyReasonCode;
+    public String bbAnomalyScore;
+    public Double bbAssessment;
+    public String bbAssessmentRating;
+    public Double bbAuthConfidenceScore;
+    public Double bbAuthHistoricalScoreMean;
+    public Double bbAuthHistoricalScoreStd;
+    public Double bbAuthScore;
+    public String bbBotRating;
+    public Double bbBotScore;
+    public String bbFraudRating;
+    public Double bbFraudScore;
+    public String behaviosecBotReasons;
+    public Double behaviosecConfidence;
+    public String behaviosecDataIntegrityReasons;
+    public Double behaviosecPopulationProfileChallengerRiskRank;
+    public Double behaviosecPopulationProfileChallengerScore;
+    public Double behaviosecPopulationProfileRiskRank;
+    public Double behaviosecPopulationProfileScore;
+    public Double behaviosecScore;
+    public String behaviosecUserid;
+    public String browser;
+    public String browserAddon;
+    public String browserAddonHash;
+    public String browserAnomaly;
+    public String browserLanguage;
+    public String browserSpoofRating;
+    public String browserStringHash;
+    public String canvasHash;
+    public String cidrNumber;
+    public String deviceActivities;
+    public String deviceAttributes;
+    public String deviceFingerprint;
+    public String deviceFingerprintActivities;
+    public String deviceFingerprintAttributes;
+    public String deviceFingerprintFirstSeen;
+    public String deviceFingerprintResult;
+    public Integer deviceFingerprintScore;
+    public Integer deviceFingerprintWorstScore;
+    public String deviceFirstSeen;
+    public String deviceHealthReasons;
+    public String deviceId;
+    public Double deviceIdConfidence;
+    public String deviceMemory;
+    public String deviceModel;
+    public String deviceName;
+    public String deviceResult;
+    public Integer deviceScore;
+    public Integer deviceWorstScore;
+    public String digitalId;
+    public String digitalIdActivities;
+    public String digitalIdAttributes;
+    public String digitalIdConfidence;
+    public String digitalIdConfidenceRating;
+    public String digitalIdFirstSeen;
+    public String digitalIdReasonCode;
+    public String digitalIdResult;
+    public Double digitalIdTrustScore;
+    public String digitalIdTrustScoreRating;
+    public String digitalIdTrustScoreReasonCode;
+    public String digitalIdTrustScoreSummaryReasonCode;
+    public String dnsIp;
+    public String dnsIpAttributes;
+    public String dnsIpCity;
+    public String dnsIpGeo;
+    public String dnsIpIsp;
+    public String dnsIpOrganization;
+    public String dnsIpPostalCode;
+    public String dnsIpRegion;
+    public Integer emailageEmailRiskScoreBillAddressToFullNameConfidence;
+    public String emailageEmailRiskScoreEaAdvice;
+    public String emailageEmailRiskScoreEaReason;
+    public String emailageEmailRiskScoreEaScore;
+    public String emailageEmailRiskScoreEaStatusId;
+    public String emailageEmailRiskScoreEmailCreationDays;
+    public String emailageEmailRiskScoreEmailage;
+    public String emailageEmailRiskScoreEmailExists;
+    public Integer emailageEmailRiskScoreEmailToBillAddressConfidence;
+    public Integer emailageEmailRiskScoreEmailToFullNameConfidence;
+    public Integer emailageEmailRiskScoreEmailToIpConfidence;
+    public Integer emailageEmailRiskScoreEmailToPhoneConfidence;
+    public String emailageEmailRiskScoreEName;
+    public String emailageEmailRiskScoreFirstSeenDays;
+    public String emailageEmailRiskScoreFirstVerificationDate;
+    public String emailageEmailRiskScoreFraudType;
+    public String emailageEmailRiskScoreImageUrl;
+    public String emailageEmailRiskScoreIpRiskLevel;
+    public String emailageEmailRiskScoreIpRiskReason;
+    public String emailageEmailRiskScoreLocation;
+    public String emailageEmailRiskScoreNamematch;
+    public Integer emailageEmailRiskScoreOverallDigitalIdentityScore;
+    public String emailageEmailRiskScorePhoneOwnerMatch;
+    public Integer emailageEmailRiskScorePhoneToBillAddressConfidence;
+    public Integer emailageEmailRiskScorePhoneToFullNameConfidence;
+    public Integer emailageEmailRiskScorePhoneToShipAddressConfidence;
+    public String emailageEmailRiskScoreResponseStatusStatus;
+    public Integer emailageEmailRiskScoreShipAddressToFullNameConfidence;
+    public String emailageEmailRiskScoreSmFriends;
+    public String emailageEmailRiskScoreStatus;
+    public String eventDatetime;
+    public Integer eventId;
+    public String finalReviewStatus;
+    public String fuzzyDeviceAttributes;
+    public String fuzzyDeviceFirstSeen;
+    public String fuzzyDeviceId;
+    public Double fuzzyDeviceIdConfidence;
+    public String fuzzyDeviceMatchResult;
+    public String fuzzyDeviceResult;
+    public Integer fuzzyDeviceScore;
+    public Integer fuzzyDeviceWorstScore;
+    public String geofenceCountryGps;
+    public String geofenceRegionGps;
+    public String gpsSpoof;
+    public String gpuName;
+    public String gpuVendor;
+    public String hwFingerprint;
+    public String jbRoot;
+    public String jsBrowser;
+    public String jsBrowserStringHash;
+    public String jsFontsHash;
+    public String jsFontsNumber;
+    public String jsOs;
+    public String liveness;
+    public String macAddress;
+    public String mathRoutine;
+    public String mimeTypeHash;
+    public String multiDisplay;
+    public String nationalId;
+    public String passwordHash;
+    public String passwordHashActivities;
+    public String passwordHashAttributes;
+    public String passwordHashFirstSeen;
+    public String passwordHashResult;
+    public Integer passwordHashScore;
+    public Integer passwordHashWorstScore;
+    public String policy;
+    public String privateBrowsing;
+    public String proxyIp;
+    public String proxyIpActivities;
+    public String[] proxyIpAttributes;
+    public String proxyIpCity;
+    public String proxyIpConnectionType;
+    public String proxyIpFirstSeen;
+    public String proxyIpGeo;
+    public String proxyIpHome;
+    public String proxyIpIsp;
+    public Double proxyIpLatitude;
+    public Double proxyIpLongitude;
+    public String proxyIpOrganization;
+    public String proxyIpOrganizationType;
+    public String proxyIpPostalCode;
+    public String proxyIpRegion;
+    public String proxyIpResult;
+    public String proxyIpRoutingType;
+    public Integer proxyIpScore;
+    public Integer proxyIpWorstScore;
+    public String proxyIpv6;
+    public String proxyName;
+    public Double proxyScore;
+    public String proxyType;
+    public String relatedRequestId;
+    public String remoteAccess;
+    public String remoteAccessRating;
+    public String remoteAccessScore;
+    public String remoteDesktop;
+    public String screenRes;
+    public String screenResAnomaly;
+    public String seRating;
+    public Double seScore;
+    public String smartLearningFraudRating;
+    public Double smartLearningPScore;
+    public Integer smartLearningPolicyScore;
+    public String smartLearningReasonCode;
+    public Double smartLearningRiskRank;
+    public String smartLearningSummaryReasonCode;
+    public Integer timeZone;
+    public String timeZoneDstOffset;
+    public String timezoneName;
+    public String timezoneOffsetAnomaly;
+    public String tmxPolicyScore;
+    public String tmxRiskRating;
+    public String tmxVariables;
+    public String trueIp;
+    public String trueIpActivities;
+    public String[] trueIpAttributes;
+    public String trueIpCity;
+    public Integer trueIpCountryConfidence;
+    public String trueIpFirstSeen;
+    public String trueIpGeo;
+    public String trueIpIsp;
+    public String trueIpLastEvent;
+    public String trueIpOrganization;
+    public String trueIpOrganizationType;
+    public String trueIpPostalCode;
+    public String trueIpRegion;
+    public String trueIpResult;
+    public String trueIpRoutingType;
+    public Integer trueIpScore;
+    public Integer trueIpWorstScore;
+    public String trueIpv6;
+    public String uaAgent;
+    public String uaMobile;
+    public String unknownSession;
+    public String virtualDevice;
+    public String virtualDeviceReason;
+    public String vpnReason;
+    public Integer vpnScore;
+    public String webglHash;
+    public String webrtcExternalIp;
+    public String customerEventType;
+    public String inputIpAddress;
+    public String webSessionId;
+    public String conditionAttrib5;
+    public String applicationName;
+    public String transactionId;
+    public String lineOfBusiness;
+    public String accountAddressStreet2;
+    public String conditionAttrib1;
+    public String conditionAttrib2;
+    public Double customCount1;
+    public String localAttrib1;
+    public String customCount4;
+    public String conditionAttrib6;
+    public String conditionAttrib3;
+    public Double primaryAccountBalanceUsd;
+    public Double primaryAccountBalance;
+    public String primaryAccountBalanceCurrency;
+    public String conditionAttrib10;
+    public Double conditionAttrib9;
+    public String conditionAttrib4;
+    public String conditionAttrib7;
+    public String conditionAttrib8;
+    public String localAttrib12;
+    public String localAttrib13;
+    public String localAttrib14;
+    public String localAttrib15;
+    public String customCount2;
+    public String customCount13;
+
+    public LnSessionParsedObject() {
+    }
+
+    public LnSessionParsedObject(String uid, Integer id, String brand, String sessionId, Integer userId, String email, Integer mobileCode, String mobile, String eventType, Boolean isFromApp, String createTime, Integer policyScore, String riskRating, String deviceId, String digitalId, String eventDatetime, Integer eventId, String proxyIp, String proxyIpActivities, String[] proxyIpAttributes, String proxyIpCity, String proxyIpConnectionType, String proxyIpFirstSeen, String proxyIpGeo, String proxyIpHome, String proxyIpIsp, Double proxyIpLatitude, Double proxyIpLongitude, String proxyIpOrganization, String proxyIpOrganizationType, String proxyIpPostalCode, String proxyIpRegion, String proxyIpResult, String proxyIpRoutingType, Integer proxyIpScore, Integer proxyIpWorstScore, String proxyIpv6, String proxyName, Double proxyScore, String proxyType, String trueIp, String trueIpActivities, String[] trueIpAttributes, String trueIpCity, Integer trueIpCountryConfidence, String trueIpFirstSeen, String trueIpGeo, String trueIpIsp, String trueIpLastEvent, String trueIpOrganization, String trueIpOrganizationType, String trueIpPostalCode, String trueIpRegion, String trueIpResult, String trueIpRoutingType, Integer trueIpScore, Integer trueIpWorstScore, String trueIpv6, Integer vpnScore) {
         this.uid = uid;
         this.id = id;
         this.brand = brand;
-        this.session_id = session_id;
-        this.user_id = user_id;
+        this.sessionId = sessionId;
+        this.userId = userId;
         this.email = email;
-        this.mobile_code = mobile_code;
+        this.mobileCode = mobileCode;
         this.mobile = mobile;
-        this.event_type = event_type;
-        this.is_from_app = is_from_app;
-        this.create_time = create_time;
-        this.policy_score = policy_score;
-        this.risk_rating = risk_rating;
-        this.device_id = device_id;
-        this.digital_id = digital_id;
-        this.event_datetime = event_datetime;
-        this.event_id = event_id;
-        this.proxy_ip = proxy_ip;
-        this.proxy_ip_activities = proxy_ip_activities;
-        this.proxy_ip_attributes = proxy_ip_attributes;
-        this.proxy_ip_city = proxy_ip_city;
-        this.proxy_ip_connection_type = proxy_ip_connection_type;
-        this.proxy_ip_first_seen = proxy_ip_first_seen;
-        this.proxy_ip_geo = proxy_ip_geo;
-        this.proxy_ip_home = proxy_ip_home;
-        this.proxy_ip_isp = proxy_ip_isp;
-        this.proxy_ip_latitude = proxy_ip_latitude;
-        this.proxy_ip_longitude = proxy_ip_longitude;
-        this.proxy_ip_organization = proxy_ip_organization;
-        this.proxy_ip_organization_type = proxy_ip_organization_type;
-        this.proxy_ip_postal_code = proxy_ip_postal_code;
-        this.proxy_ip_region = proxy_ip_region;
-        this.proxy_ip_result = proxy_ip_result;
-        this.proxy_ip_routing_type = proxy_ip_routing_type;
-        this.proxy_ip_score = proxy_ip_score;
-        this.proxy_ip_worst_score = proxy_ip_worst_score;
-        this.proxy_ipv6 = proxy_ipv6;
-        this.proxy_name = proxy_name;
-        this.proxy_score = proxy_score;
-        this.proxy_type = proxy_type;
-        this.true_ip = true_ip;
-        this.true_ip_activities = true_ip_activities;
-        this.true_ip_attributes = true_ip_attributes;
-        this.true_ip_city = true_ip_city;
-        this.true_ip_country_confidence = true_ip_country_confidence;
-        this.true_ip_first_seen = true_ip_first_seen;
-        this.true_ip_geo = true_ip_geo;
-        this.true_ip_isp = true_ip_isp;
-        this.true_ip_last_event = true_ip_last_event;
-        this.true_ip_organization = true_ip_organization;
-        this.true_ip_organization_type = true_ip_organization_type;
-        this.true_ip_postal_code = true_ip_postal_code;
-        this.true_ip_region = true_ip_region;
-        this.true_ip_result = true_ip_result;
-        this.true_ip_routing_type = true_ip_routing_type;
-        this.true_ip_score = true_ip_score;
-        this.true_ip_worst_score = true_ip_worst_score;
-        this.true_ipv6 = true_ipv6;
-        this.vpn_score = vpn_score;
+        this.eventType = eventType;
+        this.isFromApp = isFromApp;
+        this.createTime = createTime;
+        this.policyScore = policyScore;
+        this.riskRating = riskRating;
+        this.deviceId = deviceId;
+        this.digitalId = digitalId;
+        this.eventDatetime = eventDatetime;
+        this.eventId = eventId;
+        this.proxyIp = proxyIp;
+        this.proxyIpActivities = proxyIpActivities;
+        this.proxyIpAttributes = proxyIpAttributes;
+        this.proxyIpCity = proxyIpCity;
+        this.proxyIpConnectionType = proxyIpConnectionType;
+        this.proxyIpFirstSeen = proxyIpFirstSeen;
+        this.proxyIpGeo = proxyIpGeo;
+        this.proxyIpHome = proxyIpHome;
+        this.proxyIpIsp = proxyIpIsp;
+        this.proxyIpLatitude = proxyIpLatitude;
+        this.proxyIpLongitude = proxyIpLongitude;
+        this.proxyIpOrganization = proxyIpOrganization;
+        this.proxyIpOrganizationType = proxyIpOrganizationType;
+        this.proxyIpPostalCode = proxyIpPostalCode;
+        this.proxyIpRegion = proxyIpRegion;
+        this.proxyIpResult = proxyIpResult;
+        this.proxyIpRoutingType = proxyIpRoutingType;
+        this.proxyIpScore = proxyIpScore;
+        this.proxyIpWorstScore = proxyIpWorstScore;
+        this.proxyIpv6 = proxyIpv6;
+        this.proxyName = proxyName;
+        this.proxyScore = proxyScore;
+        this.proxyType = proxyType;
+        this.trueIp = trueIp;
+        this.trueIpActivities = trueIpActivities;
+        this.trueIpAttributes = trueIpAttributes;
+        this.trueIpCity = trueIpCity;
+        this.trueIpCountryConfidence = trueIpCountryConfidence;
+        this.trueIpFirstSeen = trueIpFirstSeen;
+        this.trueIpGeo = trueIpGeo;
+        this.trueIpIsp = trueIpIsp;
+        this.trueIpLastEvent = trueIpLastEvent;
+        this.trueIpOrganization = trueIpOrganization;
+        this.trueIpOrganizationType = trueIpOrganizationType;
+        this.trueIpPostalCode = trueIpPostalCode;
+        this.trueIpRegion = trueIpRegion;
+        this.trueIpResult = trueIpResult;
+        this.trueIpRoutingType = trueIpRoutingType;
+        this.trueIpScore = trueIpScore;
+        this.trueIpWorstScore = trueIpWorstScore;
+        this.trueIpv6 = trueIpv6;
+        this.vpnScore = vpnScore;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LnSessionParsedObject that = (LnSessionParsedObject) o;
+        return Objects.equals(uid, that.uid) && Objects.equals(id, that.id) && Objects.equals(brand, that.brand) && Objects.equals(sessionId, that.sessionId) && Objects.equals(userId, that.userId) && Objects.equals(email, that.email) && Objects.equals(mobileCode, that.mobileCode) && Objects.equals(mobile, that.mobile) && Objects.equals(eventType, that.eventType) && Objects.equals(isFromApp, that.isFromApp) && Objects.equals(createTime, that.createTime) && Objects.equals(policyScore, that.policyScore) && Objects.equals(riskRating, that.riskRating) && Objects.equals(reviewStatus, that.reviewStatus) && Objects.equals(requestResult, that.requestResult) && Objects.equals(accountAddress, that.accountAddress) && Objects.equals(accountAddressActivities, that.accountAddressActivities) && Objects.equals(accountAddressAttributes, that.accountAddressAttributes) && Objects.equals(accountAddressCity, that.accountAddressCity) && Objects.equals(accountAddressCountry, that.accountAddressCountry) && Objects.equals(accountAddressFirstSeen, that.accountAddressFirstSeen) && Objects.equals(accountAddressResult, that.accountAddressResult) && Objects.equals(accountAddressScore, that.accountAddressScore) && Objects.equals(accountAddressState, that.accountAddressState) && Objects.equals(accountAddressStreet1, that.accountAddressStreet1) && Objects.equals(accountAddressWorstScore, that.accountAddressWorstScore) && Objects.equals(accountAddressZip, that.accountAddressZip) && Objects.equals(accountDateOfBirth, that.accountDateOfBirth) && Objects.equals(accountEmail, that.accountEmail) && Objects.equals(accountEmailActivities, that.accountEmailActivities) && Objects.equals(accountEmailAttributes, that.accountEmailAttributes) && Objects.equals(accountEmailDomain, that.accountEmailDomain) && Objects.equals(accountEmailFirstSeen, that.accountEmailFirstSeen) && Objects.equals(accountEmailResult, that.accountEmailResult) && Objects.equals(accountEmailScore, that.accountEmailScore) && Objects.equals(accountEmailWorstScore, that.accountEmailWorstScore) && Objects.equals(accountFirstName, that.accountFirstName) && Objects.equals(accountGender, that.accountGender) && Objects.equals(accountLastName, that.accountLastName) && Objects.equals(accountLexIdActivities, that.accountLexIdActivities) && Objects.equals(accountLexIdAttributes, that.accountLexIdAttributes) && Objects.equals(accountLexIdFirstSeen, that.accountLexIdFirstSeen) && Objects.equals(accountLexIdNumber, that.accountLexIdNumber) && Objects.equals(accountLexIdResult, that.accountLexIdResult) && Objects.equals(accountLexIdScore, that.accountLexIdScore) && Objects.equals(accountLexIdWorstScore, that.accountLexIdWorstScore) && Objects.equals(accountLogin, that.accountLogin) && Objects.equals(accountLoginActivities, that.accountLoginActivities) && Objects.equals(accountLoginAttributes, that.accountLoginAttributes) && Objects.equals(accountLoginFirstSeen, that.accountLoginFirstSeen) && Objects.equals(accountLoginResult, that.accountLoginResult) && Objects.equals(accountLoginScore, that.accountLoginScore) && Objects.equals(accountLoginWorstScore, that.accountLoginWorstScore) && Objects.equals(accountName, that.accountName) && Objects.equals(accountNameActivities, that.accountNameActivities) && Objects.equals(accountNameAttributes, that.accountNameAttributes) && Objects.equals(accountNameFirstSeen, that.accountNameFirstSeen) && Objects.equals(accountNameResult, that.accountNameResult) && Objects.equals(accountNameScore, that.accountNameScore) && Objects.equals(accountNameWorstScore, that.accountNameWorstScore) && Objects.equals(accountTelephone, that.accountTelephone) && Objects.equals(accountTelephoneActivities, that.accountTelephoneActivities) && Objects.equals(accountTelephoneAttributes, that.accountTelephoneAttributes) && Objects.equals(accountTelephoneCountryCode, that.accountTelephoneCountryCode) && Objects.equals(accountTelephoneFirstSeen, that.accountTelephoneFirstSeen) && Objects.equals(accountTelephoneGeo, that.accountTelephoneGeo) && Objects.equals(accountTelephoneIsPossible, that.accountTelephoneIsPossible) && Objects.equals(accountTelephoneIsValid, that.accountTelephoneIsValid) && Objects.equals(accountTelephoneResult, that.accountTelephoneResult) && Objects.equals(accountTelephoneScore, that.accountTelephoneScore) && Objects.equals(accountTelephoneType, that.accountTelephoneType) && Objects.equals(accountTelephoneWorstScore, that.accountTelephoneWorstScore) && Objects.equals(agentBssidActivities, that.agentBssidActivities) && Objects.equals(agentBssidAttributes, that.agentBssidAttributes) && Objects.equals(agentBssidFirstSeen, that.agentBssidFirstSeen) && Objects.equals(agentBssidResult, that.agentBssidResult) && Objects.equals(agentBssidScore, that.agentBssidScore) && Objects.equals(agentBssidWorstScore, that.agentBssidWorstScore) && Objects.equals(agentSsidClear, that.agentSsidClear) && Objects.equals(appIntegrityScore, that.appIntegrityScore) && Objects.equals(audioContext, that.audioContext) && Objects.equals(batteryStatusLevel, that.batteryStatusLevel) && Objects.equals(batteryStatus, that.batteryStatus) && Objects.equals(bbAnomalyRating, that.bbAnomalyRating) && Objects.equals(bbAnomalyReasonCode, that.bbAnomalyReasonCode) && Objects.equals(bbAnomalyScore, that.bbAnomalyScore) && Objects.equals(bbAssessment, that.bbAssessment) && Objects.equals(bbAssessmentRating, that.bbAssessmentRating) && Objects.equals(bbAuthConfidenceScore, that.bbAuthConfidenceScore) && Objects.equals(bbAuthHistoricalScoreMean, that.bbAuthHistoricalScoreMean) && Objects.equals(bbAuthHistoricalScoreStd, that.bbAuthHistoricalScoreStd) && Objects.equals(bbAuthScore, that.bbAuthScore) && Objects.equals(bbBotRating, that.bbBotRating) && Objects.equals(bbBotScore, that.bbBotScore) && Objects.equals(bbFraudRating, that.bbFraudRating) && Objects.equals(bbFraudScore, that.bbFraudScore) && Objects.equals(behaviosecBotReasons, that.behaviosecBotReasons) && Objects.equals(behaviosecConfidence, that.behaviosecConfidence) && Objects.equals(behaviosecDataIntegrityReasons, that.behaviosecDataIntegrityReasons) && Objects.equals(behaviosecPopulationProfileChallengerRiskRank, that.behaviosecPopulationProfileChallengerRiskRank) && Objects.equals(behaviosecPopulationProfileChallengerScore, that.behaviosecPopulationProfileChallengerScore) && Objects.equals(behaviosecPopulationProfileRiskRank, that.behaviosecPopulationProfileRiskRank) && Objects.equals(behaviosecPopulationProfileScore, that.behaviosecPopulationProfileScore) && Objects.equals(behaviosecScore, that.behaviosecScore) && Objects.equals(behaviosecUserid, that.behaviosecUserid) && Objects.equals(browser, that.browser) && Objects.equals(browserAddon, that.browserAddon) && Objects.equals(browserAddonHash, that.browserAddonHash) && Objects.equals(browserAnomaly, that.browserAnomaly) && Objects.equals(browserLanguage, that.browserLanguage) && Objects.equals(browserSpoofRating, that.browserSpoofRating) && Objects.equals(browserStringHash, that.browserStringHash) && Objects.equals(canvasHash, that.canvasHash) && Objects.equals(cidrNumber, that.cidrNumber) && Objects.equals(deviceActivities, that.deviceActivities) && Objects.equals(deviceAttributes, that.deviceAttributes) && Objects.equals(deviceFingerprint, that.deviceFingerprint) && Objects.equals(deviceFingerprintActivities, that.deviceFingerprintActivities) && Objects.equals(deviceFingerprintAttributes, that.deviceFingerprintAttributes) && Objects.equals(deviceFingerprintFirstSeen, that.deviceFingerprintFirstSeen) && Objects.equals(deviceFingerprintResult, that.deviceFingerprintResult) && Objects.equals(deviceFingerprintScore, that.deviceFingerprintScore) && Objects.equals(deviceFingerprintWorstScore, that.deviceFingerprintWorstScore) && Objects.equals(deviceFirstSeen, that.deviceFirstSeen) && Objects.equals(deviceHealthReasons, that.deviceHealthReasons) && Objects.equals(deviceId, that.deviceId) && Objects.equals(deviceIdConfidence, that.deviceIdConfidence) && Objects.equals(deviceMemory, that.deviceMemory) && Objects.equals(deviceModel, that.deviceModel) && Objects.equals(deviceName, that.deviceName) && Objects.equals(deviceResult, that.deviceResult) && Objects.equals(deviceScore, that.deviceScore) && Objects.equals(deviceWorstScore, that.deviceWorstScore) && Objects.equals(digitalId, that.digitalId) && Objects.equals(digitalIdActivities, that.digitalIdActivities) && Objects.equals(digitalIdAttributes, that.digitalIdAttributes) && Objects.equals(digitalIdConfidence, that.digitalIdConfidence) && Objects.equals(digitalIdConfidenceRating, that.digitalIdConfidenceRating) && Objects.equals(digitalIdFirstSeen, that.digitalIdFirstSeen) && Objects.equals(digitalIdReasonCode, that.digitalIdReasonCode) && Objects.equals(digitalIdResult, that.digitalIdResult) && Objects.equals(digitalIdTrustScore, that.digitalIdTrustScore) && Objects.equals(digitalIdTrustScoreRating, that.digitalIdTrustScoreRating) && Objects.equals(digitalIdTrustScoreReasonCode, that.digitalIdTrustScoreReasonCode) && Objects.equals(digitalIdTrustScoreSummaryReasonCode, that.digitalIdTrustScoreSummaryReasonCode) && Objects.equals(dnsIp, that.dnsIp) && Objects.equals(dnsIpAttributes, that.dnsIpAttributes) && Objects.equals(dnsIpCity, that.dnsIpCity) && Objects.equals(dnsIpGeo, that.dnsIpGeo) && Objects.equals(dnsIpIsp, that.dnsIpIsp) && Objects.equals(dnsIpOrganization, that.dnsIpOrganization) && Objects.equals(dnsIpPostalCode, that.dnsIpPostalCode) && Objects.equals(dnsIpRegion, that.dnsIpRegion) && Objects.equals(emailageEmailRiskScoreBillAddressToFullNameConfidence, that.emailageEmailRiskScoreBillAddressToFullNameConfidence) && Objects.equals(emailageEmailRiskScoreEaAdvice, that.emailageEmailRiskScoreEaAdvice) && Objects.equals(emailageEmailRiskScoreEaReason, that.emailageEmailRiskScoreEaReason) && Objects.equals(emailageEmailRiskScoreEaScore, that.emailageEmailRiskScoreEaScore) && Objects.equals(emailageEmailRiskScoreEaStatusId, that.emailageEmailRiskScoreEaStatusId) && Objects.equals(emailageEmailRiskScoreEmailCreationDays, that.emailageEmailRiskScoreEmailCreationDays) && Objects.equals(emailageEmailRiskScoreEmailage, that.emailageEmailRiskScoreEmailage) && Objects.equals(emailageEmailRiskScoreEmailExists, that.emailageEmailRiskScoreEmailExists) && Objects.equals(emailageEmailRiskScoreEmailToBillAddressConfidence, that.emailageEmailRiskScoreEmailToBillAddressConfidence) && Objects.equals(emailageEmailRiskScoreEmailToFullNameConfidence, that.emailageEmailRiskScoreEmailToFullNameConfidence) && Objects.equals(emailageEmailRiskScoreEmailToIpConfidence, that.emailageEmailRiskScoreEmailToIpConfidence) && Objects.equals(emailageEmailRiskScoreEmailToPhoneConfidence, that.emailageEmailRiskScoreEmailToPhoneConfidence) && Objects.equals(emailageEmailRiskScoreEName, that.emailageEmailRiskScoreEName) && Objects.equals(emailageEmailRiskScoreFirstSeenDays, that.emailageEmailRiskScoreFirstSeenDays) && Objects.equals(emailageEmailRiskScoreFirstVerificationDate, that.emailageEmailRiskScoreFirstVerificationDate) && Objects.equals(emailageEmailRiskScoreFraudType, that.emailageEmailRiskScoreFraudType) && Objects.equals(emailageEmailRiskScoreImageUrl, that.emailageEmailRiskScoreImageUrl) && Objects.equals(emailageEmailRiskScoreIpRiskLevel, that.emailageEmailRiskScoreIpRiskLevel) && Objects.equals(emailageEmailRiskScoreIpRiskReason, that.emailageEmailRiskScoreIpRiskReason) && Objects.equals(emailageEmailRiskScoreLocation, that.emailageEmailRiskScoreLocation) && Objects.equals(emailageEmailRiskScoreNamematch, that.emailageEmailRiskScoreNamematch) && Objects.equals(emailageEmailRiskScoreOverallDigitalIdentityScore, that.emailageEmailRiskScoreOverallDigitalIdentityScore) && Objects.equals(emailageEmailRiskScorePhoneOwnerMatch, that.emailageEmailRiskScorePhoneOwnerMatch) && Objects.equals(emailageEmailRiskScorePhoneToBillAddressConfidence, that.emailageEmailRiskScorePhoneToBillAddressConfidence) && Objects.equals(emailageEmailRiskScorePhoneToFullNameConfidence, that.emailageEmailRiskScorePhoneToFullNameConfidence) && Objects.equals(emailageEmailRiskScorePhoneToShipAddressConfidence, that.emailageEmailRiskScorePhoneToShipAddressConfidence) && Objects.equals(emailageEmailRiskScoreResponseStatusStatus, that.emailageEmailRiskScoreResponseStatusStatus) && Objects.equals(emailageEmailRiskScoreShipAddressToFullNameConfidence, that.emailageEmailRiskScoreShipAddressToFullNameConfidence) && Objects.equals(emailageEmailRiskScoreSmFriends, that.emailageEmailRiskScoreSmFriends) && Objects.equals(emailageEmailRiskScoreStatus, that.emailageEmailRiskScoreStatus) && Objects.equals(eventDatetime, that.eventDatetime) && Objects.equals(eventId, that.eventId) && Objects.equals(finalReviewStatus, that.finalReviewStatus) && Objects.equals(fuzzyDeviceAttributes, that.fuzzyDeviceAttributes) && Objects.equals(fuzzyDeviceFirstSeen, that.fuzzyDeviceFirstSeen) && Objects.equals(fuzzyDeviceId, that.fuzzyDeviceId) && Objects.equals(fuzzyDeviceIdConfidence, that.fuzzyDeviceIdConfidence) && Objects.equals(fuzzyDeviceMatchResult, that.fuzzyDeviceMatchResult) && Objects.equals(fuzzyDeviceResult, that.fuzzyDeviceResult) && Objects.equals(fuzzyDeviceScore, that.fuzzyDeviceScore) && Objects.equals(fuzzyDeviceWorstScore, that.fuzzyDeviceWorstScore) && Objects.equals(geofenceCountryGps, that.geofenceCountryGps) && Objects.equals(geofenceRegionGps, that.geofenceRegionGps) && Objects.equals(gpsSpoof, that.gpsSpoof) && Objects.equals(gpuName, that.gpuName) && Objects.equals(gpuVendor, that.gpuVendor) && Objects.equals(hwFingerprint, that.hwFingerprint) && Objects.equals(jbRoot, that.jbRoot) && Objects.equals(jsBrowser, that.jsBrowser) && Objects.equals(jsBrowserStringHash, that.jsBrowserStringHash) && Objects.equals(jsFontsHash, that.jsFontsHash) && Objects.equals(jsFontsNumber, that.jsFontsNumber) && Objects.equals(jsOs, that.jsOs) && Objects.equals(liveness, that.liveness) && Objects.equals(macAddress, that.macAddress) && Objects.equals(mathRoutine, that.mathRoutine) && Objects.equals(mimeTypeHash, that.mimeTypeHash) && Objects.equals(multiDisplay, that.multiDisplay) && Objects.equals(nationalId, that.nationalId) && Objects.equals(passwordHash, that.passwordHash) && Objects.equals(passwordHashActivities, that.passwordHashActivities) && Objects.equals(passwordHashAttributes, that.passwordHashAttributes) && Objects.equals(passwordHashFirstSeen, that.passwordHashFirstSeen) && Objects.equals(passwordHashResult, that.passwordHashResult) && Objects.equals(passwordHashScore, that.passwordHashScore) && Objects.equals(passwordHashWorstScore, that.passwordHashWorstScore) && Objects.equals(policy, that.policy) && Objects.equals(privateBrowsing, that.privateBrowsing) && Objects.equals(proxyIp, that.proxyIp) && Objects.equals(proxyIpActivities, that.proxyIpActivities) && Objects.deepEquals(proxyIpAttributes, that.proxyIpAttributes) && Objects.equals(proxyIpCity, that.proxyIpCity) && Objects.equals(proxyIpConnectionType, that.proxyIpConnectionType) && Objects.equals(proxyIpFirstSeen, that.proxyIpFirstSeen) && Objects.equals(proxyIpGeo, that.proxyIpGeo) && Objects.equals(proxyIpHome, that.proxyIpHome) && Objects.equals(proxyIpIsp, that.proxyIpIsp) && Objects.equals(proxyIpLatitude, that.proxyIpLatitude) && Objects.equals(proxyIpLongitude, that.proxyIpLongitude) && Objects.equals(proxyIpOrganization, that.proxyIpOrganization) && Objects.equals(proxyIpOrganizationType, that.proxyIpOrganizationType) && Objects.equals(proxyIpPostalCode, that.proxyIpPostalCode) && Objects.equals(proxyIpRegion, that.proxyIpRegion) && Objects.equals(proxyIpResult, that.proxyIpResult) && Objects.equals(proxyIpRoutingType, that.proxyIpRoutingType) && Objects.equals(proxyIpScore, that.proxyIpScore) && Objects.equals(proxyIpWorstScore, that.proxyIpWorstScore) && Objects.equals(proxyIpv6, that.proxyIpv6) && Objects.equals(proxyName, that.proxyName) && Objects.equals(proxyScore, that.proxyScore) && Objects.equals(proxyType, that.proxyType) && Objects.equals(relatedRequestId, that.relatedRequestId) && Objects.equals(remoteAccess, that.remoteAccess) && Objects.equals(remoteAccessRating, that.remoteAccessRating) && Objects.equals(remoteAccessScore, that.remoteAccessScore) && Objects.equals(remoteDesktop, that.remoteDesktop) && Objects.equals(screenRes, that.screenRes) && Objects.equals(screenResAnomaly, that.screenResAnomaly) && Objects.equals(seRating, that.seRating) && Objects.equals(seScore, that.seScore) && Objects.equals(smartLearningFraudRating, that.smartLearningFraudRating) && Objects.equals(smartLearningPScore, that.smartLearningPScore) && Objects.equals(smartLearningPolicyScore, that.smartLearningPolicyScore) && Objects.equals(smartLearningReasonCode, that.smartLearningReasonCode) && Objects.equals(smartLearningRiskRank, that.smartLearningRiskRank) && Objects.equals(smartLearningSummaryReasonCode, that.smartLearningSummaryReasonCode) && Objects.equals(timeZone, that.timeZone) && Objects.equals(timeZoneDstOffset, that.timeZoneDstOffset) && Objects.equals(timezoneName, that.timezoneName) && Objects.equals(timezoneOffsetAnomaly, that.timezoneOffsetAnomaly) && Objects.equals(tmxPolicyScore, that.tmxPolicyScore) && Objects.equals(tmxRiskRating, that.tmxRiskRating) && Objects.equals(tmxVariables, that.tmxVariables) && Objects.equals(trueIp, that.trueIp) && Objects.equals(trueIpActivities, that.trueIpActivities) && Objects.deepEquals(trueIpAttributes, that.trueIpAttributes) && Objects.equals(trueIpCity, that.trueIpCity) && Objects.equals(trueIpCountryConfidence, that.trueIpCountryConfidence) && Objects.equals(trueIpFirstSeen, that.trueIpFirstSeen) && Objects.equals(trueIpGeo, that.trueIpGeo) && Objects.equals(trueIpIsp, that.trueIpIsp) && Objects.equals(trueIpLastEvent, that.trueIpLastEvent) && Objects.equals(trueIpOrganization, that.trueIpOrganization) && Objects.equals(trueIpOrganizationType, that.trueIpOrganizationType) && Objects.equals(trueIpPostalCode, that.trueIpPostalCode) && Objects.equals(trueIpRegion, that.trueIpRegion) && Objects.equals(trueIpResult, that.trueIpResult) && Objects.equals(trueIpRoutingType, that.trueIpRoutingType) && Objects.equals(trueIpScore, that.trueIpScore) && Objects.equals(trueIpWorstScore, that.trueIpWorstScore) && Objects.equals(trueIpv6, that.trueIpv6) && Objects.equals(uaAgent, that.uaAgent) && Objects.equals(uaMobile, that.uaMobile) && Objects.equals(unknownSession, that.unknownSession) && Objects.equals(virtualDevice, that.virtualDevice) && Objects.equals(virtualDeviceReason, that.virtualDeviceReason) && Objects.equals(vpnReason, that.vpnReason) && Objects.equals(vpnScore, that.vpnScore) && Objects.equals(webglHash, that.webglHash) && Objects.equals(webrtcExternalIp, that.webrtcExternalIp) && Objects.equals(customerEventType, that.customerEventType) && Objects.equals(inputIpAddress, that.inputIpAddress) && Objects.equals(webSessionId, that.webSessionId) && Objects.equals(conditionAttrib5, that.conditionAttrib5) && Objects.equals(applicationName, that.applicationName) && Objects.equals(transactionId, that.transactionId) && Objects.equals(lineOfBusiness, that.lineOfBusiness) && Objects.equals(accountAddressStreet2, that.accountAddressStreet2) && Objects.equals(conditionAttrib1, that.conditionAttrib1) && Objects.equals(conditionAttrib2, that.conditionAttrib2) && Objects.equals(customCount1, that.customCount1) && Objects.equals(localAttrib1, that.localAttrib1) && Objects.equals(customCount4, that.customCount4) && Objects.equals(conditionAttrib6, that.conditionAttrib6) && Objects.equals(conditionAttrib3, that.conditionAttrib3) && Objects.equals(primaryAccountBalanceUsd, that.primaryAccountBalanceUsd) && Objects.equals(primaryAccountBalance, that.primaryAccountBalance) && Objects.equals(primaryAccountBalanceCurrency, that.primaryAccountBalanceCurrency) && Objects.equals(conditionAttrib10, that.conditionAttrib10) && Objects.equals(conditionAttrib9, that.conditionAttrib9) && Objects.equals(conditionAttrib4, that.conditionAttrib4) && Objects.equals(conditionAttrib7, that.conditionAttrib7) && Objects.equals(conditionAttrib8, that.conditionAttrib8) && Objects.equals(localAttrib12, that.localAttrib12) && Objects.equals(localAttrib13, that.localAttrib13) && Objects.equals(localAttrib14, that.localAttrib14) && Objects.equals(localAttrib15, that.localAttrib15) && Objects.equals(customCount2, that.customCount2) && Objects.equals(customCount13, that.customCount13);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uid, id, brand, sessionId, userId, email, mobileCode, mobile, eventType, isFromApp, createTime, policyScore, riskRating, reviewStatus, requestResult, accountAddress, accountAddressActivities, accountAddressAttributes, accountAddressCity, accountAddressCountry, accountAddressFirstSeen, accountAddressResult, accountAddressScore, accountAddressState, accountAddressStreet1, accountAddressWorstScore, accountAddressZip, accountDateOfBirth, accountEmail, accountEmailActivities, accountEmailAttributes, accountEmailDomain, accountEmailFirstSeen, accountEmailResult, accountEmailScore, accountEmailWorstScore, accountFirstName, accountGender, accountLastName, accountLexIdActivities, accountLexIdAttributes, accountLexIdFirstSeen, accountLexIdNumber, accountLexIdResult, accountLexIdScore, accountLexIdWorstScore, accountLogin, accountLoginActivities, accountLoginAttributes, accountLoginFirstSeen, accountLoginResult, accountLoginScore, accountLoginWorstScore, accountName, accountNameActivities, accountNameAttributes, accountNameFirstSeen, accountNameResult, accountNameScore, accountNameWorstScore, accountTelephone, accountTelephoneActivities, accountTelephoneAttributes, accountTelephoneCountryCode, accountTelephoneFirstSeen, accountTelephoneGeo, accountTelephoneIsPossible, accountTelephoneIsValid, accountTelephoneResult, accountTelephoneScore, accountTelephoneType, accountTelephoneWorstScore, agentBssidActivities, agentBssidAttributes, agentBssidFirstSeen, agentBssidResult, agentBssidScore, agentBssidWorstScore, agentSsidClear, appIntegrityScore, audioContext, batteryStatusLevel, batteryStatus, bbAnomalyRating, bbAnomalyReasonCode, bbAnomalyScore, bbAssessment, bbAssessmentRating, bbAuthConfidenceScore, bbAuthHistoricalScoreMean, bbAuthHistoricalScoreStd, bbAuthScore, bbBotRating, bbBotScore, bbFraudRating, bbFraudScore, behaviosecBotReasons, behaviosecConfidence, behaviosecDataIntegrityReasons, behaviosecPopulationProfileChallengerRiskRank, behaviosecPopulationProfileChallengerScore, behaviosecPopulationProfileRiskRank, behaviosecPopulationProfileScore, behaviosecScore, behaviosecUserid, browser, browserAddon, browserAddonHash, browserAnomaly, browserLanguage, browserSpoofRating, browserStringHash, canvasHash, cidrNumber, deviceActivities, deviceAttributes, deviceFingerprint, deviceFingerprintActivities, deviceFingerprintAttributes, deviceFingerprintFirstSeen, deviceFingerprintResult, deviceFingerprintScore, deviceFingerprintWorstScore, deviceFirstSeen, deviceHealthReasons, deviceId, deviceIdConfidence, deviceMemory, deviceModel, deviceName, deviceResult, deviceScore, deviceWorstScore, digitalId, digitalIdActivities, digitalIdAttributes, digitalIdConfidence, digitalIdConfidenceRating, digitalIdFirstSeen, digitalIdReasonCode, digitalIdResult, digitalIdTrustScore, digitalIdTrustScoreRating, digitalIdTrustScoreReasonCode, digitalIdTrustScoreSummaryReasonCode, dnsIp, dnsIpAttributes, dnsIpCity, dnsIpGeo, dnsIpIsp, dnsIpOrganization, dnsIpPostalCode, dnsIpRegion, emailageEmailRiskScoreBillAddressToFullNameConfidence, emailageEmailRiskScoreEaAdvice, emailageEmailRiskScoreEaReason, emailageEmailRiskScoreEaScore, emailageEmailRiskScoreEaStatusId, emailageEmailRiskScoreEmailCreationDays, emailageEmailRiskScoreEmailage, emailageEmailRiskScoreEmailExists, emailageEmailRiskScoreEmailToBillAddressConfidence, emailageEmailRiskScoreEmailToFullNameConfidence, emailageEmailRiskScoreEmailToIpConfidence, emailageEmailRiskScoreEmailToPhoneConfidence, emailageEmailRiskScoreEName, emailageEmailRiskScoreFirstSeenDays, emailageEmailRiskScoreFirstVerificationDate, emailageEmailRiskScoreFraudType, emailageEmailRiskScoreImageUrl, emailageEmailRiskScoreIpRiskLevel, emailageEmailRiskScoreIpRiskReason, emailageEmailRiskScoreLocation, emailageEmailRiskScoreNamematch, emailageEmailRiskScoreOverallDigitalIdentityScore, emailageEmailRiskScorePhoneOwnerMatch, emailageEmailRiskScorePhoneToBillAddressConfidence, emailageEmailRiskScorePhoneToFullNameConfidence, emailageEmailRiskScorePhoneToShipAddressConfidence, emailageEmailRiskScoreResponseStatusStatus, emailageEmailRiskScoreShipAddressToFullNameConfidence, emailageEmailRiskScoreSmFriends, emailageEmailRiskScoreStatus, eventDatetime, eventId, finalReviewStatus, fuzzyDeviceAttributes, fuzzyDeviceFirstSeen, fuzzyDeviceId, fuzzyDeviceIdConfidence, fuzzyDeviceMatchResult, fuzzyDeviceResult, fuzzyDeviceScore, fuzzyDeviceWorstScore, geofenceCountryGps, geofenceRegionGps, gpsSpoof, gpuName, gpuVendor, hwFingerprint, jbRoot, jsBrowser, jsBrowserStringHash, jsFontsHash, jsFontsNumber, jsOs, liveness, macAddress, mathRoutine, mimeTypeHash, multiDisplay, nationalId, passwordHash, passwordHashActivities, passwordHashAttributes, passwordHashFirstSeen, passwordHashResult, passwordHashScore, passwordHashWorstScore, policy, privateBrowsing, proxyIp, proxyIpActivities, Arrays.hashCode(proxyIpAttributes), proxyIpCity, proxyIpConnectionType, proxyIpFirstSeen, proxyIpGeo, proxyIpHome, proxyIpIsp, proxyIpLatitude, proxyIpLongitude, proxyIpOrganization, proxyIpOrganizationType, proxyIpPostalCode, proxyIpRegion, proxyIpResult, proxyIpRoutingType, proxyIpScore, proxyIpWorstScore, proxyIpv6, proxyName, proxyScore, proxyType, relatedRequestId, remoteAccess, remoteAccessRating, remoteAccessScore, remoteDesktop, screenRes, screenResAnomaly, seRating, seScore, smartLearningFraudRating, smartLearningPScore, smartLearningPolicyScore, smartLearningReasonCode, smartLearningRiskRank, smartLearningSummaryReasonCode, timeZone, timeZoneDstOffset, timezoneName, timezoneOffsetAnomaly, tmxPolicyScore, tmxRiskRating, tmxVariables, trueIp, trueIpActivities, Arrays.hashCode(trueIpAttributes), trueIpCity, trueIpCountryConfidence, trueIpFirstSeen, trueIpGeo, trueIpIsp, trueIpLastEvent, trueIpOrganization, trueIpOrganizationType, trueIpPostalCode, trueIpRegion, trueIpResult, trueIpRoutingType, trueIpScore, trueIpWorstScore, trueIpv6, uaAgent, uaMobile, unknownSession, virtualDevice, virtualDeviceReason, vpnReason, vpnScore, webglHash, webrtcExternalIp, customerEventType, inputIpAddress, webSessionId, conditionAttrib5, applicationName, transactionId, lineOfBusiness, accountAddressStreet2, conditionAttrib1, conditionAttrib2, customCount1, localAttrib1, customCount4, conditionAttrib6, conditionAttrib3, primaryAccountBalanceUsd, primaryAccountBalance, primaryAccountBalanceCurrency, conditionAttrib10, conditionAttrib9, conditionAttrib4, conditionAttrib7, conditionAttrib8, localAttrib12, localAttrib13, localAttrib14, localAttrib15, customCount2, customCount13);
+    }
+
+    @Override
+    public String toString() {
+        return "LnSessionParsedObject{" +
+                "uid='" + uid + '\'' +
+                ", id=" + id +
+                ", brand='" + brand + '\'' +
+                ", sessionId='" + sessionId + '\'' +
+                ", userId=" + userId +
+                ", email='" + email + '\'' +
+                ", mobileCode=" + mobileCode +
+                ", mobile='" + mobile + '\'' +
+                ", eventType='" + eventType + '\'' +
+                ", isFromApp=" + isFromApp +
+                ", createTime='" + createTime + '\'' +
+                ", policyScore=" + policyScore +
+                ", riskRating='" + riskRating + '\'' +
+                ", reviewStatus='" + reviewStatus + '\'' +
+                ", requestResult='" + requestResult + '\'' +
+                ", accountAddress='" + accountAddress + '\'' +
+                ", accountAddressActivities='" + accountAddressActivities + '\'' +
+                ", accountAddressAttributes='" + accountAddressAttributes + '\'' +
+                ", accountAddressCity='" + accountAddressCity + '\'' +
+                ", accountAddressCountry='" + accountAddressCountry + '\'' +
+                ", accountAddressFirstSeen='" + accountAddressFirstSeen + '\'' +
+                ", accountAddressResult='" + accountAddressResult + '\'' +
+                ", accountAddressScore=" + accountAddressScore +
+                ", accountAddressState='" + accountAddressState + '\'' +
+                ", accountAddressStreet1='" + accountAddressStreet1 + '\'' +
+                ", accountAddressWorstScore=" + accountAddressWorstScore +
+                ", accountAddressZip='" + accountAddressZip + '\'' +
+                ", accountDateOfBirth='" + accountDateOfBirth + '\'' +
+                ", accountEmail='" + accountEmail + '\'' +
+                ", accountEmailActivities='" + accountEmailActivities + '\'' +
+                ", accountEmailAttributes='" + accountEmailAttributes + '\'' +
+                ", accountEmailDomain='" + accountEmailDomain + '\'' +
+                ", accountEmailFirstSeen='" + accountEmailFirstSeen + '\'' +
+                ", accountEmailResult='" + accountEmailResult + '\'' +
+                ", accountEmailScore=" + accountEmailScore +
+                ", accountEmailWorstScore=" + accountEmailWorstScore +
+                ", accountFirstName='" + accountFirstName + '\'' +
+                ", accountGender='" + accountGender + '\'' +
+                ", accountLastName='" + accountLastName + '\'' +
+                ", accountLexIdActivities='" + accountLexIdActivities + '\'' +
+                ", accountLexIdAttributes='" + accountLexIdAttributes + '\'' +
+                ", accountLexIdFirstSeen='" + accountLexIdFirstSeen + '\'' +
+                ", accountLexIdNumber='" + accountLexIdNumber + '\'' +
+                ", accountLexIdResult='" + accountLexIdResult + '\'' +
+                ", accountLexIdScore=" + accountLexIdScore +
+                ", accountLexIdWorstScore=" + accountLexIdWorstScore +
+                ", accountLogin='" + accountLogin + '\'' +
+                ", accountLoginActivities='" + accountLoginActivities + '\'' +
+                ", accountLoginAttributes='" + accountLoginAttributes + '\'' +
+                ", accountLoginFirstSeen='" + accountLoginFirstSeen + '\'' +
+                ", accountLoginResult='" + accountLoginResult + '\'' +
+                ", accountLoginScore=" + accountLoginScore +
+                ", accountLoginWorstScore=" + accountLoginWorstScore +
+                ", accountName='" + accountName + '\'' +
+                ", accountNameActivities='" + accountNameActivities + '\'' +
+                ", accountNameAttributes='" + accountNameAttributes + '\'' +
+                ", accountNameFirstSeen='" + accountNameFirstSeen + '\'' +
+                ", accountNameResult='" + accountNameResult + '\'' +
+                ", accountNameScore=" + accountNameScore +
+                ", accountNameWorstScore=" + accountNameWorstScore +
+                ", accountTelephone='" + accountTelephone + '\'' +
+                ", accountTelephoneActivities='" + accountTelephoneActivities + '\'' +
+                ", accountTelephoneAttributes='" + accountTelephoneAttributes + '\'' +
+                ", accountTelephoneCountryCode=" + accountTelephoneCountryCode +
+                ", accountTelephoneFirstSeen='" + accountTelephoneFirstSeen + '\'' +
+                ", accountTelephoneGeo='" + accountTelephoneGeo + '\'' +
+                ", accountTelephoneIsPossible='" + accountTelephoneIsPossible + '\'' +
+                ", accountTelephoneIsValid='" + accountTelephoneIsValid + '\'' +
+                ", accountTelephoneResult='" + accountTelephoneResult + '\'' +
+                ", accountTelephoneScore=" + accountTelephoneScore +
+                ", accountTelephoneType='" + accountTelephoneType + '\'' +
+                ", accountTelephoneWorstScore=" + accountTelephoneWorstScore +
+                ", agentBssidActivities='" + agentBssidActivities + '\'' +
+                ", agentBssidAttributes='" + agentBssidAttributes + '\'' +
+                ", agentBssidFirstSeen='" + agentBssidFirstSeen + '\'' +
+                ", agentBssidResult='" + agentBssidResult + '\'' +
+                ", agentBssidScore=" + agentBssidScore +
+                ", agentBssidWorstScore=" + agentBssidWorstScore +
+                ", agentSsidClear='" + agentSsidClear + '\'' +
+                ", appIntegrityScore='" + appIntegrityScore + '\'' +
+                ", audioContext='" + audioContext + '\'' +
+                ", batteryStatusLevel=" + batteryStatusLevel +
+                ", batteryStatus='" + batteryStatus + '\'' +
+                ", bbAnomalyRating='" + bbAnomalyRating + '\'' +
+                ", bbAnomalyReasonCode='" + bbAnomalyReasonCode + '\'' +
+                ", bbAnomalyScore='" + bbAnomalyScore + '\'' +
+                ", bbAssessment=" + bbAssessment +
+                ", bbAssessmentRating='" + bbAssessmentRating + '\'' +
+                ", bbAuthConfidenceScore=" + bbAuthConfidenceScore +
+                ", bbAuthHistoricalScoreMean=" + bbAuthHistoricalScoreMean +
+                ", bbAuthHistoricalScoreStd=" + bbAuthHistoricalScoreStd +
+                ", bbAuthScore=" + bbAuthScore +
+                ", bbBotRating='" + bbBotRating + '\'' +
+                ", bbBotScore=" + bbBotScore +
+                ", bbFraudRating='" + bbFraudRating + '\'' +
+                ", bbFraudScore=" + bbFraudScore +
+                ", behaviosecBotReasons='" + behaviosecBotReasons + '\'' +
+                ", behaviosecConfidence=" + behaviosecConfidence +
+                ", behaviosecDataIntegrityReasons='" + behaviosecDataIntegrityReasons + '\'' +
+                ", behaviosecPopulationProfileChallengerRiskRank=" + behaviosecPopulationProfileChallengerRiskRank +
+                ", behaviosecPopulationProfileChallengerScore=" + behaviosecPopulationProfileChallengerScore +
+                ", behaviosecPopulationProfileRiskRank=" + behaviosecPopulationProfileRiskRank +
+                ", behaviosecPopulationProfileScore=" + behaviosecPopulationProfileScore +
+                ", behaviosecScore=" + behaviosecScore +
+                ", behaviosecUserid='" + behaviosecUserid + '\'' +
+                ", browser='" + browser + '\'' +
+                ", browserAddon='" + browserAddon + '\'' +
+                ", browserAddonHash='" + browserAddonHash + '\'' +
+                ", browserAnomaly='" + browserAnomaly + '\'' +
+                ", browserLanguage='" + browserLanguage + '\'' +
+                ", browserSpoofRating='" + browserSpoofRating + '\'' +
+                ", browserStringHash='" + browserStringHash + '\'' +
+                ", canvasHash='" + canvasHash + '\'' +
+                ", cidrNumber='" + cidrNumber + '\'' +
+                ", deviceActivities='" + deviceActivities + '\'' +
+                ", deviceAttributes='" + deviceAttributes + '\'' +
+                ", deviceFingerprint='" + deviceFingerprint + '\'' +
+                ", deviceFingerprintActivities='" + deviceFingerprintActivities + '\'' +
+                ", deviceFingerprintAttributes='" + deviceFingerprintAttributes + '\'' +
+                ", deviceFingerprintFirstSeen='" + deviceFingerprintFirstSeen + '\'' +
+                ", deviceFingerprintResult='" + deviceFingerprintResult + '\'' +
+                ", deviceFingerprintScore=" + deviceFingerprintScore +
+                ", deviceFingerprintWorstScore=" + deviceFingerprintWorstScore +
+                ", deviceFirstSeen='" + deviceFirstSeen + '\'' +
+                ", deviceHealthReasons='" + deviceHealthReasons + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", deviceIdConfidence=" + deviceIdConfidence +
+                ", deviceMemory='" + deviceMemory + '\'' +
+                ", deviceModel='" + deviceModel + '\'' +
+                ", deviceName='" + deviceName + '\'' +
+                ", deviceResult='" + deviceResult + '\'' +
+                ", deviceScore=" + deviceScore +
+                ", deviceWorstScore=" + deviceWorstScore +
+                ", digitalId='" + digitalId + '\'' +
+                ", digitalIdActivities='" + digitalIdActivities + '\'' +
+                ", digitalIdAttributes='" + digitalIdAttributes + '\'' +
+                ", digitalIdConfidence='" + digitalIdConfidence + '\'' +
+                ", digitalIdConfidenceRating='" + digitalIdConfidenceRating + '\'' +
+                ", digitalIdFirstSeen='" + digitalIdFirstSeen + '\'' +
+                ", digitalIdReasonCode='" + digitalIdReasonCode + '\'' +
+                ", digitalIdResult='" + digitalIdResult + '\'' +
+                ", digitalIdTrustScore=" + digitalIdTrustScore +
+                ", digitalIdTrustScoreRating='" + digitalIdTrustScoreRating + '\'' +
+                ", digitalIdTrustScoreReasonCode='" + digitalIdTrustScoreReasonCode + '\'' +
+                ", digitalIdTrustScoreSummaryReasonCode='" + digitalIdTrustScoreSummaryReasonCode + '\'' +
+                ", dnsIp='" + dnsIp + '\'' +
+                ", dnsIpAttributes='" + dnsIpAttributes + '\'' +
+                ", dnsIpCity='" + dnsIpCity + '\'' +
+                ", dnsIpGeo='" + dnsIpGeo + '\'' +
+                ", dnsIpIsp='" + dnsIpIsp + '\'' +
+                ", dnsIpOrganization='" + dnsIpOrganization + '\'' +
+                ", dnsIpPostalCode='" + dnsIpPostalCode + '\'' +
+                ", dnsIpRegion='" + dnsIpRegion + '\'' +
+                ", emailageEmailRiskScoreBillAddressToFullNameConfidence=" + emailageEmailRiskScoreBillAddressToFullNameConfidence +
+                ", emailageEmailRiskScoreEaAdvice='" + emailageEmailRiskScoreEaAdvice + '\'' +
+                ", emailageEmailRiskScoreEaReason='" + emailageEmailRiskScoreEaReason + '\'' +
+                ", emailageEmailRiskScoreEaScore='" + emailageEmailRiskScoreEaScore + '\'' +
+                ", emailageEmailRiskScoreEaStatusId='" + emailageEmailRiskScoreEaStatusId + '\'' +
+                ", emailageEmailRiskScoreEmailCreationDays='" + emailageEmailRiskScoreEmailCreationDays + '\'' +
+                ", emailageEmailRiskScoreEmailage='" + emailageEmailRiskScoreEmailage + '\'' +
+                ", emailageEmailRiskScoreEmailExists='" + emailageEmailRiskScoreEmailExists + '\'' +
+                ", emailageEmailRiskScoreEmailToBillAddressConfidence=" + emailageEmailRiskScoreEmailToBillAddressConfidence +
+                ", emailageEmailRiskScoreEmailToFullNameConfidence=" + emailageEmailRiskScoreEmailToFullNameConfidence +
+                ", emailageEmailRiskScoreEmailToIpConfidence=" + emailageEmailRiskScoreEmailToIpConfidence +
+                ", emailageEmailRiskScoreEmailToPhoneConfidence=" + emailageEmailRiskScoreEmailToPhoneConfidence +
+                ", emailageEmailRiskScoreEName='" + emailageEmailRiskScoreEName + '\'' +
+                ", emailageEmailRiskScoreFirstSeenDays='" + emailageEmailRiskScoreFirstSeenDays + '\'' +
+                ", emailageEmailRiskScoreFirstVerificationDate='" + emailageEmailRiskScoreFirstVerificationDate + '\'' +
+                ", emailageEmailRiskScoreFraudType='" + emailageEmailRiskScoreFraudType + '\'' +
+                ", emailageEmailRiskScoreImageUrl='" + emailageEmailRiskScoreImageUrl + '\'' +
+                ", emailageEmailRiskScoreIpRiskLevel='" + emailageEmailRiskScoreIpRiskLevel + '\'' +
+                ", emailageEmailRiskScoreIpRiskReason='" + emailageEmailRiskScoreIpRiskReason + '\'' +
+                ", emailageEmailRiskScoreLocation='" + emailageEmailRiskScoreLocation + '\'' +
+                ", emailageEmailRiskScoreNamematch='" + emailageEmailRiskScoreNamematch + '\'' +
+                ", emailageEmailRiskScoreOverallDigitalIdentityScore=" + emailageEmailRiskScoreOverallDigitalIdentityScore +
+                ", emailageEmailRiskScorePhoneOwnerMatch='" + emailageEmailRiskScorePhoneOwnerMatch + '\'' +
+                ", emailageEmailRiskScorePhoneToBillAddressConfidence=" + emailageEmailRiskScorePhoneToBillAddressConfidence +
+                ", emailageEmailRiskScorePhoneToFullNameConfidence=" + emailageEmailRiskScorePhoneToFullNameConfidence +
+                ", emailageEmailRiskScorePhoneToShipAddressConfidence=" + emailageEmailRiskScorePhoneToShipAddressConfidence +
+                ", emailageEmailRiskScoreResponseStatusStatus='" + emailageEmailRiskScoreResponseStatusStatus + '\'' +
+                ", emailageEmailRiskScoreShipAddressToFullNameConfidence=" + emailageEmailRiskScoreShipAddressToFullNameConfidence +
+                ", emailageEmailRiskScoreSmFriends='" + emailageEmailRiskScoreSmFriends + '\'' +
+                ", emailageEmailRiskScoreStatus='" + emailageEmailRiskScoreStatus + '\'' +
+                ", eventDatetime='" + eventDatetime + '\'' +
+                ", eventId=" + eventId +
+                ", finalReviewStatus='" + finalReviewStatus + '\'' +
+                ", fuzzyDeviceAttributes='" + fuzzyDeviceAttributes + '\'' +
+                ", fuzzyDeviceFirstSeen='" + fuzzyDeviceFirstSeen + '\'' +
+                ", fuzzyDeviceId='" + fuzzyDeviceId + '\'' +
+                ", fuzzyDeviceIdConfidence=" + fuzzyDeviceIdConfidence +
+                ", fuzzyDeviceMatchResult='" + fuzzyDeviceMatchResult + '\'' +
+                ", fuzzyDeviceResult='" + fuzzyDeviceResult + '\'' +
+                ", fuzzyDeviceScore=" + fuzzyDeviceScore +
+                ", fuzzyDeviceWorstScore=" + fuzzyDeviceWorstScore +
+                ", geofenceCountryGps='" + geofenceCountryGps + '\'' +
+                ", geofenceRegionGps='" + geofenceRegionGps + '\'' +
+                ", gpsSpoof='" + gpsSpoof + '\'' +
+                ", gpuName='" + gpuName + '\'' +
+                ", gpuVendor='" + gpuVendor + '\'' +
+                ", hwFingerprint='" + hwFingerprint + '\'' +
+                ", jbRoot='" + jbRoot + '\'' +
+                ", jsBrowser='" + jsBrowser + '\'' +
+                ", jsBrowserStringHash='" + jsBrowserStringHash + '\'' +
+                ", jsFontsHash='" + jsFontsHash + '\'' +
+                ", jsFontsNumber='" + jsFontsNumber + '\'' +
+                ", jsOs='" + jsOs + '\'' +
+                ", liveness='" + liveness + '\'' +
+                ", macAddress='" + macAddress + '\'' +
+                ", mathRoutine='" + mathRoutine + '\'' +
+                ", mimeTypeHash='" + mimeTypeHash + '\'' +
+                ", multiDisplay='" + multiDisplay + '\'' +
+                ", nationalId='" + nationalId + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", passwordHashActivities='" + passwordHashActivities + '\'' +
+                ", passwordHashAttributes='" + passwordHashAttributes + '\'' +
+                ", passwordHashFirstSeen='" + passwordHashFirstSeen + '\'' +
+                ", passwordHashResult='" + passwordHashResult + '\'' +
+                ", passwordHashScore=" + passwordHashScore +
+                ", passwordHashWorstScore=" + passwordHashWorstScore +
+                ", policy='" + policy + '\'' +
+                ", privateBrowsing='" + privateBrowsing + '\'' +
+                ", proxyIp='" + proxyIp + '\'' +
+                ", proxyIpActivities=" + proxyIpActivities + '\'' +
+                ", proxyIpAttributes=" + Arrays.toString(proxyIpAttributes) +
+                ", proxyIpCity='" + proxyIpCity + '\'' +
+                ", proxyIpConnectionType='" + proxyIpConnectionType + '\'' +
+                ", proxyIpFirstSeen='" + proxyIpFirstSeen + '\'' +
+                ", proxyIpGeo='" + proxyIpGeo + '\'' +
+                ", proxyIpHome='" + proxyIpHome + '\'' +
+                ", proxyIpIsp='" + proxyIpIsp + '\'' +
+                ", proxyIpLatitude=" + proxyIpLatitude +
+                ", proxyIpLongitude=" + proxyIpLongitude +
+                ", proxyIpOrganization='" + proxyIpOrganization + '\'' +
+                ", proxyIpOrganizationType='" + proxyIpOrganizationType + '\'' +
+                ", proxyIpPostalCode='" + proxyIpPostalCode + '\'' +
+                ", proxyIpRegion='" + proxyIpRegion + '\'' +
+                ", proxyIpResult='" + proxyIpResult + '\'' +
+                ", proxyIpRoutingType='" + proxyIpRoutingType + '\'' +
+                ", proxyIpScore=" + proxyIpScore +
+                ", proxyIpWorstScore=" + proxyIpWorstScore +
+                ", proxyIpv6='" + proxyIpv6 + '\'' +
+                ", proxyName='" + proxyName + '\'' +
+                ", proxyScore=" + proxyScore +
+                ", proxyType='" + proxyType + '\'' +
+                ", relatedRequestId='" + relatedRequestId + '\'' +
+                ", remoteAccess='" + remoteAccess + '\'' +
+                ", remoteAccessRating='" + remoteAccessRating + '\'' +
+                ", remoteAccessScore='" + remoteAccessScore + '\'' +
+                ", remoteDesktop='" + remoteDesktop + '\'' +
+                ", screenRes='" + screenRes + '\'' +
+                ", screenResAnomaly='" + screenResAnomaly + '\'' +
+                ", seRating='" + seRating + '\'' +
+                ", seScore=" + seScore +
+                ", smartLearningFraudRating='" + smartLearningFraudRating + '\'' +
+                ", smartLearningPScore=" + smartLearningPScore +
+                ", smartLearningPolicyScore=" + smartLearningPolicyScore +
+                ", smartLearningReasonCode='" + smartLearningReasonCode + '\'' +
+                ", smartLearningRiskRank=" + smartLearningRiskRank +
+                ", smartLearningSummaryReasonCode='" + smartLearningSummaryReasonCode + '\'' +
+                ", timeZone=" + timeZone +
+                ", timeZoneDstOffset='" + timeZoneDstOffset + '\'' +
+                ", timezoneName='" + timezoneName + '\'' +
+                ", timezoneOffsetAnomaly='" + timezoneOffsetAnomaly + '\'' +
+                ", tmxPolicyScore='" + tmxPolicyScore + '\'' +
+                ", tmxRiskRating='" + tmxRiskRating + '\'' +
+                ", tmxVariables='" + tmxVariables + '\'' +
+                ", trueIp='" + trueIp + '\'' +
+                ", trueIpActivities='" + trueIpActivities + '\'' +
+                ", trueIpAttributes=" + Arrays.toString(trueIpAttributes) +
+                ", trueIpCity='" + trueIpCity + '\'' +
+                ", trueIpCountryConfidence=" + trueIpCountryConfidence +
+                ", trueIpFirstSeen='" + trueIpFirstSeen + '\'' +
+                ", trueIpGeo='" + trueIpGeo + '\'' +
+                ", trueIpIsp='" + trueIpIsp + '\'' +
+                ", trueIpLastEvent='" + trueIpLastEvent + '\'' +
+                ", trueIpOrganization='" + trueIpOrganization + '\'' +
+                ", trueIpOrganizationType='" + trueIpOrganizationType + '\'' +
+                ", trueIpPostalCode='" + trueIpPostalCode + '\'' +
+                ", trueIpRegion='" + trueIpRegion + '\'' +
+                ", trueIpResult='" + trueIpResult + '\'' +
+                ", trueIpRoutingType='" + trueIpRoutingType + '\'' +
+                ", trueIpScore=" + trueIpScore +
+                ", trueIpWorstScore=" + trueIpWorstScore +
+                ", trueIpv6='" + trueIpv6 + '\'' +
+                ", uaAgent='" + uaAgent + '\'' +
+                ", uaMobile='" + uaMobile + '\'' +
+                ", unknownSession='" + unknownSession + '\'' +
+                ", virtualDevice='" + virtualDevice + '\'' +
+                ", virtualDeviceReason='" + virtualDeviceReason + '\'' +
+                ", vpnReason='" + vpnReason + '\'' +
+                ", vpnScore=" + vpnScore +
+                ", webglHash='" + webglHash + '\'' +
+                ", webrtcExternalIp='" + webrtcExternalIp + '\'' +
+                ", customerEventType='" + customerEventType + '\'' +
+                ", inputIpAddress='" + inputIpAddress + '\'' +
+                ", webSessionId='" + webSessionId + '\'' +
+                ", conditionAttrib5='" + conditionAttrib5 + '\'' +
+                ", applicationName='" + applicationName + '\'' +
+                ", transactionId='" + transactionId + '\'' +
+                ", lineOfBusiness='" + lineOfBusiness + '\'' +
+                ", accountAddressStreet2='" + accountAddressStreet2 + '\'' +
+                ", conditionAttrib1='" + conditionAttrib1 + '\'' +
+                ", conditionAttrib2='" + conditionAttrib2 + '\'' +
+                ", customCount1=" + customCount1 +
+                ", localAttrib1='" + localAttrib1 + '\'' +
+                ", customCount4='" + customCount4 + '\'' +
+                ", conditionAttrib6='" + conditionAttrib6 + '\'' +
+                ", conditionAttrib3='" + conditionAttrib3 + '\'' +
+                ", primaryAccountBalanceUsd=" + primaryAccountBalanceUsd +
+                ", primaryAccountBalance=" + primaryAccountBalance +
+                ", primaryAccountBalanceCurrency='" + primaryAccountBalanceCurrency + '\'' +
+                ", conditionAttrib10='" + conditionAttrib10 + '\'' +
+                ", conditionAttrib9=" + conditionAttrib9 +
+                ", conditionAttrib4='" + conditionAttrib4 + '\'' +
+                ", conditionAttrib7='" + conditionAttrib7 + '\'' +
+                ", conditionAttrib8='" + conditionAttrib8 + '\'' +
+                ", localAttrib12='" + localAttrib12 + '\'' +
+                ", localAttrib13='" + localAttrib13 + '\'' +
+                ", localAttrib14='" + localAttrib14 + '\'' +
+                ", localAttrib15='" + localAttrib15 + '\'' +
+                ", customCount2='" + customCount2 + '\'' +
+                ", customCount13='" + customCount13 + '\'' +
+                '}';
     }
 }

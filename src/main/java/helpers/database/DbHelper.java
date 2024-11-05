@@ -6,7 +6,9 @@ import java.lang.reflect.Field;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 
 import static utils.ConfigFactory.*;
@@ -18,8 +20,9 @@ public class DbHelper {
         if (objects == null || objects.isEmpty()) return;
 
         try (Connection connection = createConnection()) {
+            Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
             for (T obj : objects) {
-                insertSingleObject(connection, tableName, obj);
+                insertSingleObject(connection, tableName, obj, fieldMappings);
             }
         }
     }
@@ -27,7 +30,8 @@ public class DbHelper {
     @Step("Insert single object: {object}")
     public static <T> void insertObjectToDb(String tableName, T object) throws SQLException, ReflectiveOperationException {
         try (Connection connection = createConnection()) {
-            insertSingleObject(connection, tableName, object);
+            Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, object.getClass());
+            insertSingleObject(connection, tableName, object, fieldMappings);
         }
     }
 
@@ -48,12 +52,10 @@ public class DbHelper {
         return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
     }
 
-    @Step("Insert single object: {obj}")
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj) throws SQLException, ReflectiveOperationException {
-        String insertQuery = buildInsertQuery(tableName, obj);
+    private static <T> void insertSingleObject(Connection connection, String tableName, T obj, Map<String, String> fieldMappings) throws SQLException, ReflectiveOperationException {
+        String insertQuery = buildInsertQuery(tableName, obj, fieldMappings);
         String insertQueryToPrint = insertQuery;
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-            // Set only non-null values in the statement
             int parameterIndex = 1;
             for (Field field : obj.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
@@ -68,22 +70,22 @@ public class DbHelper {
                         statement.setObject(parameterIndex++, value);
                     }
                 }
-                insertQueryToPrint = insertQueryToPrint.replaceFirst("\\?", "'"+ value.toString() + "'");
+                insertQueryToPrint = insertQueryToPrint.replaceFirst("\\?", "'" + (value != null ? value.toString() : "null") + "'");
             }
             System.out.println(insertQueryToPrint);
             statement.executeUpdate();
         }
     }
 
-    @Step("Build query for: {obj}")
-    private static <T> String buildInsertQuery(String tableName, T obj) throws IllegalAccessException {
+    private static <T> String buildInsertQuery(String tableName, T obj, Map<String, String> fieldMappings) throws IllegalAccessException {
         StringJoiner columnNames = new StringJoiner(", ");
         StringJoiner placeholders = new StringJoiner(", ");
 
         for (Field field : obj.getClass().getDeclaredFields()) {
             field.setAccessible(true);
-            if (field.get(obj) != null) { // Include only non-null fields
-                columnNames.add(camelToSnake(field.getName()));
+            if (field.get(obj) != null) {
+                String columnName = fieldMappings.getOrDefault(field.getName(), camelToSnake(field.getName()));
+                columnNames.add(columnName);
                 placeholders.add("?");
             }
         }
@@ -100,8 +102,37 @@ public class DbHelper {
                 result.append(ch);
             }
         }
-        String resultString = result.toString();
-        //TODO refactor
-        return resultString.replace("crm_tb_user_id", "crm__tb_user_id");
+        return result.toString();
+    }
+
+    private static Map<String, String> retrieveColumnMappings(Connection connection, String tableName, Class<?> objClass) throws SQLException {
+        Map<String, String> columnMappings = new HashMap<>();
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        try (ResultSet columns = metaData.getColumns(tableName.split("\\.")[0], null, tableName.split("\\.")[1], null)) {
+            while (columns.next()) {
+                String columnName = columns.getString("COLUMN_NAME");
+                // Normalize column names by replacing multiple underscores with a single underscore
+                String normalizedColumnName = columnName.replaceAll("__+", "_");
+
+                for (Field field : objClass.getDeclaredFields()) {
+                    String fieldName = field.getName();
+
+                    // Compare the field name directly with the normalized column name and with underscores
+                    if (fieldName.equalsIgnoreCase(normalizedColumnName) || camelToSnake(fieldName).equalsIgnoreCase(normalizedColumnName)) {
+                        columnMappings.put(fieldName, columnName);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Print mappings for verification
+        System.out.println("Column mappings:");
+        for (Map.Entry<String, String> entry : columnMappings.entrySet()) {
+            System.out.println("Field: " + entry.getKey() + " -> Column: " + entry.getValue());
+        }
+
+        return columnMappings;
     }
 }
