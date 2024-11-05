@@ -4,71 +4,69 @@ import java.util.Objects;
 
 public class CrmTbUserObject {
     // Declare variables
-    public String id;
-    public int user_id;
+    public int userId;
     public String ucid;
     public String brand;
     public String regulator;
-    public String registration_date;
-    public String first_name;
-    public String last_name;
+    public String registrationDate;
+    public String firstName;
+    public String lastName;
     public String gender;
     public String birthday;
     public String country;
-    public String country_code;
-    public String iso_country_code;
+    public String countryCode;
+    public String isoCountryCode;
     public String language;
     public String nationality;
     public String email;
-    public String phone_num;
-    public String phone_country_code;
-    public String is_two_fa_user;
+    public String phoneNum;
+    public String phoneCountryCode;
+    public String isTwoFaUser;
     public String authentication;
-    public String website_user_type;
-    public String email_verification_mark;
-    public String phone_verification_mark;
-    public String ib_id;
-    public String cpa_id;
-    public String raf_referrer_id;
-    public String kyc_status;
-    public String last_updated;
+    public String websiteUserType;
+    public String emailVerificationMark;
+    public String phoneVerificationMark;
+    public String ibId;
+    public String cpaId;
+    public String rafReferrerId;
+    public String kycStatus;
+    public String lastUpdated;
 
     // Constructor to initialize all fields
-    public CrmTbUserObject(String id, int user_id, String ucid, String brand, String regulator, String registration_date,
-            String first_name, String last_name, String gender, String birthday, String country,
-            String country_code, String iso_country_code, String language, String nationality,
-            String email, String phone_num, String phone_country_code, String is_two_fa_user,
-            String authentication, String website_user_type, String email_verification_mark,
-            String phone_verification_mark, String ib_id, String cpa_id, String raf_referrer_id,
-            String kyc_status, String last_updated) {
-        this.id = id;
-        this.user_id = user_id;
+    public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String registrationDate,
+            String firstName, String lastName, String gender, String birthday, String country,
+            String countryCode, String isoCountryCode, String language, String nationality,
+            String email, String phoneNum, String phoneCountryCode, String isTwoFaUser,
+            String authentication, String websiteUserType, String emailVerificationMark,
+            String phoneVerificationMark, String ibId, String cpaId, String rafReferrerId,
+            String kycStatus, String lastUpdated) {
+        this.userId = userId;
         this.ucid = ucid;
         this.brand = brand;
         this.regulator = regulator;
-        this.registration_date = registration_date;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.registrationDate = registrationDate;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.birthday = birthday;
         this.country = country;
-        this.country_code = country_code;
-        this.iso_country_code = iso_country_code;
+        this.countryCode = countryCode;
+        this.isoCountryCode = isoCountryCode;
         this.language = language;
         this.nationality = nationality;
         this.email = email;
-        this.phone_num = phone_num;
-        this.phone_country_code = phone_country_code;
-        this.is_two_fa_user = is_two_fa_user;
+        this.phoneNum = phoneNum;
+        this.phoneCountryCode = phoneCountryCode;
+        this.isTwoFaUser = isTwoFaUser;
         this.authentication = authentication;
-        this.website_user_type = website_user_type;
-        this.email_verification_mark = email_verification_mark;
-        this.phone_verification_mark = phone_verification_mark;
-        this.ib_id = ib_id;
-        this.cpa_id = cpa_id;
-        this.raf_referrer_id = raf_referrer_id;
-        this.kyc_status = kyc_status;
-        this.last_updated = last_updated;
+        this.websiteUserType = websiteUserType;
+        this.emailVerificationMark = emailVerificationMark;
+        this.phoneVerificationMark = phoneVerificationMark;
+        this.ibId = ibId;
+        this.cpaId = cpaId;
+        this.rafReferrerId = rafReferrerId;
+        this.kycStatus = kycStatus;
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
@@ -76,45 +74,44 @@ public class CrmTbUserObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbUserObject that = (CrmTbUserObject) o;
-        return user_id == that.user_id && Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registration_date, that.registration_date) && Objects.equals(first_name, that.first_name) && Objects.equals(last_name, that.last_name) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(country_code, that.country_code) && Objects.equals(iso_country_code, that.iso_country_code) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phone_num, that.phone_num) && Objects.equals(phone_country_code, that.phone_country_code) && Objects.equals(is_two_fa_user, that.is_two_fa_user) && Objects.equals(authentication, that.authentication) && Objects.equals(website_user_type, that.website_user_type) && Objects.equals(email_verification_mark, that.email_verification_mark) && Objects.equals(phone_verification_mark, that.phone_verification_mark) && Objects.equals(ib_id, that.ib_id) && Objects.equals(cpa_id, that.cpa_id) && Objects.equals(raf_referrer_id, that.raf_referrer_id) && Objects.equals(kyc_status, that.kyc_status) && Objects.equals(last_updated, that.last_updated);
+        return userId == that.userId && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registrationDate, that.registrationDate) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(countryCode, that.countryCode) && Objects.equals(isoCountryCode, that.isoCountryCode) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phoneNum, that.phoneNum) && Objects.equals(phoneCountryCode, that.phoneCountryCode) && Objects.equals(isTwoFaUser, that.isTwoFaUser) && Objects.equals(authentication, that.authentication) && Objects.equals(websiteUserType, that.websiteUserType) && Objects.equals(emailVerificationMark, that.emailVerificationMark) && Objects.equals(phoneVerificationMark, that.phoneVerificationMark) && Objects.equals(ibId, that.ibId) && Objects.equals(cpaId, that.cpaId) && Objects.equals(rafReferrerId, that.rafReferrerId) && Objects.equals(kycStatus, that.kycStatus) && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user_id, ucid, brand, regulator, registration_date, first_name, last_name, gender, birthday, country, country_code, iso_country_code, language, nationality, email, phone_num, phone_country_code, is_two_fa_user, authentication, website_user_type, email_verification_mark, phone_verification_mark, ib_id, cpa_id, raf_referrer_id, kyc_status, last_updated);
+        return Objects.hash(userId, ucid, brand, regulator, registrationDate, firstName, lastName, gender, birthday, country, countryCode, isoCountryCode, language, nationality, email, phoneNum, phoneCountryCode, isTwoFaUser, authentication, websiteUserType, emailVerificationMark, phoneVerificationMark, ibId, cpaId, rafReferrerId, kycStatus, lastUpdated);
     }
 
     @Override
     public String toString() {
         return "CrmTbUserObject{" +
-                "id='" + id + '\'' +
-                ", user_id=" + user_id +
+                "user_id=" + userId +
                 ", ucid='" + ucid + '\'' +
                 ", brand='" + brand + '\'' +
                 ", regulator='" + regulator + '\'' +
-                ", registration_date='" + registration_date + '\'' +
-                ", first_name='" + first_name + '\'' +
-                ", last_name='" + last_name + '\'' +
+                ", registration_date='" + registrationDate + '\'' +
+                ", first_name='" + firstName + '\'' +
+                ", last_name='" + lastName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", birthday='" + birthday + '\'' +
                 ", country='" + country + '\'' +
-                ", country_code='" + country_code + '\'' +
-                ", iso_country_code='" + iso_country_code + '\'' +
+                ", country_code='" + countryCode + '\'' +
+                ", iso_country_code='" + isoCountryCode + '\'' +
                 ", language='" + language + '\'' +
                 ", nationality='" + nationality + '\'' +
                 ", email='" + email + '\'' +
-                ", phone_num='" + phone_num + '\'' +
-                ", phone_country_code='" + phone_country_code + '\'' +
-                ", is_two_fa_user='" + is_two_fa_user + '\'' +
+                ", phone_num='" + phoneNum + '\'' +
+                ", phone_country_code='" + phoneCountryCode + '\'' +
+                ", is_two_fa_user='" + isTwoFaUser + '\'' +
                 ", authentication='" + authentication + '\'' +
-                ", website_user_type='" + website_user_type + '\'' +
-                ", email_verification_date='" + email_verification_mark + '\'' +
-                ", phone_verification_date='" + phone_verification_mark + '\'' +
-                ", ib_id='" + ib_id + '\'' +
-                ", cpa_id='" + cpa_id + '\'' +
-                ", raf_referrer_id='" + raf_referrer_id + '\'' +
-                ", kyc_status='" + kyc_status + '\'' +
-                ", last_updated='" + last_updated + '\'' +
+                ", website_user_type='" + websiteUserType + '\'' +
+                ", email_verification_date='" + emailVerificationMark + '\'' +
+                ", phone_verification_date='" + phoneVerificationMark + '\'' +
+                ", ib_id='" + ibId + '\'' +
+                ", cpa_id='" + cpaId + '\'' +
+                ", raf_referrer_id='" + rafReferrerId + '\'' +
+                ", kyc_status='" + kycStatus + '\'' +
+                ", last_updated='" + lastUpdated + '\'' +
                 '}';
     }
 }
