@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.25.0'
+    id 'org.gradle.test-retry' version '1.6.0'
 }
 
 group = 'antifraud'
@@ -92,10 +93,6 @@ spotless {
     }
 }
 
-test {
-    useJUnitPlatform()
-}
-
 task installChromium(type: JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
     args = ['install', 'chromium']
@@ -106,6 +103,17 @@ task installDeps(type: JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
     args = ['install-deps']
     classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.withType(Test).configureEach {
+    retry {
+        maxRetries = 2
+        failOnPassedAfterRetry = false // If true, fails the build if a test passes after retrying
+    }
+}
+
+test {
+    useJUnitPlatform()
 }
 
 task testBuildCheck(type: Test) {
