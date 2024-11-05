@@ -2,9 +2,7 @@ package businessObjects.db.mtTbUser;
 
 public class MtTbUserObject {
 
-    private String id;
     private String ucid;
-    private String crmTbUserId;
     private int account;
     private String serverName;
     private String platform;
@@ -25,13 +23,11 @@ public class MtTbUserObject {
     private String lastUpdated;
 
     // Constructor to initialize all fields
-    public MtTbUserObject(String id, String ucid, String crmTbUserId, int account, String serverName, String platform, String type,
+    public MtTbUserObject(String ucid, int account, String serverName, String platform, String type,
             int serverId, String createdDate, String status, double balance, String currency,
             double balanceUsd, double equity, double credit, int leverage, String accountGroup,
             double marginFree, double pnl, String lastActionDate, String lastUpdated) {
-        this.id = id;
         this.ucid = ucid;
-        this.crmTbUserId = crmTbUserId;
         this.account = account;
         this.serverName = serverName;
         this.platform = platform;

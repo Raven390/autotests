@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import tests.TestBaseApi;
-import utils.Utils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,10 +45,10 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -73,10 +72,10 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -99,10 +98,10 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = new ClientHelper();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUuid(),client.getUserId());
+        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(Utils.getRandomUuidString(),client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
