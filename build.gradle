@@ -28,6 +28,7 @@ def imageComparisonVersion = '4.4.0'
 def jsonVersion = '20240303'
 def httpcomponentsVersion = '5.2.3'
 def commonsConfigurationVersion = '1.7'
+def fakerVersion = '2.4.1'
 
 dependencies {
     // Junit
@@ -74,6 +75,8 @@ dependencies {
 
     //Visual testing
     implementation "com.github.romankh3:image-comparison:$imageComparisonVersion"
+
+    implementation "net.datafaker:datafaker:$fakerVersion"
 
 }
 
