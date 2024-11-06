@@ -74,4 +74,5 @@ public class Constants {
     public static final String IP_TABLE_NAME = "vindex_test.cs__tb_ip_table";
     public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
     public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
+    public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln__session_parsed";
 }
