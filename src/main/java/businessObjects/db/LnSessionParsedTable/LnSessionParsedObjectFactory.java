@@ -2,8 +2,6 @@ package businessObjects.db.lnSessionParsedTable;
 
 import io.qameta.allure.Step;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
-
 public class LnSessionParsedObjectFactory {
 
     @Step("Generate lexis nexis object for user")
@@ -23,16 +21,5 @@ public class LnSessionParsedObjectFactory {
                 "1973-01-01", "trueIpOrganization", "trueIpOrganizationType","trueIpPostalCode"
                 ,"trueIpRegion", "trueIpResult","trueIpRoutingType",100,1, "1",1
         );
-    }
-
-    // Registration Rule
-
-    public static LnSessionParsedObject registrationRuleExitEventEnd1LNDbObject() {
-        LnSessionParsedObject dbObject = new LnSessionParsedObject();
-        dbObject.userId = 8_880_001;
-        dbObject.brand = "Vantage";
-        dbObject.eventType = "account_creation";
-        dbObject.createTime = getCurrentTimestampDbFormat();
-        return dbObject;
     }
 }

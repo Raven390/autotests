@@ -15,14 +15,6 @@ import static utils.Constants.*;
 @Tag(TAG_MANUAL)
 public class RegistrationRuleTest {
 
-//    @Test
-//    @DisplayName("Debug")
-//    public void sometest() throws ReflectiveOperationException, SQLException {
-//        LnSessionParsedObject object = registrationRuleExitEventEnd1LNDbObject();
-//        insertObjectToDb("vindex_test.ln__session_parsed", object);
-//        deleteEntryFromDb("vindex_test.ln__session_parsed", String.format("user_id=%s", object.userId));
-//    }
-
     @Test
     @DisplayName("Registration rule exit Event_End_1")
     @AllureId("155")
@@ -99,7 +91,7 @@ public class RegistrationRuleTest {
         Allure.step("Connected user is a bonus abuser");
         Allure.step("Set no bonuses, promotions");
         Allure.step("Not Vjp");
-        Allure.step("Block user");
+        Allure.step("Set Login CRM Restriction");
         Allure.step("Generate alert");
         Allure.step("Is a voucher abuser");
         Allure.step("Set no vouchers");
@@ -262,29 +254,9 @@ public class RegistrationRuleTest {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_7 only Wipeout blacklist")
-    @AllureId("169")
-    public void registrationRuleExitEventEnd7Version9Test() {
-        Allure.step("Toxic accounts linked");
-        Allure.step("All of the connected users are NOT CPA abusers");
-        Allure.step("Connected user is NOT a bonus abuser");
-        Allure.step("Is a voucher abuser");
-        Allure.step("Set no vouchers");
-        Allure.step("High LN score");
-        Allure.step("Set bad trading environment");
-        Allure.step("Generate alert");
-        Allure.step("NOT a News trader");
-        Allure.step("NOT TLS");
-        Allure.step("NOT Swap abuse");
-        Allure.step("NOT Market manipulation");
-        Allure.step("Generate alert");
-        Allure.step("Fraud");
-    }
-
-    @Test
     @DisplayName("Registration rule exit Event_End_7 only Set no vouchers + Set bad trading environment")
     @AllureId("169")
-    public void registrationRuleExitEventEnd7Version10Test() {
+    public void registrationRuleExitEventEnd7Version9Test() {
         Allure.step("Toxic accounts linked");
         Allure.step("All of the connected users are NOT CPA abusers");
         Allure.step("Connected user is NOT a bonus abuser");
@@ -303,7 +275,7 @@ public class RegistrationRuleTest {
     @Test
     @DisplayName("Registration rule exit Event_End_7 only Set bad trading environment (News trader)")
     @AllureId("170")
-    public void registrationRuleExitEventEnd7Version11Test() {
+    public void registrationRuleExitEventEnd7Version10Test() {
         Allure.step("Toxic accounts linked");
         Allure.step("All of the connected users are NOT CPA abusers");
         Allure.step("Connected user is NOT a bonus abuser");
@@ -322,7 +294,7 @@ public class RegistrationRuleTest {
     @Test
     @DisplayName("Registration rule exit Event_End_7 only Block user (TLS)")
     @AllureId("171")
-    public void registrationRuleExitEventEnd7Version12Test() {
+    public void registrationRuleExitEventEnd7Version11Test() {
         Allure.step("Toxic accounts linked");
         Allure.step("All of the connected users are NOT CPA abusers");
         Allure.step("Connected user is NOT a bonus abuser");
@@ -331,6 +303,28 @@ public class RegistrationRuleTest {
         Allure.step("Is TLS");
         Allure.step("Block user");
         Allure.step("NOT Swap abuse");
+        Allure.step("NOT Market manipulation");
+        Allure.step("Generate alert");
+        Allure.step("Fraud");
+    }
+
+    @Test
+    @DisplayName("Registration rule exit Event_End_7 only Manual withdrawal review (Swap abuse)")
+    @AllureId("209")
+    public void registrationRuleExitEventEnd7Version12Test() {
+        Allure.step("Toxic accounts linked");
+        Allure.step("All of the connected users are NOT CPA abusers");
+        Allure.step("Connected user is NOT a bonus abuser");
+        Allure.step("Is a voucher abuser");
+        Allure.step("Set no vouchers");
+        Allure.step("High LN score");
+        Allure.step("Set bad trading environment");
+        Allure.step("Generate alert");
+        Allure.step("NOT a News trader");
+        Allure.step("NOT TLS");
+        Allure.step("Swap abuse");
+        Allure.step("Set Manual Withdrawal Review restriction");
+        Allure.step("Generate alert");
         Allure.step("NOT Market manipulation");
         Allure.step("Generate alert");
         Allure.step("Fraud");
