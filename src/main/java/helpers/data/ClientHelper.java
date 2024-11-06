@@ -12,6 +12,7 @@ public class ClientHelper {
     private String email;
     private String phoneNumber;
     private String ipAddress;
+    private String countryCode;
 
     public ClientHelper() {
     }
@@ -24,7 +25,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer serverId, String email, String phoneNumber, String ipAddress) {
+    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
         this.userId = userId;
         this.uuid = uuid;
         this.brand = brand;
@@ -33,6 +34,7 @@ public class ClientHelper {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.ipAddress = ipAddress;
+        this.countryCode = countryCode;
     }
 
     public String getUcid() {
@@ -103,17 +105,25 @@ public class ClientHelper {
         this.ipAddress = ipAddress;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientHelper that = (ClientHelper) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(uuid, that.uuid) && brand == that.brand && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress);
+        return Objects.equals(userId, that.userId) && Objects.equals(uuid, that.uuid) && brand == that.brand && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(countryCode, that.countryCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, uuid, brand, tradingAccount, serverId, email, phoneNumber, ipAddress);
+        return Objects.hash(userId, uuid, brand, tradingAccount, serverId, email, phoneNumber, ipAddress, countryCode);
     }
 
     @Override
@@ -127,6 +137,7 @@ public class ClientHelper {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", ipAddress='" + ipAddress + '\'' +
+                ", countryCode='" + countryCode + '\'' +
                 '}';
     }
 }

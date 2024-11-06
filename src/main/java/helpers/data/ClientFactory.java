@@ -42,7 +42,8 @@ public class ClientFactory {
                         .replace("+", "")
                         .replace(" ","")
                         .replace("-",""),
-                faker.internet().ipV4Address()
+                faker.internet().ipV4Address(),
+                faker.country().countryCode2().toUpperCase()
         );
     }
 }

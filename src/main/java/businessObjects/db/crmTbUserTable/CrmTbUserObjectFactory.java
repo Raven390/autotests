@@ -40,12 +40,4 @@ public class CrmTbUserObjectFactory {
                 "2024-10-23 15:14:10.722", "1", "2", "3",
                 "PARTIAL_KYC_ID_PASS", "2024-10-29 09:55:01.300");
     }
-
-    public static CrmTbUserObject registrationRuleExitEventEnd1UserDbObject() {
-        CrmTbUserObject user = new CrmTbUserObject();
-        user.userId = 1;
-        user.email = "";
-        user.phoneNum = "";
-        return user;
-    }
 }
