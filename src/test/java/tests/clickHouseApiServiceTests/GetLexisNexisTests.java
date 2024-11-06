@@ -2,9 +2,9 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisResponse;
 import businessObjects.db.lnSessionParsedTable.LnSessionParsedObject;
+import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
 import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -42,20 +43,18 @@ public class GetLexisNexisTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get lexisNexis success response(200)")
     @AllureId("141")
     public void getLexisNexisSuccessfulTest() throws IOException, ReflectiveOperationException, SQLException {
-
-        Integer userId = Utils.getRandomIntPositive();
+        ClientHelper client = getRandomClient();
         String uid = Utils.getRandomUuidString();
-        LnSessionParsedObject object = generateLexisNexisDataForUserId(uid,userId,eventId);
-        insertObjectToDb("vindex_test.ln__session_parsed", object);
+        LnSessionParsedObject object = generateLexisNexisDataForUserId(uid,client.getUserId(),eventId);
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object);
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", brand);
-        queryParams.put("userId", userId);
+        queryParams.put("userId", client.getUserId());
         queryParams.put("eventType", eventTypeRegistration);
         queryParams.put("eventId", eventId);
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
-        System.out.println(responseBody);
         GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
@@ -63,7 +62,7 @@ public class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response id", lexisNexisResponse.id, is(123));
         assertThat("Check response brand", lexisNexisResponse.brand, is("vt"));
         assertThat("Check response sessionId", lexisNexisResponse.sessionId, is("sessionId"));
-        assertThat("Check response userId", lexisNexisResponse.userId, is(userId));
+        assertThat("Check response userId", lexisNexisResponse.userId, is(client.getUserId()));
         assertThat("Check response email", lexisNexisResponse.email, is("email@email.com"));
         assertThat("Check response mobileCode", lexisNexisResponse.mobileCode, is("60"));
         assertThat("Check response mobile", lexisNexisResponse.mobile, is("123456"));
@@ -198,10 +197,10 @@ public class GetLexisNexisTests extends TestBaseApi {
         assertThat("Assert that code is 404", response.code(), is(404));
     }
 
-    @Disabled
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis internal server error response(500)")
     @AllureId("144")
+    @Tag(TAG_MANUAL)
     public void getLexisNexisInternalErrorTest() {
         //Can't check it with automation tests
     }

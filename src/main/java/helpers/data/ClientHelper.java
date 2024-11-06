@@ -36,7 +36,7 @@ public class ClientHelper {
     }
 
     public String getUcid() {
-        return String.format("%s-%s", brand.getDisplayName().toLowerCase().replace(" ", "_"), userId);
+        return String.format("%s-%s", brand.getDisplayName().toLowerCase().replace(" ", ""), userId);
     }
 
     public Integer getUserId() {
@@ -55,8 +55,8 @@ public class ClientHelper {
         this.uuid = uuid;
     }
 
-    public Brand getBrand() {
-        return brand;
+    public String getBrand() {
+        return brand.getDisplayName();
     }
 
     public void setBrand(Brand brand) {
