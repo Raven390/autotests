@@ -9,7 +9,7 @@ import helpers.data.ClientHelper;
 
 import java.util.ArrayList;
 
-import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUserId;
+import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static utils.Utils.getCurrentTimestampDbFormat;
@@ -39,11 +39,9 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd7Version13Client = getRandomVantageClientAllFields();
 
     public static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
-        CrmTbUserObject userObject = generateUserByUserId(client.getUserId());
+        CrmTbUserObject userObject = generateUserByClient(client);
         userObject.phoneNum = client.getPhoneNumber();
         userObject.email = client.getEmail();
-        userObject.brand = client.getBrand();
-        userObject.ucid = client.getUcid();
         userObject.countryCode = client.getCountryCode();
         LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObject.brand = client.getBrand();
@@ -84,11 +82,9 @@ public class RegistrationRuleDataFactory {
                     }""", fromClient.getUserId(), fromClient.getBrand().toLowerCase(), toClient.getUserId(), toClient.getBrand().toLowerCase()),
                 getCurrentTimestampDbFormat());
         // Create connected user
-        CrmTbUserObject connectedCrmTbUserObject = generateUserByUserId(toClient.getUserId());
+        CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
         connectedCrmTbUserObject.phoneNum = toClient.getPhoneNumber();
         connectedCrmTbUserObject.email = toClient.getEmail();
-        connectedCrmTbUserObject.brand = toClient.getBrand();
-        connectedCrmTbUserObject.ucid = toClient.getUcid();
         connectedCrmTbUserObject.countryCode = toClient.getCountryCode();
         return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject);
     }
