@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
-import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByUuidAndUserId;
+import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.mtTbUser.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -46,7 +46,7 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = getRandomClient();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
+        CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
         MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
@@ -73,7 +73,7 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = getRandomClient();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
+        CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
         MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
@@ -99,7 +99,7 @@ public class GetClientsTests extends TestBaseApi {
         ClientHelper client = getRandomClient();
 
         // Insert in crm user table
-        CrmTbUserObject crmObject = generateUserByUuidAndUserId(client.getUserId());
+        CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
         MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
