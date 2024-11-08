@@ -8,26 +8,28 @@ variables:
 
 workflow:
   rules:
-   # Rule for Clickhouse webhook
-   - if: '$RUN_CLICKHOUSE_TESTS == "true"'
-     when: always
    # Rule for nightly job
    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
      when: always
    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
      when: always
    # Rule for jobs run on MR
-   - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+   - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $APP_NAME == null'
      when: always  # Pipeline runs on merge requests
    # Push pipeline workflow (excluding main branch)
    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
      when: always  # Pipeline runs on non-main branch pushes
+   # Rule for downstream pipeline for merges to services repos
+   - if: '$APP_NAME != null'
+     when: always
    # Default: Disable pipeline for other scenarios
    - when: never
 
 job_build:
   stage: build
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$APP_NAME == null'
   script:
     - echo "Building the project"
     - ./gradlew clean
@@ -39,6 +41,8 @@ job_code_check:
   stage: build
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$APP_NAME == null'
   script:
     - echo "Checking the code"
     - ./gradlew spotlessCheck
@@ -50,8 +54,8 @@ job_run_minimal_tests:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $APP_NAME == null'
+    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push" && $APP_NAME == null'
   script:
     - echo "Run the minimal tests set to ensure that framework works"
     - ./gradlew installDeps
@@ -120,15 +124,15 @@ job_test_backoffice:
       - test-output/videos
     expire_in: 1 day
 
-#Job to launch tests by webhook from Clickhouse api service
-job_test_clickhouse_api_service:
+#Job to launch tests by connected service
+job_test_downstream_end_to_end:
   stage: test
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$RUN_CLICKHOUSE_TESTS == "true"'
+    - if: '$APP_NAME != null'
       when: always
   variables:
-    ALLURE_LAUNCH_NAME: "[Core team] Triggered by Clickhouse api"
+    ALLURE_LAUNCH_NAME: "[Core team] Triggered by $APP_NAME"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
@@ -137,7 +141,14 @@ job_test_clickhouse_api_service:
     - chmod +x allurectl
   script:
     - echo "Running tests"
-    - ./allurectl watch -- gradle clean testClickhouseApiService
+    - |
+      if [ "$APP_NAME" == "clickhouse-api" ]; then
+        ./allurectl watch -- gradle clean testClickhouseApiService
+      elif [ "$APP_NAME" == "event-generator" ]; then
+        ./allurectl watch -- gradle clean testEventGeneratorService
+      elif [ "$APP_NAME" == "connection-search-service" ]; then
+        ./allurectl watch -- gradle clean testConnectionSearchApiService
+      fi
     - echo "TEST SUCCESS"
   artifacts:
     when: always

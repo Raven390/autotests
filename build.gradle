@@ -147,9 +147,22 @@ task testSmokeCore(type: Test) {
         includeTags "team_core"
     }
 }
+
 task testClickhouseApiService(type: Test) {
     useJUnitPlatform(){
         includeTags "suite_clickhouse_api_service"
+    }
+}
+
+task testConnectionSearchApiService(type: Test) {
+    useJUnitPlatform(){
+        includeTags "suite_connection_search_service"
+    }
+}
+
+task testEventGeneratorService(type: Test) {
+    useJUnitPlatform(){
+        includeTags "suite_event_generator_service"
     }
 }
 
