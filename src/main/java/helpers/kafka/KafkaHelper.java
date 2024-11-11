@@ -3,9 +3,13 @@ package helpers.kafka;
 import static utils.ConfigFactory.*;
 import static utils.Constants.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 
 import io.qameta.allure.Step;
 import org.apache.kafka.clients.consumer.*;
@@ -20,6 +24,76 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 public class KafkaHelper {
+
+    public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
+
+    public static String getFreeConsumerId() {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+        try {
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(filePath);
+
+            // Iterate over each line and check if it's used or not
+            for (int i = 0; i < lines.size(); i++) {
+                String line = lines.get(i);
+
+                // Check if the line is marked as used
+                if (!line.startsWith("Used")) {
+                    // Mark this line as used and write it back to the file
+                    lines.set(i, "Used - " + line);
+                    Files.write(filePath, lines);
+
+                    // Print and set the system property
+                    System.out.println("getFreeConsumerId , consumerId = " + line);
+                    System.setProperty("consumerGroup", line);
+                    System.out.println("getFreeConsumerId , consumerGroup = " + line);
+
+                    return line; // Return the original line without "Used - "
+                }
+            }
+
+            // If all lines are marked as used, return null
+            return null;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static Void cleanConsumerIdAfterUse(String target, String replacement) {
+        ReentrantLock lock = new ReentrantLock();
+        lock.lock();
+        try {
+            // Read all lines from the file
+            List<String> lines = Files.readAllLines(filePath);
+
+            // Prepare the target string to search for
+            String targetToReplace = "Used - " + target;
+            System.out.println(targetToReplace);
+
+            // Loop through each line and replace if it matches the target string
+            for (int i = 0; i < lines.size(); i++) {
+                if (lines.get(i).equals(targetToReplace)) {
+                    lines.set(i, replacement);
+                    System.out.println("cleanConsumerIdAfterUse LINE" + i + " replacement success");
+                }
+            }
+
+            // Write the modified lines back to the file
+            Files.write(filePath, lines);
+            System.out.println("File updated successfully.");
+            System.out.println(Files.readAllLines(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+        return null;
+    }
 
     public static Properties getKafkaProducerProperties() {
         Properties properties = new Properties();
@@ -39,7 +113,7 @@ public class KafkaHelper {
         return properties;
     }
 
-    public static Properties getKafkaConsumerProperties() {
+    public static Properties getKafkaConsumerProperties(String consumerId) {
         Properties properties = new Properties();
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
             // Private Kafka setup for CI environment
@@ -58,7 +132,7 @@ public class KafkaHelper {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
 
         // Kafka Consumer Group ID
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "coretest");
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerId);
 
         // Auto-offset configuration: read from the earliest offset if no previous offset is found
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -73,7 +147,9 @@ public class KafkaHelper {
     @Step("Consume message")
     public String consumeMessage(String topic, String id) throws InterruptedException {
         ConsumerRecords<String, String> records;
-        Properties properties = getKafkaConsumerProperties();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
+        String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic and poll once to assign partitions
@@ -110,21 +186,26 @@ public class KafkaHelper {
 
                     // If the record contains the specified id, return it
                     if (record.value() != null && record.value().contains(id)) {
+                        cleanConsumerIdAfterUse(consumerGroupId ,consumerGroupId);
                         return record.value();
                     }
                 }
             }
             // After maxAttempts, if no matching message is found, return message
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
-            consumer.close(); // Ensure the consumer is closed
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
+            consumer.close();// Ensure the consumer is closed
         }
     }
 
     @Step("Consume message")
     public String consumeMessage(String topic, String id, Integer maxAttempts) throws InterruptedException {
         ConsumerRecords<String, String> records;
-        Properties properties = getKafkaConsumerProperties();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
+        String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic and poll once to assign partitions
@@ -165,8 +246,10 @@ public class KafkaHelper {
                 }
             }
             // After maxAttempts, if no matching message is found, return message
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             consumer.close(); // Ensure the consumer is closed
         }
     }
@@ -177,7 +260,9 @@ public class KafkaHelper {
             return new MessageWithHeaders(consumeMessage(topic, id), new HashMap<>());
         } else {
             ConsumerRecords<String, String> records;
-            Properties properties = getKafkaConsumerProperties();
+            String consumerId = getFreeConsumerId();
+            Properties properties = getKafkaConsumerProperties(consumerId);
+            String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
             // Subscribe to the topic
@@ -209,17 +294,24 @@ public class KafkaHelper {
                     }
                 }
                 // After X attempts, if no matching message is found, return null
+                cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
                 return new MessageWithHeaders(
                         KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
             }
             // Ensure the consumer is closed
+            finally {
+                cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+                consumer.close();
+            }
         }
     }
 
     @Step("Consume messages from {topic}")
     public Map<String, String> consumeMessages(String topic, String... idList) throws InterruptedException {
         ConsumerRecords<String, String> records;
-        Properties properties = getKafkaConsumerProperties();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
+        String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic and poll once to assign partitions
@@ -268,9 +360,10 @@ public class KafkaHelper {
             for (String id : idList) {
                 foundMessages.putIfAbsent(id, null);
             }
-
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             return foundMessages; // Return the map of found messages
         } finally {
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             consumer.close(); // Ensure the consumer is closed
         }
     }
@@ -323,7 +416,8 @@ public class KafkaHelper {
     @Step("Check that {textToSearchList} presented in topic")
     public MatchResultWithMessage isAnyMatchPresentInMessages(String topic, String... textToSearchList) {
         ConsumerRecords<String, String> records;
-        Properties properties = getKafkaConsumerProperties();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic
@@ -333,6 +427,7 @@ public class KafkaHelper {
             int attempts = 0;
             // Ensure there are no null values in the textToSearchList
             if (textToSearchList == null || textToSearchList.length == 0) {
+                cleanConsumerIdAfterUse(consumerId,consumerId);
                 return new MatchResultWithMessage(false, KAFKA_NO_PARAMETERS_PROVIDED);
             }
             while (attempts < maxAttempts) {
@@ -360,6 +455,7 @@ public class KafkaHelper {
                 }
             }
             // After max attempts, if no matching message is found, return false
+            cleanConsumerIdAfterUse(consumerId,consumerId);
             return new MatchResultWithMessage(false, KAFKA_NO_MESSAGE_FOUND_ERROR);
         }
     }
@@ -367,7 +463,8 @@ public class KafkaHelper {
     @Step("Check that all params {textToSearchList} presented in topic")
     public MatchResultWithMessage areAllParamsPresentInMessages(String topic, String... textToSearchList) {
         ConsumerRecords<String, String> records;
-        Properties properties = getKafkaConsumerProperties();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic
@@ -398,11 +495,13 @@ public class KafkaHelper {
                     }
                     // If all texts are found, we can stop searching
                     if (foundTexts.size() == textToSearchList.length) {
+                        cleanConsumerIdAfterUse(consumerId,consumerId);
                         return new MatchResultWithMessage(true, KAFKA_ALL_PARAMETERS_FOUND);
                     }
                 }
             }
             // If we exit the loop, it means some parameters were not found
+            cleanConsumerIdAfterUse(consumerId,consumerId);
             return new MatchResultWithMessage(false, KAFKA_SOME_PARAMETERS_FOUND);
         }
     }

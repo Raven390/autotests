@@ -101,5 +101,4 @@ public class Utils {
         int x = new Random().nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
-
 }

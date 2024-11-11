@@ -4,6 +4,11 @@ plugins {
     id 'org.gradle.test-retry' version '1.6.0'
 }
 
+def properties = new Properties()
+file("src/main/resources/config/config.properties").withInputStream { stream ->
+    properties.load(stream)
+}
+
 group = 'antifraud'
 version = '1.0'
 
@@ -93,6 +98,35 @@ spotless {
                 .addMutator('UnnecessarySemicolon')
                 .addMutator('UseTextBlocks')
         formatAnnotations()
+    }
+}
+
+task createConsumerGroupsFile {
+    def group1 = properties.getProperty("testClusterKafkaConsumerGroup1")
+    def group2 = properties.getProperty("testClusterKafkaConsumerGroup2")
+    doFirst {
+        def filePath = "src/main/resources/config/consumer-groups"
+        def file = new File(filePath)
+
+        // Write content to the file
+        file.text = "$group1\n$group2"
+
+        println "File created at: ${filePath}"
+    }
+}
+
+tasks.withType(Test) {
+    dependsOn(createConsumerGroupsFile)
+    // Enable parallel test execution
+    maxParallelForks = 2// Set to the number of available processors
+
+    // Optional: Configure parallel execution for classes and methods
+    forkEvery = 0 // 0 means it forks once per class. Increase for larger suites.
+    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true' // Enable JUnit 5 parallelism
+
+    // Other options
+    testLogging {
+        events "passed", "failed", "skipped"
     }
 }
 
