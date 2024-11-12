@@ -26,7 +26,7 @@ public class VantageUserAccountPage {
 
     public VantageUserAccountPage(Page page) {
         this.page = page;
-        this.closeAlertButton = page.locator("[data-testid=\"notificationDialog\"] .el-dialog__headerbtn");
+        this.closeAlertButton = page.locator("xpath=//*[@data-testid='notificationDialog']//*[contains(@role,'dialog')]//*[@type='button' and @aria-label='Close']");
         this.declineCookies = page.locator("xpath=//*[@id='adroll_consent_reject']//*[@class='adroll_button_text']");
         this.personalDetailsWindowTitle = page.locator("xpath=//span[normalize-space()='Personal Details']");
         this.genderMaleRadioButton = page.locator("xpath=//span[normalize-space()='Male']");
@@ -67,8 +67,6 @@ public class VantageUserAccountPage {
 
     @Step("Close alert window")
     public void closeAlertWindow() {
-
-        closeCookieBanner();
         if (closeAlertButton.isVisible()) {
             closeAlertButton.waitFor();
             closeAlertButton.click();
