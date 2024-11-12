@@ -14,15 +14,15 @@ public class MitigationServiceRequest {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_GET_RESTRICTION_CATALOG, null, null);
     }
 
-    public static Response postRestriction(GetRestrictionResponseBody getRestrictionResponseBody) throws IOException {
-        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, getRestrictionResponseBody);
+    public static Response postRestriction(PostRestrictionRequestBody postRestrictionRequestBody) throws IOException {
+        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, postRestrictionRequestBody);
     }
 
     public static Response getRestrictionsByUcid(String ucid) throws IOException {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
     }
 
-    public static Response cancelRestrictionById(String id) throws IOException {
-        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, null, Map.of("id", id));
+    public static Response cancelRestrictionById(Integer id, CancelRestrictionRequestBody cancelRestrictionRequestBody) throws IOException {
+        return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, id), null, null, cancelRestrictionRequestBody);
     }
 }
