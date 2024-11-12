@@ -21,8 +21,14 @@ public class GetRestrictionResponseBody {
     @JsonProperty("applyReason")
     public String applyReason;
 
+    @JsonProperty("cancelReason")
+    public String cancelReason;
+
     @JsonProperty("updatedAt")
     public String updatedAt;
+
+    @JsonProperty("createdAt")
+    public String createdAt;
 
     @JsonProperty("updatedBy")
     public UpdatedBy updatedBy;
@@ -33,12 +39,13 @@ public class GetRestrictionResponseBody {
     public GetRestrictionResponseBody() {
     }
 
-    public GetRestrictionResponseBody(Integer id, String code, String type, String status, String applyReason, String updatedAt, UpdatedBy updatedBy, Integer accountId) {
+    public GetRestrictionResponseBody(Integer id, String code, String type, String status, String applyReason, String cancelReason, String updatedAt, UpdatedBy updatedBy, Integer accountId) {
         this.id = id;
         this.code = code;
         this.type = type;
         this.status = status;
         this.applyReason = applyReason;
+        this.cancelReason = cancelReason;
         this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
         this.accountId = accountId;
@@ -49,12 +56,12 @@ public class GetRestrictionResponseBody {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetRestrictionResponseBody that = (GetRestrictionResponseBody) o;
-        return Objects.equals(id, that.id) && Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(status, that.status) && Objects.equals(applyReason, that.applyReason) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(accountId, that.accountId);
+        return Objects.equals(id, that.id) && Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(status, that.status) && Objects.equals(applyReason, that.applyReason) && Objects.equals(cancelReason, that.cancelReason) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(updatedBy, that.updatedBy) && Objects.equals(accountId, that.accountId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, type, status, applyReason, updatedAt, updatedBy, accountId);
+        return Objects.hash(id, code, type, status, applyReason, cancelReason, updatedAt, updatedBy, accountId);
     }
 
     @Override
@@ -65,6 +72,7 @@ public class GetRestrictionResponseBody {
                 ", type='" + type + '\'' +
                 ", status='" + status + '\'' +
                 ", applyReason='" + applyReason + '\'' +
+                ", cancelReason='" + cancelReason + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 ", updatedBy=" + updatedBy +
                 ", accountId=" + accountId +
@@ -74,10 +82,10 @@ public class GetRestrictionResponseBody {
     public static class UpdatedBy {
 
         @JsonProperty("system")
-        String system;
+        public String system;
 
         @JsonProperty("user")
-        String user;
+        public String user;
 
         public UpdatedBy() {
         }
