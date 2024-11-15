@@ -8,7 +8,9 @@ import io.qameta.allure.Step;
 
 public class VantageUserAccountPage {
     private final Page page;
+    private final Locator loader;
     private final Locator closeAlertButton;
+    private final Locator closeBannerButton;
     private final Locator declineCookies;
     private final Locator personalDetailsWindowTitle;
     private final Locator genderMaleRadioButton;
@@ -26,6 +28,8 @@ public class VantageUserAccountPage {
 
     public VantageUserAccountPage(Page page) {
         this.page = page;
+        this.loader = page.locator("xpath=//*[@class='client-portal-loading']");
+        this.closeBannerButton = page.locator("xpath=//*[@class='bannerContainer']//*[contains(@data-testid,'closeImg') and contains(@class,'close-icon')]");
         this.closeAlertButton = page.locator("xpath=//*[@data-testid='notificationDialog']//*[contains(@role,'dialog')]//*[@type='button' and @aria-label='Close']");
         this.declineCookies = page.locator("xpath=//*[@id='adroll_consent_reject']//*[@class='adroll_button_text']");
         this.personalDetailsWindowTitle = page.locator("xpath=//span[normalize-space()='Personal Details']");
@@ -41,6 +45,27 @@ public class VantageUserAccountPage {
 
         this.accountCurrencyBlock = page.locator("xpath=//li[@data-testid='USD']");
         this.acceptTermsCheckbox = page.locator("xpath=//span[@class='el-checkbox__inner']");
+    }
+
+    @Step("Check if the page loaded")
+    public void isPageLoaded() {
+        int n = 0;
+        page.waitForTimeout(2000);
+        while (loader.isVisible() && n < 10) {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
+        page.waitForTimeout(2000);
+    }
+
+    @Step("Check if element loaded")
+    public void isElementLoaded(Locator locator) {
+        int n = 0;
+        page.waitForTimeout(2000);
+        while (locator.isVisible() && n < 10) {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
     }
 
     @Step("Check that page present")
@@ -67,9 +92,15 @@ public class VantageUserAccountPage {
 
     @Step("Close alert window")
     public void closeAlertWindow() {
+        isPageLoaded();
         if (closeAlertButton.isVisible()) {
             closeAlertButton.waitFor();
             closeAlertButton.click();
+        }
+        isElementLoaded(closeBannerButton);
+        if (closeBannerButton.isVisible()) {
+            closeBannerButton.waitFor();
+            closeBannerButton.click();
         }
     }
 
