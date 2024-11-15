@@ -42,7 +42,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis success response(200)")
     @AllureId("141")
-    public void getLexisNexisSuccessfulTest() throws IOException, ReflectiveOperationException, SQLException {
+    public void getLexisNexisTest1() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
         String uid = Utils.getRandomUuidString();
         LnSessionParsedObject object = generateLexisNexisDataForUserId(uid,client.getUserId(),eventId);
@@ -123,7 +123,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without brand parameter")
     @AllureId("151")
-    public void getLexisNexisNoBrandTest() throws IOException {
+    public void getLexisNexisTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", userId);
         queryParams.put("eventType", eventTypeRegistration);
@@ -136,7 +136,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without userId parameter")
     @AllureId("152")
-    public void getLexisNexisUserIdTest() throws IOException {
+    public void getLexisNexisTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", brand);
         queryParams.put("eventType", eventTypeRegistration);
@@ -149,23 +149,10 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without eventType and eventId parameters")
     @AllureId("154")
-    public void getLexisNexisWithoutEventTypeIdTest() throws IOException {
+    public void getLexisNexisTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", userId);
         queryParams.put("brand", brand);
-        Response response = getLexisNexis(queryParams);
-
-        assertThat("Check response code", response.code(), is(200));
-    }
-
-    @Test
-    @DisplayName("Clickhouse Api. Get lexisNexis 400 error without eventId and eventType=login")
-    @AllureId("153")
-    public void getLexisNexisWithoutEventIdTest() throws IOException {
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("brand", brand);
-        queryParams.put("userId", userId);
-        queryParams.put("eventType", eventTypeLogin);
         Response response = getLexisNexis(queryParams);
 
         assertThat("Check response code", response.code(), is(400));
@@ -174,7 +161,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 200 when eventType registration and eventId=null")
     @AllureId("153")
-    public void getLexisNexisWithoutEventIdTest1() throws IOException {
+    public void getLexisNexisTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", brand);
         queryParams.put("userId", userId);
@@ -187,7 +174,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis client not found response(404)")
     @AllureId("142")
-    public void getLexisNexisClientNotFoundTest() throws IOException {
+    public void getLexisNexisTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", 1);
         queryParams.put("userId", 1);
@@ -201,7 +188,57 @@ public class GetLexisNexisTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get lexisNexis internal server error response(500)")
     @AllureId("144")
     @Tag(TAG_MANUAL)
-    public void getLexisNexisInternalErrorTest() {
+    public void getLexisNexisTest8() {
         //Can't check it with automation tests
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get lexisNexis event if eventId filled search is made for exact id")
+    @AllureId("283")
+    public void getLexisNexisTest9() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("userId", userId);
+        queryParams.put("brand", brand);
+        queryParams.put("eventType", eventTypeLogin);
+        queryParams.put("eventId", 557);
+        Response response = getLexisNexis(queryParams);
+        String responseBody = response.body().string();
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
+
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check response code", lexisNexisResponse.uid, is("00000000-0000-0000-0000-000000000002"));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get lexisNexis event If not filled - last event of selected type")
+    @AllureId("284")
+    public void getLexisNexisTest10() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("userId", userId);
+        queryParams.put("brand", brand);
+        queryParams.put("eventType", eventTypeLogin);
+        Response response = getLexisNexis(queryParams);
+        String responseBody = response.body().string();
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
+
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check response code", lexisNexisResponse.uid, is("00000000-0000-0000-0000-000000000003"));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get lexisNexis event If event_dateTime= null - sort by createTime")
+    @AllureId("285")
+    public void getLexisNexisTest11() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("userId", 6667);
+        queryParams.put("brand", brand);
+        queryParams.put("eventType", eventTypeLogin);
+        Response response = getLexisNexis(queryParams);
+        String responseBody = response.body().string();
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
+
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check response code", lexisNexisResponse.uid, is("00000000-0000-0000-0000-000000000005"));
+        assertThat("Check response code", lexisNexisResponse.eventId, is(560));
     }
 }
