@@ -4,16 +4,17 @@ package helpers.data.rules.registrationRule;
 import businessObjects.db.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.csTbConnectionTableV2.ConnectionTableEntry;
 import businessObjects.db.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.Brand;
 import helpers.data.ClientHelper;
 
+import java.time.Instant;
 import java.util.ArrayList;
 
 import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.*;
 
 public class RegistrationRuleDataFactory {
 
@@ -43,14 +44,24 @@ public class RegistrationRuleDataFactory {
         userObject.phoneNum = client.getPhoneNumber();
         userObject.email = client.getEmail();
         userObject.countryCode = client.getCountryCode();
+        userObject.regulator = "VFSC2";
         LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObject.brand = client.getBrand();
-        lexisNexisObject.eventType = "account_creation";
+        lexisNexisObject.eventType = "registration";
+        lexisNexisObject.email = client.getEmail();
         lexisNexisObject.userId = client.getUserId();
         lexisNexisObject.proxyIp = client.getIpAddress();
         lexisNexisObject.trueIpGeo = client.getCountryCode();
         lexisNexisObject.policyScore = -49;
-        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>());
+        RegistrationEvent registrationEvent = new RegistrationEvent();
+        registrationEvent.clientId = client.getUserId();
+        registrationEvent.brand = client.getBrand();
+        registrationEvent.regulator = "VFSC2";
+        registrationEvent.metaTraderAccount = 1;
+        registrationEvent.id = getRandomUuidString();
+        registrationEvent.createTime = Instant.now().toString();
+        registrationEvent.type = "clientRegistration";
+        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent);
     }
 
     public static class ConnectionAndConnectedUser {
@@ -82,10 +93,10 @@ public class RegistrationRuleDataFactory {
                     }""", fromClient.getUserId(), fromClient.getBrand().toLowerCase(), toClient.getUserId(), toClient.getBrand().toLowerCase()),
                 getCurrentTimestampDbFormat());
         // Create connected user
-        CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
-        connectedCrmTbUserObject.phoneNum = toClient.getPhoneNumber();
-        connectedCrmTbUserObject.email = toClient.getEmail();
-        connectedCrmTbUserObject.countryCode = toClient.getCountryCode();
+        CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(fromClient);
+        connectedCrmTbUserObject.phoneNum = fromClient.getPhoneNumber();
+        connectedCrmTbUserObject.email = fromClient.getEmail();
+        connectedCrmTbUserObject.countryCode = fromClient.getCountryCode();
         return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject);
     }
 
@@ -143,48 +154,54 @@ public class RegistrationRuleDataFactory {
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version1Data() {
+        registrationRuleExitEventEnd7Version1Client.setUserId(1_370_903_308);
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version1Client);
+        registrationRuleData.registrationEvent.clientId = 1_370_903_308;
 
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
-        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
-        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
-        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNewsTrader);
-        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
-        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
-        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
+        connectedClientCpa.setUserId(1_370_903_309);
+//        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
+//        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
+//        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
+//        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
+//        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
+//        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
+        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(connectedClientCpa, registrationRuleExitEventEnd7Version1Client);
+//        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
+//        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
+//        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNewsTrader);
+//        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
+//        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
+//        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
         //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
+//        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
+//        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
         return registrationRuleData;
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version2Data() {
+        registrationRuleExitEventEnd7Version2Client.setUserId(1_370_903_308);
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version2Client);
+        registrationRuleData.registrationEvent.clientId = 1_370_903_308;
 
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
+        connectedClientCpa.setUserId(1_370_903_309);
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
         //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
 
@@ -195,10 +212,13 @@ public class RegistrationRuleDataFactory {
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version3Data() {
+        registrationRuleExitEventEnd7Version3Client.setUserId(1_370_903_308);
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version3Client);
+        registrationRuleData.registrationEvent.clientId = 1_370_903_308;
 
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
+        connectedClientCpa.setUserId(1_370_903_309);
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version3Client, connectedClientCpa);
         //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
 

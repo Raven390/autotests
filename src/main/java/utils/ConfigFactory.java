@@ -1,49 +1,63 @@
 package utils;
 
 import java.util.Objects;
+
 import org.aeonbits.owner.Config;
 
 public class ConfigFactory {
     private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
-    public static final String
     // URLs
-    BASE_URL_E2E = CONFIG.baseURLE2E(), BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount(),
-            // Kafka
-            KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic(), KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate(),
-            KAFKA_PASSWORD = CONFIG.testClusterKafkaPassword(),
-            // Settings
-            PATH_TRACE_VIDEO = CONFIG.pathTraceVideo(), PATH_TRACE = CONFIG.pathTrace(),
-            PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot(),
-            // Databases
-            POSTGRE_HOST = CONFIG.postgreHost(),
-            POSTGRE_PASSWORD = CONFIG.postgrePassword(),
-            POSTGRE_LOGIN = CONFIG.postgreLogin(),
-            MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost(),
-            MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin(),
-            MYSQL_STAGING_CRM_PASSWORD = CONFIG.mysqlStagingCrmPassword(),
-            // Registration helper
-            REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin(),
-            REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword(),
-            // Clickhouse api
-            CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath(),
-            CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath(),
-            CLICKHOUSE_API_GET_CLIENTS_PATH = CONFIG.clickhouseGetClientsPath(),
-            CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH = CONFIG.clickhouseGetLexisNexisPath(),
-            // Connection search
-            CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath(),
-            CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient(),
-            CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes(),
-            // Mitigation service
-            MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath(),
-            MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog(),
-            MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions(),
-            MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction(),
-            // Clickhouse database
-            CLICKHOUSE_HOST = CONFIG.clickhouseHost(), CLICKHOUSE_USER = CONFIG.clickhouseUser(),
-            CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword(),
-            // Other
-            COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
+    public static final String BASE_URL_E2E = CONFIG.baseURLE2E();
+    public static final String BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount();
+    // Kafka
+    public static final String  KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic();
+    public static final String KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate();
+    public static final String KAFKA_PASSWORD = CONFIG.testClusterKafkaPassword();
+    // Settings
+    public static final String PATH_TRACE_VIDEO = CONFIG.pathTraceVideo();
+    public static final String PATH_TRACE = CONFIG.pathTrace();
+    public static final String PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot();
+    // Databases
+    public static final String POSTGRE_HOST = CONFIG.postgreHost();
+    public static final String POSTGRE_PASSWORD = CONFIG.postgrePassword();
+    public static final String POSTGRE_LOGIN = CONFIG.postgreLogin();
+    public static final String MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost();
+    public static final String MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin();
+    public static final String MYSQL_STAGING_CRM_PASSWORD = CONFIG.mysqlStagingCrmPassword();
+    // Registration helper
+    public static final String REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin();
+    public static final String REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword();
+    // Clickhouse api
+    public static final String CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath();
+    public static final String CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath();
+    public static final String CLICKHOUSE_API_GET_CLIENTS_PATH = CONFIG.clickhouseGetClientsPath();
+    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH = CONFIG.clickhouseGetLexisNexisPath();
+    // Connection search
+    public static final String CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath();
+    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
+    public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes();
+    // Mitigation service
+    public static final String MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath();
+    public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
+    public static final String MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions();
+    public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
+    // Mitigation service db
+    public static final String MITIGATION_DB_SSH_HOST = CONFIG.mitigationDbSshHost();
+    public static final String MITIGATION_DB_SSH_PORT = String.valueOf(CONFIG.mitigationDbSshPort());
+    public static final String MITIGATION_DB_SSH_USER = CONFIG.mitigationDbSshUser();
+    public static final String MITIGATION_DB_SSH_PRIVATE_KEY = CONFIG.mitigationDbSshPrivateKey();
+    public static final String MITIGATION_DB_HOST = CONFIG.mitigationDbHost(); // As seen from the SSH server
+    public static final String  MITIGATION_DB_PORT = String.valueOf(CONFIG.mitigationDbPort());
+    public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
+    public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
+    public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
+    // Clickhouse database
+    public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
+    public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
+    public static final String CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword();
+    // Other
+    public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
 
     public static final Double TIMEOUT = CONFIG.waitTimeout();
 
@@ -163,6 +177,34 @@ public class ConfigFactory {
 
         @Key("mitigationServiceCancelRestriction")
         String mitigationServiceCancelRestriction();
+
+        // Mitigation service db
+        @Key("mitigationDbSshHost")
+        String mitigationDbSshHost();
+
+        @Key("mitigationDbSshPort")
+        int mitigationDbSshPort();
+
+        @Key("mitigationDbSshUser")
+        String mitigationDbSshUser();
+
+        @Key("mitigationDbSshPrivateKey")
+        String mitigationDbSshPrivateKey();
+
+        @Key("mitigationDbHost")
+        String mitigationDbHost();
+
+        @Key("mitigationDbPort")
+        int mitigationDbPort();
+
+        @Key("mitigationDbUser")
+        String mitigationDbUser();
+
+        @Key("mitigationDbPassword")
+        String mitigationDbPassword();
+
+        @Key("mitigationDbName")
+        String mitigationDbName();
 
         // Other
 
