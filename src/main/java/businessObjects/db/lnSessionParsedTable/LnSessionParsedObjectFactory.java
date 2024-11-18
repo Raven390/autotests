@@ -8,7 +8,7 @@ public class LnSessionParsedObjectFactory {
     public static LnSessionParsedObject generateLexisNexisDataForUserId(String uid, Integer userId, Integer eventId) {
         return new LnSessionParsedObject(
                 uid, 123, "vt", "sessionId", userId,
-                "email@email.com", 60, "123456", "registration", true,
+                "email@email.com", 60, "123456", "account_creation", true,
                 "1970-01-01 00:00:00", 0,"12","device_id","12345",
                 "1971-01-01 00:00:00", eventId,"127.0.0.1","proxyIpActivities",
                 new String[]{"String_1", "String_2"},"proxyIpCity","proxyIpConnection",
