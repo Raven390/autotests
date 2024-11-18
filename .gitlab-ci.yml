@@ -22,6 +22,12 @@ workflow:
    # Rule for downstream pipeline for merges to services repos
    - if: '$APP_NAME != null'
      when: always
+   # Rule for launching core tests from gitlab ui
+   - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core"'
+     when: always
+    # Rule for launching backoffice tests from gitlab ui
+   - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
+     when: always
    # Default: Disable pipeline for other scenarios
    - when: never
 
@@ -70,6 +76,7 @@ job_test_core:
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core"'
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Nightly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
@@ -101,6 +108,7 @@ job_test_backoffice:
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
   variables:
     ALLURE_LAUNCH_NAME: "[Backoffice team] Nightly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
