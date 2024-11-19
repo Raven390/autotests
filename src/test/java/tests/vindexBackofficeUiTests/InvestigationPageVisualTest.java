@@ -16,7 +16,7 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
     @Disabled//need to update mocking
     @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
-    @Tag(STATUS_AUTOMATED)
+    @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("Compare Alert Page with baseline Dark Mode, Unfolded Sidebar")
@@ -34,7 +34,7 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
     @Disabled//need to update mocking
     @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
-    @Tag(STATUS_AUTOMATED)
+    @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("Compare Alert Page with baseline Light Mode, Folded Sidebar")

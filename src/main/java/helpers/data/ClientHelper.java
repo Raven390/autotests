@@ -1,5 +1,7 @@
 package helpers.data;
 
+import helpers.data.enums.Brand;
+
 import java.util.Objects;
 
 public class ClientHelper {

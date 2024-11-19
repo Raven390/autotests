@@ -5,8 +5,8 @@ import businessObjects.db.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.csTbConnectionTableV2.ConnectionTableEntry;
 import businessObjects.db.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
-import helpers.data.Brand;
 import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
 
 import java.time.Instant;
 import java.util.ArrayList;

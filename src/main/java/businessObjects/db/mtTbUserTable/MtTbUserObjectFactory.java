@@ -1,4 +1,4 @@
-package businessObjects.db.mtTbUser;
+package businessObjects.db.mtTbUserTable;
 
 import io.qameta.allure.Step;
 

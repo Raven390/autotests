@@ -12,9 +12,6 @@ public class Constants {
     public static final String SUITE_EVENT_GENERATOR_SERVICE = "suite_event_generator_service";
     public static final String SUITE_MITIGATION_SERVICE = "suite_mitigation_service";
     public static final String SUITE_RULE_ENGINE_SERVICE = "suite_rule_engine_service";
-    // TEST CASE STATUSES
-    public static final String STATUS_MANUAL = "status_manual";
-    public static final String STATUS_AUTOMATED = "status_automated";
     // TEST LAYERS
     public static final String LAYER_API = "layer_api";
     public static final String LAYER_WEB = "layer_web";
@@ -34,7 +31,17 @@ public class Constants {
     public static final String STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE = "Raf balance trade event in Event Generator";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS = "Clickhouse api. Get client by trading account & server ID";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES_GROUP_BY_SYMBOL = "Clickhouse api. Get trades grouped by symbol";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS = "Clickhouse api. Get deposits";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_WITHDRAWALS = "Clickhouse api. Get withdrawals";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BONUSES = "Clickhouse api. Get bonuses";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDITS = "Clickhouse api. Get credits";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES = "Clickhouse api. Get trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS = "Clickhouse api. Get lexis nexis data by client request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_EQUITY = "Clickhouse api. Get credit equity request";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY = "Clickhouse api. Get floating trades group by";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_POST_ABUSE_TYPES = "Clickhouse api. Post abuse types";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
@@ -47,7 +54,7 @@ public class Constants {
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
     // OTHER
     public static final String TAG_BUILD_CHECK = "build_check";
-    public static final String TAG_AUTOMATION = "Automation tests";
+    public static final String TAG_AUTOMATED = "automated";
     public static final String TAG_MANUAL = "manual";
     // KAFKA
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
@@ -67,7 +74,12 @@ public class Constants {
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
     // TABLES
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm__tb_user";
+    public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm__tb_bonus";
+    public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm__tb_deposit";
+    public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm__tb_withdrawal";
     public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
+    public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt__tb_credits";
+    public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__mt5_trades";
     public static final String CONNECTIONS_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
     public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";
@@ -75,4 +87,5 @@ public class Constants {
     public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
     public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln__session_parsed";
+    public static final String MITIGATION_ABUSE_TYPES_TABLE_NAME = "";
 }
