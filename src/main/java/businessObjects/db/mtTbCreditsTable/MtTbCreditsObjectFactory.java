@@ -1,4 +1,4 @@
-package businessObjects.db.mtCreditsTable;
+package businessObjects.db.mtTbCreditsTable;
 
 
 import helpers.data.ClientHelper;

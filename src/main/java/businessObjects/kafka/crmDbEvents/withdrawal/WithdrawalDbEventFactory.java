@@ -44,8 +44,8 @@ public class WithdrawalDbEventFactory {
         return new WithdrawalDbEventData(
                 Instant.now().toString(),
                 getRandomIntPositive(),
-                1,
-                1,
+                getRandomIntPositive(),
+                getRandomIntPositive(),
                 "test_brand",
                 "test_regulator",
                 "test_payment_method_type",

@@ -6,6 +6,7 @@ import org.aeonbits.owner.Config;
 
 public class ConfigFactory {
     private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
+
     // URLs
     public static final String BASE_URL_E2E = CONFIG.baseURLE2E();
     public static final String BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount();
@@ -39,9 +40,8 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
     public static final String CLICKHOUSE_API_GET_BONUSES = CONFIG.clickhouseGetBonusesPath();
     public static final String CLICKHOUSE_API_GET_CREDIT_EQUITY_PATH = CONFIG.clickhouseGetCreditEquityRatio();
-    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES_PATH = CONFIG.clickhouseGetMirrorAccountsByTrades();
     public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY_PATH = CONFIG.clickhouseGetFloatingTradesGroupBy();
-    public static final String CLICKHOUSE_API_POST_ABUSE_TYPES_PATH = CONFIG.clickhousePostAbuseTypes();
+    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES_PATH = CONFIG.clickhouseGetMirrorAccountsByTrades();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
@@ -177,20 +177,17 @@ public class ConfigFactory {
         @Key("clickhouseGetBonusesPath")
         String clickhouseGetBonusesPath();
 
-        @Key("clickhouseGetCreditEquityRatio")
-        String clickhouseGetCreditEquityRatio();
-
-        @Key("clickhouseGetMirrorAccountsByTrades")
-        String clickhouseGetMirrorAccountsByTrades();
-
         @Key("clickhouseGetLexisNexisPath")
         String clickhouseGetLexisNexisPath();
+
+        @Key("clickhouseGetCreditEquityRatio")
+        String clickhouseGetCreditEquityRatio();
 
         @Key("clickhouseGetFloatingTradesGroupBy")
         String clickhouseGetFloatingTradesGroupBy();
 
-        @Key("clickhousePostAbuseTypes")
-        String clickhousePostAbuseTypes();
+        @Key("clickhouseGetMirrorAccountsByTrades")
+        String clickhouseGetMirrorAccountsByTrades();
 
         // Connection search
 

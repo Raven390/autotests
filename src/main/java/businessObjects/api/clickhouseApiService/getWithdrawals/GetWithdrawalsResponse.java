@@ -7,9 +7,9 @@ import java.util.List;
 public class GetWithdrawalsResponse {
 
     @JsonProperty
-    public List<withdrawalsItem> withdrawalsItem;
+    public List<WithdrawalsItem> withdrawalsItem;
 
-    public static class withdrawalsItem {
+    public static class WithdrawalsItem {
         @JsonProperty("transferId")
         public Integer transferId;
 

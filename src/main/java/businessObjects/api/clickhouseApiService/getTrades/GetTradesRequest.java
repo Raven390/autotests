@@ -15,4 +15,5 @@ public class GetTradesRequest {
     public static Response getTrades(Map<String, Object> paramsMap) throws IOException {
         return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_TRADES, null, paramsMap);
     }
+
 }

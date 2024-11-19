@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getDeposits.GetDepositsRequest.getDeposits;
-import static businessObjects.db.crmDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
+import static businessObjects.db.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;

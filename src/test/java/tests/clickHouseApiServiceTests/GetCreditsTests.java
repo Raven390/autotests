@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCredits.GetCreditsRequest.getCredits;
-import static businessObjects.db.mtCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static businessObjects.db.mtTbCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
