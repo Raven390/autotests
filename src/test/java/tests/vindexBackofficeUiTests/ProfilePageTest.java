@@ -15,7 +15,7 @@ public class ProfilePageTest extends TestBaseWeb {
     @Disabled
     @Test
     @Tag(TEAM_BACKOFFICE)
-    @Tag(STATUS_AUTOMATED)
+    @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("user can navigate to the profile page")
@@ -28,7 +28,7 @@ public class ProfilePageTest extends TestBaseWeb {
     @Disabled
     @Test
     @Tag(TEAM_BACKOFFICE)
-    @Tag(STATUS_AUTOMATED)
+    @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("user can log out from the profile page")

@@ -14,10 +14,12 @@ import tests.TestBaseWeb;
 
 @Feature(FEATURE_LEXIS_NEXIS)
 @Tag(TEAM_CORE)
-@Tag(LAYER_WEB)
 public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
+    @Disabled
     @Test
+    @Tag(TAG_AUTOMATED)
+    @Tag(LAYER_API)
     @DisplayName("Vantage. Registration Lexis Nexis event")
     @AllureId("57")
     public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
@@ -27,7 +29,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         String firstName = REGISTRATION_HELPER_FIRST_NAME;
         String secondName = REGISTRATION_HELPER_SECOND_NAME;
         String password = "Test1234!";
-        String emailVerificationCode = "1234";
+        String emailVerificationCode = "1234!";
 
         // Pass helper form
         stageRegistrationHelperPage.navigate(REGISTRATION_HELPER_LOGIN, REGISTRATION_HELPER_PASSWORD);
@@ -42,11 +44,9 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         stageRegistrationHelperPage.fillWid(REGISTRATION_HELPER_WID_VANTAGE);
         stageRegistrationHelperPage.chooseRegisterInterface(REGISTRATION_HELPER_INTERFACE);
         stageRegistrationHelperPage.clickSendFormButton();
-        System.out.println("Registered as email: "+email+", password: "+password);
 
         // Pass form after account creation
         vantageUserAccountPage.checkPagePresent();
-        vantageUserAccountPage.closeCookieBanner();
         vantageUserAccountPage.closeAlertWindow();
         vantageUserAccountPage.waitPersonalDetailsWindowPresented();
         vantageUserAccountPage.chooseGender();

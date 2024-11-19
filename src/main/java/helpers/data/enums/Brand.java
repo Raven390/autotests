@@ -1,4 +1,4 @@
-package helpers.data;
+package helpers.data.enums;
 
 public enum Brand {
     PU_PRIME("PU Prime"),

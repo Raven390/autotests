@@ -1,4 +1,4 @@
-package businessObjects.db.mtTbUser;
+package businessObjects.db.mtTbUserTable;
 
 public class MtTbUserObject {
 

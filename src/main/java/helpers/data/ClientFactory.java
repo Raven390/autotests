@@ -1,6 +1,7 @@
 
 package helpers.data;
 
+import helpers.data.enums.Brand;
 import net.datafaker.Faker;
 
 import java.util.Random;
