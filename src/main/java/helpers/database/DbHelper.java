@@ -92,11 +92,14 @@ public class DbHelper {
         } else if (targetType.equals(String.class) && value instanceof UUID) {
             return value.toString(); // Convert UUID to String
         } else if (targetType.equals(String.class) && value instanceof LocalDateTime) {
-            // Format LocalDateTime to String
+            // Convert LocalDateTime to String
             return ((LocalDateTime) value).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } else if (targetType.equals(String.class) && value instanceof LocalDate) {
             // Convert LocalDate to String
             return ((LocalDate) value).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        } else if (targetType.equals(String.class) && value instanceof Timestamp) {
+            // Convert Timestamp to String
+            return ((Timestamp) value).toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         } else if (targetType.equals(String.class) && value instanceof String[]) {
             return String.join(",", (String[]) value); // Convert String array to single String
         } else if (targetType.equals(String.class) && value instanceof InetAddress) {
