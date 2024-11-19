@@ -1,4 +1,4 @@
-package businessObjects.db.crmDepositTable;
+package businessObjects.db.crmTbDepositTable;
 
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;

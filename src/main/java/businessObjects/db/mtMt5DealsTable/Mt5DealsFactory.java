@@ -1,4 +1,4 @@
-package businessObjects.db.mt5DealsTable;
+package businessObjects.db.mtMt5DealsTable;
 
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;

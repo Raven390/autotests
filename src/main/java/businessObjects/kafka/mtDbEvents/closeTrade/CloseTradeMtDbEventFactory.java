@@ -35,6 +35,12 @@ public class CloseTradeMtDbEventFactory {
                 Instant.now().toString(), getRandomInt(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "test_symbol", 0, 9);
     }
 
+    @Step("Generate close trade db event mt4 data by trading account")
+    private static CloseTradeMtDbEventMt4Data generateCloseTradeMtDbEventMt4DataByTradingAccount(Integer tradingAccount) {
+        return new CloseTradeMtDbEventMt4Data(
+                Instant.now().toString(), getRandomInt(), tradingAccount, 3.45d, "test_symbol", 0, 9);
+    }
+
     @Step("Generate close trade db event mt5 data")
     private static CloseTradeMtDbEventMt5Data generateCloseTradeMtDbEventMt5Data() {
         return new CloseTradeMtDbEventMt5Data(
@@ -45,6 +51,12 @@ public class CloseTradeMtDbEventFactory {
     public static CloseTradeMtDbEventMt4 generateCloseTradeMtDbEventMt4() {
         return new CloseTradeMtDbEventMt4(
                 generateCloseTradeMtDbEventMt4Data(), generateCloseTradeMtDbEventMetadataMt4());
+    }
+
+    @Step("Generate close trade db event mt4")
+    public static CloseTradeMtDbEventMt4 generateCloseTradeMtDbEventMt4ByTradingAccount(Integer tradingAccount) {
+        return new CloseTradeMtDbEventMt4(
+                generateCloseTradeMtDbEventMt4DataByTradingAccount(tradingAccount), generateCloseTradeMtDbEventMetadataMt4());
     }
 
     @Step("Generate close trade db event mt5")

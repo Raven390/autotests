@@ -1,4 +1,4 @@
-package businessObjects.db.crmWithdrawalTable;
+package businessObjects.db.crmTbWithdrawalTable;
 
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;

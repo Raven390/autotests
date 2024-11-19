@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
-import static businessObjects.db.mt5DealsTable.Mt5DealsFactory.generateTradeByClient;
+import static businessObjects.db.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
