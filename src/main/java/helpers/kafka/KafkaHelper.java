@@ -4,12 +4,14 @@ import static utils.ConfigFactory.*;
 import static utils.Constants.*;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Future;
-import java.util.concurrent.locks.ReentrantLock;
 
 import io.qameta.allure.Step;
 import org.apache.kafka.clients.consumer.*;
@@ -28,10 +30,33 @@ public class KafkaHelper {
     public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
 
     public static String getFreeConsumerId() {
-        ReentrantLock lock = new ReentrantLock();
-        lock.lock();
+        FileLock fileLock = null;
+        FileChannel fileChannel = null;
+        long startTime = System.currentTimeMillis();
+        long timeout = 10_000; // 10 seconds
+        boolean isLocked = false;
+
         try {
-            // Read all lines from the file
+            // Open the file channel
+            fileChannel = FileChannel.open(filePath, StandardOpenOption.READ, StandardOpenOption.WRITE);
+
+            // Attempt to acquire the lock with retries
+            while (!isLocked && (System.currentTimeMillis() - startTime) < timeout) {
+                try {
+                    fileLock = fileChannel.tryLock();
+                    isLocked = (fileLock != null);
+                } catch (Exception e) {
+                    System.out.println("File is locked by another JVM. Retrying...");
+                    Thread.sleep(1000); // Wait 1 second before retrying
+                }
+            }
+
+            if (!isLocked) {
+                System.out.println("Failed to acquire file lock within timeout.");
+                return null; // Could not acquire the lock
+            }
+
+            // Lock acquired: Process the file
             List<String> lines = Files.readAllLines(filePath);
 
             // Iterate over each line and check if it's used or not
@@ -44,10 +69,9 @@ public class KafkaHelper {
                     lines.set(i, "Used - " + line);
                     Files.write(filePath, lines);
 
-                    // Print and set the system property
-                    System.out.println("getFreeConsumerId , consumerId = " + line);
+                    System.out.println("getFreeConsumerId, consumerId = " + line);
                     System.setProperty("consumerGroup", line);
-                    System.out.println("getFreeConsumerId , consumerGroup = " + line);
+                    System.out.println("getFreeConsumerId, consumerGroup = " + line);
 
                     return line; // Return the original line without "Used - "
                 }
@@ -56,19 +80,59 @@ public class KafkaHelper {
             // If all lines are marked as used, return null
             return null;
 
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
         } finally {
-            lock.unlock();
+            // Release the lock before closing the channel
+            if (fileLock != null) {
+                try {
+                    fileLock.release();
+                    System.out.println("File lock released.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Close the channel
+            if (fileChannel != null) {
+                try {
+                    fileChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     public static Void cleanConsumerIdAfterUse(String target, String replacement) {
-        ReentrantLock lock = new ReentrantLock();
-        lock.lock();
+        FileLock fileLock = null;
+        FileChannel fileChannel = null;
+        long startTime = System.currentTimeMillis();
+        long timeout = 10_000; // 10 seconds
+        boolean isLocked = false;
+
         try {
-            // Read all lines from the file
+            // Open the file channel
+            fileChannel = FileChannel.open(filePath, StandardOpenOption.READ, StandardOpenOption.WRITE);
+
+            // Attempt to acquire the lock with retries
+            while (!isLocked && (System.currentTimeMillis() - startTime) < timeout) {
+                try {
+                    fileLock = fileChannel.tryLock();
+                    isLocked = (fileLock != null);
+                } catch (Exception e) {
+                    System.out.println("File is locked by another JVM. Retrying...");
+                    Thread.sleep(1000); // Wait 1 second before retrying
+                }
+            }
+
+            if (!isLocked) {
+                System.out.println("Failed to acquire file lock within timeout.");
+                return null; // Could not acquire the lock
+            }
+
+            // Lock acquired: Process the file
             List<String> lines = Files.readAllLines(filePath);
 
             // Prepare the target string to search for
@@ -79,7 +143,7 @@ public class KafkaHelper {
             for (int i = 0; i < lines.size(); i++) {
                 if (lines.get(i).equals(targetToReplace)) {
                     lines.set(i, replacement);
-                    System.out.println("cleanConsumerIdAfterUse LINE" + i + " replacement success");
+                    System.out.println("cleanConsumerIdAfterUse LINE " + i + " replacement success");
                 }
             }
 
@@ -87,10 +151,28 @@ public class KafkaHelper {
             Files.write(filePath, lines);
             System.out.println("File updated successfully.");
             System.out.println(Files.readAllLines(filePath));
-        } catch (IOException e) {
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
-            lock.unlock();
+            // Release the lock before closing the channel
+            if (fileLock != null) {
+                try {
+                    fileLock.release();
+                    System.out.println("File lock released.");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Close the channel
+            if (fileChannel != null) {
+                try {
+                    fileChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return null;
     }
@@ -418,6 +500,7 @@ public class KafkaHelper {
         ConsumerRecords<String, String> records;
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
+        String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 
         // Subscribe to the topic
@@ -448,6 +531,7 @@ public class KafkaHelper {
                     for (String text : textToSearchList) {
                         // Ensure text is not null
                         if (text != null && record.value().contains(text)) {
+                            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
                             return new MatchResultWithMessage(
                                     true, "Matching Record Found: " + record.value() + ". Based on search with: " + text);
                         }
@@ -455,8 +539,11 @@ public class KafkaHelper {
                 }
             }
             // After max attempts, if no matching message is found, return false
-            cleanConsumerIdAfterUse(consumerId,consumerId);
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
             return new MatchResultWithMessage(false, KAFKA_NO_MESSAGE_FOUND_ERROR);
+        } finally {
+            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            consumer.close();
         }
     }
 
@@ -503,6 +590,9 @@ public class KafkaHelper {
             // If we exit the loop, it means some parameters were not found
             cleanConsumerIdAfterUse(consumerId,consumerId);
             return new MatchResultWithMessage(false, KAFKA_SOME_PARAMETERS_FOUND);
+        } finally {
+            cleanConsumerIdAfterUse(consumerId,consumerId);
+            consumer.close();
         }
     }
 
