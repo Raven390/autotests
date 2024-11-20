@@ -282,6 +282,70 @@ public class KafkaHelper {
         }
     }
 
+    @Step("Consume messages")
+    public List<String> consumeMessages(String topic, String id) throws InterruptedException {
+        ConsumerRecords<String, String> records;
+        List<String> matchingMessages = new ArrayList<>();
+        String consumerId = getFreeConsumerId();
+        Properties properties = getKafkaConsumerProperties(consumerId);
+        String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+
+        // Subscribe to the topic and poll once to assign partitions
+        consumer.subscribe(Collections.singletonList(topic));
+        consumer.poll(Duration.ofMillis(100)); // Initial poll to get the assignment
+
+        // Get the partitions assigned to the consumer for this topic
+        Set<TopicPartition> partitions = consumer.assignment();
+
+        // Get the latest (end) offset for each partition
+        Map<TopicPartition, Long> endOffsets = consumer.endOffsets(partitions);
+
+        // Seek to the previous 50 messages for each partition
+        for (TopicPartition partition : partitions) {
+            long endOffset = endOffsets.get(partition);
+            long startOffset = Math.max(0, endOffset - 50);
+            consumer.seek(partition, startOffset);
+        }
+
+        int maxAttempts = 30;
+        int attempts = 0;
+
+        try {
+            while (attempts < maxAttempts) {
+                // Poll the Kafka broker for new records (with a timeout of 1000 ms)
+                records = consumer.poll(Duration.ofMillis(1000));
+                attempts++; // Increment the attempt count
+                Thread.sleep(500);
+
+                // Process each record
+                for (ConsumerRecord<String, String> record : records) {
+                    System.out.printf(
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
+                            topic, record.key(), record.value(), record.partition(), record.offset());
+
+                    // If the record contains the specified id, add it to the list
+                    if (record.value() != null && record.value().contains(id)) {
+                        matchingMessages.add(record.value());
+                    }
+                }
+
+                // Exit early if messages are found
+                if (!matchingMessages.isEmpty()) {
+                    cleanConsumerIdAfterUse(consumerGroupId, consumerId);
+                    return matchingMessages;
+                }
+            }
+
+            // After maxAttempts, return the list (it might be empty)
+            cleanConsumerIdAfterUse(consumerGroupId, consumerId);
+            return matchingMessages;
+        } finally {
+            cleanConsumerIdAfterUse(consumerGroupId, consumerId);
+            consumer.close(); // Ensure the consumer is closed
+        }
+    }
+
     @Step("Consume message")
     public String consumeMessage(String topic, String id, Integer maxAttempts) throws InterruptedException {
         ConsumerRecords<String, String> records;

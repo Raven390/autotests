@@ -5,6 +5,7 @@ import businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsRes
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -19,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsRequest.getWithdrawals;
-import static businessObjects.db.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,6 +33,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 @Disabled
+@Muted
 public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test

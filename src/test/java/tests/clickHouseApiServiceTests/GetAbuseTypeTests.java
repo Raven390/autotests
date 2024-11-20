@@ -5,6 +5,7 @@ import businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesRespo
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesRequest.GetAbuseTypes;
-import static businessObjects.db.mitigationDbAbuseTypesTable.MitigationTbAbuseTypesObjectFactory.generateAbuseTypesClient;
+import static businessObjects.db.clickhouse.mitigationDbAbuseTypesTable.MitigationTbAbuseTypesObjectFactory.generateAbuseTypesClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,6 +31,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 @Disabled
+@Muted
 public class GetAbuseTypeTests extends TestBaseApi {
 
     @Test

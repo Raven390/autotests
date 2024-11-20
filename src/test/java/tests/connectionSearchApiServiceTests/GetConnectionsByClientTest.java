@@ -2,7 +2,7 @@ package tests.connectionSearchApiServiceTests;
 
 import businessObjects.api.connectionSearchApi.GetConnectionsResponse;
 import businessObjects.api.connectionSearchApi.GetConnectionsResponseError;
-import businessObjects.db.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -19,7 +19,7 @@ import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getC
 import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static businessObjects.db.csTbConnectionTableV2.ConnectionTableEntryFactory.getConnectionTableEntryByClient;
+import static businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntryFactory.getConnectionTableEntryByClient;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;

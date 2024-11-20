@@ -1,8 +1,8 @@
 package helpers.data.rules.registrationRule;
 
-import businessObjects.db.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.csTbConnectionTableV2.ConnectionTableEntry;
-import businessObjects.db.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 

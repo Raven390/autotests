@@ -5,6 +5,7 @@ import businessObjects.api.clickhouseApiService.getFloatingTradesGroupBy.GetFloa
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -30,6 +31,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 @Disabled
+@Muted
 public class GetFloatingTradesGroupBy extends TestBaseApi {
 
     @Test

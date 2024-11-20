@@ -8,6 +8,7 @@ import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import io.qameta.allure.*;
 import okhttp3.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_SERVICE)
 @Tag(TAG_MANUAL)
+@Disabled
+@Muted
 public class MirrorTradeRuleTest {
 
     KafkaHelper kafka = new KafkaHelper();

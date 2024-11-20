@@ -2,8 +2,8 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponse;
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponseError;
-import businessObjects.db.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.mtTbUserTable.MtTbUserObject;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
-import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
