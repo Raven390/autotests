@@ -2,9 +2,9 @@ package helpers.data.rules.mirrorTradingRule;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.api.mitigationService.PostRestrictionResponse;
-import businessObjects.db.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.csTbConnectionTableV2.ConnectionTableEntry;
-import businessObjects.db.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import helpers.data.ClientHelper;
 import helpers.data.rules.registrationRule.RegistrationRuleDataFactory;
 import io.qameta.allure.Allure;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 import static businessObjects.api.clickhouseApiService.getClient.GetClientRequest.objectMapper;
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
-import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getRandomIntPositive;

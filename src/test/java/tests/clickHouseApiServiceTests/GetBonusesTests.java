@@ -2,10 +2,11 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getBonuses.GetBonusesResponse;
 import businessObjects.api.clickhouseApiService.getBonuses.GetBonusesResponseError;
-import businessObjects.db.crmTbBonusTable.CrmTbBonusObject;
+import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getBonuses.GetBonusesRequest.getBonuses;
-import static businessObjects.db.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
+import static businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -35,6 +36,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 @Disabled
+@Muted
 public class GetBonusesTests extends TestBaseApi {
 
     @Test

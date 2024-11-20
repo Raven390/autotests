@@ -5,6 +5,7 @@ import businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupB
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBySymbol;
-import static businessObjects.db.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
+import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,6 +34,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 @Disabled
+@Muted
 public class GetTradesGroupByTests extends TestBaseApi {
 
     @Test

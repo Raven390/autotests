@@ -25,7 +25,7 @@ def junitBomVersion = '5.10.2'
 def junitJupiterApiVersion = '5.10.3'
 def allureBomVersion = '2.25.0'
 def jacksonVersion = '2.17.2'
-def postgreVersion = '42.7.3'
+def postgresVersion = '42.7.3'
 def mysqlVersion = '8.0.32'
 def clickhouseVersion = '0.6.0'
 def kafkaClientVersion = '3.6.0'
@@ -60,7 +60,7 @@ dependencies {
     implementation "org.hamcrest:hamcrest:$hamcrestVersion"
 
     //Database
-    implementation "org.postgresql:postgresql:$postgreVersion"
+    implementation "org.postgresql:postgresql:$postgresVersion"
     implementation "mysql:mysql-connector-java:$mysqlVersion"
     implementation "com.clickhouse:clickhouse-jdbc:$clickhouseVersion"
     implementation "org.apache.httpcomponents.client5:httpclient5:$httpcomponentsVersion"

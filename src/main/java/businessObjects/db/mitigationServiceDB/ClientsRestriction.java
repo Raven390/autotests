@@ -3,95 +3,74 @@ package businessObjects.db.mitigationServiceDB;
 import java.util.Objects;
 
 public class ClientsRestriction {
-    Long id;
-    String ucid;
-    String regulator;
-    Long accountId;
-    Long serverId;
-    Long restrictionId;
-    String applicationReason;
-    String status;
-    String cancellationReason;
-    String failReason;
-    String createdAt;
-    String updatedAt;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ClientsRestriction that = (ClientsRestriction) o;
-        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(accountId, that.accountId) && Objects.equals(serverId, that.serverId) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(applicationReason, that.applicationReason) && Objects.equals(status, that.status) && Objects.equals(cancellationReason, that.cancellationReason) && Objects.equals(failReason, that.failReason) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt);
-    }
+        public Long id;
+        public String ucid;
+        public String regulator;
+        public Long accountId;
+        public Long serverId;
+        public Long restrictionId;
+        public String applicationReason;
+        public String status;
+        public String cancellationReason;
+        public String failReason;
+        public String createdAt;
+        public String updatedAt;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, ucid, regulator, accountId, serverId, restrictionId, applicationReason, status, cancellationReason, failReason, createdAt, updatedAt);
-    }
+        public ClientsRestriction() {
+        }
 
-    @Override
-    public String toString() {
-        return "ClientsRestriction{" +
-                "id=" + id +
-                ", ucid='" + ucid + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", accountId=" + accountId +
-                ", serverId=" + serverId +
-                ", restrictionId=" + restrictionId +
-                ", applicationReason='" + applicationReason + '\'' +
-                ", status='" + status + '\'' +
-                ", cancellationReason='" + cancellationReason + '\'' +
-                ", failReason='" + failReason + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                '}';
-    }
+        public ClientsRestriction(Long id, String ucid, String regulator, Long accountId, Long serverId, Long restrictionId, String applicationReason, String status, String cancellationReason, String failReason, String createdAt, String updatedAt) {
+                this.id = id;
+                this.ucid = ucid;
+                this.regulator = regulator;
+                this.accountId = accountId;
+                this.serverId = serverId;
+                this.restrictionId = restrictionId;
+                this.applicationReason = applicationReason;
+                this.status = status;
+                this.cancellationReason = cancellationReason;
+                this.failReason = failReason;
+                this.createdAt = createdAt;
+                this.updatedAt = updatedAt;
+        }
 
-    public Long getId() {
-        return id;
-    }
+        public ClientsRestriction(String ucid, String regulator, Long restrictionId, String applicationReason, String status) {
+                this.ucid = ucid;
+                this.regulator = regulator;
+                this.restrictionId = restrictionId;
+                this.applicationReason = applicationReason;
+                this.status = status;
+        }
 
-    public String getUcid() {
-        return ucid;
-    }
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                ClientsRestriction that = (ClientsRestriction) o;
+                return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(applicationReason, that.applicationReason) && Objects.equals(status, that.status);
+        }
 
-    public String getRegulator() {
-        return regulator;
-    }
+        @Override
+        public int hashCode() {
+                return Objects.hash(ucid, regulator, restrictionId, applicationReason, status);
+        }
 
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public Long getServerId() {
-        return serverId;
-    }
-
-    public Long getRestrictionId() {
-        return restrictionId;
-    }
-
-    public String getApplicationReason() {
-        return applicationReason;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public String getCancellationReason() {
-        return cancellationReason;
-    }
-
-    public String getFailReason() {
-        return failReason;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
+        @Override
+        public String toString() {
+                return "ClientsRestriction{" +
+                        "id=" + id +
+                        ", ucid='" + ucid + '\'' +
+                        ", regulator='" + regulator + '\'' +
+                        ", accountId=" + accountId +
+                        ", serverId=" + serverId +
+                        ", restrictionId=" + restrictionId +
+                        ", applicationReason='" + applicationReason + '\'' +
+                        ", status='" + status + '\'' +
+                        ", cancellationReason='" + cancellationReason + '\'' +
+                        ", failReason='" + failReason + '\'' +
+                        ", createdAt='" + createdAt + '\'' +
+                        ", updatedAt='" + updatedAt + '\'' +
+                        '}';
+        }
 }

@@ -47,6 +47,7 @@ public class DbHelper {
         }
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
+            System.out.println(query);
             return mapResultSetToObjects(resultSet, className);
         }
     }
@@ -187,9 +188,10 @@ public class DbHelper {
             startSshTunnel();
         }
 
+        String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
         try (Connection connection = createConnection(dbName);
-             PreparedStatement statement = connection.prepareStatement(String.format("DELETE FROM %s WHERE %s", tableName, where))) {
-            System.out.println(statement.toString());
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            System.out.println(query);
             statement.executeUpdate();
         } finally {
             if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
@@ -214,7 +216,7 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnection() throws SQLException {
-        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        String jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", MITIGATION_DB_USER);
@@ -308,6 +310,7 @@ public class DbHelper {
                     }
                 }
             }
+            System.out.println(insertQuery);
             statement.executeUpdate();
         }
     }

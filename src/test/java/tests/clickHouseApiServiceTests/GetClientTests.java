@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
 import static businessObjects.api.clickhouseApiService.getClient.GetClientRequest.getClient;
-import static businessObjects.db.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
