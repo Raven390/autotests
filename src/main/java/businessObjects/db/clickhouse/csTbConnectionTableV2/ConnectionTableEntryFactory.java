@@ -129,4 +129,25 @@ public class ConnectionTableEntryFactory {
                 getCurrentTimestampDbFormat()
         );
     }
+
+    public static ConnectionTableEntry getConnectionTableEntryForDepth() {
+        return new ConnectionTableEntry(
+                "vantage-99997",
+                "vantage-99999",
+                2,
+                """
+                    {
+                        "connect_info":{
+                            "user_1":{"user_id": "99991","brand": "vantage"},
+                            "connection_1":{
+                                "attr_info":{"payout": "463344**** **5603"},
+                                "degree_connection": "Same Person",
+                                "connection_score": 1
+                            },
+                            "user_2":{"user_id": "99999","brand": "vantage"}
+                        }
+                    }""",
+                getCurrentTimestampDbFormat()
+        );
+    }
 }

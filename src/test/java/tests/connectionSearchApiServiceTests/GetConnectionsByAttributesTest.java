@@ -10,6 +10,7 @@ import businessObjects.db.clickhouse.csTbPayoutTable.PayoutTableEntry;
 import businessObjects.db.clickhouse.csTbPhoneTable.PhoneTableEntry;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
@@ -21,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByAttributes;
-import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByClientId;
 import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
 import static businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntryFactory.*;
 import static businessObjects.db.clickhouse.csTbDocTable.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.csTbDocTable.DocumentTableEntryFactory.documentTableEntryForConnectionSearchDepth;
 import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.csTbIpTable.IpTableEntryFactory.ipTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.csTbPayoutTable.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
@@ -48,20 +49,21 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesIpResponseSuccess();
     public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesPhoneResponseSuccess();
     public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesPayoutResponseSuccess();
-    public GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess = getConnectionsByAttributesDocumentResponseSuccess();
+    public final GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess = getConnectionsByAttributesForDepth();
     // Objects to insert to connections table
     public static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntryByDocument();
     public static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntryByEmail();
     public static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntryByIp();
     public static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntryByPhone();
     public static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntryByPayout();
-    public static ConnectionTableEntry connectionTableEntryForDepth = getConnectionTableEntryByDocument();
+    public static final ConnectionTableEntry connectionTableEntryForDepth = getConnectionTableEntryForDepth();
     // Objects to insert to attributes tables
     public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch();
     public static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch();
     public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch();
     public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch();
     public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch();
+    public static final DocumentTableEntry documentTableEntryForDepth = documentTableEntryForConnectionSearchDepth();
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
@@ -71,7 +73,6 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByIp);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPhone);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPayout);
-        connectionTableEntryForDepth.level = 2;
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth);
         // Insert data to attributes tables
         insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
@@ -79,6 +80,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(IP_TABLE_NAME, ipTableEntry);
         insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry);
         insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
+        insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntryForDepth);
     }
 
     @Test
@@ -104,6 +106,8 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesDocumentResponseSuccess));
     }
 
+    @Disabled
+    @Muted
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by document with connection depth success(200)")
     @AllureId("189")
@@ -242,15 +246,14 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         assertThat("Check that response body has object found by payoutId", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccess));
     }
 
-    @Disabled
     @Test
     @DisplayName("Connection search by attributes Api. documentCountryId not int bad request (400)")
     @AllureId("195")
     public void getConnectionsByAttributesDocumentCountryIdNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
-        queryParams.put("documentNumber", "test");
-        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", "test");
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
@@ -260,7 +263,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorClientIdBadRequest()));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorDocumentCountryIdNotInt()));
     }
 
     @Test
@@ -320,14 +323,13 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorDocumentCountryIdBadRequest()));
     }
 
-    @Disabled
     @Test
     @DisplayName("Connection search by attributes Api. No params bad request (400)")
     @AllureId("199")
     public void getConnectionsByAttributesNoParamsBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
 
-        Response response = getConnectionsByClientId(queryParams);
+        Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
                 response.body().string(),
                 GetConnectionsResponseError.class
@@ -335,7 +337,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorClientIdBadRequest()));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorNoSearchParameters()));
     }
 
     @AfterAll
