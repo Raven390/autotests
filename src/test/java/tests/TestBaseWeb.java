@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pageObjects.backofficePages.InvestigationPage;
 import pageObjects.backofficePages.KeycloackPage;
 import pageObjects.backofficePages.ProfilePage;
+import pageObjects.backofficePages.RestrictionPage;
 import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
 import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
 import utils.TestResultWatcher;
@@ -33,6 +34,7 @@ public class TestBaseWeb {
     public InvestigationPage investigationPage;
     public KeycloackPage keycloackPage;
     public ProfilePage profilePage;
+    public RestrictionPage restrictionPage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -61,6 +63,7 @@ public class TestBaseWeb {
         investigationPage = new InvestigationPage(page);
         keycloackPage = new KeycloackPage(page);
         profilePage = new ProfilePage(page);
+        restrictionPage = new RestrictionPage(page);
     }
 
     @AfterEach

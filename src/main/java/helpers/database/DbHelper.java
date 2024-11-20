@@ -25,14 +25,14 @@ public class DbHelper {
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className) throws Exception {
-        if (dbName == DbName.MITIGATION_POSTGRES) {
+        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             return fetchObjects(connection, tableName, where, className);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES) {
+            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
                 stopSshTunnel();
             }
         }
@@ -139,14 +139,14 @@ public class DbHelper {
     public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
 
-        if (dbName == DbName.MITIGATION_POSTGRES) {
+        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             insertObjects(connection, tableName, objects);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES) {
+            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
                 stopSshTunnel();
             }
         }
@@ -159,14 +159,14 @@ public class DbHelper {
 
     @Step("Insert single object: {object} to {dbName}")
     public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException, ReflectiveOperationException {
-        if (dbName == DbName.MITIGATION_POSTGRES) {
+        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             insertSingleObject(connection, tableName, object);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES) {
+            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
                 stopSshTunnel();
             }
         }
@@ -183,15 +183,16 @@ public class DbHelper {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
         }
 
-        if (dbName == DbName.MITIGATION_POSTGRES) {
+        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName);
              PreparedStatement statement = connection.prepareStatement(String.format("DELETE FROM %s WHERE %s", tableName, where))) {
+            System.out.println(statement.toString());
             statement.executeUpdate();
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES) {
+            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
                 stopSshTunnel();
             }
         }
@@ -200,17 +201,44 @@ public class DbHelper {
     private static Connection createConnection(DbName dbName) throws SQLException {
         if (dbName == DbName.MITIGATION_POSTGRES) {
             return createPostgresConnection();
-        } else {
+        }
+        else if (dbName == DbName.AUDIT) {
+            return createPostgresConnectionAudit();
+        }
+        else if (dbName == DbName.BO) {
+            return createPostgresConnectionBO();
+        }
+        else {
             return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
         }
     }
 
     private static Connection createPostgresConnection() throws SQLException {
-        String jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", MITIGATION_DB_USER);
         connectionProps.setProperty("password", MITIGATION_DB_PASSWORD);
+
+        return DriverManager.getConnection(jdbcUrl, connectionProps);
+    }
+
+    private static Connection createPostgresConnectionAudit() throws SQLException {
+        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+
+        Properties connectionProps = new Properties();
+        connectionProps.setProperty("user", AUDIT_DB_USER);
+        connectionProps.setProperty("password", AUDIT_DB_PASSWORD);
+
+        return DriverManager.getConnection(jdbcUrl, connectionProps);
+    }
+
+    private static Connection createPostgresConnectionBO() throws SQLException {
+        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+
+        Properties connectionProps = new Properties();
+        connectionProps.setProperty("user", BO_DB_USER);
+        connectionProps.setProperty("password", BO_DB_PASSWORD);
 
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }

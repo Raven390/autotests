@@ -61,6 +61,14 @@ public class ConfigFactory {
     public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
     public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
     public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
+    // Audit service db
+    public static final String AUDIT_DB_USER = CONFIG.auditDbUser();
+    public static final String AUDIT_DB_PASSWORD = CONFIG.auditDbPassword();
+    public static final String AUDIT_DB_NAME = CONFIG.auditDbName();
+    // BO service db
+    public static final String BO_DB_USER = CONFIG.boDbUser();
+    public static final String BO_DB_PASSWORD = CONFIG.boDbPassword();
+    public static final String BO_DB_NAME = CONFIG.boDbName();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
@@ -241,6 +249,29 @@ public class ConfigFactory {
 
         @Key("mitigationDbName")
         String mitigationDbName();
+
+        // Audit service db
+
+        @Key("auditDbUser")
+        String auditDbUser();
+
+        @Key("auditDbPassword")
+        String auditDbPassword();
+
+        @Key("auditDbName")
+        String auditDbName();
+
+        // BO service db
+
+        @Key("boDbUser")
+        String boDbUser();
+
+        @Key("boDbPassword")
+        String boDbPassword();
+
+        @Key("boDbName")
+        String boDbName();
+
 
         // Other
 
