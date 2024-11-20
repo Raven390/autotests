@@ -8,7 +8,7 @@ public class EmailTableEntryFactory {
 
     public static EmailTableEntry emailTableEntryForConnectionSearch() {
         return new EmailTableEntry(
-                "99992",
+                "vantage-99992",
                 99_992,
                 "vantage",
                 "test@email.com",

@@ -59,6 +59,24 @@ public class GetConnectionsResponseFactory {
         );
     }
 
+    public static GetConnectionsResponseError getConnectionsResponseErrorNoSearchParameters(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "No search parameters specified",
+                null
+        );
+    }
+
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdNotInt(){
+        return new GetConnectionsResponseError(
+                null,
+                400,
+                "Country code must be decimal number consist 1 to 4 digits",
+                null
+        );
+    }
+
     public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess(){
         return new GetConnectionsResponse(
                 "vantage-99991",
@@ -127,6 +145,18 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
+                null
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesForDepth(){
+        return new GetConnectionsResponse(
+                "vantage-99991",
+                "vantage-99999",
+                1.0,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                2,
                 null
         );
     }

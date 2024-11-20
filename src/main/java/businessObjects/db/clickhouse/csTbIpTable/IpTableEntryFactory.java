@@ -6,7 +6,7 @@ public class IpTableEntryFactory {
 
     public static IpTableEntry ipTableEntryForConnectionSearch() {
         return new IpTableEntry(
-                "99993",
+                "vantage-99993",
                 99_993,
                 "vantage",
                 "111.111.111.111",

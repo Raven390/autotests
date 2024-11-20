@@ -6,7 +6,7 @@ public class DocumentTableEntryFactory {
 
     public static DocumentTableEntry documentTableEntryForConnectionSearch() {
      return new DocumentTableEntry(
-             "99991",
+             "vantage-99991",
              99_991,
              "vantage",
              "passport",
@@ -14,5 +14,17 @@ public class DocumentTableEntryFactory {
              1,
              getCurrentTimestampDbFormat()
      );
+    }
+
+    public static DocumentTableEntry documentTableEntryForConnectionSearchDepth() {
+        return new DocumentTableEntry(
+                "vantage-99997",
+                99_997,
+                "vantage",
+                "passport",
+                "testaccidnum",
+                1,
+                getCurrentTimestampDbFormat()
+        );
     }
 }
