@@ -293,14 +293,30 @@ public class DbHelper {
         insertSingleObject(connection, tableName, obj, fieldMappings);
     }
 
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj, Map<String, String> fieldMappings) throws SQLException, ReflectiveOperationException {
+    private static <T> void insertSingleObject(Connection connection, String tableName, T obj, Map<String, String> fieldMappings)
+            throws SQLException, ReflectiveOperationException {
         String insertQuery = buildInsertQuery(tableName, obj, fieldMappings);
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             int parameterIndex = 1;
+            StringBuilder filledQuery = new StringBuilder(insertQuery);
+            int placeholderIndex = 0; // Tracks where placeholders ("?") are in the query.
+
             for (Field field : obj.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 Object value = field.get(obj);
                 if (value != null) {
+                    // Replace placeholders with actual values for debugging.
+                    int questionMarkPos = filledQuery.indexOf("?", placeholderIndex);
+                    String replacement;
+                    if (value instanceof String || value instanceof LocalDate || value instanceof LocalDateTime) {
+                        replacement = "'" + value + "'";
+                    } else {
+                        replacement = value.toString();
+                    }
+                    filledQuery.replace(questionMarkPos, questionMarkPos + 1, replacement);
+                    placeholderIndex = questionMarkPos + replacement.length();
+
+                    // Set value in the PreparedStatement
                     if (value instanceof LocalDate) {
                         statement.setDate(parameterIndex++, Date.valueOf((LocalDate) value));
                     } else if (value instanceof LocalDateTime) {
@@ -310,7 +326,11 @@ public class DbHelper {
                     }
                 }
             }
-            System.out.println(insertQuery);
+
+            // Print the query with filled values
+            System.out.println("Executing Query: " + filledQuery);
+
+            // Execute the query
             statement.executeUpdate();
         }
     }
