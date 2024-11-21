@@ -266,6 +266,8 @@ public class DbHelper {
         System.out.println(sshCommand);
 
         try {
+            new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + MITIGATION_DB_SSH_PRIVATE_KEY).start();
+            Thread.sleep(500);
             sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand)
                     .start();
             Thread.sleep(2000); // Wait for the tunnel to establish

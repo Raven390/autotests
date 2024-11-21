@@ -2,6 +2,7 @@ package tests.ruleEngineServiceTests;
 
 import businessObjects.api.mitigationService.GetRestrictionResponseBody;
 import businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventMt4;
+import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.rules.mirrorTradingRule.MirrorTradingRuleData;
 import helpers.kafka.KafkaHelper;
@@ -14,11 +15,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.getRestrictionsByUcid;
 import static businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static businessObjects.kafka.mtDbEvents.closeTrade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4ByTradingAccount;
 import static helpers.data.rules.mirrorTradingRule.MirrorTradingRuleDataFactory.*;
+import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 
@@ -38,12 +41,58 @@ public class MirrorTradeRuleTest {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_1_1")
     @AllureId("179")
-    public void mirrorTradeRuleExitEventEnd1Test() {
+    public void mirrorTradeRuleExitEventEnd1Test() throws ReflectiveOperationException, SQLException {
         // TODO finish
         // Prepare Data
         getMirrorTradingRuleExitEventEnd1_1Data();
         // Trigger rule
         CloseTradeMtDbEventMt4 closeTradeMtDbEventMt4 = generateCloseTradeMtDbEventMt4();
+    }
+
+    @Test
+    public void manualTest() throws Exception {
+//        ClientHelper client = getRandomVantageClientAllFields();
+//        CrmTbUserObject crmUserObject = generateUserByClient(client);
+//        MtTbUserObject mtUserObject = new MtTbUserObject(
+//                crmUserObject.userId, crmUserObject.ucid, getRandomIntPositive(),"mirrortestserver","MT4",
+//                "Standard", getRandomIntPositive(),crmUserObject.registrationDate,"Active",0.00,"USD",
+//                100.0,1.0,2.0,3,"S_VFX_EUR",9.0,1.0,
+//                crmUserObject.lastUpdated,crmUserObject.lastUpdated
+//                );
+        CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
+                Integer.toString(889_002_739),
+                "2024-11-21T08:49:34.619356Z",
+                1_402_297_358,
+                431_279_960,
+                100.12,
+                "test_symbol",
+                31_164
+        );
+        closeTradeMtEvent.type = "closeTrade";
+//        ClientHelper connectedClient = getRandomVantageClientAllFields();
+//        ConnectionTableEntry connection = new ConnectionTableEntry(
+//                crmUserObject.ucid,
+//                connectedClient.getUcid(),
+//                1,
+//                String.format("""
+//                    {
+//                        "connect_info":{
+//                            "user_1":{"user_id": "%s","brand": "%s"},
+//                            "connection_1":{
+//                                "attr_info":{"payout": "463344**** **5603"},
+//                                "degree_connection": "Same Person",
+//                                "connection_score": 1
+//                            },
+//                            "user_2":{"user_id": "%s","brand": "%s"}
+//                        }
+//                    }""", crmUserObject.userId, crmUserObject.brand.toLowerCase(), connectedClient.getUserId(), connectedClient.getBrand().toLowerCase()),
+//                getCurrentTimestampDbFormat()
+//        );
+//        insertObjectToDb(CRM_USER_TABLE_NAME, crmUserObject);
+//        insertObjectToDb(MT_USER_TABLE_NAME, mtUserObject);
+//        insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
+        System.out.println(closeTradeMtEvent);
+        cleanUserRestriction("vantage-1427876091");
     }
 
     @Test
