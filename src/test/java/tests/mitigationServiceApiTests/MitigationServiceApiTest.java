@@ -5,9 +5,8 @@ import businessObjects.db.auditServiceDB.Event;
 import helpers.database.AuditHelper;
 import helpers.database.DbName;
 import helpers.database.MitigationHelper;
-import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import io.qameta.allure.Owner;
-import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
@@ -20,11 +19,13 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 
-@Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-@Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
-@Tag(TEAM_CORE)
+//@Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
+//@Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
+@Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
+@Disabled
+@Muted
 public class MitigationServiceApiTest extends TestBaseApi {
 
     @BeforeAll

@@ -27,7 +27,7 @@ public class GetConnectionsResponseFactory {
         return new GetConnectionsResponseError(
                 null,
                 400,
-                "ClientId must be in format <brand>-<user-id>",
+                "Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030",
                 null
         );
     }
