@@ -1,32 +1,35 @@
 package businessObjects.db.clickhouse.mtTbUserTable;
 
+import java.util.Objects;
+
 public class MtTbUserObject {
 
-    private String ucid;
-    private int account;
-    private String serverName;
-    private String platform;
-    private String type;
-    private int serverId;
-    private String createdDate;
-    private String status;
-    private double balance;
-    private String currency;
-    private double balanceUsd;
-    private double equity;
-    private double credit;
-    private int leverage;
-    private String accountGroup;
-    private double marginFree;
-    private double pnl;
-    private String lastActionDate;
-    private String lastUpdated;
+    public Integer userId;
+    public String ucid;
+    public Integer account;
+    public String serverName;
+    public String platform;
+    public String type;
+    public Integer serverId;
+    public String createdDate;
+    public String status;
+    public Double balance;
+    public String currency;
+    public Double balanceUsd;
+    public Double equity;
+    public Double credit;
+    public Integer leverage;
+    public String accountGroup;
+    public Double marginFree;
+    public Double pnl;
+    public String lastActionDate;
+    public String lastUpdated;
 
-    // Constructor to initialize all fields
-    public MtTbUserObject(String ucid, int account, String serverName, String platform, String type,
-            int serverId, String createdDate, String status, double balance, String currency,
-            double balanceUsd, double equity, double credit, int leverage, String accountGroup,
-            double marginFree, double pnl, String lastActionDate, String lastUpdated) {
+    public MtTbUserObject() {
+    }
+
+    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform, String type, Integer serverId, String createdDate, String status, Double balance, String currency, Double balanceUsd, Double equity, Double credit, Integer leverage, String accountGroup, Double marginFree, Double pnl, String lastActionDate, String lastUpdated) {
+        this.userId = userId;
         this.ucid = ucid;
         this.account = account;
         this.serverName = serverName;
@@ -46,5 +49,44 @@ public class MtTbUserObject {
         this.pnl = pnl;
         this.lastActionDate = lastActionDate;
         this.lastUpdated = lastUpdated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MtTbUserObject that = (MtTbUserObject) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverName, that.serverName) && Objects.equals(platform, that.platform) && Objects.equals(type, that.type) && Objects.equals(serverId, that.serverId) && Objects.equals(createdDate, that.createdDate) && Objects.equals(status, that.status) && Objects.equals(balance, that.balance) && Objects.equals(currency, that.currency) && Objects.equals(balanceUsd, that.balanceUsd) && Objects.equals(equity, that.equity) && Objects.equals(credit, that.credit) && Objects.equals(leverage, that.leverage) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(marginFree, that.marginFree) && Objects.equals(pnl, that.pnl) && Objects.equals(lastActionDate, that.lastActionDate) && Objects.equals(lastUpdated, that.lastUpdated);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, ucid, account, serverName, platform, type, serverId, createdDate, status, balance, currency, balanceUsd, equity, credit, leverage, accountGroup, marginFree, pnl, lastActionDate, lastUpdated);
+    }
+
+    @Override
+    public String toString() {
+        return "MtTbUserObject{" +
+                "userId=" + userId +
+                ", ucid='" + ucid + '\'' +
+                ", account=" + account +
+                ", serverName='" + serverName + '\'' +
+                ", platform='" + platform + '\'' +
+                ", type='" + type + '\'' +
+                ", serverId=" + serverId +
+                ", createdDate='" + createdDate + '\'' +
+                ", status='" + status + '\'' +
+                ", balance=" + balance +
+                ", currency='" + currency + '\'' +
+                ", balanceUsd=" + balanceUsd +
+                ", equity=" + equity +
+                ", credit=" + credit +
+                ", leverage=" + leverage +
+                ", accountGroup='" + accountGroup + '\'' +
+                ", marginFree=" + marginFree +
+                ", pnl=" + pnl +
+                ", lastActionDate='" + lastActionDate + '\'' +
+                ", lastUpdated='" + lastUpdated + '\'' +
+                '}';
     }
 }
