@@ -25,14 +25,14 @@ public class DbHelper {
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className) throws Exception {
-        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             return fetchObjects(connection, tableName, where, className);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
                 stopSshTunnel();
             }
         }
@@ -140,14 +140,14 @@ public class DbHelper {
     public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
 
-        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             insertObjects(connection, tableName, objects);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
                 stopSshTunnel();
             }
         }
@@ -160,14 +160,14 @@ public class DbHelper {
 
     @Step("Insert single object: {object} to {dbName}")
     public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException, ReflectiveOperationException {
-        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
             startSshTunnel();
         }
 
         try (Connection connection = createConnection(dbName)) {
             insertSingleObject(connection, tableName, object);
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
                 stopSshTunnel();
             }
         }
@@ -184,7 +184,7 @@ public class DbHelper {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
         }
 
-        if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
             startSshTunnel();
         }
 
@@ -194,7 +194,7 @@ public class DbHelper {
             System.out.println(query);
             statement.executeUpdate();
         } finally {
-            if (dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO) {
+            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
                 stopSshTunnel();
             }
         }
