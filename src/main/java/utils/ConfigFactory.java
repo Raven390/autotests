@@ -69,6 +69,8 @@ public class ConfigFactory {
     public static final String BO_DB_USER = CONFIG.boDbUser();
     public static final String BO_DB_PASSWORD = CONFIG.boDbPassword();
     public static final String BO_DB_NAME = CONFIG.boDbName();
+    // BO DB general
+    public static final String POSTGRE_DB_HOST = CONFIG.postgreDBHost();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
@@ -271,6 +273,11 @@ public class ConfigFactory {
 
         @Key("boDbName")
         String boDbName();
+
+        // DO DB general
+
+        @Key("postgreDBHost")
+        String postgreDBHost();
 
 
         // Other

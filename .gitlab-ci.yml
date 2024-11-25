@@ -82,6 +82,7 @@ job_test_core:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
+    RUNNER: "GITLAB_CI"
     TAG: 'team_core'
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
@@ -114,6 +115,7 @@ job_test_backoffice:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 4
     ALLURE_RESULTS: allure-results
+    RUNNER: "GITLAB_CI"
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
     - chmod +x allurectl
@@ -144,6 +146,7 @@ job_test_downstream_end_to_end:
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
+    RUNNER: "GITLAB_CI"
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
     - chmod +x allurectl
