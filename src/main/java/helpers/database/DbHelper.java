@@ -216,7 +216,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnection() throws SQLException {
-        String jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        String jdbcUrl;
+        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+             jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        } else {
+             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        }
+        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", MITIGATION_DB_USER);
@@ -226,8 +232,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnectionAudit() throws SQLException {
-        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
-
+        String jdbcUrl;
+        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+        } else {
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+        }
+        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", AUDIT_DB_USER);
         connectionProps.setProperty("password", AUDIT_DB_PASSWORD);
@@ -236,7 +247,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnectionBO() throws SQLException {
-        String jdbcUrl = String.format("jdbc:postgresql://0.0.0.0:%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+        String jdbcUrl;
+        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+        } else {
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+        }
+        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", BO_DB_USER);

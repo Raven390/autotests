@@ -24,7 +24,6 @@ import static utils.Constants.*;
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
-@Disabled
 @Muted
 public class MitigationServiceApiTest extends TestBaseApi {
 
