@@ -50,7 +50,7 @@ public class GetClientTests extends TestBaseApi {
         assertThat("Check clientId", getClientResponse.clientId, is(client.getUcid()));
         assertThat("Check userId", getClientResponse.userId, is(client.getUserId().toString()));
         assertThat("Check brand", getClientResponse.brand, is("Vantage"));
-        assertThat("Check regulator", getClientResponse.regulator, is("VSFC"));
+        assertThat("Check regulator", getClientResponse.regulator, is("VFSC"));
         assertThat("Check registrationDate", getClientResponse.registrationDate, is("2024-10-23T14:56:59Z"));
         assertThat("Check firstName", getClientResponse.firstName, is("Test"));
         assertThat("Check lastName", getClientResponse.lastName, is("User"));

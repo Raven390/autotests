@@ -87,6 +87,7 @@ public class Constants {
     public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
     public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln__session_parsed";
-    public static final String MITIGATION_ABUSE_TYPES_TABLE_NAME = "";
+    public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo__client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "mi.mi.clients_restriction";
+    public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt__mt5_deals";
 }

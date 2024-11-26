@@ -4,39 +4,39 @@ import java.util.Objects;
 
 public class Mt5DealsObject {
 
-    public String action;
-    public String apiData;
+    public Integer action;
+    public String apidata;
     public String comment;
     public Double commission;
-    public Double contractSize;
+    public Double contractsize;
     public Long deal;
     public String dealer;
     public Integer digits;
-    public Integer digitsCurrency;
+    public Integer digitscurrency;
     public String entry;
-    public Long expertId;
-    public String externalId;
+    public Long expertid;
+    public String externalid;
     public Double fee;
     public Integer flags;
     public String gateway;
     public String lastUpdated;
     public Long login;
-    public Double marketAsk;
-    public Double marketBid;
-    public Double marketLast;
-    public Integer modifyFlags;
+    public Double marketask;
+    public Double marketbid;
+    public Double marketlast;
+    public Integer modifyflags;
     public String op;
     public Long order;
-    public Long positionId;
+    public Long positionid;
     public Double price;
-    public Double priceGateway;
-    public Double pricePosition;
-    public Double priceSl;
-    public Double priceTp;
+    public Double pricegateway;
+    public Double priceposition;
+    public Double pricesl;
+    public Double pricetp;
     public Double profit;
-    public Double profitRaw;
-    public Double rateMargin;
-    public Double rateProfit;
+    public Double profitraw;
+    public Double ratemargin;
+    public Double rateprofit;
     public String reason;
     public Integer serverId;
     public Integer serverIdOld;
@@ -44,65 +44,65 @@ public class Mt5DealsObject {
     public String serverNameOld;
     public String storage;
     public String symbol;
-    public Double tickSize;
-    public Double tickValue;
+    public Double ticksize;
+    public Double tickvalue;
     public String time;
-    public Long timeMsc;
+    public Long timemsc;
     public String timestamp;
     public Double value;
     public Double volume;
     public Double volumeLots;
-    public Double volumeClosed;
-    public Double volumeClosedExt;
-    public Double volumeExt;
+    public Double volumeclosed;
+    public Double volumeclosedext;
+    public Double volumeext;
 
     public Mt5DealsObject() {
     }
 
     // Constructor with all fields
-    public Mt5DealsObject(String action, String apiData, String comment, Double commission, Double contractSize,
-                       Long deal, String dealer, Integer digits, Integer digitsCurrency, String entry, Long expertId,
-                       String externalId, Double fee, Integer flags, String gateway, String lastUpdated, Long login,
-                       Double marketAsk, Double marketBid, Double marketLast, Integer modifyFlags, String op,
-                       Long order, Long positionId, Double price, Double priceGateway, Double pricePosition,
-                       Double priceSl, Double priceTp, Double profit, Double profitRaw, Double rateMargin,
-                       Double rateProfit, String reason, Integer serverId, Integer serverIdOld, String serverName,
-                       String serverNameOld, String storage, String symbol, Double tickSize, Double tickValue,
-                       String time, Long timeMsc, String timestamp, Double value, Double volume, Double volumeLots,
-                       Double volumeClosed, Double volumeClosedExt, Double volumeExt) {
+    public Mt5DealsObject(Integer action, String apidata, String comment, Double commission, Double contractsize,
+                          Long deal, String dealer, Integer digits, Integer digitscurrency, String entry, Long expertid,
+                          String externalid, Double fee, Integer flags, String gateway, String lastUpdated, Long login,
+                          Double marketask, Double marketbid, Double marketlast, Integer modifyflags, String op,
+                          Long order, Long positionid, Double price, Double pricegateway, Double priceposition,
+                          Double pricesl, Double pricetp, Double profit, Double profitraw, Double ratemargin,
+                          Double rateprofit, String reason, Integer serverId, Integer serverIdOld, String serverName,
+                          String serverNameOld, String storage, String symbol, Double ticksize, Double tickvalue,
+                          String time, Long timemsc, String timestamp, Double value, Double volume, Double volumeLots,
+                          Double volumeclosed, Double volumeclosedext, Double volumeext) {
         this.action = action;
-        this.apiData = apiData;
+        this.apidata = apidata;
         this.comment = comment;
         this.commission = commission;
-        this.contractSize = contractSize;
+        this.contractsize = contractsize;
         this.deal = deal;
         this.dealer = dealer;
         this.digits = digits;
-        this.digitsCurrency = digitsCurrency;
+        this.digitscurrency = digitscurrency;
         this.entry = entry;
-        this.expertId = expertId;
-        this.externalId = externalId;
+        this.expertid = expertid;
+        this.externalid = externalid;
         this.fee = fee;
         this.flags = flags;
         this.gateway = gateway;
         this.lastUpdated = lastUpdated;
         this.login = login;
-        this.marketAsk = marketAsk;
-        this.marketBid = marketBid;
-        this.marketLast = marketLast;
-        this.modifyFlags = modifyFlags;
+        this.marketask = marketask;
+        this.marketbid = marketbid;
+        this.marketlast = marketlast;
+        this.modifyflags = modifyflags;
         this.op = op;
         this.order = order;
-        this.positionId = positionId;
+        this.positionid = positionid;
         this.price = price;
-        this.priceGateway = priceGateway;
-        this.pricePosition = pricePosition;
-        this.priceSl = priceSl;
-        this.priceTp = priceTp;
+        this.pricegateway = pricegateway;
+        this.priceposition = priceposition;
+        this.pricesl = pricesl;
+        this.pricetp = pricetp;
         this.profit = profit;
-        this.profitRaw = profitRaw;
-        this.rateMargin = rateMargin;
-        this.rateProfit = rateProfit;
+        this.profitraw = profitraw;
+        this.ratemargin = ratemargin;
+        this.rateprofit = rateprofit;
         this.reason = reason;
         this.serverId = serverId;
         this.serverIdOld = serverIdOld;
@@ -110,17 +110,17 @@ public class Mt5DealsObject {
         this.serverNameOld = serverNameOld;
         this.storage = storage;
         this.symbol = symbol;
-        this.tickSize = tickSize;
-        this.tickValue = tickValue;
+        this.ticksize = ticksize;
+        this.tickvalue = tickvalue;
         this.time = time;
-        this.timeMsc = timeMsc;
+        this.timemsc = timemsc;
         this.timestamp = timestamp;
         this.value = value;
         this.volume = volume;
         this.volumeLots = volumeLots;
-        this.volumeClosed = volumeClosed;
-        this.volumeClosedExt = volumeClosedExt;
-        this.volumeExt = volumeExt;
+        this.volumeclosed = volumeclosed;
+        this.volumeclosedext = volumeclosedext;
+        this.volumeext = volumeext;
     }
 
     @Override
@@ -128,50 +128,50 @@ public class Mt5DealsObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mt5DealsObject that = (Mt5DealsObject) o;
-        return Objects.equals(action, that.action) && Objects.equals(apiData, that.apiData) && Objects.equals(comment, that.comment) && Objects.equals(commission, that.commission) && Objects.equals(contractSize, that.contractSize) && Objects.equals(deal, that.deal) && Objects.equals(dealer, that.dealer) && Objects.equals(digits, that.digits) && Objects.equals(digitsCurrency, that.digitsCurrency) && Objects.equals(entry, that.entry) && Objects.equals(expertId, that.expertId) && Objects.equals(externalId, that.externalId) && Objects.equals(fee, that.fee) && Objects.equals(flags, that.flags) && Objects.equals(gateway, that.gateway) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(login, that.login) && Objects.equals(marketAsk, that.marketAsk) && Objects.equals(marketBid, that.marketBid) && Objects.equals(marketLast, that.marketLast) && Objects.equals(modifyFlags, that.modifyFlags) && Objects.equals(op, that.op) && Objects.equals(order, that.order) && Objects.equals(positionId, that.positionId) && Objects.equals(price, that.price) && Objects.equals(priceGateway, that.priceGateway) && Objects.equals(pricePosition, that.pricePosition) && Objects.equals(priceSl, that.priceSl) && Objects.equals(priceTp, that.priceTp) && Objects.equals(profit, that.profit) && Objects.equals(profitRaw, that.profitRaw) && Objects.equals(rateMargin, that.rateMargin) && Objects.equals(rateProfit, that.rateProfit) && Objects.equals(reason, that.reason) && Objects.equals(serverId, that.serverId) && Objects.equals(serverIdOld, that.serverIdOld) && Objects.equals(serverName, that.serverName) && Objects.equals(serverNameOld, that.serverNameOld) && Objects.equals(storage, that.storage) && Objects.equals(symbol, that.symbol) && Objects.equals(tickSize, that.tickSize) && Objects.equals(tickValue, that.tickValue) && Objects.equals(time, that.time) && Objects.equals(timeMsc, that.timeMsc) && Objects.equals(timestamp, that.timestamp) && Objects.equals(value, that.value) && Objects.equals(volume, that.volume) && Objects.equals(volumeLots, that.volumeLots) && Objects.equals(volumeClosed, that.volumeClosed) && Objects.equals(volumeClosedExt, that.volumeClosedExt) && Objects.equals(volumeExt, that.volumeExt);
+        return Objects.equals(action, that.action) && Objects.equals(apidata, that.apidata) && Objects.equals(comment, that.comment) && Objects.equals(commission, that.commission) && Objects.equals(contractsize, that.contractsize) && Objects.equals(deal, that.deal) && Objects.equals(dealer, that.dealer) && Objects.equals(digits, that.digits) && Objects.equals(digitscurrency, that.digitscurrency) && Objects.equals(entry, that.entry) && Objects.equals(expertid, that.expertid) && Objects.equals(externalid, that.externalid) && Objects.equals(fee, that.fee) && Objects.equals(flags, that.flags) && Objects.equals(gateway, that.gateway) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(login, that.login) && Objects.equals(marketask, that.marketask) && Objects.equals(marketbid, that.marketbid) && Objects.equals(marketlast, that.marketlast) && Objects.equals(modifyflags, that.modifyflags) && Objects.equals(op, that.op) && Objects.equals(order, that.order) && Objects.equals(positionid, that.positionid) && Objects.equals(price, that.price) && Objects.equals(pricegateway, that.pricegateway) && Objects.equals(priceposition, that.priceposition) && Objects.equals(pricesl, that.pricesl) && Objects.equals(pricetp, that.pricetp) && Objects.equals(profit, that.profit) && Objects.equals(profitraw, that.profitraw) && Objects.equals(ratemargin, that.ratemargin) && Objects.equals(rateprofit, that.rateprofit) && Objects.equals(reason, that.reason) && Objects.equals(serverId, that.serverId) && Objects.equals(serverIdOld, that.serverIdOld) && Objects.equals(serverName, that.serverName) && Objects.equals(serverNameOld, that.serverNameOld) && Objects.equals(storage, that.storage) && Objects.equals(symbol, that.symbol) && Objects.equals(ticksize, that.ticksize) && Objects.equals(tickvalue, that.tickvalue) && Objects.equals(time, that.time) && Objects.equals(timemsc, that.timemsc) && Objects.equals(timestamp, that.timestamp) && Objects.equals(value, that.value) && Objects.equals(volume, that.volume) && Objects.equals(volumeLots, that.volumeLots) && Objects.equals(volumeclosed, that.volumeclosed) && Objects.equals(volumeclosedext, that.volumeclosedext) && Objects.equals(volumeext, that.volumeext);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(action, apiData, comment, commission, contractSize, deal, dealer, digits, digitsCurrency, entry, expertId, externalId, fee, flags, gateway, lastUpdated, login, marketAsk, marketBid, marketLast, modifyFlags, op, order, positionId, price, priceGateway, pricePosition, priceSl, priceTp, profit, profitRaw, rateMargin, rateProfit, reason, serverId, serverIdOld, serverName, serverNameOld, storage, symbol, tickSize, tickValue, time, timeMsc, timestamp, value, volume, volumeLots, volumeClosed, volumeClosedExt, volumeExt);
+        return Objects.hash(action, apidata, comment, commission, contractsize, deal, dealer, digits, digitscurrency, entry, expertid, externalid, fee, flags, gateway, lastUpdated, login, marketask, marketbid, marketlast, modifyflags, op, order, positionid, price, pricegateway, priceposition, pricesl, pricetp, profit, profitraw, ratemargin, rateprofit, reason, serverId, serverIdOld, serverName, serverNameOld, storage, symbol, ticksize, tickvalue, time, timemsc, timestamp, value, volume, volumeLots, volumeclosed, volumeclosedext, volumeext);
     }
 
     @Override
     public String toString() {
         return "Mt5DealsObject{" +
                 "action='" + action + '\'' +
-                ", apiData='" + apiData + '\'' +
+                ", apiData='" + apidata + '\'' +
                 ", comment='" + comment + '\'' +
                 ", commission=" + commission +
-                ", contractSize=" + contractSize +
+                ", contractSize=" + contractsize +
                 ", deal=" + deal +
                 ", dealer='" + dealer + '\'' +
                 ", digits=" + digits +
-                ", digitsCurrency=" + digitsCurrency +
+                ", digitsCurrency=" + digitscurrency +
                 ", entry='" + entry + '\'' +
-                ", expertId=" + expertId +
-                ", externalId='" + externalId + '\'' +
+                ", expertId=" + expertid +
+                ", externalId='" + externalid + '\'' +
                 ", fee=" + fee +
                 ", flags=" + flags +
                 ", gateway='" + gateway + '\'' +
                 ", lastUpdated='" + lastUpdated + '\'' +
                 ", login=" + login +
-                ", marketAsk=" + marketAsk +
-                ", marketBid=" + marketBid +
-                ", marketLast=" + marketLast +
-                ", modifyFlags=" + modifyFlags +
+                ", marketAsk=" + marketask +
+                ", marketBid=" + marketbid +
+                ", marketLast=" + marketlast +
+                ", modifyFlags=" + modifyflags +
                 ", op='" + op + '\'' +
                 ", order=" + order +
-                ", positionId=" + positionId +
+                ", positionId=" + positionid +
                 ", price=" + price +
-                ", priceGateway=" + priceGateway +
-                ", pricePosition=" + pricePosition +
-                ", priceSl=" + priceSl +
-                ", priceTp=" + priceTp +
+                ", priceGateway=" + pricegateway +
+                ", pricePosition=" + priceposition +
+                ", priceSl=" + pricesl +
+                ", priceTp=" + pricetp +
                 ", profit=" + profit +
-                ", profitRaw=" + profitRaw +
-                ", rateMargin=" + rateMargin +
-                ", rateProfit=" + rateProfit +
+                ", profitRaw=" + profitraw +
+                ", rateMargin=" + ratemargin +
+                ", rateProfit=" + rateprofit +
                 ", reason='" + reason + '\'' +
                 ", serverId=" + serverId +
                 ", serverIdOld=" + serverIdOld +
@@ -179,17 +179,17 @@ public class Mt5DealsObject {
                 ", serverNameOld='" + serverNameOld + '\'' +
                 ", storage='" + storage + '\'' +
                 ", symbol='" + symbol + '\'' +
-                ", tickSize=" + tickSize +
-                ", tickValue=" + tickValue +
+                ", tickSize=" + ticksize +
+                ", tickValue=" + tickvalue +
                 ", time='" + time + '\'' +
-                ", timeMsc=" + timeMsc +
+                ", timeMsc=" + timemsc +
                 ", timestamp='" + timestamp + '\'' +
                 ", value=" + value +
                 ", volume=" + volume +
                 ", volumeLots=" + volumeLots +
-                ", volumeClosed=" + volumeClosed +
-                ", volumeClosedExt=" + volumeClosedExt +
-                ", volumeExt=" + volumeExt +
+                ", volumeClosed=" + volumeclosed +
+                ", volumeClosedExt=" + volumeclosedext +
+                ", volumeExt=" + volumeext +
                 '}';
     }
 }

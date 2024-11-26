@@ -4,6 +4,7 @@ package businessObjects.db.clickhouse.mtTbCreditsTable;
 import java.util.Objects;
 
 public class MtTbCreditsObject {
+
     public Integer account;
     public Double amount;
     public Double amountUsd;
@@ -22,7 +23,6 @@ public class MtTbCreditsObject {
     public MtTbCreditsObject() {
     }
 
-    // Constructor with all fields
     public MtTbCreditsObject(Integer account, Double amount, Double amountUsd, String brand, String comment,
                             String createTime, String currency, String regulator, Integer serverId, String serverName,
                              Integer ticket, String ucid, String uid, Integer userId) {

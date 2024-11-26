@@ -4,6 +4,7 @@ package businessObjects.db.clickhouse.crmTbDepositTable;
 import java.util.Objects;
 
 public class CrmTbDepositObject {
+
     public Integer account;
     public Double amount;
     public Double amountUsd;
@@ -30,7 +31,6 @@ public class CrmTbDepositObject {
     public CrmTbDepositObject() {
     }
 
-    // Constructor with all fields
     public CrmTbDepositObject(
             Integer account, Double amount, Double amountUsd, String brand, String createTime,
             String currency, Double fee, String paymentChannel, String paymentDetails,

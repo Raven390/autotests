@@ -8,7 +8,7 @@ public class CrmTbUserObjectFactory {
     @Step("Generate user object by Client")
     public static CrmTbUserObject generateUserByClient(ClientHelper client) {
         return new CrmTbUserObject(client.getUserId(), client.getUcid(), client.getBrand(),
-                "VSFC", "2024-10-23 14:56:59.000", "Test", "User",
+                "VFSC", "2024-10-23 14:56:59.000", "Test", "User",
                 "1", "1961-02-01", "Cyprus", "CY", "CY",
                 "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS",
                 "BjrbbdAHkwhBFLnPclfvbg==", "357", "1",

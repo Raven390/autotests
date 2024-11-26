@@ -4,6 +4,7 @@ package businessObjects.db.clickhouse.crmTbWithdrawalTable;
 import java.util.Objects;
 
 public class CrmTbWithdrawalObject {
+
     public Integer account;
     public Double amount;
     public Double amountUsd;
@@ -32,7 +33,6 @@ public class CrmTbWithdrawalObject {
     public CrmTbWithdrawalObject() {
     }
 
-    // Constructor with all fields
     public CrmTbWithdrawalObject(Integer account, Double amount, Double amountUsd, String brand, String createTime,
                             String currency, Double fee, String paymentChannel, String paymentDetails,
                             String paymentExpirationDate, String paymentRequisite, String paymentSystemAccount,

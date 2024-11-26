@@ -24,6 +24,7 @@ import static helpers.data.rules.mirrorTradingRule.MirrorTradingRuleDataFactory.
 import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
+import static utils.Utils.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
@@ -54,19 +55,19 @@ public class MirrorTradeRuleTest {
 //        ClientHelper client = getRandomVantageClientAllFields();
 //        CrmTbUserObject crmUserObject = generateUserByClient(client);
 //        MtTbUserObject mtUserObject = new MtTbUserObject(
-//                crmUserObject.userId, crmUserObject.ucid, getRandomIntPositive(),"mirrortestserver","MT4",
-//                "Standard", getRandomIntPositive(),crmUserObject.registrationDate,"Active",0.00,"USD",
+//                1427876091, "vantage-1427876091", 431279960,"mirrortestserver","MT4",
+//                "Standard", 188, "2024-10-23 14:56:59","Active",0.00,"USD",
 //                100.0,1.0,2.0,3,"S_VFX_EUR",9.0,1.0,
-//                crmUserObject.lastUpdated,crmUserObject.lastUpdated
+//                "2024-10-29 09:55:01.300000000", "2024-10-29 09:55:01.300000000"
 //                );
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
-                Integer.toString(889_002_739),
+                getRandomUuidString(),
                 "2024-11-21T08:49:34.619356Z",
                 1_402_297_358,
                 431_279_960,
                 100.12,
                 "test_symbol",
-                31_164
+                188
         );
         closeTradeMtEvent.type = "closeTrade";
 //        ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -92,6 +93,170 @@ public class MirrorTradeRuleTest {
 //        insertObjectToDb(MT_USER_TABLE_NAME, mtUserObject);
 //        insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
         System.out.println(closeTradeMtEvent);
+//        MtTbCreditsObject mtTbCreditsObject = new MtTbCreditsObject(
+//                431_279_960,
+//                100.1,
+//                99.9,
+//                "Vantage",
+//                "comment",
+//                getCurrentTimestampDbFormat(),
+//                "EUR",
+//                "VFSC",
+//                188,
+//                "S_VFX_EUR",
+//                12,
+//                "vantage-1427876091",
+//                getRandomUuidString(),
+//                1427876091
+//        );
+//        insertObjectToDb(MT_CREDITS_TABLE_NAME, mtTbCreditsObject);
+//        CrmTbWithdrawalObject withdrawalObject = new CrmTbWithdrawalObject(
+//                431279960,
+//                100.1,
+//                99.9,
+//                "Vantage",
+//                getCurrentTimestampDbFormat(),
+//                "EUR",
+//                1.23,
+//                "DebitCard",
+//                "details",
+//                "2024-11-21",
+//                "paymentRequisite",
+//                "paymentSystemAccount",
+//                "EUR",
+//                "paymentType",
+//                "VFSC",
+//                88.9,
+//                getCurrentTimestampDbFormat(),
+//                1,
+//                12,
+//                13,
+//                "vantage-1427876091",
+//                getRandomUuidString(),
+//                getCurrentTimestampDbFormat(),
+//                1427876091
+//        );
+//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawalObject);
+//        CrmTbDepositObject depositObject = new CrmTbDepositObject(
+//                431279960,
+//                100.1,
+//                99.9,
+//                "Vantage",
+//                getCurrentTimestampDbFormat(),
+//                "EUR",
+//                1.23,
+//                "CreditCard",
+//                "details",
+//                "2024-11-21",
+//                "paymentRequisite",
+//                "paymentSystemAccount",
+//                "EUR",
+//                "paymentType",
+//                "VFSC",
+//                1,
+//                12,
+//                13,
+//                "vantage-1427876091",
+//                getRandomUuidString(),
+//                getCurrentTimestampDbFormat(),
+//                1427876091
+//        );
+//        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, depositObject);
+//        CrmTbBonusObject bonusObject = new CrmTbBonusObject(
+//                getRandomIntPositive(),
+//                getRandomUuidString(),
+//                "vantage-1427876091",
+//                "Vantage",
+//                "VFSC",
+//                1427876091,
+//                431279960,
+//                getCurrentTimestampDbFormat(),
+//                getCurrentTimestampDbFormat(),
+//                100.1,
+//                99.9,
+//                "EUR",
+//                1,
+//                1,
+//                "remark",
+//                "comment"
+//        );
+//        insertObjectToDb(CRM_BONUS_TABLE_NAME, bonusObject);
+//        Mt5DealsObject dealsObject = new Mt5DealsObject(
+//                1,
+//                "[]",
+//                "Comment",
+//                1.0,
+//                1.2,
+//                13962488L,
+//                "",
+//                1,
+//                2,
+//                "",
+//                1234L,
+//                "",
+//                1.0,
+//                1,
+//                "",
+//                "2024-10-08 01:47:30",
+//                431279960L,
+//                2.0,
+//                1.1,
+//                1.0,
+//                1,
+//                "1",
+//                11111111L,
+//                111111L,
+//                2.2,
+//                3.3,
+//                1.0,
+//                1.0,
+//                1.0,
+//                1.0,
+//                1.0,
+//                1.0,
+//                2.0,
+//                "",
+//                188,
+//                32,
+//                "S_VFX_EUR",
+//                "S_VFX_EUR",
+//                "",
+//                "EURUSD",
+//                1.2,
+//                1.1,
+//                "",
+//                123L,
+//                "",
+//                0.0,
+//                500.0,
+//                50.0,
+//                25.0,
+//                1.0,
+//                1.0
+//        );
+//        insertObjectToDb(MT5_DEALS_TABLE_NAME, dealsObject);
+//        LnSessionParsedObject lnSessionParsedObject = generateLexisNexisDataForUserId(getRandomUuidString(), 1427876091, getRandomIntPositive());
+//        lnSessionParsedObject.brand = "Vantage";
+//        lnSessionParsedObject.riskRating = "medium";
+//        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lnSessionParsedObject);
+        KafkaHelper kafka = new KafkaHelper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+//        RegistrationEvent registrationEvent = new RegistrationEvent(
+//                Instant.now().toString(),
+//                1370903308,
+//                "Vantage",
+//                "VFSC2",
+//                getRandomInt(),
+//                "clientRegistration"
+//        );
+//        KafkaHelper kafka = new KafkaHelper();
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        kafka.produceMessage("13", objectMapper.writeValueAsString(registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+    }
+
+    @Test
+    public void manualTest1() throws Exception {
         cleanUserRestriction("vantage-1427876091");
     }
 

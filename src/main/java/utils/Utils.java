@@ -39,6 +39,12 @@ public class Utils {
         return now.format(formatter);
     }
 
+    public static String getTomorrowTimestampDbFormat() {
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return tomorrow.format(formatter);
+    }
+
     public static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");

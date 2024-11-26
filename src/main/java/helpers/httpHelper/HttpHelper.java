@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class HttpHelper {
@@ -53,7 +54,18 @@ public class HttpHelper {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         if (queryParamsMap != null) {
             for (Map.Entry<String, Object> entry : queryParamsMap.entrySet()) {
-                httpBuilder.addQueryParameter(entry.getKey(), entry.getValue().toString());
+                String key = entry.getKey();
+                Object value = entry.getValue();
+
+                if (value instanceof List) {
+                    // If the value is a List, add each item in the List as a query parameter
+                    for (Object item : (List<?>) value) {
+                        httpBuilder.addQueryParameter(key, item.toString());
+                    }
+                } else {
+                    // Otherwise, add the value directly
+                    httpBuilder.addQueryParameter(key, value.toString());
+                }
             }
         }
         return httpBuilder.build();
