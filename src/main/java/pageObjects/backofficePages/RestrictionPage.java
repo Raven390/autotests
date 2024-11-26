@@ -1,6 +1,7 @@
 package pageObjects.backofficePages;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
+import businessObjects.db.auditServiceDB.Event;
 import businessObjects.db.mitigationServiceDB.ClientsRestriction;
 import businessObjects.kafka.restrictionEvents.ClientRestrictionApply;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,41 +43,63 @@ public class RestrictionPage {
     private final Locator setToast;
     private final Locator restrictionCancelCancel;
     private final Locator restrictionCancelSet;
+    private final Locator restrictionCancelSetTrade;
     private final Locator cancelToast;
     private final Locator checkedAccount;
     private final Locator checkedTransfer;
+    private final Locator checkedDeposits;
+    private final Locator checkedWithdrawals;
+    private final Locator checkedLogin;
+    private final Locator checkedManual;
+    private final Locator loaderAnimation;
+    private final Locator selectAllAccCheckbox;
+    private final Locator checkedCloseOnlyMode;
+    private final Locator checkedOffQuotesMode;
+    private final Locator checkedAbBook;
 
 
     public RestrictionPage(Page page) {
         this.page = page;
+        this.loaderAnimation = page.locator(".v-loader");
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
         this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Open new account");
-        this.transferSwitch = page.locator(".v-restrictions-tab-item__switch").nth(1);
-        this.depositsSwitch = page.locator(".v-restrictions-tab-item__switch").nth(2);
-        this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__switch").nth(3);
-        this.loginSwitch = page.locator(".v-restrictions-tab-item__switch").nth(4);
-        this.manualSwitch = page.locator(".v-restrictions-tab-item__switch").nth(5);
-        this.closeSwitch = page.locator(".v-restrictions-tab-item__switch").nth(6);
-        this.offQuotesSwitch = page.locator(".v-restrictions-tab-item__switch").nth(7);
-        this.abBookSwitch = page.locator(".v-restrictions-tab-item__switch").nth(8);
+        this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Internal transfer");
+        this.depositsSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Deposits");
+        this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Withdrawals");
+        this.loginSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Login CRM");
+        this.manualSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Manual Withdrawal Review");
+        this.closeSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Close only mode");
+        this.offQuotesSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Off quotes");
+        this.abBookSwitch = page.locator(".v-restrictions-tab-item__name").getByText("B-Book -> A-Book");
         this.header1 = page.locator(".g-text_variant_header-1");
         this.header2 = page.locator(".g-text_variant_header-2");
         this.dialog = page.locator(".v-restriction-tab-general-modal");
         this.reasonInput = page.locator("textarea[placeholder=\"Reason (discovered fraud type, etc.)\"]");
         this.restrictionSetCancel = page.locator("v-common-modal__buttons").getByText("Cancel");
         this.restrictionSetSet = page.locator(".v-common-modal__buttons").getByText("Set");
+        this.selectAllAccCheckbox = page.locator(".v-checkbox-list-with-select-all__select-all");
         this.setToast = page.locator(".g-toast__title").getByText("Restriction was set");
         this.restrictionCancelCancel = page.locator("v-common-modal__buttons").getByText("Cancel");
         this.restrictionCancelSet = page.locator(".v-common-modal__buttons").getByText("Remove");
+        this.restrictionCancelSetTrade = page.locator(".v-common-modal__buttons").getByText("Apply changes");
         this.cancelToast = page.locator(".g-toast__title").getByText("Restriction was removed");
         this.checkedAccount = page.locator(".v-restrictions-tab-item_checked").getByText("Open new account");
         this.checkedTransfer = page.locator(".v-restrictions-tab-item_checked").getByText("Internal transfer");
+        this.checkedDeposits = page.locator(".v-restrictions-tab-item_checked").getByText("Deposits");
+        this.checkedWithdrawals = page.locator(".v-restrictions-tab-item_checked").getByText("Withdrawals");
+        this.checkedLogin = page.locator(".v-restrictions-tab-item_checked").getByText("Login CRM");
+        this.checkedManual = page.locator(".v-restrictions-tab-item_checked").getByText("Manual Withdrawal Review");
+        this.checkedCloseOnlyMode = page.locator(".v-restrictions-tab-item_checked").getByText("Close only mode");
+        this.checkedOffQuotesMode = page.locator(".v-restrictions-tab-item_checked").getByText("Off quotes");
+        this.checkedAbBook = page.locator(".v-restrictions-tab-item_checked").getByText("B-Book -> A-Book");
     }
 
     @Step("open users restriction tab")
-    public void navigate() {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=vantage-10081449&alerts_status=OPEN");
+    public void navigate(String ucid) {
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid="+ucid);
+        isPageLoaded();
         restrictionTab.click();
+        isPageLoaded();
     }
 
     @Step("check that restriction tab rendered properly")
@@ -106,14 +129,83 @@ public class RestrictionPage {
         transferSwitch.click();
     }
 
-    @Step("check that account restruction tumbler is checked")
+    @Step("set account restriction")
+    public void clickDepositsSwitch() throws InterruptedException, JsonProcessingException {
+        depositsSwitch.click();
+    }
+
+    @Step("set Withdrawals restriction")
+    public void clickWithdrawalsSwitch() throws InterruptedException, JsonProcessingException {
+        withdrawalsSwitch.click();
+    }
+
+    @Step("set login restriction")
+    public void clickLoginSwitch() throws InterruptedException, JsonProcessingException {
+        loginSwitch.click();
+    }
+
+    @Step("set ManualWithdrawal restriction")
+    public void clickManualWithdrawalSwitch() throws InterruptedException, JsonProcessingException {
+        manualSwitch.click();
+    }
+
+    @Step("set Close only mode restriction")
+    public void clickCloseOnlyModeSwitch() throws InterruptedException, JsonProcessingException {
+        closeSwitch.click();
+    }
+
+    @Step("set OffQuotes restriction")
+    public void clickOffQuotesModeSwitch() throws InterruptedException, JsonProcessingException {
+        offQuotesSwitch.click();
+    }
+
+    @Step("set AbBook restriction")
+    public void clickAbBookSwitch() throws InterruptedException, JsonProcessingException {
+        abBookSwitch.click();
+    }
+
+    @Step("check that account restriction tumbler is checked")
     public void checkThatAccountIsChecked() throws InterruptedException, JsonProcessingException {
         checkedAccount.isVisible();
     }
 
-    @Step("check that Transfer restruction tumbler is checked")
+    @Step("check that OffQuotes tumbler is checked")
+    public void checkThatAOffQuotesIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedOffQuotesMode.isVisible();
+    }
+    @Step("check that AbBook tumbler is checked")
+    public void checkThatAbBookIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedAbBook.isVisible();
+    }
+
+    @Step("check that Transfer restriction tumbler is checked")
     public void checkThatTransferIsChecked() throws InterruptedException, JsonProcessingException {
         checkedTransfer.isVisible();
+    }
+
+    @Step("check that Deposits restriction tumbler is checked")
+    public void checkThatDepositsIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedDeposits.isVisible();
+    }
+
+    @Step("check that Withdrawals restriction tumbler is checked")
+    public void checkThatWithdrawalsIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedWithdrawals.isVisible();
+    }
+
+    @Step("check that Login restriction tumbler is checked")
+    public void checkThatLoginIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedLogin.isVisible();
+    }
+
+    @Step("check that ManualWithdrawal restriction tumbler is checked")
+    public void checkThatCloseOnlyIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedCloseOnlyMode.isVisible();
+    }
+
+    @Step("check that ManualWithdrawal restriction tumbler is checked")
+    public void checkThatManualWithdrawalIsChecked() throws InterruptedException, JsonProcessingException {
+        checkedManual.isVisible();
     }
 
     @Step("click checked account tumbler")
@@ -126,12 +218,58 @@ public class RestrictionPage {
         checkedTransfer.click();
     }
 
+    @Step("click checked Deposits tumbler")
+    public void clickCheckedDeposits() throws InterruptedException, JsonProcessingException {
+        checkedDeposits.click();
+    }
+
+    @Step("click checked Withdrawals tumbler")
+    public void clickCheckedWithdrawals() throws InterruptedException, JsonProcessingException {
+        checkedWithdrawals.click();
+    }
+
+    @Step("click checked Login CRM tumbler")
+    public void clickCheckedLogin() throws InterruptedException, JsonProcessingException {
+        checkedLogin.click();
+    }
+
+    @Step("click checked Manual Withdrawal Review tumbler")
+    public void clickCheckedManual() throws InterruptedException, JsonProcessingException {
+        checkedManual.click();
+    }
+
+    @Step("click checked Close Only Mode tumbler")
+    public void clickCheckedCloseOnly() throws InterruptedException, JsonProcessingException {
+        checkedCloseOnlyMode.click();
+    }
+
+    @Step("click checked OffQuotes tumbler")
+    public void clickCheckedOffQuotes() throws InterruptedException, JsonProcessingException {
+        checkedOffQuotesMode.click();
+    }
+
+    @Step("click checked AbBook tumbler")
+    public void clickCheckedAbBook() throws InterruptedException, JsonProcessingException {
+        checkedAbBook.click();
+    }
+
     @Step("fill apply reason")
     public void fillApplyReason(String reason) throws InterruptedException, JsonProcessingException {
         dialog.isVisible();
         reasonInput.fill(reason);
         restrictionSetSet.click();
         setToast.isVisible();
+        page.waitForTimeout(1000);
+    }
+
+    @Step("fill apply reason")
+    public void fillApplyReasonTradingAllAccs(String reason) throws InterruptedException, JsonProcessingException {
+        dialog.isVisible();
+        selectAllAccCheckbox.click();
+        reasonInput.fill(reason);
+        restrictionSetSet.click();
+        setToast.isVisible();
+        page.waitForTimeout(1000);
     }
 
     @Step("fill cancel reason")
@@ -140,12 +278,52 @@ public class RestrictionPage {
         reasonInput.fill(reason);
         restrictionCancelSet.click();
         cancelToast.isVisible();
+        page.waitForTimeout(1000);
+    }
+
+    @Step("fill cancel reason")
+    public void fillCancelReasonTrade(String reason) throws InterruptedException, JsonProcessingException {
+        dialog.isVisible();
+        selectAllAccCheckbox.click();
+        reasonInput.fill(reason);
+        restrictionCancelSetTrade.click();
+        cancelToast.isVisible();
+        page.waitForTimeout(1000);
     }
 
     @Step("check request to apply message")
     public void checkKafkaRequestApplyUCID(String userId) throws InterruptedException, JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", "10081449");
+        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
+        apply.clientId.equals(userId);
+        assertNotNull((apply.clientId));
+        assertNotNull((apply.timestamp));
+        assertNotNull((apply.messageId));
+        assertNotNull((apply.regulator));
+        assertNotNull((apply.restrictions));
+    }
+
+
+    @Step("check request to apply message trade")
+    public void checkKafkaRequestApplyTradeUCID(String userId) throws InterruptedException, JsonProcessingException {
+        KafkaHelper helper = new KafkaHelper();
+        String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
+        apply.clientId.equals(userId);
+        assertNotNull((apply.clientId));
+        assertNotNull((apply.timestamp));
+        assertNotNull((apply.messageId));
+        assertNotNull((apply.regulator));
+        assertNotNull((apply.restrictions));
+    }
+
+    @Step
+    public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException, JsonProcessingException {
+        KafkaHelper helper = new KafkaHelper();
+        String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.equals(userId);
@@ -159,7 +337,7 @@ public class RestrictionPage {
     @Step
     public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException, JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", "10081449");
+        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.equals(userId);
@@ -176,19 +354,20 @@ public class RestrictionPage {
         for (ClientsRestriction i : restrictionList) {
             String Id = i.id.toString();
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.action", "clients_restriction_id = " + Id);
-            Thread.sleep(100);
+            Thread.sleep(200);
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.kafka_request", "clients_restriction_id = " + Id);
-            Thread.sleep(100);
+            Thread.sleep(200);
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.kafka_response", "clients_restriction_id = " + Id);
-            Thread.sleep(100);
+            Thread.sleep(200);
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.clients_restriction", "id = " + Id);
-            Thread.sleep(100);
+            Thread.sleep(200);
         }
     }
 
     @Step("clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "au.au.event","ucid = '"+ ucid+"'");
+        Thread.sleep(200);
     }
 
     @Step
@@ -201,9 +380,62 @@ public class RestrictionPage {
                 null,
                 "Integration test",
                 new PostRestrictionRequestBody.UpdatedBy("string", "string")
+
+
         );
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
+    }
+
+    @Step
+    public void setRestrictionAPITrade (String ucid,int accId, int serverId, String code) throws IOException {
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                ucid,
+                code,
+                "TRADING",
+                accId,
+                serverId,
+                "Integration test",
+                new PostRestrictionRequestBody.UpdatedBy("string", "string")
+
+
+        );
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertNotNull(response);
+    }
+
+    public void checkRestrictionCancellationAudit (String ucid, String detail) throws Exception {
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '"+ucid+"'", Event.class);
+        String type1 = event.get(2).getType();
+        assertEquals("CANCELLATION_REQUESTED",type1);
+        String details = event.get(2).getDetails();
+        assertEquals(details, detail);
+        String type2 = event.get(3).getType();
+        assertEquals("RESTRICTION_CANCELLED",type2);
+        String system = event.get(2).getInitiatedBySystem();
+        assertEquals(system, "vindex-backoffice");
+    }
+
+    public void checkRestrictionApplymentAudit (String ucid, String detail) throws Exception {
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '"+ucid+"'", Event.class);
+        String type1 = event.get(0).getType();
+        assertEquals("RESTRICTION_REQUESTED",type1);
+        String details = event.get(0).getDetails();
+        assertEquals(details, detail);
+        String type2 = event.get(1).getType();
+        assertEquals("RESTRICTION_APPLIED",type2);
+        String system = event.get(0).getInitiatedBySystem();
+        assertEquals(system, "vindex-backoffice");
+    }
+
+    @Step("Check if the page loaded")
+    public void isPageLoaded() {
+        int n = 0;
+        page.waitForTimeout(2000);
+        while (loaderAnimation.isVisible() && n < 8) {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
     }
 
 

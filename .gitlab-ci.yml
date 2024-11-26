@@ -32,6 +32,7 @@ workflow:
    - when: never
 
 job_build:
+  timeout: 1 hour
   stage: build
   image: gradle:8.10.0-jdk22
   rules:
@@ -44,6 +45,7 @@ job_build:
 
 #Jobe for checking code format with spotless
 job_code_check:
+  timeout: 30 minutes
   stage: build
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
@@ -56,6 +58,7 @@ job_code_check:
 
 #Job to check that base tests are working
 job_run_minimal_tests:
+  timeout: 3 hours
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
@@ -71,6 +74,7 @@ job_run_minimal_tests:
 
 #Job for core team nightly tests
 job_test_core:
+  timeout: 3 hours
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
@@ -104,6 +108,7 @@ job_test_core:
 
 #Job for backoffice team nightly tests
 job_test_backoffice:
+  timeout: 3 hours
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
@@ -136,6 +141,7 @@ job_test_backoffice:
 
 #Job to launch tests by connected service
 job_test_downstream_end_to_end:
+  timeout: 3 hours
   stage: test
   image: gradle:8.10.0-jdk22
   rules:
