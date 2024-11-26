@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBySymbol;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomClient;
-import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -43,10 +41,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("213")
     public void getTradesTest1() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -79,7 +73,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest2() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -97,7 +90,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest3() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -116,7 +108,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest4() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -134,7 +125,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest5() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -151,7 +141,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest6() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -168,7 +157,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest7() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -184,7 +172,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest8() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -203,7 +190,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest9() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -222,7 +208,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest10() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -242,7 +227,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("213")
     public void getTradesTest11() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -261,7 +245,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest12() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -280,7 +263,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest13() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -299,7 +281,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest14() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -318,7 +299,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest15() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -337,7 +317,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest16() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -357,7 +336,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest17() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -377,7 +355,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest18() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -397,7 +374,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest19() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -417,7 +393,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest20() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -437,7 +412,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest21() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -457,7 +431,6 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("")
     public void getTradesTest22() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();

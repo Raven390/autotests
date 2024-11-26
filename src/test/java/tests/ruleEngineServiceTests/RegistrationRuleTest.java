@@ -26,8 +26,6 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_SERVICE)
-@Disabled
-@Muted
 public class RegistrationRuleTest {
 
     public static RegistrationRuleData registrationRuleData1 = getRegistrationRuleExitEventEnd1Data();
@@ -62,7 +60,7 @@ public class RegistrationRuleTest {
         dbDataList.add(registrationRuleData4);
         dbDataList.add(registrationRuleData5);
         dbDataList.add(registrationRuleData6);
-        dbDataList.add(registrationRuleData7v1);
+//        dbDataList.add(registrationRuleData7v1);
         dbDataList.add(registrationRuleData7v2);
         dbDataList.add(registrationRuleData7v3);
         dbDataList.add(registrationRuleData7v4);
@@ -74,7 +72,7 @@ public class RegistrationRuleTest {
         dbDataList.add(registrationRuleData7v10);
         dbDataList.add(registrationRuleData7v11);
         dbDataList.add(registrationRuleData7v12);
-        dbDataList.add(registrationRuleData7v13);
+//        dbDataList.add(registrationRuleData7v13);
         dbDataList.add(registrationRuleData7v14);
 
         // Loop through the list with data and insert all the data into the according tables
@@ -103,6 +101,13 @@ public class RegistrationRuleTest {
                 }
             });
             insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
     }
 
@@ -166,7 +171,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData2.lnSessionParsedObject.policyScore));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData2.lnSessionParsedObject.riskRating));
         assertThat("Verify alert id not null", alert.rule.attributes.stepName, equalTo("High Lexis score"));
 
         // Verify restriction
@@ -184,9 +189,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData2.clientHelper.getUcid(),
                 registrationRuleData2.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_set_manual_withdrawal_restriction_2",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -221,7 +226,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData3.lnSessionParsedObject.policyScore));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData3.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Ip country does not equal address country"));
         assertThat("Verify rule attributes ipAddress is correct", alert.rule.attributes.ipAddress, equalTo(registrationRuleData3.lnSessionParsedObject.trueIp));
         assertThat("Verify rule attributes country is correct", alert.rule.attributes.country, equalTo(registrationRuleData3.crmTbUserObject.countryCode));
@@ -240,9 +245,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData3.clientHelper.getUcid(),
                 registrationRuleData3.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_set_manual_withdrawal_restriction_1",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -277,7 +282,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData4.lnSessionParsedObject.policyScore));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData4.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("IB or referrer connection"));
         assertThat("Verify rule attributes refferalId is correct", alert.rule.attributes.refferalId, equalTo(registrationRuleData4.crmTbUserObject.rafReferrerId));
         assertThat("Verify rule attributes ibId is correct", alert.rule.attributes.ibId, equalTo(registrationRuleData4.crmTbUserObject.ibId));
@@ -296,9 +301,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData4.clientHelper.getUcid(),
                 registrationRuleData4.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_set_manual_withdrawal_restriction_3",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -363,8 +368,8 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData6.lnSessionParsedObject.policyScore));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis Score, same Identity"));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData6.lnSessionParsedObject.riskRating));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score, same Identity"));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -382,6 +387,9 @@ public class RegistrationRuleTest {
     @Test
     @DisplayName("Registration rule exit Event_End_7 all available alerts/restrictions")
     @AllureId("161")
+    @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     public void registrationRuleExitEventEnd7Version1Test() throws Exception {
         Allure.step("Toxic accounts linked");
         Allure.step("Any of the connected users is a CPA abuser");
@@ -456,7 +464,7 @@ public class RegistrationRuleTest {
                 assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
                 assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
                 assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-                assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData7v2.lnSessionParsedObject.policyScore));
+                assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData7v2.lnSessionParsedObject.riskRating));
                 expectedSteps.remove("Linked CPA abuser");
             } else if (Objects.equals(alert.rule.attributes.stepName, "Linked bonus abuser")){
                 assertThat("Verify alert id not null", alert.alertId, notNullValue());
@@ -534,7 +542,7 @@ public class RegistrationRuleTest {
                 assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
                 assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
                 assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-                assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, equalTo("unknown"));
+                assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, equalTo("UNKNOWN"));
                 expectedSteps.remove("Linked unknown abuser");
             }
         }
@@ -556,7 +564,7 @@ public class RegistrationRuleTest {
                 registrationRuleData7v1.crmTbUserObject.regulator,
                 12L,
                 "Registration_SetRestriction_2",
-                "APPLY_REQUESTED");
+                "APPLIED");
         // TODO add check for a restriction when it's implemented (bad trading env)
         // TODO add check for a restriction when it's implemented (unknown)
         ClientsRestriction expectedRestriction4 = new ClientsRestriction(
@@ -564,7 +572,7 @@ public class RegistrationRuleTest {
                 registrationRuleData7v1.crmTbUserObject.regulator,
                 5L,
                 "Registration_block_user_restriction_bonus",
-                "APPLY_REQUESTED");
+                "APPLIED");
         // TODO add check for a restriction when it's implemented (unknown)
         // TODO add check for a restriction when it's implemented (bad trading env)
         // TODO add check for a restriction when it's implemented (b-book -> a-book)
@@ -610,7 +618,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData7v2.lnSessionParsedObject.policyScore));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData7v2.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
 
         Allure.step("Get client restrictions");
@@ -627,9 +635,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v2.clientHelper.getUcid(),
                 registrationRuleData7v2.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_2",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -673,7 +681,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo(registrationRuleData7v3.lnSessionParsedObject.policyScore));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData7v3.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
 
 
@@ -691,9 +699,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v3.clientHelper.getUcid(),
                 registrationRuleData7v3.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_2",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
 
@@ -794,9 +802,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v5.clientHelper.getUcid(),
                 registrationRuleData7v5.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_6",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
         // TODO add check for one more restriction when it's implemented
@@ -860,7 +868,7 @@ public class RegistrationRuleTest {
                 registrationRuleData7v6.crmTbUserObject.regulator,
                 5L,
                 "Registration_block_user_restriction_bonus",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
         // TODO add check for one more restriction when it's implemented
@@ -920,9 +928,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v7.clientHelper.getUcid(),
                 registrationRuleData7v7.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_7",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -982,9 +990,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v8.clientHelper.getUcid(),
                 registrationRuleData7v8.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_7",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
 
@@ -1045,9 +1053,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v9.clientHelper.getUcid(),
                 registrationRuleData7v9.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_9",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1158,7 +1166,7 @@ public class RegistrationRuleTest {
                 registrationRuleData7v11.crmTbUserObject.regulator,
                 5L,
                 "Registration_block_user_restriction_tls",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1220,9 +1228,9 @@ public class RegistrationRuleTest {
         ClientsRestriction expectedRestriction = new ClientsRestriction(
                 registrationRuleData7v12.clientHelper.getUcid(),
                 registrationRuleData7v12.crmTbUserObject.regulator,
-                12L,
+                9L,
                 "Registration_SetRestriction_12",
-                "APPLY_REQUESTED");
+                "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1230,6 +1238,9 @@ public class RegistrationRuleTest {
     @Test
     @DisplayName("Registration rule exit Event_End_7 only Set no bonuses, promotions (Market manipulation)")
     @AllureId("172")
+    @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     public void registrationRuleExitEventEnd7Version13Test() throws Exception {
         Allure.step("Toxic accounts linked");
         Allure.step("All of the connected users are NOT CPA abusers");
@@ -1273,7 +1284,17 @@ public class RegistrationRuleTest {
                 ClientsRestriction.class
         );
 
-        // TODO add check for a restriction when it's implemented
+        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+
+        ClientsRestriction restriction = clientsRestrictions.getFirst();
+        ClientsRestriction expectedRestriction = new ClientsRestriction(
+                registrationRuleData7v13.clientHelper.getUcid(),
+                registrationRuleData7v13.crmTbUserObject.regulator,
+                8L,
+                "Registration_a-book_restriction",
+                "APPLIED");
+
+        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 
     @Test
@@ -1312,7 +1333,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked unknown abuser"));
-        assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, equalTo("unknown"));
+        assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, equalTo(new String[]{"UNKNOWN"}));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1348,12 +1369,19 @@ public class RegistrationRuleTest {
             });
             data.connections.forEach(connection -> {
                 try {
-                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = %s", connection.userFrom));
+                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             });
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.userId));
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             cleanUserRestriction(data.clientHelper.getUcid());
         }
     }
