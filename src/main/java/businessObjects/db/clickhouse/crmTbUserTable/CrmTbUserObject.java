@@ -26,9 +26,9 @@ public class CrmTbUserObject {
     public String websiteUserType;
     public String emailVerificationMark;
     public String phoneVerificationMark;
-    public String ibId;
-    public String cpaId;
-    public String rafReferrerId;
+    public Integer ibId;
+    public Integer cpaId;
+    public Integer rafReferrerId;
     public String kycStatus;
     public String lastUpdated;
 
@@ -41,7 +41,7 @@ public class CrmTbUserObject {
             String countryCode, String isoCountryCode, String language, String nationality,
             String email, String phoneNum, String phoneCountryCode, String isTwoFaUser,
             String authentication, String websiteUserType, String emailVerificationMark,
-            String phoneVerificationMark, String ibId, String cpaId, String rafReferrerId,
+            String phoneVerificationMark, Integer ibId, Integer cpaId, Integer rafReferrerId,
             String kycStatus, String lastUpdated) {
         this.userId = userId;
         this.ucid = ucid;

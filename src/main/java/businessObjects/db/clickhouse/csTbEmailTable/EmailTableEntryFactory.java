@@ -20,7 +20,7 @@ public class EmailTableEntryFactory {
         return new EmailTableEntry(
                 user.ucid,
                 user.userId,
-                user.brand,
+                user.brand.toLowerCase(),
                 user.email,
                 getCurrentTimestampDbFormat()
         );

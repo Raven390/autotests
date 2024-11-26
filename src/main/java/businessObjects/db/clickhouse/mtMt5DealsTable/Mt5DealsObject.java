@@ -9,18 +9,18 @@ public class Mt5DealsObject {
     public String comment;
     public Double commission;
     public Double contractsize;
-    public Long deal;
-    public String dealer;
+    public Integer deal;
+    public Integer dealer;
     public Integer digits;
     public Integer digitscurrency;
-    public String entry;
+    public Integer entry;
     public Long expertid;
     public String externalid;
     public Double fee;
     public Integer flags;
     public String gateway;
     public String lastUpdated;
-    public Long login;
+    public Integer login;
     public Double marketask;
     public Double marketbid;
     public Double marketlast;
@@ -42,13 +42,13 @@ public class Mt5DealsObject {
     public Integer serverIdOld;
     public String serverName;
     public String serverNameOld;
-    public String storage;
+    public Integer storage;
     public String symbol;
     public Double ticksize;
     public Double tickvalue;
     public String time;
-    public Long timemsc;
-    public String timestamp;
+    public String timemsc;
+    public Long timestamp;
     public Double value;
     public Double volume;
     public Double volumeLots;
@@ -59,16 +59,15 @@ public class Mt5DealsObject {
     public Mt5DealsObject() {
     }
 
-    // Constructor with all fields
     public Mt5DealsObject(Integer action, String apidata, String comment, Double commission, Double contractsize,
-                          Long deal, String dealer, Integer digits, Integer digitscurrency, String entry, Long expertid,
-                          String externalid, Double fee, Integer flags, String gateway, String lastUpdated, Long login,
+                          Integer deal, Integer dealer, Integer digits, Integer digitscurrency, Integer entry, Long expertid,
+                          String externalid, Double fee, Integer flags, String gateway, String lastUpdated, Integer login,
                           Double marketask, Double marketbid, Double marketlast, Integer modifyflags, String op,
                           Long order, Long positionid, Double price, Double pricegateway, Double priceposition,
                           Double pricesl, Double pricetp, Double profit, Double profitraw, Double ratemargin,
                           Double rateprofit, String reason, Integer serverId, Integer serverIdOld, String serverName,
-                          String serverNameOld, String storage, String symbol, Double ticksize, Double tickvalue,
-                          String time, Long timemsc, String timestamp, Double value, Double volume, Double volumeLots,
+                          String serverNameOld, Integer storage, String symbol, Double ticksize, Double tickvalue,
+                          String time, String timemsc, Long timestamp, Double value, Double volume, Double volumeLots,
                           Double volumeclosed, Double volumeclosedext, Double volumeext) {
         this.action = action;
         this.apidata = apidata;

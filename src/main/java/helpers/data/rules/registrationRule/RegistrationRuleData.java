@@ -1,5 +1,6 @@
 package helpers.data.rules.registrationRule;
 
+import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
@@ -15,17 +16,19 @@ public class RegistrationRuleData {
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
     public RegistrationEvent registrationEvent;
+    public List<BoClientFraudTypesObject> clientFraudTypes;
 
     public RegistrationRuleData() {
     }
 
-    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent) {
+    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
         this.connections = connections;
         this.connectedUsers = connectedUsers;
         this.registrationEvent = registrationEvent;
+        this.clientFraudTypes = clientFraudTypes;
     }
 
     @Override
@@ -36,7 +39,8 @@ public class RegistrationRuleData {
                 ", lnSessionParsedObject=" + lnSessionParsedObject +
                 ", connections=" + connections +
                 ", connectedUsers=" + connectedUsers +
-                ", registrationDbEvent=" + registrationEvent +
+                ", registrationEvent=" + registrationEvent +
+                ", clientFraudTypes=" + clientFraudTypes +
                 '}';
     }
 }

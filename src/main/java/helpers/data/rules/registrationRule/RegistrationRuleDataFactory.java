@@ -1,6 +1,7 @@
 package helpers.data.rules.registrationRule;
 
 
+import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
@@ -54,6 +55,7 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.proxyIp = client.getIpAddress();
         lexisNexisObject.trueIpGeo = client.getCountryCode();
         lexisNexisObject.policyScore = -49;
+        lexisNexisObject.riskRating = "low";
         RegistrationEvent registrationEvent = new RegistrationEvent();
         registrationEvent.clientId = client.getUserId();
         registrationEvent.brand = client.getBrand();
@@ -62,7 +64,7 @@ public class RegistrationRuleDataFactory {
         registrationEvent.id = getRandomUuidString();
         registrationEvent.createTime = Instant.now().toString();
         registrationEvent.type = "clientRegistration";
-        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent);
+        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>());
     }
 
     public static class ConnectionAndConnectedUser {
@@ -99,6 +101,8 @@ public class RegistrationRuleDataFactory {
         connectedCrmTbUserObject.email = fromClient.getEmail();
         connectedCrmTbUserObject.countryCode = fromClient.getCountryCode();
         connectedCrmTbUserObject.regulator = "VFSC2";
+        connectedCrmTbUserObject.rafReferrerId = 22;
+        connectedCrmTbUserObject.ibId = 33;
         return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject);
     }
 
@@ -110,6 +114,7 @@ public class RegistrationRuleDataFactory {
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd2Client);
         LnSessionParsedObject lexisNexisObject = registrationRuleData.lnSessionParsedObject;
         lexisNexisObject.policyScore = -50;
+        lexisNexisObject.riskRating = "high";
         return registrationRuleData;
     }
 
@@ -128,8 +133,8 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd4Client, connectedClient);
         CrmTbUserObject crmTbUserToObject = connectionAndConnectedUser.crmTbUserObject;
-        crmTbUserToObject.rafReferrerId = getRandomIntPositive().toString();
         crmTbUserObject.rafReferrerId = crmTbUserToObject.rafReferrerId;
+        crmTbUserObject.ibId = crmTbUserToObject.ibId;
         registrationRuleData.connectedUsers.add(crmTbUserToObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         return registrationRuleData;
@@ -152,6 +157,7 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd6Client, connectedClient);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
         return registrationRuleData;
     }
 
@@ -166,6 +172,8 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientTls = getRandomVantageClientAllFields();
         ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
         ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
+        ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
+
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
         ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
@@ -173,9 +181,19 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
         ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
         ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+        ConnectionAndConnectedUser connectionAndConnectedUserUnknownFraudster = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientUnknownAbuser);
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientTls.getUcid(), 1, "TLS"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), 1, "SWAP_ARBITRAGE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), 1, "MARKET_MANIPULATION"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), 1, "UNKNOWN"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
@@ -190,6 +208,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownFraudster.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntry);
         return registrationRuleData;
     }
 
@@ -199,7 +219,8 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
@@ -213,9 +234,11 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version3Client, connectedClientCpa);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
         return registrationRuleData;
@@ -229,7 +252,8 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
         connectedClientBonusAbuser.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
@@ -242,7 +266,8 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version5Client, connectedClientBonusAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
@@ -256,9 +281,11 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version6Client, connectedClientBonusAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         return registrationRuleData;
@@ -270,7 +297,8 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version7Client, connectedClientVoucherAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
@@ -284,9 +312,12 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version8Client, connectedClientVoucherAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
+
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
         return registrationRuleData;
@@ -300,7 +331,9 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
         connectedClientNewsTrader.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version9Client, connectedClientNewsTrader);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
+
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
@@ -313,7 +346,9 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version10Client, connectedClientNewsTrader);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
+
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
@@ -326,7 +361,8 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientTls = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version11Client, connectedClientTls);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientTls.getUcid(), 1, "TLS"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
@@ -339,7 +375,10 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version12Client, connectedClientSwapAbuse);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), 1, "SWAP_ARBITRAGE"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
@@ -352,7 +391,8 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version13Client, connectedClientMarketManipulator);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), 1, "MARKET_MANIPULATION"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
@@ -365,7 +405,9 @@ public class RegistrationRuleDataFactory {
         // Abuser connected clients
         ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserUnknownAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version14Client, connectedClientUnknownAbuser);
-        //TODO Add methods to create objects for connected users to be returned with related abuse types from V1/abuseTypes API
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), 1, "UNKNOWN"));
+
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntry);

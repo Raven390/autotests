@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBySymbol;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomClient;
-import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -42,7 +40,6 @@ public class GetTradesGroupBySymbolTests extends TestBaseApi {
     @AllureId("213")
     public void getTradesTest1() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
-        insertObjectToDb(MT_TRADES_TABLE_NAME, generateTradeByClient(client));
 
         //Send request
         Map<String, Object> queryParams = new HashMap<>();

@@ -35,8 +35,8 @@ public class RuleAlert {
 
         public static class Attribute {
 
-            @JsonProperty("policyScore")
-            public Integer policyScore;
+            @JsonProperty("riskRating")
+            public String riskRating;
 
             @JsonProperty("stepName")
             public String stepName;
@@ -48,7 +48,7 @@ public class RuleAlert {
             public String  country;
 
             @JsonProperty("fraudType")
-            public String fraudType;
+            public String[] fraudType;
 
             @JsonProperty("refferalId")
             public Integer refferalId;
