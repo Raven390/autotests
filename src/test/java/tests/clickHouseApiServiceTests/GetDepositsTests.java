@@ -2,16 +2,15 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getDeposits.GetDepositsResponse;
 import businessObjects.api.clickhouseApiService.getDeposits.GetDepositsResponseError;
+import businessObjects.api.clickhouseApiService.getDeposits.GetDepositsResponse;
+import businessObjects.api.clickhouseApiService.getDeposits.GetDepositsResponseError;
+import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Muted;
 import io.qameta.allure.Story;
 import okhttp3.Response;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
@@ -20,235 +19,288 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getDeposits.GetDepositsRequest.getDeposits;
+import static businessObjects.api.clickhouseApiService.getDeposits.GetDepositsRequest.getDeposits;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
-import static helpers.data.ClientFactory.getRandomClient;
+import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-@Disabled
-@Muted
 public class GetDepositsTests extends TestBaseApi {
 
-    @Test
-    @DisplayName("Clickhouse Api. Get deposits request by all params")
-    @AllureId("")
-    public void getDepositsTest10() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    private static CrmTbDepositObject deposit1;
+    private static CrmTbDepositObject deposit2;
 
-        //Send request
+    @BeforeAll
+    public static void setupDeposits() throws ReflectiveOperationException, SQLException {
+        ClientHelper client = getRandomVantageClient();
+        deposit1 = generateDepositByClient(client);
+        deposit2 = generateDepositByClient(client);
+        deposit2.createTime = getTomorrowTimestampDbFormat();
+        deposit2.amountUsd = 3.0;
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit1);
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get Deposits by all params")
+    @AllureId("")
+    public void getDepositsAllParamsTest() throws IOException {
+
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("dateFrom", deposit1.createTime.replace(" ", "T"));
+        queryParams.put("dateTo", deposit2.createTime.replace(" ", "T"));
+        queryParams.put("orderBy", "createTime");
+        queryParams.put("sortOrder", "desc");
+        queryParams.put("limit", "2");
+        Response response = getDeposits(queryParams);
+
+        assert response.body() != null;
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(2));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit2.createTime.replace(" ", "T")));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.amount));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get Deposits by empty params")
+    @AllureId("")
+    public void getDepositsEmptyParamsTest() throws IOException {
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", deposit1.ucid);
         queryParams.put("dateFrom", "");
         queryParams.put("dateTo", "");
-        queryParams.put("orderBy", ""); // Enum - createTime, actualAmount, actualAmountUSD
-        queryParams.put("sortOrder", ""); // Enum - asc, desc
-        queryParams.put("limit", ""); // Limit the number of results returned
+        queryParams.put("bonusType", "");
+        queryParams.put("orderBy", "");
+        queryParams.put("sortOrder", "");
+        queryParams.put("limit", "");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert depositItems size", mappedResponse.depositItems.size(), is(2));
-        assertThat("Assert transferId ", mappedResponse.depositItems.getFirst().transferId, is(123_456));
-        assertThat("Assert createTime ", mappedResponse.depositItems.getFirst().createTime, is("2024-11-05T12:34:56Z"));
-        assertThat("Assert clientId ", mappedResponse.depositItems.getFirst().clientId, is("moneta-78910"));
-        assertThat("Assert actualAmountUSD ", mappedResponse.depositItems.getFirst().actualAmountUsd, is(1500.75));
-        assertThat("Assert actualAmount ", mappedResponse.depositItems.getFirst().actualAmount, is(1500.75));
-        assertThat("Assert paymentChannel ", mappedResponse.depositItems.getFirst().paymentChannel, is("BankTransfer"));
+        assertThat("Assert response length", mappedResponse.length, is(2));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by client Id (200)")
-    @AllureId("212")
-    public void getDepositsTest1() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    @DisplayName("Clickhouse Api. Get Deposits only by clientId(200)")
+    @AllureId("210")
+    public void getDepositsClientIdTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
+        queryParams.put("clientId", deposit1.ucid);
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(2));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request without required params (400)")
+    @DisplayName("Clickhouse Api. Get Deposits by clientId and limit")
     @AllureId("")
-    public void getDepositsTest2() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsLimitTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("orderBy", "createTime");
+        queryParams.put("sortOrder", "desc");
+        queryParams.put("limit", "1");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(1));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit2.createTime.replace(" ", "T")));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.amount));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by dateFrom")
+    @DisplayName("Clickhouse Api. Get Deposits order by create time default order")
     @AllureId("")
-    public void getDepositsTest3() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsDefaultSortOrderTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("dateFrom", "");
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("orderBy", "createTime");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(2));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit1.transferId));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit1.createTime.replace(" ", "T")));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit1.ucid));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.amountUsd));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit1.amount));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by dateTo")
+    @DisplayName("Clickhouse Api. Get Deposits order by actualAmountUSD")
     @AllureId("")
-    public void getDepositsTest4() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsOrderByAmountUsdTest() throws IOException{
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("dateTo", "");
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("orderBy", "actualAmountUSD");
+        queryParams.put("sortOrder", "desc");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
+        GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(2));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by date range")
+    @DisplayName("Clickhouse Api. Get Deposits no params")
     @AllureId("")
-    public void getDepositsTest5() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsNoParamsTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("dateTo", "");
-        queryParams.put("dateFrom", "");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientId' for method parameter type String is not present"));
+        assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by orderBy=createTime")
+    @DisplayName("Clickhouse Api. Get Deposits no clientId")
     @AllureId("")
-    public void getDepositsTest6() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsNoClientIdTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("orderBy", "createTime"); // Enum - createTime, actualAmount, actualAmountUSD
-
+        queryParams.put("dateFrom", deposit1.createTime.replace(" ", "T"));
+        queryParams.put("dateTo", deposit2.createTime.replace(" ", "T"));
+        queryParams.put("orderBy", "createTime");
+        queryParams.put("sortOrder", "desc");
+        queryParams.put("limit", "2");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        // TODO проверить сортировку если не отправлен параметр сортировки
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientId' for method parameter type String is not present"));
+        assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by orderBy=actualAmount")
+    @DisplayName("Clickhouse Api. Get Deposits incorrect dateFrom")
     @AllureId("")
-    public void getDepositsTest7() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsIncorrectDateFromTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("orderBy", "actualAmount"); // Enum - createTime, actualAmount, actualAmountUSD
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("dateFrom", "test");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        // TODO проверить сортировку если не отправлен параметр сортировки
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by orderBy=actualAmountUSD")
+    @DisplayName("Clickhouse Api. Get Deposits incorrect dateTo")
     @AllureId("")
-    public void getDepositsTest8() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsIncorrectDateToTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("orderBy", "actualAmountUSD"); // Enum - createTime, actualAmount, actualAmount
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("dateTo", "test");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        // TODO проверить сортировку если не отправлен параметр сортировки
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request by limit")
+    @DisplayName("Clickhouse Api. Get Deposits incorrect orderBy")
     @AllureId("")
-    public void getDepositsTest9() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsIncorrectOrderByTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid()); // Required
-        queryParams.put("dateFrom", "");
-        queryParams.put("dateTo", "");
-        queryParams.put("orderBy", ""); // Enum - createTime, actualAmount, actualAmountUSD
-        queryParams.put("sortOrder", ""); // Enum - asc, desc
-        queryParams.put("limit", ""); // Limit the number of results returned
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("orderBy", "test");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert error", mappedResponse.error, is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
+        assertThat("Assert status", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get deposits request not found(404)")
+    @DisplayName("Clickhouse Api. Get Deposits incorrect sortOrder")
     @AllureId("")
-    public void getDepositsTest11() throws IOException, ReflectiveOperationException, SQLException {
-        ClientHelper client = getRandomClient();
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, generateDepositByClient(client));
+    public void getDepositsIncorrectSortOrderTest() throws IOException {
 
-        //Send request
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", 1); // Required
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("sortOrder", "test");
         Response response = getDeposits(queryParams);
 
         assert response.body() != null;
-        GetDepositsResponseError
-                mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
-        assertThat("Assert that code is 404", response.code(), is(404));
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert error", mappedResponse.error, is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat("Assert status", mappedResponse.status, is(400));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get Deposits incorrect limit")
+    @AllureId("")
+    public void getDepositsIncorrectLimitTest() throws IOException {
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("limit", "test");
+        Response response = getDeposits(queryParams);
+
+        assert response.body() != null;
+        GetDepositsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponseError.class);
+        assertThat("Assert that code is 400", response.code(), is(400));
+        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.status, is(400));
+    }
+
+    @AfterAll
+    public static void teardownDeposits() throws SQLException {
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit1.ucid));
     }
 }

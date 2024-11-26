@@ -2,30 +2,36 @@ package businessObjects.api.clickhouseApiService.getBonuses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
 
 public class GetBonusesResponse {
 
-    @JsonProperty
-    public List<BonusItem> bonusItem;
+    @JsonProperty("transferId")
+    public Integer transferId;
 
-    public static class BonusItem{
-        @JsonProperty("transferId")
-        public Integer transferId;
+    @JsonProperty("createTime")
+    public String createTime;
 
-        @JsonProperty("createTime")
-        public String createTime;
+    @JsonProperty("clientId")
+    public String clientId;
 
-        @JsonProperty("clientId")
-        public String clientId;
+    @JsonProperty("actualAmountUSD")
+    public Double actualAmountUsd;
 
-        @JsonProperty("actualAmountUSD")
-        public Float actualAmountUsd;
+    @JsonProperty("actualAmount")
+    public Double actualAmount;
 
-        @JsonProperty("actualAmount")
-        public Float actualAmount;
+    @JsonProperty("bonusType")
+    public String bonusType;
 
-        @JsonProperty("bonusType")
-        public String bonusType;
+    @Override
+    public String toString() {
+        return "GetBonusesResponse{" +
+                "transferId=" + transferId +
+                ", createTime='" + createTime + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", actualAmountUSD=" + actualAmountUsd +
+                ", actualAmount=" + actualAmount +
+                ", bonusType='" + bonusType + '\'' +
+                '}';
     }
 }

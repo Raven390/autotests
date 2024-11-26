@@ -4,7 +4,7 @@ package businessObjects.db.clickhouse.crmTbBonusTable;
 import java.util.Objects;
 
 public class CrmTbBonusObject {
-    // Declare variables
+
     public Integer transferId;
     public String uid;
     public String ucid;

@@ -9,4 +9,12 @@ public class GetAbuseTypesResponseError {
 
     @JsonProperty("status")
     public String status;
+
+    @Override
+    public String toString() {
+        return "GetAbuseTypesResponseError{" +
+                "error='" + error + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

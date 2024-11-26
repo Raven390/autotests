@@ -2,30 +2,36 @@ package businessObjects.api.clickhouseApiService.getCredits;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
 
 public class GetCreditsResponse {
 
-    @JsonProperty
-    public List<CreditItem> creditItem;
+    @JsonProperty("tradeId")
+    public Integer tradeId;
 
-    public static class CreditItem{
-        @JsonProperty("tradeId")
-        public Integer tradeId;
+    @JsonProperty("createTime")
+    public String createTime;
 
-        @JsonProperty("openTime")
-        public String openTime;
+    @JsonProperty("tradingAccount")
+    public String tradingAccount;
 
-        @JsonProperty("tradingAccount")
-        public String tradingAccount;
+    @JsonProperty("profitUSD")
+    public Double profitUSD;
 
-        @JsonProperty("profitUSD")
-        public Float profitUSD;
+    @JsonProperty("profit")
+    public Double profit;
 
-        @JsonProperty("profit")
-        public Float profit;
+    @JsonProperty("comment")
+    public String comment;
 
-        @JsonProperty("comment")
-        public String comment;
+    @Override
+    public String toString() {
+        return "GetCreditsResponse{" +
+                "tradeId=" + tradeId +
+                ", createTime='" + createTime + '\'' +
+                ", tradingAccount='" + tradingAccount + '\'' +
+                ", profitUSD=" + profitUSD +
+                ", profit=" + profit +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

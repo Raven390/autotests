@@ -29,6 +29,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
+@Tag(TAG_MANUAL)
 @Muted
 public class GetCreditEquityTests extends TestBaseApi {
 

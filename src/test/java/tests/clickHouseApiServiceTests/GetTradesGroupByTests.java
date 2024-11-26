@@ -33,6 +33,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
+@Tag(TAG_MANUAL)
 @Disabled
 @Muted
 public class GetTradesGroupByTests extends TestBaseApi {
