@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import pageObjects.backofficePages.InvestigationPage;
-import pageObjects.backofficePages.KeycloackPage;
-import pageObjects.backofficePages.ProfilePage;
-import pageObjects.backofficePages.RestrictionPage;
+import pageObjects.backofficePages.*;
 import pageObjects.vantageUserAccountPages.StageRegistrationHelperPage;
 import pageObjects.vantageUserAccountPages.VantageUserAccountPage;
 import utils.TestResultWatcher;
@@ -35,6 +32,7 @@ public class TestBaseWeb {
     public KeycloackPage keycloackPage;
     public ProfilePage profilePage;
     public RestrictionPage restrictionPage;
+    public ConnectionPage connectionPage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -64,6 +62,7 @@ public class TestBaseWeb {
         keycloackPage = new KeycloackPage(page);
         profilePage = new ProfilePage(page);
         restrictionPage = new RestrictionPage(page);
+        connectionPage = new ConnectionPage(page);
     }
 
     @AfterEach
