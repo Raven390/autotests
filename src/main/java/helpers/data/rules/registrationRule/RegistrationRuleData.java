@@ -4,6 +4,7 @@ import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 
@@ -17,11 +18,12 @@ public class RegistrationRuleData {
     public List<CrmTbUserObject> connectedUsers;
     public RegistrationEvent registrationEvent;
     public List<BoClientFraudTypesObject> clientFraudTypes;
+    public MtTbUserObject mtTbUserObject;
 
     public RegistrationRuleData() {
     }
 
-    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes) {
+    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
@@ -29,6 +31,7 @@ public class RegistrationRuleData {
         this.connectedUsers = connectedUsers;
         this.registrationEvent = registrationEvent;
         this.clientFraudTypes = clientFraudTypes;
+        this.mtTbUserObject = mtTbUserObject;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class RegistrationRuleData {
                 ", connectedUsers=" + connectedUsers +
                 ", registrationEvent=" + registrationEvent +
                 ", clientFraudTypes=" + clientFraudTypes +
+                ", mtTbUserObject=" + mtTbUserObject +
                 '}';
     }
 }

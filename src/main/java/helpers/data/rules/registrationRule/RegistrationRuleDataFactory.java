@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static utils.Utils.*;
 
@@ -64,7 +65,7 @@ public class RegistrationRuleDataFactory {
         registrationEvent.id = getRandomUuidString();
         registrationEvent.createTime = Instant.now().toString();
         registrationEvent.type = "clientRegistration";
-        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>());
+        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>(), null);
     }
 
     public static class ConnectionAndConnectedUser {
@@ -396,6 +397,8 @@ public class RegistrationRuleDataFactory {
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+
+        registrationRuleData.mtTbUserObject = generateMtTbUserData(registrationRuleData.clientHelper.getUcid(), getRandomIntPositive(), 188);
         return registrationRuleData;
     }
 

@@ -72,7 +72,7 @@ public class RegistrationRuleTest {
         dbDataList.add(registrationRuleData7v10);
         dbDataList.add(registrationRuleData7v11);
         dbDataList.add(registrationRuleData7v12);
-//        dbDataList.add(registrationRuleData7v13);
+        dbDataList.add(registrationRuleData7v13);
         dbDataList.add(registrationRuleData7v14);
 
         // Loop through the list with data and insert all the data into the according tables
@@ -108,6 +108,9 @@ public class RegistrationRuleTest {
                     throw new RuntimeException(e);
                 }
             });
+            if (data.mtTbUserObject != null) {
+                insertObjectToDb(MT_USER_TABLE_NAME, data.mtTbUserObject);
+            }
         }
     }
 
@@ -1238,9 +1241,6 @@ public class RegistrationRuleTest {
     @Test
     @DisplayName("Registration rule exit Event_End_7 only Set no bonuses, promotions (Market manipulation)")
     @AllureId("172")
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
     public void registrationRuleExitEventEnd7Version13Test() throws Exception {
         Allure.step("Toxic accounts linked");
         Allure.step("All of the connected users are NOT CPA abusers");
@@ -1382,6 +1382,9 @@ public class RegistrationRuleTest {
                     throw new RuntimeException(e);
                 }
             });
+            if (data.mtTbUserObject != null) {
+                deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
+            }
             cleanUserRestriction(data.clientHelper.getUcid());
         }
     }
