@@ -238,6 +238,7 @@ public class MirrorTradeRuleTest {
 //        LnSessionParsedObject lnSessionParsedObject = generateLexisNexisDataForUserId(getRandomUuidString(), 1427876091, getRandomIntPositive());
 //        lnSessionParsedObject.brand = "Vantage";
 //        lnSessionParsedObject.riskRating = "medium";
+//        lnSessionParsedObject.trueIpGeo = "CY";
 //        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lnSessionParsedObject);
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();

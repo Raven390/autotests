@@ -49,7 +49,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -76,7 +76,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -102,7 +102,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getUuid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
