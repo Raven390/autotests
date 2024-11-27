@@ -33,6 +33,7 @@ public class TestBaseWeb {
     public ProfilePage profilePage;
     public RestrictionPage restrictionPage;
     public ConnectionPage connectionPage;
+    public GeneralPage generalPage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -63,6 +64,7 @@ public class TestBaseWeb {
         profilePage = new ProfilePage(page);
         restrictionPage = new RestrictionPage(page);
         connectionPage = new ConnectionPage(page);
+        generalPage = new GeneralPage(page);
     }
 
     @AfterEach
