@@ -2,8 +2,6 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsResponse;
 import businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsResponseError;
-import businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsResponse;
-import businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsResponseError;
 import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -18,7 +16,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsRequest.getWithdrawals;
 import static businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsRequest.getWithdrawals;
 import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
@@ -52,7 +49,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals by all params")
-    @AllureId("")
+    @AllureId("378")
     public void getWithdrawalsAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -77,7 +74,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals by empty params")
-    @AllureId("")
+    @AllureId("379")
     public void getWithdrawalsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -98,7 +95,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals only by clientId(200)")
-    @AllureId("210")
+    @AllureId("215")
     public void getWithdrawalsClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -113,7 +110,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals by clientId and limit")
-    @AllureId("")
+    @AllureId("380")
     public void getWithdrawalsLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -136,7 +133,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals order by create time default order")
-    @AllureId("")
+    @AllureId("381")
     public void getWithdrawalsDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -157,7 +154,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals order by actualAmountUSD")
-    @AllureId("")
+    @AllureId("382")
     public void getWithdrawalsOrderByAmountUsdTest() throws IOException{
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -175,7 +172,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals no params")
-    @AllureId("")
+    @AllureId("383")
     public void getWithdrawalsNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -190,7 +187,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals no clientId")
-    @AllureId("")
+    @AllureId("384")
     public void getWithdrawalsNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -210,7 +207,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals incorrect dateFrom")
-    @AllureId("")
+    @AllureId("385")
     public void getWithdrawalsIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -229,7 +226,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals incorrect dateTo")
-    @AllureId("")
+    @AllureId("386")
     public void getWithdrawalsIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -248,7 +245,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals incorrect orderBy")
-    @AllureId("")
+    @AllureId("387")
     public void getWithdrawalsIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -265,7 +262,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals incorrect sortOrder")
-    @AllureId("")
+    @AllureId("388")
     public void getWithdrawalsIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -282,7 +279,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals incorrect limit")
-    @AllureId("")
+    @AllureId("389")
     public void getWithdrawalsIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();

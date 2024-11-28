@@ -46,8 +46,8 @@ public class GetAbuseTypesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Single client success (200)")
-    @AllureId("219")
+    @DisplayName("Clickhouse Api. Get abuse types single client success (200)")
+    @AllureId("429")
     public void getAbuseTypesSingleClientTest() throws IOException{
 
         Response response = getAbuseTypes(List.of(fraud1.ucid));
@@ -63,8 +63,8 @@ public class GetAbuseTypesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Multiple clients success (200)")
-    @AllureId("219")
+    @DisplayName("Clickhouse Api. Get abuse types multiple clients success (200)")
+    @AllureId("430")
     public void getAbuseTypesMultipleClientsTest() throws IOException{
 
         GetAbuseTypesResponse abuseTypesResponse1 = new GetAbuseTypesResponse(fraud1.ucid, new String[]{fraud1.fraudTypeCode, fraud2.fraudTypeCode});
@@ -81,8 +81,8 @@ public class GetAbuseTypesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Incorrect clientIds (400)")
-    @AllureId("219")
+    @DisplayName("Clickhouse Api. Get abuse types incorrect clientIds (400)")
+    @AllureId("431")
     public void getAbuseTypesIncorrectClientIdsTest() throws IOException{
 
         Response response = getAbuseTypes(List.of("test"));

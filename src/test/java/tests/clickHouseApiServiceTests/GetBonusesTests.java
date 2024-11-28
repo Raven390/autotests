@@ -48,7 +48,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by all params")
-    @AllureId("")
+    @AllureId("415")
     public void getBonusesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -75,7 +75,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by empty params")
-    @AllureId("")
+    @AllureId("416")
     public void getBonusesEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -96,7 +96,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses only by clientId(200)")
-    @AllureId("210")
+    @AllureId("417")
     public void getBonusesClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -111,7 +111,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by clientId and limit")
-    @AllureId("")
+    @AllureId("418")
     public void getBonusesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -136,7 +136,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses order by create time default order")
-    @AllureId("")
+    @AllureId("419")
     public void getBonusesDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -159,7 +159,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses order by actualAmountUSD")
-    @AllureId("")
+    @AllureId("420")
     public void getBonusesOrderByAmountUsdTest() throws IOException{
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -177,7 +177,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses no params")
-    @AllureId("")
+    @AllureId("421")
     public void getBonusesNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -192,7 +192,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses no clientId")
-    @AllureId("")
+    @AllureId("422")
     public void getBonusesNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -213,7 +213,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect dateFrom")
-    @AllureId("")
+    @AllureId("423")
     public void getBonusesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -232,7 +232,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect dateTo")
-    @AllureId("")
+    @AllureId("424")
     public void getBonusesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -251,7 +251,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect orderBy")
-    @AllureId("")
+    @AllureId("425")
     public void getBonusesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -268,7 +268,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect sortOrder")
-    @AllureId("")
+    @AllureId("426")
     public void getBonusesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -285,7 +285,7 @@ public class GetBonusesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect limit")
-    @AllureId("")
+    @AllureId("427")
     public void getBonusesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
