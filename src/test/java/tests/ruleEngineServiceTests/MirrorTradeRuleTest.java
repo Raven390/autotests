@@ -165,11 +165,11 @@ public class MirrorTradeRuleTest {
 //        CrmTbBonusObject bonusObject = new CrmTbBonusObject(
 //                getRandomIntPositive(),
 //                getRandomUuidString(),
-//                "vantage-1427876091",
+//                "vantage-822292379",
 //                "Vantage",
 //                "VFSC",
-//                1427876091,
-//                431279960,
+//                822292379,
+//                getRandomIntPositive(),
 //                getCurrentTimestampDbFormat(),
 //                getCurrentTimestampDbFormat(),
 //                100.1,
@@ -240,6 +240,12 @@ public class MirrorTradeRuleTest {
 //        lnSessionParsedObject.riskRating = "medium";
 //        lnSessionParsedObject.trueIpGeo = "CY";
 //        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lnSessionParsedObject);
+//        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
+//                "vantage-822292379",
+//                6,
+//                "HEDGING"
+//        );
+//        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, boClientFraudTypesObject);
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);

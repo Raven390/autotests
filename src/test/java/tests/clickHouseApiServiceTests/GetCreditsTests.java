@@ -50,7 +50,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits by all params")
-    @AllureId("")
+    @AllureId("402")
     public void getCreditsAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -77,7 +77,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits by empty params")
-    @AllureId("")
+    @AllureId("403")
     public void getCreditsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -98,7 +98,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits mandatory parameters(200)")
-    @AllureId("210")
+    @AllureId("211")
     public void getCreditsClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -114,7 +114,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits by mandatory params and limit")
-    @AllureId("")
+    @AllureId("404")
     public void getCreditsLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -139,7 +139,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits order by create time default order")
-    @AllureId("")
+    @AllureId("405")
     public void getCreditsDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -161,8 +161,8 @@ public class GetCreditsTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client bonuses order by actualAmountUSD")
-    @AllureId("")
+    @DisplayName("Clickhouse Api. Get client bonuses order by profitUSD")
+    @AllureId("406")
     public void getCreditsOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -181,7 +181,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits no params")
-    @AllureId("")
+    @AllureId("407")
     public void getCreditsNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -196,7 +196,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits no tradingAccount")
-    @AllureId("")
+    @AllureId("408")
     public void getCreditsNoTradingAccountTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -216,8 +216,8 @@ public class GetCreditsTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credits no tradingAccount")
-    @AllureId("")
+    @DisplayName("Clickhouse Api. Get credits no serverId")
+    @AllureId("409")
     public void getCreditsNoServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -238,7 +238,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect dateFrom")
-    @AllureId("")
+    @AllureId("410")
     public void getCreditsIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -258,7 +258,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect dateTo")
-    @AllureId("")
+    @AllureId("411")
     public void getCreditsIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -278,7 +278,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect orderBy")
-    @AllureId("")
+    @AllureId("412")
     public void getCreditsIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -296,7 +296,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect sortOrder")
-    @AllureId("")
+    @AllureId("413")
     public void getCreditsIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -314,7 +314,7 @@ public class GetCreditsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect limit")
-    @AllureId("")
+    @AllureId("414")
     public void getCreditsIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();

@@ -2,8 +2,6 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getTrades.GetTradesResponse;
 import businessObjects.api.clickhouseApiService.getTrades.GetTradesResponseError;
-import businessObjects.api.clickhouseApiService.getTrades.GetTradesResponse;
-import businessObjects.api.clickhouseApiService.getTrades.GetTradesResponseError;
 import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -17,7 +15,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
 import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByAccountServerId;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -55,7 +52,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
-    @AllureId("")
+    @AllureId("214")
     public void getTradesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -87,7 +84,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by empty params")
-    @AllureId("")
+    @AllureId("428")
     public void getTradesEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -126,7 +123,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by clientId and limit")
-    @AllureId("")
+    @AllureId("367")
     public void getTradesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -154,7 +151,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades order by create time default order")
-    @AllureId("")
+    @AllureId("368")
     public void getTradesDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -180,7 +177,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades order by actualAmountUSD")
-    @AllureId("")
+    @AllureId("369")
     public void getTradesOrderByAmountUsdTest() throws IOException{
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -199,7 +196,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades no params")
-    @AllureId("")
+    @AllureId("370")
     public void getTradesNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -214,7 +211,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades no tradingAccount")
-    @AllureId("")
+    @AllureId("371")
     public void getTradesNoTradingAccountTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -237,7 +234,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades no serverId")
-    @AllureId("")
+    @AllureId("372")
     public void getTradesNoServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -260,7 +257,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect dateFrom")
-    @AllureId("")
+    @AllureId("373")
     public void getTradesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -280,7 +277,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect dateTo")
-    @AllureId("")
+    @AllureId("374")
     public void getTradesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -300,7 +297,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect orderBy")
-    @AllureId("")
+    @AllureId("375")
     public void getTradesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -318,7 +315,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect sortOrder")
-    @AllureId("")
+    @AllureId("376")
     public void getTradesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
@@ -336,7 +333,7 @@ public class GetTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect limit")
-    @AllureId("")
+    @AllureId("377")
     public void getTradesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
