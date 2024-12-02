@@ -6,17 +6,19 @@ import java.util.List;
 
 public class GetMirrorAccountsByTradesResponse {
 
-    @JsonProperty("requestTradingAccount")
-    public String requestTradingAccount;
+    @JsonProperty("originalAccount")
+    public originalAccount originalAccount;
 
-    @JsonProperty("requestServerId")
-    public String requestServerId;
+    public static class originalAccount{
+        @JsonProperty("tradingAccount")
+        public String requestTradingAccount;
 
-    @JsonProperty("requestVolumeInLots")
-    public String requestVolumeInLots;
+        @JsonProperty("serverId")
+        public String requestServerId;
 
-    @JsonProperty("Symbol")
-    public String Symbol;
+        @JsonProperty("volumeInLots")
+        public String requestVolumeInLots;
+    }
 
     @JsonProperty("mirrorAccounts")
     public List<MirrorAccounts> mirrorAccounts;

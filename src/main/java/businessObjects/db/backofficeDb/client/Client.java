@@ -1,4 +1,4 @@
-package businessObjects.db.boDb.client;
+package businessObjects.db.backofficeDb.client;
 
 import java.util.Objects;
 

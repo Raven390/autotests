@@ -1,7 +1,7 @@
 package tests.mitigationServiceApiTests;
 
 import businessObjects.api.mitigationService.*;
-import businessObjects.db.auditServiceDB.Event;
+import businessObjects.db.auditServiceDb.Event;
 import helpers.database.AuditHelper;
 import helpers.database.DbName;
 import helpers.database.MitigationHelper;
