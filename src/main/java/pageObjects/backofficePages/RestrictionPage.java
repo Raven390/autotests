@@ -1,8 +1,8 @@
 package pageObjects.backofficePages;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
-import businessObjects.db.auditServiceDB.Event;
-import businessObjects.db.mitigationServiceDB.ClientsRestriction;
+import businessObjects.db.auditServiceDb.Event;
+import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.restrictionEvents.ClientRestrictionApply;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

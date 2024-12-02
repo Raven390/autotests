@@ -1,4 +1,4 @@
-package businessObjects.db.boDb.alert;
+package businessObjects.db.backofficeDb.alert;
 
 import java.util.Objects;
 

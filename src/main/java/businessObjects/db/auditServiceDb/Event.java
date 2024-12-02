@@ -1,4 +1,4 @@
-package businessObjects.db.auditServiceDB;
+package businessObjects.db.auditServiceDb;
 
 
 import java.util.Objects;

@@ -93,4 +93,5 @@ public class Constants {
     public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt__mt5_deals";
     public static final String BO_ALERT_TABLE_NAME = "bo.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "bo.bo.client";
+    public static final String AGGR_MIRROR_ACCOUNTS_BY_TRADES = "vindex_test_api.aggr__mirror_accounts_by_trades";
 }

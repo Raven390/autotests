@@ -1,4 +1,4 @@
-package businessObjects.db.mitigationServiceDB;
+package businessObjects.db.mitigationServiceDb;
 
 import java.util.Objects;
 

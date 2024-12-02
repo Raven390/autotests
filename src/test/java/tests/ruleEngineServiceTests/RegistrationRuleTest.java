@@ -1,6 +1,6 @@
 package tests.ruleEngineServiceTests;
 
-import businessObjects.db.mitigationServiceDB.ClientsRestriction;
+import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
