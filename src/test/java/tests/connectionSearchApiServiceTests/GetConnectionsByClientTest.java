@@ -2,7 +2,7 @@ package tests.connectionSearchApiServiceTests;
 
 import businessObjects.api.connectionSearchApi.GetConnectionsResponse;
 import businessObjects.api.connectionSearchApi.GetConnectionsResponseError;
-import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -12,14 +12,16 @@ import tests.TestBaseApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByClientId;
 import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
+import static businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3Factory.getConnectionTableEntryByClientLvl2V3;
+import static businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3Factory.getConnectionTableEntryByClientV3;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntryFactory.getConnectionTableEntryByClient;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -32,13 +34,15 @@ import static utils.Constants.*;
 public class GetConnectionsByClientTest extends TestBaseApi {
 
     public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsByClientResponseSuccess();
+    public final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess();
     public final GetConnectionsResponseError getConnectionsResponseError = getConnectionsResponseErrorBadRequest();
-    public static final String TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
-    public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntryByClient();
+    public static ConnectionTableEntryV3 connectionTableEntryV3 = getConnectionTableEntryByClientV3();
+    public static ConnectionTableEntryV3 connectionTableEntryV3Lvl2 = getConnectionTableEntryByClientLvl2V3();
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(TABLE_NAME, connectionTableEntry);
+        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryV3);
+        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryV3Lvl2);
     }
 
     @Test
@@ -46,7 +50,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("145")
     public void getConnectionsByClientSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntry.userFrom);
+        queryParams.put("clientId", connectionTableEntryV3.userFrom);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -57,9 +61,8 @@ public class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsResponseSuccess));
+        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess, getConnectionsLvl2ResponseSuccess));
     }
 
     @Test
@@ -67,8 +70,8 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("146")
     public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntry.userFrom);
-        queryParams.put("connectionDepth", connectionTableEntry.level);
+        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -90,7 +93,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     public void getConnectionsNoSuchClientIdSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "test-12345");
-        queryParams.put("connectionDepth", connectionTableEntry.level);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -108,8 +110,8 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("148")
     public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntry.userFrom);
-        queryParams.put("connectionDepth", 99);
+        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("connectionDepth", -99);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -127,7 +129,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("149")
     public void getConnectionsNoClientIdBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("connectionDepth", connectionTableEntry.level);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
@@ -148,7 +149,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     public void getConnectionsIncorrectClientIdFormatBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "incorrect_client_format");
-        queryParams.put("connectionDepth", connectionTableEntry.level);
+        queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
@@ -166,7 +167,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("150")
     public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntry.userFrom);
+        queryParams.put("clientId", connectionTableEntryV3.userFrom);
         queryParams.put("connectionDepth", "test");
 
         Response response = getConnectionsByClientId(queryParams);
@@ -184,6 +185,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
-        deleteEntryFromDb(TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry.userFrom));
+        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryV3.userFrom));
+        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryV3Lvl2.userFrom));
     }
 }

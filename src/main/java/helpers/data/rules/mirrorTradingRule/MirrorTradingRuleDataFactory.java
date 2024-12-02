@@ -3,10 +3,9 @@ package helpers.data.rules.mirrorTradingRule;
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.api.mitigationService.PostRestrictionResponse;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import helpers.data.ClientHelper;
-import helpers.data.rules.registrationRule.RegistrationRuleDataFactory;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import okhttp3.Response;
@@ -57,39 +56,29 @@ public class MirrorTradingRuleDataFactory {
     }
 
     public static class ConnectionAndConnectedUser {
-        public ConnectionTableEntry connectionTableEntry;
+        public ConnectionTableEntryV3 connectionTableEntryV3;
         public CrmTbUserObject crmTbUserObject;
 
-        public ConnectionAndConnectedUser(ConnectionTableEntry connectionTableEntry, CrmTbUserObject crmTbUserObject) {
-            this.connectionTableEntry = connectionTableEntry;
+        public ConnectionAndConnectedUser(ConnectionTableEntryV3 connectionTableEntryV3, CrmTbUserObject crmTbUserObject) {
+            this.connectionTableEntryV3 = connectionTableEntryV3;
             this.crmTbUserObject = crmTbUserObject;
         }
     }
 
-    public static RegistrationRuleDataFactory.ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
-        ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(
+    public static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
+        ConnectionTableEntryV3 connectionTableEntryV3 = new ConnectionTableEntryV3(
                 fromClient.getUcid(),
                 toClient.getUcid(),
-                1,
-                String.format("""
-                    {
-                        "connect_info":{
-                            "user_1":{"user_id": "%s","brand": "%s"},
-                            "connection_1":{
-                                "attr_info":{"payout": "463344**** **5603"},
-                                "degree_connection": "sameIdentity",
-                                "connection_score": 1
-                            },
-                            "user_2":{"user_id": "%s","brand": "%s"}
-                        }
-                    }""", fromClient.getUserId(), fromClient.getBrand().toLowerCase(), toClient.getUserId(), toClient.getBrand().toLowerCase()),
+                "Same Identity",
+                1d,
+                "{\"payout\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat());
         // Create connected user
         CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
         connectedCrmTbUserObject.phoneNum = toClient.getPhoneNumber();
         connectedCrmTbUserObject.email = toClient.getEmail();
         connectedCrmTbUserObject.countryCode = toClient.getCountryCode();
-        return new RegistrationRuleDataFactory.ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject);
+        return new ConnectionAndConnectedUser(connectionTableEntryV3, connectedCrmTbUserObject);
     }
 
     public static void getMirrorTradingRuleExitEventEnd1_1Data() {

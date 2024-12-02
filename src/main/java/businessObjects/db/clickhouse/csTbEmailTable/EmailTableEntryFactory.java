@@ -10,7 +10,7 @@ public class EmailTableEntryFactory {
         return new EmailTableEntry(
                 "vantage-99992",
                 99_992,
-                "vantage",
+                "Vantage",
                 "test@email.com",
                 getCurrentTimestampDbFormat()
         );
@@ -20,7 +20,7 @@ public class EmailTableEntryFactory {
         return new EmailTableEntry(
                 user.ucid,
                 user.userId,
-                user.brand.toLowerCase(),
+                user.brand,
                 user.email,
                 getCurrentTimestampDbFormat()
         );

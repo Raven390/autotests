@@ -80,7 +80,8 @@ public class Constants {
     public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt__tb_credits";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__mt5_trades";
-    public static final String CONNECTIONS_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
+    public static final String CONNECTIONS_V2_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
+    public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
     public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";
     public static final String IP_TABLE_NAME = "vindex_test.cs__tb_ip_table";
@@ -90,4 +91,6 @@ public class Constants {
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo__client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "mi.mi.clients_restriction";
     public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt__mt5_deals";
+    public static final String BO_ALERT_TABLE_NAME = "bo.bo.alert";
+    public static final String BO_CLIENT_TABLE_NAME = "bo.bo.client";
 }

@@ -28,10 +28,13 @@ public class GetConnectionsResponse {
     @JsonProperty("abuseType")
     public String abuseType;
 
+    @JsonProperty("connectionStrengthToInitial")
+    public Double connectionStrengthToInitial;
+
     public GetConnectionsResponse() {
     }
 
-    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength, ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType) {
+    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength, ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType, Double connectionStrengthToInitial) {
         this.clientIdFrom = clientIdFrom;
         this.clientIdTo = clientIdTo;
         this.connectionStrength = connectionStrength;
@@ -39,6 +42,7 @@ public class GetConnectionsResponse {
         this.connectionType = connectionType;
         this.connectionDepth = connectionDepth;
         this.abuseType = abuseType;
+        this.connectionStrengthToInitial = connectionStrengthToInitial;
     }
 
     @Override
@@ -46,25 +50,12 @@ public class GetConnectionsResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetConnectionsResponse that = (GetConnectionsResponse) o;
-        return Objects.equals(clientIdFrom, that.clientIdFrom) && Objects.equals(clientIdTo, that.clientIdTo) && Objects.equals(connectionStrength, that.connectionStrength) && Objects.deepEquals(connectionDetail, that.connectionDetail) && Objects.equals(connectionType, that.connectionType) && Objects.equals(connectionDepth, that.connectionDepth) && Objects.equals(abuseType, that.abuseType);
+        return Objects.equals(clientIdFrom, that.clientIdFrom) && Objects.equals(clientIdTo, that.clientIdTo) && Objects.equals(connectionStrength, that.connectionStrength) && Objects.deepEquals(connectionDetail, that.connectionDetail) && Objects.equals(connectionType, that.connectionType) && Objects.equals(connectionDepth, that.connectionDepth) && Objects.equals(abuseType, that.abuseType) && Objects.equals(connectionStrengthToInitial, that.connectionStrengthToInitial);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientIdFrom, clientIdTo, connectionStrength, Arrays.hashCode(connectionDetail), connectionType, connectionDepth, abuseType);
-    }
-
-    @Override
-    public String toString() {
-        return "GetConnectionsResponse{" +
-                "clientIdFrom='" + clientIdFrom + '\'' +
-                ", clientIdTo='" + clientIdTo + '\'' +
-                ", connectionStrength=" + connectionStrength +
-                ", connectionDetail=" + Arrays.toString(connectionDetail) +
-                ", connectionType='" + connectionType + '\'' +
-                ", connectionDepth=" + connectionDepth +
-                ", abuseType='" + abuseType + '\'' +
-                '}';
+        return Objects.hash(clientIdFrom, clientIdTo, connectionStrength, Arrays.hashCode(connectionDetail), connectionType, connectionDepth, abuseType, connectionStrengthToInitial);
     }
 
     public static class ConnectionDetail {

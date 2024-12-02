@@ -15,6 +15,7 @@ import java.util.*;
 
 import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.getEmailTableEntryByCrmUser;
 import static helpers.data.rules.registrationRule.RegistrationRuleDataFactory.*;
+import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -95,7 +96,7 @@ public class RegistrationRuleTest {
             });
             data.connections.forEach(connection -> {
                 try {
-                    insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
+                    insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connection);
                 } catch (SQLException | ReflectiveOperationException e) {
                     throw new RuntimeException(e);
                 }
@@ -176,6 +177,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData2.lnSessionParsedObject.riskRating));
         assertThat("Verify alert id not null", alert.rule.attributes.stepName, equalTo("High Lexis score"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData2.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
         Allure.step("Get client restrictions");
@@ -234,6 +246,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes ipAddress is correct", alert.rule.attributes.ipAddress, equalTo(registrationRuleData3.lnSessionParsedObject.trueIp));
         assertThat("Verify rule attributes country is correct", alert.rule.attributes.country, equalTo(registrationRuleData3.crmTbUserObject.countryCode));
 
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData3.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+//
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES,
@@ -289,6 +312,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("IB or referrer connection"));
         assertThat("Verify rule attributes refferalId is correct", alert.rule.attributes.refferalId, equalTo(registrationRuleData4.crmTbUserObject.rafReferrerId));
         assertThat("Verify rule attributes ibId is correct", alert.rule.attributes.ibId, equalTo(registrationRuleData4.crmTbUserObject.ibId));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData4.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -373,6 +407,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData6.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score, same Identity"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData6.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -551,6 +596,17 @@ public class RegistrationRuleTest {
         }
 
         assertThat("Verify that all the expected abuse types were found", expectedSteps, empty());
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v1.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(8));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -623,6 +679,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData7v2.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v2.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -687,6 +754,16 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData7v3.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
 
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v3.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -790,6 +867,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked bonus abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v5.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -854,6 +942,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked bonus abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v6.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -916,6 +1015,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("LOSS_VOUCHER_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked voucher abuse"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v7.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -978,6 +1088,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("LOSS_VOUCHER_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked voucher abuse"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v8.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1041,6 +1162,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("NEWS_ABUSER"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked news trading abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v9.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1102,6 +1234,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("NEWS_ABUSER"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked news trading abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v10.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1152,6 +1295,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("TLS_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked TLS abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v11.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1216,6 +1370,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("SWAP_ARBITRAGE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked SWAP abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v12.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1275,6 +1440,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("MARKET_MANIPULATION"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked market manipulator abuser"));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v13.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1334,6 +1510,17 @@ public class RegistrationRuleTest {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked unknown abuser"));
         assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, equalTo(new String[]{"UNKNOWN"}));
+//
+//        List<Alert> dbAlerts = getObjectsFromDB(
+//                DbName.BO,
+//                BO_ALERT_TABLE_NAME,
+//                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, registrationRuleData7v14.clientHelper.getUcid()),
+//                Alert.class
+//        );
+//
+//        // Verify alert in BO db
+//
+//        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
@@ -1369,7 +1556,7 @@ public class RegistrationRuleTest {
             });
             data.connections.forEach(connection -> {
                 try {
-                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
+                    deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
@@ -1386,6 +1573,7 @@ public class RegistrationRuleTest {
                 deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
             }
             cleanUserRestriction(data.clientHelper.getUcid());
+            closeAlert(data.clientHelper.getUcid());
         }
     }
 }

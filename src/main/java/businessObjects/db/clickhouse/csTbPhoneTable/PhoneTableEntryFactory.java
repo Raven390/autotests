@@ -8,7 +8,7 @@ public class PhoneTableEntryFactory {
         return new PhoneTableEntry(
                 "vantage-99994",
                 99_994,
-                "vantage",
+                "Vantage",
                 "357111111111",
                 getCurrentTimestampDbFormat()
         );

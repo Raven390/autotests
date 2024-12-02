@@ -10,7 +10,21 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
+                null,
+                1d
+        );
+    }
+
+    public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(){
+        return new GetConnectionsResponse(
+                "vantage-99999",
+                "vantage-99991",
+                0.5d,
+                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
+                "Same Person",
+                2,
+                null,
+                0.5d
         );
     }
 
@@ -85,19 +99,8 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
-        );
-    }
-
-    public static GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess(){
-        return new GetConnectionsResponse(
-                "vantage-99991",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
-                "Same Person",
-                2,
-                null
+                null,
+                1d
         );
     }
 
@@ -109,7 +112,8 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
+                null,
+                1d
         );
     }
 
@@ -121,7 +125,8 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
+                null,
+                1d
         );
     }
 
@@ -133,7 +138,8 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
+                null,
+                1d
         );
     }
 
@@ -145,19 +151,21 @@ public class GetConnectionsResponseFactory {
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 1,
-                null
+                null,
+                1d
         );
     }
 
     public static GetConnectionsResponse getConnectionsByAttributesForDepth(){
         return new GetConnectionsResponse(
-                "vantage-99991",
                 "vantage-99999",
+                "vantage-99997",
                 1.0,
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payout", "463344**** **5603")},
                 "Same Person",
                 2,
-                null
+                null,
+                1d
         );
     }
 }

@@ -3,10 +3,9 @@ package tests.clickHouseApiServiceTests;
 import static businessObjects.api.clickhouseApiService.getClient.GetClientRequest.getClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import businessObjects.api.clickhouseApiService.getClient.GetClientResponse;

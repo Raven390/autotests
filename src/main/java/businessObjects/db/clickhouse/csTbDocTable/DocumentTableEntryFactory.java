@@ -8,23 +8,11 @@ public class DocumentTableEntryFactory {
      return new DocumentTableEntry(
              "vantage-99991",
              99_991,
-             "vantage",
+             "Vantage",
              "passport",
              "testaccidnum",
              1,
              getCurrentTimestampDbFormat()
      );
-    }
-
-    public static DocumentTableEntry documentTableEntryForConnectionSearchDepth() {
-        return new DocumentTableEntry(
-                "vantage-99997",
-                99_997,
-                "vantage",
-                "passport",
-                "testaccidnum",
-                1,
-                getCurrentTimestampDbFormat()
-        );
     }
 }

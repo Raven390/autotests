@@ -2,7 +2,7 @@ package businessObjects.db.clickhouse.csTbConnectionTableV2;
 
 import java.util.Objects;
 
-public class ConnectionTableEntry {
+public class ConnectionTableEntryV2 {
 
     public String userFrom;
     public String userTo;
@@ -10,10 +10,10 @@ public class ConnectionTableEntry {
     public String attr;
     public String updateTs;
 
-    public ConnectionTableEntry() {
+    public ConnectionTableEntryV2() {
     }
 
-    public ConnectionTableEntry(String userFrom, String userTo, Integer level, String attr, String updateTs) {
+    public ConnectionTableEntryV2(String userFrom, String userTo, Integer level, String attr, String updateTs) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.level = level;
@@ -25,7 +25,7 @@ public class ConnectionTableEntry {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ConnectionTableEntry that = (ConnectionTableEntry) o;
+        ConnectionTableEntryV2 that = (ConnectionTableEntryV2) o;
         return Objects.equals(userFrom, that.userFrom) && Objects.equals(userTo, that.userTo) && Objects.equals(level, that.level) && Objects.equals(attr, that.attr) && Objects.equals(updateTs, that.updateTs);
     }
 
