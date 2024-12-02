@@ -3,7 +3,7 @@ package helpers.data.rules.registrationRule;
 
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
@@ -69,33 +69,24 @@ public class RegistrationRuleDataFactory {
     }
 
     public static class ConnectionAndConnectedUser {
-        public ConnectionTableEntry connectionTableEntry;
+        public ConnectionTableEntryV3 connectionTableEntryV2;
         public CrmTbUserObject crmTbUserObject;
 
-        public ConnectionAndConnectedUser(ConnectionTableEntry connectionTableEntry, CrmTbUserObject crmTbUserObject) {
-            this.connectionTableEntry = connectionTableEntry;
+        public ConnectionAndConnectedUser(ConnectionTableEntryV3 connectionTableEntryV3, CrmTbUserObject crmTbUserObject) {
+            this.connectionTableEntryV2 = connectionTableEntryV3;
             this.crmTbUserObject = crmTbUserObject;
         }
     }
 
     public static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
-        ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(
+        ConnectionTableEntryV3 connectionTableEntryV3 = new ConnectionTableEntryV3(
                 fromClient.getUcid(),
                 toClient.getUcid(),
-                1,
-                String.format("""
-                    {
-                        "connect_info":{
-                            "user_1":{"user_id": "%s","brand": "%s"},
-                            "connection_1":{
-                                "attr_info":{"payout": "463344**** **5603"},
-                                "degree_connection": "sameIdentity",
-                                "connection_score": 1
-                            },
-                            "user_2":{"user_id": "%s","brand": "%s"}
-                        }
-                    }""", fromClient.getUserId(), fromClient.getBrand().toLowerCase(), toClient.getUserId(), toClient.getBrand().toLowerCase()),
-                getCurrentTimestampDbFormat());
+                "Same Identity",
+                1d,
+                "{\"payout\": \"463344**** **5603\"}",
+                getCurrentTimestampDbFormat()
+        );
         // Create connected user
         CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
         connectedCrmTbUserObject.phoneNum = fromClient.getPhoneNumber();
@@ -104,7 +95,7 @@ public class RegistrationRuleDataFactory {
         connectedCrmTbUserObject.regulator = "VFSC2";
         connectedCrmTbUserObject.rafReferrerId = 22;
         connectedCrmTbUserObject.ibId = 33;
-        return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject);
+        return new ConnectionAndConnectedUser(connectionTableEntryV3, connectedCrmTbUserObject);
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd1Data() {
@@ -137,7 +128,7 @@ public class RegistrationRuleDataFactory {
         crmTbUserObject.rafReferrerId = crmTbUserToObject.rafReferrerId;
         crmTbUserObject.ibId = crmTbUserToObject.ibId;
         registrationRuleData.connectedUsers.add(crmTbUserToObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -148,7 +139,7 @@ public class RegistrationRuleDataFactory {
         CrmTbUserObject crmTbUserToObject = connectionAndConnectedUser.crmTbUserObject;
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(crmTbUserToObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -157,7 +148,7 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd6Client, connectedClient);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntryV2);
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         return registrationRuleData;
     }
@@ -196,21 +187,21 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntryV2);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownFraudster.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -225,7 +216,7 @@ public class RegistrationRuleDataFactory {
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -241,7 +232,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -257,7 +248,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -272,7 +263,7 @@ public class RegistrationRuleDataFactory {
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -288,7 +279,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -303,7 +294,7 @@ public class RegistrationRuleDataFactory {
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -320,7 +311,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -337,7 +328,7 @@ public class RegistrationRuleDataFactory {
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -352,7 +343,7 @@ public class RegistrationRuleDataFactory {
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -366,7 +357,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientTls.getUcid(), 1, "TLS"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -382,7 +373,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), 1, "SWAP_ARBITRAGE"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntryV2);
         return registrationRuleData;
     }
 
@@ -396,7 +387,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), 1, "MARKET_MANIPULATION"));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntryV2);
 
         registrationRuleData.mtTbUserObject = generateMtTbUserData(registrationRuleData.clientHelper.getUcid(), getRandomIntPositive(), 188);
         return registrationRuleData;
@@ -413,7 +404,7 @@ public class RegistrationRuleDataFactory {
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntry);
+        registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntryV2);
         return registrationRuleData;
     }
 }

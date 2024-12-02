@@ -106,6 +106,9 @@ public class DbHelper {
         } else if (targetType.equals(String.class) && value instanceof InetAddress) {
             // Convert InetAddress (including Inet4Address) to String
             return ((InetAddress) value).getHostAddress();
+        } else if (targetType.equals(String.class) && value instanceof org.postgresql.util.PGobject) {
+            // Convert PGobject to String
+            return ((org.postgresql.util.PGobject) value).getValue();
         }
 
         throw new IllegalArgumentException(String.format(
@@ -193,6 +196,23 @@ public class DbHelper {
              PreparedStatement statement = connection.prepareStatement(query)) {
             System.out.println(query);
             statement.executeUpdate();
+        } finally {
+            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
+                stopSshTunnel();
+            }
+        }
+    }
+
+    @Step("Execute query: {query} to {dbName}")
+    public static void executeQueryToDb(DbName dbName, String query) throws SQLException {
+        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
+            startSshTunnel();
+        }
+
+        try (Connection connection = createConnection(dbName)) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.executeUpdate();
+            }
         } finally {
             if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
                 stopSshTunnel();

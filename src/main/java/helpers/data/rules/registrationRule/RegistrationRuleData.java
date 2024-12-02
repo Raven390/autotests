@@ -2,7 +2,7 @@ package helpers.data.rules.registrationRule;
 
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV2.ConnectionTableEntry;
+import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
@@ -14,7 +14,7 @@ public class RegistrationRuleData {
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
     public LnSessionParsedObject lnSessionParsedObject;
-    public List<ConnectionTableEntry> connections;
+    public List<ConnectionTableEntryV3> connections;
     public List<CrmTbUserObject> connectedUsers;
     public RegistrationEvent registrationEvent;
     public List<BoClientFraudTypesObject> clientFraudTypes;
@@ -23,7 +23,7 @@ public class RegistrationRuleData {
     public RegistrationRuleData() {
     }
 
-    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
+    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntryV3> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;

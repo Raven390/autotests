@@ -8,7 +8,7 @@ public class PayoutTableEntryFactory {
         return new PayoutTableEntry(
                 "vantage-99995",
                 99_995,
-                "vantage",
+                "Vantage",
                 "testpayoutid",
                 getCurrentTimestampDbFormat()
         );

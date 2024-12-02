@@ -8,7 +8,7 @@ public class IpTableEntryFactory {
         return new IpTableEntry(
                 "vantage-99993",
                 99_993,
-                "vantage",
+                "Vantage",
                 "111.111.111.111",
                 getCurrentTimestampDbFormat()
         );

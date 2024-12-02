@@ -2,10 +2,11 @@ package businessObjects.db.clickhouse.csTbConnectionTableV2;
 
 import static utils.Utils.getCurrentTimestampDbFormat;
 
-public class ConnectionTableEntryFactory {
+public class ConnectionTableEntryV2Factory {
 
-    public static ConnectionTableEntry getConnectionTableEntryByClient() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByClientV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99996",
                 "vantage-99999",
                 1,
@@ -25,8 +26,9 @@ public class ConnectionTableEntryFactory {
                 );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryByDocument() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByDocumentV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99991",
                 "vantage-99999",
                 1,
@@ -46,8 +48,9 @@ public class ConnectionTableEntryFactory {
         );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryByEmail() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByEmailV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99992",
                 "vantage-99999",
                 1,
@@ -67,8 +70,9 @@ public class ConnectionTableEntryFactory {
         );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryByIp() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByIpV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99993",
                 "vantage-99999",
                 1,
@@ -88,8 +92,9 @@ public class ConnectionTableEntryFactory {
         );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryByPhone() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByPhoneV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99994",
                 "vantage-99999",
                 1,
@@ -109,8 +114,9 @@ public class ConnectionTableEntryFactory {
         );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryByPayout() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryByPayoutV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99995",
                 "vantage-99999",
                 1,
@@ -130,8 +136,9 @@ public class ConnectionTableEntryFactory {
         );
     }
 
-    public static ConnectionTableEntry getConnectionTableEntryForDepth() {
-        return new ConnectionTableEntry(
+    @Deprecated
+    public static ConnectionTableEntryV2 getConnectionTableEntryForDepthV2() {
+        return new ConnectionTableEntryV2(
                 "vantage-99997",
                 "vantage-99999",
                 2,
