@@ -10,9 +10,12 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
 
+import static businessObjects.api.mitigationService.MitigationServiceRequest.disableCRMEmulator;
+import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
 import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.getEmailTableEntryByCrmUser;
 import static helpers.data.rules.registrationRule.RegistrationRuleDataFactory.*;
 import static helpers.database.BoHelper.closeAlert;
@@ -52,7 +55,9 @@ public class RegistrationRuleTest {
     public static List<RegistrationRuleData> dbDataList = new ArrayList<>();
 
     @BeforeAll
-    public static void setupDbData() throws ReflectiveOperationException, SQLException {
+    public static void setupDbData() throws ReflectiveOperationException, SQLException, IOException {
+        // Enable emulator to set restrictions to status APPLIED
+        enableCRMEmulator();
 
         // Put all the db data for setup in a list
         dbDataList.add(registrationRuleData1);
@@ -1575,5 +1580,7 @@ public class RegistrationRuleTest {
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
+
+        disableCRMEmulator();
     }
 }
