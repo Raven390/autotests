@@ -15,8 +15,11 @@ import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObjectFactory.generateMirrorTradesByAccount;
@@ -29,6 +32,11 @@ import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.gene
 import static businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.BoHelper.closeAlert;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.MitigationHelper.cleanUserRestriction;
+import static utils.Constants.*;
 import static utils.Utils.*;
 
 public class MirrorTradingRuleDataFactory {
@@ -431,5 +439,158 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for no dummy trades?
         data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
         return data;
+    }
+
+    public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() throws ReflectiveOperationException, SQLException {
+        Map<String, MirrorTradingRuleData> map = new HashMap<>();
+        // Put all the db data for setup in a list
+        map.put("2", getMirrorTradingRuleExitEventEnd2Data());
+        map.put("3_1", getMirrorTradingRuleExitEventEnd3_1Data());
+        map.put("3_2", getMirrorTradingRuleExitEventEnd3_2Data());
+        map.put("4_1", getMirrorTradingRuleExitEventEnd4_1Data());
+        map.put("4_2", getMirrorTradingRuleExitEventEnd4_2Data());
+        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
+        map.put("5_2", getMirrorTradingRuleExitEventEnd5_2Data());
+        map.put("6", getMirrorTradingRuleExitEventEnd6Data());
+        map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
+        map.put("1_2", getMirrorTradingRuleExitEventEnd1_2Data());
+        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
+        map.put("7_2", getMirrorTradingRuleExitEventEnd7_2Data());
+        map.put("7_3", getMirrorTradingRuleExitEventEnd7_3Data());
+        map.put("7_4", getMirrorTradingRuleExitEventEnd7_4Data());
+        map.put("7_5", getMirrorTradingRuleExitEventEnd7_5Data());
+
+        // Loop through the list with data and insert all the data into the according tables
+        for (MirrorTradingRuleData data : map.values()) {
+            insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            data.connections.forEach(connection -> {
+                try {
+                    insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connection);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.lnSessionParsedObjectRegistration != null) {
+                insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
+            }
+            if (data.lnSessionParsedObjectLogin != null) {
+                insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectLogin);
+            }
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.mtTbUserObject != null) {
+                insertObjectToDb(MT_USER_TABLE_NAME, data.mtTbUserObject);
+            }
+            data.mtTbCreditsObjects.forEach(credit -> {
+                try {
+                    insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
+                try {
+                    insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbDepositObjects.forEach(deposit -> {
+                try {
+                    insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbBonusObjects.forEach(bonus -> {
+                try {
+                    insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.mt5DealsObjects.forEach(deal -> {
+                try {
+                    insertObjectToDb(MT5_DEALS_TABLE_NAME, deal);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.aggrCreditEquityRate != null) {
+                insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
+            }
+            if (data.aggrMirrorAccountsByTrades != null) {
+                insertObjectToDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, data.aggrMirrorAccountsByTrades);
+            }
+        }
+        return map;
+    }
+
+    public static void deleteMirrorTradingRuleData(Map<String, MirrorTradingRuleData> map) throws Exception {
+        // Loop through the list with data and delete all the previously created data into the according tables
+        for (MirrorTradingRuleData data : map.values()) {
+            deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            data.connections.forEach(connection -> {
+                try {
+                    deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
+            deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.userId));
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.mtTbUserObject != null) {
+                deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
+            }
+            data.mtTbCreditsObjects.forEach(credit -> {
+                try {
+                    deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
+                try {
+                    deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbDepositObjects.forEach(deposit -> {
+                try {
+                    deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.crmTbBonusObjects.forEach(bonus -> {
+                try {
+                    deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.mt5DealsObjects.forEach(deal -> {
+                try {
+                    deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("server_id = %s and login = %s", deal.serverId, deal.login));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            cleanUserRestriction(data.clientHelper.getUcid());
+            closeAlert(data.clientHelper.getUcid());
+        }
     }
 }

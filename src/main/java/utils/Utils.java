@@ -1,5 +1,7 @@
 package utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -106,5 +108,18 @@ public class Utils {
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
         int x = new Random().nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
+    }
+
+    public static double roundDouble(double value, int decimals) {
+        if (decimals < 0) {
+            throw new IllegalArgumentException("Decimals must be non-negative.");
+        }
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(decimals, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static String timestampFromDbToIso(String timestampDb) {
+        return timestampDb.replace(" ", "T") + "Z";
     }
 }

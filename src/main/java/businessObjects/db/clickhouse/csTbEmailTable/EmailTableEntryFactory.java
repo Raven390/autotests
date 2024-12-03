@@ -25,4 +25,14 @@ public class EmailTableEntryFactory {
                 getCurrentTimestampDbFormat()
         );
     }
+
+    public static EmailTableEntry emailTableEntryForConnectionSearchFiltration() {
+        return new EmailTableEntry(
+                "vantage-100004",
+                100_004,
+                "Vantage",
+                "testfiltration@qatest.com",
+                getCurrentTimestampDbFormat()
+        );
+    }
 }

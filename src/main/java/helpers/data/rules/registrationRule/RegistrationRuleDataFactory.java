@@ -9,13 +9,23 @@ import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.getEmailTableEntryByCrmUser;
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.BoHelper.closeAlert;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.MitigationHelper.cleanUserRestriction;
+import static utils.Constants.*;
+import static utils.Constants.MT_USER_TABLE_NAME;
 import static utils.Utils.*;
 
 public class RegistrationRuleDataFactory {
@@ -83,7 +93,7 @@ public class RegistrationRuleDataFactory {
                 toClient.getUcid(),
                 "Same Identity",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
         // Create connected user
@@ -404,5 +414,111 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntryV2);
         return registrationRuleData;
+    }
+
+    public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException, SQLException {
+        Map<String, RegistrationRuleData> map = new HashMap<>();
+        // Put all the db data for setup in a map
+        map.put("1", getRegistrationRuleExitEventEnd1Data());
+        map.put("2", getRegistrationRuleExitEventEnd2Data());
+        map.put("3", getRegistrationRuleExitEventEnd3Data());
+        map.put("4", getRegistrationRuleExitEventEnd4Data());
+        map.put("5", getRegistrationRuleExitEventEnd5Data());
+        map.put("6", getRegistrationRuleExitEventEnd6Data());
+//        map.put("7v1", getRegistrationRuleExitEventEnd7Version1Data());
+        map.put("7v2", getRegistrationRuleExitEventEnd7Version2Data());
+        map.put("7v3", getRegistrationRuleExitEventEnd7Version3Data());
+        map.put("7v4", getRegistrationRuleExitEventEnd7Version4Data());
+        map.put("7v5", getRegistrationRuleExitEventEnd7Version5Data());
+        map.put("7v6", getRegistrationRuleExitEventEnd7Version6Data());
+        map.put("7v7", getRegistrationRuleExitEventEnd7Version7Data());
+        map.put("7v8", getRegistrationRuleExitEventEnd7Version8Data());
+        map.put("7v9", getRegistrationRuleExitEventEnd7Version9Data());
+        map.put("7v10", getRegistrationRuleExitEventEnd7Version10Data());
+        map.put("7v11", getRegistrationRuleExitEventEnd7Version11Data());
+        map.put("7v12", getRegistrationRuleExitEventEnd7Version12Data());
+        map.put("7v13", getRegistrationRuleExitEventEnd7Version13Data());
+        map.put("7v14", getRegistrationRuleExitEventEnd7Version14Data());
+
+        // Loop through the map with data and insert all the data into the according tables
+        for (RegistrationRuleData data : map.values()) {
+            insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByCrmUser(data.crmTbUserObject));
+            data.connectedUsers.forEach(user -> {
+                try {
+                    insertObjectToDb(CRM_USER_TABLE_NAME, user);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.connectedUsers.forEach(user -> {
+                try {
+                    insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByCrmUser(user));
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.connections.forEach(connection -> {
+                try {
+                    insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connection);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.mtTbUserObject != null) {
+                insertObjectToDb(MT_USER_TABLE_NAME, data.mtTbUserObject);
+            }
+        }
+        return map;
+    }
+
+    public static void deleteRegistrationRuleData(Map<String, RegistrationRuleData> map) throws Exception {
+        // Loop through the map with data and delete all the previously created data into the according tables
+        for (RegistrationRuleData data : map.values()) {
+            deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            data.connectedUsers.forEach(user -> {
+                try {
+                    deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", user.userId));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.connectedUsers.forEach(user -> {
+                try {
+                    deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", user.userId));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.connections.forEach(connection -> {
+                try {
+                    deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.userId));
+            data.clientFraudTypes.forEach(fraud -> {
+                try {
+                    deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            if (data.mtTbUserObject != null) {
+                deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
+            }
+            cleanUserRestriction(data.clientHelper.getUcid());
+            closeAlert(data.clientHelper.getUcid());
+        }
     }
 }
