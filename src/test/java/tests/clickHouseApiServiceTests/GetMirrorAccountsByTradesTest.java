@@ -70,11 +70,11 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert requestTradingAccount", mappedResponse.originalAccount.requestTradingAccount, is(data1.requestTradingAccount));
         assertThat("Assert requestServerId", mappedResponse.originalAccount.requestServerId, is(data1.requestServerId));
-        assertThat("Assert requestVolumeInLots", mappedResponse.originalAccount.requestVolumeInLots, is(data1.requestVolumeInLots));
+        assertThat("Assert requestVolumeInLots", mappedResponse.originalAccount.requestVolumeInLots, is(data1.requestVolumeInLots.toString()));
         assertThat("Assert list size", mappedResponse.mirrorAccounts.size(), is(1));
         assertThat("Assert tradingAccount", mappedResponse.mirrorAccounts.getFirst().tradingAccount, is(data1.mirrorAccounts));
         assertThat("Assert serverId", mappedResponse.mirrorAccounts.getFirst().serverId, is(data1.mirrorServerId));
-        assertThat("Assert volumeInLots", mappedResponse.mirrorAccounts.getFirst().volumeInLots, is(data1.mirrorVolumeInLots));
+        assertThat("Assert volumeInLots", mappedResponse.mirrorAccounts.getFirst().volumeInLots, is(data1.mirrorVolumeInLots.toString()));
     }
 
     @Test

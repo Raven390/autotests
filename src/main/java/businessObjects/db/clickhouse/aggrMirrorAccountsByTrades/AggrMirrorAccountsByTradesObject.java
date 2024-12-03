@@ -7,17 +7,17 @@ public class AggrMirrorAccountsByTradesObject {
     public String symbol;
     public String requestTradingAccount;
     public String requestServerId;
-    public String requestVolumeInLots;
+    public Double requestVolumeInLots;
     public String mirrorAccounts;
     public String mirrorServerId;
-    public String mirrorVolumeInLots;
+    public Double mirrorVolumeInLots;
 
     public AggrMirrorAccountsByTradesObject() {
     }
 
     public AggrMirrorAccountsByTradesObject(String symbol, String requestTradingAccount, String requestServerId,
-                                            String requestVolumeInLots, String mirrorAccounts,String mirrorServerId,
-                                            String mirrorVolumeInLots) {
+                                            Double requestVolumeInLots, String mirrorAccounts,String mirrorServerId,
+                                            Double mirrorVolumeInLots) {
         this.symbol = symbol;
         this.requestTradingAccount = requestTradingAccount;
         this.requestServerId = requestServerId;

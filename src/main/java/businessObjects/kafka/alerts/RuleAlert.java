@@ -55,6 +55,15 @@ public class RuleAlert {
 
             @JsonProperty("ibId")
             public Integer ibId;
+
+            @JsonProperty("tradingAccount")
+            public Integer tradingAccount;
+
+            @JsonProperty("serverId")
+            public Integer serverId;
+
+            @JsonProperty("clones")
+            public String clones;
         }
     }
 }

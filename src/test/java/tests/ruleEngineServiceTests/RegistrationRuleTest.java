@@ -181,7 +181,7 @@ public class RegistrationRuleTest {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(registrationRuleData2.lnSessionParsedObject.riskRating));
-        assertThat("Verify alert id not null", alert.rule.attributes.stepName, equalTo("High Lexis score"));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score"));
 //
 //        List<Alert> dbAlerts = getObjectsFromDB(
 //                DbName.BO,
@@ -621,7 +621,7 @@ public class RegistrationRuleTest {
                 ClientsRestriction.class
         );
 
-        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(2));
 
         ClientsRestriction expectedRestriction1 = new ClientsRestriction(
                 registrationRuleData7v1.clientHelper.getUcid(),

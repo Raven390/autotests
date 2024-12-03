@@ -42,12 +42,11 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd7Version13Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version14Client = getRandomVantageClientAllFields();
 
-    public static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
+    private static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.phoneNum = client.getPhoneNumber();
         userObject.email = client.getEmail();
         userObject.countryCode = client.getCountryCode();
-        userObject.regulator = "VFSC2";
         LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObject.brand = client.getBrand();
         lexisNexisObject.eventType = "account_creation";
@@ -60,7 +59,7 @@ public class RegistrationRuleDataFactory {
         RegistrationEvent registrationEvent = new RegistrationEvent();
         registrationEvent.clientId = client.getUserId();
         registrationEvent.brand = client.getBrand();
-        registrationEvent.regulator = "VFSC2";
+        registrationEvent.regulator = "VFSC";
         registrationEvent.metaTraderAccount = 1;
         registrationEvent.id = getRandomUuidString();
         registrationEvent.createTime = Instant.now().toString();
@@ -68,7 +67,7 @@ public class RegistrationRuleDataFactory {
         return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>(), null);
     }
 
-    public static class ConnectionAndConnectedUser {
+    private static class ConnectionAndConnectedUser {
         public ConnectionTableEntryV3 connectionTableEntryV2;
         public CrmTbUserObject crmTbUserObject;
 
@@ -78,7 +77,7 @@ public class RegistrationRuleDataFactory {
         }
     }
 
-    public static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
+    private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
         ConnectionTableEntryV3 connectionTableEntryV3 = new ConnectionTableEntryV3(
                 fromClient.getUcid(),
                 toClient.getUcid(),
@@ -92,7 +91,6 @@ public class RegistrationRuleDataFactory {
         connectedCrmTbUserObject.phoneNum = fromClient.getPhoneNumber();
         connectedCrmTbUserObject.email = fromClient.getEmail();
         connectedCrmTbUserObject.countryCode = fromClient.getCountryCode();
-        connectedCrmTbUserObject.regulator = "VFSC2";
         connectedCrmTbUserObject.rafReferrerId = 22;
         connectedCrmTbUserObject.ibId = 33;
         return new ConnectionAndConnectedUser(connectionTableEntryV3, connectedCrmTbUserObject);

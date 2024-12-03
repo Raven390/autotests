@@ -11,7 +11,7 @@ public class CrmTbWithdrawalObjectFactory {
         return new CrmTbWithdrawalObject(client.getTradingAccount(), 1.0,2.0, client.getBrand(), getCurrentTimestampDbFormat(),
                 "USD",0.1,"CreditCard", "paymentDetails", getCurrentTimestampDbFormat(),
                 "paymentRequisite","paymentSystemAccount",
-                "EUR","paymentType","VFSC2",0.9,getCurrentTimestampDbFormat(),
+                "EUR","paymentType","VFSC",0.9,getCurrentTimestampDbFormat(),
                 1, getRandomIntPositive(), getRandomIntPositive(), client.getUcid(), getRandomUuidString(), getCurrentTimestampDbFormat(), client.getUserId());
     }
 }

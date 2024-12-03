@@ -3,19 +3,19 @@ package businessObjects.db.clickhouse.aggrCreditEquityRate;
 
 import java.util.Objects;
 
-public class AggrGetCreditEquityRatioObject {
+public class AggrCreditEquityRateObject {
     public String serverId;
     public String tradingAccount;
     public String indicatorDate;
-    public String currentEquity;
-    public String sumCreditOrder;
-    public String creditEquityRatio;
+    public Double currentEquity;
+    public Double sumCreditOrder;
+    public Double creditEquityRatio;
 
-    public AggrGetCreditEquityRatioObject() {
+    public AggrCreditEquityRateObject() {
     }
 
-    public AggrGetCreditEquityRatioObject(String serverId, String tradingAccount, String indicatorDate,
-                                          String currentEquity, String sumCreditOrder, String creditEquityRatio) {
+    public AggrCreditEquityRateObject(String serverId, String tradingAccount, String indicatorDate,
+                                      Double currentEquity, Double sumCreditOrder, Double creditEquityRatio) {
         this.serverId = serverId;
         this.tradingAccount = tradingAccount;
         this.indicatorDate = indicatorDate;
@@ -28,7 +28,7 @@ public class AggrGetCreditEquityRatioObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AggrGetCreditEquityRatioObject that = (AggrGetCreditEquityRatioObject) o;
+        AggrCreditEquityRateObject that = (AggrCreditEquityRateObject) o;
         return Objects.equals(serverId, that.serverId) && Objects.equals(tradingAccount, that.tradingAccount)
                 && Objects.equals(indicatorDate, that.indicatorDate) && Objects.equals(currentEquity, that.currentEquity)
                 && Objects.equals(sumCreditOrder, that.sumCreditOrder) && Objects.equals(creditEquityRatio, that.creditEquityRatio);
