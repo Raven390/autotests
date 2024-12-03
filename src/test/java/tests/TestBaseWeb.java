@@ -34,6 +34,7 @@ public class TestBaseWeb {
     public RestrictionPage restrictionPage;
     public ConnectionPage connectionPage;
     public GeneralPage generalPage;
+    public ResolveScreen resolveScreen;
 
     @BeforeAll
     static void setupBrowser() {
@@ -65,6 +66,7 @@ public class TestBaseWeb {
         restrictionPage = new RestrictionPage(page);
         connectionPage = new ConnectionPage(page);
         generalPage = new GeneralPage(page);
+        resolveScreen = new ResolveScreen(page);
     }
 
     @AfterEach
