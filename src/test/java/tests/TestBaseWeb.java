@@ -1,5 +1,7 @@
 package tests;
 
+import static helpers.database.DbHelper.startSshTunnel;
+import static helpers.database.DbHelper.stopSshTunnel;
 import static utils.ConfigFactory.*;
 
 import com.microsoft.playwright.*;
@@ -41,6 +43,7 @@ public class TestBaseWeb {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(getHeadless()).setTimeout(
                 TIMEOUT));
+        startSshTunnel();
     }
 
     @AfterAll
@@ -48,6 +51,7 @@ public class TestBaseWeb {
         if (playwright != null) {
             playwright.close();
         }
+        stopSshTunnel();
     }
 
     @BeforeEach

@@ -33,8 +33,7 @@ import static businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObjectFa
 import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -426,7 +425,7 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("count(balanceOrdersWithTypeWO) > 0 is False");
         Allure.step("Set restriction");
         Allure.step("Send alert");
-        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_1Client);
+        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_5Client);
         data.mtTbCreditsObjects.add(generateCreditsByClient(data.clientHelper));
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
@@ -442,6 +441,7 @@ public class MirrorTradingRuleDataFactory {
     }
 
     public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() throws ReflectiveOperationException, SQLException {
+        startSshTunnel();
         Map<String, MirrorTradingRuleData> map = new HashMap<>();
         // Put all the db data for setup in a list
         map.put("2", getMirrorTradingRuleExitEventEnd2Data());
@@ -592,5 +592,6 @@ public class MirrorTradingRuleDataFactory {
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
+        stopSshTunnel();
     }
 }

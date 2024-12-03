@@ -21,8 +21,7 @@ import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsed
 import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Constants.MT_USER_TABLE_NAME;
@@ -417,6 +416,7 @@ public class RegistrationRuleDataFactory {
     }
 
     public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException, SQLException {
+        startSshTunnel();
         Map<String, RegistrationRuleData> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleExitEventEnd1Data());
@@ -520,5 +520,6 @@ public class RegistrationRuleDataFactory {
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
+        stopSshTunnel();
     }
 }
