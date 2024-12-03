@@ -253,7 +253,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom success(200)")
-    @AllureId("")
+    @AllureId("467")
     public void getConnectionsByAttributesConnectionScoreFromSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
@@ -274,7 +274,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo success(200)")
-    @AllureId("")
+    @AllureId("468")
     public void getConnectionsByAttributesConnectionScoreToSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
@@ -295,7 +295,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionType success(200)")
-    @AllureId("")
+    @AllureId("469")
     public void getConnectionsByAttributesConnectionTypeSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
@@ -410,7 +410,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom not int Bad Request(400)")
-    @AllureId("")
+    @AllureId("470")
     public void getConnectionsConnectionScoreFromNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
@@ -431,7 +431,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo not int Bad Request(400)")
-    @AllureId("")
+    @AllureId("471")
     public void getConnectionsConnectionScoreToNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);

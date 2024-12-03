@@ -132,7 +132,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreFrom filtration success(200)")
-    @AllureId("")
+    @AllureId("460")
     public void getConnectionsConnectionScoreFromFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
@@ -153,7 +153,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreTo filtration success(200)")
-    @AllureId("")
+    @AllureId("461")
     public void getConnectionsConnectionScoreToFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
@@ -174,7 +174,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionType filtration success(200)")
-    @AllureId("")
+    @AllureId("462")
     public void getConnectionsConnectionTypeFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
@@ -195,7 +195,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionAttributes filtration success(200)")
-    @AllureId("")
+    @AllureId("463")
     public void getConnectionsConnectionAttributesFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
@@ -275,7 +275,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreFrom not int Bad Request(400)")
-    @AllureId("")
+    @AllureId("464")
     public void getConnectionsConnectionScoreFromNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryV3.userFrom);
@@ -296,7 +296,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreTo not int Bad Request(400)")
-    @AllureId("")
+    @AllureId("465")
     public void getConnectionsConnectionScoreToNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryV3.userFrom);
@@ -317,7 +317,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @Test
     @DisplayName("Connection search by client Api. Get connection with incorrect connectionAttributes Bad Request(400)")
-    @AllureId("")
+    @AllureId("466")
     public void getConnectionsConnectionAttributesIncorrectBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryV3.userFrom);
