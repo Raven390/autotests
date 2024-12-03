@@ -11,9 +11,9 @@ public class AggrMirrorAccountsByTradesObjectFactory {
         return new AggrMirrorAccountsByTradesObject("EURUSD",
                                                     client.getTradingAccount().toString(),
                                                     client.getServerId().toString(),
-                                                    1d,
+                                                    1.1,
                                                     String.valueOf(1234),
                                                     String.valueOf(2),
-                                                    3d);
+                                                    3.3);
     }
 }
