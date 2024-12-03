@@ -35,9 +35,7 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 public class GetMirrorAccountsByTradesTest extends TestBaseApi {
 
     private static AggrMirrorAccountsByTradesObject data1;
-    private static AggrMirrorAccountsByTradesObject data2;
     private static final ClientHelper client1 = getRandomVantageClient();
-    private static final ClientHelper client2 = getRandomVantageClient();
     private static final String symbol = "EURUSD";
     public static final String dateTo = getCurrentTimestampDbFormat();
     public static final String dateFrom = getTomorrowTimestampDbFormat();
@@ -46,15 +44,12 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @BeforeAll
     public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
         data1 = generateMirrorTradesByAccount(client1);
-        data2 = generateMirrorTradesByAccount(client2);
         insertObjectToDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, data1);
-        insertObjectToDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, data2);
     }
 
     @AfterAll
     public static void teardownMirrorTrades() throws SQLException {
         deleteEntryFromDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, String.format("request_trading_account = '%s'", data1.requestTradingAccount));
-        deleteEntryFromDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, String.format("request_trading_account = '%s'", data2.requestTradingAccount));
     }
 
     @Test

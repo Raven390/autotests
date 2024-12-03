@@ -15,5 +15,4 @@ public class GetMirrorAccountsByTradesRequest {
     public static Response getMirrorAccountsByTrades(Map<String, Object> paramsMap) throws IOException {
         return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES_PATH, null, paramsMap);
     }
-
 }
