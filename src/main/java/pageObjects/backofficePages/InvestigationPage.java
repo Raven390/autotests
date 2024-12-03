@@ -283,4 +283,10 @@ public class InvestigationPage {
         comparePageScreenshotWithBaseline(page, baselinePath);
     }
 
+    @Step("navigate to client")
+    public void navigateToClient(String ucid) {
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        isPageLoaded();
+    }
+
 }

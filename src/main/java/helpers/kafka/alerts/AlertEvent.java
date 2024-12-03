@@ -11,7 +11,7 @@ public class AlertEvent {
     public String alertId;
 
     @JsonProperty("timestamp")
-    public Float timestamp;
+    public String timestamp;
 
     @JsonProperty("ucid")
     public String ucid;
@@ -19,7 +19,7 @@ public class AlertEvent {
     @JsonProperty("rule")
     public AlertRules rule;
 
-    public static AlertEvent alertEvent(String traceId, String alertId, Float timestamp, String unClId, AlertRules rule) {
+    public static AlertEvent alertEvent(String traceId, String alertId, String timestamp, String unClId, AlertRules rule) {
         AlertEvent alertEvent = new AlertEvent();
         alertEvent.uuid = traceId;
         alertEvent.alertId = alertId;
