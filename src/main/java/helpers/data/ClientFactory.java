@@ -37,6 +37,7 @@ public class ClientFactory {
                 getRandomUuidString(),
                 Brand.VANTAGE,
                 getRandomIntPositive(),
+                getRandomIntPositive(),
                 new Random().nextInt(1, 50),
                 faker.internet().emailAddress(),
                 faker.phoneNumber().cellPhoneInternational()
