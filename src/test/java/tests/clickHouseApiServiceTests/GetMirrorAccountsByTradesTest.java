@@ -55,7 +55,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades (200)")
     @AllureId("217")
-    public void getMirrorTradeAccountsByTradesTest1() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
