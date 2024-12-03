@@ -25,22 +25,14 @@ public class DbHelper {
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className) throws Exception {
-        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-            startSshTunnel();
-        }
-
         try (Connection connection = createConnection(dbName)) {
             return fetchObjects(connection, tableName, where, className);
-        } finally {
-            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-                stopSshTunnel();
-            }
         }
     }
 
     private static <T> List<T> fetchObjects(Connection connection, String tableName, String where, Class<T> className) throws Exception {
         String query;
-        if (where == null || where.isEmpty()){
+        if (where == null || where.isEmpty()) {
             query = String.format("SELECT * FROM %s", tableName);
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
@@ -143,16 +135,8 @@ public class DbHelper {
     public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
 
-        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-            startSshTunnel();
-        }
-
         try (Connection connection = createConnection(dbName)) {
             insertObjects(connection, tableName, objects);
-        } finally {
-            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-                stopSshTunnel();
-            }
         }
     }
 
@@ -163,16 +147,8 @@ public class DbHelper {
 
     @Step("Insert single object: {object} to {dbName}")
     public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException, ReflectiveOperationException {
-        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-            startSshTunnel();
-        }
-
         try (Connection connection = createConnection(dbName)) {
             insertSingleObject(connection, tableName, object);
-        } finally {
-            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-                stopSshTunnel();
-            }
         }
     }
 
@@ -187,35 +163,19 @@ public class DbHelper {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
         }
 
-        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-            startSshTunnel();
-        }
-
         String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
         try (Connection connection = createConnection(dbName);
              PreparedStatement statement = connection.prepareStatement(query)) {
             System.out.println(query);
             statement.executeUpdate();
-        } finally {
-            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-                stopSshTunnel();
-            }
         }
     }
 
     @Step("Execute query: {query} to {dbName}")
     public static void executeQueryToDb(DbName dbName, String query) throws SQLException {
-        if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-            startSshTunnel();
-        }
-
         try (Connection connection = createConnection(dbName)) {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.executeUpdate();
-            }
-        } finally {
-            if ((dbName == DbName.MITIGATION_POSTGRES || dbName == DbName.AUDIT || dbName == DbName.BO)&&((!"GITLAB_CI".equals(System.getenv("RUNNER"))))) {
-                stopSshTunnel();
             }
         }
     }
@@ -223,26 +183,23 @@ public class DbHelper {
     private static Connection createConnection(DbName dbName) throws SQLException {
         if (dbName == DbName.MITIGATION_POSTGRES) {
             return createPostgresConnection();
-        }
-        else if (dbName == DbName.AUDIT) {
+        } else if (dbName == DbName.AUDIT) {
             return createPostgresConnectionAudit();
-        }
-        else if (dbName == DbName.BO) {
+        } else if (dbName == DbName.BO) {
             return createPostgresConnectionBO();
-        }
-        else {
+        } else {
             return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
         }
     }
 
     private static Connection createPostgresConnection() throws SQLException {
         String jdbcUrl;
-        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-             jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         } else {
-             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         }
-        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
+        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", MITIGATION_DB_USER);
@@ -253,12 +210,12 @@ public class DbHelper {
 
     private static Connection createPostgresConnectionAudit() throws SQLException {
         String jdbcUrl;
-        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
         } else {
             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
         }
-        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
+        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", AUDIT_DB_USER);
         connectionProps.setProperty("password", AUDIT_DB_PASSWORD);
@@ -268,12 +225,12 @@ public class DbHelper {
 
     private static Connection createPostgresConnectionBO() throws SQLException {
         String jdbcUrl;
-        if("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://"+POSTGRE_DB_HOST+":%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
         } else {
             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
         }
-        System.out.println("++++++++++++++++"+jdbcUrl+"+++++++++++++++++++++");
+        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", BO_DB_USER);
@@ -282,38 +239,40 @@ public class DbHelper {
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }
 
-    private static void startSshTunnel() {
+    public static void startSshTunnel() {
         if (sshTunnelProcess != null && sshTunnelProcess.isAlive()) {
             return; // Tunnel is already running
         }
 
-        String sshCommand = String.join("","ssh -i ",
-                MITIGATION_DB_SSH_PRIVATE_KEY,
-                " -L ",
-                MITIGATION_DB_PORT,
-                ":",
-                MITIGATION_DB_HOST,
-                ":",
-                MITIGATION_DB_PORT,
-                " ",
-                MITIGATION_DB_SSH_USER,
-                "@",
-                MITIGATION_DB_SSH_HOST
-        );
-        System.out.println(sshCommand);
+        if (!"GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            String sshCommand = String.join("", "ssh -i ",
+                    MITIGATION_DB_SSH_PRIVATE_KEY,
+                    " -L ",
+                    MITIGATION_DB_PORT,
+                    ":",
+                    MITIGATION_DB_HOST,
+                    ":",
+                    MITIGATION_DB_PORT,
+                    " ",
+                    MITIGATION_DB_SSH_USER,
+                    "@",
+                    MITIGATION_DB_SSH_HOST
+            );
+            System.out.println(sshCommand);
 
-        try {
-            new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + MITIGATION_DB_SSH_PRIVATE_KEY).start();
-            Thread.sleep(500);
-            sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand)
-                    .start();
-            Thread.sleep(2000); // Wait for the tunnel to establish
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Failed to start SSH tunnel", e);
+            try {
+                new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + MITIGATION_DB_SSH_PRIVATE_KEY).start();
+                Thread.sleep(500);
+                sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand)
+                        .start();
+                Thread.sleep(2000); // Wait for the tunnel to establish
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException("Failed to start SSH tunnel", e);
+            }
         }
     }
 
-    private static void stopSshTunnel() {
+    public static void stopSshTunnel() {
         if (sshTunnelProcess != null) {
             sshTunnelProcess.destroy();
             sshTunnelProcess = null;
