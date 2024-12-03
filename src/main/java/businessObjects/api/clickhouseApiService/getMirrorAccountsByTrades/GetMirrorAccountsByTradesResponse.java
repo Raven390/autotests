@@ -33,7 +33,5 @@ public class GetMirrorAccountsByTradesResponse {
 
         @JsonProperty("volumeInLots")
         public String volumeInLots;
-
     }
-
 }
