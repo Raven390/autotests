@@ -6,8 +6,8 @@ public class ConnectionTableEntryV3Factory {
 
     public static ConnectionTableEntryV3 getConnectionTableEntryByClientV3() {
         return new ConnectionTableEntryV3(
-                "vantage-99996",
-                "vantage-99999",
+                "vantage-88886",
+                "vantage-88888",
                 "Same Person",
                 1d,
                 "{\"payoutId\": \"463344**** **5603\"}",
@@ -17,8 +17,8 @@ public class ConnectionTableEntryV3Factory {
 
     public static ConnectionTableEntryV3 getConnectionTableEntryByClientLvl2V3() {
         return new ConnectionTableEntryV3(
-                "vantage-99999",
-                "vantage-99991",
+                "vantage-88888",
+                "vantage-88881",
                 "Same Person",
                 0.5d,
                 "{\"payoutId\": \"463344**** **5603\"}",

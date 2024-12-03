@@ -4,8 +4,8 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsByClientResponseSuccess(){
         return new GetConnectionsResponse(
-                "vantage-99996",
-                "vantage-99999",
+                "vantage-88886",
+                "vantage-88888",
                 1.0,
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
                 "Same Person",
@@ -19,8 +19,8 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(){
         return new GetConnectionsResponse(
-                "vantage-99999",
-                "vantage-99991",
+                "vantage-88888",
+                "vantage-88881",
                 0.5d,
                 new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
                 "Same Person",
