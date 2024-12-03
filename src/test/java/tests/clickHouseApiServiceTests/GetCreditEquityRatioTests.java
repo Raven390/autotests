@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRatioResponseError;
 import businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityResponse;
-import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrGetCreditEquityRatioObject;
+import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRequest.getCreditEquity;
-import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrGetCreditEquityRatioObjectFactory.generateCreditEquityRatioAccount;
+import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -34,7 +34,7 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetCreditEquityRatioTests extends TestBaseApi {
 
-    private static AggrGetCreditEquityRatioObject data1;
+    private static AggrCreditEquityRateObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
     public static final String dateTo = getCurrentTimestampDbFormat();
     public static final String dateFrom = getTomorrowTimestampDbFormat();

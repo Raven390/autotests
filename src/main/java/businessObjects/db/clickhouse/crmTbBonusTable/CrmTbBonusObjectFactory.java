@@ -11,7 +11,7 @@ public class CrmTbBonusObjectFactory {
     @Step("Generate bonus object by client")
     public static CrmTbBonusObject generateBonusByClient(ClientHelper client) {
         return new CrmTbBonusObject(Utils.getRandomIntPositive(), Utils.getRandomUuidString(), client.getUcid(),
-                                    client.getBrand(), "VFSC2", client.getUserId(), client.getTradingAccount(),
+                                    client.getBrand(), "VFSC", client.getUserId(), client.getTradingAccount(),
                                     getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(),
                                     1.0, 2.0, "USD", 1, 2, "WelcomeBonus",
                                     "Comment");
