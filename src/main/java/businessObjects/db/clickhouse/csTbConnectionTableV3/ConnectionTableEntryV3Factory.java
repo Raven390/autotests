@@ -10,7 +10,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
                 );
     }
@@ -21,7 +21,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99991",
                 "Same Person",
                 0.5d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -32,7 +32,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -43,7 +43,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -54,7 +54,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -65,7 +65,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -76,7 +76,7 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99999",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
                 getCurrentTimestampDbFormat()
         );
     }
@@ -87,7 +87,51 @@ public class ConnectionTableEntryV3Factory {
                 "vantage-99997",
                 "Same Person",
                 1d,
-                "{\"payout\": \"463344**** **5603\"}",
+                "{\"payoutId\": \"463344**** **5603\"}",
+                getCurrentTimestampDbFormat()
+        );
+    }
+
+    public static ConnectionTableEntryV3 getConnectionTableEntryForFiltration1V3() {
+        return new ConnectionTableEntryV3(
+                "vantage-100001",
+                "vantage-100002",
+                "Same Person",
+                1d,
+                "{\"payoutId\": \"463344**** **5603\"}",
+                getCurrentTimestampDbFormat()
+        );
+    }
+
+    public static ConnectionTableEntryV3 getConnectionTableEntryForFiltration2V3() {
+        return new ConnectionTableEntryV3(
+                "vantage-100002",
+                "vantage-100003",
+                "Same Network",
+                0.2d,
+                "{\"emailAddress\": \"testfiltration@qatest.com\"}",
+                getCurrentTimestampDbFormat()
+        );
+    }
+
+    public static ConnectionTableEntryV3 getConnectionTableByAttributesEntryForFiltration1V3() {
+        return new ConnectionTableEntryV3(
+                "vantage-100004",
+                "vantage-100005",
+                "Same Person",
+                1d,
+                "{\"payoutId\": \"463344**** **5603\"}",
+                getCurrentTimestampDbFormat()
+        );
+    }
+
+    public static ConnectionTableEntryV3 getConnectionTableByAttributesEntryForFiltration2V3() {
+        return new ConnectionTableEntryV3(
+                "vantage-100005",
+                "vantage-100006",
+                "Same Network",
+                0.2d,
+                "{\"emailAddress\": \"testfiltration@qatest.com\"}",
                 getCurrentTimestampDbFormat()
         );
     }

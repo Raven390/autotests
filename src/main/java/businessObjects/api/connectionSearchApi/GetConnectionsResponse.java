@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static utils.Utils.roundDouble;
+
 public class GetConnectionsResponse {
 
     @JsonProperty("clientIdFrom")
@@ -31,10 +33,16 @@ public class GetConnectionsResponse {
     @JsonProperty("connectionStrengthToInitial")
     public Double connectionStrengthToInitial;
 
+    @JsonProperty("connectionScore")
+    public Double connectionScore;
+
+    @JsonProperty("connectionScoreToInitial")
+    public Double connectionScoreToInitial;
+
     public GetConnectionsResponse() {
     }
 
-    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength, ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType, Double connectionStrengthToInitial) {
+    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength, ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType, Double connectionStrengthToInitial, Double connectionScore, Double connectionScoreToInitial) {
         this.clientIdFrom = clientIdFrom;
         this.clientIdTo = clientIdTo;
         this.connectionStrength = connectionStrength;
@@ -43,6 +51,8 @@ public class GetConnectionsResponse {
         this.connectionDepth = connectionDepth;
         this.abuseType = abuseType;
         this.connectionStrengthToInitial = connectionStrengthToInitial;
+        this.connectionScore = connectionScore;
+        this.connectionScoreToInitial = connectionScoreToInitial;
     }
 
     @Override
@@ -50,12 +60,12 @@ public class GetConnectionsResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetConnectionsResponse that = (GetConnectionsResponse) o;
-        return Objects.equals(clientIdFrom, that.clientIdFrom) && Objects.equals(clientIdTo, that.clientIdTo) && Objects.equals(connectionStrength, that.connectionStrength) && Objects.deepEquals(connectionDetail, that.connectionDetail) && Objects.equals(connectionType, that.connectionType) && Objects.equals(connectionDepth, that.connectionDepth) && Objects.equals(abuseType, that.abuseType) && Objects.equals(connectionStrengthToInitial, that.connectionStrengthToInitial);
+        return Objects.equals(clientIdFrom, that.clientIdFrom) && Objects.equals(clientIdTo, that.clientIdTo) && Objects.deepEquals(connectionDetail, that.connectionDetail) && Objects.equals(connectionType, that.connectionType) && Objects.equals(connectionDepth, that.connectionDepth) && Objects.equals(abuseType, that.abuseType) && Objects.equals(roundDouble(connectionScore, 4), roundDouble(that.connectionScore, 4)) && Objects.equals(roundDouble(connectionScoreToInitial, 4), roundDouble(that.connectionScoreToInitial, 4));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientIdFrom, clientIdTo, connectionStrength, Arrays.hashCode(connectionDetail), connectionType, connectionDepth, abuseType, connectionStrengthToInitial);
+        return Objects.hash(clientIdFrom, clientIdTo, Arrays.hashCode(connectionDetail), connectionType, connectionDepth, abuseType, roundDouble(connectionScore, 4), roundDouble(connectionScoreToInitial, 4));
     }
 
     public static class ConnectionDetail {
@@ -94,5 +104,21 @@ public class GetConnectionsResponse {
                     ", connectionAttributeValue='" + connectionAttributeValue + '\'' +
                     '}';
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GetConnectionsResponse{" +
+                "clientIdFrom='" + clientIdFrom + '\'' +
+                ", clientIdTo='" + clientIdTo + '\'' +
+                ", connectionStrength=" + connectionStrength +
+                ", connectionDetail=" + Arrays.toString(connectionDetail) +
+                ", connectionType='" + connectionType + '\'' +
+                ", connectionDepth=" + connectionDepth +
+                ", abuseType='" + abuseType + '\'' +
+                ", connectionStrengthToInitial=" + connectionStrengthToInitial +
+                ", connectionScore=" + connectionScore +
+                ", connectionScoreToInitial=" + connectionScoreToInitial +
+                '}';
     }
 }
