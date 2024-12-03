@@ -10,6 +10,7 @@ public class ClientHelper {
     private String uuid;
     private Brand brand;
     private Integer tradingAccount;
+    private Integer tradingAccount2;
     private Integer serverId;
     private String email;
     private String phoneNumber;
@@ -27,11 +28,21 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
+    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2, Integer serverId) {
         this.userId = userId;
         this.uuid = uuid;
         this.brand = brand;
         this.tradingAccount = tradingAccount;
+        this.tradingAccount2 = tradingAccount2;
+        this.serverId = serverId;
+    }
+
+    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2, Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
+        this.userId = userId;
+        this.uuid = uuid;
+        this.brand = brand;
+        this.tradingAccount = tradingAccount;
+        this.tradingAccount2 = tradingAccount2;
         this.serverId = serverId;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -71,9 +82,18 @@ public class ClientHelper {
         return tradingAccount;
     }
 
+    public Integer getTradingAccount2() {
+        return tradingAccount2;
+    }
+
     public void setTradingAccount(Integer tradingAccount) {
         this.tradingAccount = tradingAccount;
     }
+
+    public void setTradingAccount2(Integer tradingAccount2) {
+        this.tradingAccount2 = tradingAccount2;
+    }
+
 
     public Integer getServerId() {
         return serverId;
@@ -135,6 +155,7 @@ public class ClientHelper {
                 ", uuid='" + uuid + '\'' +
                 ", brand=" + brand +
                 ", tradingAccount=" + tradingAccount +
+                ", tradingAccount2=" + tradingAccount2 +
                 ", serverId=" + serverId +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
