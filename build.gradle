@@ -200,6 +200,12 @@ task testEventGeneratorService(type: Test) {
     }
 }
 
+task testRuleEngineService(type: Test) {
+    useJUnitPlatform(){
+        includeTags "suite_rule_engine_service"
+    }
+}
+
 sourceSets {
     main {
         java {
