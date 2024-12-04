@@ -9,4 +9,16 @@ public class GetTradesGroupByResponseError {
 
     @JsonProperty("status")
     public String status;
+
+    @JsonProperty("type")
+    public String type;
+
+    @JsonProperty("title")
+    public String title;
+
+    @JsonProperty("detail")
+    public String detail;
+
+    @JsonProperty("instance")
+    public String instance;
 }

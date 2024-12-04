@@ -18,4 +18,38 @@ public class Mt5DealsFactory {
                                   "MT5_INF",1,"EURUSD",1.2,1.1,getCurrentTimestampDbFormat(),getCurrentTimestampDbFormat(),
                 getRandomIntPositive().longValue(),0.0,500.0,50.0,25.0,1.0,1.0);
     }
+
+    public static Mt5DealsObject generateTradeForGroupBy1(Integer account, Integer serverId) {
+        Mt5DealsObject trade = generateTradeByAccountServerId(account, serverId);
+        trade.entry = 2;
+        trade.time = "2024-01-01 00:00:00";
+        trade.profit = 1d;
+        return trade;
+    }
+
+    public static Mt5DealsObject generateTradeForGroupBy2(Integer account, Integer serverId) {
+        Mt5DealsObject trade = generateTradeByAccountServerId(account, serverId);
+        trade.action = 2;
+        trade.time = "2024-02-02 00:00:00";
+        trade.profit = 2d;
+        return trade;
+    }
+
+    public static Mt5DealsObject generateTradeForGroupBy3(Integer account, Integer serverId) {
+        Mt5DealsObject trade = generateTradeByAccountServerId(account, serverId);
+        trade.entry = 2;
+        trade.time = "2024-01-01 00:00:00";
+        trade.symbol = "GBPUSD";
+        trade.profit = 3d;
+        return trade;
+    }
+
+    public static Mt5DealsObject generateTradeForGroupBy4(Integer account, Integer serverId) {
+        Mt5DealsObject trade = generateTradeByAccountServerId(account, serverId);
+        trade.action = 2;
+        trade.time = "2024-02-02 00:00:00";
+        trade.symbol = "GBPUSD";
+        trade.profit = 4d;
+        return trade;
+    }
 }

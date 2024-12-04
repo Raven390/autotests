@@ -1448,7 +1448,7 @@ public class RegistrationRuleTest {
 
     @Test
     @DisplayName("Registration rule exit Event_End_7 unknown fraud type")
-    @AllureId("")
+    @AllureId("484")
     public void registrationRuleExitEventEnd7Version14Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v14");
 
