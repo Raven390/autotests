@@ -67,17 +67,17 @@ public class ConfigFactory {
     public static final String AUDIT_DB_USER = CONFIG.auditDbUser();
     public static final String AUDIT_DB_PASSWORD = CONFIG.auditDbPassword();
     public static final String AUDIT_DB_NAME = CONFIG.auditDbName();
-    // BO service db
-    public static final String BO_DB_USER = CONFIG.boDbUser();
-    public static final String BO_DB_PASSWORD = CONFIG.boDbPassword();
-    public static final String BO_DB_NAME = CONFIG.boDbName();
-    // BO DB general
+    // Backoffice service db
+    public static final String BACKOFFICE_BO_DB_USER = CONFIG.backofficeDbUser();
+    public static final String BACKOFFICE_DB_PASSWORD = CONFIG.backofficeDbPassword();
+    public static final String BACKOFFICE_DB_NAME = CONFIG.backofficeDbName();
+    // Backoffice db general
     public static final String POSTGRE_DB_HOST = CONFIG.postgreDBHost();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
     public static final String CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword();
-    // BO test user
+    // Backoffice test user
     public static final String CRM_INEGRATION_USER_UCID= CONFIG.crmIntegrationUserUcid();
     public static final String CRM_INEGRATION_USER_ID = CONFIG.crmIntegrationUserUcid();
     // Other
@@ -236,6 +236,7 @@ public class ConfigFactory {
         String mitigationServiceCancelRestriction();
 
         // Mitigation service db
+
         @Key("mitigationDbSshHost")
         String mitigationDbSshHost();
 
@@ -274,22 +275,21 @@ public class ConfigFactory {
         @Key("auditDbName")
         String auditDbName();
 
-        // BO service db
+        // Backoffice service db
 
-        @Key("boDbUser")
-        String boDbUser();
+        @Key("backofficeDbUser")
+        String backofficeDbUser();
 
-        @Key("boDbPassword")
-        String boDbPassword();
+        @Key("backofficeDbPassword")
+        String backofficeDbPassword();
 
-        @Key("boDbName")
-        String boDbName();
+        @Key("backofficeDbName")
+        String backofficeDbName();
 
-        // DO DB general
+        // Backoffice DB general?
 
         @Key("postgreDBHost")
         String postgreDBHost();
-
 
         // Other
 

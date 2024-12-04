@@ -17,11 +17,11 @@ public class GetCreditEquityResponse {
 
     public static class TradingIndicators{
 
-        @JsonProperty("currentEquity")
-        public String currentEquity;
-
         @JsonProperty("indicatorDate")
         public String indicatorDate;
+
+        @JsonProperty("currentEquity")
+        public String currentEquity;
 
         @JsonProperty("sumCreditOrder")
         public String sumCreditOrder;
