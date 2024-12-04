@@ -165,6 +165,8 @@ job_test_downstream_end_to_end:
         ./allurectl watch -- gradle clean testEventGeneratorService
       elif [ "$APP_NAME" == "connection-search-service" ]; then
         ./allurectl watch -- gradle clean testConnectionSearchApiService
+      elif [ "$APP_NAME" == "rule-engine" ]; then
+        ./allurectl watch -- gradle clean testRuleEngineService
       fi
     - echo "TEST SUCCESS"
   artifacts:
