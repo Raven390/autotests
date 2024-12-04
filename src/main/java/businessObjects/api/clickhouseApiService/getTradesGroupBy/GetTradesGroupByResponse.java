@@ -2,21 +2,47 @@ package businessObjects.api.clickhouseApiService.getTradesGroupBy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
+import java.util.Objects;
 
 public class GetTradesGroupByResponse {
 
-    @JsonProperty()
-    public List<TradesItem> groups;
+    @JsonProperty("symbol")
+    public String symbol;
 
-    public static class TradesItem{
-        @JsonProperty("symbol")
-        public String symbol;
+    @JsonProperty("profit")
+    public Double profit;
 
-        @JsonProperty("profit")
-        public Float profit;
+    @JsonProperty("profitUSD")
+    public Double profitUsd;
 
-        @JsonProperty("profitUSD")
-        public Float profitUsd;
+    public GetTradesGroupByResponse() {
+    }
+
+    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd) {
+        this.symbol = symbol;
+        this.profit = profit;
+        this.profitUsd = profitUsd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GetTradesGroupByResponse that = (GetTradesGroupByResponse) o;
+        return Objects.equals(symbol, that.symbol) && Objects.equals(profit, that.profit) && Objects.equals(profitUsd, that.profitUsd);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(symbol, profit, profitUsd);
+    }
+
+    @Override
+    public String toString() {
+        return "GetTradesGroupByResponse{" +
+                "symbol='" + symbol + '\'' +
+                ", profit=" + profit +
+                ", profitUsd=" + profitUsd +
+                '}';
     }
 }
