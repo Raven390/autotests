@@ -226,15 +226,17 @@ public class DbHelper {
     private static Connection createPostgresConnectionBO() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT,
+                    BACKOFFICE_DB_NAME);
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BO_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT,
+                    BACKOFFICE_DB_NAME);
         }
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", BO_DB_USER);
-        connectionProps.setProperty("password", BO_DB_PASSWORD);
+        connectionProps.setProperty("user", BACKOFFICE_BO_DB_USER);
+        connectionProps.setProperty("password", BACKOFFICE_DB_PASSWORD);
 
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }

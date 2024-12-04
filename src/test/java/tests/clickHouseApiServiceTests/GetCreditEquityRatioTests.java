@@ -66,11 +66,16 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(1));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
+
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.getFirst().sumCreditOrder, is("2"));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.getFirst().creditEquityRatio, is("3"));
+        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
     }
 
     @Test
@@ -134,11 +139,15 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(1));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.getFirst().sumCreditOrder, is("2"));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.getFirst().creditEquityRatio, is("3"));
+        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
     }
 
     @Test
@@ -156,10 +165,14 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(1));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.getFirst().sumCreditOrder, is("2"));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.getFirst().creditEquityRatio, is("3"));
+        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
+
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
     }
 }
