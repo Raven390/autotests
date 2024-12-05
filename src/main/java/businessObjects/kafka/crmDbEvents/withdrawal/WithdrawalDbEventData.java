@@ -96,7 +96,13 @@ public class WithdrawalDbEventData {
     public WithdrawalDbEventData() {
     }
 
-    public WithdrawalDbEventData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawAmount, Double fee, Double actualAmount, Double paymentAmount, String cardNumber, Integer isDel, String updateTime, String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo, String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency, Integer checkingStatus, Integer isTrade, Double rate, Integer isNonApp, Double toUsdRate) {
+    public WithdrawalDbEventData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand,
+            String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawAmount, Double fee,
+            Double actualAmount, Double paymentAmount, String cardNumber, Integer isDel, String updateTime,
+            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo,
+            String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
+            String orderCurrency, Integer checkingStatus, Integer isTrade, Double rate, Integer isNonApp,
+            Double toUsdRate) {
         this.createTime = createTime;
         this.id = id;
         this.userId = userId;
@@ -143,36 +149,6 @@ public class WithdrawalDbEventData {
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventData{" +
-                "createTime='" + createTime + '\'' +
-                ", id=" + id +
-                ", userId='" + userId + '\'' +
-                ", mt4Account=" + mt4Account +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", paymentMethodCode='" + paymentMethodCode + '\'' +
-                ", withdrawType=" + withdrawType +
-                ", withdrawAmount=" + withdrawAmount +
-                ", fee=" + fee +
-                ", actualAmount=" + actualAmount +
-                ", paymentAmount=" + paymentAmount +
-                ", cardNumber='" + cardNumber + '\'' +
-                ", isDel=" + isDel +
-                ", updateTime='" + updateTime + '\'' +
-                ", cpsAttachVariable='" + cpsAttachVariable + '\'' +
-                ", orderNumber='" + orderNumber + '\'' +
-                ", cpsMandatoryField='" + cpsMandatoryField + '\'' +
-                ", isRememberInfo=" + isRememberInfo +
-                ", upiAccountName='" + upiAccountName + '\'' +
-                ", deductCredit=" + deductCredit +
-                ", userSalesId=" + userSalesId +
-                ", accountSalesId=" + accountSalesId +
-                ", orderCurrency='" + orderCurrency + '\'' +
-                ", checkingStatus=" + checkingStatus +
-                ", isTrade=" + isTrade +
-                ", rate=" + rate +
-                ", isNonApp=" + isNonApp +
-                ", toUsdRate=" + toUsdRate +
-                '}';
+        return "WithdrawalDbEventData{" + "createTime='" + createTime + '\'' + ", id=" + id + ", userId='" + userId + '\'' + ", mt4Account=" + mt4Account + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawAmount=" + withdrawAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardNumber='" + cardNumber + '\'' + ", isDel=" + isDel + ", updateTime='" + updateTime + '\'' + ", cpsAttachVariable='" + cpsAttachVariable + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", isRememberInfo=" + isRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", orderCurrency='" + orderCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", isTrade=" + isTrade + ", rate=" + rate + ", isNonApp=" + isNonApp + ", toUsdRate=" + toUsdRate + '}';
     }
 }

@@ -24,13 +24,6 @@ public class GetWithdrawalsResponseError {
 
     @Override
     public String toString() {
-        return "GetBonusesResponseError{" +
-                "error='" + error + '\'' +
-                ", status=" + status +
-                ", type='" + type + '\'' +
-                ", title='" + title + '\'' +
-                ", detail='" + detail + '\'' +
-                ", instance='" + instance + '\'' +
-                '}';
+        return "GetBonusesResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
     }
 }

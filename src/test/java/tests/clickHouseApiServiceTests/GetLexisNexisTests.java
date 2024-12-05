@@ -45,7 +45,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     public void getLexisNexisTest1() throws IOException, ReflectiveOperationException, SQLException {
         ClientHelper client = getRandomClient();
         String uid = Utils.getRandomUuidString();
-        LnSessionParsedObject object = generateLexisNexisDataForUserId(uid,client.getUserId(),eventId);
+        LnSessionParsedObject object = generateLexisNexisDataForUserId(uid, client.getUserId(), eventId);
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object);
 
         Map<String, Object> queryParams = new HashMap<>();

@@ -44,7 +44,9 @@ public class WithdrawalDbEventMetadata {
     public WithdrawalDbEventMetadata() {
     }
 
-    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName, String transactionId, String transactionRecordId, String prevTransactionId, String prevTransactionRecordId, String commitTimestamp, String streamPosition) {
+    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,
+            String schemaName, String tableName, String transactionId, String transactionRecordId,
+            String prevTransactionId, String prevTransactionRecordId, String commitTimestamp, String streamPosition) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -59,7 +61,9 @@ public class WithdrawalDbEventMetadata {
         this.streamPosition = streamPosition;
     }
 
-    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String transactionId, String transactionRecordId, String prevTransactionId, String commitTimestamp, String streamPosition, String prevTransactionRecordId) {
+    public WithdrawalDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,
+            String schemaName, String transactionId, String transactionRecordId, String prevTransactionId,
+            String commitTimestamp, String streamPosition, String prevTransactionRecordId) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -88,19 +92,6 @@ public class WithdrawalDbEventMetadata {
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventMetadata{" +
-                "timestamp='" + timestamp + '\'' +
-                ", recordType='" + recordType + '\'' +
-                ", operation='" + operation + '\'' +
-                ", partitionKeyType='" + partitionKeyType + '\'' +
-                ", schemaName='" + schemaName + '\'' +
-                ", tableName='" + tableName + '\'' +
-                ", transactionId='" + transactionId + '\'' +
-                ", transactionRecordId='" + transactionRecordId + '\'' +
-                ", prevTransactionId='" + prevTransactionId + '\'' +
-                ", prevTransactionRecordId='" + prevTransactionRecordId + '\'' +
-                ", commitTimestamp='" + commitTimestamp + '\'' +
-                ", streamPosition='" + streamPosition + '\'' +
-                '}';
+        return "WithdrawalDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\'' + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\'' + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + ", transactionId='" + transactionId + '\'' + ", transactionRecordId='" + transactionRecordId + '\'' + ", prevTransactionId='" + prevTransactionId + '\'' + ", prevTransactionRecordId='" + prevTransactionRecordId + '\'' + ", commitTimestamp='" + commitTimestamp + '\'' + ", streamPosition='" + streamPosition + '\'' + '}';
     }
 }

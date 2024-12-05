@@ -43,11 +43,6 @@ public class RestrictionCatalogEntry {
 
     @Override
     public String toString() {
-        return "RestrictionCatalogEntry{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+        return "RestrictionCatalogEntry{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", type='" + type + '\'' + ", description='" + description + '\'' + '}';
     }
 }

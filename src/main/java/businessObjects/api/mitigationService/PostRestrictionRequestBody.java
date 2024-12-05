@@ -30,7 +30,8 @@ public class PostRestrictionRequestBody {
     public PostRestrictionRequestBody() {
     }
 
-    public PostRestrictionRequestBody(String ucid, String code, String type, Integer accountId, Integer serverId, String applyReason, UpdatedBy updatedBy) {
+    public PostRestrictionRequestBody(String ucid, String code, String type, Integer accountId, Integer serverId,
+            String applyReason, UpdatedBy updatedBy) {
         this.ucid = ucid;
         this.code = code;
         this.type = type;
@@ -55,15 +56,7 @@ public class PostRestrictionRequestBody {
 
     @Override
     public String toString() {
-        return "PostRestrictionRequestBody{" +
-                "ucid='" + ucid + '\'' +
-                ", code='" + code + '\'' +
-                ", type='" + type + '\'' +
-                ", accountId=" + accountId +
-                ", serverId=" + serverId +
-                ", applyReason='" + applyReason + '\'' +
-                ", updatedBy=" + updatedBy +
-                '}';
+        return "PostRestrictionRequestBody{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", type='" + type + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", applyReason='" + applyReason + '\'' + ", updatedBy=" + updatedBy + '}';
     }
 
     public static class UpdatedBy {
@@ -97,10 +90,7 @@ public class PostRestrictionRequestBody {
 
         @Override
         public String toString() {
-            return "UpdatedBy{" +
-                    "system='" + system + '\'' +
-                    ", user='" + user + '\'' +
-                    '}';
+            return "UpdatedBy{" + "system='" + system + '\'' + ", user='" + user + '\'' + '}';
         }
     }
 }

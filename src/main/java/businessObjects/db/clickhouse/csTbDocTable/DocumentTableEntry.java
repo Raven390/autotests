@@ -15,7 +15,8 @@ public class DocumentTableEntry {
     public DocumentTableEntry() {
     }
 
-    public DocumentTableEntry(String ucid, Integer userId, String brand, String accIdType, String accIdNum, Integer nationalityId, String updateTs) {
+    public DocumentTableEntry(String ucid, Integer userId, String brand, String accIdType, String accIdNum,
+            Integer nationalityId, String updateTs) {
         this.ucid = ucid;
         this.userId = userId;
         this.brand = brand;
@@ -40,14 +41,6 @@ public class DocumentTableEntry {
 
     @Override
     public String toString() {
-        return "DocumentTableEntry{" +
-                "ucid='" + ucid + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", accIdType='" + accIdType + '\'' +
-                ", accIdNum='" + accIdNum + '\'' +
-                ", nationalityId=" + nationalityId +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "DocumentTableEntry{" + "ucid='" + ucid + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", accIdType='" + accIdType + '\'' + ", accIdNum='" + accIdNum + '\'' + ", nationalityId=" + nationalityId + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

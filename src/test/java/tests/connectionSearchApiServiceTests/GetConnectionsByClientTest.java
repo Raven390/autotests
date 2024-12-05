@@ -60,8 +60,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -81,8 +80,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -102,8 +100,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -121,8 +118,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -140,8 +136,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -161,8 +156,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -182,8 +176,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -203,8 +196,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponse[].class
+                response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -222,8 +214,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -243,8 +234,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -262,8 +252,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -283,8 +272,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -304,8 +292,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -325,8 +312,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(),
-                GetConnectionsResponseError.class
+                response.body().string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));

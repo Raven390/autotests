@@ -26,7 +26,8 @@ public class RafBalanceOrderMtDbEventMetadata {
     public String tableName;
 
     public RafBalanceOrderMtDbEventMetadata(
-                                            String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
+            String timestamp, String recordType, String operation, String partitionKeyType, String schemaName,
+            String tableName) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;

@@ -39,7 +39,8 @@ public class GetRestrictionResponseBody {
     public GetRestrictionResponseBody() {
     }
 
-    public GetRestrictionResponseBody(Integer id, String code, String type, String status, String applyReason, String cancelReason, String updatedAt, UpdatedBy updatedBy, Integer accountId) {
+    public GetRestrictionResponseBody(Integer id, String code, String type, String status, String applyReason,
+            String cancelReason, String updatedAt, UpdatedBy updatedBy, Integer accountId) {
         this.id = id;
         this.code = code;
         this.type = type;
@@ -66,17 +67,7 @@ public class GetRestrictionResponseBody {
 
     @Override
     public String toString() {
-        return "GetRestrictionResponseBody{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", type='" + type + '\'' +
-                ", status='" + status + '\'' +
-                ", applyReason='" + applyReason + '\'' +
-                ", cancelReason='" + cancelReason + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", updatedBy=" + updatedBy +
-                ", accountId=" + accountId +
-                '}';
+        return "GetRestrictionResponseBody{" + "id=" + id + ", code='" + code + '\'' + ", type='" + type + '\'' + ", status='" + status + '\'' + ", applyReason='" + applyReason + '\'' + ", cancelReason='" + cancelReason + '\'' + ", updatedAt='" + updatedAt + '\'' + ", updatedBy=" + updatedBy + ", accountId=" + accountId + '}';
     }
 
     public static class UpdatedBy {
@@ -110,10 +101,7 @@ public class GetRestrictionResponseBody {
 
         @Override
         public String toString() {
-            return "UpdatedBy{" +
-                    "system='" + system + '\'' +
-                    ", user='" + user + '\'' +
-                    '}';
+            return "UpdatedBy{" + "system='" + system + '\'' + ", user='" + user + '\'' + '}';
         }
     }
 }

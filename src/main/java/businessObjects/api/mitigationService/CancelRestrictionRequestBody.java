@@ -35,10 +35,7 @@ public class CancelRestrictionRequestBody {
 
     @Override
     public String toString() {
-        return "CancelRestrictionRequestBody{" +
-                "cancelReason='" + cancelReason + '\'' +
-                ", updatedBy=" + updatedBy +
-                '}';
+        return "CancelRestrictionRequestBody{" + "cancelReason='" + cancelReason + '\'' + ", updatedBy=" + updatedBy + '}';
     }
 
     public static class UpdatedBy {
@@ -72,10 +69,7 @@ public class CancelRestrictionRequestBody {
 
         @Override
         public String toString() {
-            return "UpdatedBy{" +
-                    "system='" + system + '\'' +
-                    ", user='" + user + '\'' +
-                    '}';
+            return "UpdatedBy{" + "system='" + system + '\'' + ", user='" + user + '\'' + '}';
         }
     }
 }

@@ -20,15 +20,16 @@ public class GetClientTradingAccountsResponse {
         this.serverId = serverId;
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetClientTradingAccountsResponse that = (GetClientTradingAccountsResponse) o;
-        return Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId,
-                                                                                     that.serverId);
+        return Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId);
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Objects.hash(tradingAccount, serverId);
     }
 }

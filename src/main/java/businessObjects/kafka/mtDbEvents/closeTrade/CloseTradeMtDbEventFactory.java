@@ -36,7 +36,8 @@ public class CloseTradeMtDbEventFactory {
     }
 
     @Step("Generate close trade db event mt4 data by trading account")
-    private static CloseTradeMtDbEventMt4Data generateCloseTradeMtDbEventMt4DataByTradingAccount(Integer tradingAccount) {
+    private static CloseTradeMtDbEventMt4Data generateCloseTradeMtDbEventMt4DataByTradingAccount(
+            Integer tradingAccount) {
         return new CloseTradeMtDbEventMt4Data(
                 Instant.now().toString(), getRandomInt(), tradingAccount, 3.45d, "test_symbol", 0, 9);
     }

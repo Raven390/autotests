@@ -24,21 +24,22 @@ public class DbHelper {
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
-    public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className) throws Exception {
+    public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className)
+            throws Exception {
         try (Connection connection = createConnection(dbName)) {
             return fetchObjects(connection, tableName, where, className);
         }
     }
 
-    private static <T> List<T> fetchObjects(Connection connection, String tableName, String where, Class<T> className) throws Exception {
+    private static <T> List<T> fetchObjects(Connection connection, String tableName, String where, Class<T> className)
+            throws Exception {
         String query;
         if (where == null || where.isEmpty()) {
             query = String.format("SELECT * FROM %s", tableName);
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
         }
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
             System.out.println(query);
             return mapResultSetToObjects(resultSet, className);
         }
@@ -104,12 +105,12 @@ public class DbHelper {
         }
 
         throw new IllegalArgumentException(String.format(
-                "Cannot convert value of type %s to type %s",
-                value.getClass().getName(), targetType.getName()
+                "Cannot convert value of type %s to type %s", value.getClass().getName(), targetType.getName()
         ));
     }
 
-    private static <T> Map<String, Field> mapDbColumnsToFields(ResultSet resultSet, Class<T> className) throws SQLException {
+    private static <T> Map<String, Field> mapDbColumnsToFields(ResultSet resultSet, Class<T> className)
+            throws SQLException {
         Map<String, Field> fieldMappings = new HashMap<>();
         ResultSetMetaData metaData = resultSet.getMetaData();
 
@@ -127,12 +128,14 @@ public class DbHelper {
     }
 
     @Step("Insert objects: {objects}")
-    public static <T> void insertObjectsToDb(String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
+    public static <T> void insertObjectsToDb(String tableName, List<T> objects) throws SQLException,
+            ReflectiveOperationException {
         insertObjectsToDb(DbName.CLICKHOUSE, tableName, objects);
     }
 
     @Step("Insert objects: {objects} to {dbName}")
-    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
+    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException,
+            ReflectiveOperationException {
         if (objects == null || objects.isEmpty()) return;
 
         try (Connection connection = createConnection(dbName)) {
@@ -141,12 +144,14 @@ public class DbHelper {
     }
 
     @Step("Insert single object: {object}")
-    public static <T> void insertObjectToDb(String tableName, T object) throws SQLException, ReflectiveOperationException {
+    public static <T> void insertObjectToDb(String tableName, T object) throws SQLException,
+            ReflectiveOperationException {
         insertObjectToDb(DbName.CLICKHOUSE, tableName, object);
     }
 
     @Step("Insert single object: {object} to {dbName}")
-    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException, ReflectiveOperationException {
+    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException,
+            ReflectiveOperationException {
         try (Connection connection = createConnection(dbName)) {
             insertSingleObject(connection, tableName, object);
         }
@@ -164,8 +169,7 @@ public class DbHelper {
         }
 
         String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
-        try (Connection connection = createConnection(dbName);
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
             System.out.println(query);
             statement.executeUpdate();
         }
@@ -226,11 +230,9 @@ public class DbHelper {
     private static Connection createPostgresConnectionBO() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT,
-                    BACKOFFICE_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT,
-                    BACKOFFICE_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
         }
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
@@ -247,26 +249,14 @@ public class DbHelper {
         }
 
         if (!"GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            String sshCommand = String.join("", "ssh -i ",
-                    MITIGATION_DB_SSH_PRIVATE_KEY,
-                    " -L ",
-                    MITIGATION_DB_PORT,
-                    ":",
-                    MITIGATION_DB_HOST,
-                    ":",
-                    MITIGATION_DB_PORT,
-                    " ",
-                    MITIGATION_DB_SSH_USER,
-                    "@",
-                    MITIGATION_DB_SSH_HOST
+            String sshCommand = String.join("", "ssh -i ", MITIGATION_DB_SSH_PRIVATE_KEY, " -L ", MITIGATION_DB_PORT, ":", MITIGATION_DB_HOST, ":", MITIGATION_DB_PORT, " ", MITIGATION_DB_SSH_USER, "@", MITIGATION_DB_SSH_HOST
             );
             System.out.println(sshCommand);
 
             try {
                 new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + MITIGATION_DB_SSH_PRIVATE_KEY).start();
                 Thread.sleep(500);
-                sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand)
-                        .start();
+                sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand).start();
                 Thread.sleep(2000); // Wait for the tunnel to establish
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException("Failed to start SSH tunnel", e);
@@ -281,19 +271,22 @@ public class DbHelper {
         }
     }
 
-    private static <T> void insertObjects(Connection connection, String tableName, List<T> objects) throws SQLException, ReflectiveOperationException {
+    private static <T> void insertObjects(Connection connection, String tableName, List<T> objects) throws SQLException,
+            ReflectiveOperationException {
         Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
         for (T obj : objects) {
             insertSingleObject(connection, tableName, obj, fieldMappings);
         }
     }
 
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj) throws SQLException, ReflectiveOperationException {
+    private static <T> void insertSingleObject(Connection connection, String tableName, T obj) throws SQLException,
+            ReflectiveOperationException {
         Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, obj.getClass());
         insertSingleObject(connection, tableName, obj, fieldMappings);
     }
 
-    private static <T> void insertSingleObject(Connection connection, String tableName, T obj, Map<String, String> fieldMappings)
+    private static <T> void insertSingleObject(Connection connection, String tableName, T obj,
+            Map<String, String> fieldMappings)
             throws SQLException, ReflectiveOperationException {
         String insertQuery = buildInsertQuery(tableName, obj, fieldMappings);
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
@@ -335,7 +328,8 @@ public class DbHelper {
         }
     }
 
-    private static <T> String buildInsertQuery(String tableName, T obj, Map<String, String> fieldMappings) throws IllegalAccessException {
+    private static <T> String buildInsertQuery(String tableName, T obj, Map<String, String> fieldMappings)
+            throws IllegalAccessException {
         StringJoiner columnNames = new StringJoiner(", ");
         StringJoiner placeholders = new StringJoiner(", ");
 
@@ -351,7 +345,8 @@ public class DbHelper {
         return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, columnNames, placeholders);
     }
 
-    private static Map<String, String> retrieveColumnMappings(Connection connection, String tableName, Class<?> objClass) throws SQLException {
+    private static Map<String, String> retrieveColumnMappings(Connection connection, String tableName,
+            Class<?> objClass) throws SQLException {
         Map<String, String> columnMappings = new HashMap<>();
         DatabaseMetaData metaData = connection.getMetaData();
         try (ResultSet columns = metaData.getColumns(null, null, tableName, null)) {

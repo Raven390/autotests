@@ -26,7 +26,7 @@ public class RafBalanceOrderMtDbEventMt5Data {
     public Integer serverId;
 
     public RafBalanceOrderMtDbEventMt5Data(
-                                           String openTime, Integer tradeId, Integer mtAccount, String comment, Integer action, Integer serverId) {
+            String openTime, Integer tradeId, Integer mtAccount, String comment, Integer action, Integer serverId) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;

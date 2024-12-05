@@ -45,7 +45,7 @@ public class RuleAlert {
             public String ipAddress;
 
             @JsonProperty("country")
-            public String  country;
+            public String country;
 
             @JsonProperty("fraudType")
             public String[] fraudType;

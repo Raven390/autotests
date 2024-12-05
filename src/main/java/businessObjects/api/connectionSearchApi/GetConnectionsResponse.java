@@ -42,7 +42,9 @@ public class GetConnectionsResponse {
     public GetConnectionsResponse() {
     }
 
-    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength, ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType, Double connectionStrengthToInitial, Double connectionScore, Double connectionScoreToInitial) {
+    public GetConnectionsResponse(String clientIdFrom, String clientIdTo, Double connectionStrength,
+            ConnectionDetail[] connectionDetail, String connectionType, Integer connectionDepth, String abuseType,
+            Double connectionStrengthToInitial, Double connectionScore, Double connectionScoreToInitial) {
         this.clientIdFrom = clientIdFrom;
         this.clientIdTo = clientIdTo;
         this.connectionStrength = connectionStrength;
@@ -99,26 +101,12 @@ public class GetConnectionsResponse {
 
         @Override
         public String toString() {
-            return "ConnectionDetail{" +
-                    "connectionAttributeName='" + connectionAttributeName + '\'' +
-                    ", connectionAttributeValue='" + connectionAttributeValue + '\'' +
-                    '}';
+            return "ConnectionDetail{" + "connectionAttributeName='" + connectionAttributeName + '\'' + ", connectionAttributeValue='" + connectionAttributeValue + '\'' + '}';
         }
     }
 
     @Override
     public String toString() {
-        return "GetConnectionsResponse{" +
-                "clientIdFrom='" + clientIdFrom + '\'' +
-                ", clientIdTo='" + clientIdTo + '\'' +
-                ", connectionStrength=" + connectionStrength +
-                ", connectionDetail=" + Arrays.toString(connectionDetail) +
-                ", connectionType='" + connectionType + '\'' +
-                ", connectionDepth=" + connectionDepth +
-                ", abuseType='" + abuseType + '\'' +
-                ", connectionStrengthToInitial=" + connectionStrengthToInitial +
-                ", connectionScore=" + connectionScore +
-                ", connectionScoreToInitial=" + connectionScoreToInitial +
-                '}';
+        return "GetConnectionsResponse{" + "clientIdFrom='" + clientIdFrom + '\'' + ", clientIdTo='" + clientIdTo + '\'' + ", connectionStrength=" + connectionStrength + ", connectionDetail=" + Arrays.toString(connectionDetail) + ", connectionType='" + connectionType + '\'' + ", connectionDepth=" + connectionDepth + ", abuseType='" + abuseType + '\'' + ", connectionStrengthToInitial=" + connectionStrengthToInitial + ", connectionScore=" + connectionScore + ", connectionScoreToInitial=" + connectionScoreToInitial + '}';
     }
 }

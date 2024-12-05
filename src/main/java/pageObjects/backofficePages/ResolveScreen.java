@@ -97,7 +97,8 @@ public class ResolveScreen {
     }
 
     @Step("Check withdrawal approval message in Kafka")
-    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException, JsonProcessingException {
+    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
+            JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         String kafkaResponse = kafkaResponses.getLast();

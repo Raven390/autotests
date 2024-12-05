@@ -35,7 +35,8 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-                             String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
+            String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol,
+            Integer serverId) {
         this.id = id;
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -46,7 +47,8 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-                             String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId, String type) {
+            String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
+            String type) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -56,7 +58,8 @@ public class CloseTradeMtEvent {
         this.type = type;
     }
 
-    public CloseTradeMtEvent(String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId, String type) {
+    public CloseTradeMtEvent(String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume,
+            String symbol, Integer serverId, String type) {
         this.id = id;
         this.closeTime = closeTime;
         this.tradeId = tradeId;

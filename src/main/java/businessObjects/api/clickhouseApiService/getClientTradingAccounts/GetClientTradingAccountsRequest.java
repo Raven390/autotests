@@ -12,6 +12,6 @@ public class GetClientTradingAccountsRequest {
 
     @Step("Get client Trading Accounts by ucid")
     public static Response getClientTradingAccounts(String ucid) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS_PATH.replace("{clientId}",ucid), null, null);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS_PATH.replace("{clientId}", ucid), null, null);
     }
 }

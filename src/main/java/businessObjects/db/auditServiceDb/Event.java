@@ -16,17 +16,7 @@ public class Event {
 
     @Override
     public String toString() {
-        return "Event{" +
-                "id=" + id +
-                ", kafkaMessageId='" + kafkaMessageId + '\'' +
-                ", ucid='" + ucid + '\'' +
-                ", type='" + type + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", initiatedBySystem='" + initiatedBySystem + '\'' +
-                ", initiatedByUser='" + initiatedByUser + '\'' +
-                ", comment='" + comment + '\'' +
-                ", details='" + details + '\'' +
-                '}';
+        return "Event{" + "id=" + id + ", kafkaMessageId='" + kafkaMessageId + '\'' + ", ucid='" + ucid + '\'' + ", type='" + type + '\'' + ", createdAt='" + createdAt + '\'' + ", initiatedBySystem='" + initiatedBySystem + '\'' + ", initiatedByUser='" + initiatedByUser + '\'' + ", comment='" + comment + '\'' + ", details='" + details + '\'' + '}';
     }
 
     @Override

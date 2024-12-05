@@ -27,7 +27,8 @@ public class GetWithdrawalsResponse {
     public GetWithdrawalsResponse() {
     }
 
-    public GetWithdrawalsResponse(Integer transferId, String createTime, String clientId, Double actualAmountUsd, Double actualAmount, String paymentChannel) {
+    public GetWithdrawalsResponse(Integer transferId, String createTime, String clientId, Double actualAmountUsd,
+            Double actualAmount, String paymentChannel) {
         this.transferId = transferId;
         this.createTime = createTime;
         this.clientId = clientId;
@@ -51,13 +52,6 @@ public class GetWithdrawalsResponse {
 
     @Override
     public String toString() {
-        return "GetWithdrawalsResponse{" +
-                "transferId=" + transferId +
-                ", createTime='" + createTime + '\'' +
-                ", clientId='" + clientId + '\'' +
-                ", actualAmountUsd=" + actualAmountUsd +
-                ", actualAmount=" + actualAmount +
-                ", paymentChannel='" + paymentChannel + '\'' +
-                '}';
+        return "GetWithdrawalsResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\'' + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount=" + actualAmount + ", paymentChannel='" + paymentChannel + '\'' + '}';
     }
 }

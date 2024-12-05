@@ -24,13 +24,6 @@ public class GetCreditsResponseError {
 
     @Override
     public String toString() {
-        return "GetCreditsResponseError{" +
-                "error='" + error + '\'' +
-                ", status=" + status +
-                ", type='" + type + '\'' +
-                ", title='" + title + '\'' +
-                ", detail='" + detail + '\'' +
-                ", instance='" + instance + '\'' +
-                '}';
+        return "GetCreditsResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
     }
 }

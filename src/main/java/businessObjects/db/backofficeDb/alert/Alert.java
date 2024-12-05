@@ -22,7 +22,9 @@ public class Alert {
     public Alert() {
     }
 
-    public Alert(Long id, String uuid, Long clientId, String happenedAt, String receivedAt, String closedAt, String status, String rule, String trigger, String ruleVersion, Long ruleCode, String fraudType, String ruleAttributes, Boolean confirmed) {
+    public Alert(Long id, String uuid, Long clientId, String happenedAt, String receivedAt, String closedAt,
+            String status, String rule, String trigger, String ruleVersion, Long ruleCode, String fraudType,
+            String ruleAttributes, Boolean confirmed) {
         this.id = id;
         this.uuid = uuid;
         this.clientId = clientId;
@@ -54,21 +56,6 @@ public class Alert {
 
     @Override
     public String toString() {
-        return "Alert{" +
-                "id=" + id +
-                ", uuid='" + uuid + '\'' +
-                ", clientId=" + clientId +
-                ", happenedAt='" + happenedAt + '\'' +
-                ", receivedAt='" + receivedAt + '\'' +
-                ", closedAt='" + closedAt + '\'' +
-                ", status='" + status + '\'' +
-                ", rule='" + rule + '\'' +
-                ", trigger='" + trigger + '\'' +
-                ", ruleVersion='" + ruleVersion + '\'' +
-                ", ruleCode='" + ruleCode + '\'' +
-                ", fraudType='" + fraudType + '\'' +
-                ", ruleAttributes='" + ruleAttributes + '\'' +
-                ", confirmed=" + confirmed +
-                '}';
+        return "Alert{" + "id=" + id + ", uuid='" + uuid + '\'' + ", clientId=" + clientId + ", happenedAt='" + happenedAt + '\'' + ", receivedAt='" + receivedAt + '\'' + ", closedAt='" + closedAt + '\'' + ", status='" + status + '\'' + ", rule='" + rule + '\'' + ", trigger='" + trigger + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", ruleCode='" + ruleCode + '\'' + ", fraudType='" + fraudType + '\'' + ", ruleAttributes='" + ruleAttributes + '\'' + ", confirmed=" + confirmed + '}';
     }
 }

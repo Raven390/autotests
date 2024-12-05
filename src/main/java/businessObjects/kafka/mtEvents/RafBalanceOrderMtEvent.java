@@ -32,7 +32,7 @@ public class RafBalanceOrderMtEvent {
     }
 
     public RafBalanceOrderMtEvent(
-                                  String id, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
+            String id, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
         this.id = id;
         this.openTime = openTime;
         this.tradeId = tradeId;
@@ -42,7 +42,7 @@ public class RafBalanceOrderMtEvent {
     }
 
     public RafBalanceOrderMtEvent(
-                                  String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
+            String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId, String type) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;

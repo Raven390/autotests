@@ -36,12 +36,6 @@ public class IpTableEntry {
 
     @Override
     public String toString() {
-        return "IpTableEntry{" +
-                "ucid='" + ucid + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", ip='" + ip + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "IpTableEntry{" + "ucid='" + ucid + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", ip='" + ip + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

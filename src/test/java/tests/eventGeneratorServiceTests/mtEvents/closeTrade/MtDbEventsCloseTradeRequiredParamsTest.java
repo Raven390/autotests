@@ -74,7 +74,8 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
     @DisplayName(
         "Generate close event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("117")
-    public void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException, InterruptedException {
+    public void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException,
+            InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 

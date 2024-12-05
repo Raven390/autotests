@@ -49,7 +49,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -76,7 +76,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -102,7 +102,7 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(),client.getTradingAccount(), client.getServerId());
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
         insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
 
         // getClient request
@@ -136,7 +136,7 @@ public class GetClientsTests extends TestBaseApi {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","qwerty"})
+    @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("204")
     public void getClientSuccessTest5() throws IOException {
@@ -154,7 +154,7 @@ public class GetClientsTests extends TestBaseApi {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","qwerty"})
+    @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("205")
     public void getClientSuccessTest6(String serverId) throws IOException {

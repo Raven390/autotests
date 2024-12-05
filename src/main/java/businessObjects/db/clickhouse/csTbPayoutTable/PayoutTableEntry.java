@@ -36,12 +36,6 @@ public class PayoutTableEntry {
 
     @Override
     public String toString() {
-        return "PayoutTableEntry{" +
-                "ucid='" + ucid + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", payoutId='" + payoutId + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "PayoutTableEntry{" + "ucid='" + ucid + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", payoutId='" + payoutId + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

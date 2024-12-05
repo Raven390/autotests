@@ -12,9 +12,6 @@ public class GetAbuseTypesResponseError {
 
     @Override
     public String toString() {
-        return "GetAbuseTypesResponseError{" +
-                "error='" + error + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+        return "GetAbuseTypesResponseError{" + "error='" + error + '\'' + ", status='" + status + '\'' + '}';
     }
 }

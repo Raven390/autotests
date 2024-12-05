@@ -9,7 +9,7 @@ public class GetMirrorAccountsByTradesResponse {
     @JsonProperty("originalAccount")
     public originalAccount originalAccount;
 
-    public static class originalAccount{
+    public static class originalAccount {
         @JsonProperty("tradingAccount")
         public String requestTradingAccount;
 
@@ -23,7 +23,7 @@ public class GetMirrorAccountsByTradesResponse {
     @JsonProperty("mirrorAccounts")
     public List<MirrorAccounts> mirrorAccounts;
 
-    public static class MirrorAccounts{
+    public static class MirrorAccounts {
 
         @JsonProperty("tradingAccount")
         public String tradingAccount;

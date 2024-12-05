@@ -34,11 +34,11 @@ public class CrmTbWithdrawalObject {
     }
 
     public CrmTbWithdrawalObject(Integer account, Double amount, Double amountUsd, String brand, String createTime,
-                            String currency, Double fee, String paymentChannel, String paymentDetails,
-                            String paymentExpirationDate, String paymentRequisite, String paymentSystemAccount,
-                            String paymentSystemCurrency, String paymentType, String regulator, Double reversedAmount,
-                            String reversedTime, Integer status, Integer ticketId, Integer transferId, String ucid,
-                            String uid, String updateTime, Integer userId) {
+            String currency, Double fee, String paymentChannel, String paymentDetails,
+            String paymentExpirationDate, String paymentRequisite, String paymentSystemAccount,
+            String paymentSystemCurrency, String paymentType, String regulator, Double reversedAmount,
+            String reversedTime, Integer status, Integer ticketId, Integer transferId, String ucid,
+            String uid, String updateTime, Integer userId) {
         this.account = account;
         this.amount = amount;
         this.amountUsd = amountUsd;
@@ -80,31 +80,6 @@ public class CrmTbWithdrawalObject {
 
     @Override
     public String toString() {
-        return "CrmTbWithdrawalObject{" +
-                "account=" + account +
-                ", amount=" + amount +
-                ", amountUsd=" + amountUsd +
-                ", brand='" + brand + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", currency='" + currency + '\'' +
-                ", fee=" + fee +
-                ", paymentChannel='" + paymentChannel + '\'' +
-                ", paymentDetails='" + paymentDetails + '\'' +
-                ", paymentExpirationDate='" + paymentExpirationDate + '\'' +
-                ", paymentRequisite='" + paymentRequisite + '\'' +
-                ", paymentSystemAccount='" + paymentSystemAccount + '\'' +
-                ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' +
-                ", paymentType='" + paymentType + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", reversedAmount=" + reversedAmount +
-                ", reversedTime='" + reversedTime + '\'' +
-                ", status=" + status +
-                ", ticketId=" + ticketId +
-                ", transferId=" + transferId +
-                ", ucid='" + ucid + '\'' +
-                ", uid='" + uid + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", userId=" + userId +
-                '}';
+        return "CrmTbWithdrawalObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", fee=" + fee + ", paymentChannel='" + paymentChannel + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", paymentRequisite='" + paymentRequisite + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentType='" + paymentType + '\'' + ", regulator='" + regulator + '\'' + ", reversedAmount=" + reversedAmount + ", reversedTime='" + reversedTime + '\'' + ", status=" + status + ", ticketId=" + ticketId + ", transferId=" + transferId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + '}';
     }
 }

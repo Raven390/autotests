@@ -36,12 +36,6 @@ public class ConnectionTableEntryV2 {
 
     @Override
     public String toString() {
-        return "ConnectionTableEntry{" +
-                "userFrom='" + userFrom + '\'' +
-                ", userTo='" + userTo + '\'' +
-                ", level=" + level +
-                ", attr='" + attr + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "ConnectionTableEntry{" + "userFrom='" + userFrom + '\'' + ", userTo='" + userTo + '\'' + ", level=" + level + ", attr='" + attr + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

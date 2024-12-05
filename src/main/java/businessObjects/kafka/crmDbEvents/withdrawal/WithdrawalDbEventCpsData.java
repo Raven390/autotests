@@ -75,7 +75,11 @@ public class WithdrawalDbEventCpsData {
     public WithdrawalDbEventCpsData() {
     }
 
-    public WithdrawalDbEventCpsData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand, String regulator, Integer withdrawType, Double withdrawAmount, Double fee, Double actualAmount, Double paymentAmount, String cardNumber, Integer isDel, String updateTime, String orderNumber, Double deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency, Integer checkingStatus, Double rate, Double toUsdRate) {
+    public WithdrawalDbEventCpsData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand,
+            String regulator, Integer withdrawType, Double withdrawAmount, Double fee, Double actualAmount,
+            Double paymentAmount, String cardNumber, Integer isDel, String updateTime, String orderNumber,
+            Double deductCredit, Integer userSalesId, Integer accountSalesId, String orderCurrency,
+            Integer checkingStatus, Double rate, Double toUsdRate) {
         this.createTime = createTime;
         this.id = id;
         this.userId = userId;
@@ -115,29 +119,6 @@ public class WithdrawalDbEventCpsData {
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventCpsData{" +
-                "createTime='" + createTime + '\'' +
-                ", id=" + id +
-                ", userId=" + userId +
-                ", mt4Account=" + mt4Account +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", withdrawType=" + withdrawType +
-                ", withdrawAmount=" + withdrawAmount +
-                ", fee=" + fee +
-                ", actualAmount=" + actualAmount +
-                ", paymentAmount=" + paymentAmount +
-                ", cardNumber='" + cardNumber + '\'' +
-                ", isDel=" + isDel +
-                ", updateTime='" + updateTime + '\'' +
-                ", orderNumber='" + orderNumber + '\'' +
-                ", deductCredit=" + deductCredit +
-                ", userSalesId=" + userSalesId +
-                ", accountSalesId=" + accountSalesId +
-                ", orderCurrency='" + orderCurrency + '\'' +
-                ", checkingStatus=" + checkingStatus +
-                ", rate=" + rate +
-                ", toUsdRate=" + toUsdRate +
-                '}';
+        return "WithdrawalDbEventCpsData{" + "createTime='" + createTime + '\'' + ", id=" + id + ", userId=" + userId + ", mt4Account=" + mt4Account + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", withdrawType=" + withdrawType + ", withdrawAmount=" + withdrawAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardNumber='" + cardNumber + '\'' + ", isDel=" + isDel + ", updateTime='" + updateTime + '\'' + ", orderNumber='" + orderNumber + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", orderCurrency='" + orderCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", rate=" + rate + ", toUsdRate=" + toUsdRate + '}';
     }
 }

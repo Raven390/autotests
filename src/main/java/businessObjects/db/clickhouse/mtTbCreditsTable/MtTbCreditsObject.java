@@ -24,8 +24,8 @@ public class MtTbCreditsObject {
     }
 
     public MtTbCreditsObject(Integer account, Double amount, Double amountUsd, String brand, String comment,
-                            String createTime, String currency, String regulator, Integer serverId, String serverName,
-                             Integer ticket, String ucid, String uid, Integer userId) {
+            String createTime, String currency, String regulator, Integer serverId, String serverName,
+            Integer ticket, String ucid, String uid, Integer userId) {
         this.account = account;
         this.amount = amount;
         this.amountUsd = amountUsd;
@@ -57,21 +57,6 @@ public class MtTbCreditsObject {
 
     @Override
     public String toString() {
-        return "MtTbCreditsObject{" +
-                "account=" + account +
-                ", amount=" + amount +
-                ", amountUsd=" + amountUsd +
-                ", brand='" + brand + '\'' +
-                ", comment='" + comment + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", currency='" + currency + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", serverId=" + serverId +
-                ", serverName='" + serverName + '\'' +
-                ", ticket=" + ticket +
-                ", ucid='" + ucid + '\'' +
-                ", uid='" + uid + '\'' +
-                ", userId=" + userId +
-                '}';
+        return "MtTbCreditsObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", comment='" + comment + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", regulator='" + regulator + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", ticket=" + ticket + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", userId=" + userId + '}';
     }
 }

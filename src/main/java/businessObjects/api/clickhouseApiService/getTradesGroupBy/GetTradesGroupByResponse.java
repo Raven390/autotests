@@ -39,10 +39,6 @@ public class GetTradesGroupByResponse {
 
     @Override
     public String toString() {
-        return "GetTradesGroupByResponse{" +
-                "symbol='" + symbol + '\'' +
-                ", profit=" + profit +
-                ", profitUsd=" + profitUsd +
-                '}';
+        return "GetTradesGroupByResponse{" + "symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + '}';
     }
 }

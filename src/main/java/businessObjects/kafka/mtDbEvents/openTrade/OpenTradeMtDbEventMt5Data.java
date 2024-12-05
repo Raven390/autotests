@@ -32,7 +32,8 @@ public class OpenTradeMtDbEventMt5Data {
     public Integer serverId;
 
     public OpenTradeMtDbEventMt5Data(
-                                     String openTime, Integer tradeId, Integer mtAccount, Double volume, String symbol, Integer entry, Integer action, Integer serverId) {
+            String openTime, Integer tradeId, Integer mtAccount, Double volume, String symbol, Integer entry,
+            Integer action, Integer serverId) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;

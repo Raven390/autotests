@@ -106,7 +106,7 @@ public class Utils {
         }
     }
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
+    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         int x = new Random().nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
@@ -124,7 +124,7 @@ public class Utils {
         return timestampDb.replace(" ", "T") + "Z";
     }
 
-    public static long getDifferenceTimeMinutes(String dateTimeString, String dateTimeString2){
+    public static long getDifferenceTimeMinutes(String dateTimeString, String dateTimeString2) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);

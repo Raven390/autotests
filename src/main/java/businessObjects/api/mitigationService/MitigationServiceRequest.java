@@ -26,7 +26,8 @@ public class MitigationServiceRequest {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
     }
 
-    public static Response cancelRestrictionById(Integer id, CancelRestrictionRequestBody cancelRestrictionRequestBody) throws IOException {
+    public static Response cancelRestrictionById(Integer id, CancelRestrictionRequestBody cancelRestrictionRequestBody)
+            throws IOException {
         return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, id), null, null, cancelRestrictionRequestBody);
     }
 

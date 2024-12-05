@@ -82,7 +82,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credit equity ratio request only by tradingAccount (400)")
     @AllureId("445")
     public void getCreditEquityRatioTest2() throws IOException {
-         //Send request
+        //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         Response response = getCreditEquity(queryParams);

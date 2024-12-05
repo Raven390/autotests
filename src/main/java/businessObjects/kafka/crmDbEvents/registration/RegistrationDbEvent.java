@@ -35,9 +35,6 @@ public class RegistrationDbEvent {
 
     @Override
     public String toString() {
-        return "RegistrationDbEvent{" +
-                "data=" + data +
-                ", metadata=" + metadata +
-                '}';
+        return "RegistrationDbEvent{" + "data=" + data + ", metadata=" + metadata + '}';
     }
 }

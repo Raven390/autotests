@@ -36,7 +36,8 @@ public class GetTradesResponse {
     public GetTradesResponse() {
     }
 
-    public GetTradesResponse(String tradeDate, Integer tradeId, Integer tradingAccount, Integer action, Integer entry, String symbol, Double profit, Double profitUsd, String comment) {
+    public GetTradesResponse(String tradeDate, Integer tradeId, Integer tradingAccount, Integer action, Integer entry,
+            String symbol, Double profit, Double profitUsd, String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -63,16 +64,6 @@ public class GetTradesResponse {
 
     @Override
     public String toString() {
-        return "GetTradesResponse{" +
-                "tradeDate='" + tradeDate + '\'' +
-                ", tradeId=" + tradeId +
-                ", tradingAccount=" + tradingAccount +
-                ", action=" + action +
-                ", entry=" + entry +
-                ", symbol='" + symbol + '\'' +
-                ", profit=" + profit +
-                ", profitUsd=" + profitUsd +
-                ", comment='" + comment + '\'' +
-                '}';
+        return "GetTradesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", action=" + action + ", entry=" + entry + ", symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", comment='" + comment + '\'' + '}';
     }
 }

@@ -160,7 +160,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses order by actualAmountUSD")
     @AllureId("420")
-    public void getBonusesOrderByAmountUsdTest() throws IOException{
+    public void getBonusesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));

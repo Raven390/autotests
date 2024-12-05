@@ -43,12 +43,7 @@ public class EventGeneratorRegistrationTests {
         RegistrationEvent retrievedRegistrationEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         RegistrationEvent expectedRegistrationEvent = new RegistrationEvent(
-                registrationDbEvent.data.createTime,
-                registrationDbEvent.data.userId,
-                registrationDbEvent.data.brand,
-                registrationDbEvent.data.regulator,
-                registrationDbEvent.data.mtAccount,
-                "clientRegistration"
+                registrationDbEvent.data.createTime, registrationDbEvent.data.userId, registrationDbEvent.data.brand, registrationDbEvent.data.regulator, registrationDbEvent.data.mtAccount, "clientRegistration"
         );
 
         Allure.step("Verify that message was written correctly");

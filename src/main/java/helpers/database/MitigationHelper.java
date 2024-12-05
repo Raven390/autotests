@@ -11,7 +11,7 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 public class MitigationHelper {
     @Step("clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '"+ ucid+"'", ClientsRestriction.class);
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {
             String Id = i.id.toString();
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.action", "clients_restriction_id = " + Id);

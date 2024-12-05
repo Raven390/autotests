@@ -101,7 +101,13 @@ public class WithdrawalEvent {
     public WithdrawalEvent() {
     }
 
-    public WithdrawalEvent(String eventDate, Integer withdrawalId, Integer clientId, Integer metaTraderAccount, String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount, Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime, String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo, String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId, String withdrawalCurrency, Integer checkingStatus, Integer wdIsTrade, Double rate, Integer wdIsNonApp, Double toUsdRate, String type) {
+    public WithdrawalEvent(String eventDate, Integer withdrawalId, Integer clientId, Integer metaTraderAccount,
+            String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
+            Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
+            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
+            String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
+            String withdrawalCurrency, Integer checkingStatus, Integer wdIsTrade, Double rate, Integer wdIsNonApp,
+            Double toUsdRate, String type) {
         this.eventDate = eventDate;
         this.withdrawalId = withdrawalId;
         this.clientId = clientId;
@@ -149,38 +155,6 @@ public class WithdrawalEvent {
 
     @Override
     public String toString() {
-        return "WithdrawalEvent{" +
-                "id='" + id + '\'' +
-                ", eventDate='" + eventDate + '\'' +
-                ", withdrawalId=" + withdrawalId +
-                ", clientId=" + clientId +
-                ", metaTraderAccount=" + metaTraderAccount +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", paymentMethodCode='" + paymentMethodCode + '\'' +
-                ", withdrawType=" + withdrawType +
-                ", withdrawalAmount=" + withdrawalAmount +
-                ", fee=" + fee +
-                ", actualAmount=" + actualAmount +
-                ", paymentAmount=" + paymentAmount +
-                ", cardHash='" + cardHash + '\'' +
-                ", wdIsDel=" + wdIsDel +
-                ", updateTime='" + updateTime + '\'' +
-                ", cpsAttachVariable='" + cpsAttachVariable + '\'' +
-                ", orderNumber='" + orderNumber + '\'' +
-                ", cpsMandatoryField='" + cpsMandatoryField + '\'' +
-                ", wdIsRememberInfo=" + wdIsRememberInfo +
-                ", upiAccountName='" + upiAccountName + '\'' +
-                ", deductCredit=" + deductCredit +
-                ", userSalesId=" + userSalesId +
-                ", accountSalesId=" + accountSalesId +
-                ", withdrawalCurrency='" + withdrawalCurrency + '\'' +
-                ", checkingStatus=" + checkingStatus +
-                ", wdIsTrade=" + wdIsTrade +
-                ", rate=" + rate +
-                ", wdIsNonApp=" + wdIsNonApp +
-                ", toUsdRate=" + toUsdRate +
-                ", type='" + type + '\'' +
-                '}';
+        return "WithdrawalEvent{" + "id='" + id + '\'' + ", eventDate='" + eventDate + '\'' + ", withdrawalId=" + withdrawalId + ", clientId=" + clientId + ", metaTraderAccount=" + metaTraderAccount + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawalAmount=" + withdrawalAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardHash='" + cardHash + '\'' + ", wdIsDel=" + wdIsDel + ", updateTime='" + updateTime + '\'' + ", cpsAttachVariable='" + cpsAttachVariable + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", wdIsRememberInfo=" + wdIsRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", withdrawalCurrency='" + withdrawalCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", wdIsTrade=" + wdIsTrade + ", rate=" + rate + ", wdIsNonApp=" + wdIsNonApp + ", toUsdRate=" + toUsdRate + ", type='" + type + '\'' + '}';
     }
 }

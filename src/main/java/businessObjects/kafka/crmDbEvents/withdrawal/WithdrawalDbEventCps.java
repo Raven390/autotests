@@ -35,9 +35,6 @@ public class WithdrawalDbEventCps {
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventCps{" +
-                "data=" + data +
-                ", metadata=" + metadata +
-                '}';
+        return "WithdrawalDbEventCps{" + "data=" + data + ", metadata=" + metadata + '}';
     }
 }

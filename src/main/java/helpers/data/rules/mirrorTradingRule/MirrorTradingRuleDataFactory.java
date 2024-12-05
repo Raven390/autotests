@@ -71,26 +71,14 @@ public class MirrorTradingRuleDataFactory {
         lexisNexisObjectLogin.trueIpGeo = "CY";
         MtTbUserObject mtTbUserObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(),
-                Instant.now().toString(),
-                getRandomIntPositive(),
-                mtTbUserObject.account,
-                100d,
-                "USDEUR",
-                mtTbUserObject.serverId,
-                "closeTrade"
+                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), mtTbUserObject.account, 100d, "USDEUR", mtTbUserObject.serverId, "closeTrade"
         );
         return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
     }
 
     private static ConnectionTableEntryV3 getConnection(ClientHelper fromClient, ClientHelper toClient) {
         return new ConnectionTableEntryV3(
-                fromClient.getUcid(),
-                toClient.getUcid(),
-                "Same Identity",
-                1d,
-                "{\"payout\": \"463344**** **5603\"}",
-                getCurrentTimestampDbFormat());
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "{\"payout\": \"463344**** **5603\"}", getCurrentTimestampDbFormat());
     }
 
     public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd2Data() {
@@ -98,9 +86,7 @@ public class MirrorTradingRuleDataFactory {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd2Client);
         Allure.step("Client has previous restrictions");
         BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                data.clientHelper.getUcid(),
-                6,
-                "HEDGING"
+                data.clientHelper.getUcid(), 6, "HEDGING"
         );
         data.clientFraudTypes.add(boClientFraudTypesObject);
         return data;
@@ -115,9 +101,7 @@ public class MirrorTradingRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(),
-                6,
-                "HEDGING"
+                connectedClient.getUcid(), 6, "HEDGING"
         );
         data.clientFraudTypes.add(boClientFraudTypesObject);
         return data;
@@ -440,7 +424,8 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() throws ReflectiveOperationException, SQLException {
+    public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() throws ReflectiveOperationException,
+            SQLException {
         startSshTunnel();
         Map<String, MirrorTradingRuleData> map = new HashMap<>();
         // Put all the db data for setup in a list

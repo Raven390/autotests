@@ -60,10 +60,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -99,10 +96,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -112,27 +106,16 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
 
         ClientsRestriction expectedRestrictionClose = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                6L,
-                "Doppelganger is a mirrorAbuser",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 6L, "Doppelganger is a mirrorAbuser", "APPLIED");
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Doppelganger isn't a mirrorAbuser but with bonus",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Doppelganger isn't a mirrorAbuser but with bonus", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestrictionClose, expectedRestrictionWithdrawal));
     }
@@ -167,10 +150,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -180,20 +160,13 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Doppelganger isn't a mirrorAbuser but with bonus",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Doppelganger isn't a mirrorAbuser but with bonus", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
@@ -214,10 +187,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -239,10 +209,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -264,10 +231,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -289,10 +253,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -314,10 +275,7 @@ public class MirrorTradeRuleTest {
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -353,10 +311,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -366,31 +321,19 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
 
         ClientsRestriction expectedRestrictionClose = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                6L,
-                "Trading account is a mirror abuser (full rule)",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 6L, "Trading account is a mirror abuser (full rule)", "APPLIED");
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Doppelganger is a mirrorAbuser",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Doppelganger is a mirrorAbuser", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestrictionClose, expectedRestrictionWithdrawal));
     }
-
 
 
     @Test
@@ -423,10 +366,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -436,27 +376,16 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
 
         ClientsRestriction expectedRestrictionClose = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                6L,
-                "Trading account is a mirror abuser (full rule)",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 6L, "Trading account is a mirror abuser (full rule)", "APPLIED");
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Doppelganger is a mirrorAbuser",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Doppelganger is a mirrorAbuser", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestrictionClose, expectedRestrictionWithdrawal));
     }
@@ -491,10 +420,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -504,21 +430,14 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
 
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Trading account is a mirror abuser (full rule) but without existing mirror trades",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
@@ -553,10 +472,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -566,21 +482,14 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
 
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Trading account is a mirror abuser (full rule) but without existing mirror trades",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
@@ -615,10 +524,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -628,21 +534,14 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
 
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Trading account is a mirror abuser (full rule) but without existing mirror trades",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
@@ -677,10 +576,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -690,21 +586,14 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
 
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Trading account is a mirror abuser (full rule) but without existing mirror trades",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
@@ -739,10 +628,7 @@ public class MirrorTradeRuleTest {
         assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO,
-                BO_ALERT_TABLE_NAME,
-                String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()),
-                Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -752,21 +638,14 @@ public class MirrorTradeRuleTest {
         // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES,
-                MITIGATION_CLIENTS_RESTRICTION,
-                String.format("ucid = '%s'", data.clientHelper.getUcid()),
-                ClientsRestriction.class
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
         assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
 
 
         ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(),
-                data.crmTbUserObject.regulator,
-                4L,
-                "Trading account is a mirror abuser (full rule) but without existing mirror trades",
-                "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }

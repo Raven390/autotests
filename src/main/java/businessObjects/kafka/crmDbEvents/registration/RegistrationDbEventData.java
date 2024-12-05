@@ -24,7 +24,8 @@ public class RegistrationDbEventData {
     public RegistrationDbEventData() {
     }
 
-    public RegistrationDbEventData(String createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
+    public RegistrationDbEventData(String createTime, Integer userId, String brand, String regulator,
+            Integer mtAccount) {
         this.createTime = createTime;
         this.userId = userId;
         this.brand = brand;
@@ -47,12 +48,6 @@ public class RegistrationDbEventData {
 
     @Override
     public String toString() {
-        return "RegistrationDbEventData{" +
-                "createTime='" + createTime + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", mtAccount=" + mtAccount +
-                '}';
+        return "RegistrationDbEventData{" + "createTime='" + createTime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", mtAccount=" + mtAccount + '}';
     }
 }

@@ -26,8 +26,8 @@ public class CrmTbBonusObject {
     }
 
     public CrmTbBonusObject(Integer transferId, String uid, String ucid, String brand, String regulator, Integer userId,
-                            Integer account, String createTime, String updateTime, Double amount, Double amountUsd,
-                            String currency, Integer status, Integer type, String typeRemark, String comment) {
+            Integer account, String createTime, String updateTime, Double amount, Double amountUsd,
+            String currency, Integer status, Integer type, String typeRemark, String comment) {
         this.transferId = transferId;
         this.uid = uid;
         this.ucid = ucid;
@@ -61,23 +61,6 @@ public class CrmTbBonusObject {
 
     @Override
     public String toString() {
-        return "CrmTbBonusObject{" +
-                "transferId=" + transferId +
-                ", uid='" + uid + '\'' +
-                ", ucid='" + ucid + '\'' +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", userId=" + userId +
-                ", account=" + account +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", amount=" + amount +
-                ", amountUsd=" + amountUsd +
-                ", currency='" + currency + '\'' +
-                ", status=" + status +
-                ", type=" + type +
-                ", typeRemark='" + typeRemark + '\'' +
-                ", comment='" + comment + '\'' +
-                '}';
+        return "CrmTbBonusObject{" + "transferId=" + transferId + ", uid='" + uid + '\'' + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", account=" + account + ", createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", amount=" + amount + ", amountUsd=" + amountUsd + ", currency='" + currency + '\'' + ", status=" + status + ", type=" + type + ", typeRemark='" + typeRemark + '\'' + ", comment='" + comment + '\'' + '}';
     }
 }

@@ -16,8 +16,8 @@ public class AggrMirrorAccountsByTradesObject {
     }
 
     public AggrMirrorAccountsByTradesObject(String symbol, String requestTradingAccount, String requestServerId,
-                                            Double requestVolumeInLots, String mirrorAccounts,String mirrorServerId,
-                                            Double mirrorVolumeInLots) {
+            Double requestVolumeInLots, String mirrorAccounts, String mirrorServerId,
+            Double mirrorVolumeInLots) {
         this.symbol = symbol;
         this.requestTradingAccount = requestTradingAccount;
         this.requestServerId = requestServerId;
@@ -32,27 +32,16 @@ public class AggrMirrorAccountsByTradesObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AggrMirrorAccountsByTradesObject that = (AggrMirrorAccountsByTradesObject) o;
-        return Objects.equals(symbol, that.symbol) && Objects.equals(requestTradingAccount, that.requestTradingAccount)
-                && Objects.equals(requestServerId, that.requestServerId) && Objects.equals(requestVolumeInLots, that.requestVolumeInLots)
-                && Objects.equals(mirrorAccounts, that.mirrorAccounts) && Objects.equals(mirrorServerId, that.mirrorServerId)
-                && Objects.equals(mirrorVolumeInLots, that.mirrorVolumeInLots);
+        return Objects.equals(symbol, that.symbol) && Objects.equals(requestTradingAccount, that.requestTradingAccount) && Objects.equals(requestServerId, that.requestServerId) && Objects.equals(requestVolumeInLots, that.requestVolumeInLots) && Objects.equals(mirrorAccounts, that.mirrorAccounts) && Objects.equals(mirrorServerId, that.mirrorServerId) && Objects.equals(mirrorVolumeInLots, that.mirrorVolumeInLots);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(symbol, requestTradingAccount, requestServerId,requestVolumeInLots,mirrorAccounts,mirrorServerId,mirrorVolumeInLots);
+        return Objects.hash(symbol, requestTradingAccount, requestServerId, requestVolumeInLots, mirrorAccounts, mirrorServerId, mirrorVolumeInLots);
     }
 
     @Override
     public String toString() {
-        return "aggrMirrorAccountsByTradesObject{" +
-                "symbol='" + symbol + '\'' +
-                ", requestTradingAccount=" + requestTradingAccount +
-                ", requestServerId='" + requestServerId + '\'' +
-                ", requestVolumeInLots='" + requestVolumeInLots + '\'' +
-                ", mirrorAccounts='" + mirrorAccounts + '\'' +
-                ", mirrorServerId='" + mirrorServerId + '\'' +
-                ", mirrorVolumeInLots='" + mirrorVolumeInLots + '\'' +
-                '}';
+        return "aggrMirrorAccountsByTradesObject{" + "symbol='" + symbol + '\'' + ", requestTradingAccount=" + requestTradingAccount + ", requestServerId='" + requestServerId + '\'' + ", requestVolumeInLots='" + requestVolumeInLots + '\'' + ", mirrorAccounts='" + mirrorAccounts + '\'' + ", mirrorServerId='" + mirrorServerId + '\'' + ", mirrorVolumeInLots='" + mirrorVolumeInLots + '\'' + '}';
     }
 }

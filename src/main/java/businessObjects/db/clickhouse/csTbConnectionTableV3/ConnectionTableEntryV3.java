@@ -14,7 +14,8 @@ public class ConnectionTableEntryV3 {
     public ConnectionTableEntryV3() {
     }
 
-    public ConnectionTableEntryV3(String userFrom, String userTo, String degreeConnection, Double connectionScore, String connectionInfo, String updateTs) {
+    public ConnectionTableEntryV3(String userFrom, String userTo, String degreeConnection, Double connectionScore,
+            String connectionInfo, String updateTs) {
         this.userFrom = userFrom;
         this.userTo = userTo;
         this.degreeConnection = degreeConnection;
@@ -38,13 +39,6 @@ public class ConnectionTableEntryV3 {
 
     @Override
     public String toString() {
-        return "ConnectionTableEntryV3{" +
-                "userFrom='" + userFrom + '\'' +
-                ", userTo='" + userTo + '\'' +
-                ", degreeConnection='" + degreeConnection + '\'' +
-                ", connectionScore=" + connectionScore +
-                ", connectionInfo='" + connectionInfo + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "ConnectionTableEntryV3{" + "userFrom='" + userFrom + '\'' + ", userTo='" + userTo + '\'' + ", degreeConnection='" + degreeConnection + '\'' + ", connectionScore=" + connectionScore + ", connectionInfo='" + connectionInfo + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

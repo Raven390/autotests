@@ -31,7 +31,8 @@ public class MtDbEventsOpenTradeFiltrationTest {
     @Test
     @DisplayName("Generate open event with event generator service that should be filtered out by the Event Generator")
     @AllureId("120")
-    public void generateOpenTradeEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException, InterruptedException {
+    public void generateOpenTradeEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException,
+            InterruptedException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 

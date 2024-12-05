@@ -43,11 +43,6 @@ public class GetConnectionsResponseError {
 
     @Override
     public String toString() {
-        return "GetConnectionsResponseError{" +
-                "timestamp='" + timestamp + '\'' +
-                ", status=" + status +
-                ", error='" + error + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+        return "GetConnectionsResponseError{" + "timestamp='" + timestamp + '\'' + ", status=" + status + ", error='" + error + '\'' + ", path='" + path + '\'' + '}';
     }
 }
