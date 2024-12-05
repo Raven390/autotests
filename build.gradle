@@ -28,6 +28,7 @@ def jacksonVersion = '2.17.2'
 def postgresVersion = '42.7.3'
 def mysqlVersion = '8.0.32'
 def clickhouseVersion = '0.6.0'
+def hikariVersion = '6.2.1'
 def kafkaClientVersion = '3.6.0'
 def imageComparisonVersion = '4.4.0'
 def jsonVersion = '20240303'
@@ -63,6 +64,7 @@ dependencies {
     implementation "org.postgresql:postgresql:$postgresVersion"
     implementation "mysql:mysql-connector-java:$mysqlVersion"
     implementation "com.clickhouse:clickhouse-jdbc:$clickhouseVersion"
+    implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.apache.httpcomponents.client5:httpclient5:$httpcomponentsVersion"
 
     //Allure
