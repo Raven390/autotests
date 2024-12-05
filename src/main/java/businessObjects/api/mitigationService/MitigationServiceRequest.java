@@ -18,6 +18,10 @@ public class MitigationServiceRequest {
         return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, postRestrictionRequestBody);
     }
 
+    public static Response putRestriction(PostRestrictionRequestBody postRestrictionRequestBody) throws IOException {
+        return new HttpHelper().sendPutRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, postRestrictionRequestBody);
+    }
+
     public static Response getRestrictionsByUcid(String ucid) throws IOException {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
     }

@@ -102,20 +102,20 @@ public class ConnectionPage {
             "    }\n" +
             "}";
 
-    @Step("open users restriction tab")
+    @Step("Open users restriction tab")
     public void navigateConnectionTab(String ucid) {
         page.navigate(BASE_URL_E2E + "investigation?client_ucid=" + ucid);
         isPageLoaded();
         connectionTab.click();
     }
 
-    @Step("go to main page")
+    @Step("Go to main page")
     public void navigateMain() {
         page.navigate(BASE_URL_E2E);
 
     }
 
-    @Step("go to main page")
+    @Step("Go to main page")
     public void checkLineStyle(String ucid1, String ucid2, String attributeName, double connectionScore) {
         isPageLoaded();
         int width = connectionWidth(connectionScore);
@@ -124,14 +124,14 @@ public class ConnectionPage {
 
     }
 
-    @Step("check name of the client in node")
+    @Step("Check name of the client in node")
     public void checkClientName(String ucid1, String name) {
         isPageLoaded();
         assertTrue(page.locator(".v-graph-node[data-qa=\"" + ucid1 + "\"]").getByText(name).isVisible());
 
     }
 
-    @Step("check status of the client in node")
+    @Step("Check status of the client in node")
     public void checkClientStatus(String ucid1, String status) {
         isPageLoaded();
 

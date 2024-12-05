@@ -11,6 +11,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import okhttp3.Response;
 
@@ -455,8 +456,9 @@ public class RestrictionPage {
         Thread.sleep(200);
     }
 
-    @Step
+    @Step("Set restriction though API")
     public void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
+        Allure.step("Set restriction though API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid,
                 code,
@@ -474,6 +476,7 @@ public class RestrictionPage {
 
     @Step
     public void setRestrictionAPITrade(String ucid, int accId, int serverId, String code) throws IOException {
+        Allure.step("Set restriction though API TRADE");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid,
                 code,

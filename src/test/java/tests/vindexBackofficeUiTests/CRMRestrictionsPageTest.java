@@ -1,7 +1,6 @@
 package tests.vindexBackofficeUiTests;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -9,6 +8,7 @@ import tests.TestBaseWeb;
 import java.io.IOException;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.disableCRMEmulator;
+import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.ConfigFactory.CRM_INEGRATION_USER_UCID;
 import static utils.Constants.LAYER_WEB;
@@ -17,14 +17,18 @@ import static utils.Constants.TEAM_BACKOFFICE;
 public class CRMRestrictionsPageTest extends TestBaseWeb {
 
     @BeforeEach
-    public void CRMEmulation() throws IOException {
+    public void CRMEmulationDisable() throws IOException {
         Response response = disableCRMEmulator();
         assertNotNull(response);
+    }
 
+    @AfterAll
+    public static void CRMEmulationEnable() throws IOException {
+        Response response = enableCRMEmulator();
+        assertNotNull(response);
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("345")
@@ -43,7 +47,6 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("346")
@@ -62,7 +65,6 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("347")
@@ -81,7 +83,6 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("348")
@@ -100,7 +101,6 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("349")
@@ -120,7 +120,6 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
 
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("350")

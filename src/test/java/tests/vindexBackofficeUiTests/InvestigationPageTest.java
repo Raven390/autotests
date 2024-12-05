@@ -3,7 +3,6 @@ package tests.vindexBackofficeUiTests;
 import static utils.Constants.*;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -13,7 +12,6 @@ import tests.TestBaseWeb;
 public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -26,7 +24,6 @@ public class InvestigationPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -40,7 +37,6 @@ public class InvestigationPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -54,7 +50,6 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -68,7 +63,6 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Disabled("not implemented")
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -83,7 +77,6 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -98,7 +91,6 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -113,7 +105,6 @@ public class InvestigationPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -128,7 +119,6 @@ public class InvestigationPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)

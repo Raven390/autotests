@@ -1,7 +1,6 @@
 package tests.vindexBackofficeUiTests;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -28,7 +27,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("327")
@@ -45,7 +43,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("328")
@@ -63,7 +60,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("329")
@@ -80,7 +76,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("330")
@@ -97,7 +92,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("331")
@@ -114,7 +108,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("332")
@@ -131,7 +124,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("333")
@@ -148,7 +140,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("334")
@@ -165,7 +156,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("335")
@@ -182,7 +172,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("336")
@@ -200,7 +189,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("337")
@@ -217,7 +205,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("338")
@@ -234,7 +221,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("361")
@@ -255,7 +241,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("365")
@@ -276,7 +261,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("366")
@@ -311,7 +295,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("339")
@@ -328,7 +311,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("340")
@@ -346,7 +328,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("341")
@@ -363,7 +344,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("342")
@@ -381,7 +361,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("343")
@@ -398,7 +377,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("344")

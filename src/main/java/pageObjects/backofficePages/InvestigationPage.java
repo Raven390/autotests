@@ -181,14 +181,14 @@ public class InvestigationPage {
         }
     }
 
-    @Step("unfold suspicious clients side menu folds")
+    @Step("Unfold suspicious clients side menu folds")
     public void unfoldSusClientFoldSection() {
         susClientSectionFoldButtonFolded.isVisible();
         susClientSectionFolded.isVisible();
         susClientSectionFoldButtonFolded.click();
     }
 
-    @Step("fold suspicious clients side menu folds")
+    @Step("Fold suspicious clients side menu folds")
     public void foldSusClientFoldSection() {
         susClientSectionFoldButton.isVisible();
         susClientSection.isVisible();
@@ -257,19 +257,19 @@ public class InvestigationPage {
         darkBody.isVisible();
     }
 
-    @Step("filter assigned to me")
+    @Step("Filter assigned to me")
     public void filterAssignedMe() {
         assignToMeFilter.click();
         assignToMeFilter.locator("[aria-checked=\"true\"]").isVisible();
     }
 
-    @Step("filter unassigned")
+    @Step("Filter unassigned")
     public void filterUnassigned() {
         unassignedFilter.click();
         unassignedFilter.locator("[aria-checked=\"true\"]").isVisible();
     }
 
-    @Step("filter all")
+    @Step("Filter all")
     public void filterAll() {
         allSusClientsFilter.click();
         allSusClientsFilter.locator("[aria-checked=\"true\"]").isVisible();
@@ -283,7 +283,7 @@ public class InvestigationPage {
         comparePageScreenshotWithBaseline(page, baselinePath);
     }
 
-    @Step("navigate to client")
+    @Step("Navigate to client")
     public void navigateToClient(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
         isPageLoaded();

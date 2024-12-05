@@ -3,7 +3,6 @@ package tests.vindexBackofficeUiTests;
 import static utils.Constants.*;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -14,7 +13,6 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
 
     @Test
     @Disabled//need to update mocking
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -32,7 +30,6 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
 
     @Test
     @Disabled//need to update mocking
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)

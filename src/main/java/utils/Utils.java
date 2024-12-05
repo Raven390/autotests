@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.UUID;
@@ -121,5 +122,18 @@ public class Utils {
 
     public static String timestampFromDbToIso(String timestampDb) {
         return timestampDb.replace(" ", "T") + "Z";
+    }
+
+    public static long getDifferenceTimeMinutes(String dateTimeString, String dateTimeString2){
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, formatter);
+        LocalDateTime dateTime2 = LocalDateTime.parse(dateTimeString2, formatter);
+
+        long time = ChronoUnit.MINUTES.between(dateTime, dateTime2);
+
+        System.out.println("TIME DIFFERENCE IN MINUTES IS " + time);
+
+        return time;
     }
 }

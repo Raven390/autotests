@@ -4,6 +4,7 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GeneralPage {
@@ -79,7 +80,7 @@ public class GeneralPage {
 
     }
 
-    @Step("open users general tab")
+    @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
         isPageLoaded();
@@ -87,7 +88,7 @@ public class GeneralPage {
         isPageLoaded();
     }
 
-    @Step("check that general tab rendered properly")
+    @Step("Check that general tab rendered properly")
     public void checkUI() {
         generalInfoSection.isVisible();
         generalInfoBody.isVisible();
@@ -97,17 +98,17 @@ public class GeneralPage {
         kyclInfoHeader.isVisible();
     }
 
-    @Step("checkKycStatusGeneral")
+    @Step("Check KYC status general")
     public void checkKycStatusGeneral(String title, String status) {
         assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/descendant::div[@class='g-label__content']").getByText(status).isVisible());
     }
 
-    @Step("checkKycAttemptsGeneral")
+    @Step("Check KYC attempts general")
     public void checkKycAttemptsGeneral(String title, String expectedAttempts) {
         assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]").getByText(expectedAttempts).isVisible());
     }
 
-    @Step("checkKycAttemptsGeneral")
+    @Step("Check KYC attempts general")
     public void checkIdInfoGeneral(String title, String expectedInfo) {
         assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]").getByText(expectedInfo).isVisible());
     }
@@ -122,12 +123,12 @@ public class GeneralPage {
         assertTrue(historyDrawer.isVisible());
     }
 
-    @Step("open KYC info")
+    @Step("Open KYC info")
     public void kycDetailsOpen(String title) {
         kycLine.getByText(title).click();
     }
 
-    @Step("check fv zoom functions")
+    @Step("Check fv zoom functions")
     public void FVZoomFunctions() {
         displayedFile.isVisible();
         assertTrue(displayedFile.getAttribute("style").contains("scale(1)"));
@@ -144,21 +145,21 @@ public class GeneralPage {
         assertTrue(displayedFile.getAttribute("style").contains("scale(1.1)"));
     }
 
-    @Step("check fv rotate functions")
+    @Step("Check fv rotate functions")
     public void FVRotateFunctions() {
         displayedFile.isVisible();
         assertTrue(displayedFile.getAttribute("style").contains("rotate(0deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(90deg)"));
+        assertTrue(displayedFile.getAttribute("style").contains("rotate(-90deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(180deg)"));
+        assertTrue(displayedFile.getAttribute("style").contains("rotate(-180deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(270deg)"));
+        assertTrue(displayedFile.getAttribute("style").contains("rotate(-270deg)"));
         rotateButton.click();
         assertTrue(displayedFile.getAttribute("style").contains("rotate(0deg)"));
     }
 
-    @Step("check fv mirror functions")
+    @Step("Check fv mirror functions")
     public void FVMirrorFunctions() {
         displayedFile.isVisible();
         assertTrue(displayedFile.getAttribute("style").contains("scaleX(1)"));
@@ -168,33 +169,38 @@ public class GeneralPage {
         assertTrue(displayedFile.getAttribute("style").contains("scaleX(1)"));
     }
 
-    @Step("check fv slide functions")
+    @Step("Check fv slide functions")
     public void FVSlideFunctions() {
         displayedFile.isVisible();
-        assertTrue(imageFile.getAttribute("src").contains("V+03hf4+zfGB8vjYP1bbAAAAABJRU5ErkJggg=="));
+        String image1 = imageFile.getAttribute("src");
+        String[] splitedSource1 = image1.split("/");
         sliderForwardButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("w8wTQORKhjH5gAAAABJRU5ErkJggg=="));
+        String image2 = imageFile.getAttribute("src");
+        String[] splitedSource2 = image2.split("/");
+        assertNotEquals(splitedSource1[splitedSource1.length - 1], splitedSource2[splitedSource2.length - 1]);
         sliderBackwardButton.click();
-        assertTrue(imageFile.getAttribute("src").contains("V+03hf4+zfGB8vjYP1bbAAAAABJRU5ErkJggg=="));
+        String image3 = imageFile.getAttribute("src");
+        String[] splitedSource3 = image3.split("/");
+        assertEquals(splitedSource1[splitedSource1.length - 1], splitedSource3[splitedSource3.length - 1]);
     }
 
-    @Step("check POA details general")
+    @Step("Check POA details general")
     public void poaDetailsGeneral(String lineOne, String lineTwo) {
         kycAddressRowDetails.getByText(lineOne);
         kycAddressRowDetails.getByText(lineTwo);
     }
 
-    @Step("check No applied placeholder is visible")
+    @Step("Check no applied placeholder is visible")
     public void noAppliedIsVisible() {
         assertTrue(notAppliedPlaceholder.isVisible());
     }
 
-    @Step("poaPlaceholderIsVisible")
+    @Step("POA placeholder is visible")
     public void poaPlaceholderIsVisible() {
         assertTrue(poaNotAppliedPlaceholder.isVisible());
     }
 
-    @Step("poiPlaceholderIsVisible")
+    @Step("POI placeholder is visible")
     public void poiPlaceholderIsVisible() {
         assertTrue(poiNotAppliedPlaceholder.isVisible());
     }
