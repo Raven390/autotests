@@ -295,7 +295,8 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals all green")
-    public void fillCancelReasonManualWithdrawalAllGreen(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalAllGreen(String reason) throws InterruptedException,
+            JsonProcessingException {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -308,7 +309,8 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals all refuse")
-    public void fillCancelReasonManualWithdrawalAllrefuse(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalAllrefuse(String reason) throws InterruptedException,
+            JsonProcessingException {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -321,7 +323,8 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals approve one")
-    public void fillCancelReasonManualWithdrawalApproveOne(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalApproveOne(String reason) throws InterruptedException,
+            JsonProcessingException {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -349,7 +352,7 @@ public class RestrictionPage {
     @Step("Check request to apply message")
     public void checkKafkaRequestApplyUCID(String userId) throws InterruptedException, JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
-        List <String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
+        List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
@@ -362,9 +365,10 @@ public class RestrictionPage {
     }
 
     @Step("Check withdrawal approval message")
-    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException, JsonProcessingException {
+    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
+            JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
-        List <String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
+        List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
@@ -397,7 +401,8 @@ public class RestrictionPage {
     }
 
     @Step
-    public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException, JsonProcessingException {
+    public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException,
+            JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
         String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -416,7 +421,8 @@ public class RestrictionPage {
     }
 
     @Step
-    public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException, JsonProcessingException {
+    public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException,
+            JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
         String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -460,13 +466,7 @@ public class RestrictionPage {
     public void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
         Allure.step("Set restriction though API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid,
-                code,
-                "GENERAL",
-                null,
-                null,
-                "Integration test",
-                new PostRestrictionRequestBody.UpdatedBy("string", "string")
+                ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
 
 
         );
@@ -478,13 +478,7 @@ public class RestrictionPage {
     public void setRestrictionAPITrade(String ucid, int accId, int serverId, String code) throws IOException {
         Allure.step("Set restriction though API TRADE");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid,
-                code,
-                "TRADING",
-                accId,
-                serverId,
-                "Integration test",
-                new PostRestrictionRequestBody.UpdatedBy("string", "string")
+                ucid, code, "TRADING", accId, serverId, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
         );
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
@@ -531,7 +525,7 @@ public class RestrictionPage {
     public void isPageLoaded() {
         int n = 0;
         page.waitForTimeout(2000);
-        while ((loaderAnimation.isVisible()||loaderSpin.isVisible()) && n < 8) {
+        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
             page.waitForTimeout(2000);
             n += 1;
         }

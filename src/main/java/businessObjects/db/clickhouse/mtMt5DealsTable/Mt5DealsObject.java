@@ -60,15 +60,15 @@ public class Mt5DealsObject {
     }
 
     public Mt5DealsObject(Integer action, String apidata, String comment, Double commission, Double contractsize,
-                          Integer deal, Integer dealer, Integer digits, Integer digitscurrency, Integer entry, Long expertid,
-                          String externalid, Double fee, Integer flags, String gateway, String lastUpdated, Integer login,
-                          Double marketask, Double marketbid, Double marketlast, Integer modifyflags, String op,
-                          Long order, Long positionid, Double price, Double pricegateway, Double priceposition,
-                          Double pricesl, Double pricetp, Double profit, Double profitraw, Double ratemargin,
-                          Double rateprofit, String reason, Integer serverId, Integer serverIdOld, String serverName,
-                          String serverNameOld, Integer storage, String symbol, Double ticksize, Double tickvalue,
-                          String time, String timemsc, Long timestamp, Double value, Double volume, Double volumeLots,
-                          Double volumeclosed, Double volumeclosedext, Double volumeext) {
+            Integer deal, Integer dealer, Integer digits, Integer digitscurrency, Integer entry, Long expertid,
+            String externalid, Double fee, Integer flags, String gateway, String lastUpdated, Integer login,
+            Double marketask, Double marketbid, Double marketlast, Integer modifyflags, String op,
+            Long order, Long positionid, Double price, Double pricegateway, Double priceposition,
+            Double pricesl, Double pricetp, Double profit, Double profitraw, Double ratemargin,
+            Double rateprofit, String reason, Integer serverId, Integer serverIdOld, String serverName,
+            String serverNameOld, Integer storage, String symbol, Double ticksize, Double tickvalue,
+            String time, String timemsc, Long timestamp, Double value, Double volume, Double volumeLots,
+            Double volumeclosed, Double volumeclosedext, Double volumeext) {
         this.action = action;
         this.apidata = apidata;
         this.comment = comment;
@@ -137,58 +137,6 @@ public class Mt5DealsObject {
 
     @Override
     public String toString() {
-        return "Mt5DealsObject{" +
-                "action='" + action + '\'' +
-                ", apiData='" + apidata + '\'' +
-                ", comment='" + comment + '\'' +
-                ", commission=" + commission +
-                ", contractSize=" + contractsize +
-                ", deal=" + deal +
-                ", dealer='" + dealer + '\'' +
-                ", digits=" + digits +
-                ", digitsCurrency=" + digitscurrency +
-                ", entry='" + entry + '\'' +
-                ", expertId=" + expertid +
-                ", externalId='" + externalid + '\'' +
-                ", fee=" + fee +
-                ", flags=" + flags +
-                ", gateway='" + gateway + '\'' +
-                ", lastUpdated='" + lastUpdated + '\'' +
-                ", login=" + login +
-                ", marketAsk=" + marketask +
-                ", marketBid=" + marketbid +
-                ", marketLast=" + marketlast +
-                ", modifyFlags=" + modifyflags +
-                ", op='" + op + '\'' +
-                ", order=" + order +
-                ", positionId=" + positionid +
-                ", price=" + price +
-                ", priceGateway=" + pricegateway +
-                ", pricePosition=" + priceposition +
-                ", priceSl=" + pricesl +
-                ", priceTp=" + pricetp +
-                ", profit=" + profit +
-                ", profitRaw=" + profitraw +
-                ", rateMargin=" + ratemargin +
-                ", rateProfit=" + rateprofit +
-                ", reason='" + reason + '\'' +
-                ", serverId=" + serverId +
-                ", serverIdOld=" + serverIdOld +
-                ", serverName='" + serverName + '\'' +
-                ", serverNameOld='" + serverNameOld + '\'' +
-                ", storage='" + storage + '\'' +
-                ", symbol='" + symbol + '\'' +
-                ", tickSize=" + ticksize +
-                ", tickValue=" + tickvalue +
-                ", time='" + time + '\'' +
-                ", timeMsc=" + timemsc +
-                ", timestamp='" + timestamp + '\'' +
-                ", value=" + value +
-                ", volume=" + volume +
-                ", volumeLots=" + volumeLots +
-                ", volumeClosed=" + volumeclosed +
-                ", volumeClosedExt=" + volumeclosedext +
-                ", volumeExt=" + volumeext +
-                '}';
+        return "Mt5DealsObject{" + "action='" + action + '\'' + ", apiData='" + apidata + '\'' + ", comment='" + comment + '\'' + ", commission=" + commission + ", contractSize=" + contractsize + ", deal=" + deal + ", dealer='" + dealer + '\'' + ", digits=" + digits + ", digitsCurrency=" + digitscurrency + ", entry='" + entry + '\'' + ", expertId=" + expertid + ", externalId='" + externalid + '\'' + ", fee=" + fee + ", flags=" + flags + ", gateway='" + gateway + '\'' + ", lastUpdated='" + lastUpdated + '\'' + ", login=" + login + ", marketAsk=" + marketask + ", marketBid=" + marketbid + ", marketLast=" + marketlast + ", modifyFlags=" + modifyflags + ", op='" + op + '\'' + ", order=" + order + ", positionId=" + positionid + ", price=" + price + ", priceGateway=" + pricegateway + ", pricePosition=" + priceposition + ", priceSl=" + pricesl + ", priceTp=" + pricetp + ", profit=" + profit + ", profitRaw=" + profitraw + ", rateMargin=" + ratemargin + ", rateProfit=" + rateprofit + ", reason='" + reason + '\'' + ", serverId=" + serverId + ", serverIdOld=" + serverIdOld + ", serverName='" + serverName + '\'' + ", serverNameOld='" + serverNameOld + '\'' + ", storage='" + storage + '\'' + ", symbol='" + symbol + '\'' + ", tickSize=" + ticksize + ", tickValue=" + tickvalue + ", time='" + time + '\'' + ", timeMsc=" + timemsc + ", timestamp='" + timestamp + '\'' + ", value=" + value + ", volume=" + volume + ", volumeLots=" + volumeLots + ", volumeClosed=" + volumeclosed + ", volumeClosedExt=" + volumeclosedext + ", volumeExt=" + volumeext + '}';
     }
 }

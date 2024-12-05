@@ -26,7 +26,8 @@ public class OpenTradeMtDbEventMetadata {
     public String tableName;
 
     public OpenTradeMtDbEventMetadata(
-                                      String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
+            String timestamp, String recordType, String operation, String partitionKeyType, String schemaName,
+            String tableName) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;

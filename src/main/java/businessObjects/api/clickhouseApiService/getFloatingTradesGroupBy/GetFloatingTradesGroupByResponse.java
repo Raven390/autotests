@@ -9,7 +9,7 @@ public class GetFloatingTradesGroupByResponse {
     @JsonProperty
     public List<FloatingTradesItem> floatingTradesItems;
 
-    public static class FloatingTradesItem{
+    public static class FloatingTradesItem {
         @JsonProperty("symbol")
         public String symbol;
 

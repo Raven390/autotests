@@ -178,7 +178,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades order by actualAmountUSD")
     @AllureId("369")
-    public void getTradesOrderByAmountUsdTest() throws IOException{
+    public void getTradesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.login);

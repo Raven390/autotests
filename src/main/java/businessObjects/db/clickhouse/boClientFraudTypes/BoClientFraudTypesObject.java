@@ -33,10 +33,6 @@ public class BoClientFraudTypesObject {
 
     @Override
     public String toString() {
-        return "boClientFraudTypesObject{" +
-                "ucid='" + ucid + '\'' +
-                ", fraudTypeId=" + fraudTypeId +
-                ", fraudTypeCode='" + fraudTypeCode + '\'' +
-                '}';
+        return "boClientFraudTypesObject{" + "ucid='" + ucid + '\'' + ", fraudTypeId=" + fraudTypeId + ", fraudTypeCode='" + fraudTypeCode + '\'' + '}';
     }
 }

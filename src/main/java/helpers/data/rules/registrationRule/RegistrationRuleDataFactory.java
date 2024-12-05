@@ -80,20 +80,17 @@ public class RegistrationRuleDataFactory {
         public ConnectionTableEntryV3 connectionTableEntryV2;
         public CrmTbUserObject crmTbUserObject;
 
-        public ConnectionAndConnectedUser(ConnectionTableEntryV3 connectionTableEntryV3, CrmTbUserObject crmTbUserObject) {
+        public ConnectionAndConnectedUser(ConnectionTableEntryV3 connectionTableEntryV3,
+                CrmTbUserObject crmTbUserObject) {
             this.connectionTableEntryV2 = connectionTableEntryV3;
             this.crmTbUserObject = crmTbUserObject;
         }
     }
 
-    private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient, ClientHelper toClient) {
+    private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient,
+            ClientHelper toClient) {
         ConnectionTableEntryV3 connectionTableEntryV3 = new ConnectionTableEntryV3(
-                fromClient.getUcid(),
-                toClient.getUcid(),
-                "Same Identity",
-                1d,
-                "{\"payoutId\": \"463344**** **5603\"}",
-                getCurrentTimestampDbFormat()
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "{\"payoutId\": \"463344**** **5603\"}", getCurrentTimestampDbFormat()
         );
         // Create connected user
         CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
@@ -415,7 +412,8 @@ public class RegistrationRuleDataFactory {
         return registrationRuleData;
     }
 
-    public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException, SQLException {
+    public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException,
+            SQLException {
         startSshTunnel();
         Map<String, RegistrationRuleData> map = new HashMap<>();
         // Put all the db data for setup in a map

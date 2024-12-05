@@ -268,13 +268,13 @@ public class KafkaHelper {
 
                     // If the record contains the specified id, return it
                     if (record.value() != null && record.value().contains(id)) {
-                        cleanConsumerIdAfterUse(consumerGroupId ,consumerGroupId);
+                        cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
                         return record.value();
                     }
                 }
             }
             // After maxAttempts, if no matching message is found, return message
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
             cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
@@ -321,8 +321,7 @@ public class KafkaHelper {
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
                     System.out.printf(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n",
-                            topic, record.key(), record.value(), record.partition(), record.offset());
+                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
 
                     // If the record contains the specified id, add it to the list
                     if (record.value() != null && record.value().contains(id)) {
@@ -392,10 +391,10 @@ public class KafkaHelper {
                 }
             }
             // After maxAttempts, if no matching message is found, return message
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             return KAFKA_NO_MESSAGE_FOUND_ERROR;
         } finally {
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             consumer.close(); // Ensure the consumer is closed
         }
     }
@@ -440,13 +439,13 @@ public class KafkaHelper {
                     }
                 }
                 // After X attempts, if no matching message is found, return null
-                cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+                cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
                 return new MessageWithHeaders(
                         KAFKA_NO_MESSAGE_FOUND_ERROR, new HashMap<>());
             }
             // Ensure the consumer is closed
             finally {
-                cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+                cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
                 consumer.close();
             }
         }
@@ -506,10 +505,10 @@ public class KafkaHelper {
             for (String id : idList) {
                 foundMessages.putIfAbsent(id, null);
             }
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             return foundMessages; // Return the map of found messages
         } finally {
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             consumer.close(); // Ensure the consumer is closed
         }
     }
@@ -574,7 +573,7 @@ public class KafkaHelper {
             int attempts = 0;
             // Ensure there are no null values in the textToSearchList
             if (textToSearchList == null || textToSearchList.length == 0) {
-                cleanConsumerIdAfterUse(consumerId,consumerId);
+                cleanConsumerIdAfterUse(consumerId, consumerId);
                 return new MatchResultWithMessage(false, KAFKA_NO_PARAMETERS_PROVIDED);
             }
             while (attempts < maxAttempts) {
@@ -595,7 +594,7 @@ public class KafkaHelper {
                     for (String text : textToSearchList) {
                         // Ensure text is not null
                         if (text != null && record.value().contains(text)) {
-                            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+                            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
                             return new MatchResultWithMessage(
                                     true, "Matching Record Found: " + record.value() + ". Based on search with: " + text);
                         }
@@ -603,10 +602,10 @@ public class KafkaHelper {
                 }
             }
             // After max attempts, if no matching message is found, return false
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             return new MatchResultWithMessage(false, KAFKA_NO_MESSAGE_FOUND_ERROR);
         } finally {
-            cleanConsumerIdAfterUse(consumerGroupId,consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
             consumer.close();
         }
     }
@@ -646,16 +645,16 @@ public class KafkaHelper {
                     }
                     // If all texts are found, we can stop searching
                     if (foundTexts.size() == textToSearchList.length) {
-                        cleanConsumerIdAfterUse(consumerId,consumerId);
+                        cleanConsumerIdAfterUse(consumerId, consumerId);
                         return new MatchResultWithMessage(true, KAFKA_ALL_PARAMETERS_FOUND);
                     }
                 }
             }
             // If we exit the loop, it means some parameters were not found
-            cleanConsumerIdAfterUse(consumerId,consumerId);
+            cleanConsumerIdAfterUse(consumerId, consumerId);
             return new MatchResultWithMessage(false, KAFKA_SOME_PARAMETERS_FOUND);
         } finally {
-            cleanConsumerIdAfterUse(consumerId,consumerId);
+            cleanConsumerIdAfterUse(consumerId, consumerId);
             consumer.close();
         }
     }

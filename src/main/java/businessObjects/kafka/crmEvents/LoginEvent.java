@@ -35,7 +35,8 @@ public class LoginEvent {
     public LoginEvent() {
     }
 
-    public LoginEvent(String eventDate, Integer clientId, String brand, String ipAddress, String cid, String cookie, String loginType, String type) {
+    public LoginEvent(String eventDate, Integer clientId, String brand, String ipAddress, String cid, String cookie,
+            String loginType, String type) {
         this.eventDate = eventDate;
         this.clientId = clientId;
         this.brand = brand;
@@ -46,7 +47,8 @@ public class LoginEvent {
         this.type = type;
     }
 
-    public LoginEvent(String id, String eventDate, Integer clientId, String brand, String ipAddress, String cid, String cookie, String loginType, String type) {
+    public LoginEvent(String id, String eventDate, Integer clientId, String brand, String ipAddress, String cid,
+            String cookie, String loginType, String type) {
         this.id = id;
         this.eventDate = eventDate;
         this.clientId = clientId;
@@ -73,16 +75,6 @@ public class LoginEvent {
 
     @Override
     public String toString() {
-        return "LoginEvent{" +
-                "id='" + id + '\'' +
-                ", eventDate='" + eventDate + '\'' +
-                ", clientId=" + clientId +
-                ", brand='" + brand + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", cid='" + cid + '\'' +
-                ", cookie='" + cookie + '\'' +
-                ", loginType='" + loginType + '\'' +
-                ", type='" + type + '\'' +
-                '}';
+        return "LoginEvent{" + "id='" + id + '\'' + ", eventDate='" + eventDate + '\'' + ", clientId=" + clientId + ", brand='" + brand + '\'' + ", ipAddress='" + ipAddress + '\'' + ", cid='" + cid + '\'' + ", cookie='" + cookie + '\'' + ", loginType='" + loginType + '\'' + ", type='" + type + '\'' + '}';
     }
 }

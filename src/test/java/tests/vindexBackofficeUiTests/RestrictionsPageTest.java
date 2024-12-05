@@ -235,7 +235,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllGreen("test reason");
         String details = "Transaction ID 141405;71.00 USDT 2024-11-13 10:11 bank trasfer; Accept";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402","WD_REQUEST_DECISION", details);
+        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }
@@ -255,7 +255,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
         String details = "Transaction ID 141403; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402","WD_REQUEST_DECISION", details);
+        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("141401", "4");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }
@@ -277,7 +277,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("test reason");
         String details1 = "Transaction ID 141403; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402","WD_REQUEST_DECISION", details1);
+        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details1);
         restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
         //second run
@@ -288,7 +288,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("test reason");
         String details2 = "Transaction ID 141401; 5.00 USD 2024-11-13 10:11 bank card; Accept";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402","WD_REQUEST_DECISION", details2);
+        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details2);
         restrictionPage.checkKafkaRequestWithdrawal("141402", "4");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }

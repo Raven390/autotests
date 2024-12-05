@@ -35,7 +35,8 @@ public class OpenTradeMtEvent {
     }
 
     public OpenTradeMtEvent(
-                            String id, String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId) {
+            String id, String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol,
+            Integer serverId) {
         this.id = id;
         this.openTime = openTime;
         this.tradeId = tradeId;
@@ -46,7 +47,8 @@ public class OpenTradeMtEvent {
     }
 
     public OpenTradeMtEvent(
-                            String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId, String type) {
+            String openTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
+            String type) {
         this.openTime = openTime;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;

@@ -35,9 +35,6 @@ public class LoginDbEvent {
 
     @Override
     public String toString() {
-        return "LoginDbEvent{" +
-                "data=" + data +
-                ", metadata=" + metadata +
-                '}';
+        return "LoginDbEvent{" + "data=" + data + ", metadata=" + metadata + '}';
     }
 }

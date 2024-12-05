@@ -74,8 +74,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assert response.body() != null;
-        GetFloatingTradesGroupByResponseError
-                mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponseError.class);
+        GetFloatingTradesGroupByResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponseError.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 

@@ -2,262 +2,123 @@ package businessObjects.api.connectionSearchApi;
 
 public class GetConnectionsResponseFactory {
 
-    public static GetConnectionsResponse getConnectionsByClientResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByClientResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-88886",
-                "vantage-88888",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-88886", "vantage-88888", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-88888",
-                "vantage-88881",
-                0.5d,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                2,
-                null,
-                0.5d,
-                0.5d,
-                0.5d
+                "vantage-88888", "vantage-88881", 0.5d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 2, null, 0.5d, 0.5d, 0.5d
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorBadRequest(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "Bad Request",
-                "/v1/connections/byClientId"
+                null, 400, "Bad Request", "/v1/connections/byClientId"
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsByAttributesResponseErrorBadRequest(){
+    public static GetConnectionsResponseError getConnectionsByAttributesResponseErrorBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "Bad Request",
-                "/v1/connections/byAttributes"
+                null, 400, "Bad Request", "/v1/connections/byAttributes"
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorClientIdBadRequest(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorClientIdBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030",
-                null
+                null, 400, "Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030", null
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentTypeBadRequest(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentTypeBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "DocumentType must be specified once DocumentNumber or DocumentCountryId provided",
-                null
+                null, 400, "DocumentType must be specified once DocumentNumber or DocumentCountryId provided", null
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentNumberBadRequest(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentNumberBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "DocumentNumber must be specified once DocumentType or DocumentCountryId provided",
-                null
+                null, 400, "DocumentNumber must be specified once DocumentType or DocumentCountryId provided", null
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdBadRequest(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdBadRequest() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "DocumentCountryId must be specified once DocumentType or DocumentNumber provided",
-                null
+                null, 400, "DocumentCountryId must be specified once DocumentType or DocumentNumber provided", null
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorNoSearchParameters(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorNoSearchParameters() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "No search parameters specified",
-                null
+                null, 400, "No search parameters specified", null
         );
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdNotInt(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorDocumentCountryIdNotInt() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "Country code must be decimal number consist 1 to 4 digits",
-                null
+                null, 400, "Country code must be decimal number consist 1 to 4 digits", null
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-99991",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99991", "vantage-99999", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-99992",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99992", "vantage-99999", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-99993",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99993", "vantage-99999", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-99994",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99994", "vantage-99999", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess(){
+    public static GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess() {
         return new GetConnectionsResponse(
-                "vantage-99995",
-                "vantage-99999",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                1,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99995", "vantage-99999", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse getConnectionsByAttributesForDepth(){
+    public static GetConnectionsResponse getConnectionsByAttributesForDepth() {
         return new GetConnectionsResponse(
-                "vantage-99999",
-                "vantage-99997",
-                1.0,
-                new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                "Same Person",
-                2,
-                null,
-                1d,
-                1d,
-                1d
+                "vantage-99999", "vantage-99997", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 2, null, 1d, 1d, 1d
         );
     }
 
-    public static GetConnectionsResponse[] getConnectionsForFiltrationByParams(){
-        return new GetConnectionsResponse[]{
-                new GetConnectionsResponse(
-                        "vantage-100001",
-                        "vantage-100002",
-                        1.0,
-                        new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                        "Same Person",
-                        1,
-                        null,
-                        1d,
-                        1d,
-                        1d
-                ),
-                new GetConnectionsResponse(
-                        "vantage-100002",
-                        "vantage-100003",
-                        0.2d,
-                        new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "testfiltration@qatest.com")},
-                        "Same Network",
-                        2,
-                        null,
-                        0.2d,
-                        0.2d,
-                        0.2d
-                )
+    public static GetConnectionsResponse[] getConnectionsForFiltrationByParams() {
+        return new GetConnectionsResponse[]{new GetConnectionsResponse(
+                "vantage-100001", "vantage-100002", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
+        ), new GetConnectionsResponse(
+                "vantage-100002", "vantage-100003", 0.2d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "testfiltration@qatest.com")}, "Same Network", 2, null, 0.2d, 0.2d, 0.2d
+        )
         };
     }
 
-    public static GetConnectionsResponse[] getConnectionsByAttributesForFiltrationByParams(){
-        return new GetConnectionsResponse[]{
-                new GetConnectionsResponse(
-                        "vantage-100004",
-                        "vantage-100005",
-                        1.0,
-                        new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")},
-                        "Same Person",
-                        1,
-                        null,
-                        1d,
-                        1d,
-                        1d
-                ),
-                new GetConnectionsResponse(
-                        "vantage-100005",
-                        "vantage-100006",
-                        0.2d,
-                        new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "testfiltration@qatest.com")},
-                        "Same Network",
-                        2,
-                        null,
-                        0.2d,
-                        0.2d,
-                        0.2d
-                )
+    public static GetConnectionsResponse[] getConnectionsByAttributesForFiltrationByParams() {
+        return new GetConnectionsResponse[]{new GetConnectionsResponse(
+                "vantage-100004", "vantage-100005", 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "463344**** **5603")}, "Same Person", 1, null, 1d, 1d, 1d
+        ), new GetConnectionsResponse(
+                "vantage-100005", "vantage-100006", 0.2d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "testfiltration@qatest.com")}, "Same Network", 2, null, 0.2d, 0.2d, 0.2d
+        )
         };
     }
 
-    public static GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes(){
+    public static GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes() {
         return new GetConnectionsResponseError(
-                null,
-                400,
-                "Unknown attribute provided: test. Valid arguments are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute]",
-                null
+                null, 400, "Unknown attribute provided: test. Valid arguments are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute]", null
         );
     }
 }

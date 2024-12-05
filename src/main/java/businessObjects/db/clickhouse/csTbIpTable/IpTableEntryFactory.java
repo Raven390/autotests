@@ -6,11 +6,7 @@ public class IpTableEntryFactory {
 
     public static IpTableEntry ipTableEntryForConnectionSearch() {
         return new IpTableEntry(
-                "vantage-99993",
-                99_993,
-                "Vantage",
-                "111.111.111.111",
-                getCurrentTimestampDbFormat()
+                "vantage-99993", 99_993, "Vantage", "111.111.111.111", getCurrentTimestampDbFormat()
         );
     }
 }

@@ -22,7 +22,8 @@ public class HttpHelper {
     }
 
     @Step("Send get request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendGetRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap) throws IOException {
+    public Response sendGetRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap)
+            throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         Request request = buildRequestWithHeaders(httpUrl, headersMap).get().build();
 
@@ -34,7 +35,8 @@ public class HttpHelper {
     }
 
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, Object requestBody) throws IOException {
+    public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
+            Object requestBody) throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
         System.out.println("Body: " + jsonBody);
@@ -51,7 +53,8 @@ public class HttpHelper {
     }
 
     @Step("Send put request: {url}, {headersMap}, {queryParamsMap}")
-    public Response sendPutRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap, Object requestBody) throws IOException {
+    public Response sendPutRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
+            Object requestBody) throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
         System.out.println("Body: " + jsonBody);

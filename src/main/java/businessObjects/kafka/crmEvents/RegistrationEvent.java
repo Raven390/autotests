@@ -29,7 +29,8 @@ public class RegistrationEvent {
     public RegistrationEvent() {
     }
 
-    public RegistrationEvent(String createTime, Integer clientId, String brand, String regulator, Integer metaTraderAccount, String type) {
+    public RegistrationEvent(String createTime, Integer clientId, String brand, String regulator,
+            Integer metaTraderAccount, String type) {
         this.createTime = createTime;
         this.clientId = clientId;
         this.brand = brand;
@@ -53,14 +54,6 @@ public class RegistrationEvent {
 
     @Override
     public String toString() {
-        return "RegistrationEvent{" +
-                "id='" + id + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", clientId=" + clientId +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", metaTraderAccount=" + metaTraderAccount +
-                ", type='" + type + '\'' +
-                '}';
+        return "RegistrationEvent{" + "id='" + id + '\'' + ", createTime='" + createTime + '\'' + ", clientId=" + clientId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", metaTraderAccount=" + metaTraderAccount + ", type='" + type + '\'' + '}';
     }
 }

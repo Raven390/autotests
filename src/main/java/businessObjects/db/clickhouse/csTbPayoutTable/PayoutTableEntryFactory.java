@@ -6,11 +6,7 @@ public class PayoutTableEntryFactory {
 
     public static PayoutTableEntry payoutTableEntryForConnectionSearch() {
         return new PayoutTableEntry(
-                "vantage-99995",
-                99_995,
-                "Vantage",
-                "testpayoutid",
-                getCurrentTimestampDbFormat()
+                "vantage-99995", 99_995, "Vantage", "testpayoutid", getCurrentTimestampDbFormat()
         );
     }
 }

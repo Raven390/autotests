@@ -31,8 +31,6 @@ public class PostRestrictionResponse {
 
     @Override
     public String toString() {
-        return "PostRestrictionResponse{" +
-                "id=" + id +
-                '}';
+        return "PostRestrictionResponse{" + "id=" + id + '}';
     }
 }

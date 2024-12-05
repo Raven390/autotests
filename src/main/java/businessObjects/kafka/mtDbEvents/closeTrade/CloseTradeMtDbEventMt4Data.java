@@ -29,7 +29,7 @@ public class CloseTradeMtDbEventMt4Data {
     public Integer serverId;
 
     public CloseTradeMtDbEventMt4Data(
-                                      String closeTime, int tradeId, int mtAccount, double volume, String symbol, int cmd, int serverId) {
+            String closeTime, int tradeId, int mtAccount, double volume, String symbol, int cmd, int serverId) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;

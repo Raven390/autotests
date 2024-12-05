@@ -13,7 +13,6 @@ public class GetLexisNexisRequest {
 
     @Step("Get lexis nexis user data")
     public static Response getLexisNexis(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH,
-                null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH, null, paramsMap);
     }
 }

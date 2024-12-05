@@ -32,7 +32,8 @@ public class CloseTradeMtDbEventMt5Data {
     public Integer serverId;
 
     public CloseTradeMtDbEventMt5Data(
-                                      String closeTime, int tradeId, int mtAccount, double volume, String symbol, int entry, int action, int serverId) {
+            String closeTime, int tradeId, int mtAccount, double volume, String symbol, int entry, int action,
+            int serverId) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
         this.mtAccount = mtAccount;

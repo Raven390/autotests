@@ -25,7 +25,8 @@ public class MySqlHelper {
     }
 
     @Step("Make query: {query}")
-    public static ResultSet makeQuery(String query, int maxAttempts) throws SQLException, ClassNotFoundException, InterruptedException {
+    public static ResultSet makeQuery(String query, int maxAttempts) throws SQLException, ClassNotFoundException,
+            InterruptedException {
         ResultSet result = null;
         Connection connection;
         Statement statement;

@@ -28,7 +28,10 @@ public class MtTbUserObject {
     public MtTbUserObject() {
     }
 
-    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform, String type, Integer serverId, String createdDate, String status, Double balance, String currency, Double balanceUsd, Double equity, Double credit, Integer leverage, String accountGroup, Double marginFree, Double pnl, String lastActionDate, String lastUpdated) {
+    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform, String type,
+            Integer serverId, String createdDate, String status, Double balance, String currency, Double balanceUsd,
+            Double equity, Double credit, Integer leverage, String accountGroup, Double marginFree, Double pnl,
+            String lastActionDate, String lastUpdated) {
         this.userId = userId;
         this.ucid = ucid;
         this.account = account;
@@ -66,27 +69,6 @@ public class MtTbUserObject {
 
     @Override
     public String toString() {
-        return "MtTbUserObject{" +
-                "userId=" + userId +
-                ", ucid='" + ucid + '\'' +
-                ", account=" + account +
-                ", serverName='" + serverName + '\'' +
-                ", platform='" + platform + '\'' +
-                ", type='" + type + '\'' +
-                ", serverId=" + serverId +
-                ", createdDate='" + createdDate + '\'' +
-                ", status='" + status + '\'' +
-                ", balance=" + balance +
-                ", currency='" + currency + '\'' +
-                ", balanceUsd=" + balanceUsd +
-                ", equity=" + equity +
-                ", credit=" + credit +
-                ", leverage=" + leverage +
-                ", accountGroup='" + accountGroup + '\'' +
-                ", marginFree=" + marginFree +
-                ", pnl=" + pnl +
-                ", lastActionDate='" + lastActionDate + '\'' +
-                ", lastUpdated='" + lastUpdated + '\'' +
-                '}';
+        return "MtTbUserObject{" + "userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverName='" + serverName + '\'' + ", platform='" + platform + '\'' + ", type='" + type + '\'' + ", serverId=" + serverId + ", createdDate='" + createdDate + '\'' + ", status='" + status + '\'' + ", balance=" + balance + ", currency='" + currency + '\'' + ", balanceUsd=" + balanceUsd + ", equity=" + equity + ", credit=" + credit + ", leverage=" + leverage + ", accountGroup='" + accountGroup + '\'' + ", marginFree=" + marginFree + ", pnl=" + pnl + ", lastActionDate='" + lastActionDate + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

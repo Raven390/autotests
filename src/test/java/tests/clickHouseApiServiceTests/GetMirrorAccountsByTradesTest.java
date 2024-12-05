@@ -181,7 +181,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by account (200)")
     @AllureId("442")
-    public void getMirrorTradeAccountsByTradesTest9() throws IOException{
+    public void getMirrorTradeAccountsByTradesTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
@@ -190,8 +190,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse
-                mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
+        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that original account is null", mappedResponse.originalAccount, is(nullValue()));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.mirrorAccounts, is(empty()));

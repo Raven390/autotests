@@ -25,13 +25,6 @@ public class GetBonusesResponse {
 
     @Override
     public String toString() {
-        return "GetBonusesResponse{" +
-                "transferId=" + transferId +
-                ", createTime='" + createTime + '\'' +
-                ", clientId='" + clientId + '\'' +
-                ", actualAmountUSD=" + actualAmountUsd +
-                ", actualAmount=" + actualAmount +
-                ", bonusType='" + bonusType + '\'' +
-                '}';
+        return "GetBonusesResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\'' + ", clientId='" + clientId + '\'' + ", actualAmountUSD=" + actualAmountUsd + ", actualAmount=" + actualAmount + ", bonusType='" + bonusType + '\'' + '}';
     }
 }

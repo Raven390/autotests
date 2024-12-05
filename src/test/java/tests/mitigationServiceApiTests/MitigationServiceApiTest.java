@@ -20,8 +20,8 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 
-//@Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-//@Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
+// @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
+// @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
@@ -139,18 +139,11 @@ public class MitigationServiceApiTest extends TestBaseApi {
     public void setRestrictionRecordInAudit() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                "vantage-10081449",
-                "05",
-                "GENERAL",
-                null,
-                null,
-                "Integration test",
-                new PostRestrictionRequestBody.UpdatedBy("string", "string")
+                "vantage-10081449", "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
         );
         Response response = postRestriction(postRestrictionRequestBody);
         PostRestrictionResponse restrictionBody = objectMapper.readValue(
-                response.body().string(),
-                PostRestrictionResponse.class
+                response.body().string(), PostRestrictionResponse.class
         );
         String restrictionID = restrictionBody.id.toString();
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = 'vantage-10081449'", Event.class);
@@ -168,13 +161,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     public void successIfRestrictionAlreadyApplied() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                "vantage-10081449",
-                "05",
-                "GENERAL",
-                null,
-                null,
-                "Integration test",
-                new PostRestrictionRequestBody.UpdatedBy("API", "QA")
+                "vantage-10081449", "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
         );
 
         Allure.step("Send and check first request");

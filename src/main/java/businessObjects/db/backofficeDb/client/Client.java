@@ -17,7 +17,8 @@ public class Client {
     public Client() {
     }
 
-    public Client(Integer id, String ucid, Integer crmId, String clientBrand, String clientRegulator, String country, String countryCode, String updatedAt, String assignedUserId) {
+    public Client(Integer id, String ucid, Integer crmId, String clientBrand, String clientRegulator, String country,
+            String countryCode, String updatedAt, String assignedUserId) {
         this.id = id;
         this.ucid = ucid;
         this.crmId = crmId;
@@ -44,16 +45,6 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", ucid='" + ucid + '\'' +
-                ", crmId=" + crmId +
-                ", clientBrand='" + clientBrand + '\'' +
-                ", clientRegulator='" + clientRegulator + '\'' +
-                ", country='" + country + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                ", assignedUserId='" + assignedUserId + '\'' +
-                '}';
+        return "Client{" + "id=" + id + ", ucid='" + ucid + '\'' + ", crmId=" + crmId + ", clientBrand='" + clientBrand + '\'' + ", clientRegulator='" + clientRegulator + '\'' + ", country='" + country + '\'' + ", countryCode='" + countryCode + '\'' + ", updatedAt='" + updatedAt + '\'' + ", assignedUserId='" + assignedUserId + '\'' + '}';
     }
 }

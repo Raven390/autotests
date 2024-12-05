@@ -27,7 +27,8 @@ public class LoginDbEventData {
     public LoginDbEventData() {
     }
 
-    public LoginDbEventData(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString, String cookie) {
+    public LoginDbEventData(String loginDatetime, Integer userId, String brand, String ipAddress, String uaString,
+            String cookie) {
         this.loginDatetime = loginDatetime;
         this.userId = userId;
         this.brand = brand;
@@ -51,13 +52,6 @@ public class LoginDbEventData {
 
     @Override
     public String toString() {
-        return "LoginDbEventData{" +
-                "loginDatetime='" + loginDatetime + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", uaString='" + uaString + '\'' +
-                ", cookie='" + cookie + '\'' +
-                '}';
+        return "LoginDbEventData{" + "loginDatetime='" + loginDatetime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", ipAddress='" + ipAddress + '\'' + ", uaString='" + uaString + '\'' + ", cookie='" + cookie + '\'' + '}';
     }
 }

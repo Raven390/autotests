@@ -87,34 +87,6 @@ public class CrmTbUserObject {
 
     @Override
     public String toString() {
-        return "CrmTbUserObject{" +
-                "user_id=" + userId +
-                ", ucid='" + ucid + '\'' +
-                ", brand='" + brand + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", registration_date='" + registrationDate + '\'' +
-                ", first_name='" + firstName + '\'' +
-                ", last_name='" + lastName + '\'' +
-                ", gender='" + gender + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", country='" + country + '\'' +
-                ", country_code='" + countryCode + '\'' +
-                ", iso_country_code='" + isoCountryCode + '\'' +
-                ", language='" + language + '\'' +
-                ", nationality='" + nationality + '\'' +
-                ", email='" + email + '\'' +
-                ", phone_num='" + phoneNum + '\'' +
-                ", phone_country_code='" + phoneCountryCode + '\'' +
-                ", is_two_fa_user='" + isTwoFaUser + '\'' +
-                ", authentication='" + authentication + '\'' +
-                ", website_user_type='" + websiteUserType + '\'' +
-                ", email_verification_date='" + emailVerificationMark + '\'' +
-                ", phone_verification_date='" + phoneVerificationMark + '\'' +
-                ", ib_id='" + ibId + '\'' +
-                ", cpa_id='" + cpaId + '\'' +
-                ", raf_referrer_id='" + rafReferrerId + '\'' +
-                ", kyc_status='" + kycStatus + '\'' +
-                ", last_updated='" + lastUpdated + '\'' +
-                '}';
+        return "CrmTbUserObject{" + "user_id=" + userId + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", registration_date='" + registrationDate + '\'' + ", first_name='" + firstName + '\'' + ", last_name='" + lastName + '\'' + ", gender='" + gender + '\'' + ", birthday='" + birthday + '\'' + ", country='" + country + '\'' + ", country_code='" + countryCode + '\'' + ", iso_country_code='" + isoCountryCode + '\'' + ", language='" + language + '\'' + ", nationality='" + nationality + '\'' + ", email='" + email + '\'' + ", phone_num='" + phoneNum + '\'' + ", phone_country_code='" + phoneCountryCode + '\'' + ", is_two_fa_user='" + isTwoFaUser + '\'' + ", authentication='" + authentication + '\'' + ", website_user_type='" + websiteUserType + '\'' + ", email_verification_date='" + emailVerificationMark + '\'' + ", phone_verification_date='" + phoneVerificationMark + '\'' + ", ib_id='" + ibId + '\'' + ", cpa_id='" + cpaId + '\'' + ", raf_referrer_id='" + rafReferrerId + '\'' + ", kyc_status='" + kycStatus + '\'' + ", last_updated='" + lastUpdated + '\'' + '}';
     }
 }

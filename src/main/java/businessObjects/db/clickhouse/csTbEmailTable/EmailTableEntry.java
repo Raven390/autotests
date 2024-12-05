@@ -36,12 +36,6 @@ public class EmailTableEntry {
 
     @Override
     public String toString() {
-        return "EmailTableEntry{" +
-                "ucid='" + ucid + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", email='" + email + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "EmailTableEntry{" + "ucid='" + ucid + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", email='" + email + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

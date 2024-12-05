@@ -38,7 +38,15 @@ public class MirrorTradingRuleData {
     public MirrorTradingRuleData() {
     }
 
-    public MirrorTradingRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin, List<ConnectionTableEntryV3> connections, List<CrmTbUserObject> connectedUsers, CloseTradeMtEvent closeTradeMtEvent, List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject, List<MtTbCreditsObject> mtTbCreditsObjects, List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects, List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsObject> mt5DealsObjects, AggrCreditEquityRateObject aggrCreditEquityRate, AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades) {
+    public MirrorTradingRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
+            LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
+            List<ConnectionTableEntryV3> connections, List<CrmTbUserObject> connectedUsers,
+            CloseTradeMtEvent closeTradeMtEvent, List<BoClientFraudTypesObject> clientFraudTypes,
+            MtTbUserObject mtTbUserObject, List<MtTbCreditsObject> mtTbCreditsObjects,
+            List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
+            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsObject> mt5DealsObjects,
+            AggrCreditEquityRateObject aggrCreditEquityRate,
+            AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;
@@ -59,23 +67,6 @@ public class MirrorTradingRuleData {
 
     @Override
     public String toString() {
-        return "MirrorTradingRuleData{" +
-                "clientHelper=" + clientHelper +
-                ", crmTbUserObject=" + crmTbUserObject +
-                ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration +
-                ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin +
-                ", connections=" + connections +
-                ", connectedUsers=" + connectedUsers +
-                ", closeTradeMtEvent=" + closeTradeMtEvent +
-                ", clientFraudTypes=" + clientFraudTypes +
-                ", mtTbUserObject=" + mtTbUserObject +
-                ", mtTbCreditsObjects=" + mtTbCreditsObjects +
-                ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects +
-                ", crmTbDepositObjects=" + crmTbDepositObjects +
-                ", crmTbBonusObjects=" + crmTbBonusObjects +
-                ", mt5DealsObjects=" + mt5DealsObjects +
-                ", aggrCreditEquityRate=" + aggrCreditEquityRate +
-                ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades +
-                '}';
+        return "MirrorTradingRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", closeTradeMtEvent=" + closeTradeMtEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + mtTbUserObject + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + '}';
     }
 }

@@ -26,7 +26,8 @@ public class LoginDbEventMetadata {
     public LoginDbEventMetadata() {
     }
 
-    public LoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType, String schemaName, String tableName) {
+    public LoginDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,
+            String schemaName, String tableName) {
         this.timestamp = timestamp;
         this.recordType = recordType;
         this.operation = operation;
@@ -50,13 +51,6 @@ public class LoginDbEventMetadata {
 
     @Override
     public String toString() {
-        return "LoginDbEventMetadata{" +
-                "timestamp='" + timestamp + '\'' +
-                ", recordType='" + recordType + '\'' +
-                ", operation='" + operation + '\'' +
-                ", partitionKeyType='" + partitionKeyType + '\'' +
-                ", schemaName='" + schemaName + '\'' +
-                ", tableName='" + tableName + '\'' +
-                '}';
+        return "LoginDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\'' + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\'' + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + '}';
     }
 }

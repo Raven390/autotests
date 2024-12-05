@@ -28,7 +28,8 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2, Integer serverId) {
+    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
+            Integer serverId) {
         this.userId = userId;
         this.uuid = uuid;
         this.brand = brand;
@@ -37,7 +38,8 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2, Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
+    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
+            Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
         this.userId = userId;
         this.uuid = uuid;
         this.brand = brand;
@@ -150,17 +152,6 @@ public class ClientHelper {
 
     @Override
     public String toString() {
-        return "ClientHelper{" +
-                "userId=" + userId +
-                ", uuid='" + uuid + '\'' +
-                ", brand=" + brand +
-                ", tradingAccount=" + tradingAccount +
-                ", tradingAccount2=" + tradingAccount2 +
-                ", serverId=" + serverId +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", ipAddress='" + ipAddress + '\'' +
-                ", countryCode='" + countryCode + '\'' +
-                '}';
+        return "ClientHelper{" + "userId=" + userId + ", uuid='" + uuid + '\'' + ", brand=" + brand + ", tradingAccount=" + tradingAccount + ", tradingAccount2=" + tradingAccount2 + ", serverId=" + serverId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", ipAddress='" + ipAddress + '\'' + ", countryCode='" + countryCode + '\'' + '}';
     }
 }

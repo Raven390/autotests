@@ -23,7 +23,10 @@ public class RegistrationRuleData {
     public RegistrationRuleData() {
     }
 
-    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject, LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntryV3> connections, List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
+    public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
+            LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntryV3> connections,
+            List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent,
+            List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
@@ -36,15 +39,6 @@ public class RegistrationRuleData {
 
     @Override
     public String toString() {
-        return "RegistrationRuleData{" +
-                "clientHelper=" + clientHelper +
-                ", crmTbUserObject=" + crmTbUserObject +
-                ", lnSessionParsedObject=" + lnSessionParsedObject +
-                ", connections=" + connections +
-                ", connectedUsers=" + connectedUsers +
-                ", registrationEvent=" + registrationEvent +
-                ", clientFraudTypes=" + clientFraudTypes +
-                ", mtTbUserObject=" + mtTbUserObject +
-                '}';
+        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + mtTbUserObject + '}';
     }
 }

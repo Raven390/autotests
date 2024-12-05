@@ -15,7 +15,7 @@ public class GetCreditEquityResponse {
     @JsonProperty("tradingIndicators")
     public List<TradingIndicators> tradingIndicators;
 
-    public static class TradingIndicators{
+    public static class TradingIndicators {
 
         @JsonProperty("indicatorDate")
         public String indicatorDate;

@@ -36,12 +36,6 @@ public class PhoneTableEntry {
 
     @Override
     public String toString() {
-        return "PhoneTableEntry{" +
-                "ucid='" + ucid + '\'' +
-                ", userId=" + userId +
-                ", brand='" + brand + '\'' +
-                ", phoneNum='" + phoneNum + '\'' +
-                ", updateTs='" + updateTs + '\'' +
-                '}';
+        return "PhoneTableEntry{" + "ucid='" + ucid + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", phoneNum='" + phoneNum + '\'' + ", updateTs='" + updateTs + '\'' + '}';
     }
 }

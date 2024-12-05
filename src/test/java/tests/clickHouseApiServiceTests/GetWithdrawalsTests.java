@@ -155,7 +155,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals order by actualAmountUSD")
     @AllureId("382")
-    public void getWithdrawalsOrderByAmountUsdTest() throws IOException{
+    public void getWithdrawalsOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", withdrawal1.ucid);

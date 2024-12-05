@@ -36,9 +36,6 @@ public class GetAbuseTypesResponse {
 
     @Override
     public String toString() {
-        return "GetAbuseTypesResponse{" +
-                "clientId='" + clientId + '\'' +
-                ", fraudType=" + Arrays.toString(fraudType) +
-                '}';
+        return "GetAbuseTypesResponse{" + "clientId='" + clientId + '\'' + ", fraudType=" + Arrays.toString(fraudType) + '}';
     }
 }

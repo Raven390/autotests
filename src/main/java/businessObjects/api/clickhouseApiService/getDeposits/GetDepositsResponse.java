@@ -27,7 +27,8 @@ public class GetDepositsResponse {
     public GetDepositsResponse() {
     }
 
-    public GetDepositsResponse(Integer transferId, String createTime, String clientId, Double actualAmountUsd, Double actualAmount, String paymentChannel) {
+    public GetDepositsResponse(Integer transferId, String createTime, String clientId, Double actualAmountUsd,
+            Double actualAmount, String paymentChannel) {
         this.transferId = transferId;
         this.createTime = createTime;
         this.clientId = clientId;
@@ -51,13 +52,6 @@ public class GetDepositsResponse {
 
     @Override
     public String toString() {
-        return "GetDepositsResponse{" +
-                "transferId=" + transferId +
-                ", createTime='" + createTime + '\'' +
-                ", clientId='" + clientId + '\'' +
-                ", actualAmountUsd=" + actualAmountUsd +
-                ", actualAmount=" + actualAmount +
-                ", paymentChannel='" + paymentChannel + '\'' +
-                '}';
+        return "GetDepositsResponse{" + "transferId=" + transferId + ", createTime='" + createTime + '\'' + ", clientId='" + clientId + '\'' + ", actualAmountUsd=" + actualAmountUsd + ", actualAmount=" + actualAmount + ", paymentChannel='" + paymentChannel + '\'' + '}';
     }
 }

@@ -35,10 +35,7 @@ public class ApplyConfirmedKafkaMessage {
 
     @Override
     public String toString() {
-        return "ApplyConfirmedKafkaMessage{" +
-                "processedAt='" + processedAt + '\'' +
-                ", restrictions=" + Arrays.toString(restrictions) +
-                '}';
+        return "ApplyConfirmedKafkaMessage{" + "processedAt='" + processedAt + '\'' + ", restrictions=" + Arrays.toString(restrictions) + '}';
     }
 
     public static class Restriction {
@@ -74,11 +71,7 @@ public class ApplyConfirmedKafkaMessage {
 
         @Override
         public String toString() {
-            return "Restriction{" +
-                    "restrictionId=" + restrictionId +
-                    ", restrictionStatus='" + restrictionStatus + '\'' +
-                    ", failReason='" + failReason + '\'' +
-                    '}';
+            return "Restriction{" + "restrictionId=" + restrictionId + ", restrictionStatus='" + restrictionStatus + '\'' + ", failReason='" + failReason + '\'' + '}';
         }
     }
 }

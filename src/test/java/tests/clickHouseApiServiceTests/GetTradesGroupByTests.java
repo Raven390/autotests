@@ -166,7 +166,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
         GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(trade1.symbol, trade1.profit + trade2.profit, trade1.profit + trade2.profit);
         GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(trade3.symbol, trade3.profit + trade4.profit, trade3.profit + trade4.profit);
-        assertThat("Assert response body", mappedResponse, containsInRelativeOrder( responseGroup1, responseGroup2));
+        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test
@@ -207,7 +207,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
         GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(trade1.symbol, trade1.profit + trade2.profit, trade1.profit + trade2.profit);
         GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(trade3.symbol, trade3.profit + trade4.profit, trade3.profit + trade4.profit);
-        assertThat("Assert response body", mappedResponse, containsInRelativeOrder( responseGroup1, responseGroup2));
+        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test

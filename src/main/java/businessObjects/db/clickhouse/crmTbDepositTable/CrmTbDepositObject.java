@@ -76,29 +76,6 @@ public class CrmTbDepositObject {
 
     @Override
     public String toString() {
-        return "CrmTbDepositObject{" +
-                "account=" + account +
-                ", amount=" + amount +
-                ", amountUsd=" + amountUsd +
-                ", brand='" + brand + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", currency='" + currency + '\'' +
-                ", fee=" + fee +
-                ", paymentChannel='" + paymentChannel + '\'' +
-                ", paymentDetails='" + paymentDetails + '\'' +
-                ", paymentExpirationDate='" + paymentExpirationDate + '\'' +
-                ", paymentRequisite='" + paymentRequisite + '\'' +
-                ", paymentSystemAccount='" + paymentSystemAccount + '\'' +
-                ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' +
-                ", paymentType='" + paymentType + '\'' +
-                ", regulator='" + regulator + '\'' +
-                ", status=" + status +
-                ", ticketId=" + ticketId +
-                ", transferId=" + transferId +
-                ", ucid='" + ucid + '\'' +
-                ", uid='" + uid + '\'' +
-                ", updateTime='" + updateTime + '\'' +
-                ", userId=" + userId +
-                '}';
+        return "CrmTbDepositObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", fee=" + fee + ", paymentChannel='" + paymentChannel + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", paymentRequisite='" + paymentRequisite + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentType='" + paymentType + '\'' + ", regulator='" + regulator + '\'' + ", status=" + status + ", ticketId=" + ticketId + ", transferId=" + transferId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + '}';
     }
 }

@@ -55,15 +55,12 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
         // Assert response
         assert response.body() != null;
-        List<GetClientTradingAccountsResponse>
-                mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponse[].class)).toList();
+        List<GetClientTradingAccountsResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponse[].class)).toList();
         GetClientTradingAccountsResponse response1 = new GetClientTradingAccountsResponse(
-                client.getTradingAccount().toString(),
-                client.getServerId().toString()
+                client.getTradingAccount().toString(), client.getServerId().toString()
         );
         GetClientTradingAccountsResponse response2 = new GetClientTradingAccountsResponse(
-                client.getTradingAccount2().toString(),
-                client.getServerId().toString()
+                client.getTradingAccount2().toString(), client.getServerId().toString()
         );
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.size(), is(2));
@@ -79,8 +76,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
         // Assert response
         assert response.body() != null;
-        GetClientTradingAccountsResponseError
-                mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
+        GetClientTradingAccountsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
         assertThat("Check response code", response.code(), is(404));
         assertThat("Check response code", mappedResponse.status, is(404));
         assertThat("Check response code", mappedResponse.error, is("Client with clientId=vantage-1234 not found."));
@@ -95,8 +91,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
         // Assert response
         assert response.body() != null;
-        GetClientTradingAccountsResponseError
-                mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
+        GetClientTradingAccountsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
         assertThat("Check response code", response.code(), is(400));
         assertThat("Check response code", mappedResponse.status, is(400));
         assertThat("Check response code", mappedResponse.error, is("Invalid clientId format: clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));

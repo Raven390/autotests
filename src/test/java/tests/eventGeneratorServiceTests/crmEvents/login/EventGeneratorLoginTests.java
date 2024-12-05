@@ -41,14 +41,7 @@ public class EventGeneratorLoginTests {
         LoginEvent retrievedLoginEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
 
         LoginEvent expectedLoginEvent = new LoginEvent(
-                loginDbEvent.data.loginDatetime,
-                loginDbEvent.data.userId,
-                loginDbEvent.data.brand,
-                loginDbEvent.data.ipAddress,
-                loginDbEvent.data.uaString,
-                loginDbEvent.data.cookie,
-                "websiteLogin",
-                "loginToWeb"
+                loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", "loginToWeb"
         );
 
         Allure.step("Verify that message was written correctly");
