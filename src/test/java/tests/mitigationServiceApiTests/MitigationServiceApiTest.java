@@ -5,6 +5,7 @@ import businessObjects.db.auditServiceDb.Event;
 import helpers.database.AuditHelper;
 import helpers.database.DbName;
 import helpers.database.MitigationHelper;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Muted;
 import io.qameta.allure.Owner;
 import okhttp3.Response;
@@ -157,6 +158,34 @@ public class MitigationServiceApiTest extends TestBaseApi {
         assertEquals(type1, "RESTRICTION_REQUESTED");
         String type2 = event.get(1).getType();
         assertEquals(type2, "RESTRICTION_APPLIED");
+    }
+
+    @Test
+    @DisplayName("Restriction Set PUT request returns 200 if restriction already applied")
+    @Owner("DMITRI KALACHEV")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_API)
+    public void successIfRestrictionAlreadyApplied() throws Exception {
+
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                "vantage-10081449",
+                "05",
+                "GENERAL",
+                null,
+                null,
+                "Integration test",
+                new PostRestrictionRequestBody.UpdatedBy("API", "QA")
+        );
+
+        Allure.step("Send and check first request");
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertEquals(response.code(), 200);
+
+        Allure.step("Send and check second request");
+        Response response2 = putRestriction(postRestrictionRequestBody);
+
+        assertEquals(response2.code(), 200);
+
     }
 
 

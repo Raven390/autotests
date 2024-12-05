@@ -1,7 +1,6 @@
 package tests.vindexBackofficeUiTests;
 
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,11 +12,10 @@ import static utils.Constants.TEAM_BACKOFFICE;
 public class KYCTest extends TestBaseWeb {
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("351")
-    @DisplayName("check correct status display Submitted")
+    @DisplayName("Check correct status display Submitted")
     public void checkCorrectStatusDisplaySubmitted() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
@@ -26,11 +24,10 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("354")
-    @DisplayName("check correct status display Rejected")
+    @DisplayName("Check correct status display Rejected")
     public void checkCorrectStatusDisplayRejected() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
@@ -39,11 +36,10 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("352")
-    @DisplayName("check correct status display Pending")
+    @DisplayName("Check correct status display Pending")
     public void checkCorrectStatusDisplayPending() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
@@ -52,11 +48,10 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("353")
-    @DisplayName("check correct status display Completed")
+    @DisplayName("Check correct status display Completed")
     public void checkCorrectStatusDisplayCompleted() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
@@ -65,7 +60,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("357")
@@ -79,7 +73,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("358")
@@ -93,7 +86,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("359")
@@ -107,7 +99,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("356")
@@ -121,11 +112,10 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("326")
-    @DisplayName("userHasHistoryDrawer")
+    @DisplayName("User has history drawer")
     public void userHasHistoryDrawer() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
@@ -135,7 +125,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("318")
@@ -148,7 +137,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("321")
@@ -162,7 +150,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("320")
@@ -175,7 +162,6 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("319")
@@ -188,15 +174,14 @@ public class KYCTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("320")
-    @DisplayName("Client applied ID must have address info on general tab")
+    @DisplayName("Client have placeholder if not applied POI")
     public void clientHavePlaceholderPOI() {
         investigationPage.navigate();
         keycloackPage.loginWEB("dev", "123");
         generalPage.navigateGeneralTab("infinox-525203");
-        generalPage.poaPlaceholderIsVisible();
+        generalPage.poiPlaceholderIsVisible();
     }
 }

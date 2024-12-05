@@ -26,7 +26,7 @@ public class ProfilePage {
         page.navigate(BASE_URL_E2E + "/account");
     }
 
-    @Step("check that user on profile page")
+    @Step("Check that user on profile page")
     public void isOnProfilePage() {
         somethingToIDProfilePage.isVisible();
     }

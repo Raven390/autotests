@@ -2,7 +2,6 @@ package tests.vindexBackofficeUiTests;
 
 import helpers.kafka.alerts.CreateSimpleAlert;
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Owner;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import static utils.Constants.TEAM_BACKOFFICE;
 public class ResolveTest extends TestBaseWeb {
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
@@ -35,7 +33,6 @@ public class ResolveTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
@@ -54,7 +51,6 @@ public class ResolveTest extends TestBaseWeb {
     }
 
     @Test
-    @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
