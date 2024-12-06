@@ -1,5 +1,6 @@
 package helpers.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import helpers.data.enums.Brand;
 
 import java.util.Objects;
@@ -52,6 +53,7 @@ public class ClientHelper {
         this.countryCode = countryCode;
     }
 
+    @JsonIgnore
     public String getUcid() {
         return String.format("%s-%s", brand.getDisplayName().toLowerCase().replace(" ", ""), userId);
     }

@@ -8,6 +8,7 @@ import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
+import generator.annotations.RuleTestData;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -27,6 +28,7 @@ import static utils.Constants.*;
 import static utils.Constants.MT_USER_TABLE_NAME;
 import static utils.Utils.*;
 
+@RuleTestData("registration")
 public class RegistrationRuleDataFactory {
 
     // Clients

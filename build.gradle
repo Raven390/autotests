@@ -19,6 +19,9 @@ repositories {
 def ownerVersion = '1.0.12'
 def playwrightVersion = '1.45.0'
 def okhttpVersion = '4.12.0'
+def javalinVersion = '6.3.0'
+def sqliteVersion = '3.47.1.0'
+def reflectionsVersion = '0.10.2'
 def hamcrestVersion = '3.0'
 def slf4jVersion = '2.0.12'
 def junitBomVersion = '5.10.2'
@@ -51,6 +54,9 @@ dependencies {
 
     //Rest api
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "io.javalin:javalin:$javalinVersion"
+    implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
+    implementation "org.reflections:reflections:$reflectionsVersion"
 
     //Json parsing
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
