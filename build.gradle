@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.25.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'org.gradle.test-retry' version '1.6.0'
 }
 
@@ -11,6 +12,17 @@ file("src/main/resources/config/config.properties").withInputStream { stream ->
 
 group = 'antifraud'
 version = '1.0'
+
+// Configure the task to build the Generator REST API executable fatjar
+shadowJar {
+    archiveBaseName.set('generator')
+    archiveVersion.set('0.1.0-SNAPSHOT')
+    archiveClassifier.set('')
+
+    manifest {
+        attributes 'Main-Class': 'generator.app.Application'
+    }
+}
 
 repositories {
     mavenCentral()

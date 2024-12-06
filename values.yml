@@ -1,0 +1,16 @@
+appName: generator
+imageRef: 026090538932.dkr.ecr.us-east-1.amazonaws.com/generator
+requests:
+  memory: "256Mi"
+limits:
+  memory: "512Mi"
+replicaCount: 1
+environment: test
+namespace: test
+endpoints:
+  - port: 8080
+    paths:
+      - path: /
+ingress:
+  enabled: true
+  hostname: generator.vindex-test.risk-vantagefx.com

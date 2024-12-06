@@ -5,6 +5,32 @@ stages:
 variables:
   # Set Playwright environment variable to skip installing Firefox and WebKit
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "true"
+  REGISTRY_URL: "026090538932.dkr.ecr.us-east-1.amazonaws.com"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  AWS_DEFAULT_REGION: "us-east-1"
+  CHART_PATH: https://gitlab.risk-vantagefx.com/api/v4/projects/417/packages/helm/stable
+  CHART_NAME: java-app
+  CHART_VERSION: 0.3.0
+  HELM_TIMEOUT: 30s
+  IMAGE_NAME: generator
+  IMAGE_VERSION: 0.1.0-SNAPSHOT
+
+default:
+  services:
+    - name: public.ecr.aws/docker/library/docker:dind
+      alias: docker
+      command: ["--tls=false"]
+
+cache:
+  key: "${CI_PROJECT_ID}-gradle"
+  paths:
+    - cache/caches/
+    - cache/wrapper/
+    - $CI_PROJECT_DIR/*/build/
+    - $CI_PROJECT_DIR/*/build/*
+    - $CI_PROJECT_DIR/*/build/**
 
 workflow:
   rules:
@@ -55,6 +81,55 @@ job_code_check:
     - echo "Checking the code"
     - ./gradlew spotlessCheck
     - echo "CODE CHECK SUCCESS"
+
+# The test data generator API web application building
+job_build_generator_jar:
+  image: gradle:8.10.0-jdk22
+  stage: build
+  only: [main, CSV-455]
+  needs: ["job_build"]
+  variables:
+    IMAGE_NAME: generator
+    IMAGE_VERSION: 0.1.0-SNAPSHOT
+  script:
+    - ./gradlew shadowJar --info
+  cache:
+    - key: dep-cache
+      paths:
+        - .gradle
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 3 days
+
+# The test data generator API web application docker image publishing
+job_publish_generator_image:
+  image: public.ecr.aws/docker/library/docker:latest
+  stage: build
+  only: [main, CSV-455]
+  needs: ["job_build_generator_jar"]
+  before_script:
+    - apk add aws-cli
+  script:
+    - aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY_URL
+    - aws ecr create-repository --repository-name $IMAGE_NAME --region $AWS_DEFAULT_REGION || true
+    - docker build --rm --pull -q --build-arg JAR_NAME=$IMAGE_NAME-$IMAGE_VERSION -t $REGISTRY_URL/$IMAGE_NAME:$IMAGE_VERSION .
+    - docker push -q $REGISTRY_URL/$IMAGE_NAME:$IMAGE_VERSION
+    - docker rmi $REGISTRY_URL/$IMAGE_NAME:$IMAGE_VERSION
+
+# The test data generator API web application deploying to K8S
+job_deploy_generator:
+  stage: build
+  image: alpine/helm:3.15.4
+  only: [main, CSV-455]
+  needs: ["job_publish_generator_image"]
+  when: manual
+  script:
+    - helm repo add "$CHART_NAME" "$CHART_PATH"
+    - helm repo update "$CHART_NAME"
+    - helm pull "$CHART_NAME"/"$CHART_NAME" --version "$CHART_VERSION" --untar --untardir .helm
+    - helm package --app-version="$IMAGE_VERSION" .helm/"$CHART_NAME"
+    - helm upgrade "$IMAGE_NAME" "$CHART_NAME"-"$CHART_VERSION".tgz --version "$CHART_VERSION" --install --atomic --timeout $HELM_TIMEOUT -f values.yml --namespace test --set appVersion="$IMAGE_VERSION"
 
 #Job to check that base tests are working
 job_run_minimal_tests:
