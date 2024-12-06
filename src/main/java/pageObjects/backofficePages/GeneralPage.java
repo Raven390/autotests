@@ -2,6 +2,7 @@ package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
 
 
@@ -42,10 +43,12 @@ public class GeneralPage {
     private final Locator poiNotAppliedPlaceholder;
     private final Locator historyDrawer;
 
+    private final String LOADING_SPINNER_SELECTOR = ".v-loader";
+
 
     public GeneralPage(Page page) {
         this.page = page;
-        this.loaderAnimation = page.locator(".v-loader");
+        this.loaderAnimation = page.locator(LOADING_SPINNER_SELECTOR);
         this.generalTab = page.locator("[role=\"tab\"][title=\"General\"]");
         this.generalInfoSection = page.locator(".v-investigation-tools-general-info");
         this.generalInfoHeader = page.locator(".v-investigation-tools-kyc__header");
@@ -83,9 +86,9 @@ public class GeneralPage {
     @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         generalTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Check that general tab rendered properly")
@@ -100,17 +103,17 @@ public class GeneralPage {
 
     @Step("Check KYC status general")
     public void checkKycStatusGeneral(String title, String status) {
-        assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/descendant::div[@class='g-label__content']").getByText(status).isVisible());
+        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title)).getByText(status).isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkKycAttemptsGeneral(String title, String expectedAttempts) {
-        assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]").getByText(expectedAttempts).isVisible());
+        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]", title)).getByText(expectedAttempts).isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkIdInfoGeneral(String title, String expectedInfo) {
-        assertTrue(page.locator("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]").getByText(expectedInfo).isVisible());
+        assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]", title)).getByText(expectedInfo).isVisible());
     }
 
     @Step("KYC details is displayed")
@@ -205,14 +208,9 @@ public class GeneralPage {
         assertTrue(poiNotAppliedPlaceholder.isVisible());
     }
 
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while (loaderAnimation.isVisible() && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
+    @Step("Wait for page to load")
+    public void waitForPageToLoad() {
+        page.waitForSelector(LOADING_SPINNER_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
 

@@ -35,7 +35,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab  account restriction UI")
     void CRMAccountRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickAccountSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -53,7 +53,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab transfer restriction UI")
     void CRMTransferRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickTransferSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -71,7 +71,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab  Deposits restriction UI")
     void CRMDepositsRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickDepositsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -89,7 +89,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab Withdrawals restriction UI")
     void CRMWithdrawalsRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickWithdrawalsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -107,7 +107,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab Login CRM restriction UI")
     void CRMLoginCRMRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickLoginSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -126,7 +126,7 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @DisplayName("CRM restriction tab Manual Withdrawal Review restriction UI")
     void CRMManualWithdrawalRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickManualWithdrawalSwitch();
         restrictionPage.fillApplyReason("test reason");

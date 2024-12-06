@@ -33,7 +33,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set account restriction UI")
     void setAccountRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickAccountSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -50,7 +50,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelAccountRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "01");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatAccountIsChecked();
         restrictionPage.clickCheckedAccount();
@@ -66,7 +66,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set transfer restriction UI")
     void setTransferRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickTransferSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -83,7 +83,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelTransferRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "02");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatTransferIsChecked();
         restrictionPage.clickCheckedTransfer();
@@ -98,7 +98,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Deposits restriction UI")
     void setDepositsRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickDepositsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -115,7 +115,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelDepositsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "03");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatDepositsIsChecked();
         restrictionPage.clickCheckedDeposits();
@@ -130,7 +130,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Withdrawals restriction UI")
     void setWithdrawalsRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickWithdrawalsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -147,7 +147,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelWithdrawalsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "04");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatWithdrawalsIsChecked();
         restrictionPage.clickCheckedWithdrawals();
@@ -162,7 +162,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Login CRM restriction UI")
     void setLoginCRMRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickLoginSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -179,7 +179,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelLoginCRMRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "05");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatLoginIsChecked();
         restrictionPage.clickCheckedLogin();
@@ -195,7 +195,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Manual Withdrawal Review restriction UI")
     void setManualWithdrawalRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickManualWithdrawalSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -212,7 +212,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "12");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -229,7 +229,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.cleanUserAudit("infinox-141402");
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141402");
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -249,7 +249,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.cleanUserAudit("infinox-141402");
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141402");
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -271,7 +271,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
         investigationPage.navigate();
         //first run
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141402");
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -301,7 +301,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Close only mode Review restriction UI")
     void setCloseOnlyModeRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickCloseOnlyModeSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -318,7 +318,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "06");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatCloseOnlyIsChecked();
         restrictionPage.clickCheckedCloseOnly();
@@ -334,7 +334,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set Off quotes Review restriction UI")
     void setOffQuotesRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickOffQuotesModeSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -351,7 +351,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelOffQuotesRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "08");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatAOffQuotesIsChecked();
         restrictionPage.clickCheckedOffQuotes();
@@ -367,7 +367,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab set AB book Review restriction UI")
     void setAbBookRestrictionUITest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.clickAbBookSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -384,7 +384,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelAbBookRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "09");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
         restrictionPage.checkThatAbBookIsChecked();
         restrictionPage.clickCheckedAbBook();

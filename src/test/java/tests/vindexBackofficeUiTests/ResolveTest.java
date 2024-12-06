@@ -22,7 +22,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit("infinox-141402");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveWithdrawalsAllApprove();
@@ -41,7 +41,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit("infinox-141402");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveWithdrawalsAllReject();
@@ -57,7 +57,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOne() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         //first run
         cleanUserAudit("infinox-141402");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");

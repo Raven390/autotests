@@ -48,7 +48,7 @@ public class RuleAlert {
             public String country;
 
             @JsonProperty("fraudType")
-            public String[] fraudType;
+            public String fraudType;
 
             @JsonProperty("refferalId")
             public Integer refferalId;

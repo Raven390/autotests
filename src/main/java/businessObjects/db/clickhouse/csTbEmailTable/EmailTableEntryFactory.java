@@ -1,6 +1,7 @@
 package businessObjects.db.clickhouse.csTbEmailTable;
 
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import helpers.data.ClientHelper;
 
 import static utils.Utils.getCurrentTimestampDbFormat;
 
@@ -21,6 +22,12 @@ public class EmailTableEntryFactory {
     public static EmailTableEntry emailTableEntryForConnectionSearchFiltration() {
         return new EmailTableEntry(
                 "vantage-100004", 100_004, "Vantage", "testfiltration@qatest.com", getCurrentTimestampDbFormat()
+        );
+    }
+
+    public static EmailTableEntry getEmailTableEntryByClient(ClientHelper clientHelper) {
+        return new EmailTableEntry(
+                clientHelper.getUcid(), clientHelper.getUserId(), clientHelper.getBrand(), clientHelper.getEmail(), getCurrentTimestampDbFormat()
         );
     }
 }

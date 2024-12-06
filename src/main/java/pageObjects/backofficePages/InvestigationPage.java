@@ -11,8 +11,7 @@ import com.microsoft.playwright.Route;
 import io.qameta.allure.Step;
 import java.util.*;
 
-public class InvestigationPage {
-    private final Page page;
+public class InvestigationPage extends AbstractPage {
     private final Locator pageLogo;
     private final Locator userAvatar;
     private final Locator alertList;
@@ -44,7 +43,6 @@ public class InvestigationPage {
     private final Locator lightThemeButton;
     private final Locator darkBody;
     private final Locator lightBody;
-    private final Locator loaderAnimation;
     private final Locator susClientSection;
     private final Locator susClientList;
     private final Locator assignToMeFilter;
@@ -55,7 +53,7 @@ public class InvestigationPage {
     private final Locator susClientSectionFolded;
 
     public InvestigationPage(Page page) {
-        this.page = page;
+        super(page);
         this.pageLogo = page.locator(".gn-aside-header__header .gn-logo");
         this.userAvatar = page.locator(".v-aside-header-footer .g-avatar__icon");
         this.alertList = page.locator(".gn-aside-header__content .v-app-layout__content");
@@ -87,7 +85,6 @@ public class InvestigationPage {
         this.lightThemeButton = page.locator(".g-radio-button__option-control[value=\"light\"]");
         this.darkBody = page.locator(".g-root.g-root_theme_dark");
         this.lightBody = page.locator(".g-root.g-root_theme_light");
-        this.loaderAnimation = page.locator(".v-loader");
         this.susClientSection = page.locator("[data-qa=\"investigation_page__suspicious_clients_container\"]");
         this.susClientSectionFolded = page.locator(".v-investigation-tools-side-panel_collapsed[data-qa=\"investigation_page__suspicious_clients_container\"]");
         this.susClientList = page.locator("[data-qa=\"investigation_page__suspicious_clients_list\"]");
@@ -101,7 +98,7 @@ public class InvestigationPage {
     @Step("Open the BackOffice main page")
     public void navigate() {
         page.navigate(BASE_URL_E2E);
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Open the MOCKED BackOffice main page")
@@ -114,26 +111,26 @@ public class InvestigationPage {
             route.fulfill(new Route.FulfillOptions().setResponse(response).setBody(alert).setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
-        isPageLoaded();
+        waitForPageToLoad();
         page.evaluate("document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Check that user is logged in")
     public void isLoggedIn() {
-        isPageLoaded();
+        waitForPageToLoad();
         pageLogo.isVisible();
         userAvatar.isVisible();
     }
 
     @Step("Check that user is logged in")
     public void isNotLoggedIn() {
-        isPageLoaded();
+        waitForPageToLoad();
         assertEquals(pageLogo.count(), 0);
     }
 
     @Step("Check is  page basic elements visible")
     public void isAlertPageBasicElementsVisible() {
-        isPageLoaded();
+        waitForPageToLoad();
         alertList.isVisible();
         dateRowHeader.isVisible();
         amountRowHeader.isVisible();
@@ -235,16 +232,6 @@ public class InvestigationPage {
         profileButton.click();
     }
 
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while (loaderAnimation.isVisible() && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
-    }
-
     @Step("Switch to the Light mode")
     public void turnLightMode() {
         lightThemeButton.click();
@@ -279,14 +266,14 @@ public class InvestigationPage {
 
     @Step("Compare alert page with baseline screenshots")
     public void compareAlertPageWithBaseline(Page page, String baselinePath) {
-        isPageLoaded();
+        waitForPageToLoad();
         comparePageScreenshotWithBaseline(page, baselinePath);
     }
 
     @Step("Navigate to client")
     public void navigateToClient(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
 }
