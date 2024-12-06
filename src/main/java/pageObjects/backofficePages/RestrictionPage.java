@@ -493,7 +493,7 @@ public class RestrictionPage {
         String type2 = event.get(3).getType();
         assertEquals("RESTRICTION_CANCELLED", type2);
         String system = event.get(2).getInitiatedBySystem();
-        assertEquals(system, "vindex-backoffice");
+        assertEquals("Vindex BO", system);
     }
 
     public void checkRestrictionCancellationAudit(String ucid, String type, String expectedDetails) throws Exception {
@@ -518,7 +518,7 @@ public class RestrictionPage {
         String type2 = event.get(1).getType();
         assertEquals("RESTRICTION_APPLIED", type2);
         String system = event.get(0).getInitiatedBySystem();
-        assertEquals(system, "vindex-backoffice");
+        assertEquals("Vindex BO", system);
     }
 
     @Step("Check if the page loaded")
