@@ -11,6 +11,8 @@ endpoints:
   - port: 8080
     paths:
       - path: /
+envVars:
+  RUNNER: GITLAB_CI
 ingress:
   enabled: true
 hostname: generator.vindex-test.risk-vantagefx.com
