@@ -13,4 +13,4 @@ endpoints:
       - path: /
 ingress:
   enabled: true
-  hostname: generator.vindex-test.risk-vantagefx.com
+hostname: generator.vindex-test.risk-vantagefx.com
