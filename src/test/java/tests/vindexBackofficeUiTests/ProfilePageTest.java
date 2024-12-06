@@ -21,7 +21,7 @@ public class ProfilePageTest extends TestBaseWeb {
     @DisplayName("user can navigate to the profile page")
     void navigateToProfilePage() {
         profilePage.navigate();
-        keycloackPage.loginWEB("userName", "userPass");
+        keycloackPage.loginWeb("userName", "userPass");
         profilePage.isOnProfilePage();
     }
 
@@ -34,7 +34,7 @@ public class ProfilePageTest extends TestBaseWeb {
     @DisplayName("user can log out from the profile page")
     void LogOutFromProfilePage() {
         profilePage.navigate();
-        keycloackPage.loginWEB("userName", "userPass");
+        keycloackPage.loginWeb("userName", "userPass");
         profilePage.clickLogoutButton();
         keycloackPage.isLoggedOut();
     }

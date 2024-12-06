@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Step;
 
@@ -12,10 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ResolveScreen {
-    private final Page page;
-    private final Locator loaderAnimation;
-    private final Locator loaderSpin;
+public class ResolveScreen extends AbstractPage {
     private final Locator resolveButton;
     private final Locator investigateButton;
     private final Locator resolutionForm;
@@ -28,9 +26,7 @@ public class ResolveScreen {
     private final Locator successToast;
 
     public ResolveScreen(Page page) {
-        this.page = page;
-        this.loaderAnimation = page.locator(".v-loader");
-        this.loaderSpin = page.locator(".g-spin");
+        super(page);
         this.resolveButton = page.locator(".g-button__text").getByText("Resolve");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.completeInvestigationButton = page.locator(".g-button__text").getByText("Complete investigation");
@@ -45,14 +41,10 @@ public class ResolveScreen {
 
     }
 
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
+    @Step("Wait for page to load")
+    public void waitForPageToLoad() {
+        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     @Step("Open resolve form in suspicious client")
@@ -63,7 +55,7 @@ public class ResolveScreen {
             investigateButton.click();
             resolveButton.click();
         }
-        isPageLoaded();
+        waitForPageToLoad();
         assertTrue(resolutionForm.isVisible());
 
     }

@@ -6,13 +6,12 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
-public class DashboardPage {
-    private final Page page;
+public class DashboardPage extends AbstractPage {
     private final Locator pageLogo;
     private final Locator breadcrumbs;
 
     public DashboardPage(Page page) {
-        this.page = page;
+        super(page);
         this.pageLogo = page.locator("body .logo");
         this.breadcrumbs = page.locator(".breadcrumps");
     }

@@ -11,15 +11,14 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
-public class ConnectionPage {
+public class ConnectionPage extends AbstractPage {
 
-    private final Page page;
     private final Locator loaderAnimation;
     private final Locator connectionTab;
 
 
     public ConnectionPage(Page page) {
-        this.page = page;
+        super(page);
         this.loaderAnimation = page.locator(".v-loader");
         this.connectionTab = page.locator("[role=\"tab\"][title=\"Connections\"]");
     }
@@ -29,7 +28,7 @@ public class ConnectionPage {
     @Step("Open users restriction tab")
     public void navigateConnectionTab(String ucid) {
         page.navigate(BASE_URL_E2E + "investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         connectionTab.click();
     }
 
@@ -41,25 +40,24 @@ public class ConnectionPage {
 
     @Step("Go to main page")
     public void checkLineStyle(String ucid1, String ucid2, String attributeName, double connectionScore) {
-        isPageLoaded();
+        waitForPageToLoad();
         int width = connectionWidth(connectionScore);
-        isPageLoaded();
-        assertTrue(page.locator("[data-qa=\"" + ucid1 + ":" + ucid2 + ":" + attributeName + "\"][style=\"stroke-width: " + width + ";\"]").isVisible());
+        waitForPageToLoad();
+        assertTrue(page.locator(String.format("[data-qa=\"%s:%s:%s\"][style=\"stroke-width: %s;\"]", ucid1, ucid2, attributeName, width)).isVisible());
 
     }
 
     @Step("Check name of the client in node")
     public void checkClientName(String ucid1, String name) {
-        isPageLoaded();
-        assertTrue(page.locator(".v-graph-node[data-qa=\"" + ucid1 + "\"]").getByText(name).isVisible());
+        waitForPageToLoad();
+        assertTrue(page.locator(String.format(".v-graph-node[data-qa=\"%s\"]", ucid1)).getByText(name).isVisible());
 
     }
 
     @Step("Check status of the client in node")
     public void checkClientStatus(String ucid1, String status) {
-        isPageLoaded();
-
-        assertTrue(page.locator(".v-graph-node[data-qa=\"" + ucid1 + "\"]  .g-text_variant_caption-2").getByText(status).isVisible());
+        waitForPageToLoad();
+        assertTrue(page.locator(String.format(".v-graph-node[data-qa=\"%s\"]  .g-text_variant_caption-2", ucid1)).getByText(status).isVisible());
 
     }
 
@@ -73,18 +71,8 @@ public class ConnectionPage {
             route.fulfill(new Route.FulfillOptions().setResponse(response).setBody(alert).setHeaders(headers));
         });
         page.navigate(BASE_URL_E2E);
-        isPageLoaded();
+        waitForPageToLoad();
         page.evaluate("document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
-    }
-
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while (loaderAnimation.isVisible() && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
     }
 
     public static int connectionWidth(double score) {

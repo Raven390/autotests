@@ -6,15 +6,14 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.Step;
 
-public class ProfilePage {
-    private final Page page;
+public class ProfilePage extends AbstractPage {
     private final Locator logoutButton;
     private final Locator button1;
     private final Locator somethingToIDProfilePage;
     private final Locator breadcrumbs;
 
     public ProfilePage(Page page) {
-        this.page = page;
+        super(page);
         this.button1 = page.locator(".buttono");
         this.logoutButton = page.locator(".logOut");
         this.somethingToIDProfilePage = page.locator(".somethingToIDProfilePage");

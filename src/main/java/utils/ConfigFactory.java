@@ -82,8 +82,18 @@ public class ConfigFactory {
     public static final String CRM_INEGRATION_USER_ID = CONFIG.crmIntegrationUserUcid();
     // Other
     public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
-
     public static final Double TIMEOUT = CONFIG.waitTimeout();
+    // Backoffice UI users
+    public static final String USERNAME_FIRST_LOGIN = CONFIG.usernameFirstLogin();
+    public static final String PASSWORD_FIRST_LOGIN = CONFIG.passwordFirstLogin();
+    public static final String FIRST_NAME_FIRST_LOGIN = CONFIG.firstNameFirstLogin();
+    public static final String LAST_NAME_FIRST_LOGIN = CONFIG.lastNameFirstLogin();
+    public static final String EMAIL_FIRST_LOGIN = CONFIG.emailFirstLogin();
+    public static final String USERNAME_CORE = CONFIG.usernameCore();
+    public static final String PASSWORD_CORE = CONFIG.passwordCore();
+    public static final String FIRST_NAME_CORE = CONFIG.firstNameCore();
+    public static final String LAST_NAME_CORE = CONFIG.lastNameCore();
+    public static final String EMAIL_CORE = CONFIG.emailCore();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -303,6 +313,38 @@ public class ConfigFactory {
 
         @Key("crmIntegrationUserId")
         String crmIntegrationUserId();
+
+        // Backoffice UI users
+
+        @Key("usernameFirstLogin")
+        String usernameFirstLogin();
+
+        @Key("passwordFirstLogin")
+        String passwordFirstLogin();
+
+        @Key("firstNameFirstLogin")
+        String firstNameFirstLogin();
+
+        @Key("lastNameFirstLogin")
+        String lastNameFirstLogin();
+
+        @Key("emailFirstLogin")
+        String emailFirstLogin();
+
+        @Key("usernameCore")
+        String usernameCore();
+
+        @Key("passwordCore")
+        String passwordCore();
+
+        @Key("emailCore")
+        String emailCore();
+
+        @Key("firstNameCore")
+        String firstNameCore();
+
+        @Key("lastNameCore")
+        String lastNameCore();
     }
 
     public static boolean isGitlab() {

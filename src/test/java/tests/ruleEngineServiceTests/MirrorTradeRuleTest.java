@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.api.mitigationService.MitigationServiceRequest.disableCRMEmulator;
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.mirrorTradingRule.MirrorTradingRuleDataFactory.*;
 import static helpers.database.DbHelper.*;
@@ -335,7 +334,6 @@ public class MirrorTradeRuleTest {
         assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestrictionClose, expectedRestrictionWithdrawal));
     }
 
-
     @Test
     @DisplayName("Mirror trading rule exit Event_End_1_2")
     @AllureId("220")
@@ -653,6 +651,5 @@ public class MirrorTradeRuleTest {
     @AfterAll
     public static void deleteDbData() throws Exception {
         deleteMirrorTradingRuleData(dbDataMap);
-        disableCRMEmulator();
     }
 }

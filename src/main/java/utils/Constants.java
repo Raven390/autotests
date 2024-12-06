@@ -57,6 +57,7 @@ public class Constants {
     public static final String TAG_BUILD_CHECK = "build_check";
     public static final String TAG_AUTOMATED = "automated";
     public static final String TAG_MANUAL = "manual";
+    public static final String ROLE_UNKNOWN = "unknown";
     // KAFKA
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";
@@ -94,6 +95,7 @@ public class Constants {
     public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt__mt5_deals";
     public static final String BO_ALERT_TABLE_NAME = "bo.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "bo.bo.client";
+    public static final String BO_BACKOFFICE_USER_TABLE_NAME = "bo.bo.backoffice_user";
     public static final String AGGR_MIRROR_ACCOUNTS_BY_TRADES = "vindex_test_api.aggr__mirror_accounts_by_trades";
     public static final String AGGR_CREDIT_EQUITY_RATE = "vindex_test_api.aggr__credit_equity_rate";
 }

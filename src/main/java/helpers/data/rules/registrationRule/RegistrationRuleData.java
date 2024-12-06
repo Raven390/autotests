@@ -16,6 +16,7 @@ public class RegistrationRuleData {
     public LnSessionParsedObject lnSessionParsedObject;
     public List<ConnectionTableEntryV3> connections;
     public List<CrmTbUserObject> connectedUsers;
+    public List<ClientHelper> connectedClientHelpers;
     public RegistrationEvent registrationEvent;
     public List<BoClientFraudTypesObject> clientFraudTypes;
     public MtTbUserObject mtTbUserObject;
@@ -25,13 +26,15 @@ public class RegistrationRuleData {
 
     public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntryV3> connections,
-            List<CrmTbUserObject> connectedUsers, RegistrationEvent registrationEvent,
+            List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
+            RegistrationEvent registrationEvent,
             List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
         this.connections = connections;
         this.connectedUsers = connectedUsers;
+        this.connectedClientHelpers = connectedClientHelpers;
         this.registrationEvent = registrationEvent;
         this.clientFraudTypes = clientFraudTypes;
         this.mtTbUserObject = mtTbUserObject;
@@ -39,6 +42,6 @@ public class RegistrationRuleData {
 
     @Override
     public String toString() {
-        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + mtTbUserObject + '}';
+        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", connectedClientHelpers=" + connectedClientHelpers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + mtTbUserObject + '}';
     }
 }

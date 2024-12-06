@@ -2,6 +2,7 @@ package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import utils.Utils;
@@ -9,14 +10,11 @@ import utils.Utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TradingPage {
+public class TradingPage extends AbstractPage {
 
-    private final Page page;
     private final Locator tradingTab;
     private final Locator accountsTab;
     private final Locator operationsTab;
-    private final Locator loaderAnimation;
-    private final Locator loaderSpin;
     private final Locator accountsTabContent;
     private final Locator dealsTabContent;
     private final Locator accountColumnHeader;
@@ -60,9 +58,7 @@ public class TradingPage {
     private final Locator profitFromInput;
 
     public TradingPage(Page page) {
-        this.page = page;
-        this.loaderAnimation = page.locator(".v-loader");
-        this.loaderSpin = page.locator(".g-spin");
+        super(page);
         this.tradingTab = page.locator("[role=\"tab\"][title=\"Trading\"]");
         this.accountsTab = page.locator(".g-radio-button__option-control[value=\"Accounts\"]");
         this.operationsTab = page.locator(".g-radio-button__option-control[value=\"Deals\"]");
@@ -107,48 +103,36 @@ public class TradingPage {
         this.durationToInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.profitFromInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
         this.profitToInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
-
-
     }
 
     @Step("Navigate to users trading tab")
     public void navigate(String ucid) {
         Allure.step("Navigate to users trading tab");
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         tradingTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Navigate to users restriction tab/operations")
     public void navigateOperations(String ucid) {
         Allure.step("Navigate to users trading tab/operations");
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         tradingTab.click();
         operationsTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Open users restriction tab")
     public void openTradingTab() {
         Allure.step("Open users trading tab/operations");
-        isPageLoaded();
+        waitForPageToLoad();
         tradingTab.click();
         operationsTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        Allure.step("Check if the page loaded");
-        int n = 0;
-        page.waitForTimeout(2000);
-        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
-    }
 
     @Step("Check if the trading/operations tab renders all basic elements")
     public void operationsRendersTest() {
@@ -317,5 +301,10 @@ public class TradingPage {
         assertTrue(from <= difference && difference <= to);
     }
 
+    @Step("Wait for page to load")
+    public void waitForPageToLoad() {
+        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+    }
 
 }

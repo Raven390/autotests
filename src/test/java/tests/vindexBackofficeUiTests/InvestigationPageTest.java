@@ -19,7 +19,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("positive login test")
     void PositiveloginUITest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("DEV", "123");
+        keycloackPage.loginWeb("DEV", "123");
         investigationPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
@@ -31,7 +31,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("negative login test")
     void NegativeLoginUITest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
         investigationPage.isNotLoggedIn(); // check some simple and bulletproof marker of logging error
         keycloackPage.errorMessageIsShown();
     }
@@ -44,7 +44,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("alert page rendered basic elements")
     void alertPageRendersTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
         investigationPage.isAlertPageBasicElementsVisible();
     }
 
@@ -57,7 +57,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that side menu folds")
     void sideMenuFoldsTest() throws InterruptedException {
         investigationPage.navigate();
-        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
         investigationPage.sideMenuFoldButtonTest();
     }
 
@@ -70,7 +70,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that side menu renders")
     void sidebarRenderTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
         investigationPage.foldSidebar();
         investigationPage.unfoldSidebar();
     }
@@ -84,7 +84,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that color scheme is changing")
     void colorThemeSwitchTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
         investigationPage.colorThemeSwitch();
     }
 
@@ -98,7 +98,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("user can go to profile page from alert page")
     void alertPageOpenProfilePageTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("valid user name", "userPassString"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("valid user name", "userPassString"); // call the method for log in thought UI login form
         investigationPage.isProfileButtonVisible();
         investigationPage.clickProfileButton();
         profilePage.isOnProfilePage();
@@ -112,7 +112,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test folding feature of suspicious client list section in investigation tool")
     void susClientFoldButtonTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("dev", "123"); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.foldSusClientFoldSection();
         investigationPage.unfoldSusClientFoldSection();
@@ -126,7 +126,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test quick filter")
     void quickFiltersTest() {
         investigationPage.navigate();
-        keycloackPage.loginWEB("dev", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginWeb("dev", "123"); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.filterAssignedMe();
         investigationPage.filterUnassigned();

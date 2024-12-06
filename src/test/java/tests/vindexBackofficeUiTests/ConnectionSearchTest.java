@@ -18,7 +18,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("positive login test")
     void CSPageOpensTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
     }
 
@@ -29,7 +29,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("check line width")
     void CSPageConnectionLinesStileTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkLineStyle("infinox-424201", "infinox-424202", "payout", 1.0);
         connectionPage.checkLineStyle("infinox-424201", "infinox-424203", "email", 16.0);
@@ -51,7 +51,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("check that connection node have right client name")
     void CSPageConnectionNodesHaveRightClientNamesTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientName("infinox-424201", "Connect Firstman");
         connectionPage.checkClientName("infinox-424202", "Connect Secondman");
@@ -65,7 +65,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("check that connection node have right client name")
     void CSPageConnectionNodesHaveRightClientStatusTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginWEB("dev", "123");
+        keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientName("infinox-424201", "Suspicious");
         connectionPage.checkClientName("infinox-424202", "Normal");

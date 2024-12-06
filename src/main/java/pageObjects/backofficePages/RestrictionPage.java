@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -23,9 +24,8 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RestrictionPage {
+public class RestrictionPage extends AbstractPage {
 
-    private final Page page;
     private final Locator restrictionTab;
     private final Locator accountSwitch;
     private final Locator transferSwitch;
@@ -53,8 +53,6 @@ public class RestrictionPage {
     private final Locator checkedWithdrawals;
     private final Locator checkedLogin;
     private final Locator checkedManual;
-    private final Locator loaderAnimation;
-    private final Locator loaderSpin;
     private final Locator selectAllAccCheckbox;
     private final Locator checkedCloseOnlyMode;
     private final Locator checkedOffQuotesMode;
@@ -66,9 +64,7 @@ public class RestrictionPage {
 
 
     public RestrictionPage(Page page) {
-        this.page = page;
-        this.loaderAnimation = page.locator(".v-loader");
-        this.loaderSpin = page.locator(".g-spin");
+        super(page);
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
         this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Open new account");
         this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Internal transfer");
@@ -109,9 +105,9 @@ public class RestrictionPage {
     @Step("Open users restriction tab")
     public void navigate(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         restrictionTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Check that restriction tab rendered properly")
@@ -298,7 +294,7 @@ public class RestrictionPage {
     public void fillCancelReasonManualWithdrawalAllGreen(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        isPageLoaded();
+        waitForPageToLoad();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         approveAllwithdrawalsButton.click();
@@ -312,7 +308,7 @@ public class RestrictionPage {
     public void fillCancelReasonManualWithdrawalAllrefuse(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        isPageLoaded();
+        waitForPageToLoad();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         rejectAllwithdrawalsButton.click();
@@ -326,7 +322,7 @@ public class RestrictionPage {
     public void fillCancelReasonManualWithdrawalApproveOne(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        isPageLoaded();
+        waitForPageToLoad();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         rejectAllwithdrawalsButton.click();
@@ -340,7 +336,7 @@ public class RestrictionPage {
     @Step("Fill cancel reason")
     public void fillCancelReasonTrade(String reason) throws InterruptedException, JsonProcessingException {
         page.waitForTimeout(1000);
-        isPageLoaded();
+        waitForPageToLoad();
         dialog.isVisible();
         selectAllAccCheckbox.click();
         reasonInput.fill(reason);
@@ -521,16 +517,10 @@ public class RestrictionPage {
         assertEquals("Vindex BO", system);
     }
 
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
+    @Step("Wait for page to load")
+    public void waitForPageToLoad() {
+        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
-
-
 }
 
