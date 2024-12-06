@@ -86,7 +86,7 @@ job_code_check:
 job_build_generator_jar:
   image: gradle:8.10.0-jdk22
   stage: build
-  only: [main, CSV-455]
+  only: [main]
   needs: ["job_build"]
   variables:
     IMAGE_NAME: generator
@@ -106,7 +106,7 @@ job_build_generator_jar:
 job_publish_generator_image:
   image: public.ecr.aws/docker/library/docker:latest
   stage: build
-  only: [main, CSV-455]
+  only: [main]
   needs: ["job_build_generator_jar"]
   before_script:
     - apk add aws-cli
@@ -121,7 +121,7 @@ job_publish_generator_image:
 job_deploy_generator:
   stage: build
   image: alpine/helm:3.15.4
-  only: [main, CSV-455]
+  only: [main]
   needs: ["job_publish_generator_image"]
   when: manual
   script:
