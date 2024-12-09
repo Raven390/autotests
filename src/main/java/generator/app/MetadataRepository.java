@@ -59,7 +59,7 @@ final class MetadataRepository {
     }
 
     public void remove(String name, Timestamp timestamp) throws IllegalStateException {
-        try (var st = connection.prepareStatement("DELETE FROM result WHERE name = ? AND created = ?")) {
+        try (var st = connection.prepareStatement("DELETE FROM result WHERE key = ? AND created = ?")) {
             st.setString(1, name);
             st.setTimestamp(2, timestamp);
             st.executeUpdate();
