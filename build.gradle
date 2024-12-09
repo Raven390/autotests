@@ -18,6 +18,7 @@ shadowJar {
     archiveBaseName.set('generator')
     archiveVersion.set('0.1.0-SNAPSHOT')
     archiveClassifier.set('')
+    mergeServiceFiles()
 
     manifest {
         attributes 'Main-Class': 'generator.app.Application'
