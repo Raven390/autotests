@@ -11,6 +11,7 @@ import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
 import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
+import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -38,6 +39,7 @@ import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+@RuleTestData("mirror-trading")
 public class MirrorTradingRuleDataFactory {
     private static final ClientHelper mirrorTradingRuleExitEventEnd2Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd3_1Client = getRandomVantageClientAllFields();
