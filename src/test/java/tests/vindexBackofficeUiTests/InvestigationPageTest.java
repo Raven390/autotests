@@ -133,4 +133,40 @@ public class InvestigationPageTest extends TestBaseWeb {
         investigationPage.filterAll();
 
     }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(TAG_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("324")
+    @DisplayName("B0 user must see error message if commenting suspicious client failed")
+    void commentErrorScreenTest() {
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient("infinox-424242");
+        investigationPage.mockCommentError("infinox-424242");
+        investigationPage.openCommentForm();
+        investigationPage.fillCommentForm("error test");
+        investigationPage.submitCommentFormError();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(TAG_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @AllureId("227")
+    @DisplayName("BO user can add commentary to the suspicious client's audit trail")
+    void commentTest() {
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient("infinox-424242");
+        investigationPage.openCommentForm();
+        String message = "comment test " + timestamp;
+        investigationPage.fillCommentForm(message);
+        investigationPage.submitCommentForm();
+        auditTrailPage.openAuditTrailTab();
+        auditTrailPage.findRecord(message);
+    }
+
+
 }
