@@ -71,7 +71,7 @@ job_build:
 
 #Jobe for checking code format with spotless
 job_code_check:
-  timeout: 30 minutes
+  timeout: 10 minutes
   stage: build
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
@@ -88,6 +88,7 @@ job_build_generator_jar:
   stage: build
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
   needs: ["job_build"]
   variables:
     IMAGE_NAME: generator
@@ -109,6 +110,7 @@ job_publish_generator_image:
   stage: build
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
   needs: ["job_build_generator_jar"]
   before_script:
     - apk add aws-cli
@@ -125,6 +127,7 @@ job_deploy_generator:
   image: alpine/helm:3.15.4
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
   needs: ["job_publish_generator_image"]
   when: manual
   script:
