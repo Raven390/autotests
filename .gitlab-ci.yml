@@ -54,6 +54,8 @@ workflow:
     # Rule for launching backoffice tests from gitlab ui
    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
      when: always
+   - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true"'
+     when: always
    # Default: Disable pipeline for other scenarios
    - when: never
 
@@ -87,10 +89,10 @@ job_build_generator_jar:
   image: gradle:8.10.0-jdk22
   stage: build
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true"'
   needs: ["job_build"]
   variables:
+    DATA_GENERATOR: true
     IMAGE_NAME: generator
     IMAGE_VERSION: 0.1.0-SNAPSHOT
   script:
@@ -109,11 +111,12 @@ job_publish_generator_image:
   image: public.ecr.aws/docker/library/docker:latest
   stage: build
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true"'
   needs: ["job_build_generator_jar"]
   before_script:
     - apk add aws-cli
+  variables:
+    DATA_GENERATOR: true
   script:
     - aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY_URL
     - aws ecr create-repository --repository-name $IMAGE_NAME --region $AWS_DEFAULT_REGION || true
@@ -126,10 +129,11 @@ job_deploy_generator:
   stage: build
   image: alpine/helm:3.15.4
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true"'
   needs: ["job_publish_generator_image"]
   when: manual
+  variables:
+    DATA_GENERATOR: true
   script:
     - helm repo add "$CHART_NAME" "$CHART_PATH"
     - helm repo update "$CHART_NAME"
