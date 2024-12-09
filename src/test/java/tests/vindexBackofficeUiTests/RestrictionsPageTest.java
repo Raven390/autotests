@@ -5,20 +5,21 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.io.IOException;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RestrictionsPageTest extends TestBaseWeb {
 
+
     @BeforeAll
-    public static void CRMEmulation() throws IOException {
+    public static void CRMEmulation() throws Exception {
         Response response = enableCRMEmulator();
         assertNotNull(response);
-
     }
+
 
     @BeforeEach
     public void before() throws Exception {

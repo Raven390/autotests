@@ -1,13 +1,18 @@
 package pageObjects.backofficePages;
 
+import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
+import businessObjects.db.auditServiceDb.Event;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
+import helpers.database.DbName;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import java.util.*;
 
@@ -51,6 +56,16 @@ public class InvestigationPage extends AbstractPage {
     private final Locator susClientSectionFoldButton;
     private final Locator susClientSectionFoldButtonFolded;
     private final Locator susClientSectionFolded;
+    private final Locator addCommentButton;
+    private final Locator addCommentSubmitButton;
+    private final Locator addCommentPopup;
+    private final Locator addCommentInput;
+    private final Locator addCommentDangerToast;
+    private final Locator successToast;
+    private final Locator investigateButtonList;
+    private final Locator infoToast;
+    private final Locator suspiciousClientsList;
+    private final Locator investigateButton;
 
     public InvestigationPage(Page page) {
         super(page);
@@ -93,6 +108,17 @@ public class InvestigationPage extends AbstractPage {
         this.allSusClientsFilter = page.locator("[data-qa=\"investigation_page__suspicious_clients_buttons\"] [value=\"ALL\"]");
         this.susClientSectionFoldButton = page.locator("[data-qa=\"investigation_page__side_panel_toggler\"]");
         this.susClientSectionFoldButtonFolded = page.locator(".v-investigation-tools-side-panel__toggler_collapsed [data-qa=\"investigation_page__side_panel_toggler\"]");
+        this.addCommentButton = page.locator("[data-qa=\"investigation_tools__add_comment_button\"]");
+        this.addCommentSubmitButton = page.locator("[data-qa=\"investigation_tools__add_comment_submit_button\"]");
+        this.addCommentPopup = page.locator("[data-qa=\"investigation_tools__add_comment_popup\"]");
+        this.addCommentInput = page.locator("[data-qa=\"investigation_tools__add_comment_textarea_container\"] textarea");
+        this.addCommentDangerToast = page.locator(".g-toast_theme_danger");
+        this.successToast = page.locator(".g-toast_theme_success");
+        this.infoToast = page.locator(".g-toast_theme_info");
+        this.investigateButtonList = page.locator("[data-qa=\"investigation_tools__client_card_assign_button\"]");
+        this.suspiciousClientsList = page.locator("[data-qa=\"investigation_page__suspicious_clients_list\"]");
+        this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
+
     }
 
     @Step("Open the BackOffice main page")
@@ -274,6 +300,77 @@ public class InvestigationPage extends AbstractPage {
     public void navigateToClient(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
         waitForPageToLoad();
+    }
+
+    @Step("Mock comment api to return error")
+    public void mockCommentError(String ucid) {
+        page.route("**/api/clients/" + ucid + "/comments", route -> {
+            APIResponse response = route.fetch();
+            Map<String, String> headers = response.headers();
+            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+        });
+    }
+
+    @Step("Open add comment form")
+    public void openCommentForm() {
+        Allure.step("Open add comment form");
+        addCommentButton.click();
+        assertTrue(addCommentPopup.isVisible());
+    }
+
+    @Step("Fill add comment form")
+    public void fillCommentForm(String comment) {
+        Allure.step("Fill add comment form");
+        addCommentInput.fill(comment);
+        addCommentInput.textContent().contains(comment);
+    }
+
+    @Step("Submit comment form with error")
+    public void submitCommentFormError() {
+        Allure.step("Submit comment form with error");
+        addCommentSubmitButton.click();
+        String message = addCommentDangerToast.textContent();
+        assertEquals("Oops! Something went wrong while adding your comment. Please try again.", message);
+    }
+
+    @Step("Submit comment form")
+    public void submitCommentForm() {
+        Allure.step("Submit comment form");
+        addCommentSubmitButton.click();
+        String message = successToast.textContent();
+        assertEquals("Comment added to Audit trail", message);
+    }
+
+    @Step("take client to investigation from the alert list")
+    public void investigateUserAlertList(String userId) {
+        Allure.step("take client to investigation from the alert list");
+        int attempts = 0;
+        while ((!page.locator("//*[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 50) {
+            suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
+            page.mouse().wheel(0, 10);
+            attempts++;
+        }
+        page.locator("//*[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::div[text()='" + userId + "']").hover();
+        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::button[@data-qa=\"investigation_tools__client_card_assign_button\"]").click();
+        String message = infoToast.textContent();
+        assertEquals("Client investigation started", message);
+    }
+
+    @Step("take client to investigation from the client card")
+    public void investigateClientCard() {
+        Allure.step("take client to investigation from the from the client card");
+        investigateButton.click();
+        String message = infoToast.textContent();
+        assertEquals("Client investigation started", message);
+    }
+
+    public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
+        Allure.step("check assigment event in Audit DB");
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'", Event.class);
+        String type = event.get(1).getType();
+        assertEquals("CLIENT_ASSIGNED", type);
+        String system = event.get(1).getInitiatedBySystem();
+        assertEquals("Vindex BO", system);
     }
 
 }

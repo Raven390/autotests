@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -24,8 +23,9 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RestrictionPage extends AbstractPage {
+public class RestrictionPage {
 
+    private final Page page;
     private final Locator restrictionTab;
     private final Locator accountSwitch;
     private final Locator transferSwitch;
@@ -53,6 +53,8 @@ public class RestrictionPage extends AbstractPage {
     private final Locator checkedWithdrawals;
     private final Locator checkedLogin;
     private final Locator checkedManual;
+    private final Locator loaderAnimation;
+    private final Locator loaderSpin;
     private final Locator selectAllAccCheckbox;
     private final Locator checkedCloseOnlyMode;
     private final Locator checkedOffQuotesMode;
@@ -64,7 +66,9 @@ public class RestrictionPage extends AbstractPage {
 
 
     public RestrictionPage(Page page) {
-        super(page);
+        this.page = page;
+        this.loaderAnimation = page.locator(".v-loader");
+        this.loaderSpin = page.locator(".g-spin");
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
         this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Open new account");
         this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Internal transfer");
@@ -105,9 +109,9 @@ public class RestrictionPage extends AbstractPage {
     @Step("Open users restriction tab")
     public void navigate(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
-        waitForPageToLoad();
+        isPageLoaded();
         restrictionTab.click();
-        waitForPageToLoad();
+        isPageLoaded();
     }
 
     @Step("Check that restriction tab rendered properly")
@@ -294,7 +298,7 @@ public class RestrictionPage extends AbstractPage {
     public void fillCancelReasonManualWithdrawalAllGreen(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        waitForPageToLoad();
+        isPageLoaded();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         approveAllwithdrawalsButton.click();
@@ -308,7 +312,7 @@ public class RestrictionPage extends AbstractPage {
     public void fillCancelReasonManualWithdrawalAllrefuse(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        waitForPageToLoad();
+        isPageLoaded();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         rejectAllwithdrawalsButton.click();
@@ -322,7 +326,7 @@ public class RestrictionPage extends AbstractPage {
     public void fillCancelReasonManualWithdrawalApproveOne(String reason) throws InterruptedException,
             JsonProcessingException {
         page.waitForTimeout(1000);
-        waitForPageToLoad();
+        isPageLoaded();
         assertTrue(dialog.isVisible());
         assertTrue(withdrawalList.isVisible());
         rejectAllwithdrawalsButton.click();
@@ -336,7 +340,7 @@ public class RestrictionPage extends AbstractPage {
     @Step("Fill cancel reason")
     public void fillCancelReasonTrade(String reason) throws InterruptedException, JsonProcessingException {
         page.waitForTimeout(1000);
-        waitForPageToLoad();
+        isPageLoaded();
         dialog.isVisible();
         selectAllAccCheckbox.click();
         reasonInput.fill(reason);
@@ -347,12 +351,13 @@ public class RestrictionPage extends AbstractPage {
 
     @Step("Check request to apply message")
     public void checkKafkaRequestApplyUCID(String userId) throws InterruptedException, JsonProcessingException {
+        Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        apply.clientId.equals(userId);
+        apply.clientId.toString().equals(userId);
         assertNotNull((apply.clientId));
         assertNotNull((apply.timestamp));
         assertNotNull((apply.messageId));
@@ -363,12 +368,13 @@ public class RestrictionPage extends AbstractPage {
     @Step("Check withdrawal approval message")
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
+        Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
-        apply.transferId.equals(transactionID);
+        apply.transferId.toString().equals(transactionID);
         assertNotNull((apply.regulator));
         assertNotNull((apply.brand));
         assertNotNull((apply.timestamp));
@@ -399,8 +405,30 @@ public class RestrictionPage extends AbstractPage {
     @Step
     public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException,
             JsonProcessingException {
+        Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
+        apply.clientId.toString().equals(userId);
+        assertNotNull((apply.clientId));
+        assertNotNull((apply.timestamp));
+        assertNotNull((apply.messageId));
+        assertNotNull((apply.regulator));
+        assertNotNull((apply.restrictions));
+        assertNotEquals((apply.clientId), null);
+        assertNotEquals((apply.timestamp), "null");
+        assertNotEquals((apply.messageId), "null");
+        assertNotEquals((apply.regulator), "null");
+        assertNotEquals((apply.restrictions), null);
+    }
+
+    @Step
+    public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException,
+            JsonProcessingException {
+        Thread.sleep(2000);
+        KafkaHelper helper = new KafkaHelper();
+        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.equals(userId);
@@ -417,23 +445,18 @@ public class RestrictionPage extends AbstractPage {
     }
 
     @Step
-    public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException,
-            JsonProcessingException {
+    public void readMessagesFromClientApply(String userId) throws InterruptedException, JsonProcessingException {
+        Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        apply.clientId.equals(userId);
-        assertNotNull((apply.clientId));
-        assertNotNull((apply.timestamp));
-        assertNotNull((apply.messageId));
-        assertNotNull((apply.regulator));
-        assertNotNull((apply.restrictions));
-        assertNotEquals((apply.clientId), "null");
-        assertNotEquals((apply.timestamp), "null");
-        assertNotEquals((apply.messageId), "null");
-        assertNotEquals((apply.regulator), "null");
-        assertNotEquals((apply.restrictions), "null");
+        helper.consumeMessage("client.restrictions.apply", userId);
+    }
+
+    @Step
+    public void readMessagesFromWithdrawalApprovals(String userId) throws InterruptedException,
+            JsonProcessingException {
+        Thread.sleep(2000);
+        KafkaHelper helper = new KafkaHelper();
+        helper.consumeMessage("withdrawal.approvals", userId);
     }
 
     @Step("Clean users restriction history")
@@ -517,10 +540,23 @@ public class RestrictionPage extends AbstractPage {
         assertEquals("Vindex BO", system);
     }
 
-    @Step("Wait for page to load")
-    public void waitForPageToLoad() {
-        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
-        page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+    @Step("Check if the page loaded")
+    public void isPageLoaded() {
+        int n = 0;
+        page.waitForTimeout(2000);
+        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
+            page.waitForTimeout(2000);
+            n += 1;
+        }
     }
+
+    @Step("Check if the page loaded")
+    public void cleanKafka(String userId) throws Exception {
+        readMessagesFromClientApply(userId);
+        readMessagesFromWithdrawalApprovals(userId);
+
+    }
+
+
 }
 
