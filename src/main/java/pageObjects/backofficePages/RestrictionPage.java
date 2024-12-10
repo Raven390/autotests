@@ -132,142 +132,142 @@ public class RestrictionPage {
     }
 
     @Step("Set account restriction")
-    public void clickAccountSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickAccountSwitch() {
         accountSwitch.click();
     }
 
     @Step("Set transfer restriction")
-    public void clickTransferSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickTransferSwitch() {
         transferSwitch.click();
     }
 
     @Step("Set deposit restriction")
-    public void clickDepositsSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickDepositsSwitch() {
         depositsSwitch.click();
     }
 
     @Step("Set Withdrawals restriction")
-    public void clickWithdrawalsSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickWithdrawalsSwitch() {
         withdrawalsSwitch.click();
     }
 
     @Step("Set login restriction")
-    public void clickLoginSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickLoginSwitch() {
         loginSwitch.click();
     }
 
     @Step("Set ManualWithdrawal restriction")
-    public void clickManualWithdrawalSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickManualWithdrawalSwitch() {
         manualSwitch.click();
     }
 
     @Step("Set Close only mode restriction")
-    public void clickCloseOnlyModeSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickCloseOnlyModeSwitch() {
         closeSwitch.click();
     }
 
     @Step("Set OffQuotes restriction")
-    public void clickOffQuotesModeSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickOffQuotesModeSwitch() {
         offQuotesSwitch.click();
     }
 
     @Step("Set AbBook restriction")
-    public void clickAbBookSwitch() throws InterruptedException, JsonProcessingException {
+    public void clickAbBookSwitch() {
         abBookSwitch.click();
     }
 
     @Step("Check that account restriction tumbler is checked")
-    public void checkThatAccountIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatAccountIsChecked() {
         checkedAccount.isVisible();
     }
 
     @Step("Check that OffQuotes tumbler is checked")
-    public void checkThatAOffQuotesIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatAOffQuotesIsChecked() {
         checkedOffQuotesMode.isVisible();
     }
 
     @Step("Check that AbBook tumbler is checked")
-    public void checkThatAbBookIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatAbBookIsChecked() {
         checkedAbBook.isVisible();
     }
 
     @Step("Check that Transfer restriction tumbler is checked")
-    public void checkThatTransferIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatTransferIsChecked() {
         checkedTransfer.isVisible();
     }
 
     @Step("Check that Deposits restriction tumbler is checked")
-    public void checkThatDepositsIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatDepositsIsChecked() {
         checkedDeposits.isVisible();
     }
 
     @Step("Check that Withdrawals restriction tumbler is checked")
-    public void checkThatWithdrawalsIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatWithdrawalsIsChecked() {
         checkedWithdrawals.isVisible();
     }
 
     @Step("Check that Login restriction tumbler is checked")
-    public void checkThatLoginIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatLoginIsChecked() {
         checkedLogin.isVisible();
     }
 
     @Step("Check that ManualWithdrawal restriction tumbler is checked")
-    public void checkThatCloseOnlyIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatCloseOnlyIsChecked() {
         checkedCloseOnlyMode.isVisible();
     }
 
     @Step("Check that ManualWithdrawal restriction tumbler is checked")
-    public void checkThatManualWithdrawalIsChecked() throws InterruptedException, JsonProcessingException {
+    public void checkThatManualWithdrawalIsChecked() {
         checkedManual.isVisible();
     }
 
     @Step("Click checked account tumbler")
-    public void clickCheckedAccount() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedAccount() {
         checkedAccount.click();
     }
 
     @Step("Click checked transfer tumbler")
-    public void clickCheckedTransfer() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedTransfer() {
         checkedTransfer.click();
     }
 
     @Step("Click checked Deposits tumbler")
-    public void clickCheckedDeposits() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedDeposits() {
         checkedDeposits.click();
     }
 
     @Step("Click checked Withdrawals tumbler")
-    public void clickCheckedWithdrawals() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedWithdrawals() {
         checkedWithdrawals.click();
     }
 
     @Step("Click checked Login CRM tumbler")
-    public void clickCheckedLogin() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedLogin() {
         checkedLogin.click();
     }
 
     @Step("Click checked Manual Withdrawal Review tumbler")
-    public void clickCheckedManual() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedManual() {
         checkedManual.click();
     }
 
     @Step("Click checked Close Only Mode tumbler")
-    public void clickCheckedCloseOnly() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedCloseOnly() {
         checkedCloseOnlyMode.click();
     }
 
     @Step("Click checked OffQuotes tumbler")
-    public void clickCheckedOffQuotes() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedOffQuotes() {
         checkedOffQuotesMode.click();
     }
 
     @Step("Click checked AbBook tumbler")
-    public void clickCheckedAbBook() throws InterruptedException, JsonProcessingException {
+    public void clickCheckedAbBook() {
         checkedAbBook.click();
     }
 
     @Step("Fill apply reason")
-    public void fillApplyReason(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillApplyReason(String reason) {
         dialog.isVisible();
         reasonInput.fill(reason);
         restrictionSetSet.click();
@@ -276,7 +276,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill apply reason trading Green all accounts")
-    public void fillApplyReasonTradingAllAccs(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillApplyReasonTradingAllAccs(String reason) {
         dialog.isVisible();
         selectAllAccCheckbox.click();
         reasonInput.fill(reason);
@@ -286,7 +286,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason")
-    public void fillCancelReason(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillCancelReason(String reason) {
         dialog.isVisible();
         reasonInput.fill(reason);
         restrictionCancelSet.click();
@@ -295,8 +295,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals all green")
-    public void fillCancelReasonManualWithdrawalAllGreen(String reason) throws InterruptedException,
-            JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalAllGreen(String reason) {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -309,8 +308,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals all refuse")
-    public void fillCancelReasonManualWithdrawalAllrefuse(String reason) throws InterruptedException,
-            JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalAllrefuse(String reason) {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -323,8 +321,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason Manual withdrawal with withdrawals approve one")
-    public void fillCancelReasonManualWithdrawalApproveOne(String reason) throws InterruptedException,
-            JsonProcessingException {
+    public void fillCancelReasonManualWithdrawalApproveOne(String reason) {
         page.waitForTimeout(1000);
         isPageLoaded();
         assertTrue(dialog.isVisible());
@@ -338,7 +335,7 @@ public class RestrictionPage {
     }
 
     @Step("Fill cancel reason")
-    public void fillCancelReasonTrade(String reason) throws InterruptedException, JsonProcessingException {
+    public void fillCancelReasonTrade(String reason) {
         page.waitForTimeout(1000);
         isPageLoaded();
         dialog.isVisible();
@@ -350,10 +347,13 @@ public class RestrictionPage {
     }
 
     @Step("Check request to apply message")
-    public void checkKafkaRequestApplyUCID(String userId) throws InterruptedException, JsonProcessingException {
+    public void checkKafkaRequestApplyUCID(String userId) throws JsonProcessingException, InterruptedException {
         Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
@@ -371,6 +371,9 @@ public class RestrictionPage {
         Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
@@ -408,6 +411,7 @@ public class RestrictionPage {
         Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
+        System.out.println(kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.toString().equals(userId);
@@ -445,7 +449,7 @@ public class RestrictionPage {
     }
 
     @Step
-    public void readMessagesFromClientApply(String userId) throws InterruptedException, JsonProcessingException {
+    public void readMessagesFromClientApply(String userId) throws InterruptedException {
         Thread.sleep(2000);
         KafkaHelper helper = new KafkaHelper();
         helper.consumeMessage("client.restrictions.apply", userId);

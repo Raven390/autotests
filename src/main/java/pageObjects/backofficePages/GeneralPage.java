@@ -44,6 +44,8 @@ public class GeneralPage {
     private final Locator historyDrawer;
 
     private final String LOADING_SPINNER_SELECTOR = ".v-loader";
+    private final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
+    private final String KYC_STATUS_SELECTOR = "[data-qa=\"investigation_tools_kyc__status\"]";
 
 
     public GeneralPage(Page page) {
@@ -70,9 +72,9 @@ public class GeneralPage {
         this.sliderForwardButton = page.locator(".v-gallery__slides button").nth(0);
         this.sliderBackwardButton = page.locator(".v-gallery__slides button").nth(1);
         this.sliderGalleryCounter = page.locator(".v-gallery__slides .v-gallery__counter");
-        this.notAppliedPlaceholder = page.locator(".v-text-with-icon__text").getByText("Not applied");
-        this.poaNotAppliedPlaceholder = page.locator("[data-qa=\"investigation_tools_kyc__status\"]").getByText("Proof of address not applied");
-        this.poiNotAppliedPlaceholder = page.locator("[data-qa=\"investigation_tools_kyc__status\"]").getByText("Proof of identity not applied");
+        this.notAppliedPlaceholder = page.locator(PLACEHOLDER_SELECTOR).getByText("Not applied");
+        this.poaNotAppliedPlaceholder = page.locator(KYC_STATUS_SELECTOR).getByText("Proof of address not applied");
+        this.poiNotAppliedPlaceholder = page.locator(KYC_STATUS_SELECTOR).getByText("Proof of identity not applied");
         this.attemptSection = page.locator(".v-investigation-tools-kyc-row__cell_type_attempts");
         this.kycAddressRow = page.locator("[data-qa=\"investigation_tools_kyc__address_row\"]");
         this.kycAddressRowDetails = page.locator("[data-qa=\"investigation_tools_kyc__address_row\"] [data-qa=\"investigation_tools_kyc_row__params\"]");
@@ -103,16 +105,19 @@ public class GeneralPage {
 
     @Step("Check KYC status general")
     public void checkKycStatusGeneral(String title, String status) {
+        page.waitForSelector(String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title));
         assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/descendant::div[@class='g-label__content']", title)).getByText(status).isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkKycAttemptsGeneral(String title, String expectedAttempts) {
+        page.waitForSelector("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
         assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]", title)).getByText(expectedAttempts).isVisible());
     }
 
     @Step("Check KYC attempts general")
     public void checkIdInfoGeneral(String title, String expectedInfo) {
+        page.waitForSelector("//span[text()='" + title + "']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_attempts')]");
         assertTrue(page.locator(String.format("//span[text()='%s']/ancestor::tr/td[contains(@class,'v-investigation-tools-kyc-row__cell_type_params')]", title)).getByText(expectedInfo).isVisible());
     }
 
@@ -195,16 +200,19 @@ public class GeneralPage {
 
     @Step("Check no applied placeholder is visible")
     public void noAppliedIsVisible() {
+        page.waitForSelector(PLACEHOLDER_SELECTOR);
         assertTrue(notAppliedPlaceholder.isVisible());
     }
 
     @Step("POA placeholder is visible")
     public void poaPlaceholderIsVisible() {
+        page.waitForSelector(KYC_STATUS_SELECTOR);
         assertTrue(poaNotAppliedPlaceholder.isVisible());
     }
 
     @Step("POI placeholder is visible")
     public void poiPlaceholderIsVisible() {
+        page.waitForSelector(KYC_STATUS_SELECTOR);
         assertTrue(poiNotAppliedPlaceholder.isVisible());
     }
 
