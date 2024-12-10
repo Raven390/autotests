@@ -35,7 +35,7 @@ public class ResolveScreen {
         this.resolveButton = page.locator(".g-button__text").getByText("Resolve");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.completeInvestigationButton = page.locator(".g-button__text").getByText("Complete investigation");
-        this.resolutionForm = page.locator("[data-qa=\"drawer_body\"]").getByText("Resolution");
+        this.resolutionForm = page.locator("[data-qa='drawer_body']").getByText("Resolution");
         this.commentInput = page.locator(".v-investigation-tools-client-resolving-drawer__textarea-container textarea");
         this.withdrawalList = page.locator(".v-withdrawals-list");
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
