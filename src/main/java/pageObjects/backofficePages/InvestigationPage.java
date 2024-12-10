@@ -96,27 +96,27 @@ public class InvestigationPage extends AbstractPage {
         this.supportButton = page.locator(".supportButton"); // not implemented
         this.bugReportButton = page.locator(".BugReportButton"); // not implemented
         this.breadcrumbs = page.locator(".breadcrumbs"); // not implemented
-        this.darkThemeButton = page.locator(".g-radio-button__option-control[value=\"dark\"]");
-        this.lightThemeButton = page.locator(".g-radio-button__option-control[value=\"light\"]");
+        this.darkThemeButton = page.locator(".g-radio-button__option-control[value='dark']");
+        this.lightThemeButton = page.locator(".g-radio-button__option-control[value='light']");
         this.darkBody = page.locator(".g-root.g-root_theme_dark");
         this.lightBody = page.locator(".g-root.g-root_theme_light");
-        this.susClientSection = page.locator("[data-qa=\"investigation_page__suspicious_clients_container\"]");
-        this.susClientSectionFolded = page.locator(".v-investigation-tools-side-panel_collapsed[data-qa=\"investigation_page__suspicious_clients_container\"]");
-        this.susClientList = page.locator("[data-qa=\"investigation_page__suspicious_clients_list\"]");
-        this.assignToMeFilter = page.locator("[data-qa=\"investigation_page__suspicious_clients_buttons\"] [value=\"MY\"]");
-        this.unassignedFilter = page.locator("[data-qa=\"investigation_page__suspicious_clients_buttons\"] [value=\"UNASSIGNED\"]");
-        this.allSusClientsFilter = page.locator("[data-qa=\"investigation_page__suspicious_clients_buttons\"] [value=\"ALL\"]");
-        this.susClientSectionFoldButton = page.locator("[data-qa=\"investigation_page__side_panel_toggler\"]");
-        this.susClientSectionFoldButtonFolded = page.locator(".v-investigation-tools-side-panel__toggler_collapsed [data-qa=\"investigation_page__side_panel_toggler\"]");
-        this.addCommentButton = page.locator("[data-qa=\"investigation_tools__add_comment_button\"]");
-        this.addCommentSubmitButton = page.locator("[data-qa=\"investigation_tools__add_comment_submit_button\"]");
-        this.addCommentPopup = page.locator("[data-qa=\"investigation_tools__add_comment_popup\"]");
-        this.addCommentInput = page.locator("[data-qa=\"investigation_tools__add_comment_textarea_container\"] textarea");
+        this.susClientSection = page.locator("[data-qa='investigation_page__suspicious_clients_container']");
+        this.susClientSectionFolded = page.locator(".v-investigation-tools-side-panel_collapsed[data-qa='investigation_page__suspicious_clients_container']");
+        this.susClientList = page.locator("[data-qa='investigation_page__suspicious_clients_list']");
+        this.assignToMeFilter = page.locator("[data-qa='investigation_page__suspicious_clients_buttons'] [value='MY']");
+        this.unassignedFilter = page.locator("[data-qa='investigation_page__suspicious_clients_buttons'] [value='UNASSIGNED']");
+        this.allSusClientsFilter = page.locator("[data-qa='investigation_page__suspicious_clients_buttons'] [value='ALL']");
+        this.susClientSectionFoldButton = page.locator("[data-qa='investigation_page__side_panel_toggler']");
+        this.susClientSectionFoldButtonFolded = page.locator(".v-investigation-tools-side-panel__toggler_collapsed [data-qa='investigation_page__side_panel_toggler']");
+        this.addCommentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
+        this.addCommentSubmitButton = page.locator("[data-qa='investigation_tools__add_comment_submit_button']");
+        this.addCommentPopup = page.locator("[data-qa='investigation_tools__add_comment_popup']");
+        this.addCommentInput = page.locator("[data-qa='investigation_tools__add_comment_textarea_container'] textarea");
         this.addCommentDangerToast = page.locator(".g-toast_theme_danger");
         this.successToast = page.locator(".g-toast_theme_success");
         this.infoToast = page.locator(".g-toast_theme_info");
-        this.investigateButtonList = page.locator("[data-qa=\"investigation_tools__client_card_assign_button\"]");
-        this.suspiciousClientsList = page.locator("[data-qa=\"investigation_page__suspicious_clients_list\"]");
+        this.investigateButtonList = page.locator("[data-qa='investigation_tools__client_card_assign_button']");
+        this.suspiciousClientsList = page.locator("[data-qa='investigation_page__suspicious_clients_list']");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
 
     }
@@ -130,7 +130,7 @@ public class InvestigationPage extends AbstractPage {
     @Step("Open the MOCKED BackOffice main page")
     public void navigateMock() {
         page.route("**/api/alerts", route -> {
-            String alert = "{\n" + "        \"id\": 1518,\n" + "        \"uuid\": \"c6b6af2e-43a2-425d-bf87-ee2b6141e267\",\n" + "        \"date\": \"2024-09-12T07:57:46.713048Z\",\n" + "        \"amount\": {\n" + "            \"value\": -235331367481903743,\n" + "            \"currency\": \"Monica\"\n" + "        },\n" + "        \"rule\": [\n" + "            \"ProctorMan\",\n" + "            \"Marquez\",\n" + "            \"Ramirez\",\n" + "            \"Simpson\",\n" + "            \"McFadden\",\n" + "            \"Farley\"\n" + "        ],\n" + "        \"client\": {\n" + "            \"id\": null,\n" + "            \"regulator\": null,\n" + "            \"brand\": null\n" + "        },\n" + "        \"status\": \"NEW\",\n" + "        \"tag\": []\n" + "    }";
+            String alert = "{\n" + "        'id': 1518,\n" + "        'uuid': 'c6b6af2e-43a2-425d-bf87-ee2b6141e267',\n" + "        'date': '2024-09-12T07:57:46.713048Z',\n" + "        'amount': {\n" + "            'value': -235331367481903743,\n" + "            'currency': 'Monica'\n" + "        },\n" + "        'rule': [\n" + "            'ProctorMan',\n" + "            'Marquez',\n" + "            'Ramirez',\n" + "            'Simpson',\n" + "            'McFadden',\n" + "            'Farley'\n" + "        ],\n" + "        'client': {\n" + "            'id': null,\n" + "            'regulator': null,\n" + "            'brand': null\n" + "        },\n" + "        'status': 'NEW',\n" + "        'tag': []\n" + "    }";
             APIResponse response = route.fetch();
             String body = response.text();
             Map<String, String> headers = response.headers();
@@ -273,19 +273,19 @@ public class InvestigationPage extends AbstractPage {
     @Step("Filter assigned to me")
     public void filterAssignedMe() {
         assignToMeFilter.click();
-        assignToMeFilter.locator("[aria-checked=\"true\"]").isVisible();
+        assignToMeFilter.locator("[aria-checked='true']").isVisible();
     }
 
     @Step("Filter unassigned")
     public void filterUnassigned() {
         unassignedFilter.click();
-        unassignedFilter.locator("[aria-checked=\"true\"]").isVisible();
+        unassignedFilter.locator("[aria-checked='true']").isVisible();
     }
 
     @Step("Filter all")
     public void filterAll() {
         allSusClientsFilter.click();
-        allSusClientsFilter.locator("[aria-checked=\"true\"]").isVisible();
+        allSusClientsFilter.locator("[aria-checked='true']").isVisible();
     }
 
     @Deprecated//need to update logic of mock
@@ -345,13 +345,14 @@ public class InvestigationPage extends AbstractPage {
     public void investigateUserAlertList(String userId) {
         Allure.step("take client to investigation from the alert list");
         int attempts = 0;
-        while ((!page.locator("//*[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 50) {
+        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 50) {
             suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
-            page.mouse().wheel(0, 10);
+            page.mouse().wheel(0, 100);
+//            page.waitForTimeout(500);
             attempts++;
         }
-        page.locator("//*[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::div[text()='" + userId + "']").hover();
-        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa=\"investigation_page__suspicious_client_card\"]/descendant::button[@data-qa=\"investigation_tools__client_card_assign_button\"]").click();
+        page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").hover();
+        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa='investigation_page__suspicious_client_card']/descendant::button[@data-qa='investigation_tools__client_card_assign_button']").click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
     }

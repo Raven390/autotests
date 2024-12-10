@@ -348,13 +348,15 @@ public class RestrictionPage {
 
     @Step("Check request to apply message")
     public void checkKafkaRequestApplyUCID(String userId) throws JsonProcessingException, InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
+        System.out.println("we search user " + userId);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
         for (String response : kafkaResponses) {
             System.out.println(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
+        System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.toString().equals(userId);
@@ -368,13 +370,15 @@ public class RestrictionPage {
     @Step("Check withdrawal approval message")
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
+        System.out.println("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         for (String response : kafkaResponses) {
             System.out.println(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
+        System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
         apply.transferId.toString().equals(transactionID);
@@ -408,7 +412,7 @@ public class RestrictionPage {
     @Step
     public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException,
             JsonProcessingException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
         String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
         System.out.println(kafkaResponse);
@@ -450,7 +454,7 @@ public class RestrictionPage {
 
     @Step
     public void readMessagesFromClientApply(String userId) throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
         helper.consumeMessage("client.restrictions.apply", userId);
     }
@@ -458,7 +462,7 @@ public class RestrictionPage {
     @Step
     public void readMessagesFromWithdrawalApprovals(String userId) throws InterruptedException,
             JsonProcessingException {
-        Thread.sleep(2000);
+        Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
         helper.consumeMessage("withdrawal.approvals", userId);
     }
