@@ -59,7 +59,7 @@ public class ResolveScreen {
 
     @Step("Open resolve form in suspicious client")
     public void openResolveSuspicious() {
-        page.waitForTimeout(1000);
+        isPageLoaded();
         if (resolveButton.isVisible()) {
             resolveButton.click();
         } else {
@@ -72,6 +72,7 @@ public class ResolveScreen {
 
     @Step("Resolve and approve all withdrawals")
     public void resolveWithdrawalsAllApprove() {
+//        page.waitForSelector(resolutionForm.toString());
         assertTrue(resolutionForm.isVisible());
         approveAllwithdrawalsButton.click();
         commentInput.fill("autotest to withdrawals");
@@ -110,6 +111,9 @@ public class ResolveScreen {
             JsonProcessingException {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
