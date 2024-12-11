@@ -81,8 +81,6 @@ public class GeneralPage {
         this.kycIdRow = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"]");
         this.kycIdRowDetails = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"] [data-qa=\"investigation_tools_kyc_row__params\"]");
         this.historyDrawer = page.locator("[data-qa=\"drawer_body\"]");
-
-
     }
 
     @Step("Open users general tab")

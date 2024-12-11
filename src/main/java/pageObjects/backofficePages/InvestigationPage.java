@@ -1,20 +1,23 @@
 package pageObjects.backofficePages;
 
 import static helpers.database.DbHelper.getObjectsFromDB;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
 import businessObjects.db.auditServiceDb.Event;
-import com.microsoft.playwright.APIResponse;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Route;
+import businessObjects.ui.user.User;
+import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class InvestigationPage extends AbstractPage {
     private final Locator pageLogo;
@@ -66,6 +69,17 @@ public class InvestigationPage extends AbstractPage {
     private final Locator infoToast;
     private final Locator suspiciousClientsList;
     private final Locator investigateButton;
+    private final Locator clientContainer;
+    private final Locator brandImage;
+    private final Locator countryCodeElement;
+    private final Locator clientIdElement;
+    private final Locator investigationStatusElement;
+    private final Locator clientAssignmentElement;
+    private final Locator clientCardTimerElement;
+    private final Locator clientCardAlertsCountElement;
+    private final Locator currentTabCardsCountElement;
+
+    private final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
 
     public InvestigationPage(Page page) {
         super(page);
@@ -118,13 +132,21 @@ public class InvestigationPage extends AbstractPage {
         this.investigateButtonList = page.locator("[data-qa='investigation_tools__client_card_assign_button']");
         this.suspiciousClientsList = page.locator("[data-qa='investigation_page__suspicious_clients_list']");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
-
+        this.clientContainer = page.locator("//*[@data-qa='data_item_wrapper_container']");
+        this.brandImage = page.locator("//img[@class='g-avatar__image']");
+        this.countryCodeElement = page.locator("//span[contains(@class,'g-text')]");
+        this.clientIdElement = page.locator("//div[contains(@class,'g-text_variant_subheader-1')]");
+        this.investigationStatusElement = page.locator("//div[contains(@class,'v-suspicious-client-card__status')]");
+        this.clientAssignmentElement = page.locator("//div[contains(@class,'v-suspicious-client-card__assigned-user')]");
+        this.clientCardTimerElement = page.locator("//div[contains(@class,'v-suspicious-client-card__timer')]");
+        this.clientCardAlertsCountElement = page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
+        this.currentTabCardsCountElement = page.locator("//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
     }
 
     @Step("Open the BackOffice main page")
     public void navigate() {
         page.navigate(BASE_URL_E2E);
-        waitForPageToLoad();
+        super.waitForPageToLoad();
     }
 
     @Step("Open the MOCKED BackOffice main page")
@@ -372,6 +394,142 @@ public class InvestigationPage extends AbstractPage {
         assertEquals("CLIENT_ASSIGNED", type);
         String system = event.get(1).getInitiatedBySystem();
         assertEquals("Vindex BO", system);
+    }
+
+    @Step("Verify each client card has a brand image")
+    public void verifyEachClientHasBrandImg() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(brandImage);
+            assertThat(child.count(), not(equalTo(0)));
+        }
+    }
+
+    @Step("Verify each client card has a country code")
+    public void verifyEachClientHasCountryCode() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> clientsCountryList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(countryCodeElement);
+            assertThat(child.count(), not(equalTo(0)));
+            clientsCountryList.add(child.textContent());
+        }
+        String iso2Pattern = "^[A-Z]{2}$";
+        clientsCountryList.forEach(country -> assertThat(String.format("Assert that country '%s' matches iso2 format", country), country.matches(iso2Pattern))
+        );
+    }
+
+    @Step("Verify each client card has a client id")
+    public void verifyEachClientHasClientId() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> clientIdList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(clientIdElement);
+            assertThat(child.count(), not(equalTo(0)));
+            clientIdList.add(child.textContent());
+        }
+        String positiveIntsPattern = "^[1-9]\\d*$";
+        clientIdList.forEach(clientId -> assertThat(String.format("Assert that clientId '%s' is a positive int", clientId), clientId.matches(positiveIntsPattern))
+        );
+    }
+
+    @Step("Verify each client card has any investigation status")
+    public void verifyEachClientHasAnyInvestigationStatus() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> investigationStatusList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(investigationStatusElement);
+            assertThat(child.count(), not(equalTo(0)));
+            investigationStatusList.add(child.textContent());
+        }
+        investigationStatusList.forEach(status -> assertThat(String.format("Assert that investigation status '%s' has value in ['Investigating', 'Suspicious']", status), status, anyOf(is("Investigating"), is("Suspicious"))
+        )
+        );
+    }
+
+    @Step("Verify each client card has investigation status 'Investigating'")
+    public void verifyEachClientHasInvestigationStatusInvestigating() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> investigationStatusList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(investigationStatusElement);
+            assertThat(child.count(), not(equalTo(0)));
+            investigationStatusList.add(child.textContent());
+        }
+        investigationStatusList.forEach(status -> assertThat(String.format("Assert that investigation status '%s' has value 'Investigating'", status), status, (is("Investigating"))
+        )
+        );
+    }
+
+    @Step("Verify each client card has investigation status 'Investigating'")
+    public void verifyEachClientAssignedToUser(User user) {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> assignmentList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(clientAssignmentElement);
+            assertThat(child.count(), not(equalTo(0)));
+            assignmentList.add(child.textContent());
+        }
+        assignmentList.forEach(assignee -> assertThat("Assert that assignment element is present", assignee, (is(String.format("%s %s", user.getFirstName(), user.getLastName())))
+        )
+        );
+    }
+
+    @Step("Verify each client card has a card timer")
+    public void verifyEachClientHasCardTimer() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> cardTimerList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(clientCardTimerElement);
+            assertThat(child.count(), not(equalTo(0)));
+            cardTimerList.add(child.textContent());
+        }
+        String timerPattern = "^(\\d{1,2}:\\d{2}(:\\d{2})?|(\\d{1,2}d \\d{1,2}h))$";
+        cardTimerList.forEach(timer -> assertThat(String.format("Assert that card timer '%s' is a positive int", timer), timer.matches(timerPattern))
+        );
+    }
+
+    @Step("Verify each client card has an alert count")
+    public void verifyEachClientHasAlertCount() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        List<String> alertCountList = new ArrayList<>();
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(clientCardAlertsCountElement);
+            assertThat(child.count(), not(equalTo(0)));
+            alertCountList.add(child.textContent());
+        }
+        String positiveIntsPattern = "^[1-9]\\d*$";
+        alertCountList.forEach(alertCount -> assertThat(String.format("Assert that alert count '%s' is a positive int", alertCount), alertCount.matches(positiveIntsPattern))
+        );
+    }
+
+    @Step("Verify client cards count is equal to actual number of client cards in the list")
+    public void verifyClientCardsCount() throws InterruptedException {
+        clientContainer.first().hover();
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(200);
+            page.mouse().wheel(0, 500);
+        }
+        String style = clientContainer.last().getAttribute("style");
+        String regex = "top:\\s*(\\d+)px";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(style);
+        if (matcher.find()) {
+            int actualCardsCount = (Integer.parseInt(matcher.group(1)) / 110) + 1;
+            int expectedCardsCount = Integer.parseInt(currentTabCardsCountElement.textContent());
+            assertThat(String.format("Assert that card count in tab (%s) is equal to card count by counting rows (%s)", expectedCardsCount, actualCardsCount), actualCardsCount, equalTo(expectedCardsCount)
+            );
+        } else {
+            assertThat("Was not able to find 'top' value in style attribute", false);
+        }
+    }
+
+    public void waitForPageToLoad() {
+        try {
+            page.locator(CLIENT_LIST_LOADING).waitFor(new Locator.WaitForOptions().setTimeout(5000));
+        } catch (PlaywrightException ignored) {
+        }
+        page.waitForSelector(CLIENT_LIST_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
 }

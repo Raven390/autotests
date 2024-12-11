@@ -33,7 +33,7 @@ public class FirstLoginTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("524")
     @DisplayName("Verify that user data is saved to backoffice db after first login")
     public void verifyUserDataSavedAfterFirstLoginTest() throws Exception {
         investigationPage.navigate();
