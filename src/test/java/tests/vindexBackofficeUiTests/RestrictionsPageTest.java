@@ -211,7 +211,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("338")
     @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client without transactions")
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral("infinox-141401", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141401", "13");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141401");
@@ -228,7 +228,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client with transactions all green")
     void cancelManualWithdrawalRestrictionUITestWithTransactionsGreen() throws Exception {
         restrictionPage.cleanUserAudit("infinox-141402");
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141402");
@@ -248,7 +248,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client with transactions all refuse")
     void cancelManualWithdrawalRestrictionUITestWithTransactionsRefuse() throws Exception {
         restrictionPage.cleanUserAudit("infinox-141402");
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         restrictionPage.navigate("infinox-141402");
@@ -269,7 +269,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelManualWithdrawalRestrictionUITestWithTransactionsApproveOne() throws Exception {
         //login
         restrictionPage.cleanUserAudit("infinox-141402");
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         investigationPage.navigate();
         //first run
         keycloackPage.loginWeb("dev", "123");
@@ -283,7 +283,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkKafkaRequestApplyUCID("141402");
         //second run
         restrictionPage.cleanUserAudit("infinox-141402");
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         restrictionPage.navigate("infinox-141402");
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -328,6 +328,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
 
+    @Disabled
+    //restriction abadoned
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
@@ -344,6 +346,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkRestrictionApplymentAudit("infinox-141401", "Off quotes; account: 14140101");
     }
 
+    @Disabled
+    //restriction abadoned
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)

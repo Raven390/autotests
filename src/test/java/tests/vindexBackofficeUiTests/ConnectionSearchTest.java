@@ -15,7 +15,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("")
-    @DisplayName("positive login test")
+    @DisplayName("Positive login test")
     void CSPageOpensTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
@@ -26,7 +26,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("")
-    @DisplayName("check line width")
+    @DisplayName("Check line width")
     void CSPageConnectionLinesStileTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
@@ -47,29 +47,95 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
-    @DisplayName("check that connection node have right client name")
+    @AllureId("311")
+    @DisplayName("Check that connection node have right client name")
     void CSPageConnectionNodesHaveRightClientNamesTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
-        connectionPage.checkClientName("infinox-424201", "Connect Firstman");
-        connectionPage.checkClientName("infinox-424202", "Connect Secondman");
-        connectionPage.checkClientName("infinox-424203", "Connect Thrirdman");
+        connectionPage.checkClientNodeText("infinox-424201", "Connect Firstman");
+        connectionPage.checkClientNodeText("infinox-424202", "Connect Secondman");
+        connectionPage.checkClientNodeText("infinox-424203", "Connect Thrirdman");
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
-    @DisplayName("check that connection node have right client name")
+    @AllureId("311")
+    @DisplayName("Check that connection node have right client status")
     void CSPageConnectionNodesHaveRightClientStatusTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
-        connectionPage.checkClientName("infinox-424201", "Suspicious");
-        connectionPage.checkClientName("infinox-424202", "Normal");
-        connectionPage.checkClientName("infinox-424203", "Gap trading, Latency arbitrage");
+        connectionPage.checkClientNodeText("infinox-424201", "Suspicious");
+        connectionPage.checkClientNodeText("infinox-424202", "Normal");
+        connectionPage.checkClientNodeText("infinox-424203", "Gap trading, Latency arbitrage");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("518")
+    @DisplayName("Check that connection table opens")
+    void CSPageConnectionTableOpens() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.openConnectionTable();
+        connectionPage.connectionTableIsRendered();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("526")
+    @DisplayName("Check that sorting works")
+    void CSPageConnectionTableSort() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.openConnectionTable();
+        connectionPage.testSortingLevel();
+        connectionPage.testSortingConnection();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("520")
+    @DisplayName("Connection Search connection search tab can switches between graph and table mode")
+    void CSPageConnectionTableSwitchesBackToGraph() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.openConnectionTable();
+        connectionPage.openConnectionGraph();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("521")
+    @DisplayName("Test the same user save highlighted state between different modes of the connection search when you switches view mode")
+    void CSPageConnectionSelectionSwitchView() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.openConnectionTable();
+        connectionPage.checkSelection("424202", "infinox-424202");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("527")
+    @DisplayName("Test the same user save highlighted state between different modes of the connection search when you click link button ")
+    void CSPageConnectionSelectionLinkButton() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.openConnectionTable();
+        connectionPage.checkSelection("424202", "infinox-424202");
     }
 
 }

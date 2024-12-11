@@ -28,7 +28,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -51,7 +51,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -76,7 +76,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
         resolveScreen.openResolveSuspicious();
@@ -89,7 +89,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response1 = enableCRMEmulator();
         assertNotNull(response1);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "12");
+        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
         resolveScreen.openResolveSuspicious();
