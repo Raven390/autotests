@@ -5,6 +5,8 @@ import helpers.data.enums.Brand;
 
 import java.util.Objects;
 
+import static utils.Utils.getUcidByUserIdAndBrand;
+
 public class ClientHelper {
 
     private Integer userId;
@@ -55,7 +57,7 @@ public class ClientHelper {
 
     @JsonIgnore
     public String getUcid() {
-        return String.format("%s-%s", brand.getDisplayName().toLowerCase().replace(" ", ""), userId);
+        return getUcidByUserIdAndBrand(userId, brand);
     }
 
     public Integer getUserId() {

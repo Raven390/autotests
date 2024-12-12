@@ -39,6 +39,7 @@ public class TestBaseWeb {
     public ResolveScreen resolveScreen;
     public TradingPage tradingPage;
     public AuditTrailPage auditTrailPage;
+    public AlertsPage alertsPage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -75,6 +76,7 @@ public class TestBaseWeb {
         resolveScreen = new ResolveScreen(page);
         tradingPage = new TradingPage(page);
         auditTrailPage = new AuditTrailPage(page);
+        alertsPage = new AlertsPage(page);
     }
 
     @AfterEach

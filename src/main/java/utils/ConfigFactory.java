@@ -84,16 +84,24 @@ public class ConfigFactory {
     public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
     public static final Double TIMEOUT = CONFIG.waitTimeout();
     // Backoffice UI users
+    public static final String ID_FIRST_LOGIN = CONFIG.idFirstLogin();
     public static final String USERNAME_FIRST_LOGIN = CONFIG.usernameFirstLogin();
     public static final String PASSWORD_FIRST_LOGIN = CONFIG.passwordFirstLogin();
     public static final String FIRST_NAME_FIRST_LOGIN = CONFIG.firstNameFirstLogin();
     public static final String LAST_NAME_FIRST_LOGIN = CONFIG.lastNameFirstLogin();
     public static final String EMAIL_FIRST_LOGIN = CONFIG.emailFirstLogin();
+    public static final String ID_CORE = CONFIG.idCore();
     public static final String USERNAME_CORE = CONFIG.usernameCore();
     public static final String PASSWORD_CORE = CONFIG.passwordCore();
     public static final String FIRST_NAME_CORE = CONFIG.firstNameCore();
     public static final String LAST_NAME_CORE = CONFIG.lastNameCore();
     public static final String EMAIL_CORE = CONFIG.emailCore();
+    public static final String ID_DEV = CONFIG.idDev();
+    public static final String USERNAME_DEV = CONFIG.usernameDev();
+    public static final String PASSWORD_DEV = CONFIG.passwordDev();
+    public static final String FIRST_NAME_DEV = CONFIG.firstNameDev();
+    public static final String LAST_NAME_DEV = CONFIG.lastNameDev();
+    public static final String EMAIL_DEV = CONFIG.emailDev();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -316,6 +324,9 @@ public class ConfigFactory {
 
         // Backoffice UI users
 
+        @Key("idFirstLogin")
+        String idFirstLogin();
+
         @Key("usernameFirstLogin")
         String usernameFirstLogin();
 
@@ -331,6 +342,9 @@ public class ConfigFactory {
         @Key("emailFirstLogin")
         String emailFirstLogin();
 
+        @Key("idCore")
+        String idCore();
+
         @Key("usernameCore")
         String usernameCore();
 
@@ -345,6 +359,24 @@ public class ConfigFactory {
 
         @Key("lastNameCore")
         String lastNameCore();
+
+        @Key("idDev")
+        String idDev();
+
+        @Key("usernameDev")
+        String usernameDev();
+
+        @Key("passwordDev")
+        String passwordDev();
+
+        @Key("emailDev")
+        String emailDev();
+
+        @Key("firstNameDev")
+        String firstNameDev();
+
+        @Key("lastNameDev")
+        String lastNameDev();
     }
 
     public static boolean isGitlab() {

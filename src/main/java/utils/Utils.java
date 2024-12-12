@@ -6,11 +6,13 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+
+import helpers.data.enums.Brand;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import static helpers.data.enums.Brand.*;
 
 public class Utils {
 
@@ -135,5 +137,18 @@ public class Utils {
         System.out.println("TIME DIFFERENCE IN MINUTES IS " + time);
 
         return time;
+    }
+
+    public static String getUcidByUserIdAndBrand(Integer userId, Brand brand) {
+        Map<Brand, String> brandToUcidBrandMap = new HashMap<>();
+        brandToUcidBrandMap.put(VANTAGE, "vantage");
+        brandToUcidBrandMap.put(VJP, "vjp");
+        brandToUcidBrandMap.put(VT, "vt");
+        brandToUcidBrandMap.put(PU_PRIME, "puprime");
+        brandToUcidBrandMap.put(STAR_TRADER, "startrader");
+        brandToUcidBrandMap.put(MONETA, "moneta");
+        brandToUcidBrandMap.put(ULTIMA_MARKETS, "ultimamarkets");
+        brandToUcidBrandMap.put(INFINOX, "infinox");
+        return String.format("%s-%s", userId, brandToUcidBrandMap.get(brand));
     }
 }

@@ -28,4 +28,46 @@ public class ClientFactory {
                 getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), faker.country().countryCode2().toUpperCase()
         );
     }
+
+    public static ClientHelper getRandomVjpClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.VJP);
+        return client;
+    }
+
+    public static ClientHelper getRandomVtClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.VT);
+        return client;
+    }
+
+    public static ClientHelper getRandomPuPrimeClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.PU_PRIME);
+        return client;
+    }
+
+    public static ClientHelper getRandomStarTraderClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.STAR_TRADER);
+        return client;
+    }
+
+    public static ClientHelper getRandomMonetaClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.MONETA);
+        return client;
+    }
+
+    public static ClientHelper getRandomUltimaMarketsClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.ULTIMA_MARKETS);
+        return client;
+    }
+
+    public static ClientHelper getRandomInfinoxClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.INFINOX);
+        return client;
+    }
 }
