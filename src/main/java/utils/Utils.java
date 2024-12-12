@@ -149,6 +149,6 @@ public class Utils {
         brandToUcidBrandMap.put(MONETA, "moneta");
         brandToUcidBrandMap.put(ULTIMA_MARKETS, "ultimamarkets");
         brandToUcidBrandMap.put(INFINOX, "infinox");
-        return String.format("%s-%s", userId, brandToUcidBrandMap.get(brand));
+        return String.format("%s-%s", brandToUcidBrandMap.get(brand), userId);
     }
 }
