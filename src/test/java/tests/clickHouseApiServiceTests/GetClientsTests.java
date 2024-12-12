@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponse;
-import businessObjects.api.clickhouseApiService.getClients.GetClientsResponseError;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import helpers.data.ClientHelper;
@@ -83,12 +83,12 @@ public class GetClientsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
-        GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", error.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
-        assertThat("Check response code", error.status, is("400"));
+        assertThat("Check response code", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
@@ -109,13 +109,13 @@ public class GetClientsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client.getServerId());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
-        GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", error.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Check response code", error.status, is("400"));
+        assertThat("Check response code", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
@@ -127,12 +127,12 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("serverId", 1);
         queryParams.put("tradingAccount", 1);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
-        GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         // Assert response
         assertThat("Check response code", response.code(), is(404));
-        assertThat("Check response code", error.error, containsString("Client not found"));
-        assertThat("Check response code", error.status, is("404"));
+        assertThat("Check response code", mappedResponse.error, containsString("Client not found"));
+        assertThat("Check response code", mappedResponse.status, is(404));
     }
 
     @ParameterizedTest
@@ -145,12 +145,12 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("tradingAccount", "");
         queryParams.put("serverId", 1);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
-        GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", error.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
-        assertThat("Check response code", error.status, is("400"));
+        assertThat("Check response code", mappedResponse.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @ParameterizedTest
@@ -163,11 +163,11 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("tradingAccount", 1);
         queryParams.put("serverId", serverId);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
-        GetClientsResponseError error = objectMapper.readValue(response.body().string(), GetClientsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", error.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
-        assertThat("Check response code", error.status, is("400"));
+        assertThat("Check response code", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat("Check response code", mappedResponse.status, is(400));
     }
 }

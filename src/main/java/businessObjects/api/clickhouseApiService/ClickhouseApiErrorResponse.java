@@ -1,8 +1,9 @@
-package businessObjects.api.clickhouseApiService.getCredits;
+package businessObjects.api.clickhouseApiService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GetCreditsResponseError {
+
+public class ClickhouseApiErrorResponse {
 
     @JsonProperty("error")
     public String error;
@@ -24,6 +25,6 @@ public class GetCreditsResponseError {
 
     @Override
     public String toString() {
-        return "GetCreditsResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
+        return "GetBonusesResponseError{" + "error='" + error + '\'' + ", status=" + status + ", type='" + type + '\'' + ", title='" + title + '\'' + ", detail='" + detail + '\'' + ", instance='" + instance + '\'' + '}';
     }
 }

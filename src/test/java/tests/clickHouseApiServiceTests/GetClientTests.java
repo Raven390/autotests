@@ -8,8 +8,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClient.GetClientResponse;
-import businessObjects.api.clickhouseApiService.getClient.GetClientResponseError;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import java.io.IOException;
@@ -81,10 +81,10 @@ public class GetClientTests extends TestBaseApi {
     public void getClientNotFoundTest() throws IOException {
         Response response = getClient("AlphaTick-999");
         assert response.body() != null;
-        GetClientResponseError responseBody = objectMapper.readValue(response.body().string(), GetClientResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 404", response.code(), is(404));
-        assertThat("Assert that code is 400", responseBody.status, is("404"));
-        assertThat("Assert that code is 400", responseBody.error, is("Client not found."));
+        assertThat("Assert that code is 400", mappedResponse.status, is(404));
+        assertThat("Assert that code is 400", mappedResponse.error, is("Client not found."));
     }
 
     @Test
@@ -93,11 +93,11 @@ public class GetClientTests extends TestBaseApi {
     public void getClientBadRequestTest() throws IOException {
         Response response = getClient(1);
         assert response.body() != null;
-        GetClientResponseError responseBody = objectMapper.readValue(response.body().string(), GetClientResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", responseBody.status, is("400"));
-        assertThat("Assert that code is 400", responseBody.error, containsString("Invalid clientId format"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
+        assertThat("Assert that code is 400", mappedResponse.error, containsString("Invalid clientId format"));
     }
 
     @Test

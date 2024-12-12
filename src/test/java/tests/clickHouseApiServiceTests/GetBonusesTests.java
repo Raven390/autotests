@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getBonuses.GetBonusesResponse;
-import businessObjects.api.clickhouseApiService.getBonuses.GetBonusesResponseError;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -184,7 +184,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientIds' for method parameter type List is not present"));
         assertThat("Assert error status", mappedResponse.status, is(400));
@@ -205,7 +205,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientIds' for method parameter type List is not present"));
         assertThat("Assert error status", mappedResponse.status, is(400));
@@ -222,7 +222,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: 'test'"));
@@ -241,7 +241,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: 'test'"));
@@ -260,7 +260,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.error, is("Invalid &quot;orderBy&quot; property format. The property may include only: clientId, createTime, actualAmount, actualAmountUSD"));
         assertThat("Assert status", mappedResponse.status, is(400));
@@ -277,7 +277,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.error, is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
         assertThat("Assert status", mappedResponse.status, is(400));
@@ -294,7 +294,7 @@ public class GetBonusesTests extends TestBaseApi {
         Response response = getBonuses(queryParams);
 
         assert response.body() != null;
-        GetBonusesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));

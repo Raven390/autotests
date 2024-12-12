@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClientTradingAccounts.GetClientTradingAccountsResponse;
-import businessObjects.api.clickhouseApiService.getClientTradingAccounts.GetClientTradingAccountsResponseError;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -76,7 +76,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
         // Assert response
         assert response.body() != null;
-        GetClientTradingAccountsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Check response code", response.code(), is(404));
         assertThat("Check response code", mappedResponse.status, is(404));
         assertThat("Check response code", mappedResponse.error, is("Client with clientId=vantage-1234 not found."));
@@ -91,7 +91,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
         // Assert response
         assert response.body() != null;
-        GetClientTradingAccountsResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Check response code", response.code(), is(400));
         assertThat("Check response code", mappedResponse.status, is(400));
         assertThat("Check response code", mappedResponse.error, is("Invalid clientId format: clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));

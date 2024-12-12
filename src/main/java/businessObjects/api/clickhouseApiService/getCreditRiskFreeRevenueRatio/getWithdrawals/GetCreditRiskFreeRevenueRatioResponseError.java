@@ -1,8 +1,9 @@
-package businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades;
+package businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class GetMirrorAccountsByTradesResponseError {
+
+public class GetCreditRiskFreeRevenueRatioResponseError {
 
     @JsonProperty("error")
     public String error;

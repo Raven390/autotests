@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades.GetMirrorAccountsByTradesResponse;
-import businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades.GetMirrorAccountsByTradesResponseError;
 import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -104,10 +104,10 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'symbol' for method parameter type String is not present"));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
     }
 
     @Test
@@ -121,9 +121,9 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
@@ -138,9 +138,9 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 

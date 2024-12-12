@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesResponse;
-import businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesResponseError;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -88,10 +88,10 @@ public class GetAbuseTypesTests extends TestBaseApi {
         Response response = getAbuseTypes(List.of("test"));
 
         assert response.body() != null;
-        GetAbuseTypesResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetAbuseTypesResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.error, is("Invalid \"clientId\" property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
-        assertThat("Assert status", mappedResponse.status, is("400"));
+        assertThat("Assert status", mappedResponse.status, is(400));
     }
 
     @AfterAll

@@ -50,6 +50,18 @@ public class Utils {
         return tomorrow.format(formatter);
     }
 
+    public static String getNextYearTimestampDbFormat() {
+        LocalDateTime tomorrow = LocalDateTime.now().plusYears(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPreviousYearTimestampDbFormat() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusYears(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return tomorrow.format(formatter);
+    }
+
     public static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
