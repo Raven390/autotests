@@ -13,7 +13,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("549")
     @DisplayName("Verify filtration by brand for suspicious clients")
     public void verifyBrandFiltrationTest() {
         investigationPage.navigate();
@@ -34,7 +34,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("550")
     @DisplayName("Verify filtration by rule for suspicious clients")
     public void verifyRuleFiltrationTest() {
         investigationPage.navigate();
@@ -53,7 +53,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("551")
     @DisplayName("Verify filtration by country for suspicious clients")
     public void verifyCountryFiltrationTest() {
         investigationPage.navigate();
@@ -74,7 +74,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
     public void verifyAssigneeFiltrationTest() {
         investigationPage.navigate();
@@ -93,7 +93,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("553")
     @DisplayName("Verify reset filtration functionality for suspicious clients")
     public void verifyResetFiltrationTest() {
         investigationPage.navigate();

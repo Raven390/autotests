@@ -91,10 +91,12 @@ public class InvestigationPage extends AbstractPage {
     private final Locator ruleCheckboxes;
     private final Locator countryCheckboxes;
     private final Locator assigneeCheckboxes;
+    private final Locator assignButton;
 
     private final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
     private final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
+    private final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'investigation_page__suspicious_client_card')]";
 
     public InvestigationPage(Page page) {
         super(page);
@@ -168,6 +170,7 @@ public class InvestigationPage extends AbstractPage {
         this.ruleCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__rules']/descendant::label[contains(@class,'g-checkbox')]");
         this.countryCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__countries']/descendant::label[contains(@class,'g-checkbox')]");
         this.assigneeCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__assignees']/descendant::label[contains(@class,'g-checkbox')]");
+        this.assignButton = page.locator("//button[@data-qa='investigation_tools__client_card_assign_button']");
     }
 
     @Step("Open the BackOffice main page")
@@ -530,13 +533,17 @@ public class InvestigationPage extends AbstractPage {
         );
     }
 
-    @Step("Verify client cards count is equal to actual number of client cards in the list")
-    public void verifyClientCardsCount() throws InterruptedException {
+    public void scrollClientCardsToBottom() throws InterruptedException {
         clientContainer.first().hover();
         for (int i = 0; i < 10; i++) {
             Thread.sleep(200);
             page.mouse().wheel(0, 500);
         }
+    }
+
+    @Step("Verify client cards count is equal to actual number of client cards in the list")
+    public void verifyClientCardsCount() throws InterruptedException {
+        scrollClientCardsToBottom();
         String style = clientContainer.last().getAttribute("style");
         String regex = "top:\\s*(\\d+)px";
         Pattern pattern = Pattern.compile(regex);
@@ -685,5 +692,17 @@ public class InvestigationPage extends AbstractPage {
         verifyNoRuleIsSelected();
         verifyNoCountryIsSelected();
         verifyNoAssigneeIsSelected();
+    }
+
+    @Step("Assign client with client id {clientId} to the current user")
+    public void assignClientByClientId(String clientId) {
+        Locator clientCard = page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId));
+        clientCard.hover();
+        clientCard.locator(assignButton).click();
+    }
+
+    @Step("Verify client card with client id {clientId} is visible")
+    public void verifyClientCardWithClientIdVisible(String clientId) {
+        assertThat("Assert client card with client id is visible", page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId)).isVisible(), equalTo(true));
     }
 }
