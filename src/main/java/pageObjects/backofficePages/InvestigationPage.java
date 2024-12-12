@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
 import businessObjects.db.auditServiceDb.Event;
@@ -78,8 +79,22 @@ public class InvestigationPage extends AbstractPage {
     private final Locator clientCardTimerElement;
     private final Locator clientCardAlertsCountElement;
     private final Locator currentTabCardsCountElement;
+    private final Locator suspiciousClientsFilterIcon;
+    private final Locator applyFilterButton;
+    private final Locator showMoreRulesButton;
+    private final Locator ruleSearchInput;
+    private final Locator resetBrandsButton;
+    private final Locator resetRulesButton;
+    private final Locator resetCountriesButton;
+    private final Locator resetAssigneeButton;
+    private final Locator brandButtons;
+    private final Locator ruleCheckboxes;
+    private final Locator countryCheckboxes;
+    private final Locator assigneeCheckboxes;
 
     private final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
+    private final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
+    private final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
 
     public InvestigationPage(Page page) {
         super(page);
@@ -141,6 +156,18 @@ public class InvestigationPage extends AbstractPage {
         this.clientCardTimerElement = page.locator("//div[contains(@class,'v-suspicious-client-card__timer')]");
         this.clientCardAlertsCountElement = page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
         this.currentTabCardsCountElement = page.locator("//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
+        this.suspiciousClientsFilterIcon = page.locator("//div[@class='v-investigation-tools-side-panel__filters']");
+        this.applyFilterButton = page.locator("//button[contains(@class,'g-button_width_max')]");
+        this.showMoreRulesButton = page.locator("//span[text()='Show more']/..");
+        this.ruleSearchInput = page.locator("//input[@placeholder='Search by rule']");
+        this.resetBrandsButton = page.locator("//div[@data-qa='suspicious_client_filters__brands']/descendant::span[text()='Reset']");
+        this.resetRulesButton = page.locator("//div[@data-qa='suspicious_client_filters__rules']/descendant::span[text()='Reset']");
+        this.resetCountriesButton = page.locator("//div[@data-qa='suspicious_client_filters__countries']/descendant::span[text()='Reset']");
+        this.resetAssigneeButton = page.locator("//div[@data-qa='suspicious_client_filters__assignees']/descendant::span[text()='Reset']");
+        this.brandButtons = page.locator("//div[@data-qa='suspicious_client_filters__brands']/descendant::button[contains(@class,'g-button_size_m')]");
+        this.ruleCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__rules']/descendant::label[contains(@class,'g-checkbox')]");
+        this.countryCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__countries']/descendant::label[contains(@class,'g-checkbox')]");
+        this.assigneeCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__assignees']/descendant::label[contains(@class,'g-checkbox')]");
     }
 
     @Step("Open the BackOffice main page")
@@ -199,7 +226,7 @@ public class InvestigationPage extends AbstractPage {
     }
 
     @Step("Check is  side menu folds")
-    public void sideMenuFoldButtonTest() throws InterruptedException {
+    public void sideMenuFoldButtonTest() {
         sideBarButton.isVisible();
         pageLogo.isVisible();
         alertList.isVisible();
@@ -532,4 +559,131 @@ public class InvestigationPage extends AbstractPage {
         page.waitForSelector(CLIENT_LIST_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    public void clickSuspiciousClientsFiltration() {
+        suspiciousClientsFilterIcon.click();
+    }
+
+    public void selectBrandFilterByText(String text) {
+        page.locator(String.format(FILTER_BUTTON_BY_TEXT_PATTERN, text)).click();
+    }
+
+    public void clickApplyFiltrationButton() {
+        applyFilterButton.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Verify all client cards have vantage image")
+    public void verifyBrandImagesAreVantageOnly() {
+        assertThat(clientContainer.count(), greaterThan(0));
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(brandImage);
+            assertThat("Assert that brand image is one for Vantage", child.getAttribute("src"), equalTo(VANTAGE_BRAND_IMAGE_SRC));
+        }
+    }
+
+    public void selectRuleWithNameWithSearch(String name) {
+        showMoreRulesButton.click();
+        ruleSearchInput.fill(name);
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, name)).click();
+    }
+
+    public void selectRuleWithName(String name) {
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, name)).click();
+    }
+
+    @Step("Verify all client cards are filtered by rule name {name}")
+    public void verifyAllCardsFilteredByRuleName(String name) {
+        for (int i = 0; i < clientContainer.count(); i++) {
+            clientContainer.nth(i).click();
+            String actualRuleName = new AlertsPage(page).getFirstAlertRuleName();
+            assertThat("Assert that each client card is filtered by rule name", actualRuleName, equalTo(name));
+        }
+    }
+
+    public void selectCountryFilter(String country) {
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, country)).click();
+    }
+
+    @Step("Verify all client cards are filtered by country {country}")
+    public void verifyAllCardsFilteredByCountry(String country) {
+        assertThat(clientContainer.count(), greaterThan(0));
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(countryCodeElement);
+            assertThat("Assert that country in client card is according to filtration", child.textContent(), equalTo(country));
+        }
+    }
+
+    public void selectAssigneeFilter(User assignee) {
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, assignee.getId())).click();
+    }
+
+    @Step("Verify all client cards are filtered by assignee")
+    public void verifyAllCardsFilteredByAssignee(User assignee) {
+        assertThat(clientContainer.count(), greaterThan(0));
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(clientAssignmentElement);
+            assertThat("Assert that assignee in client card is according to filtration", child.textContent(), equalTo(String.format("%s %s", assignee.getFirstName(), assignee.getLastName())));
+        }
+    }
+
+    public void verifyNoBrandIsSelected() {
+        for (int i = 0; i < brandButtons.count(); i++) {
+            Locator button = brandButtons.nth(i);
+            assertThat("Assert that each brand button is not selected", button.getAttribute("class"), not(containsString("g-button_view_action")));
+        }
+    }
+
+    public void verifyNoRuleIsSelected() {
+        for (int i = 0; i < ruleCheckboxes.count(); i++) {
+            Locator checkbox = ruleCheckboxes.nth(i);
+            assertThat("Assert that each rule checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+        }
+    }
+
+    public void verifyNoCountryIsSelected() {
+        for (int i = 0; i < countryCheckboxes.count(); i++) {
+            Locator checkbox = countryCheckboxes.nth(i);
+            assertThat("Assert that each country checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+        }
+    }
+
+    public void verifyNoAssigneeIsSelected() {
+        for (int i = 0; i < assigneeCheckboxes.count(); i++) {
+            Locator checkbox = assigneeCheckboxes.nth(i);
+            assertThat("Assert that each assignee checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
+        }
+    }
+
+    @Step("Press reset button for brands and verify that none are selected")
+    public void resetBrandFilterAndVerify() {
+        resetBrandsButton.click();
+        verifyNoBrandIsSelected();
+    }
+
+    @Step("Press reset button for rules and verify that none are selected")
+    public void resetRulesFilterAndVerify() {
+        resetRulesButton.click();
+        verifyNoRuleIsSelected();
+    }
+
+    @Step("Press reset button for countries and verify that none are selected")
+    public void resetCountriesFilterAndVerify() {
+        resetCountriesButton.click();
+        verifyNoCountryIsSelected();
+    }
+
+    @Step("Press reset button for assignee and verify that none are selected")
+    public void resetAssigneeFilterAndVerify() {
+        resetAssigneeButton.click();
+        verifyNoAssigneeIsSelected();
+    }
+
+    @Step("Press reset all button and verify that none of the filters are selected")
+    public void resetAllFiltersAndVerify() {
+        page.locator(String.format(FILTER_BUTTON_BY_TEXT_PATTERN, "Reset all")).click();
+        verifyNoBrandIsSelected();
+        verifyNoRuleIsSelected();
+        verifyNoCountryIsSelected();
+        verifyNoAssigneeIsSelected();
+    }
 }

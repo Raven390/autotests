@@ -23,6 +23,7 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws Exception {
+        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
         deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()));
         List<BackofficeUser> usersList = getObjectsFromDB(
                 DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()), BackofficeUser.class
@@ -49,6 +50,7 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws SQLException {
+        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
         deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()));
     }
 }
