@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getFloatingTradesGroupBy.GetFloatingTradesGroupByResponse;
-import businessObjects.api.clickhouseApiService.getFloatingTradesGroupBy.GetFloatingTradesGroupByResponseError;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -74,7 +74,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assert response.body() != null;
-        GetFloatingTradesGroupByResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 
@@ -108,7 +108,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
         Response response = getFloatingTradesGroupBy(queryParams);
 
         assert response.body() != null;
-        GetFloatingTradesGroupByResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
 

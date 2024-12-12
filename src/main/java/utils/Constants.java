@@ -43,6 +43,8 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY = "Clickhouse api. Get floating trades group by";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_POST_ABUSE_TYPES = "Clickhouse api. Post abuse types";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO = "Clickhouse api. Get credit risk free revenue ratio";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
@@ -81,6 +83,7 @@ public class Constants {
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm__tb_withdrawal";
     public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt__tb_credits";
+    public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt__tb_balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__mt5_trades";
     public static final String CONNECTIONS_V2_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
@@ -98,6 +101,7 @@ public class Constants {
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "bo.bo.backoffice_user";
     public static final String AGGR_MIRROR_ACCOUNTS_BY_TRADES = "vindex_test_api.aggr__mirror_accounts_by_trades";
     public static final String AGGR_CREDIT_EQUITY_RATE = "vindex_test_api.aggr__credit_equity_rate";
+    public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO = "vindex_test_api.aggr__credit_risk_free_revenue_ratio";
     public static final String BO_USER_ACTION_AUDIT_TABLE_NAME = "bo.bo.user_action_audit";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";

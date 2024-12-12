@@ -44,6 +44,8 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY_PATH = CONFIG.clickhouseGetFloatingTradesGroupBy();
     public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES_PATH = CONFIG.clickhouseGetMirrorAccountsByTrades();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
+    public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO_PATH = CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
+    public static final String CLICKHOUSE_API_GET_SWAP_FREE_FEES = CONFIG.clickhouseGetSwapFreeFees();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
@@ -227,6 +229,12 @@ public class ConfigFactory {
 
         @Key("clickhouseGetAbuseTypes")
         String clickhouseGetAbuseTypes();
+
+        @Key("clickhouseGetCreditRiskFreeRevenueRatio")
+        String clickhouseGetCreditRiskFreeRevenueRatio();
+
+        @Key("clickhouseGetSwapFreeFees")
+        String clickhouseGetSwapFreeFees();
 
         // Connection search
 

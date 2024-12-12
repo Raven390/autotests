@@ -1,6 +1,6 @@
 package tests.clickHouseApiServiceTests;
 
-import businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRatioResponseError;
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityResponse;
 import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
 import helpers.data.ClientHelper;
@@ -40,14 +40,14 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 
     @BeforeAll
-    public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
+    public static void setupData() throws ReflectiveOperationException, SQLException {
         data1 = generateCreditEquityRatioAccount(client1);
-        insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data1);
+        insertObjectToDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, data1);
     }
 
     @AfterAll
-    public static void teardownMirrorTrades() throws SQLException {
-        deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
+    public static void teardownData() throws SQLException {
+        deleteEntryFromDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
-        GetCreditEquityRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityRatioResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
@@ -104,7 +104,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
-        GetCreditEquityRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityRatioResponseError.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
