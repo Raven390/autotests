@@ -2,6 +2,7 @@ package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 
 import java.util.List;
 
@@ -48,10 +49,12 @@ public class AlertsPage extends AbstractPage {
         this.alertsLoading = page.locator("//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]").first();
     }
 
+    @Step("Get rule name of the first alert")
     public String getFirstAlertRuleName() {
         return firstAlertRuleName.first().textContent();
     }
 
+    @Step("Click refresh alert list button")
     public void clickRefreshButton() {
         refreshButton.click();
         refreshButtonDisabled.waitFor(new Locator.WaitForOptions().setState(DETACHED));
@@ -61,52 +64,63 @@ public class AlertsPage extends AbstractPage {
         alertsLoading.waitFor(new Locator.WaitForOptions().setState(DETACHED));
     }
 
+    @Step("Get text of the element with amount of the alerts")
     public String getAlertsCountText() {
         return alertCount.textContent();
     }
 
+    @Step("Get amount of all the alert cards")
     public int getAlertsCount() {
         return alertCard.count();
     }
 
+    @Step("Get list of dates for all the alert cards")
     public List<String> getAlertsDatesList() {
         return alertDate.allTextContents();
     }
 
+    @Step("Get list of time for all the alert cards")
     public List<String> getAlertsTimesList() {
         return alertCard.locator(alertTime).allTextContents();
     }
 
+    @Step("Get list of rule names for all the alert cards")
     public List<String> getAlertsRuleNamesList() {
         return alertCard.locator(alertRuleName).allTextContents();
     }
 
+    @Step("Get list of rule triggers for all the alert cards")
     public List<String> getAlertsRuleTriggersList() {
         return alertCard.locator(alertRuleTrigger).allTextContents();
     }
 
+    @Step("Get list of attributes for all the alert cards")
     public List<String> getAlertsAttributesList() {
         return alertCard.locator(alertAttributes).allTextContents();
     }
 
+    @Step("Filter active alerts")
     public void filterActiveAlerts() {
         alertStatusDropdown.click();
         alertStatusDropdownActive.click();
         waitForPageToLoad();
     }
 
+    @Step("Filter closed alerts")
     public void filterClosedAlerts() {
         alertStatusDropdown.click();
         alertStatusDropdownClosed.click();
         waitForPageToLoad();
     }
 
+    @Step("Filter all alerts")
     public void filterAllAlerts() {
         alertStatusDropdown.click();
         alertStatusDropdownAll.click();
         waitForPageToLoad();
     }
 
+    @Step("Get popup text after hovering over status of the first alert")
     public String getFirstAlertStatus() {
         alertStatus.first().hover();
         return alertPopup.textContent();
