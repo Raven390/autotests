@@ -705,4 +705,11 @@ public class InvestigationPage extends AbstractPage {
     public void verifyClientCardWithClientIdVisible(String clientId) {
         assertThat("Assert client card with client id is visible", page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId)).isVisible(), equalTo(true));
     }
+
+    @Step("Click client card with client id {clientId}")
+    public void clickClientCardByClientId(String clientId) {
+        Locator clientCard = page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId));
+        clientCard.hover();
+        clientCard.click();
+    }
 }
