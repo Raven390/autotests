@@ -40,7 +40,7 @@ public class AssignmentTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("548")
     @DisplayName("Assign a client to the current user and verify")
-    public void assignClientAndVerify() throws Exception {
+    public void assignClientAndVerifyTest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();

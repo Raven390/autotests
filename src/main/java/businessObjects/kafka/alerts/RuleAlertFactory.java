@@ -13,7 +13,7 @@ public class RuleAlertFactory {
         alert.rule = new RuleAlert.Rule();
         alert.rule.ver = "01";
         alert.rule.name = "Registration";
-        alert.rule.trigger = "registration";
+        alert.rule.trigger = "clientRegistration";
         alert.rule.fraudType = "MARKET_MANIPULATION";
         alert.rule.attributes = new RuleAlert.Rule.Attribute();
         alert.rule.attributes.stepName = "Linked market manipulator abuser";
