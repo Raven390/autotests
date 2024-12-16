@@ -6,6 +6,7 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
 
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GeneralPage {
@@ -42,11 +43,19 @@ public class GeneralPage {
     private final Locator poaNotAppliedPlaceholder;
     private final Locator poiNotAppliedPlaceholder;
     private final Locator historyDrawer;
+    private final Locator fullNameElement;
+    private final Locator registrationDateAgoElement;
+    private final Locator showHiddenDataButton;
+    private final Locator registrationSourceIb;
+    private final Locator registrationSourceCpa;
 
     private final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
     private final String KYC_STATUS_SELECTOR = "[data-qa=\"investigation_tools_kyc__status\"]";
-
+    private final String GENERAL_TAB_LOADING_ELEMENT = "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
+    private final String GENERAL_INFO_HEADER = "//div[@class='v-investigation-tools-general-info__header']";
+    private final String ELEMENT_BY_LABEL_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
+    private final String BUTTON_LOADING = "//button[contains(@class,'g-button_loading')]";
 
     public GeneralPage(Page page) {
         this.page = page;
@@ -81,12 +90,23 @@ public class GeneralPage {
         this.kycIdRow = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"]");
         this.kycIdRowDetails = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"] [data-qa=\"investigation_tools_kyc_row__params\"]");
         this.historyDrawer = page.locator("[data-qa=\"drawer_body\"]");
+        this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
+        this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
+        this.showHiddenDataButton = page.locator("//button[@data-qa='investigation_page__general_info_unmask_btn']");
+        this.registrationSourceIb = page.locator("//span[text()='IB']/following-sibling::span");
+        this.registrationSourceCpa = page.locator("//span[text()='CPA']/following-sibling::span");
     }
 
     @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
         waitForPageToLoad();
+        generalTab.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Click general tab")
+    public void clickGeneralTabButton() {
         generalTab.click();
         waitForPageToLoad();
     }
@@ -216,9 +236,97 @@ public class GeneralPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
-        page.waitForSelector(LOADING_SPINNER_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(GENERAL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    @Step("Get full name")
+    public String getFullName() {
+        return fullNameElement.textContent();
+    }
 
+    @Step("Get registration date ago")
+    public String getRegistrationDateAgo() {
+        return registrationDateAgoElement.textContent();
+    }
+
+    @Step("Click show hidden data button")
+    public void clickShowHiddenDataButton() {
+        showHiddenDataButton.click();
+        page.waitForSelector(BUTTON_LOADING, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.DETACHED));
+    }
+
+    public String getElementTextByLabel(String label) {
+        return page.locator(String.format(ELEMENT_BY_LABEL_PATTERN, label)).textContent();
+    }
+
+    @Step("Get client id")
+    public String getClientId() {
+        return getElementTextByLabel("Client ID");
+    }
+
+    @Step("Get registration date")
+    public String getRegistrationDate() {
+        return getElementTextByLabel("Registered");
+    }
+
+    @Step("Get brand")
+    public String getBrand() {
+        return getElementTextByLabel("Brand");
+    }
+
+    @Step("Get regulator")
+    public String getRegulator() {
+        return getElementTextByLabel("Regulator");
+    }
+
+    @Step("Get gender")
+    public String getGender() {
+        return getElementTextByLabel("Gender");
+    }
+
+    @Step("Get date of birth")
+    public String getDateOfBirth() {
+        return getElementTextByLabel("Date of birth");
+    }
+
+    @Step("Get country")
+    public String getCountry() {
+        return getElementTextByLabel("Country");
+    }
+
+    @Step("Get nationality")
+    public String getNationality() {
+        return getElementTextByLabel("Nationality");
+    }
+
+    @Step("Get email address")
+    public String getEmailAddress() {
+        return getElementTextByLabel("Email address");
+    }
+
+    @Step("Get phone number")
+    public String getPhoneNumber() {
+        return getElementTextByLabel("Phone number");
+    }
+
+    @Step("Get 2 factor auth")
+    public String get2FactorAuth() {
+        return getElementTextByLabel("2-Factor Auth");
+    }
+
+    @Step("Get registration source IB")
+    public String getRegistrationSourceIb() {
+        return registrationSourceIb.textContent();
+    }
+
+    @Step("Get registration source CPA")
+    public String getRegistrationSourceCpa() {
+        return registrationSourceCpa.textContent();
+    }
+
+    @Step("Verify kyc section is visible")
+    public void verifyKycSectionIsVisible() {
+        assertThat(kyclInfoSection).isVisible();
+    }
 }
 
