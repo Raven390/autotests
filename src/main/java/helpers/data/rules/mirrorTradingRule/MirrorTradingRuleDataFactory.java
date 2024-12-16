@@ -141,7 +141,7 @@ public class MirrorTradingRuleDataFactory {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd4_2Client);
         data.mtTbCreditsObjects.add(generateCreditsByClient(data.clientHelper));
         AggrCreditEquityRateObject creditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
-        creditEquityRate.creditEquityRatio = 0.4d;
+        creditEquityRate.creditRiskFreeRevenueRatio = 0.4d;
         data.aggrCreditEquityRate = creditEquityRate;
         return data;
     }

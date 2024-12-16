@@ -38,6 +38,11 @@ public class RegistrationRuleTest {
         dbDataMap = setupRegistrationRuleData();
     }
 
+    @AfterAll
+    public static void deleteDbData() throws Exception {
+        deleteRegistrationRuleData(dbDataMap);
+    }
+
     @Test
     @DisplayName("Registration rule exit Event_End_1")
     @AllureId("155")
@@ -119,8 +124,7 @@ public class RegistrationRuleTest {
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -178,8 +182,7 @@ public class RegistrationRuleTest {
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_set_manual_withdrawal_restriction_1", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -237,7 +240,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -577,7 +580,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_2", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_2", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -643,7 +646,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_2", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_2", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
 
@@ -761,7 +764,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_6", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_6", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
         // TODO add check for one more restriction when it's implemented
@@ -892,8 +895,7 @@ public class RegistrationRuleTest {
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_7", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_7", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -957,8 +959,7 @@ public class RegistrationRuleTest {
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_7", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_7", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
 
@@ -1024,7 +1025,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_9", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1212,7 +1213,7 @@ public class RegistrationRuleTest {
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 9L, "Registration_SetRestriction_12", "APPLIED");
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_12", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1273,8 +1274,7 @@ public class RegistrationRuleTest {
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
 
         ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_a-book_restriction", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 7L, "Registration_a-book_restriction", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -1334,10 +1334,5 @@ public class RegistrationRuleTest {
         );
 
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
-    }
-
-    @AfterAll
-    public static void deleteDbData() throws Exception {
-        deleteRegistrationRuleData(dbDataMap);
     }
 }

@@ -8,4 +8,4 @@
 /test-output/videos/
 /visual-comparsion/current-screenshots/
 /visual-comparsion/result-screenshots/
-consumer-groups
+/src/main/resources/config/consumer-groups
