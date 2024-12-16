@@ -589,8 +589,6 @@ public class InvestigationPage extends AbstractPage {
     }
 
     public void selectRuleWithNameWithSearch(String name) {
-        showMoreRulesButton.click();
-        ruleSearchInput.fill(name);
         page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, name)).click();
     }
 
