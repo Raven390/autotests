@@ -45,6 +45,12 @@ public class GetAbuseTypesTests extends TestBaseApi {
         insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
     }
 
+    @AfterAll
+    public static void teardownAbuseTypes() throws SQLException {
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1.ucid));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.ucid));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get abuse types single client success (200)")
     @AllureId("429")
@@ -92,11 +98,5 @@ public class GetAbuseTypesTests extends TestBaseApi {
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.error, is("Invalid \"clientId\" property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
         assertThat("Assert status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownAbuseTypes() throws SQLException {
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1.ucid));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.ucid));
     }
 }

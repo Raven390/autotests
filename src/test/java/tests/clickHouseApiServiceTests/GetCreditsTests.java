@@ -48,6 +48,11 @@ public class GetCreditsTests extends TestBaseApi {
         insertObjectToDb(MT_CREDITS_TABLE_NAME, credit2);
     }
 
+    @AfterAll
+    public static void teardownCredits() throws SQLException {
+        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit1.ucid));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get client credits by all params")
     @AllureId("402")
@@ -330,10 +335,5 @@ public class GetCreditsTests extends TestBaseApi {
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, is("/v1/credits"));
         assertThat("Assert error status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownCredits() throws SQLException {
-        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit1.ucid));
     }
 }

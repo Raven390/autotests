@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by with all params (200)")
     @AllureId("218")
-    public void getMirrorTradeAccountsByTradesTest1() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest1() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -68,7 +67,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by with no params (400)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest2() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getFloatingTradesGroupBy(queryParams);
@@ -81,7 +80,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by with required params only")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest3() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest3() throws IOException {
         ClientHelper client = getRandomClient();
 
         //Send request
@@ -98,7 +97,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group only by tradingAccount (400)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest4() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest4() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -115,7 +114,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group only by serverId (400)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest5() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest5() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -132,7 +131,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by dateFrom (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest6() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest6() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -151,7 +150,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by dateTo (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest7() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest7() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -170,7 +169,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by date range (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest8() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest8() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -190,7 +189,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by entity (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest9() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest9() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -209,7 +208,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by action (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest10() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest10() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -228,7 +227,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=createdTime (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest11() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest11() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -247,7 +246,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest12() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest12() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -266,7 +265,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest13() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest13() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -285,7 +284,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=createdTime and sortOrder=asc(200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest14() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest14() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -305,7 +304,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount and sortOrder=asc(200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest15() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest15() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -325,7 +324,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount and sortOrder=asc (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest16() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest16() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -345,7 +344,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=createdTime and sortOrder=desc(200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest17() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest17() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -365,7 +364,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount and sortOrder=desc(200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest18() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest18() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -385,7 +384,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by orderBy=actualAmount and sortOrder=desc (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTest19() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest19() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 
@@ -405,7 +404,7 @@ public class GetFloatingTradesGroupBy extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get floating trades group by limit (200)")
     @AllureId("")
-    public void getMirrorTradeAccountsByTradesTes20() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTes20() throws IOException {
         ClientHelper client = getRandomClient();
         // TODO prepare test data
 

@@ -47,6 +47,11 @@ public class GetDepositsTests extends TestBaseApi {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
     }
 
+    @AfterAll
+    public static void teardownDeposits() throws SQLException {
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit1.ucid));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get Deposits by all params")
     @AllureId("390")
@@ -294,10 +299,5 @@ public class GetDepositsTests extends TestBaseApi {
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
         assertThat("Assert error status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownDeposits() throws SQLException {
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit1.ucid));
     }
 }

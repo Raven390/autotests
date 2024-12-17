@@ -96,7 +96,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with account and serverId (400)")
     @AllureId("437")
-    public void getMirrorTradeAccountsByTradesTest3() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
@@ -164,7 +164,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades dateTo (200)")
     @AllureId("441")
-    public void getMirrorTradeAccountsByTradesTest7() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -199,7 +199,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by serverId (200)")
     @AllureId("443")
-    public void getMirrorTradeAccountsByTradesTest10() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -217,7 +217,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by symbol (200)")
     @AllureId("444")
-    public void getMirrorTradeAccountsByTradesTest11() throws IOException, ReflectiveOperationException, SQLException {
+    public void getMirrorTradeAccountsByTradesTest11() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
