@@ -39,7 +39,7 @@ public class FirstLoginTest extends TestBaseWeb {
     public void verifyUserDataSavedAfterFirstLoginTest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginAsFirstLoginUser();
-        generalPage.waitForPageToLoad();
+        investigationPage.waitForPageToLoad();
         List<BackofficeUser> usersList = getObjectsFromDB(
                 DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()), BackofficeUser.class
         );
