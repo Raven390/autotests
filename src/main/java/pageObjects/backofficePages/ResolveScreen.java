@@ -27,6 +27,7 @@ public class ResolveScreen {
     private final Locator completeInvestigationButton;
     private final Locator successToast;
     private final Locator closeToastButtom;
+    private final Locator cleanFraudListButton;
 
     public ResolveScreen(Page page) {
         this.page = page;
@@ -43,6 +44,7 @@ public class ResolveScreen {
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
         this.successToast = page.locator(".g-toast__title").getByText("Investigation completed");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
+        this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
 
 
     }
@@ -106,6 +108,14 @@ public class ResolveScreen {
         successToast.isVisible();
     }
 
+    @Step("Resolve without any actions")
+    public void resolveNoFrauds(String comment) {
+        commentInput.fill(comment);
+        cleanFraudListButton.click();
+        completeInvestigationButton.click();
+        successToast.isVisible();
+    }
+
     @Step("Check withdrawal approval message in Kafka")
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
@@ -117,7 +127,7 @@ public class ResolveScreen {
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
-        apply.transferId.equals(transactionID);
+        assertTrue(apply.transferId.equals(String.valueOf(transactionID)));
         assertNotNull((apply.regulator));
         assertNotNull((apply.brand));
         assertNotNull((apply.timestamp));
