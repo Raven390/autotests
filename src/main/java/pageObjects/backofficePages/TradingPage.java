@@ -7,6 +7,10 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import utils.Utils;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -56,6 +60,36 @@ public class TradingPage extends AbstractPage {
     private final Locator durationFromInput;
     private final Locator profitToInput;
     private final Locator profitFromInput;
+    private final Locator accountCard;
+    private final Locator accountId;
+    private final Locator balanceElement;
+    private final Locator statusElement;
+    private final Locator platformElement;
+    private final Locator accountTypeElement;
+    private final Locator createdTimeElement;
+    private final Locator updatedTimeElement;
+    private final Locator popupElement;
+    private final Locator tableViewButton;
+    private final Locator accountRow;
+    private final Locator accountTableId;
+    private final Locator accountTablePlatform;
+    private final Locator accountTableType;
+    private final Locator accountTableStatus;
+    private final Locator accountTableCreated;
+    private final Locator accountTableUpdated;
+    private final Locator accountTableBalance;
+    private final Locator accountTableTotalPnl;
+    private final Locator accountTableEquity;
+    private final Locator accountTableCredit;
+    private final Locator accountTableLeverage;
+    private final Locator accountTableMarginFree;
+    private final Locator accountTableServer;
+    private final Locator accountTableGroup;
+
+    private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
+    private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
+    private static final String ACCOUNT_TABLE_COLUMN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
+    private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
 
     public TradingPage(Page page) {
         super(page);
@@ -103,6 +137,31 @@ public class TradingPage extends AbstractPage {
         this.durationToInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.profitFromInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
         this.profitToInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.accountCard = page.locator("//div[@class='v-trading-tab-accounts-card']");
+        this.accountId = page.locator("//span[contains(@class,'g-text_variant_subheader-2')]");
+        this.balanceElement = page.locator("//div[@class='v-trading-tab-accounts-card__balance']");
+        this.statusElement = page.locator("//div[contains(@class,'v-trading-account-status-label')]/div[@class='v-text-with-icon__text']");
+        this.platformElement = page.locator("//div[@class='v-trading-tab-accounts-card__left-col-footer']/div[@class='v-trading-tab-accounts-card__tooltip-wrap'][2]/descendant::div[@class='v-text-with-icon__text']");
+        this.accountTypeElement = page.locator("//div[contains(@class,'v-trading-tab-accounts-card__account-type')]/descendant::div[@class='v-text-with-icon__text']");
+        this.createdTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[1]/descendant::div[@class='v-text-with-icon__text']"));
+        this.updatedTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[2]/descendant::div[@class='v-text-with-icon__text']"));
+        this.popupElement = page.locator(POPUP_ELEMENT_XPATH);
+        this.tableViewButton = page.locator("//input[@value='TABLE']");
+        this.accountRow = page.locator("//tr[contains(@class,'g-table__row_vertical-align_top')]");
+        this.accountTableId = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_primary')]"));
+        this.accountTablePlatform = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
+        this.accountTableType = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_type')]/div");
+        this.accountTableStatus = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_status')]/div/div");
+        this.accountTableCreated = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_created')]/div");
+        this.accountTableUpdated = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_updated')]/div");
+        this.accountTableBalance = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_balance')]/div");
+        this.accountTableTotalPnl = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_pnl')]/div");
+        this.accountTableEquity = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_equity')]/div");
+        this.accountTableCredit = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_credit')]/div");
+        this.accountTableLeverage = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_leverage')]/div");
+        this.accountTableMarginFree = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_margin-free')]/div");
+        this.accountTableServer = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_server')]/div");
+        this.accountTableGroup = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_group')]/div");
     }
 
     @Step("Navigate to users trading tab")
@@ -124,12 +183,10 @@ public class TradingPage extends AbstractPage {
         waitForPageToLoad();
     }
 
-    @Step("Open users restriction tab")
+    @Step("Open users trading tab")
     public void openTradingTab() {
-        Allure.step("Open users trading tab/operations");
         waitForPageToLoad();
         tradingTab.click();
-        operationsTab.click();
         waitForPageToLoad();
     }
 
@@ -307,4 +364,211 @@ public class TradingPage extends AbstractPage {
         page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    private int getAccountIndex(int accId) {
+        for (int i = 0; i < accountCard.count(); i++) {
+            Locator child = accountCard.nth(i).locator(accountId).last();
+            if (Objects.equals(child.textContent(), String.valueOf(accId))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException(String.format("Account with accountId '%s' not found", accId));
+    }
+
+    @Step("Get account balance in card view")
+    public String getAccountBalance(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_header-2')]").textContent();
+    }
+
+    @Step("Get account balance usd in card view")
+    public String getAccountBalanceUsd(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_subheader-2')]").textContent();
+    }
+
+    @Step("Get account status in card view")
+    public String getAccountStatus(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(statusElement).textContent();
+    }
+
+    @Step("Get account platform in card view")
+    public String getAccountPlatform(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(platformElement).textContent();
+    }
+
+    @Step("Get account type in card view")
+    public String getAccountType(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(accountTypeElement).textContent();
+    }
+
+    @Step("Get account total pnl in card view")
+    public String getAccountTotalPnl(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Total PNL")).textContent();
+    }
+
+    @Step("Get account equity in card view")
+    public String getAccountEquity(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Equity")).textContent();
+    }
+
+    @Step("Get account credit in card view")
+    public String getAccountCredit(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Credit")).textContent();
+    }
+
+    @Step("Get account leverage in card view")
+    public String getAccountLeverage(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Leverage")).textContent();
+    }
+
+    @Step("Get account margin free in card view")
+    public String getAccountMarginFree(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Margin free")).textContent();
+    }
+
+    @Step("Get account server in card view")
+    public String getAccountServer(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Server")).textContent();
+    }
+
+    @Step("Get account group in card view")
+    public String getAccountGroup(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Group")).textContent();
+    }
+
+    @Step("Get account created time in card view")
+    public String getAccountCreatedTime(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(createdTimeElement).textContent();
+    }
+
+    @Step("Get account updated time in card view")
+    public String getAccountUpdatedTime(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(updatedTimeElement).textContent();
+    }
+
+    @Step("Verify account id popup in card view is as expected")
+    public void verifyAccountIdPopup() {
+        accountCard.first().locator(accountId).last().hover();
+        assertThat(popupElement).containsText("Login");
+    }
+
+    @Step("Verify account balance popup in card view is as expected")
+    public void verifyBalancePopup(int accountId) {
+        accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_header-2')]").hover();
+        assertThat(popupElement).containsText("Balance");
+    }
+
+    @Step("Verify account balance usd popup in card view is as expected")
+    public void verifyBalanceUsdPopup(int accountId) {
+        accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_subheader-2')]").hover();
+        assertThat(popupElement).containsText("Balance in USD");
+    }
+
+    @Step("Verify account status popup in card view is as expected")
+    public void verifyStatusPopup() {
+        accountCard.first().locator(statusElement).hover();
+        assertThat(popupElement).containsText("Status");
+    }
+
+    @Step("Verify account platform popup in card view is as expected")
+    public void verifyPlatformPopup() {
+        accountCard.first().locator(platformElement).hover();
+        assertThat(popupElement).containsText("Platform");
+    }
+
+    @Step("Verify account type popup in card view is as expected")
+    public void verifyAccountTypePopup() {
+        accountCard.first().locator(accountTypeElement).hover();
+        assertThat(popupElement).containsText("Account type");
+    }
+
+    @Step("Verify account created time popup in card view is as expected")
+    public void verifyCreatedTimePopup() {
+        accountCard.first().locator(createdTimeElement).hover();
+        assertThat(popupElement).containsText("Created time");
+    }
+
+    @Step("Verify account updated time popup in card view is as expected")
+    public void verifyUpdatedTimePopup() {
+        accountCard.first().locator(updatedTimeElement).hover();
+        assertThat(popupElement).containsText("Updated time");
+    }
+
+    @Step("Click table view button")
+    public void clickTableViewButton() {
+        tableViewButton.click();
+    }
+
+    private int getAccountIndexTableView(int accId) {
+        for (int i = 0; i < accountRow.count(); i++) {
+            Locator child = accountRow.nth(i).locator(accountTableId);
+            if (Objects.equals(child.textContent(), String.valueOf(accId))) {
+                return i;
+            }
+        }
+        throw new NoSuchElementException(String.format("Account with accountId '%s' not found", accId));
+    }
+
+    @Step("Get account platform in table view")
+    public String getAccountTablePlatform(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTablePlatform).textContent();
+    }
+
+    @Step("Get account type in table view")
+    public String getAccountTableType(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableType).textContent();
+    }
+
+    @Step("Get account status in table view")
+    public String getAccountTableStatus(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableStatus).textContent();
+    }
+
+    @Step("Get account created time in table view")
+    public String getAccountTableCreated(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableCreated).textContent();
+    }
+
+    @Step("Get account updated time in table view")
+    public String getAccountTableUpdated(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableUpdated).textContent();
+    }
+
+    @Step("Get account balance in table view")
+    public String getAccountTableBalance(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableBalance).textContent();
+    }
+
+    @Step("Get account total pnl in table view")
+    public String getAccountTableTotalPnl(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableTotalPnl).textContent();
+    }
+
+    @Step("Get account equity in table view")
+    public String getAccountTableEquity(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableEquity).textContent();
+    }
+
+    @Step("Get account credit in table view")
+    public String getAccountTableCredit(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableCredit).textContent();
+    }
+
+    @Step("Get account leverage in table view")
+    public String getAccountTableLeverage(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableLeverage).textContent();
+    }
+
+    @Step("Get account margin free in table view")
+    public String getAccountTableMarginFree(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableMarginFree).textContent();
+    }
+
+    @Step("Get account server in table view")
+    public String getAccountTableServer(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableServer).textContent();
+    }
+
+    @Step("Get account group in table view")
+    public String getAccountTableGroup(int accountId) {
+        return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableGroup).textContent();
+    }
 }
