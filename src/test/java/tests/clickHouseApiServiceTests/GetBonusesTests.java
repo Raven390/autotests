@@ -46,6 +46,11 @@ public class GetBonusesTests extends TestBaseApi {
         insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus2);
     }
 
+    @AfterAll
+    public static void teardownBonuses() throws SQLException {
+        deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus1.ucid));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by all params")
     @AllureId("415")
@@ -300,10 +305,5 @@ public class GetBonusesTests extends TestBaseApi {
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, is("/v1/bonuses"));
         assertThat("Assert error status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownBonuses() throws SQLException {
-        deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus1.ucid));
     }
 }

@@ -64,7 +64,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
         );
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.size(), is(2));
-        assertThat("Check list size", mappedResponse, containsInAnyOrder(response1, response2));
+        assertThat("Check list data", mappedResponse, containsInAnyOrder(response1, response2));
     }
 
     @Test

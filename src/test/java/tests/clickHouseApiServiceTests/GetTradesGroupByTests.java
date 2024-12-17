@@ -49,6 +49,11 @@ public class GetTradesGroupByTests extends TestBaseApi {
         insertObjectToDb(MT5_DEALS_TABLE_NAME, trade4);
     }
 
+    @AfterAll
+    public static void teardownTradesGroupBy() throws SQLException {
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", ACCOUNT_ID));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with mandatory params (200)")
     @AllureId("213")
@@ -450,10 +455,5 @@ public class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
-    }
-
-    @AfterAll
-    public static void teardownTradesGroupBy() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", ACCOUNT_ID));
     }
 }

@@ -47,6 +47,11 @@ public class GetWithdrawalsTests extends TestBaseApi {
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal2);
     }
 
+    @AfterAll
+    public static void teardownWithdrawals() throws SQLException {
+        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal1.ucid));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get Withdrawals by all params")
     @AllureId("378")
@@ -294,10 +299,5 @@ public class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, is("/v1/withdrawals"));
         assertThat("Assert error status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownWithdrawals() throws SQLException {
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal1.ucid));
     }
 }

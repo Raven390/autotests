@@ -50,6 +50,11 @@ public class GetTradesTests extends TestBaseApi {
         insertObjectToDb(MT5_DEALS_TABLE_NAME, trade2);
     }
 
+    @AfterAll
+    public static void teardownTrades() throws SQLException {
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", account));
+    }
+
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
     @AllureId("214")
@@ -349,10 +354,5 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
         assertThat("Assert instance", mappedResponse.instance, is("/v1/trades"));
         assertThat("Assert error status", mappedResponse.status, is(400));
-    }
-
-    @AfterAll
-    public static void teardownTrades() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", account));
     }
 }
