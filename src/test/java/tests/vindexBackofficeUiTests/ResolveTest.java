@@ -10,8 +10,7 @@ import tests.TestBaseWeb;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.database.AuditHelper.cleanUserAudit;
-import static helpers.database.BoHelper.checkUserFraudDB;
-import static helpers.database.BoHelper.deleteUserBO;
+import static helpers.database.BoHelper.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.LAYER_WEB;
 import static utils.Constants.TEAM_BACKOFFICE;
@@ -23,7 +22,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions approve all")
-    public void resolveWithWithdrawalsApproveAll() throws Exception {
+    public void resolveWithWithdrawalsApproveAllTest() throws Exception {
         cleanUserAudit("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
@@ -46,7 +45,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions reject all")
-    public void resolveWithWithdrawalsRejectAll() throws Exception {
+    public void resolveWithWithdrawalsRejectAllTest() throws Exception {
         cleanUserAudit("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
@@ -68,7 +67,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions approve one")
-    public void resolveWithWithdrawalsApproveOne() throws Exception {
+    public void resolveWithWithdrawalsApproveOneTest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         //first run
@@ -104,7 +103,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("286")
     @DisplayName("BO user can assign suspicious client with the active alert to himself to perform investigation from the alert list")
-    public void assignAlertList() throws Exception {
+    public void assignAlertListTest() throws Exception {
         String clientUcid = "infinox-161601";
         String clientId = "161601";
         deleteUserBO(clientUcid);
@@ -123,7 +122,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("226")
     @DisplayName("BO user can assign suspicious client with the active alert to himself to perform investigation from the client card")
-    public void assignClientCard() throws Exception {
+    public void assignClientCardTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -140,7 +139,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("301")
     @DisplayName("BO user can resolve client in with fraud type Affiliate abuse")
-    public void resolveClientAffiliateAbuse() throws Exception {
+    public void resolveClientAffiliateAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -160,7 +159,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("298")
     @DisplayName("BO user can resolve client in with fraud type Gap trading")
-    public void resolveClientGapTrading() throws Exception {
+    public void resolveClientGapTradingTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -179,7 +178,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("294")
     @DisplayName("BO user can resolve client in with fraud type HEDGING")
-    public void resolveClientGapHEDGING() throws Exception {
+    public void resolveClientHedgingTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -198,7 +197,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("295")
     @DisplayName("BO user can resolve client in with fraud type LATENCY_ARBITRAGE")
-    public void resolveClientGapLATENCY_ARBITRAGE() throws Exception {
+    public void resolveClientGapLatencyArbitrageTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -217,7 +216,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("304")
     @DisplayName("BO user can resolve client in with fraud type LOSS_VOUCHER_ABUSE")
-    public void resolveClientGapLOSS_VOUCHER_ABUSE() throws Exception {
+    public void resolveClientGapLossVoucherAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -236,7 +235,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("296")
     @DisplayName("BO user can resolve client in with fraud type MARKET_MANIPULATION")
-    public void resolveClientGapMARKET_MANIPULATION() throws Exception {
+    public void resolveClientGapMarketManipulationTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -255,7 +254,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("305")
     @DisplayName("BO user can resolve client in with fraud type NBP_ABUSE")
-    public void resolveClientGapNBP_ABUSE() throws Exception {
+    public void resolveClientGapNBPAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -274,7 +273,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("307")
     @DisplayName("BO user can resolve client in with fraud type POTENTIAL_ABUSE")
-    public void resolveClientGapPOTENTIAL_ABUSE() throws Exception {
+    public void resolveClientGapPotentialAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -293,7 +292,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("297")
     @DisplayName("BO user can resolve client in with fraud type PRICING_ERRORS")
-    public void resolveClientGapPRICING_ERRORS() throws Exception {
+    public void resolveClientGapPricingErrorsTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -312,7 +311,7 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("302")
     @DisplayName("BO user can resolve client in with fraud type RAF_ABUSE")
-    public void resolveClientGapRAF_ABUSE() throws Exception {
+    public void resolveClientGapRAFAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
@@ -324,5 +323,81 @@ public class ResolveTest extends TestBaseWeb {
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
         checkUserFraudDB(clientUcid, 9);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("303")
+    @DisplayName("BO user can resolve client in with fraud type REBATE_CHURNING")
+    public void resolveClientGapRebateChurningTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "REBATE_CHURNING");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveSimple("test" + timestamp);
+        checkUserFraudDB(clientUcid, 10);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("299")
+    @DisplayName("BO user can resolve client in with fraud type SWAP_ARBITRAGE")
+    public void resolveClientSwapArbitrageTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "SWAP_ARBITRAGE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveSimple("test" + timestamp);
+        checkUserFraudDB(clientUcid, 6);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("306")
+    @DisplayName("BO user can resolve client in with fraud type TLS_ABUSE")
+    public void resolveClientTLSAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveSimple("test" + timestamp);
+        checkUserFraudDB(clientUcid, 13);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("325")
+    @DisplayName("BO user can resolve client without any applied fraud")
+    public void resolveClientNoFraudTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveNoFrauds("test" + timestamp);
+        checkUserNoFraudDb(clientUcid);
     }
 }

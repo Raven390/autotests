@@ -10,7 +10,7 @@ import java.util.List;
 
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.BO_CLIENT_TABLE_NAME;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
@@ -56,6 +56,23 @@ public class BoHelper {
         System.out.println("FRAUD ID " + fraud);
 
         assertEquals(expectedFraud, fraud);
+    }
+
+    @Step("Check that user NOT have record about fraud in db")
+    public static void checkUserNoFraudDb(String ucid) throws Exception {
+        Allure.step("Check that user have record about fraud in db");
+        Thread.sleep(2000);
+        long fraud = 0;
+
+        List<Client> client = getObjectsFromDB(DbName.BO, "bo.bo.client", "ucid = '" + ucid + "'", Client.class);
+        int boId = client.getFirst().id;
+        System.out.println("CLIENT ID IN BO " + boId);
+        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, "bo.bo.clients_fraud_types", "client_id = '" + boId + "'", ClientFraudTypes.class);
+        Thread.sleep(100);
+
+        assertEquals(clientFraudTypes.size(), 0);
+
+        assertNull(clientFraudTypes);
     }
 
 }

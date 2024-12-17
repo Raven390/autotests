@@ -1,9 +1,6 @@
 package pageObjects.backofficePages;
 
-import com.microsoft.playwright.APIResponse;
-import com.microsoft.playwright.Locator;
-import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Route;
+import com.microsoft.playwright.*;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -42,6 +39,9 @@ public class ConnectionPage extends AbstractPage {
     private final Locator registeredCell;
     private final Locator lastLoginCell;
     private final Locator graphLinkCell;
+    private final Locator connectionCardSwitch;
+    private final Locator connectionCard;
+    private final Locator connectionCardLink;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -49,6 +49,16 @@ public class ConnectionPage extends AbstractPage {
     private final String LEVEL_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_level";
     private final String CONNECTION_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_connection";
     private final String GRAPH_LINK_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_graph-link";
+    private final String CONNECTION_NODE_SELECTOR = ".v-graph-node";
+    private final String CONNECTION_CARD_SWITCH_ON_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button[contains(@class, 'g-button_selected')]";
+    private final String CONNECTION_CARD_SWITCH_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button";
+    private final String CONNECTION_CARD_SELECTOR = "div.v-graph-node-details";
+    private final String CONNECTION_CARD_LINK_SELECTOR = "//div[contains(@class, 'v-graph-node-details')]/div[@class='v-graph-node-details-header']//button";
+    private final String CONNECTION_CARD_UNMASK_GENERAL_SELECTOR = "//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//button[1]";
+    private final String CONNECTION_CARD_HEADER_ID_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'g-color-text_color_secondary')]";
+    private final String CONNECTION_CARD_HEADER_NAME_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'v-graph-node-details-header__client-name')]";
+    private final String CONNECTION_CARD_HEADER_LEVEL_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[1]//span";
+    private final String CONNECTION_CARD_HEADER_POINTS_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[2]//span";
 
 
     public ConnectionPage(Page page) {
@@ -81,6 +91,9 @@ public class ConnectionPage extends AbstractPage {
         this.registeredCell = page.locator("td.v-connection-search-table-view__column_type_registered");
         this.lastLoginCell = page.locator("td.v-connection-search-table-view__column_type_last-login");
         this.graphLinkCell = page.locator(GRAPH_LINK_CELL_SELECTOR);
+        this.connectionCardSwitch = page.locator(CONNECTION_CARD_SWITCH_SELECTOR);
+        this.connectionCard = page.locator(CONNECTION_CARD_SELECTOR);
+        this.connectionCardLink = page.locator(CONNECTION_CARD_LINK_SELECTOR);
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -217,8 +230,37 @@ public class ConnectionPage extends AbstractPage {
         page.waitForSelector(CONNECTION_GRAPH_SELECTOR);
     }
 
+    public void openConnectionCard(String clientUcid) {
+
+        Allure.step("Open connection card");
+        page.waitForSelector(CONNECTION_GRAPH_SELECTOR);
+        page.waitForSelector(CONNECTION_CARD_SWITCH_SELECTOR);
+        if (!(page.locator(CONNECTION_CARD_SWITCH_ON_SELECTOR).isVisible())) {
+            connectionCardSwitch.click();
+            page.waitForSelector(CONNECTION_CARD_SWITCH_ON_SELECTOR);
+        }
+        page.waitForSelector(CONNECTION_NODE_SELECTOR + "[data-qa='" + clientUcid + "']");
+        page.locator(CONNECTION_NODE_SELECTOR + "[data-qa='" + clientUcid + "']").click();
+        page.waitForSelector(CONNECTION_CARD_SELECTOR);
+    }
+
+    public void clickConnectionLinkCc() {
+        Allure.step("Test link to client from the connection card");
+        page.waitForSelector(CONNECTION_CARD_SELECTOR);
+        page.waitForSelector(CONNECTION_CARD_LINK_SELECTOR);
+        page.waitForTimeout(500);
+        connectionCardLink.click();
+    }
+
+    public void linkToCard(String clientId) {
+        Allure.step("Go to the cliens page from connection table link button");
+        page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
+        page.waitForSelector("//div[contains(text(), " + clientId + ")]/preceding-sibling::div/a");
+        page.locator("//div[contains(text(), " + clientId + ")]/preceding-sibling::div/a").click();
+    }
+
     public void checkSelection(String userId, String userUcid) {
-        Allure.step("check selection (green highlight)");
+        Allure.step("Check highlight of user is saved (green highlight)");
         page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
         page.locator("tr").getByText(userId).click();
         page.waitForSelector("tr.v-connection-search-table-view__row_selected");
@@ -228,11 +270,65 @@ public class ConnectionPage extends AbstractPage {
     }
 
     public void checkSelectionTransitByLinkButton(String userId, String userUcid) {
-        Allure.step("check selection (green highlight)");
+        Allure.step("Check selection (green highlight)");
         page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
-        page.locator("//div[contains(text(), " + userId + ")]/ancestor::tr//button").click();
+        page.locator("//div[contains(text(), '" + userId + "')]").hover();
+        page.locator("//div[contains(text(), '" + userId + "')]/ancestor::tr//button").click();
         page.waitForSelector(CONNECTION_GRAPH_SELECTOR);
         page.waitForSelector(".v-graph-node_isSelected[data-qa='" + userUcid + "']");
+    }
+
+    public void ccCheckDirectConnectionRows(String clientName, String rowTitle, String expectedVale) {
+        Allure.step("Check direct connection values, connect to user " + clientName + ", field " + rowTitle);
+        page.waitForSelector("//div[contains(text(), '" + clientName + "')]/ancestor::div[@class='v-graph-node-details-connection-data']//tr/td/div[@class='v-graph-node-details-attributes-table__title']/span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
+        String actualValue = page.locator("//div[contains(text(), '" + clientName + "')]/ancestor::div[@class='v-graph-node-details-connection-data']//tr/td/div[@class='v-graph-node-details-attributes-table__title']/span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
+        assertEquals(expectedVale, actualValue);
+    }
+
+    public void ccCheckGeneralInfoRows(String rowTitle, String expectedVale) {
+        Allure.step("Check general data values, field " + rowTitle);
+        page.waitForSelector("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
+        String actualValue = page.locator("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
+        assertEquals(expectedVale, actualValue);
+    }
+
+    public void ccCheckSummaryRows(String rowTitle, String expectedVale) {
+        Allure.step("Check Summary data values, field " + rowTitle);
+        page.waitForSelector("//*[contains(text(), 'Summary')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
+        String actualValue = page.locator("//*[contains(text(), 'Summary')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
+        assertEquals(expectedVale, actualValue);
+    }
+
+    public void ccCheckHeaderClientName(String clientName) {
+        Allure.step("Check clients name in header");
+        page.waitForSelector(CONNECTION_CARD_HEADER_NAME_SELECTOR);
+        String actualValue = page.locator(CONNECTION_CARD_HEADER_NAME_SELECTOR).textContent();
+        System.out.println("the current value for name is " + actualValue);
+        assertEquals(clientName, actualValue);
+    }
+
+    public void ccCheckHeaderClientId(String clientId) {
+        Allure.step("Check clients ID in header");
+        page.waitForSelector(CONNECTION_CARD_HEADER_ID_SELECTOR);
+        String actualValue = page.locator(CONNECTION_CARD_HEADER_ID_SELECTOR).textContent();
+        System.out.println("the current value for ID is " + actualValue);
+        assertEquals(clientId, actualValue);
+    }
+
+    public void ccCheckHeaderConnectionLevel(String expectedLevel) {
+        Allure.step("Check connection level in header");
+        page.waitForSelector(CONNECTION_CARD_HEADER_LEVEL_SELECTOR);
+        String actualValue = page.locator(CONNECTION_CARD_HEADER_LEVEL_SELECTOR).textContent();
+        System.out.println("the current value for level is " + actualValue);
+        assertTrue(actualValue.contains(expectedLevel));
+    }
+
+    public void ccCheckHeaderConnectionPoints(String expectedPoints) {
+        Allure.step("Check connection points in header");
+        page.waitForSelector(CONNECTION_CARD_HEADER_POINTS_SELECTOR);
+        String actualValue = page.locator(CONNECTION_CARD_HEADER_POINTS_SELECTOR).textContent();
+        System.out.println("the current value for points is " + actualValue);
+        assertTrue(actualValue.contains(expectedPoints));
     }
 
     public static int connectionWidth(double score) {

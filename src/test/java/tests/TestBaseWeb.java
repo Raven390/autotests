@@ -25,7 +25,7 @@ public class TestBaseWeb {
     static Browser browser;
 
     // New instance for each test method.
-    static BrowserContext context;
+    protected static BrowserContext context;
     public Page page;
 
     public StageRegistrationHelperPage stageRegistrationHelperPage;
