@@ -114,6 +114,8 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.clickTableViewButton();
+        // Verify table headers
+        tradingPage.verifyAccountTableHeaders();
         // Verify 1st account row
         assertThat("Assert that account platform in table view is as expected", tradingPage.getAccountTablePlatform(account1.account), equalTo(account1.platform));
         assertThat("Assert that account type in table view is as expected", tradingPage.getAccountTableType(account1.account), equalTo(account1.type));
