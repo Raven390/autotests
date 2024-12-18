@@ -8,11 +8,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import helpers.data.enums.Brand;
+import helpers.data.enums.Brands;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static helpers.data.enums.Brand.*;
+import static helpers.data.enums.Brands.*;
 
 public class Utils {
 
@@ -151,8 +151,8 @@ public class Utils {
         return time;
     }
 
-    public static String getUcidByUserIdAndBrand(Integer userId, Brand brand) {
-        Map<Brand, String> brandToUcidBrandMap = new HashMap<>();
+    public static String getUcidByUserIdAndBrand(Integer userId, Brands brand) {
+        Map<Brands, String> brandToUcidBrandMap = new HashMap<>();
         brandToUcidBrandMap.put(VANTAGE, "vantage");
         brandToUcidBrandMap.put(VJP, "vjp");
         brandToUcidBrandMap.put(VT, "vt");

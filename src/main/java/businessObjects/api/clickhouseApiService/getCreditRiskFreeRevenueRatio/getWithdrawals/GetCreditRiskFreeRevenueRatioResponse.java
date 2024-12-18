@@ -8,7 +8,7 @@ import java.util.List;
 public class GetCreditRiskFreeRevenueRatioResponse {
 
     @JsonProperty("tradingAccount")
-    public String tradingAccount;
+    public Integer tradingAccount;
 
     @JsonProperty("serverId")
     public String serverId;
@@ -22,13 +22,13 @@ public class GetCreditRiskFreeRevenueRatioResponse {
         public String indicatorDate;
 
         @JsonProperty("currentRiskFreeRevenue")
-        public String currentRiskFreeRevenue;
+        public Integer currentRiskFreeRevenue;
 
         @JsonProperty("sumCreditOrder")
-        public String sumCreditOrder;
+        public Integer sumCreditOrder;
 
         @JsonProperty("creditRiskFreeRevenueRatio")
-        public String creditRiskFreeRevenueRatio;
+        public Integer creditRiskFreeRevenueRatio;
 
     }
 }

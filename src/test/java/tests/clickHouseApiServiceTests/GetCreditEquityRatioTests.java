@@ -22,9 +22,8 @@ import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -34,32 +33,32 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetCreditEquityRatioTests extends TestBaseApi {
 
+    private static final String date = "2024-12-31 00:00:00".replace(" ", "T");
+
     private static AggrCreditEquityRateObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
-    public static final String dateTo = getCurrentTimestampDbFormat();
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
         data1 = generateCreditEquityRatioAccount(client1);
-        insertObjectToDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, data1);
+        insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data1);
     }
 
     @AfterAll
     public static void teardownData() throws SQLException {
-        deleteEntryFromDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
+        deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credit equity ratio by date range (200)")
+    @DisplayName("Clickhouse Api. Get credit equity ratio by dateTo (200)")
     @AllureId("216")
     public void getCreditEquityRatioTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateFrom", dateFrom.replace(" ", "T"));
-        queryParams.put("dateTo", dateTo.replace(" ", "T"));
+        queryParams.put("dateTo", date);
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
@@ -68,13 +67,13 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(date));
         assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(date));
         assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(date));
         assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
     }
 
@@ -90,7 +89,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
@@ -106,7 +105,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
+        assertThat("Assert that code is 400", mappedResponse.status, is(400));
         assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
@@ -125,54 +124,38 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credit equity ratio request by dateFrom (200)")
-    @AllureId("448")
+    @DisplayName("Clickhouse Api. Get credit equity ratio by dateTo, empty response (200)")
+    @AllureId("564")
     public void getCreditEquityRatioTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateFrom", dateFrom.replace(" ", "T"));
+        queryParams.put("dateTo", "2024-12-30 00:00:01".replace(" ", "T"));
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
-        GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
-
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
-
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
+        assertThat("Assert response body", response.body().string(), is("{}"));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credit equity ratio request by dateTo (200)")
-    @AllureId("449")
+    @DisplayName("Clickhouse Api. Get credit equity ratio with wrong date format(200)")
+    @AllureId("565")
     public void getCreditEquityRatioTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateTo", dateTo.replace(" ", "T"));
+        queryParams.put("dateTo", "1");
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
-        GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
-
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
-
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        assertThat("Assert status", mappedResponse.status, is(400));
+        assertThat("Assert type", mappedResponse.type, is("about:blank"));
+        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/creditEquityRatio"));
     }
 }

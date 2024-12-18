@@ -399,7 +399,7 @@ public class KafkaHelper {
         }
     }
 
-    @Step("Consume single message from {topic}")
+    @Step("Consume single message id = {id} from {topic}")
     public MessageWithHeaders consumeMessage(String topic, String id, boolean getHeaders) throws InterruptedException {
         if (!getHeaders) {
             return new MessageWithHeaders(consumeMessage(topic, id), new HashMap<>());
@@ -451,7 +451,7 @@ public class KafkaHelper {
         }
     }
 
-    @Step("Consume messages from {topic}")
+    @Step("Consume messages with ids={idList} from {topic}")
     public Map<String, String> consumeMessages(String topic, String... idList) throws InterruptedException {
         ConsumerRecords<String, String> records;
         String consumerId = getFreeConsumerId();
@@ -558,13 +558,14 @@ public class KafkaHelper {
         }
     }
 
-    @Step("Check that {textToSearchList} presented in topic")
+    @Step("Check that {textToSearchList} presented in {topic} topic")
     public MatchResultWithMessage isAnyMatchPresentInMessages(String topic, String... textToSearchList) {
         ConsumerRecords<String, String> records;
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
         String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+        System.out.print("Check that " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
 
         // Subscribe to the topic
         try (consumer) {
@@ -616,7 +617,7 @@ public class KafkaHelper {
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-
+        System.out.println("Check that all params " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
         // Subscribe to the topic
 
         try (consumer) {
