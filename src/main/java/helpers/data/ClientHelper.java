@@ -1,7 +1,7 @@
 package helpers.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import helpers.data.enums.Brand;
+import helpers.data.enums.Brands;
 
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ public class ClientHelper {
 
     private Integer userId;
     private String uuid;
-    private Brand brand;
+    private Brands brand;
     private Integer tradingAccount;
     private Integer tradingAccount2;
     private Integer serverId;
@@ -23,7 +23,7 @@ public class ClientHelper {
     public ClientHelper() {
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer serverId) {
+    public ClientHelper(Integer userId, String uuid, Brands brand, Integer tradingAccount, Integer serverId) {
         this.userId = userId;
         this.uuid = uuid;
         this.brand = brand;
@@ -31,7 +31,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
+    public ClientHelper(Integer userId, String uuid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
             Integer serverId) {
         this.userId = userId;
         this.uuid = uuid;
@@ -41,7 +41,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uuid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
+    public ClientHelper(Integer userId, String uuid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
         this.userId = userId;
         this.uuid = uuid;
@@ -80,7 +80,7 @@ public class ClientHelper {
         return brand.getDisplayName();
     }
 
-    public void setBrand(Brand brand) {
+    public void setBrand(Brands brand) {
         this.brand = brand;
     }
 

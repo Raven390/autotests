@@ -278,7 +278,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert error", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
@@ -295,7 +295,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert error", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
@@ -336,7 +336,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 500", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert type", mappedResponse.type, is("about:blank"));
@@ -358,7 +358,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert type", mappedResponse.error, containsString("The property may include only: tradeDate, profit, profitUSD"));
@@ -378,7 +378,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert type", mappedResponse.error, containsString("The property may include only: asc, desc"));
@@ -397,7 +397,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, is(400));
         assertThat("Assert type", mappedResponse.type, is("about:blank"));

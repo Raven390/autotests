@@ -1,5 +1,6 @@
 package tests.clickHouseApiServiceTests;
 
+import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals.GetCreditRiskFreeRevenueRatioResponse;
 import businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals.GetCreditRiskFreeRevenueRatioResponseError;
 import businessObjects.db.clickhouse.aggrCreditRiskFreeRevenueRatio.AggrCreditRiskFreeRevenueRatioObject;
@@ -32,8 +33,9 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-@Disabled
 public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
+
+    private static final String date = "2024-12-31 00:00:00".replace(" ", "T");
 
     private static AggrCreditRiskFreeRevenueRatioObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
@@ -52,8 +54,8 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credit risk free equity ratio required params(200)")
-    @AllureId("")
+    @DisplayName("Clickhouse Api. Get credit risk free equity ratio required params (200)")
+    @AllureId("566")
     public void getCreditRiskFreeRevenueRatioTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -67,25 +69,26 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.getFirst().creditRiskFreeRevenueRatio, is("1"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(0).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(0).currentRiskFreeRevenue, is(1));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is(2));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(2).currentRiskFreeRevenue, is("3"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.get(2).creditRiskFreeRevenueRatio, is(3));
+
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get credit risk free equity ratio all params(200)")
-    @AllureId("")
+    @DisplayName("Clickhouse Api. Get credit risk free equity ratio all params (200)")
+    @AllureId("567")
     public void getCreditRiskFreeRevenueRatioTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateTo", dateTo.replace(" ", "T"));
+        queryParams.put("dateTo", date);
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
         assert response.body() != null;
@@ -94,19 +97,19 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.getFirst().creditRiskFreeRevenueRatio, is("1"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(date));
+        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.getFirst().currentRiskFreeRevenue, is(1));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is(2));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(("2024-12-31 00:00:00").replace(" ", "T")));
-        assertThat("Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(2).currentRiskFreeRevenue, is("3"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(2).creditRiskFreeRevenueRatio, is(3));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio with only tradingAccount parameter(400)")
-    @AllureId("")
+    @AllureId("568")
     public void getCreditRiskFreeRevenueRatioTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -117,12 +120,12 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         GetCreditRiskFreeRevenueRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponseError.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio with only serverId parameter(400)")
-    @AllureId("")
+    @AllureId("569")
     public void getCreditRiskFreeRevenueRatioTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -133,12 +136,12 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         GetCreditRiskFreeRevenueRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponseError.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio wrong date format(200)")
-    @AllureId("")
+    @AllureId("570")
     public void getCreditRiskFreeRevenueRatioTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -148,15 +151,17 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
         assert response.body() != null;
-        GetCreditRiskFreeRevenueRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponseError.class);
-        assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is("400"));
-        assertThat("Assert error message", mappedResponse.error, is("Failed to convert 'dateTo' with value"));
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        assertThat("Assert status", mappedResponse.status, is(400));
+        assertThat("Assert type", mappedResponse.type, is("about:blank"));
+        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/creditRiskFreeRevenueRatio"));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio all params(200)")
-    @AllureId("")
+    @AllureId("571")
     public void getCreditRiskFreeRevenueRatioTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -165,9 +170,23 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
         assert response.body() != null;
-        GetCreditRiskFreeRevenueRatioResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(0));
+        assertThat("Assert response body", response.body().string(), is("{}"));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get credit risk free equity ratio empty response ,filtered by date(200)")
+    @AllureId("572")
+    public void getCreditRiskFreeRevenueRatioTest8() throws IOException {
+        //Send request
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
+        queryParams.put("serverId", client1.getServerId()); // Required
+        queryParams.put("dateTo", "2024-12-30 00:00:00".replace(" ", "T"));
+        Response response = getCreditRiskFreeRevenueRatio(queryParams);
+
+        assert response.body() != null;
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response body", response.body().string(), is("{}"));
     }
 }

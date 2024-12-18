@@ -5,7 +5,7 @@ import businessObjects.kafka.alerts.RuleAlert;
 import businessObjects.ui.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.data.enums.Brand;
+import helpers.data.enums.Brands;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
@@ -31,7 +31,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
-        crmTbUser2.brand = Brand.INFINOX.getDisplayName();
+        crmTbUser2.brand = Brands.INFINOX.getDisplayName();
         crmTbUser2.country = "Malaysia";
         crmTbUser2.countryCode = "MY";
         crmTbUser2.isoCountryCode = "MY";
