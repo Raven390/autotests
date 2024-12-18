@@ -84,7 +84,7 @@ public class Constants {
     public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt__tb_credits";
     public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt__tb_balance_orders";
-    public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__mt5_trades";
+    public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
     public static final String CONNECTIONS_V2_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";

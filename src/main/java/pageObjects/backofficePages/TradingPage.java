@@ -85,11 +85,26 @@ public class TradingPage extends AbstractPage {
     private final Locator accountTableMarginFree;
     private final Locator accountTableServer;
     private final Locator accountTableGroup;
+    private final Locator accountTableHeaderAccount;
+    private final Locator accountTableHeaderType;
+    private final Locator accountTableHeaderStatus;
+    private final Locator accountTableHeaderCreated;
+    private final Locator accountTableHeaderUpdated;
+    private final Locator accountTableHeaderBalance;
+    private final Locator accountTableHeaderTotalPnl;
+    private final Locator accountTableHeaderEquity;
+    private final Locator accountTableHeaderCredit;
+    private final Locator accountTableHeaderLeverage;
+    private final Locator accountTableHeaderMarginFree;
+    private final Locator accountTableHeaderServer;
+    private final Locator accountTableHeaderGroup;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
     private static final String ACCOUNT_TABLE_COLUMN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
     private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
+    private static final String ACCOUNT_TABLE_HEADER_PATTERN = "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
+    private static final String ACCOUNT_TABLE_CELL_PATTERN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]/div";
 
     public TradingPage(Page page) {
         super(page);
@@ -150,18 +165,31 @@ public class TradingPage extends AbstractPage {
         this.accountRow = page.locator("//tr[contains(@class,'g-table__row_vertical-align_top')]");
         this.accountTableId = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_primary')]"));
         this.accountTablePlatform = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
-        this.accountTableType = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_type')]/div");
-        this.accountTableStatus = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_status')]/div/div");
-        this.accountTableCreated = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_created')]/div");
-        this.accountTableUpdated = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_updated')]/div");
-        this.accountTableBalance = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_balance')]/div");
-        this.accountTableTotalPnl = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_pnl')]/div");
-        this.accountTableEquity = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_equity')]/div");
-        this.accountTableCredit = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_credit')]/div");
-        this.accountTableLeverage = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_leverage')]/div");
-        this.accountTableMarginFree = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_margin-free')]/div");
-        this.accountTableServer = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_server')]/div");
-        this.accountTableGroup = page.locator("//td[contains(@class,'v-trading-tab-accounts-table__column_type_group')]/div");
+        this.accountTableType = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "type"));
+        this.accountTableStatus = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "status"));
+        this.accountTableCreated = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "created"));
+        this.accountTableUpdated = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "updated"));
+        this.accountTableBalance = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "balance"));
+        this.accountTableTotalPnl = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "pnl"));
+        this.accountTableEquity = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "equity"));
+        this.accountTableCredit = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "credit"));
+        this.accountTableLeverage = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "leverage"));
+        this.accountTableMarginFree = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "margin-free"));
+        this.accountTableServer = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "server"));
+        this.accountTableGroup = page.locator(String.format(ACCOUNT_TABLE_CELL_PATTERN, "group"));
+        this.accountTableHeaderAccount = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "account"));
+        this.accountTableHeaderType = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "type"));
+        this.accountTableHeaderStatus = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "status"));
+        this.accountTableHeaderCreated = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "created"));
+        this.accountTableHeaderUpdated = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "updated"));
+        this.accountTableHeaderBalance = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "balance"));
+        this.accountTableHeaderTotalPnl = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "pnl"));
+        this.accountTableHeaderEquity = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "equity"));
+        this.accountTableHeaderCredit = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "credit"));
+        this.accountTableHeaderLeverage = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "leverage"));
+        this.accountTableHeaderMarginFree = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "margin-free"));
+        this.accountTableHeaderServer = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "server"));
+        this.accountTableHeaderGroup = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "group"));
     }
 
     @Step("Navigate to users trading tab")
@@ -187,6 +215,13 @@ public class TradingPage extends AbstractPage {
     public void openTradingTab() {
         waitForPageToLoad();
         tradingTab.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Open users trading-operations tab")
+    public void openOperationsTab() {
+        waitForPageToLoad();
+        operationsTab.click();
         waitForPageToLoad();
     }
 
@@ -570,5 +605,95 @@ public class TradingPage extends AbstractPage {
     @Step("Get account group in table view")
     public String getAccountTableGroup(int accountId) {
         return accountRow.nth(getAccountIndexTableView(accountId)).locator(accountTableGroup).textContent();
+    }
+
+    @Step("Verify account table headers visibility and text")
+    public void verifyAccountTableHeaders() {
+        assertThat(accountTableHeaderAccount).isVisible();
+        assertThat(accountTableHeaderAccount).containsText("ACCOUNT");
+        assertThat(accountTableHeaderType).isVisible();
+        assertThat(accountTableHeaderType).containsText("TYPE");
+        assertThat(accountTableHeaderStatus).isVisible();
+        assertThat(accountTableHeaderStatus).containsText("STATUS");
+        assertThat(accountTableHeaderCreated).isVisible();
+        assertThat(accountTableHeaderCreated).containsText("CREATED");
+        assertThat(accountTableHeaderUpdated).isVisible();
+        assertThat(accountTableHeaderUpdated).containsText("UPDATED");
+        assertThat(accountTableHeaderBalance).isVisible();
+        assertThat(accountTableHeaderBalance).containsText("BALANCE");
+        assertThat(accountTableHeaderTotalPnl).isVisible();
+        assertThat(accountTableHeaderTotalPnl).containsText("TOTAL PNL");
+        assertThat(accountTableHeaderEquity).isVisible();
+        assertThat(accountTableHeaderEquity).containsText("EQUITY");
+        assertThat(accountTableHeaderCredit).isVisible();
+        assertThat(accountTableHeaderCredit).containsText("CREDIT");
+        assertThat(accountTableHeaderLeverage).isVisible();
+        assertThat(accountTableHeaderLeverage).containsText("LEVERAGE");
+        assertThat(accountTableHeaderMarginFree).isVisible();
+        assertThat(accountTableHeaderMarginFree).containsText("MARGIN FREE");
+        assertThat(accountTableHeaderServer).isVisible();
+        assertThat(accountTableHeaderServer).containsText("SERVER");
+        assertThat(accountTableHeaderGroup).isVisible();
+        assertThat(accountTableHeaderGroup).containsText("GROUP");
+    }
+
+    @Step("Get account cell value for operation by index")
+    public String getOperationAccountByIndex(int index) {
+        return accountColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get type cell value for operation by index")
+    public String getOperationTypeByIndex(int index) {
+        return typeColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get volume cell value for operation by index")
+    public String getOperationVolumeByIndex(int index) {
+        return volumeColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get profit cell value for operation by index")
+    public String getOperationProfitByIndex(int index) {
+        return profitColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get open cell value for operation by index")
+    public String getOperationOpenByIndex(int index) {
+        return openColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get close cell value for operation by index")
+    public String getOperationCloseByIndex(int index) {
+        return closeColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get tp/sl cell value for operation by index")
+    public String getOperationTpSlByIndex(int index) {
+        return tpslColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get swap cell value for operation by index")
+    public String getOperationSwapByIndex(int index) {
+        return swapColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get sr cell value for operation by index")
+    public String getOperationSrByIndex(int index) {
+        return srColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get commission cell value for operation by index")
+    public String getOperationCommissionByIndex(int index) {
+        return commissionColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get method cell value for operation by index")
+    public String getOperationMethodByIndex(int index) {
+        return methodColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get comment cell value for operation by index")
+    public String getOperationCommentByIndex(int index) {
+        return commentColumnCell.nth(index).textContent();
     }
 }
