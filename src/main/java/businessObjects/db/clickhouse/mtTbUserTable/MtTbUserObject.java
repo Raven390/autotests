@@ -2,6 +2,8 @@ package businessObjects.db.clickhouse.mtTbUserTable;
 
 import java.util.Objects;
 
+import static utils.Utils.getCurrentTimestampDbFormat;
+
 public class MtTbUserObject {
 
     public Integer userId;
@@ -52,6 +54,30 @@ public class MtTbUserObject {
         this.pnl = pnl;
         this.lastActionDate = lastActionDate;
         this.lastUpdated = lastUpdated;
+    }
+
+    public MtTbUserObject(Integer userId, String ucid, Integer account, String serverName, String platform,
+            Integer serverId) {
+        this.userId = userId;
+        this.ucid = ucid;
+        this.account = account;
+        this.serverName = serverName;
+        this.platform = platform;
+        this.type = "Standart";
+        this.serverId = serverId;
+        this.createdDate = "2020-11-04 06:40:58.305000000";
+        this.status = "Active";
+        this.balance = 24.00;
+        this.currency = "USD";
+        this.balanceUsd = 24.00;
+        this.equity = 32.0;
+        this.credit = 42.0;
+        this.leverage = 52;
+        this.accountGroup = "S_VFX_EUR";
+        this.marginFree = 62.00;
+        this.pnl = 72.00;
+        this.lastActionDate = "2024-10-04 06:40:58.305000000";
+        this.lastUpdated = getCurrentTimestampDbFormat();
     }
 
     @Override

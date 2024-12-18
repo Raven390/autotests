@@ -331,8 +331,8 @@ public class TradingTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("472")
-    @DisplayName("Test that method filter works Web")
-    public void testProfitFilterNegativeValues() {
+    @DisplayName("Test that profit filter works with negative")
+    public void testProfitFilterNegativeValuesTest() {
         int from = 36;
         int to = 38;
         investigationPage.navigate();

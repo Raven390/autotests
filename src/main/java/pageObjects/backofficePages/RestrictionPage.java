@@ -493,7 +493,7 @@ public class RestrictionPage {
     public void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
         Allure.step("Set restriction though API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
+                ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("test", "automation")
 
 
         );

@@ -2,6 +2,8 @@ package businessObjects.db.clickhouse.crmTbUserTable;
 
 import java.util.Objects;
 
+import static utils.Utils.getCurrentTimestampDbFormat;
+
 public class CrmTbUserObject {
     // Declare variables
     public int userId;
@@ -70,6 +72,37 @@ public class CrmTbUserObject {
         this.rafReferrerId = rafReferrerId;
         this.kycStatus = kycStatus;
         this.lastUpdated = lastUpdated;
+    }
+
+    // Constructor to set name, ID, UCID, and Brand
+    public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String firstName, String lastName) {
+        this.userId = userId;
+        this.ucid = ucid;
+        this.brand = brand;
+        this.regulator = regulator;
+        this.registrationDate = "2024-10-23 14:56:59";
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = "male";
+        this.birthday = "1975-05-11";
+        this.country = "Cyprus";
+        this.countryCode = "CY";
+        this.isoCountryCode = "CY";
+        this.language = "en";
+        this.nationality = "RUS";
+        this.email = "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS";
+        this.phoneNum = "BjrbbdAHkwhBFLnPclfvbg==";
+        this.phoneCountryCode = "996";
+        this.isTwoFaUser = "1";
+        this.authentication = "2FA";
+        this.websiteUserType = "2";
+        this.emailVerificationMark = "1";
+        this.phoneVerificationMark = "1";
+        this.ibId = 1;
+        this.cpaId = 2;
+        this.rafReferrerId = 3;
+        this.kycStatus = "APPROVED";
+        this.lastUpdated = getCurrentTimestampDbFormat();
     }
 
     @Override

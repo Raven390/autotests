@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,6 +30,10 @@ public class ResolveScreen {
     private final Locator successToast;
     private final Locator closeToastButtom;
     private final Locator cleanFraudListButton;
+    private final Locator fraudListButton;
+    private final Locator fraudSelectItem;
+    private final Locator fraudSelectApplyButton;
+    private final Locator clientRestrictionItem;
 
     public ResolveScreen(Page page) {
         this.page = page;
@@ -45,9 +51,16 @@ public class ResolveScreen {
         this.successToast = page.locator(".g-toast__title").getByText("Investigation completed");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
+        this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
+        this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
+        this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
+        this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
 
 
     }
+
+    String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
+    String smallLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac";
 
     @Step("Check if the page loaded")
     public void isPageLoaded() {
@@ -108,7 +121,39 @@ public class ResolveScreen {
         successToast.isVisible();
     }
 
-    @Step("Resolve without any actions")
+    @Step("Resolve with adding fraud")
+    public void resolveAddFraud(String comment, String addedFraud) {
+        commentInput.fill(comment);
+        fraudListButton.click();
+        fraudSelectItem.getByText(addedFraud).click();
+        fraudSelectApplyButton.click();
+        completeInvestigationButton.click();
+        successToast.isVisible();
+    }
+
+
+    public void checkFraudsList() {
+        fraudListButton.click();
+        List<String> frauds = Arrays.asList("CPA", "Hedging", "Market manipulation", "Pricing errors", "Gap trading", "Swap arbitrage", "RAF abuse", "Rebate churning", "Loss voucher abuse", "NBP abuse", "TLS abuse", "Potential abuse");
+        for (String item : frauds) {
+            assertTrue(fraudSelectItem.getByText(item).isVisible());
+        }
+
+    }
+
+
+    public void checkRestrictionIsDisplayed(String restriction) {
+        Allure.step("Check if the restriction " + restriction + " is displayed on resolve screen");
+        assertTrue(clientRestrictionItem.getByText(restriction).isVisible());
+    }
+
+    @Step("Resolve test 250 symbols in comment")
+    public void test250Symbols() {
+        commentInput.fill(bigLorem);
+        assertEquals(commentInput.inputValue(), smallLorem);
+    }
+
+    @Step("Resolve cleaning fraud list")
     public void resolveNoFrauds(String comment) {
         commentInput.fill(comment);
         cleanFraudListButton.click();
