@@ -150,7 +150,27 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 8);
+        checkUserFraudDb(clientUcid, 8);
+
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("300")
+    @DisplayName("BO user can resolve client in with fraud type CPA")
+    public void resolveClientCpaTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "CPA");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveSimple("test" + timestamp);
+        checkUserFraudDb(clientUcid, 7);
 
     }
 
@@ -170,7 +190,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 5);
+        checkUserFraudDb(clientUcid, 5);
     }
 
     @Test
@@ -189,7 +209,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 1);
+        checkUserFraudDb(clientUcid, 1);
     }
 
     @Test
@@ -208,7 +228,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 2);
+        checkUserFraudDb(clientUcid, 2);
     }
 
     @Test
@@ -227,7 +247,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 11);
+        checkUserFraudDb(clientUcid, 11);
     }
 
     @Test
@@ -246,7 +266,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 3);
+        checkUserFraudDb(clientUcid, 3);
     }
 
     @Test
@@ -265,7 +285,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 12);
+        checkUserFraudDb(clientUcid, 12);
     }
 
     @Test
@@ -284,7 +304,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 14);
+        checkUserFraudDb(clientUcid, 14);
     }
 
     @Test
@@ -303,7 +323,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 4);
+        checkUserFraudDb(clientUcid, 4);
     }
 
     @Test
@@ -322,7 +342,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 9);
+        checkUserFraudDb(clientUcid, 9);
     }
 
     @Test
@@ -341,7 +361,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 10);
+        checkUserFraudDb(clientUcid, 10);
     }
 
     @Test
@@ -360,7 +380,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 6);
+        checkUserFraudDb(clientUcid, 6);
     }
 
     @Test
@@ -379,7 +399,27 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveSimple("test" + timestamp);
-        checkUserFraudDB(clientUcid, 13);
+        checkUserFraudDb(clientUcid, 13);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("322")
+    @DisplayName("BO user can resolve client in with multiple fraud types")
+    public void resolveClientMultipleAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveAddFraud("test" + timestamp, "Hedging");
+        checkUserFraudDb(clientUcid, 13);
+        checkUserFraudDb(clientUcid, 1);
     }
 
     @Test
@@ -399,5 +439,114 @@ public class ResolveTest extends TestBaseWeb {
         resolveScreen.openResolveSuspicious();
         resolveScreen.resolveNoFrauds("test" + timestamp);
         checkUserNoFraudDb(clientUcid);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("291")
+    @DisplayName("BO user can't type more than a 250 symbols into resolve commentary section")
+    public void cantTypeMoreThan250CommentTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.test250Symbols();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("233")
+    @DisplayName("on resolve violated rule can be tagged as false positive")
+    public void resolveFalsePositiveTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveNoFrauds("test" + timestamp);
+        checkUserAlertConfirmation(clientUcid, false);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("289")
+    @DisplayName("on resolve violated rule can be tagged as true positive")
+    public void resolveTruePositiveTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.resolveSimple("test" + timestamp);
+        checkUserAlertConfirmation(clientUcid, true);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("250")
+    @DisplayName("Resolve have actual list of violations")
+    public void resolveViolationsListTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.checkFraudsList();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("238")
+    @DisplayName("Resolve tab have info about currently applied restrictions")
+    public void resolveRestrictionsListTest() throws Exception {
+        //run 1
+        String clientUcid = "infinox-161601";
+        restrictionPage.cleanUserRestriction(clientUcid);
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        Response response = enableCRMEmulator();
+        assertNotNull(response);
+        restrictionPage.setRestrictionAPIGeneral(clientUcid, "01");
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.checkRestrictionIsDisplayed("Open new account");
+        //run 2
+        restrictionPage.cleanUserRestriction(clientUcid);
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        Response response2 = enableCRMEmulator();
+        assertNotNull(response2);
+        restrictionPage.setRestrictionAPIGeneral(clientUcid, "05");
+        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolveScreen.openResolveSuspicious();
+        resolveScreen.checkRestrictionIsDisplayed("Login CRM");
     }
 }

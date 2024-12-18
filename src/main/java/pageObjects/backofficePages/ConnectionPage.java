@@ -129,9 +129,18 @@ public class ConnectionPage extends AbstractPage {
     }
 
     @Step("Check status of the client in node")
-    public void checkClientStatus(String ucid1, String status) {
+    public void checkClientStatus(String ucid, String status) {
         waitForPageToLoad();
-        assertTrue(page.locator(String.format(".v-graph-node[data-qa=\"%s\"]  .g-text_variant_caption-2", ucid1)).getByText(status).isVisible());
+        page.waitForSelector("//div[@data-qa='" + ucid + "']//div[text()='" + status + "']");
+        assertTrue(page.locator("//div[@data-qa='" + ucid + "']//div[text()='" + status + "']").isVisible());
+
+    }
+
+    @Step("Check name of the client in node")
+    public void checkClientName(String ucid, String name) {
+        waitForPageToLoad();
+        page.waitForSelector("//div[@data-qa='" + ucid + "']//div[text()='" + name + "']");
+        assertTrue(page.locator("//div[@data-qa='" + ucid + "']//div[text()='" + name + "']").isVisible());
 
     }
 

@@ -1,5 +1,6 @@
 package tests.vindexBackofficeUiTests;
 
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import com.microsoft.playwright.Page;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.DisplayName;
@@ -7,9 +8,16 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
+import java.sql.SQLException;
+
+import static helpers.database.BoHelper.cleanUserFraudsDb;
+import static helpers.database.BoHelper.createUserFraudsDb;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectToDb;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.LAYER_WEB;
 import static utils.Constants.TEAM_BACKOFFICE;
+import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class ConnectionSearchTest extends TestBaseWeb {
 
@@ -18,7 +26,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("")
     @DisplayName("Positive login test")
-    void cSPageOpensTest() {
+    void csPageOpensTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -29,7 +37,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("315")
     @DisplayName("Check line width")
-    void cSPageConnectionLinesStileTest() {
+    void csPageConnectionLinesStileTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -51,7 +59,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("311")
     @DisplayName("Check that connection node have right client name")
-    void cSPageConnectionNodesHaveRightClientNamesTest() {
+    void csPageConnectionNodesHaveRightClientNamesTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -65,7 +73,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("311")
     @DisplayName("Check that connection node have right client status")
-    void cSPageConnectionNodesHaveRightClientStatusTest() {
+    void csPageConnectionNodesHaveRightClientStatusTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -79,7 +87,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("518")
     @DisplayName("Check that connection table opens")
-    void cSPageConnectionTableOpens() {
+    void csPageConnectionTableOpensTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -92,7 +100,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("526")
     @DisplayName("Check that sorting works")
-    void cSPageConnectionTableSort() {
+    void csPageConnectionTableSortTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -106,7 +114,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("520")
     @DisplayName("Connection Search connection search tab can switches between graph and table mode")
-    void cSPageConnectionTableSwitchesBackToGraph() {
+    void csPageConnectionTableSwitchesBackToGraphTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -119,7 +127,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("521")
     @DisplayName("Test the same user save highlighted state between different modes of the connection search when you switches view mode")
-    void cSPageConnectionSelectionSwitchView() {
+    void csPageConnectionSelectionSwitchViewTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -132,7 +140,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("527")
     @DisplayName("Test the same user save highlighted state between different modes of the connection search when you click link button")
-    void cSPageConnectionSelectionLinkButton() {
+    void csPageConnectionSelectionLinkButtonTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -145,7 +153,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("523")
     @DisplayName("Connection Search. User can go to clients card from connection table")
-    void cSPageGoToClientCard() {
+    void csPageGoToClientCardTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -169,7 +177,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("556")
     @DisplayName("Connection search Connection Card user can open clients page from the connection card")
-    void cSPageGoToClientCardFromConnectionCard() {
+    void csPageGoToClientCardFromConnectionCardTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -191,7 +199,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("555")
     @DisplayName("Test connection card content Direct Connections")
-    void cSPageConnectionCardDirectConnectionContentTest() {
+    void csPageConnectionCardDirectConnectionContentTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -205,9 +213,9 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("555")
+    @AllureId("554")
     @DisplayName("Test connection card content General info")
-    void cSPageConnectionCardGeneralInfoContentTest() {
+    void csPageConnectionCardGeneralInfoContentTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -227,7 +235,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("547")
     @DisplayName("Test connection card content Summary")
-    void cSPageConnectionCardSummaryContentTest() {
+    void csPageConnectionCardSummaryContentTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -244,7 +252,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("557")
     @DisplayName("Test connection card content Header")
-    void cSPageConnectionCardHeaderContentTest() {
+    void csPageConnectionCardHeaderContentTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -253,6 +261,91 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.ccCheckHeaderClientId("424213");
         connectionPage.ccCheckHeaderConnectionLevel("2");
         connectionPage.ccCheckHeaderConnectionPoints("0.6700000166893005");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("312")
+    @DisplayName("Connection Search clients frauds must be taken from DB")
+    void csGraphPageConnectionHaveFraudsFromDBTest() throws Exception {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        cleanUserFraudsDb("infinox-424204");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Normal");
+        createUserFraudsDb("infinox-424204", 1);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Hedging");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 2);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Latency arbitrage");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 3);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Market manipulation");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 4);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Pricing errors");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 5);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Gap trading");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 6);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Swap arbitrage");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 7);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "CPA");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 8);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Affiliate abuse");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 9);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "RAF abuse");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 10);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Rebate churning");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 11);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Loss voucher abuse");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 12);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "NBP abuse");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 13);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "TLS abuse");
+        cleanUserFraudsDb("infinox-424204");
+        createUserFraudsDb("infinox-424204", 14);
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientStatus("infinox-424204", "Potential abuse");
+    }
+
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("316")
+    @DisplayName("Connection Search Name of clients must be taken from the DB")
+    void csPageConnectionNodeHasNameFromDbTest() throws ReflectiveOperationException, SQLException {
+        CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23 14:56:59", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat());
+        deleteEntryFromDb("vindex_test.crm__tb_user", "user_id=424204");
+        insertObjectToDb("vindex_test.crm__tb_user", testUser);
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.checkClientName("infinox-424204", "Connect Fourthman");
     }
 
 }
