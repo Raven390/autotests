@@ -99,7 +99,7 @@ public class GeneralPage {
 
     @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
         waitForPageToLoad();
         generalTab.click();
         waitForPageToLoad();

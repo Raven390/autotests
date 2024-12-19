@@ -3,6 +3,7 @@ package pageObjects.backofficePages;
 import businessObjects.ui.user.User;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.util.regex.Pattern;
@@ -31,6 +32,7 @@ public class KeycloackPage extends AbstractPage {
 
     @Step("Log In trough UI")
     public void loginWeb(String userName, String userPass) {
+        Allure.step("Login Web");
         page.url().contains("keycloak");
         loginField.fill(userName);
         passwordField.fill(userPass);

@@ -40,6 +40,7 @@ public class TestBaseWeb {
     public TradingPage tradingPage;
     public AuditTrailPage auditTrailPage;
     public AlertsPage alertsPage;
+    public OperationsPage operationsPage;
 
     @BeforeAll
     static void setupBrowser() {
@@ -77,6 +78,7 @@ public class TestBaseWeb {
         tradingPage = new TradingPage(page);
         auditTrailPage = new AuditTrailPage(page);
         alertsPage = new AlertsPage(page);
+        operationsPage = new OperationsPage(page);
     }
 
     @AfterEach

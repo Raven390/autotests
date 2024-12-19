@@ -25,7 +25,7 @@ public class AuditTrailPage {
 
     @Step("Open users general tab")
     public void navigateAuditTrailTab(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
         isPageLoaded();
         auditTrailTab.click();
         isPageLoaded();

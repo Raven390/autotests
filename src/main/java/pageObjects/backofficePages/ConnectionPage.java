@@ -100,13 +100,14 @@ public class ConnectionPage extends AbstractPage {
 
     @Step("Open users restriction tab")
     public void navigateConnectionTab(String ucid) {
-        page.navigate(BASE_URL_E2E + "investigation?client_ucid=" + ucid);
+        page.navigate(BASE_URL_E2E + "/investigation/" + ucid);
         waitForPageToLoad();
         connectionTab.click();
     }
 
     @Step("Go to main page")
     public void navigateMain() {
+        Allure.step("Go to main page");
         page.navigate(BASE_URL_E2E);
 
     }
