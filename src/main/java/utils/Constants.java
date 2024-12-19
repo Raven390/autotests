@@ -77,7 +77,7 @@ public class Constants {
     public static final String REGISTRATION_HELPER_WID_VANTAGE = "AU";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
     // TABLES
-    public static final String CRM_USER_TABLE_NAME = "vindex_test.crm__tb_user";
+    public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm__tb_bonus";
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm__tb_deposit";
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm__tb_withdrawal";
