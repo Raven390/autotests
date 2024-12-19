@@ -76,7 +76,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
-        String ruleName = "Registration";
+        String ruleName = "Mirror Trading";
         investigationPage.selectRuleWithNameWithSearch(ruleName);
         investigationPage.clickApplyFiltrationButton();
         investigationPage.verifyAllCardsFilteredByRuleName(ruleName);
@@ -142,7 +142,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.selectBrandFilterByText("Vantage");
         investigationPage.resetBrandFilterAndVerify();
         // Rules
-        investigationPage.selectRuleWithName("CPA");
+        investigationPage.selectRuleWithName("Mirror Trading");
         investigationPage.resetRulesFilterAndVerify();
         // Countries
         investigationPage.selectCountryFilter("Cyprus");
@@ -152,7 +152,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.resetAssigneeFilterAndVerify();
         // Reset all
         investigationPage.selectBrandFilterByText("Vantage");
-        investigationPage.selectRuleWithName("CPA");
+        investigationPage.selectRuleWithName("Mirror Trading");
         investigationPage.selectCountryFilter("Cyprus");
         investigationPage.selectAssigneeFilter(coreUser());
         investigationPage.resetAllFiltersAndVerify();
