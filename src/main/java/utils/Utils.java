@@ -3,7 +3,9 @@ package utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -46,6 +48,18 @@ public class Utils {
 
     public static String getTomorrowTimestampDbFormat() {
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getYesterdayTimestampDbFormat() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPreviousWeekTimestampDbFormat() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusDays(7);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return tomorrow.format(formatter);
     }
@@ -168,5 +182,28 @@ public class Utils {
         brandToUcidBrandMap.put(ULTIMA_MARKETS, "ultimamarkets");
         brandToUcidBrandMap.put(INFINOX, "infinox");
         return String.format("%s-%s", brandToUcidBrandMap.get(brand), userId);
+    }
+
+    public static String convertDateTimeDbToDate(String dtDbFormat) {
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime dateTime = LocalDateTime.parse(dtDbFormat, inputFormatter);
+        return dateTime.format(outputFormatter);
+    }
+
+    public static String getCurrentDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).toString();
+    }
+
+    public static String getYesterdayDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).minusDays(1).toString();
+    }
+
+    public static String getPreviousWeekDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).minusDays(6).toString();
+    }
+
+    public static String getPrevious30DaysDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).minusDays(29).toString();
     }
 }

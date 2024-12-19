@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.LAYER_WEB;
 import static utils.Constants.TEAM_BACKOFFICE;
 import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.getRandomUuidString;
 
 public class ConnectionSearchTest extends TestBaseWeb {
 
@@ -339,7 +340,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("316")
     @DisplayName("Connection Search Name of clients must be taken from the DB")
     void csPageConnectionNodeHasNameFromDbTest() throws ReflectiveOperationException, SQLException {
-        CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23 14:56:59", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat());
+        CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId");
         deleteEntryFromDb("vindex_test.crm__tb_user", "user_id=424204");
         insertObjectToDb("vindex_test.crm__tb_user", testUser);
         connectionPage.navigateMain();

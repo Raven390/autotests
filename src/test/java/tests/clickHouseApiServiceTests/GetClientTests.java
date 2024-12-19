@@ -66,8 +66,8 @@ public class GetClientTests extends TestBaseApi {
         assertThat("Check twoFaUser", getClientResponse.twoFaUser, is("true"));
         assertThat("Check authentication", getClientResponse.authentication, is("2FA"));
         assertThat("Check websiteUserType", getClientResponse.websiteUserType, is("2"));
-        assertThat("Check emailVerificationDate", getClientResponse.emailVerificationMark, is("2024-10-23 15:14:17.232"));
-        assertThat("Check phoneVerificationDate", getClientResponse.phoneVerificationMark, is("2024-10-23 15:14:10.722"));
+        assertThat("Check emailVerificationDate", getClientResponse.emailVerificationMark, is("1"));
+        assertThat("Check phoneVerificationDate", getClientResponse.phoneVerificationMark, is("2"));
         assertThat("Check ibId", getClientResponse.ibId, is("1"));
         assertThat("Check cpaId", getClientResponse.cpaId, is("2"));
         assertThat("Check rafReferrerId", getClientResponse.rafReferrerId, is("3"));

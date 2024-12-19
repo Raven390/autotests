@@ -33,18 +33,20 @@ public class CrmTbUserObject {
     public Integer rafReferrerId;
     public String kycStatus;
     public String lastUpdated;
+    public String createTime;
+    public String uid;
+    public String nationalityId;
 
     public CrmTbUserObject() {
     }
 
-    // Constructor to initialize all fields
     public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String registrationDate,
-            String firstName, String lastName, String gender, String birthday, String country,
-            String countryCode, String isoCountryCode, String language, String nationality,
-            String email, String phoneNum, String phoneCountryCode, String isTwoFaUser,
-            String authentication, String websiteUserType, String emailVerificationMark,
-            String phoneVerificationMark, Integer ibId, Integer cpaId, Integer rafReferrerId,
-            String kycStatus, String lastUpdated) {
+            String firstName, String lastName, String gender, String birthday, String country, String countryCode,
+            String isoCountryCode, String language, String nationality, String email, String phoneNum,
+            String phoneCountryCode, String isTwoFaUser, String authentication, String websiteUserType,
+            String emailVerificationMark, String phoneVerificationMark, Integer ibId, Integer cpaId,
+            Integer rafReferrerId, String kycStatus, String lastUpdated, String createTime, String uid,
+            String nationalityId) {
         this.userId = userId;
         this.ucid = ucid;
         this.brand = brand;
@@ -72,6 +74,9 @@ public class CrmTbUserObject {
         this.rafReferrerId = rafReferrerId;
         this.kycStatus = kycStatus;
         this.lastUpdated = lastUpdated;
+        this.createTime = createTime;
+        this.uid = uid;
+        this.nationalityId = nationalityId;
     }
 
     // Constructor to set name, ID, UCID, and Brand
@@ -110,16 +115,16 @@ public class CrmTbUserObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbUserObject that = (CrmTbUserObject) o;
-        return userId == that.userId && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registrationDate, that.registrationDate) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(countryCode, that.countryCode) && Objects.equals(isoCountryCode, that.isoCountryCode) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phoneNum, that.phoneNum) && Objects.equals(phoneCountryCode, that.phoneCountryCode) && Objects.equals(isTwoFaUser, that.isTwoFaUser) && Objects.equals(authentication, that.authentication) && Objects.equals(websiteUserType, that.websiteUserType) && Objects.equals(emailVerificationMark, that.emailVerificationMark) && Objects.equals(phoneVerificationMark, that.phoneVerificationMark) && Objects.equals(ibId, that.ibId) && Objects.equals(cpaId, that.cpaId) && Objects.equals(rafReferrerId, that.rafReferrerId) && Objects.equals(kycStatus, that.kycStatus) && Objects.equals(lastUpdated, that.lastUpdated);
+        return userId == that.userId && Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(registrationDate, that.registrationDate) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(gender, that.gender) && Objects.equals(birthday, that.birthday) && Objects.equals(country, that.country) && Objects.equals(countryCode, that.countryCode) && Objects.equals(isoCountryCode, that.isoCountryCode) && Objects.equals(language, that.language) && Objects.equals(nationality, that.nationality) && Objects.equals(email, that.email) && Objects.equals(phoneNum, that.phoneNum) && Objects.equals(phoneCountryCode, that.phoneCountryCode) && Objects.equals(isTwoFaUser, that.isTwoFaUser) && Objects.equals(authentication, that.authentication) && Objects.equals(websiteUserType, that.websiteUserType) && Objects.equals(emailVerificationMark, that.emailVerificationMark) && Objects.equals(phoneVerificationMark, that.phoneVerificationMark) && Objects.equals(ibId, that.ibId) && Objects.equals(cpaId, that.cpaId) && Objects.equals(rafReferrerId, that.rafReferrerId) && Objects.equals(kycStatus, that.kycStatus) && Objects.equals(lastUpdated, that.lastUpdated) && Objects.equals(createTime, that.createTime) && Objects.equals(uid, that.uid) && Objects.equals(nationalityId, that.nationalityId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, ucid, brand, regulator, registrationDate, firstName, lastName, gender, birthday, country, countryCode, isoCountryCode, language, nationality, email, phoneNum, phoneCountryCode, isTwoFaUser, authentication, websiteUserType, emailVerificationMark, phoneVerificationMark, ibId, cpaId, rafReferrerId, kycStatus, lastUpdated);
+        return Objects.hash(userId, ucid, brand, regulator, registrationDate, firstName, lastName, gender, birthday, country, countryCode, isoCountryCode, language, nationality, email, phoneNum, phoneCountryCode, isTwoFaUser, authentication, websiteUserType, emailVerificationMark, phoneVerificationMark, ibId, cpaId, rafReferrerId, kycStatus, lastUpdated, createTime, uid, nationalityId);
     }
 
     @Override
     public String toString() {
-        return "CrmTbUserObject{" + "user_id=" + userId + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", registration_date='" + registrationDate + '\'' + ", first_name='" + firstName + '\'' + ", last_name='" + lastName + '\'' + ", gender='" + gender + '\'' + ", birthday='" + birthday + '\'' + ", country='" + country + '\'' + ", country_code='" + countryCode + '\'' + ", iso_country_code='" + isoCountryCode + '\'' + ", language='" + language + '\'' + ", nationality='" + nationality + '\'' + ", email='" + email + '\'' + ", phone_num='" + phoneNum + '\'' + ", phone_country_code='" + phoneCountryCode + '\'' + ", is_two_fa_user='" + isTwoFaUser + '\'' + ", authentication='" + authentication + '\'' + ", website_user_type='" + websiteUserType + '\'' + ", email_verification_date='" + emailVerificationMark + '\'' + ", phone_verification_date='" + phoneVerificationMark + '\'' + ", ib_id='" + ibId + '\'' + ", cpa_id='" + cpaId + '\'' + ", raf_referrer_id='" + rafReferrerId + '\'' + ", kyc_status='" + kycStatus + '\'' + ", last_updated='" + lastUpdated + '\'' + '}';
+        return "CrmTbUserObject{" + "userId=" + userId + ", ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", registrationDate='" + registrationDate + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", gender='" + gender + '\'' + ", birthday='" + birthday + '\'' + ", country='" + country + '\'' + ", countryCode='" + countryCode + '\'' + ", isoCountryCode='" + isoCountryCode + '\'' + ", language='" + language + '\'' + ", nationality='" + nationality + '\'' + ", email='" + email + '\'' + ", phoneNum='" + phoneNum + '\'' + ", phoneCountryCode='" + phoneCountryCode + '\'' + ", isTwoFaUser='" + isTwoFaUser + '\'' + ", authentication='" + authentication + '\'' + ", websiteUserType='" + websiteUserType + '\'' + ", emailVerificationMark='" + emailVerificationMark + '\'' + ", phoneVerificationMark='" + phoneVerificationMark + '\'' + ", ibId=" + ibId + ", cpaId=" + cpaId + ", rafReferrerId=" + rafReferrerId + ", kycStatus='" + kycStatus + '\'' + ", lastUpdated='" + lastUpdated + '\'' + ", createTime='" + createTime + '\'' + ", uid='" + uid + '\'' + ", nationalityId='" + nationalityId + '\'' + '}';
     }
 }

@@ -185,7 +185,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         crmTbDepositObject.paymentChannel = "DebitCard";
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
@@ -206,7 +206,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -233,7 +233,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -267,7 +267,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -299,7 +299,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -328,7 +328,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -355,7 +355,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -384,7 +384,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
@@ -416,7 +416,7 @@ public class MirrorTradingRuleDataFactory {
         data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
         CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.registrationDate;
+        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5

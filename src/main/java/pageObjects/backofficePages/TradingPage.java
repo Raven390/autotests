@@ -5,14 +5,17 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
+import org.hamcrest.MatcherAssert;
 import utils.Utils;
 
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.Utils.*;
 
 public class TradingPage extends AbstractPage {
 
@@ -98,6 +101,25 @@ public class TradingPage extends AbstractPage {
     private final Locator accountTableHeaderMarginFree;
     private final Locator accountTableHeaderServer;
     private final Locator accountTableHeaderGroup;
+    private final Locator operationOpenSortElement;
+    private final Locator openDatePicker;
+    private final Locator closeDatePicker;
+    private final Locator typeCheckboxes;
+    private final Locator accountsCheckboxes;
+    private final Locator symbolCheckboxes;
+    private final Locator methodCheckboxes;
+    private final Locator resetTypeButton;
+    private final Locator resetAccountsButton;
+    private final Locator resetSymbolButton;
+    private final Locator resetMethodButton;
+    private final Locator resetOpenDateButton;
+    private final Locator resetCloseDateButton;
+    private final Locator resetDurationButton;
+    private final Locator resetProfitButton;
+    private final Locator resetVolumeButton;
+    private final Locator resetAllButton;
+    private final Locator openDateTooltip;
+    private final Locator profitTooltip;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -105,6 +127,12 @@ public class TradingPage extends AbstractPage {
     private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
     private static final String ACCOUNT_TABLE_HEADER_PATTERN = "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
     private static final String ACCOUNT_TABLE_CELL_PATTERN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]/div";
+    private static final String FILTER_CONTAINER = "//div[text()='%s']/ancestor::div[@class='v-trading-tab-deals-filter__filter-container']";
+    private static final String DATE_PICKER_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input";
+    private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='%s']";
+    private static final String CHECKBOXES_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input[@type='checkbox']";
+    private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='Reset']";
+    private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
 
     public TradingPage(Page page) {
         super(page);
@@ -190,6 +218,25 @@ public class TradingPage extends AbstractPage {
         this.accountTableHeaderMarginFree = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "margin-free"));
         this.accountTableHeaderServer = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "server"));
         this.accountTableHeaderGroup = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "group"));
+        this.operationOpenSortElement = page.locator("//*[name()='svg' and contains(@data-qa, 'trading_deals__arrow')]/..");
+        this.openDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Open date"));
+        this.closeDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Close date"));
+        this.typeCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Type"));
+        this.accountsCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Accounts"));
+        this.symbolCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Symbol"));
+        this.methodCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Method"));
+        this.resetTypeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Type"));
+        this.resetAccountsButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Accounts"));
+        this.resetSymbolButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Symbol"));
+        this.resetMethodButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Method"));
+        this.resetOpenDateButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Open date"));
+        this.resetCloseDateButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Close date"));
+        this.resetDurationButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Duration"));
+        this.resetProfitButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Profit"));
+        this.resetVolumeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Volume"));
+        this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
+        this.openDateTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Open date"));
+        this.profitTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Profit"));
     }
 
     @Step("Navigate to users trading tab")
@@ -313,6 +360,7 @@ public class TradingPage extends AbstractPage {
     public void clickApplyButton() {
         Allure.step("Click apply button");
         applyFiltersButton.click();
+        waitForPageToLoad();
     }
 
     @Step("Fill volume values")
@@ -695,5 +743,214 @@ public class TradingPage extends AbstractPage {
     @Step("Get comment cell value for operation by index")
     public String getOperationCommentByIndex(int index) {
         return commentColumnCell.nth(index).textContent();
+    }
+
+    @Step("Get count of operations")
+    public int getOperationsCount() {
+        return accountColumnCell.count();
+    }
+
+    @Step("Change sorting by open")
+    public void sortByOpen() {
+        operationOpenSortElement.click();
+    }
+
+    @Step("Get text of popup when hovering over sorting by open element")
+    public String getSortByOpenPopupText() {
+        operationOpenSortElement.hover();
+        return popupElement.textContent();
+    }
+
+    @Step("Select open date from date picker")
+    public void selectOpenDate(String openDate) {
+        selectDateInElement(openDatePicker, openDate);
+    }
+
+    @Step("Select close date from date picker")
+    public void selectCloseDate(String closeDate) {
+        selectDateInElement(closeDatePicker, closeDate);
+    }
+
+    @Step("Verify preset options for filters")
+    public void verifyPresetOptionsForFilters() {
+        String openDate = "Open date";
+        String closeDate = "Close date";
+        String profit = "Profit";
+        String volume = "Volume";
+        // Open date
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today")).click();
+        assertThat(openDatePicker).hasValue(getCurrentDateUtc());
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Yesterday")).click();
+        assertThat(openDatePicker).hasValue(getYesterdayDateUtc());
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 7 days")).click();
+        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPreviousWeekDateUtc(), getCurrentDateUtc()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 30 days")).click();
+        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDateUtc(), getCurrentDateUtc()));
+        // Close date
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Today")).click();
+        assertThat(closeDatePicker).hasValue(getCurrentDateUtc());
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Yesterday")).click();
+        assertThat(closeDatePicker).hasValue(getYesterdayDateUtc());
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 7 days")).click();
+        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPreviousWeekDateUtc(), getCurrentDateUtc()));
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 30 days")).click();
+        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDateUtc(), getCurrentDateUtc()));
+        // Profit
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "0-50")).click();
+        assertThat(profitFromInput).hasValue("0 USD");
+        assertThat(profitToInput).hasValue("50 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "50-200")).click();
+        assertThat(profitFromInput).hasValue("50 USD");
+        assertThat(profitToInput).hasValue("200 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "200-500")).click();
+        assertThat(profitFromInput).hasValue("200 USD");
+        assertThat(profitToInput).hasValue("500 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, ">500")).click();
+        assertThat(profitFromInput).hasValue("500 USD");
+        assertThat(profitToInput).hasValue("");
+        // Volume
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "0-50")).click();
+        assertThat(volumeFromInput).hasValue("0 USD");
+        assertThat(volumeToInput).hasValue("50 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "50-200")).click();
+        assertThat(volumeFromInput).hasValue("50 USD");
+        assertThat(volumeToInput).hasValue("200 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "200-500")).click();
+        assertThat(volumeFromInput).hasValue("200 USD");
+        assertThat(volumeToInput).hasValue("500 USD");
+        page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, ">500")).click();
+        assertThat(volumeFromInput).hasValue("500 USD");
+        assertThat(volumeToInput).hasValue("");
+    }
+
+    public void verifyNoTypeIsSelected() {
+        for (int i = 0; i < typeCheckboxes.count(); i++) {
+            Locator checkbox = typeCheckboxes.nth(i);
+            MatcherAssert.assertThat("Assert that each type checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+        }
+    }
+
+    @Step("Press reset button for type and verify that none are selected")
+    public void resetTypeFilterAndVerify() {
+        resetTypeButton.click();
+        verifyNoTypeIsSelected();
+    }
+
+    public void verifyNoAccountIsSelected() {
+        for (int i = 0; i < accountsCheckboxes.count(); i++) {
+            Locator checkbox = accountsCheckboxes.nth(i);
+            MatcherAssert.assertThat("Assert that each account checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+        }
+    }
+
+    @Step("Press reset button for accounts and verify that none are selected")
+    public void resetAccountsFilterAndVerify() {
+        resetAccountsButton.click();
+        verifyNoAccountIsSelected();
+    }
+
+    public void verifyNoSymbolIsSelected() {
+        for (int i = 0; i < symbolCheckboxes.count(); i++) {
+            Locator checkbox = symbolCheckboxes.nth(i);
+            MatcherAssert.assertThat("Assert that each symbol checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+        }
+    }
+
+    @Step("Press reset button for symbol and verify that none are selected")
+    public void resetSymbolFilterAndVerify() {
+        resetSymbolButton.click();
+        verifyNoSymbolIsSelected();
+    }
+
+    public void verifyNoMethodIsSelected() {
+        for (int i = 0; i < methodCheckboxes.count(); i++) {
+            Locator checkbox = methodCheckboxes.nth(i);
+            MatcherAssert.assertThat("Assert that each method checkbox is not selected", checkbox.isChecked(), not(equalTo(true)));
+        }
+    }
+
+    @Step("Press reset button for method and verify that none are selected")
+    public void resetMethodFilterAndVerify() {
+        resetMethodButton.click();
+        verifyNoMethodIsSelected();
+    }
+
+    public void verifyNoOpenDateIsFilled() {
+        assertThat(openDatePicker).hasValue("");
+    }
+
+    @Step("Press reset button for open date and verify that none are selected")
+    public void resetOpenDateFilterAndVerify() {
+        resetOpenDateButton.click();
+        verifyNoOpenDateIsFilled();
+    }
+
+    public void verifyNoCloseDateIsFilled() {
+        assertThat(closeDatePicker).hasValue("");
+    }
+
+    @Step("Press reset button for close date and verify that none are selected")
+    public void resetCloseDateFilterAndVerify() {
+        resetCloseDateButton.click();
+        verifyNoCloseDateIsFilled();
+    }
+
+    public void verifyNoDurationIsFilled() {
+        assertThat(durationFromInput).hasValue("");
+        assertThat(durationToInput).hasValue("");
+    }
+
+    @Step("Press reset button for duration and verify that none are selected")
+    public void resetDurationFilterAndVerify() {
+        resetDurationButton.click();
+        verifyNoDurationIsFilled();
+    }
+
+    public void verifyNoProfitIsFilled() {
+        assertThat(profitFromInput).hasValue("");
+        assertThat(profitToInput).hasValue("");
+    }
+
+    @Step("Press reset button for profit and verify that none are selected")
+    public void resetProfitFilterAndVerify() {
+        resetProfitButton.click();
+        verifyNoProfitIsFilled();
+    }
+
+    public void verifyNoVolumeIsFilled() {
+        assertThat(volumeFromInput).hasValue("");
+        assertThat(volumeToInput).hasValue("");
+    }
+
+    @Step("Press reset button for volume and verify that none are selected")
+    public void resetVolumeFilterAndVerify() {
+        resetVolumeButton.click();
+        verifyNoVolumeIsFilled();
+    }
+
+    @Step("Press reset button for all filters and verify that none are selected")
+    public void resetAllFiltersAndVerify() {
+        resetAllButton.click();
+        verifyNoTypeIsSelected();
+        verifyNoAccountIsSelected();
+        verifyNoOpenDateIsFilled();
+        verifyNoCloseDateIsFilled();
+        verifyNoDurationIsFilled();
+        verifyNoSymbolIsSelected();
+        verifyNoProfitIsFilled();
+        verifyNoVolumeIsFilled();
+        verifyNoMethodIsSelected();
+    }
+
+    @Step("Verify open date tooltip is as expected")
+    public void verifyOpenDateTooltip() {
+        openDateTooltip.hover();
+        assertThat(popupElement).containsText("Open date for trading operations/ Date for payments operations");
+    }
+
+    @Step("Verify profit tooltip is as expected")
+    public void verifyProfitTooltip() {
+        profitTooltip.hover();
+        assertThat(popupElement).containsText("Profit date for trading operations/ Amount for payments operations");
     }
 }
