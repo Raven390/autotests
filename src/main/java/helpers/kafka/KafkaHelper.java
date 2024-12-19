@@ -28,6 +28,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class KafkaHelper {
 
     public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
+    public static final Integer MAX_ATTEMPTS = 25;
 
     public static String getFreeConsumerId() {
         FileLock fileLock = null;
@@ -251,7 +252,7 @@ public class KafkaHelper {
             consumer.seek(partition, startOffset);
         }
 
-        int maxAttempts = 30;
+        int maxAttempts = MAX_ATTEMPTS;
         int attempts = 0;
 
         try {
@@ -308,7 +309,7 @@ public class KafkaHelper {
             consumer.seek(partition, startOffset);
         }
 
-        int maxAttempts = 30;
+        int maxAttempts = MAX_ATTEMPTS;
         int attempts = 0;
 
         try {
@@ -414,7 +415,7 @@ public class KafkaHelper {
 
             try (consumer) {
                 consumer.subscribe(Collections.singletonList(topic));
-                int maxAttempts = 25;
+                int maxAttempts = MAX_ATTEMPTS;
                 int attempts = 0;
                 while (attempts < maxAttempts) {
                     // Poll the Kafka broker for new records (with a timeout of 500 ms)
@@ -476,7 +477,7 @@ public class KafkaHelper {
             consumer.seek(partition, startOffset);
         }
 
-        int maxAttempts = 30;
+        int maxAttempts = MAX_ATTEMPTS;
         int attempts = 0;
         Map<String, String> foundMessages = new HashMap<>(); // Store the messages corresponding to each id
 
@@ -570,7 +571,7 @@ public class KafkaHelper {
         // Subscribe to the topic
         try (consumer) {
             consumer.subscribe(Collections.singletonList(topic));
-            int maxAttempts = 25;
+            int maxAttempts = MAX_ATTEMPTS;
             int attempts = 0;
             // Ensure there are no null values in the textToSearchList
             if (textToSearchList == null || textToSearchList.length == 0) {
@@ -622,7 +623,7 @@ public class KafkaHelper {
 
         try (consumer) {
             consumer.subscribe(Collections.singletonList(topic));
-            int maxAttempts = 25;
+            int maxAttempts = MAX_ATTEMPTS;
             int attempts = 0;
             // Track which texts are found across all messages
             Set<String> foundTexts = new HashSet<>();
