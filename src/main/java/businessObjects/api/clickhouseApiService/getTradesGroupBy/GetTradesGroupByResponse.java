@@ -15,13 +15,17 @@ public class GetTradesGroupByResponse {
     @JsonProperty("profitUSD")
     public Double profitUsd;
 
+    @JsonProperty("volumeLots")
+    public Double volumeLots;
+
     public GetTradesGroupByResponse() {
     }
 
-    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd) {
+    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd, Double volumeLots) {
         this.symbol = symbol;
         this.profit = profit;
         this.profitUsd = profitUsd;
+        this.volumeLots = volumeLots;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class GetTradesGroupByResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetTradesGroupByResponse that = (GetTradesGroupByResponse) o;
-        return Objects.equals(symbol, that.symbol) && Objects.equals(profit, that.profit) && Objects.equals(profitUsd, that.profitUsd);
+        return Objects.equals(symbol, that.symbol) && Objects.equals(profit, that.profit) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(volumeLots, that.volumeLots);
     }
 
     @Override
@@ -39,6 +43,6 @@ public class GetTradesGroupByResponse {
 
     @Override
     public String toString() {
-        return "GetTradesGroupByResponse{" + "symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + '}';
+        return "GetTradesGroupByResponse{" + "symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeLots=" + volumeLots + '}';
     }
 }
