@@ -22,7 +22,7 @@ public class ProfilePage extends AbstractPage {
 
     @Step("Open the BackOffice user profile page")
     public void navigate() {
-        page.navigate(BASE_URL_E2E + "/account");
+        page.navigate(BASE_URL_E2E + "account");
     }
 
     @Step("Check that user on profile page")

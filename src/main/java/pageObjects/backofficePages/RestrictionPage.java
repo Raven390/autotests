@@ -108,7 +108,7 @@ public class RestrictionPage {
 
     @Step("Open users restriction tab")
     public void navigate(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
         isPageLoaded();
         restrictionTab.click();
         isPageLoaded();

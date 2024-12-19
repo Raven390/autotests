@@ -195,7 +195,7 @@ public class TradingPage extends AbstractPage {
     @Step("Navigate to users trading tab")
     public void navigate(String ucid) {
         Allure.step("Navigate to users trading tab");
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
         waitForPageToLoad();
         tradingTab.click();
         waitForPageToLoad();
@@ -204,7 +204,7 @@ public class TradingPage extends AbstractPage {
     @Step("Navigate to users restriction tab/operations")
     public void navigateOperations(String ucid) {
         Allure.step("Navigate to users trading tab/operations");
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation?client_ucid=" + ucid);
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
         waitForPageToLoad();
         tradingTab.click();
         operationsTab.click();

@@ -68,6 +68,12 @@ public class Utils {
         return formatter.format(currentDateTime);
     }
 
+    public static String getCurrentDate() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
     public static Integer getRandomIntNotInRange(int lowerBound, int upperBound) {
         if (lowerBound < upperBound) {
             int randomInt;
