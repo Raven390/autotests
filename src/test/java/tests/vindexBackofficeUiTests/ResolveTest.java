@@ -32,8 +32,8 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveWithdrawalsAllApprove();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveWithdrawalsAllApprove();
         String details = "Transaction ID 141402; 5.00 USD 2024-11-13 10:11 crypto; Accept";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("141402", "5");
@@ -55,8 +55,8 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveWithdrawalsAllReject();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveWithdrawalsAllReject();
         String details = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("141401", "4");
@@ -78,8 +78,8 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveWithdrawalsApproveFirst();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveWithdrawalsApproveFirst();
         String details1 = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details1);
         restrictionPage.checkKafkaRequestWithdrawal("141402", "4");
@@ -91,8 +91,8 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveWithdrawalsApproveFirst();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveWithdrawalsApproveFirst();
         String details2 = "Transaction ID 141401; 5.00 USD 2024-11-13 10:11 bank card; Accept";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details2);
         restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
@@ -148,8 +148,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 8);
 
     }
@@ -168,8 +168,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 7);
 
     }
@@ -188,8 +188,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 5);
     }
 
@@ -207,8 +207,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 1);
     }
 
@@ -226,8 +226,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 2);
     }
 
@@ -245,8 +245,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 11);
     }
 
@@ -264,8 +264,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 3);
     }
 
@@ -283,8 +283,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 12);
     }
 
@@ -302,8 +302,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 14);
     }
 
@@ -321,8 +321,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 4);
     }
 
@@ -340,8 +340,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 9);
     }
 
@@ -359,8 +359,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 10);
     }
 
@@ -378,8 +378,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 6);
     }
 
@@ -397,8 +397,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 13);
     }
 
@@ -416,8 +416,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveAddFraud("test" + timestamp, "Hedging");
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, "Hedging");
         checkUserFraudDb(clientUcid, 13);
         checkUserFraudDb(clientUcid, 1);
     }
@@ -436,8 +436,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveNoFrauds("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveNoFrauds("test" + timestamp);
         checkUserNoFraudDb(clientUcid);
     }
 
@@ -455,8 +455,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.test250Symbols();
+        resolvePage.openResolveSuspicious();
+        resolvePage.test250Symbols();
     }
 
     @Test
@@ -473,8 +473,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveNoFrauds("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveNoFrauds("test" + timestamp);
         checkUserAlertConfirmation(clientUcid, false);
     }
 
@@ -492,8 +492,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.resolveSimple("test" + timestamp);
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
         checkUserAlertConfirmation(clientUcid, true);
     }
 
@@ -511,8 +511,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.checkFraudsList();
+        resolvePage.openResolveSuspicious();
+        resolvePage.checkFraudsList();
     }
 
     @Test
@@ -534,8 +534,8 @@ public class ResolveTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.checkRestrictionIsDisplayed("Open new account");
+        resolvePage.openResolveSuspicious();
+        resolvePage.checkRestrictionIsDisplayed("Open new account");
         //run 2
         restrictionPage.cleanUserRestriction(clientUcid);
         deleteUserBO(clientUcid);
@@ -546,7 +546,7 @@ public class ResolveTest extends TestBaseWeb {
         CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
-        resolveScreen.openResolveSuspicious();
-        resolveScreen.checkRestrictionIsDisplayed("Login CRM");
+        resolvePage.openResolveSuspicious();
+        resolvePage.checkRestrictionIsDisplayed("Login CRM");
     }
 }

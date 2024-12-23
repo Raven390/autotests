@@ -56,7 +56,6 @@ public abstract class AbstractPage {
         page.waitForSelector(CALENDAR_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
-    @Step("Select dates from date picker by label")
     protected void selectDateInElement(Locator locator, String date) {
         selectDateRangeInElement(locator, date, date);
     }

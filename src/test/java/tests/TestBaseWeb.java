@@ -36,7 +36,7 @@ public class TestBaseWeb {
     public RestrictionPage restrictionPage;
     public ConnectionPage connectionPage;
     public GeneralPage generalPage;
-    public ResolveScreen resolveScreen;
+    public ResolvePage resolvePage;
     public TradingPage tradingPage;
     public AuditTrailPage auditTrailPage;
     public AlertsPage alertsPage;
@@ -74,7 +74,7 @@ public class TestBaseWeb {
         restrictionPage = new RestrictionPage(page);
         connectionPage = new ConnectionPage(page);
         generalPage = new GeneralPage(page);
-        resolveScreen = new ResolveScreen(page);
+        resolvePage = new ResolvePage(page);
         tradingPage = new TradingPage(page);
         auditTrailPage = new AuditTrailPage(page);
         alertsPage = new AlertsPage(page);

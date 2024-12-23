@@ -74,7 +74,7 @@ public class ConfigFactory {
     public static final String BACKOFFICE_DB_PASSWORD = CONFIG.backofficeDbPassword();
     public static final String BACKOFFICE_DB_NAME = CONFIG.backofficeDbName();
     // Backoffice db general
-    public static final String POSTGRE_DB_HOST = CONFIG.postgreDBHost();
+    public static final String POSTGRES_DB_HOST = CONFIG.postgresDBHost();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
@@ -314,8 +314,8 @@ public class ConfigFactory {
 
         // Backoffice DB general?
 
-        @Key("postgreDBHost")
-        String postgreDBHost();
+        @Key("postgresDBHost")
+        String postgresDBHost();
 
         // Other
 

@@ -14,8 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ResolveScreen {
-    private final Page page;
+public class ResolvePage extends AbstractPage {
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
     private final Locator resolveButton;
@@ -35,8 +34,8 @@ public class ResolveScreen {
     private final Locator fraudSelectApplyButton;
     private final Locator clientRestrictionItem;
 
-    public ResolveScreen(Page page) {
-        this.page = page;
+    public ResolvePage(Page page) {
+        super(page);
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin");
         this.resolveButton = page.locator(".g-button__text").getByText("Resolve");
@@ -55,8 +54,6 @@ public class ResolveScreen {
         this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
-
-
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";

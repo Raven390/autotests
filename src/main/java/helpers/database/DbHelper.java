@@ -199,7 +199,7 @@ public class DbHelper {
     private static Connection createPostgresConnection() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         } else {
             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         }
@@ -215,7 +215,7 @@ public class DbHelper {
     private static Connection createPostgresConnectionAudit() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
         } else {
             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
         }
@@ -230,7 +230,7 @@ public class DbHelper {
     private static Connection createPostgresConnectionBO() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRE_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
         } else {
             jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
         }

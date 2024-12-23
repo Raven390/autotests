@@ -93,11 +93,11 @@ public class InvestigationPage extends AbstractPage {
     private final Locator assigneeCheckboxes;
     private final Locator assignButton;
 
-    private final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
-    private final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
-    private final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
-    private final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'investigation_page__suspicious_client_card')]";
-    private final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
+    private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
+    private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
+    private static final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
+    private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'investigation_page__suspicious_client_card')]";
+    private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
 
     public InvestigationPage(Page page) {
         super(page);
