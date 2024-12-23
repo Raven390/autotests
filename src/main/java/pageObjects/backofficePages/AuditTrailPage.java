@@ -1,62 +1,78 @@
 package pageObjects.backofficePages;
 
+import businessObjects.ui.auditTrail.AuditTrailItem;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuditTrailPage {
+public class AuditTrailPage extends AbstractPage {
 
-    private final Page page;
     private final Locator auditTrailTab;
-    private final Locator loaderAnimation;
     private final Locator auditTrailItem;
+    private final Locator auditTrailItemHeader;
     private final Locator auditTrailItemComment;
+    private final Locator auditTrailItemDetails;
+    private final Locator auditTrailItemTime;
+
+    private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
 
     public AuditTrailPage(Page page) {
-        this.page = page;
-        this.loaderAnimation = page.locator(".v-loader");
+        super(page);
         this.auditTrailTab = page.locator("[role=\"tab\"][title=\"Audit trail\"]");
-        this.auditTrailItem = page.locator(".v-timeline-item");
-        this.auditTrailItemComment = page.locator(".v-timeline-item .v-investigation-tools-trail-card__comment");
-
+        this.auditTrailItem = page.locator("//div[@class='v-investigation-tools-trail__item']/div/div[contains(@class,'v-timeline-item')]");
+        this.auditTrailItemHeader = page.locator("//div[@class='v-investigation-tools-trail-card__header']");
+        this.auditTrailItemComment = page.locator("//div[@class='v-investigation-tools-trail-card__comment']");
+        this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
+        this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");
     }
 
     @Step("Open users general tab")
     public void navigateAuditTrailTab(String ucid) {
         page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
-        isPageLoaded();
+        waitForPageToLoad();
         auditTrailTab.click();
-        isPageLoaded();
+        waitForPageToLoad();
     }
 
     @Step("Open general tab")
     public void openAuditTrailTab() {
-        isPageLoaded();
         auditTrailTab.click();
-        isPageLoaded();
-    }
-
-    @Step("Check if the page loaded")
-    public void isPageLoaded() {
-        int n = 0;
-        page.waitForTimeout(2000);
-        while (loaderAnimation.isVisible() && n < 8) {
-            page.waitForTimeout(2000);
-            n += 1;
-        }
+        waitForPageToLoad();
     }
 
     @Step("Find record in audit trail")
     public void findRecord(String actionComment) {
-        String comment = auditTrailItemComment.first().textContent();
-
+        String comment = auditTrailItem.first().locator(auditTrailItemComment).textContent();
         assertEquals(actionComment, comment);
-
-
     }
 
+    @Step("Wait for page to load")
+    public void waitForPageToLoad() {
+        page.waitForSelector(AUDIT_TRAIL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+    }
 
+    @Step("Get list of all audit trail items")
+    public List<AuditTrailItem> getAuditTrailItems() {
+        List<AuditTrailItem> auditTrailItems = new ArrayList<>();
+        for (int i = 0; i < auditTrailItem.count(); i++) {
+            AuditTrailItem item = new AuditTrailItem();
+            item.setHeader(auditTrailItem.nth(i).locator(auditTrailItemHeader).textContent());
+            item.setTime(auditTrailItem.nth(i).locator(auditTrailItemTime).textContent());
+            if (auditTrailItem.nth(i).locator(auditTrailItemComment).count() > 0) {
+                item.setComment(auditTrailItem.nth(i).locator(auditTrailItemComment).textContent());
+            }
+            if (auditTrailItem.nth(i).locator(auditTrailItemDetails).count() > 0) {
+                item.setDetails(auditTrailItem.nth(i).locator(auditTrailItemDetails).innerText());
+            }
+            auditTrailItems.add(item);
+        }
+        return auditTrailItems;
+    }
 }
 

@@ -23,9 +23,8 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RestrictionPage {
+public class RestrictionPage extends AbstractPage {
 
-    private final Page page;
     private final Locator restrictionTab;
     private final Locator accountSwitch;
     private final Locator transferSwitch;
@@ -66,7 +65,7 @@ public class RestrictionPage {
 
 
     public RestrictionPage(Page page) {
-        this.page = page;
+        super(page);
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin");
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
@@ -112,6 +111,12 @@ public class RestrictionPage {
         isPageLoaded();
         restrictionTab.click();
         isPageLoaded();
+    }
+
+    @Step("Open general tab")
+    public void openRestrictionsTab() {
+        restrictionTab.click();
+        waitForPageToLoad();
     }
 
     @Step("Check that restriction tab rendered properly")

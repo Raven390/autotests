@@ -9,9 +9,8 @@ import io.qameta.allure.Step;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class GeneralPage {
+public class GeneralPage extends AbstractPage {
 
-    private final Page page;
     private final Locator generalTab;
     private final Locator loaderAnimation;
     private final Locator generalInfoSection;
@@ -49,16 +48,16 @@ public class GeneralPage {
     private final Locator registrationSourceIb;
     private final Locator registrationSourceCpa;
 
-    private final String LOADING_SPINNER_SELECTOR = ".v-loader";
-    private final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
-    private final String KYC_STATUS_SELECTOR = "[data-qa=\"investigation_tools_kyc__status\"]";
-    private final String GENERAL_TAB_LOADING_ELEMENT = "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
-    private final String GENERAL_INFO_HEADER = "//div[@class='v-investigation-tools-general-info__header']";
-    private final String ELEMENT_BY_LABEL_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
-    private final String BUTTON_LOADING = "//button[contains(@class,'g-button_loading')]";
+    private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
+    private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
+    private static final String KYC_STATUS_SELECTOR = "[data-qa=\"investigation_tools_kyc__status\"]";
+    private static final String GENERAL_TAB_LOADING_ELEMENT = "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
+    private static final String GENERAL_INFO_HEADER = "//div[@class='v-investigation-tools-general-info__header']";
+    private static final String ELEMENT_BY_LABEL_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
+    private static final String BUTTON_LOADING = "//button[contains(@class,'g-button_loading')]";
 
     public GeneralPage(Page page) {
-        this.page = page;
+        super(page);
         this.loaderAnimation = page.locator(LOADING_SPINNER_SELECTOR);
         this.generalTab = page.locator("[role=\"tab\"][title=\"General\"]");
         this.generalInfoSection = page.locator(".v-investigation-tools-general-info");
