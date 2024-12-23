@@ -41,7 +41,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account & server ID")
     @AllureId("200")
-    public void getClientSuccessTest() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest1() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
@@ -62,13 +62,40 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response code", clients.clientId, is(client.getUcid()));
+        assertThat("Check client ucid", clients.clientId, is(client.getUcid()));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client by trading account & server ID=null (400 error)")
+    @DisplayName("Clickhouse Api. Get client by userId + brand")
+    @AllureId("600")
+    public void getClientTest2() throws IOException, ReflectiveOperationException, SQLException {
+        // Create an instance of ClientHelper
+        ClientHelper client = getRandomClient();
+
+        // Insert in crm user table
+        CrmTbUserObject crmObject = generateUserByClient(client);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
+        // Insert object in mt user table
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
+        insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
+
+        // getClient request
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("userId", client.getUserId());
+        queryParams.put("brand", client.getBrand());
+        Response response = getClientsIdByTradingAccountServerId(queryParams);
+
+        GetClientsResponse clients = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
+
+        // Assert response
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check client ucid", clients.clientId, is(client.getUcid()));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get client by server ID=null (400 error)")
     @AllureId("201")
-    public void getClientSuccessTest2() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest3() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
@@ -87,14 +114,14 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid input: either tradingAccount/serverId or brand/userId must be provided."));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client by trading account=null & server ID (400 error)")
+    @DisplayName("Clickhouse Api. Get client by trading account=null (400 error)")
     @AllureId("202")
-    public void getClientSuccessTest3() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest4() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
@@ -114,14 +141,67 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid input: either tradingAccount/serverId or brand/userId must be provided."));
+        assertThat("Check response code", mappedResponse.status, is(400));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get client by userID=null (400 error)")
+    @AllureId("599")
+    public void getClientTest5() throws IOException, ReflectiveOperationException, SQLException {
+        // Create an instance of ClientHelper
+        ClientHelper client = getRandomClient();
+
+        // Insert in crm user table
+        CrmTbUserObject crmObject = generateUserByClient(client);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
+        // Insert object in mt user table
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
+        insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
+
+        // getClient request
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("brand", client.getBrand());
+        Response response = getClientsIdByTradingAccountServerId(queryParams);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+
+        // Assert response
+        assertThat("Check response code", response.code(), is(400));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid input: either tradingAccount/serverId or brand/userId must be provided."));
+        assertThat("Check response code", mappedResponse.status, is(400));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get client by brand=null (400 error)")
+    @AllureId("598")
+    public void getClientTest6() throws IOException, ReflectiveOperationException, SQLException {
+        // Create an instance of ClientHelper
+        ClientHelper client = getRandomClient();
+
+        // Insert in crm user table
+        CrmTbUserObject crmObject = generateUserByClient(client);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
+        // Insert object in mt user table
+        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
+        insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
+
+        // getClient request
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("userId", client.getUserId());
+        Response response = getClientsIdByTradingAccountServerId(queryParams);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        System.out.println(response);
+
+        // Assert response
+        assertThat("Check response code", response.code(), is(400));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid input: either tradingAccount/serverId or brand/userId must be provided."));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account=null & server ID (404 error)")
     @AllureId("203")
-    public void getClientSuccessTest4() throws IOException {
+    public void getClientTest7() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1);
@@ -131,7 +211,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(404));
-        assertThat("Check response code", mappedResponse.error, containsString("Client not found"));
+        assertThat("Check response error text", mappedResponse.error, containsString("Client not found"));
         assertThat("Check response code", mappedResponse.status, is(404));
     }
 
@@ -139,7 +219,7 @@ public class GetClientsTests extends TestBaseApi {
     @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("204")
-    public void getClientSuccessTest5() throws IOException {
+    public void getClientTest8() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
@@ -149,7 +229,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", mappedResponse.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
@@ -157,7 +237,7 @@ public class GetClientsTests extends TestBaseApi {
     @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("205")
-    public void getClientSuccessTest6(String serverId) throws IOException {
+    public void getClientTest9(String serverId) throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1);
@@ -167,7 +247,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat("Check response error text", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 }
