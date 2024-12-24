@@ -492,7 +492,7 @@ public class RegistrationRuleDataFactory {
             insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
             data.clientFraudTypes.forEach(fraud -> {
                 try {
-                    insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                    insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
                 } catch (SQLException | ReflectiveOperationException e) {
                     throw new RuntimeException(e);
                 }
@@ -533,7 +533,7 @@ public class RegistrationRuleDataFactory {
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.userId));
             data.clientFraudTypes.forEach(fraud -> {
                 try {
-                    deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                    deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

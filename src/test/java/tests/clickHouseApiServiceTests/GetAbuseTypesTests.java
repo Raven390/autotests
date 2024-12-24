@@ -40,15 +40,15 @@ public class GetAbuseTypesTests extends TestBaseApi {
         fraud1 = new BoClientFraudTypesObject(client.getUcid(), 1, "HEDGING");
         fraud2 = new BoClientFraudTypesObject(client.getUcid(), 2, "CPA");
         fraud3 = new BoClientFraudTypesObject(getRandomVantageClient().getUcid(), 3, "LOSS_VOUCHER_ABUSE");
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1);
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2);
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
     }
 
     @AfterAll
     public static void teardownAbuseTypes() throws SQLException {
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1.ucid));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.ucid));
+        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1.ucid));
+        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.ucid));
     }
 
     @Test

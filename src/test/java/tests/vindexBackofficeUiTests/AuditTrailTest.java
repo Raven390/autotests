@@ -203,4 +203,5 @@ public class AuditTrailTest extends TestBaseWeb {
         );
         assertThat("Verify audit trail items", auditTrailItems, hasItems(restrictionRequested, restrictionApplied, cancellationRequested, restrictionCancelled));
     }
+
 }
