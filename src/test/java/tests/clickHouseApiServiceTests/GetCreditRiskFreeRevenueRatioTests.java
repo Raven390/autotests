@@ -14,6 +14,7 @@ import tests.TestBaseApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +26,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getTomorrowTimestampDbFormat;
+import static utils.Utils.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO)
@@ -35,7 +35,7 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
-    private static final String date = "2024-12-31 00:00:00".replace(" ", "T");
+    private static final String date = formatTimeToUtc("2024-12-31 00:00:00");
 
     private static AggrCreditRiskFreeRevenueRatioObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
@@ -58,6 +58,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @AllureId("566")
     public void getCreditRiskFreeRevenueRatioTest1() throws IOException {
         //Send request
+        System.out.println(Instant.now().toString());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -182,7 +183,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateTo", "2024-12-30 00:00:00".replace(" ", "T"));
+        queryParams.put("dateTo", formatTimeToUtc("2024-12-30 00:00:00"));
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
         assert response.body() != null;

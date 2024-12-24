@@ -24,6 +24,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -67,13 +68,13 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(date));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(formatTimeToUtc(date)));
         assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(formatTimeToUtc(date)));
         assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(date));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(formatTimeToUtc(date)));
         assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
     }
 

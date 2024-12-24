@@ -206,4 +206,8 @@ public class Utils {
     public static String getPrevious30DaysDateUtc() {
         return LocalDate.now(ZoneOffset.UTC).minusDays(29).toString();
     }
+
+    public static String formatTimeToUtc(String time) {
+        return time.replace(" ", "T") + "Z";
+    }
 }
