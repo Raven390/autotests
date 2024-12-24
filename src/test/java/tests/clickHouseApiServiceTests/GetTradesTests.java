@@ -22,8 +22,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getTomorrowTimestampDbFormat;
+import static utils.Utils.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_TRADES)
@@ -77,7 +76,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(trade1.time.replace(" ", "T")));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.login));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
@@ -144,7 +143,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade2.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(trade2.time.replace(" ", "T")));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade2.time)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade2.login));
         assertThat("Assert action", mappedResponse[0].action, is(trade2.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade2.entry));
@@ -170,7 +169,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(trade1.time.replace(" ", "T")));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.login));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
