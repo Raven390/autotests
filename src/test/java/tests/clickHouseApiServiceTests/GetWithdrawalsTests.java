@@ -24,6 +24,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -71,7 +72,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal2.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.amountUsd));
         assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.amount));
@@ -130,7 +131,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal2.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.amountUsd));
         assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.amount));
@@ -151,7 +152,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal1.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal1.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal1.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal1.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.amountUsd));
         assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal1.amount));

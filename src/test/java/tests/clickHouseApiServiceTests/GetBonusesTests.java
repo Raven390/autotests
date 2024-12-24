@@ -24,6 +24,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -71,7 +72,7 @@ public class GetBonusesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(bonus2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(bonus2.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(bonus2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(bonus2.ucid));
         assertThat("Assert bonusType", mappedResponse[0].bonusType, is(bonus2.typeRemark));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(bonus2.amountUsd));
@@ -132,7 +133,7 @@ public class GetBonusesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(bonus2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(bonus2.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(bonus2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(bonus2.ucid));
         assertThat("Assert bonusType", mappedResponse[0].bonusType, is(bonus2.typeRemark));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(bonus2.amountUsd));
@@ -155,7 +156,7 @@ public class GetBonusesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert transferId", mappedResponse[0].transferId, is(bonus1.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(bonus1.createTime.replace(" ", "T")));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(bonus1.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(bonus1.ucid));
         assertThat("Assert bonusType", mappedResponse[0].bonusType, is(bonus1.typeRemark));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(bonus1.amountUsd));
