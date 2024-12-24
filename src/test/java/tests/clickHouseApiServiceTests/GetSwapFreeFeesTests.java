@@ -158,8 +158,8 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:14"));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:15"));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:14Z"));
+        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:15Z"));
     }
 
     @Test
@@ -179,8 +179,8 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:15"));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:14"));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:15Z"));
+        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:14Z"));
     }
 
     @Test
