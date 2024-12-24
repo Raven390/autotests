@@ -22,13 +22,14 @@ public class CrmTbWithdrawalObject {
     public String regulator;
     public Double reversedAmount;
     public String reversedTime;
-    public Integer status;
+    public String status;
     public Integer ticketId;
     public Integer transferId;
     public String ucid;
     public String uid;
     public String updateTime;
     public Integer userId;
+    public Integer statusId;
 
     public CrmTbWithdrawalObject() {
     }
@@ -37,8 +38,8 @@ public class CrmTbWithdrawalObject {
             String currency, Double fee, String paymentChannel, String paymentDetails,
             String paymentExpirationDate, String paymentRequisite, String paymentSystemAccount,
             String paymentSystemCurrency, String paymentType, String regulator, Double reversedAmount,
-            String reversedTime, Integer status, Integer ticketId, Integer transferId, String ucid,
-            String uid, String updateTime, Integer userId) {
+            String reversedTime, String status, Integer ticketId, Integer transferId, String ucid,
+            String uid, String updateTime, Integer userId, Integer statusId) {
         this.account = account;
         this.amount = amount;
         this.amountUsd = amountUsd;
@@ -63,6 +64,7 @@ public class CrmTbWithdrawalObject {
         this.uid = uid;
         this.updateTime = updateTime;
         this.userId = userId;
+        this.statusId = statusId;
     }
 
     @Override
@@ -70,16 +72,16 @@ public class CrmTbWithdrawalObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbWithdrawalObject that = (CrmTbWithdrawalObject) o;
-        return Objects.equals(account, that.account) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(brand, that.brand) && Objects.equals(createTime, that.createTime) && Objects.equals(currency, that.currency) && Objects.equals(fee, that.fee) && Objects.equals(paymentChannel, that.paymentChannel) && Objects.equals(paymentDetails, that.paymentDetails) && Objects.equals(paymentExpirationDate, that.paymentExpirationDate) && Objects.equals(paymentRequisite, that.paymentRequisite) && Objects.equals(paymentSystemAccount, that.paymentSystemAccount) && Objects.equals(paymentSystemCurrency, that.paymentSystemCurrency) && Objects.equals(paymentType, that.paymentType) && Objects.equals(regulator, that.regulator) && Objects.equals(reversedAmount, that.reversedAmount) && Objects.equals(reversedTime, that.reversedTime) && Objects.equals(status, that.status) && Objects.equals(ticketId, that.ticketId) && Objects.equals(transferId, that.transferId) && Objects.equals(ucid, that.ucid) && Objects.equals(uid, that.uid) && Objects.equals(updateTime, that.updateTime) && Objects.equals(userId, that.userId);
+        return Objects.equals(account, that.account) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(brand, that.brand) && Objects.equals(createTime, that.createTime) && Objects.equals(currency, that.currency) && Objects.equals(fee, that.fee) && Objects.equals(paymentChannel, that.paymentChannel) && Objects.equals(paymentDetails, that.paymentDetails) && Objects.equals(paymentExpirationDate, that.paymentExpirationDate) && Objects.equals(paymentRequisite, that.paymentRequisite) && Objects.equals(paymentSystemAccount, that.paymentSystemAccount) && Objects.equals(paymentSystemCurrency, that.paymentSystemCurrency) && Objects.equals(paymentType, that.paymentType) && Objects.equals(regulator, that.regulator) && Objects.equals(reversedAmount, that.reversedAmount) && Objects.equals(reversedTime, that.reversedTime) && Objects.equals(status, that.status) && Objects.equals(ticketId, that.ticketId) && Objects.equals(transferId, that.transferId) && Objects.equals(ucid, that.ucid) && Objects.equals(uid, that.uid) && Objects.equals(updateTime, that.updateTime) && Objects.equals(userId, that.userId) && Objects.equals(statusId, that.statusId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, amount, amountUsd, brand, createTime, currency, fee, paymentChannel, paymentDetails, paymentExpirationDate, paymentRequisite, paymentSystemAccount, paymentSystemCurrency, paymentType, regulator, reversedAmount, reversedTime, status, ticketId, transferId, ucid, uid, updateTime, userId);
+        return Objects.hash(account, amount, amountUsd, brand, createTime, currency, fee, paymentChannel, paymentDetails, paymentExpirationDate, paymentRequisite, paymentSystemAccount, paymentSystemCurrency, paymentType, regulator, reversedAmount, reversedTime, status, ticketId, transferId, ucid, uid, updateTime, userId, statusId);
     }
 
     @Override
     public String toString() {
-        return "CrmTbWithdrawalObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", fee=" + fee + ", paymentChannel='" + paymentChannel + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", paymentRequisite='" + paymentRequisite + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentType='" + paymentType + '\'' + ", regulator='" + regulator + '\'' + ", reversedAmount=" + reversedAmount + ", reversedTime='" + reversedTime + '\'' + ", status=" + status + ", ticketId=" + ticketId + ", transferId=" + transferId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + '}';
+        return "CrmTbWithdrawalObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", fee=" + fee + ", paymentChannel='" + paymentChannel + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", paymentRequisite='" + paymentRequisite + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentType='" + paymentType + '\'' + ", regulator='" + regulator + '\'' + ", reversedAmount=" + reversedAmount + ", reversedTime='" + reversedTime + '\'' + ", status=" + status + ", ticketId=" + ticketId + ", transferId=" + transferId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + ", statusId=" + statusId + '}';
     }
 }
