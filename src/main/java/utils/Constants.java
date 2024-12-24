@@ -82,8 +82,8 @@ public class Constants {
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm__tb_deposit";
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm__tb_withdrawal";
     public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
-    public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt__tb_credits";
-    public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt__tb_balance_orders";
+    public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt___credit_orders";
+    public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt___balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
     public static final String CONNECTIONS_V2_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
@@ -92,10 +92,10 @@ public class Constants {
     public static final String IP_TABLE_NAME = "vindex_test.cs__tb_ip_table";
     public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
     public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
-    public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln__session_parsed";
+    public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo__client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "mi.mi.clients_restriction";
-    public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt__mt5_deals";
+    public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt___mt5_deals";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
