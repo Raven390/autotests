@@ -1,11 +1,11 @@
-package businessObjects.api.clickhouseApiService.getSwapFreeFees;
+package businessObjects.api.clickhouseApiService.getBalanceOrders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
 
-public class GetSwapFreeFeesResponse {
+public class GetBalanceOrdersResponse {
 
     @JsonProperty("tradeDate")
     public String tradeDate;
@@ -25,12 +25,11 @@ public class GetSwapFreeFeesResponse {
     @JsonProperty("comment")
     public String comment;
 
-    public GetSwapFreeFeesResponse() {
+    public GetBalanceOrdersResponse() {
     }
 
-    public GetSwapFreeFeesResponse(
-            String tradeDate, Integer tradeId, Integer tradingAccount, Double profit, Double profitUSD,
-            String comment) {
+    public GetBalanceOrdersResponse(String tradeDate, Integer tradeId, Integer tradingAccount, Double profit,
+            Double profitUSD, String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
@@ -43,9 +42,9 @@ public class GetSwapFreeFeesResponse {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GetSwapFreeFeesResponse that = (GetSwapFreeFeesResponse) o;
-        return Objects.equals(tradeDate, that.tradeDate) && Objects.equals(tradeId, that.tradeId) && Objects.equals(
-                tradingAccount, that.tradingAccount) && Objects.equals(profit, that.profit) && Objects.equals(
+        GetBalanceOrdersResponse that = (GetBalanceOrdersResponse) o;
+        return Objects.equals(tradeDate, that.tradeDate) && Objects.equals(
+                tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(profit, that.profit) && Objects.equals(
                         profitUsd, that.profitUsd) && Objects.equals(comment, that.comment);
     }
 
@@ -56,6 +55,6 @@ public class GetSwapFreeFeesResponse {
 
     @Override
     public String toString() {
-        return "GetSwapFreeFeesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd + ", comment='" + comment + '\'' + '}';
+        return "GetBalanceOrdersResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd + ", comment='" + comment + '\'' + '}';
     }
 }
