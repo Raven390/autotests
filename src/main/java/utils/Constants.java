@@ -88,12 +88,12 @@ public class Constants {
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt___credit_orders";
     public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt___balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
-    public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
-    public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
-    public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";
-    public static final String IP_TABLE_NAME = "vindex_test.cs__tb_ip_table";
-    public static final String PHONE_TABLE_NAME = "vindex_test.cs__tb_phone_table";
-    public static final String PAYOUT_TABLE_NAME = "vindex_test.cs__tb_payout_table";
+    public static final String CONNECTIONS_TABLE_NAME = "vindex_test.connection_table";
+    public static final String DOCUMENT_TABLE_NAME = "vindex_test.document";
+    public static final String EMAIL_TABLE_NAME = "vindex_test.email";
+    public static final String IP_TABLE_NAME = "vindex_test.ip";
+    public static final String PHONE_TABLE_NAME = "vindex_test.phone";
+    public static final String PAYOUT_TABLE_NAME = "vindex_test.payout";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo__client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "mi.mi.clients_restriction";
@@ -107,6 +107,8 @@ public class Constants {
     public static final String BO_USER_ACTION_AUDIT_TABLE_NAME = "postgres.bo.user_action_audit";
     public static final String BO_USER_SESSION_TABLE_NAME = "postgres.bo.user_session";
     public static final String BO_CLIENTS_FRAUD_TYPES_TABLE_NAME = "postgres.bo.clients_fraud_types";
+    public static final String KYC_FILES_TABLE_NAME = "vindex_test.crm___tb_kyc_files";
+    public static final String ID_PROOF_TABLE_NAME = "vindex_test.crm___tb_id_proof";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
 }

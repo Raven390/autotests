@@ -1,14 +1,17 @@
 package helpers.database;
 
 import businessObjects.db.backofficeDb.alert.Alert;
+import businessObjects.db.backofficeDb.backofficeUser.BackofficeUser;
 import businessObjects.db.backofficeDb.client.Client;
 import businessObjects.db.backofficeDb.clientFraudTypes.ClientFraudTypes;
+import businessObjects.ui.user.User;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.sql.SQLException;
 import java.util.List;
 
+import static businessObjects.ui.user.UserFactory.coreUser;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,6 +117,13 @@ public class BoHelper {
         Thread.sleep(100);
 
         assertEquals(alert.getFirst().confirmed, expectedConfirmation);
+    }
+
+    @Step("Get user_id from bo db by user")
+    public static String getUserIdByUser(User user) throws Exception {
+        return getObjectsFromDB(
+                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", coreUser().getEmail()), BackofficeUser.class
+        ).getFirst().id;
     }
 
 }

@@ -1,0 +1,292 @@
+package tests.vindexBackofficeUiTests;
+
+import businessObjects.api.mitigationService.PostRestrictionRequestBody;
+import businessObjects.db.backofficeDb.userActionAudit.UserActionAudit;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
+import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
+import businessObjects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
+import io.qameta.allure.AllureId;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static businessObjects.db.clickhouse.crmTbKycFiles.KycFilesTableEntryFactory.getKycFile;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static businessObjects.db.clickhouse.ctmTbIdProof.IdProofTableEntryFactory.getIdProof;
+import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserDataForUi;
+import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static businessObjects.ui.user.UserFactory.coreUser;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.BoHelper.closeAlert;
+import static helpers.database.BoHelper.getUserIdByUser;
+import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class LogUsersActionsTest extends TestBaseWeb {
+
+    private static final KafkaHelper kafka = new KafkaHelper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static CrmTbUserObject crmTbUser;
+    private static MtTbUserObject account;
+    private static String userId;
+    private static CrmTbWithdrawalObject withdrawal;
+
+    @BeforeAll
+    public static void setup() throws Exception {
+        ClientHelper client = getRandomVantageClientAllFields();
+        crmTbUser = generateUserByClient(client);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
+        insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
+        account = generateMtTbUserDataForUi(crmTbUser.ucid);
+        insertObjectToDb(MT_USER_TABLE_NAME, account);
+        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
+        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        Response response = postRestriction(new PostRestrictionRequestBody(
+                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+        ));
+        assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
+        withdrawal = generateWithdrawalByClient(client);
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        userId = getUserIdByUser(coreUser());
+    }
+
+    @Test
+    @Order(1)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("646")
+    @DisplayName("Log users actions. Verify login")
+    public void verifyLogUsersActionsLoginTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "LOGIN", "AUTH", null);
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(2)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("647")
+    @DisplayName("Log users actions. Sensitive data")
+    public void verifyLogUsersActionsSensitiveDataTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.filterUnassigned();
+        investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        generalPage.clickGeneralTabButton();
+        generalPage.clickShowHiddenDataButton();
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(3)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("648")
+    @DisplayName("Log users actions. KYC data")
+    public void verifyLogUsersActionsKycDataTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.filterUnassigned();
+        investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        generalPage.clickGeneralTabButton();
+        generalPage.kycDetailsOpen("Proof of identity");
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "KYC_DATA", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", "POA.jpg"));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(4)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("649")
+    @DisplayName("Log users actions. Routing")
+    public void verifyLogUsersActionsRoutingTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.filterUnassigned();
+        investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
+        generalPage.clickGeneralTabButton();
+        operationsPage.clickOperationsTabButton();
+        tradingPage.openTradingTab();
+        tradingPage.clickTableViewButton();
+        tradingPage.openOperationsTab();
+        restrictionPage.openRestrictionsTab();
+        auditTrailPage.openAuditTrailTab();
+        connectionPage.clickConnectionTabButton();
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAuditInvestigation = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s\"}", "path", "/investigation"));
+        UserActionAudit expectedUserActionAuditAlerts = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/alerts", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/general", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/operations/summary", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingAccountsCards = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/cards", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingAccountsTable = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/table", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/operations", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditRestrictions = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/restrictions", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditAuditTrail = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/audit", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditConnections = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/connections", "ucid", crmTbUser.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditInvestigation, expectedUserActionAuditAlerts, expectedUserActionAuditGeneral, expectedUserActionAuditOperations, expectedUserActionAuditTradingAccountsCards, expectedUserActionAuditTradingAccountsTable, expectedUserActionAuditTradingOperations, expectedUserActionAuditRestrictions, expectedUserActionAuditAuditTrail, expectedUserActionAuditConnections));
+    }
+
+    @Test
+    @Order(5)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("650")
+    @DisplayName("Log users actions. Assign client")
+    public void verifyLogUsersActionsAssignClientTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.filterUnassigned();
+        investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
+        investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ASSIGN", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(6)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("651")
+    @DisplayName("Log users actions. Comment")
+    public void verifyLogUsersActionsCommentTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
+        investigationPage.openCommentForm();
+        investigationPage.fillCommentForm("Test log users actions comment");
+        investigationPage.submitCommentForm();
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "COMMENT", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(7)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("652")
+    @DisplayName("Log users actions. Restriction")
+    public void verifyLogUsersActionsRestrictionTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
+        restrictionPage.openRestrictionsTab();
+        restrictionPage.clickLoginSwitch();
+        restrictionPage.fillApplyReason("Test log users actions restriction apply");
+        restrictionPage.clickCheckedLogin();
+        restrictionPage.fillCancelReason("Test log users actions restriction cancel");
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAuditApply = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "APPLY"));
+        UserActionAudit expectedUserActionAuditCancel = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "CANCEL"));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditApply, expectedUserActionAuditCancel));
+    }
+
+    @Test
+    @Order(8)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("653")
+    @DisplayName("Log users actions. Withdrawal")
+    public void verifyLogUsersActionsWithdrawalTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
+        restrictionPage.openRestrictionsTab();
+        restrictionPage.clickCheckedManual();
+        restrictionPage.fillCancelReasonManualWithdrawalApproveOne("Test log users actions withdrawal");
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ACCEPT", "WD_REQUEST", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "transferId", withdrawal.transferId));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @Test
+    @Order(9)
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("654")
+    @DisplayName("Log users actions. Resolve")
+    public void verifyLogUsersActionsResolveTest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsCoreUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("Test log users actions resolve");
+        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
+        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        List<UserActionAudit> userActionAudits = getObjectsFromDB(
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+        );
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "RESOLVE", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+    }
+
+    @AfterAll
+    public static void teardown() throws SQLException {
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
+        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        closeAlert(crmTbUser.ucid);
+    }
+}

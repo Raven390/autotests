@@ -2,12 +2,13 @@ package tests.connectionSearchApiServiceTests;
 
 import businessObjects.api.connectionSearchApi.GetConnectionsResponse;
 import businessObjects.api.connectionSearchApi.GetConnectionsResponseError;
-import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
-import businessObjects.db.clickhouse.csTbDocTable.DocumentTableEntry;
-import businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntry;
-import businessObjects.db.clickhouse.csTbIpTable.IpTableEntry;
-import businessObjects.db.clickhouse.csTbPayoutTable.PayoutTableEntry;
-import businessObjects.db.clickhouse.csTbPhoneTable.PhoneTableEntry;
+import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
+import businessObjects.db.clickhouse.documentTable.DocumentTableEntry;
+import businessObjects.db.clickhouse.emailTable.EmailTableEntry;
+import businessObjects.db.clickhouse.ipTable.IpTableEntry;
+import businessObjects.db.clickhouse.payoutTable.PayoutTableEntry;
+import businessObjects.db.clickhouse.phoneTable.PhoneTableEntry;
+import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -24,13 +25,14 @@ import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByAttributes;
 import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
-import static businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3Factory.*;
-import static businessObjects.db.clickhouse.csTbDocTable.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
-import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
-import static businessObjects.db.clickhouse.csTbEmailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
-import static businessObjects.db.clickhouse.csTbIpTable.IpTableEntryFactory.ipTableEntryForConnectionSearch;
-import static businessObjects.db.clickhouse.csTbPayoutTable.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
-import static businessObjects.db.clickhouse.csTbPhoneTable.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
+import static businessObjects.db.clickhouse.documentTable.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
+import static businessObjects.db.clickhouse.ipTable.IpTableEntryFactory.ipTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.payoutTable.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
+import static businessObjects.db.clickhouse.phoneTable.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,44 +45,61 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 public class GetConnectionsByAttributesTest extends TestBaseApi {
-
+    public static final ClientHelper userFromDocument = getRandomVantageClient();
+    public static final ClientHelper userToDocument = getRandomVantageClient();
+    public static final ClientHelper userFromEmail = getRandomVantageClient();
+    public static final ClientHelper userToEmail = getRandomVantageClient();
+    public static final ClientHelper userFromIp = getRandomVantageClient();
+    public static final ClientHelper userToIp = getRandomVantageClient();
+    public static final ClientHelper userFromPhone = getRandomVantageClient();
+    public static final ClientHelper userToPhone = getRandomVantageClient();
+    public static final ClientHelper userFromPayout = getRandomVantageClient();
+    public static final ClientHelper userToPayout = getRandomVantageClient();
+    public static final ClientHelper userFromDepth = getRandomVantageClient();
+    public static final ClientHelper userToDepth1 = getRandomVantageClient();
+    public static final ClientHelper userToDepth2 = getRandomVantageClient();
+    public static final ClientHelper userFromFiltration = getRandomVantageClient();
+    public static final ClientHelper userToFiltration1 = getRandomVantageClient();
+    public static final ClientHelper userToFiltration2 = getRandomVantageClient();
     // Expected responses
-    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesDocumentResponseSuccess();
-    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsByAttributesEmailResponseSuccess();
-    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesIpResponseSuccess();
-    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesPhoneResponseSuccess();
-    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesPayoutResponseSuccess();
-    public final GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess = getConnectionsByAttributesForDepth();
-    public final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsByAttributesForFiltrationByParams();
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsResponseSuccess(userFromDocument, userToDocument);
+    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsResponseSuccess(userFromEmail, userToEmail);
+    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsResponseSuccess(userFromIp, userToIp);
+    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsResponseSuccess(userFromPhone, userToPhone);
+    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsResponseSuccess(userFromPayout, userToPayout);
+    public final GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess = getConnectionsByAttributesForDepth(userToDepth1, userToDepth2);
+    public final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
     public final GetConnectionsResponseError getConnectionsResponseError = getConnectionsByAttributesResponseErrorBadRequest();
     // Objects to insert to connections table
-    public static final ConnectionTableEntryV3 connectionTableEntryByDocumentV3 = getConnectionTableEntryByDocumentV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryByEmailV3 = getConnectionTableEntryByEmailV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryByIpV3 = getConnectionTableEntryByIpV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryByPhoneV3 = getConnectionTableEntryByPhoneV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryByPayoutV3 = getConnectionTableEntryByPayoutV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryForDepthV3 = getConnectionTableEntryForDepthV3();
-    public static final ConnectionTableEntryV3 connectionTableEntryFiltration1 = getConnectionTableByAttributesEntryForFiltration1V3();
-    public static final ConnectionTableEntryV3 connectionTableEntryFiltration2 = getConnectionTableByAttributesEntryForFiltration2V3();
+    public static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
+    public static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
+    public static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
+    public static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
+    public static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
+    public static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
+    public static final ConnectionTableEntry connectionTableEntryForDepth2 = getConnectionTableEntryLvl2(userToDepth1, userToDepth2);
+    public static final ConnectionTableEntry connectionTableEntryFiltration1 = getConnectionTableEntry(userFromFiltration, userToFiltration1);
+    public static final ConnectionTableEntry connectionTableEntryFiltration2 = getConnectionTableEntryForFiltration(userToFiltration1, userToFiltration2);
     // Objects to insert to attributes tables
-    public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch();
-    public static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch();
-    public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch();
-    public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch();
-    public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch();
-    public static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration();
+    public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    public static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail);
+    public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
+    public static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
         // Insert data to connections table
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryByDocumentV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryByEmailV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryByIpV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryByPhoneV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryByPayoutV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryForDepthV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryFiltration1);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryFiltration2);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDocument);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByIp);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPhone);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPayout);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth2);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration2);
         // Insert data to attributes tables
         insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
@@ -108,7 +127,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDocumentResponseSuccess, getConnectionsByAttributesConnDepthResponseSuccess));
+        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDocumentResponseSuccess));
     }
 
     @Test
@@ -199,7 +218,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @AllureId("193")
     public void getConnectionsByAttributesPayoutSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("payoutId", payoutTableEntry.payoutId);
+        queryParams.put("payoutId", payoutTableEntry.payout);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -225,7 +244,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("emailAddress", emailTableEntry.email);
         queryParams.put("ipAddress", ipTableEntry.ip);
         queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
-        queryParams.put("payoutId", payoutTableEntry.payoutId);
+        queryParams.put("payoutId", payoutTableEntry.payout);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -241,7 +260,6 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         assertThat("Check that response body has object found by ipAddress", responseBody, hasItemInArray(getConnectionsByAttributesIpResponseSuccess));
         assertThat("Check that response body has object found by phoneNumber", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccess));
         assertThat("Check that response body has object found by payoutId", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccess));
-        assertThat("Check that response body has object found by depth", responseBody, hasItemInArray(getConnectionsByAttributesConnDepthResponseSuccess));
     }
 
     @Test
@@ -408,9 +426,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsByAttributesResponseErrorConnectionScoreFromBadRequest()));
     }
 
     @Test
@@ -428,28 +444,27 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsByAttributesResponseErrorConnectionScoreToBadRequest()));
     }
 
     @AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
         // Delete data from connections table
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocumentV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByEmailV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByIpV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPhoneV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPayoutV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepthV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration1.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByEmail.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByIp.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPhone.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPayout.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth1.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration1.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration2.userFrom));
         // Delete data from attributes tables
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
         deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip));
         deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
-        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout_id = '%s'", payoutTableEntry.payoutId));
+        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
     }
 }

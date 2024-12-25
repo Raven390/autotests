@@ -2,7 +2,8 @@ package tests.connectionSearchApiServiceTests;
 
 import businessObjects.api.connectionSearchApi.GetConnectionsResponse;
 import businessObjects.api.connectionSearchApi.GetConnectionsResponseError;
-import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
+import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
+import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -19,7 +20,8 @@ import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByClientId;
 import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
-import static businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3Factory.*;
+import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,22 +35,28 @@ import static utils.Constants.*;
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 public class GetConnectionsByClientTest extends TestBaseApi {
 
-    public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsByClientResponseSuccess();
-    public final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess();
-    public final GetConnectionsResponseError getConnectionsResponseError = getConnectionsResponseErrorBadRequest();
-    public final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsForFiltrationByParams();
+    public static final ClientHelper userFrom1 = getRandomVantageClient();
+    public static final ClientHelper userTo1_1 = getRandomVantageClient();
+    public static final ClientHelper userTo1_2 = getRandomVantageClient();
+    public static final ClientHelper userFrom2 = getRandomVantageClient();
+    public static final ClientHelper userTo2_1 = getRandomVantageClient();
+    public static final ClientHelper userTo2_2 = getRandomVantageClient();
+    public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
+    public final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
+    public final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
     public final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
-    public static ConnectionTableEntryV3 connectionTableEntryV3 = getConnectionTableEntryByClientV3();
-    public static ConnectionTableEntryV3 connectionTableEntryV3Lvl2 = getConnectionTableEntryByClientLvl2V3();
-    public static ConnectionTableEntryV3 connectionTableEntryForFiltration1V3 = getConnectionTableEntryForFiltration1V3();
-    public static ConnectionTableEntryV3 connectionTableEntryForFiltration2V3 = getConnectionTableEntryForFiltration2V3();
+
+    public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
+    public static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
+    public static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
+    public static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryV3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryV3Lvl2);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryForFiltration1V3);
-        insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connectionTableEntryForFiltration2V3);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryLvl2);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForFiltration1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForFiltration2);
     }
 
     @Test
@@ -56,7 +64,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("145")
     public void getConnectionsByClientSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -75,7 +83,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("146")
     public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", 1);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -113,7 +121,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("148")
     public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", -99);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -131,7 +139,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("460")
     public void getConnectionsConnectionScoreFromFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
+        queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionScoreFrom", 1);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -151,7 +159,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("461")
     public void getConnectionsConnectionScoreToFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
+        queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionScoreTo", 0.9);
 
         Response response = getConnectionsByClientId(queryParams);
@@ -171,7 +179,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("462")
     public void getConnectionsConnectionTypeFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
+        queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionType", List.of("Same Network"));
 
         Response response = getConnectionsByClientId(queryParams);
@@ -191,7 +199,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("463")
     public void getConnectionsConnectionAttributesFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryForFiltration1V3.userFrom);
+        queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionAttributes", List.of("emailAddress"));
 
         Response response = getConnectionsByClientId(queryParams);
@@ -219,9 +227,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorClientIdMissingBadRequest()));
     }
 
     @Test
@@ -247,7 +253,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("150")
     public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", "test");
 
         Response response = getConnectionsByClientId(queryParams);
@@ -257,9 +263,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionDepthBadRequest()));
     }
 
     @Test
@@ -267,7 +271,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("464")
     public void getConnectionsConnectionScoreFromNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionScoreFrom", "test");
 
         Response response = getConnectionsByClientId(queryParams);
@@ -277,9 +281,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionScoreFromBadRequest()));
     }
 
     @Test
@@ -287,7 +289,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("465")
     public void getConnectionsConnectionScoreToNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionScoreTo", "test");
 
         Response response = getConnectionsByClientId(queryParams);
@@ -297,9 +299,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 400", response.code(), is(400));
 
-        assertThat("Check the timestamp field", responseBody.timestamp, notNullValue());
-
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseError));
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorConnectionScoreToBadRequest()));
     }
 
     @Test
@@ -307,7 +307,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @AllureId("466")
     public void getConnectionsConnectionAttributesIncorrectBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", connectionTableEntryV3.userFrom);
+        queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionAttributes", List.of("test"));
 
         Response response = getConnectionsByClientId(queryParams);
@@ -322,9 +322,9 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryV3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryV3Lvl2.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration1V3.userFrom));
-        deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration2V3.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryLvl2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration1.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration2.userFrom));
     }
 }
