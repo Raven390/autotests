@@ -22,6 +22,7 @@ import static businessObjects.api.clickhouseApiService.getSwapFreeVolumes.GetSwa
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAccountByClient;
 import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -69,13 +70,13 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     //TODO uncomment after solving error with delete statement
     @AfterAll
     public static void teardownData() throws SQLException {
-//        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
-//        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal1.comment));
-//
-//        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
-//        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal2.comment));
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal1.comment));
+
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal2.comment));
     }
 
     @Test
@@ -163,7 +164,6 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Assert error", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
-    //TODO confirm correctness of response
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes for not swap free account -  empty response")
     @AllureId("594")
@@ -203,7 +203,6 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Assert error", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
-    //TODO confirm correctness of response
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes dateTo < order date")
     @AllureId("596")
@@ -263,7 +262,6 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Assert error", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
     }
 
-    //TODO confirm correctness of response
     @Test
     @DisplayName("Clickhouse Api. Response for user without orders")
     @AllureId("645")

@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
-import businessObjects.api.clickhouseApiService.getSwapFreeFees.GetSwapFreeFeesResponse;
+import businessObjects.api.clickhouseApiService.getBalanceOrders.GetBalanceOrdersResponse;
 import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.api.clickhouseApiService.getSwapFreeFees.GetSwapFreeFeesRequest.getSwapFreeFees;
+import static businessObjects.api.clickhouseApiService.getBalanceOrders.GetBalanceOrdersRequest.getBalanceOrders;
 import static businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObjectFactory.generateBalanceOrders;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -29,22 +29,21 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
-@Story(STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES)
+@Story(STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetSwapFreeFeesTests extends TestBaseApi {
+public class GetBalanceOrdersTests extends TestBaseApi {
 
     private static MtBalanceOrdersObject data1;
     private static MtBalanceOrdersObject data2;
     private static final ClientHelper client1 = getRandomVantageClient();
-    public static final String dateTo = getNextYearTimestampDbFormat();
-    public static final String dateFrom = getPreviousYearTimestampDbFormat();
+    public static final String dateTo = formatTimeToUtc(getNextYearTimestampDbFormat());
+    public static final String dateFrom = formatTimeToUtc(getPreviousYearTimestampDbFormat());
     public static String tradeDate1 = "2024-12-10 17:59:14";
     public static String tradeDate2 = "2024-12-10 17:59:15";
     public static Integer tradeId = 123;
     public static String comment = "Administration Fee Automation test";
-
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
@@ -61,42 +60,44 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with required params")
-    @AllureId("528")
-    public void getSwapFreeFeesTest1() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with required params")
+    @AllureId("")
+    public void getBalanceOrderTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        List<GetSwapFreeFeesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class)).toList();
-        GetSwapFreeFeesResponse response1 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate1), tradeId, client1.getTradingAccount(), 1d, 2d, comment);
-        GetSwapFreeFeesResponse response2 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate2), tradeId, client1.getTradingAccount(), 3d, 4d, comment);
+        List<GetBalanceOrdersResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class)).toList();
+        GetBalanceOrdersResponse object1 = new GetBalanceOrdersResponse(formatTimeToUtc(tradeDate1), tradeId, client1.getTradingAccount(), 1d, 2d, comment);
+        GetBalanceOrdersResponse object2 = new GetBalanceOrdersResponse(formatTimeToUtc(tradeDate2), tradeId, client1.getTradingAccount(), 3d, 4d, comment);
+
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.size(), is(2));
-        assertThat("Check response", mappedResponse, containsInAnyOrder(response1, response2));
+        assertThat("Check response", mappedResponse, containsInAnyOrder(object1, object2));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with all params")
-    @AllureId("529")
-    public void getSwapFreeFeesTest2() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with all params")
+    @AllureId("")
+    public void getBalanceOrderTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateFrom", data1.createTime.replace(" ", "T"));
-        queryParams.put("dateTo", data2.createTime.replace(" ", "T"));
-        queryParams.put("orderBy", "tradeDate"); // tradeDate, profit, profitUsd
-        queryParams.put("sortOrder", "asc"); // asc, desc
+        queryParams.put("dateFrom", dateFrom);
+        queryParams.put("dateTo", dateTo);
+        queryParams.put("orderBy", "tradeDate");
+        queryParams.put("sortOrder", "asc");
         queryParams.put("limit", "1");
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
+
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(1));
 
@@ -108,95 +109,95 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with dateFrom")
-    @AllureId("530")
-    public void getSwapFreeFeesTest3() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with dateFrom")
+    @AllureId("")
+    public void getBalanceOrdersTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("dateFrom", getPreviousYearTimestampDbFormat().replace(" ", "T"));
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with dateTo")
-    @AllureId("531")
-    public void getSwapFreeFeesTest4() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with dateTo")
+    @AllureId("")
+    public void getBalanceOrdersTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("dateTo", getNextYearTimestampDbFormat().replace(" ", "T"));
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=tradeDate and sortOrder=asc")
-    @AllureId("532")
-    public void getSwapFreeFeesTest5() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=tradeDate and sortOrder=asc")
+    @AllureId("")
+    public void getBalanceOrdersTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "tradeDate"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "asc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:14Z"));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:15Z"));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(tradeDate1)));
+        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is(formatTimeToUtc(tradeDate2)));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=tradeDate and sortOrder=desc")
-    @AllureId("533")
-    public void getSwapFreeFeesTest6() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=tradeDate and sortOrder=desc")
+    @AllureId("")
+    public void getBalanceOrdersTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "tradeDate"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "desc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is("2024-12-10T17:59:15Z"));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is("2024-12-10T17:59:14Z"));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(tradeDate2)));
+        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is(formatTimeToUtc(tradeDate1)));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=asc")
-    @AllureId("534")
-    public void getSwapFreeFeesTest7() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=asc")
+    @AllureId("")
+    public void getBalanceOrdersTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "profit"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "asc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
@@ -205,19 +206,19 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=desc")
-    @AllureId("535")
-    public void getSwapFreeFeesTest8() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=desc")
+    @AllureId("")
+    public void getBalanceOrdersTest8() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "profit"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "desc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
@@ -226,19 +227,19 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profitUsd and sortOrder=asc")
-    @AllureId("536")
-    public void getSwapFreeFeesTest9() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=profitUsd and sortOrder=asc")
+    @AllureId("")
+    public void getBalanceOrdersTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "profitUSD"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "asc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
@@ -247,19 +248,19 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=desc")
-    @AllureId("537")
-    public void getSwapFreeFeesTest10() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=desc")
+    @AllureId("")
+    public void getBalanceOrdersTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "profitUSD"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "desc"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
-        GetSwapFreeFeesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class);
+        GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
@@ -268,13 +269,13 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with only tradingAccount")
-    @AllureId("538")
-    public void getSwapFreeFeesTest11() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with only tradingAccount")
+    @AllureId("")
+    public void getBalanceOrdersTest11() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -285,13 +286,13 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with only serverId")
-    @AllureId("539")
-    public void getSwapFreeFeesTest12() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with only serverId")
+    @AllureId("")
+    public void getBalanceOrdersTest12() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1); // Required
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -302,15 +303,15 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with wrong dateFrom")
-    @AllureId("540")
-    public void getSwapFreeFeesTest13() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with wrong dateFrom")
+    @AllureId("")
+    public void getBalanceOrdersTest13() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("dateFrom", 1);
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -320,19 +321,19 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert type", mappedResponse.type, is("about:blank"));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/swapFreeFees"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with wrong dateTo")
-    @AllureId("541")
-    public void getSwapFreeFeesTest14() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with wrong dateTo")
+    @AllureId("")
+    public void getBalanceOrdersTest14() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("dateTo", 1);
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -342,19 +343,19 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert type", mappedResponse.type, is("about:blank"));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/swapFreeFees"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with wrong orderBy")
-    @AllureId("542")
-    public void getSwapFreeFeesTest15() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with wrong orderBy")
+    @AllureId("")
+    public void getBalanceOrdersTest15() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "1"); // tradeDate, profit, profitUsd
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -365,16 +366,16 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with wrong sortOrder")
-    @AllureId("543")
-    public void getSwapFreeFeesTest16() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with wrong sortOrder")
+    @AllureId("")
+    public void getBalanceOrdersTest16() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("orderBy", "tradeDate"); // tradeDate, profit, profitUsd
         queryParams.put("sortOrder", "1"); // asc, desc
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -385,15 +386,15 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get swap free fees with wrong limit")
-    @AllureId("544")
-    public void getSwapFreeFeesTest17() throws IOException {
+    @DisplayName("Clickhouse Api. Get balance orders with wrong limit")
+    @AllureId("")
+    public void getBalanceOrdersTest17() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
         queryParams.put("limit", "a");
-        Response response = getSwapFreeFees(queryParams);
+        Response response = getBalanceOrders(queryParams);
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -403,6 +404,6 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert type", mappedResponse.type, is("about:blank"));
         assertThat("Assert title", mappedResponse.title, is("Bad Request"));
         assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'a'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/swapFreeFees"));
+        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
     }
 }
