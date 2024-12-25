@@ -1,4 +1,4 @@
-package businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals;
+package businessObjects.api.clickhouseApiService.getWithdrawals;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

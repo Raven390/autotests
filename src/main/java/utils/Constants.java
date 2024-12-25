@@ -45,6 +45,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_POST_ABUSE_TYPES = "Clickhouse api. Post abuse types";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO = "Clickhouse api. Get credit risk free revenue ratio";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME = "Clickhouse api. Get swap free volume";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
@@ -77,6 +78,7 @@ public class Constants {
     public static final String REGISTRATION_HELPER_WID_VANTAGE = "AU";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
     // TABLES
+    public static final String CRM_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm__tb_bonus";
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm__tb_deposit";
@@ -85,7 +87,6 @@ public class Constants {
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt___credit_orders";
     public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt___balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
-    public static final String CONNECTIONS_V2_TABLE_NAME = "vindex_test.cs__tb_connection_table_v2";
     public static final String CONNECTIONS_V3_TABLE_NAME = "vindex_test.cs__tb_connection_table_v3";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.cs__tb_doc_table";
     public static final String EMAIL_TABLE_NAME = "vindex_test.cs__tb_email_table";

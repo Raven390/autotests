@@ -56,7 +56,7 @@ public class RegistrationRuleDataFactory {
     private static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.countryCode = client.getCountryCode();
-        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
+        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObject.brand = client.getBrand();
         lexisNexisObject.eventType = "account_creation";
         lexisNexisObject.email = client.getEmail();

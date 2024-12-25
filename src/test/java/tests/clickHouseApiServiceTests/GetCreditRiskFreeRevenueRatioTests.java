@@ -1,8 +1,8 @@
 package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
-import businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals.GetCreditRiskFreeRevenueRatioResponse;
-import businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals.GetCreditRiskFreeRevenueRatioResponseError;
+import businessObjects.api.clickhouseApiService.getWithdrawals.GetCreditRiskFreeRevenueRatioResponse;
+import businessObjects.api.clickhouseApiService.getWithdrawals.GetCreditRiskFreeRevenueRatioResponseError;
 import businessObjects.db.clickhouse.aggrCreditRiskFreeRevenueRatio.AggrCreditRiskFreeRevenueRatioObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
