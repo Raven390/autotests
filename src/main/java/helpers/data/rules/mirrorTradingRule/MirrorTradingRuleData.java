@@ -7,7 +7,7 @@ import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
+import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
 import businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObject;
@@ -22,7 +22,7 @@ public class MirrorTradingRuleData {
     public CrmTbUserObject crmTbUserObject;
     public LnSessionParsedObject lnSessionParsedObjectRegistration;
     public LnSessionParsedObject lnSessionParsedObjectLogin;
-    public List<ConnectionTableEntryV3> connections;
+    public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<BoClientFraudTypesObject> clientFraudTypes;
@@ -40,7 +40,7 @@ public class MirrorTradingRuleData {
 
     public MirrorTradingRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
-            List<ConnectionTableEntryV3> connections, List<CrmTbUserObject> connectedUsers,
+            List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
             CloseTradeMtEvent closeTradeMtEvent, List<BoClientFraudTypesObject> clientFraudTypes,
             MtTbUserObject mtTbUserObject, List<MtTbCreditsObject> mtTbCreditsObjects,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,

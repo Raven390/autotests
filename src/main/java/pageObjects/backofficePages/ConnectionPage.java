@@ -105,6 +105,12 @@ public class ConnectionPage extends AbstractPage {
         connectionTab.click();
     }
 
+    @Step("Click connections tab")
+    public void clickConnectionTabButton() {
+        connectionTab.click();
+        waitForPageToLoad();
+    }
+
     @Step("Go to main page")
     public void navigateMain() {
         Allure.step("Go to main page");

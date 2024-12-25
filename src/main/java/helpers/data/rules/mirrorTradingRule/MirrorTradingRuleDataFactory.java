@@ -6,7 +6,7 @@ import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
+import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
 import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
@@ -78,9 +78,9 @@ public class MirrorTradingRuleDataFactory {
         return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
     }
 
-    private static ConnectionTableEntryV3 getConnection(ClientHelper fromClient, ClientHelper toClient) {
-        return new ConnectionTableEntryV3(
-                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "{\"payout\": \"463344**** **5603\"}", getCurrentTimestampDbFormat());
+    private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
+        return new ConnectionTableEntry(
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]");
     }
 
     public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd2Data() {
@@ -452,7 +452,7 @@ public class MirrorTradingRuleDataFactory {
             insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
             data.connections.forEach(connection -> {
                 try {
-                    insertObjectToDb(CONNECTIONS_V3_TABLE_NAME, connection);
+                    insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
                 } catch (SQLException | ReflectiveOperationException e) {
                     throw new RuntimeException(e);
                 }
@@ -524,7 +524,7 @@ public class MirrorTradingRuleDataFactory {
             deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             data.connections.forEach(connection -> {
                 try {
-                    deleteEntryFromDb(CONNECTIONS_V3_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
+                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

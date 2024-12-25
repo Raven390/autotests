@@ -39,6 +39,12 @@ public class OperationsPage extends AbstractPage {
         operationsTab.click();
     }
 
+    @Step("Click operations tab")
+    public void clickOperationsTabButton() {
+        operationsTab.click();
+        waitForPageToLoad();
+    }
+
     @Step("Open users operations tab")
     public void checkFinancialTransactionEmptyStateIsVisible() {
         Allure.step("Check that financial transaction graph empty state is visible");

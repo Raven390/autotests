@@ -2,7 +2,7 @@ package helpers.data.rules.registrationRule;
 
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.csTbConnectionTableV3.ConnectionTableEntryV3;
+import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
@@ -14,7 +14,7 @@ public class RegistrationRuleData {
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
     public LnSessionParsedObject lnSessionParsedObject;
-    public List<ConnectionTableEntryV3> connections;
+    public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
     public List<ClientHelper> connectedClientHelpers;
     public RegistrationEvent registrationEvent;
@@ -25,7 +25,7 @@ public class RegistrationRuleData {
     }
 
     public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
-            LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntryV3> connections,
+            LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections,
             List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
             RegistrationEvent registrationEvent,
             List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
