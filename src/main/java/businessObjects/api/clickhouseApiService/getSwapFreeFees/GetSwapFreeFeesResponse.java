@@ -19,7 +19,7 @@ public class GetSwapFreeFeesResponse {
     @JsonProperty("profit")
     public Double profit;
 
-    @JsonProperty("profitUSD") // Correct mapping for "profitUSD"
+    @JsonProperty("profitUSD")
     public Double profitUSD;
 
     @JsonProperty("comment")

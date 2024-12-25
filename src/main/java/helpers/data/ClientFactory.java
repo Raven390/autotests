@@ -2,6 +2,7 @@
 package helpers.data;
 
 import helpers.data.enums.Brands;
+import helpers.data.enums.Regulators;
 import net.datafaker.Faker;
 
 import java.util.Random;
@@ -25,7 +26,7 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Brands.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), faker.country().countryCode2().toUpperCase()
+                getRandomIntPositive(), getRandomUuidString(), Regulators.VFSC2, Brands.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), faker.country().countryCode2().toUpperCase()
         );
     }
 

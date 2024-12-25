@@ -1,4 +1,4 @@
-package businessObjects.api.clickhouseApiService.getCreditRiskFreeRevenueRatio.getWithdrawals;
+package businessObjects.api.clickhouseApiService.getWithdrawals;
 
 import helpers.httpHelper.HttpHelper;
 import io.qameta.allure.Step;

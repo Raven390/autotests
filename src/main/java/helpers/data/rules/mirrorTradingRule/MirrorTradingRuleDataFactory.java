@@ -60,12 +60,12 @@ public class MirrorTradingRuleDataFactory {
     @Step("Create data for Mirror trading rule")
     private static MirrorTradingRuleData getMirrorTradingRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
-        LnSessionParsedObject lexisNexisObjectRegistration = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
+        LnSessionParsedObject lexisNexisObjectRegistration = generateLexisNexisDataForUserId(client.getUid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObjectRegistration.brand = client.getBrand();
         lexisNexisObjectRegistration.eventType = "account_creation";
         lexisNexisObjectRegistration.userId = client.getUserId();
         lexisNexisObjectRegistration.riskRating = "low";
-        LnSessionParsedObject lexisNexisObjectLogin = generateLexisNexisDataForUserId(client.getUuid(), client.getUserId(), getRandomIntPositive());
+        LnSessionParsedObject lexisNexisObjectLogin = generateLexisNexisDataForUserId(client.getUid(), client.getUserId(), getRandomIntPositive());
         lexisNexisObjectLogin.brand = client.getBrand();
         lexisNexisObjectLogin.eventType = "login";
         lexisNexisObjectLogin.userId = client.getUserId();
