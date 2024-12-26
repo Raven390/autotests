@@ -6,14 +6,14 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsResponseSuccess(ClientHelper userFrom, ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344")}, "Same Person", 1, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 1, null, 1d, 1d, 1d
         );
     }
 
     public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 0.5d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344")}, "Same Person", 2, null, 0.5d, 0.5d, 0.5d
+                userFrom.getUcid(), userTo.getUcid(), 0.5d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 2, null, 0.5d, 0.5d, 0.5d
         );
     }
 
@@ -68,16 +68,16 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesForDepth(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344")}, "Same Person", 2, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 2, null, 1d, 1d, 1d
         );
     }
 
     public static GetConnectionsResponse[] getConnectionsForFiltrationByParams(ClientHelper userFrom,
             ClientHelper userTo1, ClientHelper userTo2) {
         return new GetConnectionsResponse[]{new GetConnectionsResponse(
-                userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344")}, "Same Person", 1, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 1, null, 1d, 1d, 1d
         ), new GetConnectionsResponse(
-                userTo1.getUcid(), userTo2.getUcid(), 0.2d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "wcJSyCAcOAT2WPuuoN+t6Z/WaBiHSPPa")}, "Same Network", 2, null, 0.2d, 0.2d, 0.2d
+                userTo1.getUcid(), userTo2.getUcid(), 0.2d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "wcJSyCAcOAT2WPuuoN+t6Z/WaBiHSPPa", "wcJSyCAcOAT2WPuuoN+t6Z/WaBiHSPPa", "exact")}, "Same Network", 2, null, 0.2d, 0.2d, 0.2d
         )
         };
     }

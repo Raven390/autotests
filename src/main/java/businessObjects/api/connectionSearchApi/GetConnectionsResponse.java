@@ -78,12 +78,21 @@ public class GetConnectionsResponse {
         @JsonProperty("connectionAttributeValue")
         public String connectionAttributeValue;
 
+        @JsonProperty("sourceAttributeValue")
+        public String sourceAttributeValue;
+
+        @JsonProperty("relationType")
+        public String relationType;
+
         public ConnectionDetail() {
         }
 
-        public ConnectionDetail(String connectionAttributeName, String connectionAttributeValue) {
+        public ConnectionDetail(String connectionAttributeName, String connectionAttributeValue,
+                String sourceAttributeValue, String relationType) {
             this.connectionAttributeName = connectionAttributeName;
             this.connectionAttributeValue = connectionAttributeValue;
+            this.sourceAttributeValue = sourceAttributeValue;
+            this.relationType = relationType;
         }
 
         @Override
@@ -91,17 +100,17 @@ public class GetConnectionsResponse {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ConnectionDetail that = (ConnectionDetail) o;
-            return Objects.equals(connectionAttributeName, that.connectionAttributeName) && Objects.equals(connectionAttributeValue, that.connectionAttributeValue);
+            return Objects.equals(connectionAttributeName, that.connectionAttributeName) && Objects.equals(connectionAttributeValue, that.connectionAttributeValue) && Objects.equals(sourceAttributeValue, that.sourceAttributeValue) && Objects.equals(relationType, that.relationType);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(connectionAttributeName, connectionAttributeValue);
+            return Objects.hash(connectionAttributeName, connectionAttributeValue, sourceAttributeValue, relationType);
         }
 
         @Override
         public String toString() {
-            return "ConnectionDetail{" + "connectionAttributeName='" + connectionAttributeName + '\'' + ", connectionAttributeValue='" + connectionAttributeValue + '\'' + '}';
+            return "ConnectionDetail{" + "connectionAttributeName='" + connectionAttributeName + '\'' + ", connectionAttributeValue='" + connectionAttributeValue + '\'' + ", sourceAttributeValue='" + sourceAttributeValue + '\'' + ", relationType='" + relationType + '\'' + '}';
         }
     }
 
