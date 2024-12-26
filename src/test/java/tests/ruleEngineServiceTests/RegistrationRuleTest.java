@@ -4,12 +4,11 @@ import businessObjects.db.backofficeDb.alert.Alert;
 import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.rules.registrationRule.RegistrationRuleData;
 import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,7 +26,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_SERVICE)
-public class RegistrationRuleTest {
+public class RegistrationRuleTest extends TestBaseRule {
 
     public static Map<String, RegistrationRuleData> dbDataMap = new HashMap<>();
 
@@ -55,8 +54,6 @@ public class RegistrationRuleTest {
         Allure.step("LN score != high");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -85,8 +82,6 @@ public class RegistrationRuleTest {
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -142,8 +137,6 @@ public class RegistrationRuleTest {
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -199,8 +192,6 @@ public class RegistrationRuleTest {
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -257,8 +248,6 @@ public class RegistrationRuleTest {
         Allure.step("LN score == Low");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -287,8 +276,6 @@ public class RegistrationRuleTest {
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -369,8 +356,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Set<String> expectedSteps = new HashSet<>();
@@ -541,8 +526,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -607,8 +590,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -673,8 +654,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -726,8 +705,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -793,8 +770,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -858,8 +833,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -922,8 +895,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -987,8 +958,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -1051,8 +1020,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -1108,8 +1075,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -1175,8 +1140,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -1237,8 +1200,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
@@ -1297,8 +1258,6 @@ public class RegistrationRuleTest {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");

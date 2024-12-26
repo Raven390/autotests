@@ -21,6 +21,7 @@ public class ClientHelper {
     private String phoneNumber;
     private String ipAddress;
     private String countryCode;
+    private Integer cpaId;
 
     public ClientHelper() {
     }
@@ -33,7 +34,8 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
+    public ClientHelper(
+            Integer userId, String uid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
             Integer serverId) {
         this.userId = userId;
         this.uid = uid;
@@ -57,6 +59,22 @@ public class ClientHelper {
         this.phoneNumber = phoneNumber;
         this.ipAddress = ipAddress;
         this.countryCode = countryCode;
+    }
+
+    public ClientHelper(
+            Integer userId, String uid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
+            Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId) {
+        this.userId = userId;
+        this.uid = uid;
+        this.brand = brand;
+        this.tradingAccount = tradingAccount;
+        this.tradingAccount2 = tradingAccount2;
+        this.serverId = serverId;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.ipAddress = ipAddress;
+        this.countryCode = countryCode;
+        this.cpaId = cpaId;
     }
 
     @JsonIgnore
@@ -150,6 +168,14 @@ public class ClientHelper {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public Integer getCpaId() {
+        return cpaId;
+    }
+
+    public void setCpaId(Integer cpaId) {
+        this.cpaId = cpaId;
     }
 
     @Override
