@@ -61,7 +61,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with required params")
-    @AllureId("")
+    @AllureId("659")
     public void getBalanceOrderTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -82,7 +82,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with all params")
-    @AllureId("")
+    @AllureId("660")
     public void getBalanceOrderTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -110,7 +110,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with dateFrom")
-    @AllureId("")
+    @AllureId("661")
     public void getBalanceOrdersTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -127,7 +127,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with dateTo")
-    @AllureId("")
+    @AllureId("662")
     public void getBalanceOrdersTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -144,7 +144,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=tradeDate and sortOrder=asc")
-    @AllureId("")
+    @AllureId("663")
     public void getBalanceOrdersTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -165,7 +165,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=tradeDate and sortOrder=desc")
-    @AllureId("")
+    @AllureId("664")
     public void getBalanceOrdersTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -186,7 +186,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=asc")
-    @AllureId("")
+    @AllureId("665")
     public void getBalanceOrdersTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -207,7 +207,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=desc")
-    @AllureId("")
+    @AllureId("666")
     public void getBalanceOrdersTest8() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -228,7 +228,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=profitUsd and sortOrder=asc")
-    @AllureId("")
+    @AllureId("667")
     public void getBalanceOrdersTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -249,7 +249,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with orderBy=profit and sortOrder=desc")
-    @AllureId("")
+    @AllureId("668")
     public void getBalanceOrdersTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -270,7 +270,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with only tradingAccount")
-    @AllureId("")
+    @AllureId("669")
     public void getBalanceOrdersTest11() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -287,7 +287,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with only serverId")
-    @AllureId("")
+    @AllureId("670")
     public void getBalanceOrdersTest12() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -304,7 +304,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with wrong dateFrom")
-    @AllureId("")
+    @AllureId("671")
     public void getBalanceOrdersTest13() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -326,7 +326,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with wrong dateTo")
-    @AllureId("")
+    @AllureId("672")
     public void getBalanceOrdersTest14() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -348,7 +348,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with wrong orderBy")
-    @AllureId("")
+    @AllureId("673")
     public void getBalanceOrdersTest15() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -367,7 +367,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with wrong sortOrder")
-    @AllureId("")
+    @AllureId("674")
     public void getBalanceOrdersTest16() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
@@ -387,7 +387,7 @@ public class GetBalanceOrdersTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get balance orders with wrong limit")
-    @AllureId("")
+    @AllureId("675")
     public void getBalanceOrdersTest17() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();

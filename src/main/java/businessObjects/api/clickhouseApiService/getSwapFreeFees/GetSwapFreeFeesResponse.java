@@ -29,13 +29,13 @@ public class GetSwapFreeFeesResponse {
     }
 
     public GetSwapFreeFeesResponse(
-            String tradeDate, Integer tradeId, Integer tradingAccount, Double profit, Double profitUSD,
+            String tradeDate, Integer tradeId, Integer tradingAccount, Double profit, Double profitUsd,
             String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
         this.tradingAccount = tradingAccount;
         this.profit = profit;
-        this.profitUsd = profitUSD;
+        this.profitUsd = profitUsd;
         this.comment = comment;
     }
 
@@ -56,6 +56,6 @@ public class GetSwapFreeFeesResponse {
 
     @Override
     public String toString() {
-        return "GetSwapFreeFeesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd + ", comment='" + comment + '\'' + '}';
+        return "GetSwapFreeFeesResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUsd=" + profitUsd + ", comment='" + comment + '\'' + '}';
     }
 }

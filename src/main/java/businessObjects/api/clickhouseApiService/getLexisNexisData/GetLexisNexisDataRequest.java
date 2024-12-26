@@ -1,0 +1,18 @@
+package businessObjects.api.clickhouseApiService.getLexisNexisData;
+
+import helpers.httpHelper.HttpHelper;
+import io.qameta.allure.Step;
+import okhttp3.Response;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static utils.ConfigFactory.*;
+
+public class GetLexisNexisDataRequest {
+
+    @Step("Get lexis nexis user custom data")
+    public static Response getLexisNexisData(Map<String, Object> paramsMap) throws IOException {
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA_PATH, null, paramsMap);
+    }
+}
