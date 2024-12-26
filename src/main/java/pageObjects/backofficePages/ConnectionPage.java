@@ -1,9 +1,12 @@
 package pageObjects.backofficePages;
 
 import com.microsoft.playwright.*;
+import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +45,9 @@ public class ConnectionPage extends AbstractPage {
     private final Locator connectionCardSwitch;
     private final Locator connectionCard;
     private final Locator connectionCardLink;
+    private final Locator unmaskConnectionCardDataButton;
+    private final Locator connectionTableAttribute;
+    private final Locator unmaskConnectionTableDataButton;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -59,7 +65,7 @@ public class ConnectionPage extends AbstractPage {
     private final String CONNECTION_CARD_HEADER_NAME_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'v-graph-node-details-header__client-name')]";
     private final String CONNECTION_CARD_HEADER_LEVEL_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[1]//span";
     private final String CONNECTION_CARD_HEADER_POINTS_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[2]//span";
-
+    private final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::tr";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -94,6 +100,9 @@ public class ConnectionPage extends AbstractPage {
         this.connectionCardSwitch = page.locator(CONNECTION_CARD_SWITCH_SELECTOR);
         this.connectionCard = page.locator(CONNECTION_CARD_SELECTOR);
         this.connectionCardLink = page.locator(CONNECTION_CARD_LINK_SELECTOR);
+        this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header__buttons']/button");
+        this.connectionTableAttribute = page.locator("//div[@class='v-connection-search-table-view__attributes-list']/div");
+        this.unmaskConnectionTableDataButton = page.locator("//div[@class='v-connection-search-table-view__attribute-column-name']/button");
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -256,7 +265,7 @@ public class ConnectionPage extends AbstractPage {
             page.waitForSelector(CONNECTION_CARD_SWITCH_ON_SELECTOR);
         }
         page.waitForSelector(CONNECTION_NODE_SELECTOR + "[data-qa='" + clientUcid + "']");
-        page.locator(CONNECTION_NODE_SELECTOR + "[data-qa='" + clientUcid + "']").click();
+        page.locator(CONNECTION_NODE_SELECTOR + "[data-qa='" + clientUcid + "']").locator("//div").first().click();
         page.waitForSelector(CONNECTION_CARD_SELECTOR);
     }
 
@@ -356,5 +365,27 @@ public class ConnectionPage extends AbstractPage {
         return 6;
     }
 
+    @Step("Click unmask button in card view")
+    public void clickUnmaskConnectionCardDataButton() {
+        unmaskConnectionCardDataButton.click();
+        page.waitForCondition(() -> {
+            String attributeValue = (String) unmaskConnectionCardDataButton.evaluate("el => el.getAttribute('disabled')");
+            return attributeValue == null; // Check if the attribute is no longer present
+        });
+    }
 
+    @Step("Get attributes from connection table by client")
+    public List<String> getConnectionTableAttributesList(ClientHelper client) {
+        List<String> connectionTableAttributesList = new ArrayList<>();
+        Locator attributes = page.locator(String.format(CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN, client.getUserId())).locator(connectionTableAttribute);
+        for (int i = 0; i < attributes.count(); i++) {
+            connectionTableAttributesList.add(attributes.nth(i).textContent());
+        }
+        return connectionTableAttributesList;
+    }
+
+    @Step("Click unmask button in table view")
+    public void clickUnmaskConnectionTableDataButton() {
+        unmaskConnectionTableDataButton.click();
+    }
 }
