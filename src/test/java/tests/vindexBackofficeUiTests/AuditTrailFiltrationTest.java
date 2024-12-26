@@ -1,9 +1,9 @@
 package tests.vindexBackofficeUiTests;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import businessObjects.ui.auditTrail.AuditTrailItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,9 +20,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserDataForUi;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -38,15 +38,15 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static CrmTbUserObject crmTbUser;
-    private static MtTbUserObject account;
+    private static CrmTbAccountObject account;
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, IOException {
         ClientHelper client = getRandomVantageClientAllFields();
         crmTbUser = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        account = generateMtTbUserDataForUi(crmTbUser.ucid);
-        insertObjectToDb(MT_USER_TABLE_NAME, account);
+        account = generateCrmTbAccountDataForUi(client);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         Response response = postRestriction(new PostRestrictionRequestBody(
@@ -343,7 +343,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);

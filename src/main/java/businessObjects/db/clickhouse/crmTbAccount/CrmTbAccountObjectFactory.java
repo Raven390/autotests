@@ -1,6 +1,10 @@
 package businessObjects.db.clickhouse.crmTbAccount;
 
 import helpers.data.ClientHelper;
+import io.qameta.allure.Step;
+
+import static utils.Utils.*;
+import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class CrmTbAccountObjectFactory {
 
@@ -61,4 +65,23 @@ public class CrmTbAccountObjectFactory {
                 "Automation tests"// internalComment
         );
     }
+
+    @Step("Generate account data in crm___tb_account table")
+    public static CrmTbAccountObject generateCrmTbAccountData(ClientHelper client) {
+        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), getRandomUuidString(), client.getTradingAccount(), client.getServerId(), "server1", 1, "Standard", "S_VFX_EUR", "MT4", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentDate(), getCurrentDate(), "Active", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 0.00, "USD", 100.0, 1.0, 2.0, 1.0, 3, 9.0, 0, 0, getRandomIntPositive(), getRandomIntPositive(), 0, 0, 0, 0, 0, 0, 0, getCurrentTimestampDbFormat(), "Automation tests");
+    }
+
+    @Step("Generate additional account data in crm___tb_account table")
+    public static CrmTbAccountObject generateAdditionalCrmTbAccountData(ClientHelper client) {
+        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), getRandomUuidString(), client.getTradingAccount2(), client.getServerId(), "server1", 1, "Standard", "S_VFX_EUR", "MT4", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentDate(), getCurrentDate(), "Active", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 0.00, "USD", 100.0, 1.0, 2.0, 1.0, 3, 9.0, 0, 0, getRandomIntPositive(), getRandomIntPositive(), 0, 0, 0, 0, 0, 0, 0, getCurrentTimestampDbFormat(), "Automation tests");
+    }
+
+    public static CrmTbAccountObject generateCrmTbAccountDataForUi(ClientHelper client) {
+        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), getRandomUuidString(), client.getTradingAccount(), 11, "server1", 1, "Standard", "S_VFX_EUR", "MT4", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentDate(), getCurrentDate(), "Active", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 101.5, "USD", 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, 0, getRandomIntPositive(), getRandomIntPositive(), 0, 0, 0, 0, 0, 0, 0, getCurrentTimestampDbFormat(), "Automation tests");
+    }
+
+    public static CrmTbAccountObject generateAdditionalCrmTbAccountDataForUi(ClientHelper client) {
+        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), getRandomUuidString(), client.getTradingAccount2(), 11, "server1", 1, "Standard", "S_VFX_EUR", "MT4", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentDate(), getCurrentDate(), "Active", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 101.5, "USD", 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, 0, getRandomIntPositive(), getRandomIntPositive(), 0, 0, 0, 0, 0, 0, 0, getCurrentTimestampDbFormat(), "Automation tests");
+    }
+
 }

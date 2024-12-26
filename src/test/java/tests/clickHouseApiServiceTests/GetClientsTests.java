@@ -2,8 +2,8 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponse;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -48,8 +48,8 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
-        insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
+        CrmTbAccountObject accountObject = generateCrmTbAccountData(client);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, accountObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
@@ -75,8 +75,8 @@ public class GetClientsTests extends TestBaseApi {
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
-        MtTbUserObject mtObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
-        insertObjectToDb(MT_USER_TABLE_NAME, mtObject);
+        CrmTbAccountObject accountObject = generateCrmTbAccountData(client);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, accountObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();

@@ -2,9 +2,9 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.backofficeDb.userActionAudit.UserActionAudit;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -19,11 +19,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbKycFiles.KycFilesTableEntryFactory.getKycFile;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.ctmTbIdProof.IdProofTableEntryFactory.getIdProof;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserDataForUi;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static businessObjects.ui.user.UserFactory.coreUser;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -40,7 +40,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static CrmTbUserObject crmTbUser;
-    private static MtTbUserObject account;
+    private static CrmTbAccountObject account;
     private static String userId;
     private static CrmTbWithdrawalObject withdrawal;
 
@@ -51,8 +51,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
         insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
-        account = generateMtTbUserDataForUi(crmTbUser.ucid);
-        insertObjectToDb(MT_USER_TABLE_NAME, account);
+        account = generateCrmTbAccountDataForUi(client);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         Response response = postRestriction(new PostRestrictionRequestBody(
@@ -284,7 +284,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
