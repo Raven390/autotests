@@ -1,10 +1,10 @@
 package helpers.data.rules.registrationRule;
 
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 
@@ -19,7 +19,7 @@ public class RegistrationRuleData {
     public List<ClientHelper> connectedClientHelpers;
     public RegistrationEvent registrationEvent;
     public List<BoClientFraudTypesObject> clientFraudTypes;
-    public MtTbUserObject mtTbUserObject;
+    public CrmTbAccountObject crmTbAccountObject;
 
     public RegistrationRuleData() {
     }
@@ -28,7 +28,7 @@ public class RegistrationRuleData {
             LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections,
             List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
             RegistrationEvent registrationEvent,
-            List<BoClientFraudTypesObject> clientFraudTypes, MtTbUserObject mtTbUserObject) {
+            List<BoClientFraudTypesObject> clientFraudTypes, CrmTbAccountObject crmTbAccountObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
@@ -37,11 +37,11 @@ public class RegistrationRuleData {
         this.connectedClientHelpers = connectedClientHelpers;
         this.registrationEvent = registrationEvent;
         this.clientFraudTypes = clientFraudTypes;
-        this.mtTbUserObject = mtTbUserObject;
+        this.crmTbAccountObject = crmTbAccountObject;
     }
 
     @Override
     public String toString() {
-        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", connectedClientHelpers=" + connectedClientHelpers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + mtTbUserObject + '}';
+        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", connectedClientHelpers=" + connectedClientHelpers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", mtTbUserObject=" + crmTbAccountObject + '}';
     }
 }

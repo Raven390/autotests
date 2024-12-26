@@ -16,16 +16,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static utils.Constants.*;
-import static utils.Constants.MT_USER_TABLE_NAME;
 import static utils.Utils.*;
 
 @RuleTestData("registration")
@@ -417,7 +416,7 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
 
-        registrationRuleData.mtTbUserObject = generateMtTbUserData(registrationRuleData.clientHelper.getUcid(), getRandomIntPositive(), 188);
+        registrationRuleData.crmTbAccountObject = generateCrmTbAccountData(registrationRuleData.clientHelper);
         return registrationRuleData;
     }
 
@@ -497,8 +496,8 @@ public class RegistrationRuleDataFactory {
                     throw new RuntimeException(e);
                 }
             });
-            if (data.mtTbUserObject != null) {
-                insertObjectToDb(MT_USER_TABLE_NAME, data.mtTbUserObject);
+            if (data.crmTbAccountObject != null) {
+                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
         }
         return map;
@@ -538,9 +537,6 @@ public class RegistrationRuleDataFactory {
                     throw new RuntimeException(e);
                 }
             });
-            if (data.mtTbUserObject != null) {
-                deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
-            }
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }

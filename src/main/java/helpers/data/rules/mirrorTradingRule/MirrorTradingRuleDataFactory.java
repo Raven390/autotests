@@ -3,13 +3,13 @@ package helpers.data.rules.mirrorTradingRule;
 import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
 import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObject;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
@@ -24,6 +24,7 @@ import java.util.Map;
 
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObjectFactory.generateMirrorTradesByAccount;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
@@ -31,7 +32,6 @@ import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawal
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByAccountServerId;
 import static businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
@@ -71,11 +71,11 @@ public class MirrorTradingRuleDataFactory {
         lexisNexisObjectLogin.userId = client.getUserId();
         lexisNexisObjectLogin.riskRating = "low";
         lexisNexisObjectLogin.trueIpGeo = "CY";
-        MtTbUserObject mtTbUserObject = generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId());
+        CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), mtTbUserObject.account, 100d, "USDEUR", mtTbUserObject.serverId, "closeTrade"
+                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), crmTbAccountObject.account, 100d, "USDEUR", crmTbAccountObject.serverIdSt, "closeTrade"
         );
-        return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
+        return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
@@ -470,8 +470,8 @@ public class MirrorTradingRuleDataFactory {
                     throw new RuntimeException(e);
                 }
             });
-            if (data.mtTbUserObject != null) {
-                insertObjectToDb(MT_USER_TABLE_NAME, data.mtTbUserObject);
+            if (data.crmTbAccountObject != null) {
+                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
             data.mtTbCreditsObjects.forEach(credit -> {
                 try {
@@ -538,9 +538,6 @@ public class MirrorTradingRuleDataFactory {
                     throw new RuntimeException(e);
                 }
             });
-            if (data.mtTbUserObject != null) {
-                deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", data.mtTbUserObject.ucid));
-            }
             data.mtTbCreditsObjects.forEach(credit -> {
                 try {
                     deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));

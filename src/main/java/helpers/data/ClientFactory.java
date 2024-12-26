@@ -12,15 +12,15 @@ import static utils.Utils.*;
 public class ClientFactory {
 
     public static ClientHelper getRandomClient() {
-        return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), randomEnum(Brands.class), getRandomIntPositive(), new Random().nextInt(1, 50)
-        );
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), randomEnum(Brands.class), getRandomIntPositive(), new Random().nextInt(1, 50));
+        client.setRegulator(Regulators.VFSC);
+        return client;
     }
 
     public static ClientHelper getRandomVantageClient() {
-        return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Brands.VANTAGE, getRandomIntPositive(), new Random().nextInt(1, 50)
-        );
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brands.VANTAGE, getRandomIntPositive(), new Random().nextInt(1, 50));
+        client.setRegulator(Regulators.VFSC);
+        return client;
     }
 
     public static ClientHelper getRandomVantageClientAllFields() {

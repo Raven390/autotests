@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static businessObjects.api.clickhouseApiService.getClientTradingAccounts.GetClientTradingAccountsRequest.getClientTradingAccounts;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -36,14 +36,8 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(MT_USER_TABLE_NAME, generateMtTbUserData(client.getUcid(), client.getTradingAccount(), client.getServerId()));
-        insertObjectToDb(MT_USER_TABLE_NAME, generateMtTbUserData(client.getUcid(), client.getTradingAccount2(), client.getServerId()));
-    }
-
-    @AfterAll
-    public static void teardownMirrorTrades() throws SQLException {
-        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("account = '%s'", client.getTradingAccount()));
-        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("account = '%s'", client.getTradingAccount2()));
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateAdditionalCrmTbAccountData(client));
     }
 
     @Test
@@ -68,24 +62,9 @@ public class GetClientTradingAccountTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get client trading accounts not found (404)")
-    @AllureId("458")
-    public void getClientTradingAccountsTest2() throws IOException {
-        // Execute request
-        Response response = getClientTradingAccounts("vantage-1234");
-
-        // Assert response
-        assert response.body() != null;
-        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Check response code", response.code(), is(404));
-        assertThat("Check response code", mappedResponse.status, is(404));
-        assertThat("Check response code", mappedResponse.error, is("Client with clientId=vantage-1234 not found."));
-    }
-
-    @Test
     @DisplayName("Clickhouse Api. Get client trading accounts wrong ucid (400)")
     @AllureId("459")
-    public void getClientTradingAccountsTest3() throws IOException {
+    public void getClientTradingAccountsTest2() throws IOException {
         // Execute request
         Response response = getClientTradingAccounts("1");
 

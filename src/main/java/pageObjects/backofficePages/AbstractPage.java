@@ -17,7 +17,7 @@ public abstract class AbstractPage {
     protected static final String LOADING_ANIMATION_SELECTOR = ".v-loader";
     protected static final String LOADER_SPIN_LOCATOR = ".g-spin";
     protected static final String CALENDAR_XPATH = "//div[contains(@class,'v-date-picker__calendar')]";
-    protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN = "//div[contains(@class,'g-date-calendar__button') and text()='%s']";
+    protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN = "//div[contains(@class,'g-date-calendar__button') and not(contains(@class,'g-date-calendar__button_out-of-boundary')) and text()='%s']";
 
     public AbstractPage(Page page) {
         this.page = page;

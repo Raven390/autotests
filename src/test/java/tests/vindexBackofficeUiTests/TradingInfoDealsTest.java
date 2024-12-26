@@ -1,11 +1,12 @@
 package tests.vindexBackofficeUiTests;
 
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtTbTradeTable.MtTbTradeObject;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
@@ -14,9 +15,10 @@ import tests.TestBaseWeb;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.mtTbTradeTable.MtTbTradeFactory.generateMtTbTrade;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserDataForUi;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -30,25 +32,26 @@ public class TradingInfoDealsTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final CrmTbUserObject crmTbUser = generateUserByClient(getRandomVantageClientAllFields());
-    private static MtTbUserObject account1;
-    private static MtTbUserObject account2;
+    private static final ClientHelper client = getRandomVantageClientAllFields();
+    private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
+    private static CrmTbAccountObject account1;
+    private static CrmTbAccountObject account2;
     private static MtTbTradeObject trade1;
     private static MtTbTradeObject trade2;
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        account1 = generateMtTbUserDataForUi(crmTbUser.ucid);
-        insertObjectToDb(MT_USER_TABLE_NAME, account1);
-        account2 = generateMtTbUserDataForUi(crmTbUser.ucid);
+        account1 = generateCrmTbAccountDataForUi(client);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.platform = "MT5";
-        insertObjectToDb(MT_USER_TABLE_NAME, account2);
-        trade1 = generateMtTbTrade(account1.account, account1.serverId);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+        trade1 = generateMtTbTrade(account1.account, account1.serverIdSt);
         trade1.type = "Sell";
         trade1.reason = "API";
         insertObjectToDb(MT_TRADES_TABLE_NAME, trade1);
-        trade2 = generateMtTbTrade(account2.account, account2.serverId);
+        trade2 = generateMtTbTrade(account2.account, account2.serverIdSt);
         trade2.platform = "MT5";
         insertObjectToDb(MT_TRADES_TABLE_NAME, trade2);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
@@ -104,7 +107,6 @@ public class TradingInfoDealsTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);
     }
