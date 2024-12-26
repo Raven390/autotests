@@ -38,10 +38,10 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
+        account1.currency = "EUR";
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
-        account2.currency = "USD";
         account2.accountStatus = "Inactive";
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
@@ -57,6 +57,9 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -75,7 +78,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account margin free in card view is as expected", tradingPage.getAccountMarginFree(account1.account), equalTo(String.format("%s %s", account1.marginFree, account1.currency)));
         assertThat("Assert that account server in card view is as expected", tradingPage.getAccountServer(account1.account), equalTo(account1.serverName));
         assertThat("Assert that account group in card view is as expected", tradingPage.getAccountGroup(account1.account), equalTo(account1.accountGroup));
-        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account1.account), equalTo(account1.createDateUtc));
+        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account1.account), equalTo(account1.createTimeUtc));
         assertThat("Assert that account updated time in card view is as expected", tradingPage.getAccountUpdatedTime(account1.account), equalTo(account1.lastUpdated));
         // Verify 2nd account card
         assertThat("Assert that account balance in card view is as expected", tradingPage.getAccountBalance(account2.account), equalTo(String.format("%s %s", account2.balance, account2.currency)));
@@ -89,7 +92,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account margin free in card view is as expected", tradingPage.getAccountMarginFree(account2.account), equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
         assertThat("Assert that account server in card view is as expected", tradingPage.getAccountServer(account2.account), equalTo(account2.serverName));
         assertThat("Assert that account group in card view is as expected", tradingPage.getAccountGroup(account2.account), equalTo(account2.accountGroup));
-        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account2.account), equalTo(account2.createDateUtc));
+        assertThat("Assert that account created time in card view is as expected", tradingPage.getAccountCreatedTime(account2.account), equalTo(account2.createTimeUtc));
         assertThat("Assert that account updated time in card view is as expected", tradingPage.getAccountUpdatedTime(account2.account), equalTo(account2.lastUpdated));
         // Verify tooltips
         tradingPage.verifyAccountIdPopup();
@@ -111,6 +114,9 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -123,7 +129,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account platform in table view is as expected", tradingPage.getAccountTablePlatform(account1.account), equalTo(account1.platform));
         assertThat("Assert that account type in table view is as expected", tradingPage.getAccountTableType(account1.account), equalTo(account1.accountType));
         assertThat("Assert that account status in table view is as expected", tradingPage.getAccountTableStatus(account1.account), equalTo(account1.accountStatus));
-        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account1.account), equalTo(account1.createDateUtc.replace(" ", "")));
+        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account1.account), equalTo(account1.createTimeUtc.replace(" ", "")));
         assertThat("Assert that account updated time in table view is as expected", tradingPage.getAccountTableUpdated(account1.account), equalTo(account1.lastUpdated.replace(" ", "")));
         assertThat("Assert that account balance in table view is as expected", tradingPage.getAccountTableBalance(account1.account), equalTo(String.format("%s %s%s %s", account1.balance, account1.currency, account1.balanceUsd, "USD")));
         assertThat("Assert that account total pnl in table view is as expected", tradingPage.getAccountTableTotalPnl(account1.account), equalTo(String.format("%s %s", account1.pnl, account1.currency)));
@@ -137,7 +143,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account platform in table view is as expected", tradingPage.getAccountTablePlatform(account2.account), equalTo(account2.platform));
         assertThat("Assert that account type in table view is as expected", tradingPage.getAccountTableType(account2.account), equalTo(account2.accountType));
         assertThat("Assert that account status in table view is as expected", tradingPage.getAccountTableStatus(account2.account), equalTo(account2.accountStatus));
-        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account2.account), equalTo(account2.createDateUtc.replace(" ", "")));
+        assertThat("Assert that account created time in table view is as expected", tradingPage.getAccountTableCreated(account2.account), equalTo(account2.createTimeUtc.replace(" ", "")));
         assertThat("Assert that account updated time in table view is as expected", tradingPage.getAccountTableUpdated(account2.account), equalTo(account2.lastUpdated.replace(" ", "")));
         assertThat("Assert that account balance in table view is as expected", tradingPage.getAccountTableBalance(account2.account), equalTo(String.format("%s %s", account2.balance, account2.currency)));
         assertThat("Assert that account total pnl in table view is as expected", tradingPage.getAccountTableTotalPnl(account2.account), equalTo(String.format("%s %s", account2.pnl, account2.currency)));

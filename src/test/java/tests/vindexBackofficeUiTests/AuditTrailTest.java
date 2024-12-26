@@ -73,6 +73,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -95,6 +98,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -122,6 +128,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -145,6 +154,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -181,6 +193,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
@@ -229,6 +244,9 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
