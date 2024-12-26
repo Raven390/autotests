@@ -52,6 +52,7 @@ public class Constants {
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";

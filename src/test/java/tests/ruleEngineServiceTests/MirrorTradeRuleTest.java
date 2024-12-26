@@ -3,12 +3,11 @@ package tests.ruleEngineServiceTests;
 import businessObjects.db.backofficeDb.alert.Alert;
 import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.rules.mirrorTradingRule.MirrorTradingRuleData;
 import helpers.database.DbName;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -32,7 +31,7 @@ import static utils.Constants.*;
 @Tag(TAG_MANUAL)
 @Disabled
 @Muted
-public class MirrorTradeRuleTest {
+public class MirrorTradeRuleTest extends TestBaseRule {
 
     public static Map<String, MirrorTradingRuleData> dbDataMap = new HashMap<>();
 
@@ -49,8 +48,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -71,8 +68,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd3_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("3_1");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -125,8 +120,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd3_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("3_2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -176,8 +169,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("4_1");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -198,8 +189,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("4_2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -220,8 +209,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd5_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("5_1");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -242,8 +229,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd5_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("5_2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -264,8 +249,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd6Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("6");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -286,8 +269,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd1_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("1_1");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -340,8 +321,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd1_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("1_2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -394,8 +373,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd7_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_1");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -446,8 +423,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd7_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_2");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -498,8 +473,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd7_3Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_3");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -550,8 +523,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd7_4Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_4");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
@@ -602,8 +573,6 @@ public class MirrorTradeRuleTest {
     public void mirrorTradeRuleExitEventEnd7_5Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_5");
         Allure.step("Produce close trade event to crm-events topic");
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");

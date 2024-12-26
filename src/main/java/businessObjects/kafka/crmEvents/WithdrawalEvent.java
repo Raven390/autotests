@@ -140,6 +140,47 @@ public class WithdrawalEvent {
         this.type = type;
     }
 
+    public WithdrawalEvent(String id, String eventDate, Integer withdrawalId, Integer clientId,
+            Integer metaTraderAccount,
+            String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
+            Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
+            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
+            String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
+            String withdrawalCurrency, Integer checkingStatus, Integer wdIsTrade, Double rate, Integer wdIsNonApp,
+            Double toUsdRate, String type) {
+        this.id = id;
+        this.eventDate = eventDate;
+        this.withdrawalId = withdrawalId;
+        this.clientId = clientId;
+        this.metaTraderAccount = metaTraderAccount;
+        this.brand = brand;
+        this.regulator = regulator;
+        this.paymentMethodCode = paymentMethodCode;
+        this.withdrawType = withdrawType;
+        this.withdrawalAmount = withdrawalAmount;
+        this.fee = fee;
+        this.actualAmount = actualAmount;
+        this.paymentAmount = paymentAmount;
+        this.cardHash = cardHash;
+        this.wdIsDel = wdIsDel;
+        this.updateTime = updateTime;
+        this.cpsAttachVariable = cpsAttachVariable;
+        this.orderNumber = orderNumber;
+        this.cpsMandatoryField = cpsMandatoryField;
+        this.wdIsRememberInfo = wdIsRememberInfo;
+        this.upiAccountName = upiAccountName;
+        this.deductCredit = deductCredit;
+        this.userSalesId = userSalesId;
+        this.accountSalesId = accountSalesId;
+        this.withdrawalCurrency = withdrawalCurrency;
+        this.checkingStatus = checkingStatus;
+        this.wdIsTrade = wdIsTrade;
+        this.rate = rate;
+        this.wdIsNonApp = wdIsNonApp;
+        this.toUsdRate = toUsdRate;
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
