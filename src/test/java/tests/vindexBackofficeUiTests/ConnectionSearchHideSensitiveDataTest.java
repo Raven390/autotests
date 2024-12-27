@@ -62,12 +62,12 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionCard(client.getUcid());
-        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "Email", "t****4@example.com");
+        connectionPage.ccCheckGeneralInfoRows("Email", "t****4@example.com");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "phoneNumber", "F**********************=");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "emailAddress", "m*****e@gmx.net");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "documentNumber", "3***********2");
         connectionPage.clickUnmaskConnectionCardDataButton();
-        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "Email", "test14@example.com");
+        connectionPage.ccCheckGeneralInfoRows("Email", "test14@example.com");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "phoneNumber", "F2jTWljlC4HSI0uMpPz5Yw==");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "emailAddress", "matisse@gmx.net");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "documentNumber", "3110200460092");
