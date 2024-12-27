@@ -115,6 +115,9 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickSuspiciousClientsFiltration();
+        investigationPage.selectBrandFilterByText(crmTbUser1.brand);
+        investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
