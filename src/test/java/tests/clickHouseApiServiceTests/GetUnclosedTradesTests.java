@@ -22,6 +22,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getUnclosedTrades.GetUnclosedTradesRequest.getUnclosedTrades;
 import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -65,13 +66,13 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         insertObjectToDb(MT5_DEALS_TABLE_NAME, trade5);
     }
 
-//    @AfterAll
-//    public static void teardownTests() throws SQLException {
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client1.getTradingAccount()));
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client2.getTradingAccount()));
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client3.getTradingAccount()));
-//        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client4.getTradingAccount()));
-//    }
+    @AfterAll
+    public static void teardownTests() throws SQLException {
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client1.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client2.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client3.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client4.getTradingAccount()));
+    }
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by required params + limit")
@@ -316,7 +317,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmount and sortOrder=desc")
+    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmount and sortOrder=asc")
     @AllureId("")
     public void getUnclosedTradesTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -329,26 +330,26 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradeId", mappedResponse.getFirst().profit, is(2d));
-        assertThat("Assert tradeId", mappedResponse.getLast().profit, is(1d));
+        assertThat("Assert profit", mappedResponse.getFirst().profit, is(1d));
+        assertThat("Assert profit", mappedResponse.getLast().profit, is(2d));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmountUSD and sortOrder=asc")
+    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmountUSD and sortOrder=desc")
     @AllureId("")
     public void getUnclosedTradesTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
         queryParams.put("serverId", client4.getServerId());
         queryParams.put("orderBy", "actualAmountUSD");
-        queryParams.put("sortOrder", "asc");
+        queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
         assert response.body() != null;
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradeId", mappedResponse.getFirst().profitUsd, is(1d));
-        assertThat("Assert tradeId", mappedResponse.getLast().profitUsd, is(2d));
+        assertThat("Assert tradeId", mappedResponse.getFirst().profitUsd, is(2d));
+        assertThat("Assert tradeId", mappedResponse.getLast().profitUsd, is(1d));
     }
 
     @Test
@@ -359,7 +360,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("tradingAccount", client4.getTradingAccount());
         queryParams.put("serverId", client4.getServerId());
         queryParams.put("orderBy", "actualAmountUSD");
-        queryParams.put("sortOrder", "asc");
+        queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
         assert response.body() != null;
