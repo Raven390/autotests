@@ -26,6 +26,10 @@ public class Utils {
         return new Random().nextInt(Integer.MAX_VALUE) + 1;
     }
 
+    public static Long getRandomLongPositive() {
+        return new Random().nextLong(Long.MAX_VALUE) + 1;
+    }
+
     public static String getRandomUuidString() {
         return UUID.randomUUID().toString();
     }
@@ -208,6 +212,6 @@ public class Utils {
     }
 
     public static String formatTimeToUtc(String time) {
-        return time.replace(" ", "T") + "Z";
+        return time.substring(0, time.length() - 7).replace(" ", "T") + "Z";
     }
 }

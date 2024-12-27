@@ -37,6 +37,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA_PATH = CONFIG.clickhouseGetLexisNexisDataPath();
     public static final String CLICKHOUSE_API_GET_TRADES_GROUP_BY = CONFIG.clickhouseGetTradesGroupByPath();
     public static final String CLICKHOUSE_API_GET_TRADES = CONFIG.clickhouseGetTradesPath();
+    public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES = CONFIG.clickhouseGetUnclosedTradesPath();
     public static final String CLICKHOUSE_API_GET_DEPOSITS = CONFIG.clickhouseGetDepositsPath();
     public static final String CLICKHOUSE_API_GET_WITHDRAWALS = CONFIG.clickhouseGetWithdrawalsPath();
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
@@ -205,6 +206,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetTradesPath")
         String clickhouseGetTradesPath();
+
+        @Key("clickhouseGetUnclosedTradesPath")
+        String clickhouseGetUnclosedTradesPath();
 
         @Key("clickhouseGetDepositsPath")
         String clickhouseGetDepositsPath();

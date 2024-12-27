@@ -24,7 +24,7 @@ public class Mt5DealsFactory {
     public static Mt5DealsObject generateTradeByClient(ClientHelper client, Integer action, Integer entry, Integer days,
             Long order) {
         return new Mt5DealsObject(
-                action, "[]", "Comment", 1.0, 1.0, getRandomIntPositive(), 1, 1, 2, entry, 1234L, "externalId", 1.0, 1, "", getCurrentTimestampDbFormat(), client.getTradingAccount(), 1.0, 1.0, 1.0, 1, "1", order, 111111L, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, "", client.getServerId(), 32, "MT5-IUK", "MT5_INF", 1, "EURUSD", 1.0, 1.0, LocalDateTime.now().minusDays(days).toString().replace("T", " "), getCurrentTimestampDbFormat(), getRandomIntPositive().longValue(), 0.0, 0.0, 1d, 1d, 0.0, 0.0);
+                action, "[]", "Comment", 1.0, 1.0, getRandomIntPositive(), 1, 1, 2, entry, 1234L, "externalId", 1.0, 1, "", getCurrentTimestampDbFormat(), client.getTradingAccount(), 1.0, 1.0, 1.0, 1, "1", order, getRandomLongPositive(), 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 2.0, "", client.getServerId(), 32, "MT5-IUK", "MT5_INF", 1, "EURUSD", 1.0, 1.0, LocalDateTime.now().minusDays(days).toString().replace("T", " "), getCurrentTimestampDbFormat(), getRandomIntPositive().longValue(), 0.0, 0.0, 1d, 1d, 0.0, 0.0);
     }
 
     public static Mt5DealsObject generateTradeForGroupBy1(Integer account, Integer serverId) {
