@@ -212,6 +212,6 @@ public class Utils {
     }
 
     public static String formatTimeToUtc(String time) {
-        return time.substring(0, time.length() - 7).replace(" ", "T") + "Z";
+        return time.split("\\.")[0].replace(" ", "T") + "Z";
     }
 }
