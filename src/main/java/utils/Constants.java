@@ -99,7 +99,10 @@ public class Constants {
     public static final String PAYOUT_TABLE_NAME = "vindex_test.payout";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo__client_fraud_types";
-    public static final String MITIGATION_CLIENTS_RESTRICTION = "mi.mi.clients_restriction";
+    public static final String MITIGATION_CLIENTS_RESTRICTION = "postgres.mi.clients_restriction";
+    public static final String MITIGATION_ACTION = "postgres.mi.action";
+    public static final String MITIGATION_KAFKA_REQUEST = "postgres.mi.kafka_request";
+    public static final String MITIGATION_KAFKA_RESPONSE = "postgres.mi.kafka_response";
     public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt___mt5_deals";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
