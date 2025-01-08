@@ -75,9 +75,83 @@ public class Utils {
     }
 
     public static String getPreviousYearTimestampDbFormat() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusYears(1);
+        LocalDateTime date = LocalDateTime.now().minusYears(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return date.format(formatter);
+    }
+
+    public static String getPreviousWeekTimestampYearMonthDay() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusWeeks(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return tomorrow.format(formatter);
+    }
+
+    public static String getPrevious90DaysTimestampYearMonthDay() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusDays(90);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPreviousMonthTimestampYearMonthDay() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusMonths(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPrevious6MonthTimestampYearMonthDay() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusMonths(6);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPreviousYearTimestampYearMonthDay() {
+        LocalDateTime tomorrow = LocalDateTime.now().minusYears(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return tomorrow.format(formatter);
+    }
+
+    public static String getPreviousYearMinusDayTimestampYearMonthDayDbFormat() {
+        LocalDateTime date = LocalDateTime.now().minusYears(1).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println("getPreviousYearMinusDayTimestampYearMonthDayDbFormat date is " + date.format(formatter));
+        return date.format(formatter);
+    }
+
+    public static String getPreviousYearMinusMonthTimestampYearMonthDayDbFormat() {
+        LocalDateTime date = LocalDateTime.now().minusYears(1).minusMonths(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println("getPreviousYearMinusDayTimestampYearMonthDayDbFormat date is " + date.format(formatter));
+        return date.format(formatter);
+    }
+
+    public static String getPreviousDayTimestampYearMonthDay() {
+        LocalDateTime date = LocalDateTime.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
+    }
+
+    public static String getPreviousDayTimestampYearMonthDayByIntDay(int step) {
+        LocalDateTime date = LocalDateTime.now().minusDays(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
+    }
+
+    public static String getPreviousDayTimestampYearMonthDayByIntMonth(int step) {
+        LocalDateTime date = LocalDateTime.now().minusMonths(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
+    }
+
+    public static String getPreviousDayTimestampYearMonthDayByIntMonthMinus1Day(int step) {
+        LocalDateTime date = LocalDateTime.now().minusMonths(step).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
+    }
+
+    public static String getNextDayTimestampYearMonthDayByInt(int step) {
+        LocalDateTime date = LocalDateTime.now().plusDays(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return date.format(formatter);
     }
 
     public static String getCurrentDateTime() {
@@ -86,8 +160,116 @@ public class Utils {
         return formatter.format(currentDateTime);
     }
 
+    public static String getCurrentDateMonthDay() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDayMonthDayByIntDay(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getNextDayMonthDayByInt(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().plusDays(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDayMonthDay() {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDateMonthYearIntYears(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusYears(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
+        return formatter.format(dateTime);
+    }
+
+    public static String getPreviousMonthMonth01YearIntMonth(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM 01’yy");
+        return formatter.format(dateTime);
+    }
+
+    public static String getPreviousMonthMonth01YearIntMonthMinus1day(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM 01’yy");
+        return formatter.format(dateTime);
+    }
+
+    public static String getPreviousDateMonthYearIntMonth(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
+        return formatter.format(dateTime);
+    }
+
+    public static String getCurrentDateMonthYear() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
+        return formatter.format(dateTime);
+    }
+
+    public static String getCurrentYear() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+        return formatter.format(dateTime);
+    }
+
+    public static String getPreviousYearByInt(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusYears(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+        return formatter.format(dateTime);
+    }
+
+    public static String getPreviousYearByIntMinus1day(int step) {
+        LocalDateTime dateTime = LocalDateTime.now().minusYears(step).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+        return formatter.format(dateTime);
+    }
+
     public static String getCurrentDate() {
         LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDateYearMonthDayByIntMonth(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusMonths(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDateYearMonthDayByIntMonthMinus1Day(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusMonths(step).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDayByIntDaysYearMonthDay(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousDateByIntYearMonthDay(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getPreviousYearByIntYearMonthDayMinus1day(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step).minusDays(1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
+    public static String getNextDayByIntYearMonthDay(int step) {
+        LocalDateTime currentDateTime = LocalDateTime.now().plusDays(step);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return formatter.format(currentDateTime);
     }

@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public abstract class AbstractPage {
 
@@ -38,7 +39,7 @@ public abstract class AbstractPage {
         calendarMode.click();
         LocalDate dateFromLocal = LocalDate.parse(dateFrom);
         String yearFrom = String.valueOf(dateFromLocal.getYear());
-        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM");
+        DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMM", Locale.US);
         String monthFrom = dateFromLocal.format(monthFormatter);
         String dayFrom = String.valueOf(dateFromLocal.getDayOfMonth());
         LocalDate dateToLocal = LocalDate.parse(dateTo);
