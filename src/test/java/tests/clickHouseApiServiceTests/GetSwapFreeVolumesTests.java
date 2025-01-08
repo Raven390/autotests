@@ -3,7 +3,7 @@ package tests.clickHouseApiServiceTests;
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getSwapFreeVolumes.GetSwapFreeVolumesResponse;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getSwapFreeVolumes.GetSwapFreeVolumesRequest.getSwapFreeVolumes;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAccountByClient;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
+import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -40,15 +40,15 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final CrmTbAccountObject account1 = generateAccountByClient(client1, true);
 
-    private static final Mt5DealsObject deal1 = generateTradeByClient(client1, 0, 0, 1, 1111L);
-    private static final Mt5DealsObject deal2 = generateTradeByClient(client1, 1, 1, 1, 1111L);
-    private static final Mt5DealsObject deal3 = generateTradeByClient(client1, 1, 1, 3, 1112L);
+    private static final Mt5DealsCoercedObject deal1 = generateTradeByClient(client1, 0, 0, 1, 1111L);
+    private static final Mt5DealsCoercedObject deal2 = generateTradeByClient(client1, 1, 1, 1, 1111L);
+    private static final Mt5DealsCoercedObject deal3 = generateTradeByClient(client1, 1, 1, 3, 1112L);
 
     //Client 2 data
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final CrmTbAccountObject account2 = generateAccountByClient(client2, false);
-    private static final Mt5DealsObject deal5 = generateTradeByClient(client2, 0, 0, 0, 1113L);
-    private static final Mt5DealsObject deal6 = generateTradeByClient(client2, 1, 1, 0, 1114L);
+    private static final Mt5DealsCoercedObject deal5 = generateTradeByClient(client2, 0, 0, 0, 1113L);
+    private static final Mt5DealsCoercedObject deal6 = generateTradeByClient(client2, 1, 1, 0, 1114L);
 
     //Client 3 data
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
@@ -58,13 +58,13 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, deal1);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, deal2);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, deal3);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal1);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal2);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal3);
 
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, deal5);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, deal6);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal5);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal6);
     }
 
     //TODO uncomment after solving error with delete statement
@@ -72,11 +72,11 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     public static void teardownData() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal1.comment));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("comment = '%s'", deal1.comment));
 
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("comment = '%s'", deal2.comment));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("comment = '%s'", deal2.comment));
     }
 
     @Test
@@ -97,10 +97,10 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
 
-        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("1.00000"));
-        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("1.00000"));
-        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("1.00000"));
-        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("1.00000"));
+        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("1.0000"));
+        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("1.0000"));
+        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("1.0000"));
+        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("1.0000"));
     }
 
     @Test
@@ -119,10 +119,10 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
 
-        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("1.00000"));
-        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("1.00000"));
-        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("1.00000"));
-        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("1.00000"));
+        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("1.0000"));
+        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("1.0000"));
+        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("1.0000"));
+        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("1.0000"));
     }
 
     @Test
@@ -180,10 +180,10 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
 
-        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.00000"));
-        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.00000"));
-        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.00000"));
-        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.00000"));
+        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.0000"));
+        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.0000"));
+        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.0000"));
+        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.0000"));
     }
 
     @Test
@@ -220,10 +220,10 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
 
-        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.00000"));
-        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.00000"));
-        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.00000"));
-        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.00000"));
+        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.0000"));
+        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.0000"));
+        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.0000"));
+        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.0000"));
     }
 
     @Test
@@ -278,10 +278,10 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
         assertThat("Check indicatorDate", mappedResponse.indicatorDate, notNullValue());
 
-        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.00000"));
-        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.00000"));
-        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.00000"));
-        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.00000"));
+        assertThat("Check volumeInitial", mappedResponse.tradingIndicators.getFirst().volumeInitial, is("0.0000"));
+        assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.0000"));
+        assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.0000"));
+        assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.0000"));
 
     }
 }

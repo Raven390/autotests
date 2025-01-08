@@ -10,7 +10,7 @@ import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
 import businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
@@ -31,7 +31,7 @@ public class MirrorTradingRuleData {
     public List<CrmTbWithdrawalObject> crmTbWithdrawalObjects;
     public List<CrmTbDepositObject> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
-    public List<Mt5DealsObject> mt5DealsObjects;
+    public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
     public AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades;
 
@@ -44,7 +44,7 @@ public class MirrorTradingRuleData {
             CloseTradeMtEvent closeTradeMtEvent, List<BoClientFraudTypesObject> clientFraudTypes,
             CrmTbAccountObject crmTbAccountObject, List<MtTbCreditsObject> mtTbCreditsObjects,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
-            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsObject> mt5DealsObjects,
+            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsObjects,
             AggrCreditEquityRateObject aggrCreditEquityRate,
             AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades) {
         this.clientHelper = clientHelper;

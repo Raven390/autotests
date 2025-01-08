@@ -9,7 +9,7 @@ import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
@@ -30,7 +30,7 @@ import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByAccountServerId;
+import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.generateTradeByClient;
 import static businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -167,7 +167,7 @@ public class MirrorTradingRuleDataFactory {
         data.crmTbDepositObjects.add(crmTbDepositObject);
         data.crmTbBonusObjects.add(generateBonusByClient(data.clientHelper));
         data.crmTbDepositObjects.add(generateDepositByClient(data.clientHelper));
-        data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
+        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         return data;
     }
 
@@ -239,7 +239,7 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for no trading on news periods?
         // TODO add data for no dummy trades?
-        data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
+        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         // TODO add balanceOrders with comment "WO"
         AggrMirrorAccountsByTradesObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
         mirrorAccountsByTrades.requestVolumeInLots = 3d;
@@ -272,7 +272,7 @@ public class MirrorTradingRuleDataFactory {
         data.lnSessionParsedObjectLogin.trueIpGeo = "US";
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for trading on news periods?
-        data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
+        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         AggrMirrorAccountsByTradesObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
         mirrorAccountsByTrades.requestVolumeInLots = 3d;
         data.aggrMirrorAccountsByTrades = mirrorAccountsByTrades;
@@ -305,7 +305,7 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for no trading on news periods?
         // TODO add data for no dummy trades?
-        data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
+        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         // TODO add balanceOrders with comment "WO"
         data.aggrMirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
         return data;
@@ -390,7 +390,7 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for no trading on news periods?
         // TODO add data for no dummy trades?
-        Mt5DealsObject mt5DealsObject = generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId());
+        Mt5DealsCoercedObject mt5DealsObject = generateTradeByClient(data.clientHelper);
         mt5DealsObject.comment = "S/O";
         data.mt5DealsObjects.add(mt5DealsObject);
         data.aggrMirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
@@ -422,7 +422,7 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for no trading on news periods?
         // TODO add data for no dummy trades?
-        data.mt5DealsObjects.add(generateTradeByAccountServerId(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId()));
+        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         return data;
     }
 
@@ -503,7 +503,7 @@ public class MirrorTradingRuleDataFactory {
             });
             data.mt5DealsObjects.forEach(deal -> {
                 try {
-                    insertObjectToDb(MT5_DEALS_TABLE_NAME, deal);
+                    insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
                 } catch (SQLException | ReflectiveOperationException e) {
                     throw new RuntimeException(e);
                 }
@@ -568,7 +568,7 @@ public class MirrorTradingRuleDataFactory {
             });
             data.mt5DealsObjects.forEach(deal -> {
                 try {
-                    deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("server_id = %s and login = %s", deal.serverId, deal.login));
+                    deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }

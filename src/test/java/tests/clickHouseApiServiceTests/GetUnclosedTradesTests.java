@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getUnclosedTrades.GetUnclosedTradesResponse;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getUnclosedTrades.GetUnclosedTradesRequest.getUnclosedTrades;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByClient;
+import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -36,11 +36,11 @@ import static utils.Utils.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetUnclosedTradesTests extends TestBaseApi {
 
-    private static Mt5DealsObject trade1;
-    private static Mt5DealsObject trade2;
-    private static Mt5DealsObject trade3;
-    private static Mt5DealsObject trade4;
-    private static Mt5DealsObject trade5;
+    private static Mt5DealsCoercedObject trade1;
+    private static Mt5DealsCoercedObject trade2;
+    private static Mt5DealsCoercedObject trade3;
+    private static Mt5DealsCoercedObject trade4;
+    private static Mt5DealsCoercedObject trade5;
 
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
@@ -59,24 +59,24 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade5 = generateTradeByClient(client4, 0, 0, 0, Utils.getRandomLongPositive());
         trade5.time = "2025-01-02 00:00:00";
         trade5.profit = 2D;
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade2);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade3);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade4);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade5);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade5);
     }
 
     @AfterAll
     public static void teardownTests() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client1.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client2.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client3.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", client4.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client1.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client2.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client3.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client4.getTradingAccount()));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by required params + limit")
-    @AllureId("")
+    @AllureId("703")
     public void getUnclosedTradesTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount());
@@ -89,8 +89,8 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtc(trade1.time)));
-        assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.login));
+        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.account));
         assertThat("Assert profitUSD", mappedResponse.getFirst().profitUsd, is(trade1.profit));
         assertThat("Assert profit", mappedResponse.getFirst().profit, is(trade1.profit));
         assertThat("Assert comment", mappedResponse.getFirst().comment, is(trade1.comment));
@@ -98,7 +98,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by all params")
-    @AllureId("")
+    @AllureId("704")
     public void getUnclosedTradesTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount());
@@ -115,8 +115,8 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtc(trade1.time)));
-        assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.login));
+        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.account));
         assertThat("Assert profitUSD", mappedResponse.getFirst().profitUsd, is(trade1.profit));
         assertThat("Assert profit", mappedResponse.getFirst().profit, is(trade1.profit));
         assertThat("Assert comment", mappedResponse.getFirst().comment, is(trade1.comment));
@@ -124,10 +124,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong limit")
-    @AllureId("")
+    @AllureId("705")
     public void getUnclosedTradesTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("limit", "a");
         Response response = getUnclosedTrades(queryParams);
@@ -144,10 +144,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades no serverId")
-    @AllureId("")
+    @AllureId("706")
     public void getUnclosedTradesTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         Response response = getUnclosedTrades(queryParams);
 
         assert response.body() != null;
@@ -159,7 +159,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades no tradingAccount")
-    @AllureId("")
+    @AllureId("707")
     public void getUnclosedTradesTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client1.getServerId());
@@ -174,10 +174,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong dateFrom")
-    @AllureId("")
+    @AllureId("708")
     public void getUnclosedTradesTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateFrom", "a");
         Response response = getUnclosedTrades(queryParams);
@@ -194,10 +194,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong dateTo")
-    @AllureId("")
+    @AllureId("709")
     public void getUnclosedTradesTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateTo", "a");
         Response response = getUnclosedTrades(queryParams);
@@ -214,10 +214,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong sortOrder")
-    @AllureId("")
+    @AllureId("710")
     public void getUnclosedTradesTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("sortOrder", "a");
         Response response = getUnclosedTrades(queryParams);
@@ -231,10 +231,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong orderBy")
-    @AllureId("")
+    @AllureId("711")
     public void getUnclosedTradesTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("orderBy", "a");
         Response response = getUnclosedTrades(queryParams);
@@ -248,7 +248,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades no comment")
-    @AllureId("")
+    @AllureId("712")
     public void getUnclosedTradesTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client3.getTradingAccount());
@@ -264,7 +264,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=createTime sortOrder=desc")
-    @AllureId("")
+    @AllureId("713")
     public void getUnclosedTradesTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -282,7 +282,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=createTime sortOrder=asc")
-    @AllureId("")
+    @AllureId("714")
     public void getUnclosedTradesTest18() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -300,7 +300,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmount and sortOrder=asc")
-    @AllureId("")
+    @AllureId("715")
     public void getUnclosedTradesTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -318,7 +318,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmount and sortOrder=asc")
-    @AllureId("")
+    @AllureId("716")
     public void getUnclosedTradesTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -336,7 +336,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmountUSD and sortOrder=desc")
-    @AllureId("")
+    @AllureId("717")
     public void getUnclosedTradesTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -354,7 +354,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmountUSD and sortOrder=desc")
-    @AllureId("")
+    @AllureId("718")
     public void getUnclosedTradesTest20() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
@@ -372,10 +372,10 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong serverId")
-    @AllureId("")
+    @AllureId("719")
     public void getUnclosedTradesTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", "trade1.serverId");
         Response response = getUnclosedTrades(queryParams);
 
@@ -388,7 +388,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades by wrong trading account")
-    @AllureId("")
+    @AllureId("720")
     public void getUnclosedTradesTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "trade1.login");
@@ -404,7 +404,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades empty with dateFrom")
-    @AllureId("")
+    @AllureId("721")
     public void getUnclosedTradesTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount());
@@ -420,7 +420,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades empty with dateTo")
-    @AllureId("")
+    @AllureId("722")
     public void getUnclosedTradesTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount());
@@ -433,5 +433,13 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(0));
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("Clickhouse Api. Get unclosed trades with same positionId from different servers")
+    @AllureId("723")
+    public void getUnclosedTradesTest21() {
+
     }
 }
