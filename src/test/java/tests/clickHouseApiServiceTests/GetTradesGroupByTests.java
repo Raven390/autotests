@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByResponse;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBy;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.*;
+import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,22 +36,22 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
     private static final Integer ACCOUNT_ID = getRandomIntPositive();
     private static final Integer SERVER_ID = 188;
-    private static final Mt5DealsObject trade1 = generateTradeForGroupBy1(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsObject trade2 = generateTradeForGroupBy2(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsObject trade3 = generateTradeForGroupBy3(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsObject trade4 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID);
+    private static final Mt5DealsCoercedObject trade1 = generateTradeForGroupBy1(ACCOUNT_ID, SERVER_ID);
+    private static final Mt5DealsCoercedObject trade2 = generateTradeForGroupBy2(ACCOUNT_ID, SERVER_ID);
+    private static final Mt5DealsCoercedObject trade3 = generateTradeForGroupBy3(ACCOUNT_ID, SERVER_ID);
+    private static final Mt5DealsCoercedObject trade4 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID);
 
     @BeforeAll
     public static void setupTradesGroupBy() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade2);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade3);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade4);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
     }
 
     @AfterAll
     public static void teardownTradesGroupBy() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", ACCOUNT_ID));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", ACCOUNT_ID));
     }
 
     @Test

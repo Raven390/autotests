@@ -396,4 +396,9 @@ public class Utils {
     public static String formatTimeToUtc(String time) {
         return time.split("\\.")[0].replace(" ", "T") + "Z";
     }
+
+    public static String formatTimeToUtcWithMs(String time) {
+        time = time.substring(0, time.length() - 3);
+        return time.replace(" ", "T") + "Z";
+    }
 }

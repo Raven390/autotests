@@ -2,7 +2,8 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getTrades.GetTradesResponse;
-import businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -16,8 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
-import static businessObjects.db.clickhouse.mtMt5DealsTable.Mt5DealsFactory.generateTradeByAccountServerId;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.generateTradeByClient;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -31,28 +32,29 @@ import static utils.Utils.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetTradesTests extends TestBaseApi {
 
-    private static Mt5DealsObject trade1;
-    private static Mt5DealsObject trade2;
+    private static ClientHelper client1 = getRandomVantageClient();
+    private static Mt5DealsCoercedObject trade1;
+    private static Mt5DealsCoercedObject trade2;
     private static Integer account;
     private static final Integer serverId = 24;
 
     @BeforeAll
     public static void setupTrades() throws ReflectiveOperationException, SQLException {
         account = getRandomIntPositive();
-        trade1 = generateTradeByAccountServerId(account, serverId);
-        trade2 = generateTradeByAccountServerId(account, serverId);
+        trade1 = generateTradeByClient(client1);
+        trade2 = generateTradeByClient(client1);
         trade2.time = getTomorrowTimestampDbFormat();
         trade2.profit = 2.0;
         trade2.action = 2;
         trade2.entry = 2;
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_TABLE_NAME, trade2);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
     }
 
-    @AfterAll
-    public static void teardownTrades() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_TABLE_NAME, String.format("login = %s", account));
-    }
+//    @AfterAll
+//    public static void teardownTrades() throws SQLException {
+//        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
+//    }
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
@@ -60,7 +62,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateFrom", trade1.time.replace(" ", "T"));
         queryParams.put("dateTo", trade2.time.replace(" ", "T"));
@@ -76,8 +78,8 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
-        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.login));
+        assertThat("Assert tradeDate", formatTimeToUtc(mappedResponse[0].tradeDate), is(formatTimeToUtc(trade1.time)));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.account));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
         assertThat("Assert symbol", mappedResponse[0].symbol, is(trade1.symbol));
@@ -92,7 +94,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateFrom", "");
         queryParams.put("dateTo", "");
@@ -115,7 +117,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         Response response = getTrades(queryParams);
 
@@ -131,7 +133,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("orderBy", "tradeDate");
         queryParams.put("sortOrder", "desc");
@@ -144,7 +146,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade2.deal));
         assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade2.time)));
-        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade2.login));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade2.account));
         assertThat("Assert action", mappedResponse[0].action, is(trade2.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade2.entry));
         assertThat("Assert symbol", mappedResponse[0].symbol, is(trade2.symbol));
@@ -159,7 +161,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("orderBy", "tradeDate");
         Response response = getTrades(queryParams);
@@ -169,8 +171,8 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
-        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.login));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.account));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
         assertThat("Assert symbol", mappedResponse[0].symbol, is(trade1.symbol));
@@ -185,7 +187,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("orderBy", "profitUSD");
         queryParams.put("sortOrder", "desc");
@@ -242,7 +244,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesNoServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("dateFrom", trade1.time.replace(" ", "T"));
         queryParams.put("dateTo", trade2.time.replace(" ", "T"));
         queryParams.put("action", trade1.serverId);
@@ -265,7 +267,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateFrom", "test");
         Response response = getTrades(queryParams);
@@ -285,7 +287,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("dateTo", "test");
         Response response = getTrades(queryParams);
@@ -305,7 +307,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("orderBy", "test");
         Response response = getTrades(queryParams);
@@ -323,7 +325,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("sortOrder", "test");
         Response response = getTrades(queryParams);
@@ -341,7 +343,7 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.login);
+        queryParams.put("tradingAccount", trade1.account);
         queryParams.put("serverId", trade1.serverId);
         queryParams.put("limit", "test");
         Response response = getTrades(queryParams);
