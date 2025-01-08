@@ -8,9 +8,19 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 public class OperationsHelper {
 
     public static void cleanUserCashflowDb(String ucid) throws Exception {
-        Allure.step("delete user's with ucid " + ucid + " cashflow transactions from DB");
+        Allure.step("delete user's cashflow transactions from DB");
         try {
             deleteEntryFromDb("vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "'");
+            Thread.sleep(100);
+        } catch (Exception NoSuchElementException) {
+            System.out.println("No such records with provided ucid");
+        }
+    }
+
+    public static void cleanUserFinancialTransactionDbUcid(String ucid) throws Exception {
+        Allure.step("delete user's with financial transactions transactions from DB");
+        try {
+            deleteEntryFromDb("vindex_test.payments_total", "ucid = '" + ucid + "'");
             Thread.sleep(100);
         } catch (Exception NoSuchElementException) {
             System.out.println("No such records with provided ucid");
