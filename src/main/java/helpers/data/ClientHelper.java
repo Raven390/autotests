@@ -22,6 +22,11 @@ public class ClientHelper {
     private String ipAddress;
     private String countryCode;
     private Integer cpaId;
+    private String deviceId;
+    private String webSessionId;
+    private String sessionId;
+    private String digitalId;
+    private String namedateofbirth;
 
     public ClientHelper() {
     }
@@ -62,10 +67,13 @@ public class ClientHelper {
     }
 
     public ClientHelper(
-            Integer userId, String uid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
-            Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId) {
+            Integer userId, String uid, Regulators regulator, Brands brand, Integer tradingAccount,
+            Integer tradingAccount2,
+            Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
+            String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth) {
         this.userId = userId;
         this.uid = uid;
+        this.regulator = regulator;
         this.brand = brand;
         this.tradingAccount = tradingAccount;
         this.tradingAccount2 = tradingAccount2;
@@ -75,6 +83,11 @@ public class ClientHelper {
         this.ipAddress = ipAddress;
         this.countryCode = countryCode;
         this.cpaId = cpaId;
+        this.deviceId = deviceId;
+        this.webSessionId = webSessionId;
+        this.sessionId = sessionId;
+        this.digitalId = digitalId;
+        this.namedateofbirth = namedateofbirth;
     }
 
     @JsonIgnore
@@ -178,21 +191,61 @@ public class ClientHelper {
         this.cpaId = cpaId;
     }
 
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public String getWebSessionId() {
+        return webSessionId;
+    }
+
+    public void setWebSessionId(String webSessionId) {
+        this.webSessionId = webSessionId;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getDigitalId() {
+        return digitalId;
+    }
+
+    public void setDigitalId(String digitalId) {
+        this.digitalId = digitalId;
+    }
+
+    public String getNamedateofbirth() {
+        return namedateofbirth;
+    }
+
+    public void setNamedateofbirth(String namedateofbirth) {
+        this.namedateofbirth = namedateofbirth;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientHelper that = (ClientHelper) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(uid, that.uid) && regulator == that.regulator && brand == that.brand && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(countryCode, that.countryCode);
+        return Objects.equals(userId, that.userId) && Objects.equals(uid, that.uid) && regulator == that.regulator && brand == that.brand && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(countryCode, that.countryCode) && Objects.equals(deviceId, that.deviceId) && Objects.equals(cpaId, that.cpaId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, uid, regulator, brand, tradingAccount, serverId, email, phoneNumber, ipAddress, countryCode);
+        return Objects.hash(userId, uid, regulator, brand, tradingAccount, serverId, email, phoneNumber, ipAddress, countryCode, cpaId, deviceId);
     }
 
     @Override
     public String toString() {
-        return "ClientHelper{" + "userId=" + userId + ", uuid='" + uid + '\'' + ", regulator=" + regulator + ", brand=" + brand + ", tradingAccount=" + tradingAccount + ", tradingAccount2=" + tradingAccount2 + ", serverId=" + serverId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", ipAddress='" + ipAddress + '\'' + ", countryCode='" + countryCode + '\'' + '}';
+        return "ClientHelper{" + "userId=" + userId + ", uid='" + uid + '\'' + ", brand=" + brand + ", regulator=" + regulator + ", tradingAccount=" + tradingAccount + ", tradingAccount2=" + tradingAccount2 + ", serverId=" + serverId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", ipAddress='" + ipAddress + '\'' + ", countryCode='" + countryCode + '\'' + ", cpaId=" + cpaId + ", deviceId='" + deviceId + '\'' + '}';
     }
 }
