@@ -10,7 +10,6 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -40,6 +39,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     private static final Mt5DealsCoercedObject trade2 = generateTradeForGroupBy2(ACCOUNT_ID, SERVER_ID);
     private static final Mt5DealsCoercedObject trade3 = generateTradeForGroupBy3(ACCOUNT_ID, SERVER_ID);
     private static final Mt5DealsCoercedObject trade4 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID);
+    private static final Mt5DealsCoercedObject trade5 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID + 1);
 
     @BeforeAll
     public static void setupTradesGroupBy() throws ReflectiveOperationException, SQLException {
@@ -47,6 +47,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade5);
     }
 
     @AfterAll
