@@ -41,11 +41,15 @@ public class GetUnclosedTradesTests extends TestBaseApi {
     private static Mt5DealsCoercedObject trade3;
     private static Mt5DealsCoercedObject trade4;
     private static Mt5DealsCoercedObject trade5;
+    private static Mt5DealsCoercedObject trade6;
+    private static Mt5DealsCoercedObject trade7;
+    private static Mt5DealsCoercedObject trade8;
 
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client4 = getRandomVantageClientAllFields();
+    private static final ClientHelper client5 = getRandomVantageClientAllFields();
 
     @BeforeAll
     public static void setupTests() throws ReflectiveOperationException, SQLException {
@@ -58,12 +62,30 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade4.profit = 1D;
         trade5 = generateTradeByClient(client4, 0, 0, 0, Utils.getRandomLongPositive());
         trade5.time = "2025-01-02 00:00:00";
+        trade6 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
+        trade7 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
+        trade8 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
         trade5.profit = 2D;
+        trade6.serverId = 10;
+        trade7.serverId = 10;
+        trade8.serverId = 11;
+        trade6.entry = 0;
+        trade7.entry = 1;
+        trade8.entry = 0;
+        trade6.positionId = 1000L;
+        trade7.positionId = 1000L;
+        trade8.positionId = 1000L;
+        trade6.deal = 1;
+        trade7.deal = 2;
+        trade8.deal = 3;
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade5);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade6);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade7);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade8);
     }
 
     @AfterAll
@@ -72,6 +94,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client2.getTradingAccount()));
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client3.getTradingAccount()));
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client4.getTradingAccount()));
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client5.getTradingAccount()));
     }
 
     @Test
@@ -435,11 +458,22 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert response length", mappedResponse.size(), is(0));
     }
 
-    @Disabled
     @Test
     @DisplayName("Clickhouse Api. Get unclosed trades with same positionId from different servers")
     @AllureId("723")
-    public void getUnclosedTradesTest21() {
+    public void getUnclosedTradesTest21() throws IOException {
+        client5.setServerId(11);
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("tradingAccount", client5.getTradingAccount());
+        queryParams.put("serverId", client5.getServerId());
+        queryParams.put("limit", 1);
+        Response response = getUnclosedTrades(queryParams);
+
+        assert response.body() != null;
+        List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.size(), is(1));
+        assertThat("Assert response length", mappedResponse.getFirst().tradeId, is(3));
 
     }
 }

@@ -19,6 +19,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
 import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,6 +36,7 @@ public class GetTradesTests extends TestBaseApi {
     private static ClientHelper client1 = getRandomVantageClient();
     private static Mt5DealsCoercedObject trade1;
     private static Mt5DealsCoercedObject trade2;
+    private static Mt5DealsCoercedObject trade3;
     private static Integer account;
     private static final Integer serverId = 24;
 
@@ -43,18 +45,21 @@ public class GetTradesTests extends TestBaseApi {
         account = getRandomIntPositive();
         trade1 = generateTradeByClient(client1);
         trade2 = generateTradeByClient(client1);
+        trade3 = generateTradeByClient(client1);
         trade2.time = getTomorrowTimestampDbFormat();
         trade2.profit = 2.0;
         trade2.action = 2;
         trade2.entry = 2;
+        trade3.serverId = 1000;
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
         insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
     }
 
-//    @AfterAll
-//    public static void teardownTrades() throws SQLException {
-//        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
-//    }
+    @AfterAll
+    public static void teardownTrades() throws SQLException {
+        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
+    }
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
