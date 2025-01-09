@@ -27,11 +27,11 @@ public class MtDbEventsCloseTradeFiltrationTest {
     @Test
     @DisplayName("Generate close event with event generator service that should be filtered out by the Event Generator")
     @AllureId("115")
-    public void generateCloseTradeEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException {
+    public void closeTradeEventFiltrationTest1() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //        Creation of close trade events that should be filtered out by the filtration rules
+        //Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventTestAccount1 = generateCloseTradeMtDbEventMt4();
         closeTradeEventTestAccount1.data.mtAccount = 741_000;
 
@@ -46,6 +46,9 @@ public class MtDbEventsCloseTradeFiltrationTest {
 
         CloseTradeMtDbEventMt4 closeTradeEventMt4CloseTimeZero = generateCloseTradeMtDbEventMt4();
         closeTradeEventMt4CloseTimeZero.data.closeTime = "0";
+
+        CloseTradeMtDbEventMt4 closeTradeEventMt4CloseTimeDefault = generateCloseTradeMtDbEventMt4();
+        closeTradeEventMt4CloseTimeZero.data.closeTime = "1970-01-01T00:00:00Z";
 
         CloseTradeMtDbEventMt4 closeTradeEventMt4Cmd1 = generateCloseTradeMtDbEventMt4();
         closeTradeEventMt4Cmd1.data.cmd = -1;
@@ -73,7 +76,7 @@ public class MtDbEventsCloseTradeFiltrationTest {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, closeTradeEventTestAccount1.data.closeTime, closeTradeEventTestAccount2.data.closeTime, closeTradeEventMt4CloseTimeNull.metadata.timestamp, closeTradeEventMt4CloseTimeEmpty.metadata.timestamp, closeTradeEventMt4CloseTimeZero.metadata.timestamp, closeTradeEventMt4Cmd1.data.closeTime, closeTradeEventMt4Cmd2.data.closeTime, closeTradeEventMt5Entry1.data.closeTime, closeTradeEventMt5Entry2.data.closeTime, closeTradeEventMt5Entry3.data.closeTime, closeTradeEventMt5Action1.data.closeTime, closeTradeEventMt5Action2.data.closeTime);
+                KAFKA_TOPIC_MT_EVENTS, closeTradeEventTestAccount1.data.closeTime, closeTradeEventTestAccount2.data.closeTime, closeTradeEventMt4CloseTimeNull.metadata.timestamp, closeTradeEventMt4CloseTimeEmpty.metadata.timestamp, closeTradeEventMt4CloseTimeZero.metadata.timestamp, closeTradeEventMt4CloseTimeDefault.metadata.timestamp, closeTradeEventMt4Cmd1.data.closeTime, closeTradeEventMt4Cmd2.data.closeTime, closeTradeEventMt5Entry1.data.closeTime, closeTradeEventMt5Entry2.data.closeTime, closeTradeEventMt5Entry3.data.closeTime, closeTradeEventMt5Action1.data.closeTime, closeTradeEventMt5Action2.data.closeTime);
 
         Allure.step("Verify that no matched results were found");
         assertThat(

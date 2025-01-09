@@ -1,7 +1,6 @@
 package tests.eventGeneratorServiceTests.mtEvents.openTrade;
 
-import static businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt4;
-import static businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.generateOpenTradeMtDbEventMt5;
+import static businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventFactory.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -15,12 +14,10 @@ import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt4;
 import businessObjects.kafka.mtDbEvents.openTrade.OpenTradeMtDbEventMt5;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE)
 @Tag(TEAM_CORE)
@@ -36,7 +33,7 @@ public class MtDbEventsOpenTradeFiltrationTest {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //        Creation of open trade events that should be filtered out by the filtration rules
+        //Creation of open trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventTestAccount1 = generateOpenTradeMtDbEventMt4();
         openTradeEventTestAccount1.data.mtAccount = 741_000;
 
@@ -69,12 +66,24 @@ public class MtDbEventsOpenTradeFiltrationTest {
         OpenTradeMtDbEventMt5 openTradeEventMt5Action2 = generateOpenTradeMtDbEventMt5();
         openTradeEventMt5Action2.data.action = 99;
 
+        OpenTradeMtDbEventMt4 openTradeEventTestCloseTimeNull = generateOpenTradeMtDbEventMt4();
+        openTradeEventTestCloseTimeNull.data.closeTime = null;
+
+        OpenTradeMtDbEventMt4 openTradeEventTestCloseTimeZero = generateOpenTradeMtDbEventMt4();
+        openTradeEventTestCloseTimeNull.data.closeTime = "0";
+
+        OpenTradeMtDbEventMt4 openTradeEventTestCloseTimeEmpty = generateOpenTradeMtDbEventMt4();
+        openTradeEventTestCloseTimeNull.data.closeTime = "";
+
+        OpenTradeMtDbEventMt4 openTradeEventTestCloseTimeDefault = generateOpenTradeMtDbEventMt4();
+        openTradeEventTestCloseTimeNull.data.closeTime = "1970-01-01T00:00:00Z";
+
         Allure.step("Write messages to crm-db-events topic");
         kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventTestAccount1), objectMapper.writeValueAsString(openTradeEventTestAccount2), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId1), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId2), objectMapper.writeValueAsString(openTradeEventMt4Cmd1), objectMapper.writeValueAsString(openTradeEventMt4Cmd2), objectMapper.writeValueAsString(openTradeEventMt5Entry1), objectMapper.writeValueAsString(openTradeEventMt5Entry2), objectMapper.writeValueAsString(openTradeEventMt5Action1), objectMapper.writeValueAsString(openTradeEventMt5Action2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, openTradeEventTestAccount1.data.openTime, openTradeEventTestAccount2.data.openTime, openTradeEventTradeIdAccountServerId2.data.openTime, openTradeEventMt4Cmd1.data.openTime, openTradeEventMt4Cmd2.data.openTime, openTradeEventMt5Entry1.data.openTime, openTradeEventMt5Entry2.data.openTime, openTradeEventMt5Action1.data.openTime, openTradeEventMt5Action2.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, openTradeEventTestAccount1.data.openTime, openTradeEventTestAccount2.data.openTime, openTradeEventTradeIdAccountServerId2.data.openTime, openTradeEventMt4Cmd1.data.openTime, openTradeEventMt4Cmd2.data.openTime, openTradeEventMt5Entry1.data.openTime, openTradeEventMt5Entry2.data.openTime, openTradeEventMt5Action1.data.openTime, openTradeEventMt5Action2.data.openTime, openTradeEventTestCloseTimeNull.data.closeTime, openTradeEventTestCloseTimeZero.data.closeTime, openTradeEventTestCloseTimeEmpty.data.closeTime, openTradeEventTestCloseTimeDefault.data.closeTime);
 
         Allure.step("Verify that no matched results were found");
         assertThat(
