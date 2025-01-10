@@ -63,7 +63,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("618")
     @DisplayName("Audit trail. Setting up data before filtration test")
-    public void setupData() throws JsonProcessingException {
+    public void setupData() throws JsonProcessingException, InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -72,6 +72,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
@@ -95,13 +96,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("619")
     @DisplayName("Audit trail. Verify filtration by Alert received")
-    public void verifyAuditTrailFiltrationAlertReceivedTest() {
+    public void verifyAuditTrailFiltrationAlertReceivedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -121,13 +123,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("620")
     @DisplayName("Audit trail. Verify filtration by Comment added")
-    public void verifyAuditTrailFiltrationCommentAddedTest() {
+    public void verifyAuditTrailFiltrationCommentAddedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -147,13 +150,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("621")
     @DisplayName("Audit trail. Verify filtration by Client assigned")
-    public void verifyAuditTrailFiltrationClientAssignedTest() {
+    public void verifyAuditTrailFiltrationClientAssignedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -173,13 +177,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("622")
     @DisplayName("Audit trail. Verify filtration by Investigation completed")
-    public void verifyAuditTrailFiltrationInvestigationCompletedTest() {
+    public void verifyAuditTrailFiltrationInvestigationCompletedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -199,13 +204,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("623")
     @DisplayName("Audit trail. Verify filtration by Restriction cancelled")
-    public void verifyAuditTrailFiltrationRestrictionCancelledTest() {
+    public void verifyAuditTrailFiltrationRestrictionCancelledTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -225,13 +231,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("624")
     @DisplayName("Audit trail. Verify filtration by Restriction applied")
-    public void verifyAuditTrailFiltrationRestrictionAppliedTest() {
+    public void verifyAuditTrailFiltrationRestrictionAppliedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -251,13 +258,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("625")
     @DisplayName("Audit trail. Verify filtration by Restriction requested")
-    public void verifyAuditTrailFiltrationRestrictionRequestedTest() {
+    public void verifyAuditTrailFiltrationRestrictionRequestedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -277,13 +285,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("626")
     @DisplayName("Audit trail. Verify filtration by Cancellation requested")
-    public void verifyAuditTrailFiltrationCancellationRequestedTest() {
+    public void verifyAuditTrailFiltrationCancellationRequestedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -303,13 +312,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("627")
     @DisplayName("Audit trail. Verify filtration by Withdrawal request decision")
-    public void verifyAuditTrailFiltrationWithdrawalRequestDecisionTest() {
+    public void verifyAuditTrailFiltrationWithdrawalRequestDecisionTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -329,13 +339,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("628")
     @DisplayName("Audit trail. Verify filtration by multiple types")
-    public void verifyAuditTrailFiltrationMultipleTypesTest() {
+    public void verifyAuditTrailFiltrationMultipleTypesTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -357,13 +368,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("629")
     @DisplayName("Audit trail. Verify clear filtration")
-    public void verifyAuditTrailFiltrationClearTest() {
+    public void verifyAuditTrailFiltrationClearTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         int initialItemsCount = auditTrailPage.getAuditTrailItems().size();

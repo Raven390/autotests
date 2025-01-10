@@ -49,7 +49,7 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("687")
     @DisplayName("Verify sensitive data hiding in connection search card view")
-    public void verifyConnectionSearchHideSensitiveDataCardTest() {
+    public void verifyConnectionSearchHideSensitiveDataCardTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -58,13 +58,14 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(client.getUserId()));
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionCard(client.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Email", "t****4@example.com");
-        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "phoneNumber", "F**********************=");
-        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "emailAddress", "m*****e@gmx.net");
+        connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
+        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "phoneNumber", "F*********=");
+        connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "emailAddress", "m***e@gmx.net");
         connectionPage.ccCheckDirectConnectionRows(connectedClient.getUcid(), "documentNumber", "3***********2");
         connectionPage.clickUnmaskConnectionCardDataButton();
         connectionPage.ccCheckGeneralInfoRows("Email", "test14@example.com");
@@ -92,7 +93,7 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionTable();
         List<String> attributesList = connectionPage.getConnectionTableAttributesList(connectedClient);
-        assertThat(attributesList, hasItems("phoneNumberF**********************=", "emailAddressm*****e@gmx.net", "documentNumber3***********2"));
+        assertThat(attributesList, hasItems("phoneNumberF*********=", "emailAddressm***e@gmx.net", "documentNumber3***********2"));
         connectionPage.clickUnmaskConnectionTableDataButton();
         attributesList = connectionPage.getConnectionTableAttributesList(connectedClient);
         assertThat(attributesList, hasItems("phoneNumberF2jTWljlC4HSI0uMpPz5Yw==", "emailAddressmatisse@gmx.net", "documentNumber3110200460092"));

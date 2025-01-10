@@ -64,7 +64,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     }
 
     @BeforeEach
-    public void loginAndGoToOperations() {
+    public void loginAndGoToOperations() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -73,6 +73,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();

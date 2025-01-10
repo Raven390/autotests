@@ -59,8 +59,6 @@ public class AuditTrailTest extends TestBaseWeb {
     @AfterEach
     public void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }
 
@@ -69,7 +67,7 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("601")
     @DisplayName("Audit trail. Verify message for 'Alert received' action type")
-    public void verifyAlertReceivedTest() {
+    public void verifyAlertReceivedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -78,6 +76,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
@@ -94,7 +93,7 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("602")
     @DisplayName("Audit trail. Verify message for 'Comment added' action type")
-    public void verifyCommentAddedTest() {
+    public void verifyCommentAddedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -103,6 +102,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         investigationPage.openCommentForm();
@@ -124,7 +124,7 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("603")
     @DisplayName("Audit trail. Verify message for 'Client assigned' action type")
-    public void verifyClientAssignedTest() {
+    public void verifyClientAssignedTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -133,6 +133,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
@@ -150,7 +151,7 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("604")
     @DisplayName("Audit trail. Verify message for 'Investigation completed' action type")
-    public void verifyInvestigationCompletedTest() throws JsonProcessingException {
+    public void verifyInvestigationCompletedTest() throws JsonProcessingException, InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -159,6 +160,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
 
@@ -189,7 +191,7 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("605")
     @DisplayName("Audit trail. Verify message for restrictions action types")
-    public void verifyRestrictionsTest() {
+    public void verifyRestrictionsTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -198,6 +200,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
@@ -234,7 +237,8 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("606")
     @DisplayName("Audit trail. Verify message for withdrawal request decision action type")
-    public void verifyWithdrawalRequestDecisionTest() throws IOException, ReflectiveOperationException, SQLException {
+    public void verifyWithdrawalRequestDecisionTest() throws IOException, ReflectiveOperationException, SQLException,
+            InterruptedException {
         Response response = postRestriction(new PostRestrictionRequestBody(
                 crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
@@ -249,6 +253,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();

@@ -5,83 +5,106 @@ import java.util.Objects;
 
 public class CrmTbWithdrawalObject {
 
+    public Integer sourceIdSt;
+    public Integer brandUid;
+    public String brand;
+    public String regulator;
+    public Integer userId;
+    public String ucid;
     public Integer account;
+    public Integer transferId;
+    public String createTime;
+    public String createTimeUtc;
+    public String updateTime;
+    public String updateTimeUtc;
+    public String reversedTime;
+    public String reversedTimeUtc;
     public Double amount;
     public Double amountUsd;
-    public String brand;
-    public String createTime;
+    public Double reversedAmount;
+    public Double reversedAmountUsd;
     public String currency;
-    public Double fee;
+    public Integer statusId;
+    public String status;
+    public Integer paymentTypeId;
+    public String paymentType;
+    public Integer paymentChannelId;
     public String paymentChannel;
-    public String paymentDetails;
-    public String paymentExpirationDate;
-    public String paymentRequisite;
     public String paymentSystemAccount;
     public String paymentSystemCurrency;
-    public String paymentType;
-    public String regulator;
-    public Double reversedAmount;
-    public String reversedTime;
-    public String status;
-    public Integer ticketId;
-    public Integer transferId;
-    public String ucid;
-    public String uid;
-    public String updateTime;
-    public Integer userId;
-    public Integer statusId;
+    public String paymentDetails;
+    public String paymentExpirationDate;
+    public Integer ticket;
+    public Double fee;
+    public String processedNotes;
+    public Integer isDel;
+    public Integer isTrade;
+    public Integer isNonApp;
+    public String lastUpdated;
 
     public CrmTbWithdrawalObject() {
     }
 
-    public CrmTbWithdrawalObject(Integer account, Double amount, Double amountUsd, String brand, String createTime,
-            String currency, Double fee, String paymentChannel, String paymentDetails,
-            String paymentExpirationDate, String paymentRequisite, String paymentSystemAccount,
-            String paymentSystemCurrency, String paymentType, String regulator, Double reversedAmount,
-            String reversedTime, String status, Integer ticketId, Integer transferId, String ucid,
-            String uid, String updateTime, Integer userId, Integer statusId) {
+    public CrmTbWithdrawalObject(Integer sourceIdSt, Integer brandUid, String brand, String regulator, Integer userId,
+            String ucid, Integer account, Integer transferId, String createTime, String createTimeUtc,
+            String updateTime, String updateTimeUtc, String reversedTime, String reversedTimeUtc, Double amount,
+            Double amountUsd, Double reversedAmount, Double reversedAmountUsd, String currency, Integer statusId,
+            String status, Integer paymentTypeId, String paymentType, Integer paymentChannelId, String paymentChannel,
+            String paymentSystemAccount, String paymentSystemCurrency, String paymentDetails,
+            String paymentExpirationDate, Integer ticket, Double fee, String processedNotes, Integer isDel,
+            Integer isTrade, Integer isNonApp, String lastUpdated) {
+        this.sourceIdSt = sourceIdSt;
+        this.brandUid = brandUid;
+        this.brand = brand;
+        this.regulator = regulator;
+        this.userId = userId;
+        this.ucid = ucid;
         this.account = account;
+        this.transferId = transferId;
+        this.createTime = createTime;
+        this.createTimeUtc = createTimeUtc;
+        this.updateTime = updateTime;
+        this.updateTimeUtc = updateTimeUtc;
+        this.reversedTime = reversedTime;
+        this.reversedTimeUtc = reversedTimeUtc;
         this.amount = amount;
         this.amountUsd = amountUsd;
-        this.brand = brand;
-        this.createTime = createTime;
+        this.reversedAmount = reversedAmount;
+        this.reversedAmountUsd = reversedAmountUsd;
         this.currency = currency;
-        this.fee = fee;
+        this.statusId = statusId;
+        this.status = status;
+        this.paymentTypeId = paymentTypeId;
+        this.paymentType = paymentType;
+        this.paymentChannelId = paymentChannelId;
         this.paymentChannel = paymentChannel;
-        this.paymentDetails = paymentDetails;
-        this.paymentExpirationDate = paymentExpirationDate;
-        this.paymentRequisite = paymentRequisite;
         this.paymentSystemAccount = paymentSystemAccount;
         this.paymentSystemCurrency = paymentSystemCurrency;
-        this.paymentType = paymentType;
-        this.regulator = regulator;
-        this.reversedAmount = reversedAmount;
-        this.reversedTime = reversedTime;
-        this.status = status;
-        this.ticketId = ticketId;
-        this.transferId = transferId;
-        this.ucid = ucid;
-        this.uid = uid;
-        this.updateTime = updateTime;
-        this.userId = userId;
-        this.statusId = statusId;
+        this.paymentDetails = paymentDetails;
+        this.paymentExpirationDate = paymentExpirationDate;
+        this.ticket = ticket;
+        this.fee = fee;
+        this.processedNotes = processedNotes;
+        this.isDel = isDel;
+        this.isTrade = isTrade;
+        this.isNonApp = isNonApp;
+        this.lastUpdated = lastUpdated;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CrmTbWithdrawalObject that = (CrmTbWithdrawalObject) o;
-        return Objects.equals(account, that.account) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(brand, that.brand) && Objects.equals(createTime, that.createTime) && Objects.equals(currency, that.currency) && Objects.equals(fee, that.fee) && Objects.equals(paymentChannel, that.paymentChannel) && Objects.equals(paymentDetails, that.paymentDetails) && Objects.equals(paymentExpirationDate, that.paymentExpirationDate) && Objects.equals(paymentRequisite, that.paymentRequisite) && Objects.equals(paymentSystemAccount, that.paymentSystemAccount) && Objects.equals(paymentSystemCurrency, that.paymentSystemCurrency) && Objects.equals(paymentType, that.paymentType) && Objects.equals(regulator, that.regulator) && Objects.equals(reversedAmount, that.reversedAmount) && Objects.equals(reversedTime, that.reversedTime) && Objects.equals(status, that.status) && Objects.equals(ticketId, that.ticketId) && Objects.equals(transferId, that.transferId) && Objects.equals(ucid, that.ucid) && Objects.equals(uid, that.uid) && Objects.equals(updateTime, that.updateTime) && Objects.equals(userId, that.userId) && Objects.equals(statusId, that.statusId);
+        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(brandUid, that.brandUid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(transferId, that.transferId) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(updateTime, that.updateTime) && Objects.equals(updateTimeUtc, that.updateTimeUtc) && Objects.equals(reversedTime, that.reversedTime) && Objects.equals(reversedTimeUtc, that.reversedTimeUtc) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(reversedAmount, that.reversedAmount) && Objects.equals(reversedAmountUsd, that.reversedAmountUsd) && Objects.equals(currency, that.currency) && Objects.equals(statusId, that.statusId) && Objects.equals(status, that.status) && Objects.equals(paymentTypeId, that.paymentTypeId) && Objects.equals(paymentType, that.paymentType) && Objects.equals(paymentChannelId, that.paymentChannelId) && Objects.equals(paymentChannel, that.paymentChannel) && Objects.equals(paymentSystemAccount, that.paymentSystemAccount) && Objects.equals(paymentSystemCurrency, that.paymentSystemCurrency) && Objects.equals(paymentDetails, that.paymentDetails) && Objects.equals(paymentExpirationDate, that.paymentExpirationDate) && Objects.equals(ticket, that.ticket) && Objects.equals(fee, that.fee) && Objects.equals(processedNotes, that.processedNotes) && Objects.equals(isDel, that.isDel) && Objects.equals(isTrade, that.isTrade) && Objects.equals(isNonApp, that.isNonApp) && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, amount, amountUsd, brand, createTime, currency, fee, paymentChannel, paymentDetails, paymentExpirationDate, paymentRequisite, paymentSystemAccount, paymentSystemCurrency, paymentType, regulator, reversedAmount, reversedTime, status, ticketId, transferId, ucid, uid, updateTime, userId, statusId);
+        return Objects.hash(sourceIdSt, brandUid, brand, regulator, userId, ucid, account, transferId, createTime, createTimeUtc, updateTime, updateTimeUtc, reversedTime, reversedTimeUtc, amount, amountUsd, reversedAmount, reversedAmountUsd, currency, statusId, status, paymentTypeId, paymentType, paymentChannelId, paymentChannel, paymentSystemAccount, paymentSystemCurrency, paymentDetails, paymentExpirationDate, ticket, fee, processedNotes, isDel, isTrade, isNonApp, lastUpdated);
     }
 
     @Override
     public String toString() {
-        return "CrmTbWithdrawalObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", fee=" + fee + ", paymentChannel='" + paymentChannel + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", paymentRequisite='" + paymentRequisite + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentType='" + paymentType + '\'' + ", regulator='" + regulator + '\'' + ", reversedAmount=" + reversedAmount + ", reversedTime='" + reversedTime + '\'' + ", status=" + status + ", ticketId=" + ticketId + ", transferId=" + transferId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + ", statusId=" + statusId + '}';
+        return "CrmTbWithdrawalObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", transferId=" + transferId + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='" + updateTime + '\'' + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", reversedTime='" + reversedTime + '\'' + ", reversedTimeUtc='" + reversedTimeUtc + '\'' + ", amount=" + amount + ", amountUsd=" + amountUsd + ", reversedAmount=" + reversedAmount + ", reversedAmountUsd=" + reversedAmountUsd + ", currency='" + currency + '\'' + ", statusId=" + statusId + ", status='" + status + '\'' + ", paymentTypeId='" + paymentTypeId + '\'' + ", paymentType='" + paymentType + '\'' + ", paymentChannelId='" + paymentChannelId + '\'' + ", paymentChannel='" + paymentChannel + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", ticket=" + ticket + ", fee=" + fee + ", processedNotes='" + processedNotes + '\'' + ", isDel=" + isDel + ", isTrade=" + isTrade + ", isNonApp=" + isNonApp + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

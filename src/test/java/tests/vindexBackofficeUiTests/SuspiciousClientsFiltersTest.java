@@ -76,7 +76,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
-        String ruleName = "Mirror Trading";
+        String ruleName = "Registration";
         investigationPage.selectRuleWithNameWithSearch(ruleName);
         investigationPage.clickApplyFiltrationButton();
         investigationPage.verifyAllCardsFilteredByRuleName(ruleName);
