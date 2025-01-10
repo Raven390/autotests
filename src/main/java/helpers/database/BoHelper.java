@@ -91,16 +91,15 @@ public class BoHelper {
         assertTrue(clientFraudTypes.isEmpty());
     }
 
-    public static void createUserFraudsDb(String ucid, long fraudId) throws Exception {
+    public static void createUserFraudsDb(String ucid, long... fraudIds) throws Exception {
         Allure.step("create fraud for user in DB");
         Thread.sleep(2000);
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         long boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        ClientFraudTypes fraudTypes = new ClientFraudTypes();
-        fraudTypes.setFraudTypeId(fraudId);
-        fraudTypes.setClientId(boId);
-        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, fraudTypes);
+        for (long fraudId : fraudIds) {
+            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientFraudTypes(fraudId, boId));
+        }
         Thread.sleep(100);
     }
 

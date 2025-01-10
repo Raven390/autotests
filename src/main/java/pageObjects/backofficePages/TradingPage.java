@@ -312,7 +312,7 @@ public class TradingPage extends AbstractPage {
         assertTrue(tpslColumnHeader.getByText("TP/SL").isVisible());
         assertTrue(swapColumnHeader.getByText("SWAP").isVisible());
         assertTrue(srColumnHeader.getByText("SR").isVisible());
-        assertTrue(commissionColumnHeader.getByText("COMMISS.").isVisible());
+        assertTrue(commissionColumnHeader.getByText("COMMISSION").isVisible());
         assertTrue(methodColumnHeader.getByText("METHOD").isVisible());
         assertTrue(commentColumnHeader.getByText("COMMENT").isVisible());
     }

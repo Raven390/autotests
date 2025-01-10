@@ -63,7 +63,7 @@ public class TradingInfoDealsTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("563")
     @DisplayName("Verify all data is present in trading info - operations tab")
-    public void verifyTradingInfoDealsTest() {
+    public void verifyTradingInfoDealsTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -72,6 +72,7 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();

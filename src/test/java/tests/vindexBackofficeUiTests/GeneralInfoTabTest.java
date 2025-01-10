@@ -40,7 +40,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("559")
     @DisplayName("Verify all data is present in general tab")
-    public void verifyGeneralInfoTabTest() {
+    public void verifyGeneralInfoTabTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -49,6 +49,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         generalPage.clickGeneralTabButton();
         assertThat("Assert that full name is correct", generalPage.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
@@ -61,7 +62,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         assertThat("Assert that date of birth is correct", generalPage.getDateOfBirth(), equalTo(crmTbUser.birthday));
         assertThat("Assert that country is correct", generalPage.getCountry(), equalTo(crmTbUser.country));
         assertThat("Assert that nationality is correct", generalPage.getNationality(), equalTo(crmTbUser.nationality));
-        assertThat("Assert that encoded email is correct", generalPage.getEmailAddress(), equalTo("t****4@example.com"));
+        assertThat("Assert that encoded email is correct", generalPage.getEmailAddress(), equalTo("t***4@example.com"));
         assertThat("Assert that encoded phone number is correct", generalPage.getPhoneNumber(), equalTo("***********"));
         assertThat("Assert that 2 factor auth is correct", generalPage.get2FactorAuth(), equalTo("Yes"));
         generalPage.verifyKycSectionIsVisible();
