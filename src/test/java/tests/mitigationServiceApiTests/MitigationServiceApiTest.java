@@ -175,5 +175,4 @@ public class MitigationServiceApiTest extends TestBaseApi {
 
     }
 
-
 }

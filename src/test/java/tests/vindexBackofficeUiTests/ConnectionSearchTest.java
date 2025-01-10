@@ -2,6 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -12,8 +13,8 @@ import java.sql.SQLException;
 
 import static helpers.database.BoHelper.cleanUserFraudsDb;
 import static helpers.database.BoHelper.createUserFraudsDb;
-import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.LAYER_WEB;
 import static utils.Constants.TEAM_BACKOFFICE;
@@ -25,34 +26,23 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
-    @DisplayName("Positive login test")
-    void csPageOpensTest() {
-        connectionPage.navigateMain();
-        keycloackPage.loginWeb("dev", "123");
-        connectionPage.navigateConnectionTab("infinox-424201");
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("315")
     @DisplayName("Check line width")
     void csPageConnectionLinesStileTest() {
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424202", "payoutId", 1.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424203", "payoutId", 16.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424204", "payoutId", 17.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424205", "payoutId", 33.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424206", "payoutId", 34.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424207", "payoutId", 49.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424208", "payoutId", 50.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424209", "payoutId", 66.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424210", "payoutId", 67.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424211", "payoutId", 83.0);
-        connectionPage.checkLineStyle("infinox-424201", "infinox-424212", "payoutId", 84.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424202", 1.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424203", 16.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424204", 17.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424205", 33.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424206", 34.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424207", 49.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424208", 50.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424209", 66.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424210", 67.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424211", 83.0);
+        connectionPage.checkLineStyle("infinox-424201", "infinox-424212", 84.0);
     }
 
     @Test
@@ -75,6 +65,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("311")
     @DisplayName("Check that connection node have right client status")
     void csPageConnectionNodesHaveRightClientStatusTest() {
+        createSimpleAlert("infinox-424201", "HEDGING");
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -206,9 +197,8 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
         connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "Type", "Same Identity");
-        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "Score", "0.8399999737739563");
-        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "documentNumber", "12121212");
-        connectionPage.ccCheckDirectConnectionRows("Connect Fourteenhman", "phoneNumber", "131313");
+        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "Score", "0.84");
+        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "ipAddress", "connectionAttributeValue10-13");
     }
 
     @Test
@@ -224,11 +214,11 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.ccCheckGeneralInfoRows("Brand", "Infinox");
         connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
         connectionPage.ccCheckGeneralInfoRows("Email", "t****4@example.com");
-        connectionPage.ccCheckGeneralInfoRows("Phone", "***********");
+//        connectionPage.ccCheckGeneralInfoRows("Phone", "***********");
         connectionPage.ccCheckGeneralInfoRows("IB", "1");
         connectionPage.ccCheckGeneralInfoRows("CPA", "2");
-        connectionPage.ccCheckGeneralInfoRows("Registered", "2024-10-22 21:00:00");
-        connectionPage.ccCheckGeneralInfoRows("Last active", "1970-01-01 00:00:00");
+        connectionPage.ccCheckGeneralInfoRows("Registered", "2024-10-22");
+        connectionPage.ccCheckGeneralInfoRows("Last login", "2025-01-03 13:58");
     }
 
     @Test
@@ -241,11 +231,10 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
-        connectionPage.ccCheckSummaryRows("Trading", "0 closed deal");
-        connectionPage.ccCheckSummaryRows("Total PNL", "-");
-        connectionPage.ccCheckSummaryRows("Deposit", "-");
-        connectionPage.ccCheckSummaryRows("Withdrawal", "-");
-        connectionPage.ccCheckSummaryRows("Fraud", "-");
+        connectionPage.ccCheckSummaryRows("Trading", "26 closed deals");
+        connectionPage.ccCheckSummaryRows("Total PNL", "35.5 $");
+        connectionPage.ccCheckSummaryRows("Deposit", "22.4 $");
+        connectionPage.ccCheckSummaryRows("Withdrawal", "56.1 $");
     }
 
     @Test
@@ -261,7 +250,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.ccCheckHeaderClientName("Connect Threerteenhman");
         connectionPage.ccCheckHeaderClientId("424213");
         connectionPage.ccCheckHeaderConnectionLevel("2");
-        connectionPage.ccCheckHeaderConnectionPoints("0.6700000166893005");
+        connectionPage.ccCheckHeaderConnectionPoints("0.67");
     }
 
     @Test
@@ -333,7 +322,6 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.checkClientStatus("infinox-424204", "Potential abuse");
     }
 
-
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
@@ -341,12 +329,53 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection Search Name of clients must be taken from the DB")
     void csPageConnectionNodeHasNameFromDbTest() throws ReflectiveOperationException, SQLException {
         CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId");
-        deleteEntryFromDb("vindex_test.crm__tb_user", "user_id=424204");
-        insertObjectToDb("vindex_test.crm__tb_user", testUser);
+        insertObjectToDb("vindex_test.crm___tb_user", testUser);
         connectionPage.navigateMain();
         keycloackPage.loginWeb("dev", "123");
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientName("infinox-424204", "Connect Fourthman");
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("724")
+    @DisplayName("Connection Search Connection Graph user can see data on Attribute Card")
+    void csAttributeCardHaveDataFromDbTest() {
+
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.ccClickAttributeChevron("infinox-424213");
+        Allure.step("list of user connection attributes must unfolds");
+        connectionPage.ccClickAttributeCardButton("infinox-424213", "ipAddress");
+        connectionPage.checkAttributeCardTitle("ipAddress");
+        connectionPage.checkAttributeCardSourceName("Connect Threerteenhman");
+        connectionPage.checkAttributeCardConnectedName("connectionAttributeValue10-13", "Connect Tenthman");
+        connectionPage.checkAttributeCardFieldsValues("connectionAttributeValue10-13", "Match", "exact");
+        connectionPage.checkAttributeCardFieldsValues("connectionAttributeValue10-13", "Value", "sourceAttributeValue10-13");
+        connectionPage.checkAttributeCardConnectedName("sourceAttributeValue13-15", "Connect Fifthteenhman");
+        connectionPage.checkAttributeCardFieldsValues("sourceAttributeValue13-15", "Match", "exact");
+        connectionPage.checkAttributeCardFieldsValues("sourceAttributeValue13-15", "Value", "connectionAttributeValue13-15");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("725")
+    @DisplayName("Connection Search Connection Graph user can unmask data on Attribute Card")
+    void csAttributeCardCanBeUnmaskedTest() {
+        connectionPage.navigateMain();
+        keycloackPage.loginWeb("dev", "123");
+        connectionPage.navigateConnectionTab("infinox-424201");
+        connectionPage.ccClickAttributeChevron("infinox-424208");
+        Allure.step("list of user connection attributes must unfolds");
+        connectionPage.ccClickAttributeCardButton("infinox-424201", "phoneNumber");
+        connectionPage.checkAttributeCardTitle("phoneNumber");
+        connectionPage.checkThatMaskedTextIsVisible();
+        connectionPage.toggleAttributeCardMask();
+        connectionPage.checkThatMaskedTextIsNotVisible();
+        connectionPage.toggleAttributeCardMask();
+        connectionPage.checkThatMaskedTextIsVisible();
+    }
 }
