@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+
 public abstract class AbstractPage {
 
     protected final Page page;
@@ -59,5 +62,40 @@ public abstract class AbstractPage {
 
     protected void selectDateInElement(Locator locator, String date) {
         selectDateRangeInElement(locator, date, date);
+    }
+
+    protected void selectRangeInSlider(Locator locator, Double rangeFrom, Double rangeTo) {
+        assertThat("rangeFrom should be <= rangeTo", rangeFrom, lessThanOrEqualTo(rangeTo));
+        Locator sliderLeftHandle = locator.locator("//div[@role='slider']").first();
+        Locator sliderRightHandle = locator.locator("//div[@role='slider']").last();
+        double currentValueLeft = Double.parseDouble(sliderLeftHandle.getAttribute("aria-valuenow"));
+        double currentValueRight = Double.parseDouble(sliderRightHandle.getAttribute("aria-valuenow"));
+        sliderLeftHandle.hover();
+        page.mouse().down();
+        for (int i = 0; i < 100; i++) {
+            if (currentValueLeft == rangeFrom) {
+                break;
+            } else {
+                // Drag the button by 4.125 pixels to the right
+                page.mouse().move(sliderLeftHandle.boundingBox().x + 4.125, sliderLeftHandle.boundingBox().y);
+                page.waitForTimeout(100);
+                currentValueLeft = Double.parseDouble(sliderLeftHandle.getAttribute("aria-valuenow"));
+            }
+        }
+        page.mouse().up();
+        sliderRightHandle.hover();
+        page.mouse().down();
+        for (int i = 0; i < 100; i++) {
+            if (currentValueRight == rangeTo) {
+                break;
+            } else {
+                // Drag the button by 4.125 pixels to the left
+                page.mouse().move(sliderRightHandle.boundingBox().x - 8, sliderRightHandle.boundingBox().y);
+                page.waitForTimeout(100);
+                page.mouse().up();
+                currentValueRight = Double.parseDouble(sliderRightHandle.getAttribute("aria-valuenow"));
+            }
+        }
+        page.mouse().up();
     }
 }

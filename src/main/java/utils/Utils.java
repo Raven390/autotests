@@ -238,6 +238,12 @@ public class Utils {
         return formatter.format(currentDateTime);
     }
 
+    public static String getCurrentDateMinus7Days() {
+        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(7);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formatter.format(currentDateTime);
+    }
+
     public static String getPreviousDateYearMonthDayByIntMonth(int step) {
         LocalDateTime currentDateTime = LocalDateTime.now().minusMonths(step);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -400,5 +406,13 @@ public class Utils {
     public static String formatTimeToUtcWithMs(String time) {
         time = time.substring(0, time.length() - 3);
         return time.replace(" ", "T") + "Z";
+    }
+
+    public static String getPrevious14DaysDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).minusDays(13).toString();
+    }
+
+    public static String getPrevious90DaysDateUtc() {
+        return LocalDate.now(ZoneOffset.UTC).minusDays(89).toString();
     }
 }
