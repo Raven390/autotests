@@ -129,7 +129,6 @@ public class RegistrationRuleTest extends TestBaseRule {
     @AllureId("157")
     public void registrationRuleExitEventEnd3Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("3");
-
         Allure.step("No toxic accounts linked");
         Allure.step("No different identity connections");
         Allure.step("IP country != address country");
@@ -271,7 +270,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         Allure.step("No toxic accounts linked");
         Allure.step("Different identity connections");
         Allure.step("Not linked to IB account OR Same referrer");
-        Allure.step("LN score != Low");
+        Allure.step("LN score != Medium or High");
         Allure.step("Set no bonus restriction");
         Allure.step("Generate alert");
 
@@ -552,7 +551,7 @@ public class RegistrationRuleTest extends TestBaseRule {
 
         // Verify alert in BO db
 
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(8));
+        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(14));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(

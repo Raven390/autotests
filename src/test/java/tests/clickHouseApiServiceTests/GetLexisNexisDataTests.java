@@ -20,7 +20,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataRequest.getLexisNexisData;
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataResponse.getItem;
 import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
-import static helpers.data.ClientFactory.getRandomClient;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,23 +34,23 @@ import static utils.Constants.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetLexisNexisDataTests extends TestBaseApi {
 
-    public static ClientHelper client = getRandomClient();
-    public static LnSessionParsedObject object1 = generateLexisNexisDataByClient(client);
-    public static LnSessionParsedObject object2 = generateLexisNexisDataByClient(client);
-    public static String uid1 = object1.uid;
-    public static String uid2 = object2.uid;
+    static ClientHelper client = getRandomVantageClient();
+    static LnSessionParsedObject object1 = generateLexisNexisDataByClient(client);
+    static LnSessionParsedObject object2 = generateLexisNexisDataByClient(client);
+
+    public static String ucid1 = object1.ucid;
+    public static String ucid2 = object2.ucid;
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object1);
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object2);
     }
 
     @AfterAll
     public static void teardownData() throws SQLException {
-        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("uid = '%s'", uid1));
-        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("uid = '%s'", uid2));
+        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid1));
+        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid2));
     }
 
     @Test
@@ -60,15 +60,15 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("userId", client.getUserId());
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
         GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response uid", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(uid1), getItem(uid2)));
+        assertThat("Check response ucid", mappedResponse.totalCount, is(2));
+        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(ucid1), getItem(ucid2)));
     }
 
     @Test
@@ -77,15 +77,15 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     public void getLexisNexisDataTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client.getUcid());
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
         GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response uid", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(uid1), getItem(uid2)));
+        assertThat("Check response ucid", mappedResponse.totalCount, is(2));
+        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(ucid1), getItem(ucid2)));
     }
 
     @Test
@@ -95,14 +95,14 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("userId", client.getUserId());
-        queryParams.put("columnNames", "uid123");
+        queryParams.put("columnNames", "ucid123");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("No such column: uid123"));
+        assertThat("Check response error", mappedResponse.error, is("No such column: ucid123"));
         assertThat("Check response status", mappedResponse.status, is(400));
     }
 
@@ -112,7 +112,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     public void getLexisNexisDataTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client.getUcid().replace("-", ""));
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
@@ -128,7 +128,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     @AllureId("680")
     public void getLexisNexisDataTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
@@ -144,7 +144,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     @AllureId("681")
     public void getLexisNexisDataTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         queryParams.put("brand", client.getBrand());
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
@@ -161,7 +161,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     @AllureId("682")
     public void getLexisNexisDataTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         queryParams.put("userId", client.getUserId());
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
@@ -193,7 +193,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     @AllureId("684")
     public void getLexisNexisDataTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         queryParams.put("clientId", client.getUcid() + "123");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
@@ -201,7 +201,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response uid", mappedResponse.totalCount, is(0));
+        assertThat("Check response ucid", mappedResponse.totalCount, is(0));
         assertThat("Check response item", mappedResponse.items, empty());
     }
 
@@ -212,15 +212,15 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("userId", client.getUserId());
-        queryParams.put("columnNames", "uid");
+        queryParams.put("columnNames", "ucid");
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
         GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response uid", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(uid1), getItem(uid2)));
+        assertThat("Check response ucid", mappedResponse.totalCount, is(2));
+        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(ucid1), getItem(ucid2)));
     }
 
     @Test
@@ -230,14 +230,14 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("userId", client.getUserId());
-        queryParams.put("columnNames", List.of("uid", "mobile_code", "eventId"));
+        queryParams.put("columnNames", List.of("ucid", "mobile_code", "eventId"));
         Response response = getLexisNexisData(queryParams);
         String responseBody = response.body().string();
 
         GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response uid", mappedResponse.totalCount, is(2));
-        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(uid1, 60, 123), getItem(uid2, 60, 123)));
+        assertThat("Check response ucid", mappedResponse.totalCount, is(2));
+        assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(ucid1, 60, 123), getItem(ucid2, 60, 123)));
     }
 }

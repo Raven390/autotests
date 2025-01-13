@@ -13,8 +13,8 @@ public class GetLexisNexisDataResponse {
     public Integer totalCount;
 
     public static class Items {
-        @JsonProperty("uid")
-        public String uid;
+        @JsonProperty("ucid")
+        public String ucid;
 
         @JsonProperty("mobile_code")
         public Integer mobile_code;
@@ -26,11 +26,11 @@ public class GetLexisNexisDataResponse {
         }
 
         public Items(String uid) {
-            this.uid = uid;
+            this.ucid = uid;
         }
 
-        public Items(String uid, Integer mobile_code, Integer eventId) {
-            this.uid = uid;
+        public Items(String ucid, Integer mobile_code, Integer eventId) {
+            this.ucid = ucid;
             this.mobile_code = mobile_code;
             this.eventId = eventId;
         }
@@ -40,13 +40,13 @@ public class GetLexisNexisDataResponse {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Items items = (Items) o;
-            return Objects.equals(uid, items.uid) && Objects.equals(mobile_code, items.mobile_code) && Objects.equals(
+            return Objects.equals(ucid, items.ucid) && Objects.equals(mobile_code, items.mobile_code) && Objects.equals(
                     eventId, items.eventId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(uid, mobile_code, eventId);
+            return Objects.hash(ucid, mobile_code, eventId);
         }
     }
 
@@ -54,7 +54,7 @@ public class GetLexisNexisDataResponse {
         return new Items(uid);
     }
 
-    public static Items getItem(String uid, Integer mobile_code, Integer eventId) {
-        return new Items(uid, mobile_code, eventId);
+    public static Items getItem(String ucid, Integer mobile_code, Integer eventId) {
+        return new Items(ucid, mobile_code, eventId);
     }
 }
