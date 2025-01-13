@@ -7,6 +7,9 @@ public class GetLexisNexisResponse {
     @JsonProperty("uid")
     public String uid;
 
+    @JsonProperty("ucid")
+    public String ucid;
+
     @JsonProperty("id")
     public int id;
 

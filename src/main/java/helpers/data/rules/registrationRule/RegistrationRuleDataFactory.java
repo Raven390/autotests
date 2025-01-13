@@ -19,7 +19,7 @@ import java.util.Map;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
-import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
+import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
@@ -62,7 +62,7 @@ public class RegistrationRuleDataFactory {
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.countryCode = client.getCountryCode();
         userObject.isoCountryCode = client.getCountryCode();
-        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataForUserId(client.getUid(), client.getUserId(), getRandomIntPositive());
+        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataByClient(client);
         lexisNexisObject.brand = client.getBrand();
         lexisNexisObject.eventType = "account_creation";
         lexisNexisObject.email = client.getEmail();
@@ -126,6 +126,7 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.trueIpGeo = "US";
         CrmTbUserObject crmTbUserObject = registrationRuleData.crmTbUserObject;
         crmTbUserObject.isoCountryCode = "CY";
+        lexisNexisObject.proxyIp = null;
         return registrationRuleData;
     }
 
