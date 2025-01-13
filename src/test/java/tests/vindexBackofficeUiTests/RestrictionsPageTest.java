@@ -31,7 +31,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("327")
-    @DisplayName("restriction tab set account restriction UI")
+    @DisplayName("Restriction tab set account restriction UI")
     void setAccountRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -47,7 +47,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("328")
-    @DisplayName("restriction tab remove account restriction UI")
+    @DisplayName("Restriction tab remove account restriction UI")
     void cancelAccountRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "01");
         investigationPage.navigate();
@@ -64,7 +64,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("329")
-    @DisplayName("restriction tab set transfer restriction UI")
+    @DisplayName("Restriction tab set transfer restriction UI")
     void setTransferRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -80,7 +80,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("330")
-    @DisplayName("restriction tab remove Transfer Restriction UI")
+    @DisplayName("Restriction tab remove Transfer Restriction UI")
     void cancelTransferRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "02");
         investigationPage.navigate();
@@ -96,7 +96,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("331")
-    @DisplayName("restriction tab set Deposits restriction UI")
+    @DisplayName("Restriction tab set Deposits restriction UI")
     void setDepositsRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -112,7 +112,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("332")
-    @DisplayName("restriction tab remove Deposits restriction UI")
+    @DisplayName("Restriction tab remove Deposits restriction UI")
     void cancelDepositsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "03");
         investigationPage.navigate();
@@ -128,7 +128,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("333")
-    @DisplayName("restriction tab set Withdrawals restriction UI")
+    @DisplayName("Restriction tab set Withdrawals restriction UI")
     void setWithdrawalsRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -144,7 +144,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("334")
-    @DisplayName("restriction tab remove Withdrawals restriction UI")
+    @DisplayName("Restriction tab remove Withdrawals restriction UI")
     void cancelWithdrawalsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "04");
         investigationPage.navigate();
@@ -160,7 +160,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("335")
-    @DisplayName("restriction tab set Login CRM restriction UI")
+    @DisplayName("Restriction tab set Login CRM restriction UI")
     void setLoginCRMRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -176,7 +176,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("336")
-    @DisplayName("restriction tab remove Login CRM restriction UI")
+    @DisplayName("Restriction tab remove Login CRM restriction UI")
     void cancelLoginCRMRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "05");
         investigationPage.navigate();
@@ -193,7 +193,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("337")
-    @DisplayName("restriction tab set Manual Withdrawal Review restriction UI")
+    @DisplayName("Restriction tab set Manual Withdrawal Review restriction UI")
     void setManualWithdrawalRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -209,7 +209,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("338")
-    @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client without transactions")
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client without transactions")
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral("infinox-141401", "13");
         investigationPage.navigate();
@@ -225,8 +225,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("361")
-    @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client with transactions all green")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsGreen() throws Exception {
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions all green")
+    void cancelManualWithdrawalRestrictionUITestWithTransactionsGreenTest() throws Exception {
         restrictionPage.cleanUserAudit("infinox-141402");
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         investigationPage.navigate();
@@ -237,7 +237,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReasonManualWithdrawalAllGreen("test reason");
         String details = "Transaction ID 141405;71.00 USDT 2024-11-13 10:11 bank trasfer; Accept";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("141405", "5");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }
 
@@ -245,8 +245,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("365")
-    @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client with transactions all refuse")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsRefuse() throws Exception {
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions all refuse")
+    void cancelManualWithdrawalRestrictionUITestWithTransactionsRefuseTest() throws Exception {
         restrictionPage.cleanUserAudit("infinox-141402");
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         investigationPage.navigate();
@@ -257,7 +257,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
         String details = "Transaction ID 141403; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("141401", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("141403", "4");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }
 
@@ -265,8 +265,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("366")
-    @DisplayName("restriction tab remove Manual Withdrawal Review restriction UI client with transactions  approve one")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsApproveOne() throws Exception {
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions  approve one")
+    void cancelManualWithdrawalRestrictionUITestWithTransactionsApproveOneTest() throws Exception {
         //login
         restrictionPage.cleanUserAudit("infinox-141402");
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
@@ -279,7 +279,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("test reason");
         String details1 = "Transaction ID 141403; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("141403", "5");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
         //second run
         restrictionPage.cleanUserAudit("infinox-141402");
@@ -290,7 +290,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("test reason");
         String details2 = "Transaction ID 141401; 5.00 USD 2024-11-13 10:11 bank card; Accept";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("141402", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("141401", "4");
         restrictionPage.checkKafkaRequestApplyUCID("141402");
     }
 
@@ -299,7 +299,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("339")
-    @DisplayName("restriction tab set Close only mode Review restriction UI")
+    @DisplayName("Restriction tab set Close only mode Review restriction UI")
     void setCloseOnlyModeRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -315,7 +315,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("340")
-    @DisplayName("restriction tab remove Close only mode restriction UI")
+    @DisplayName("Restriction tab remove Close only mode restriction UI")
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "06");
         investigationPage.navigate();
@@ -334,7 +334,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("341")
-    @DisplayName("restriction tab set Off quotes Review restriction UI")
+    @DisplayName("Restriction tab set Off quotes Review restriction UI")
     void setOffQuotesRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -352,7 +352,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("342")
-    @DisplayName("restriction tab remove Off quotes restriction UI")
+    @DisplayName("Restriction tab remove Off quotes restriction UI")
     void cancelOffQuotesRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "08");
         investigationPage.navigate();
@@ -369,7 +369,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("343")
-    @DisplayName("restriction tab set AB book Review restriction UI")
+    @DisplayName("Restriction tab set AB book Review restriction UI")
     void setAbBookRestrictionUITest() throws Exception {
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
@@ -385,7 +385,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("344")
-    @DisplayName("restriction tab remove AB book restriction UI")
+    @DisplayName("Restriction tab remove AB book restriction UI")
     void cancelAbBookRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade("infinox-141401", 14_140_101, 3, "09");
         investigationPage.navigate();

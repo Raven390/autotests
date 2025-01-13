@@ -420,7 +420,8 @@ public class InvestigationPage extends AbstractPage {
 
     public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
         Allure.step("check assigment event in Audit DB");
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'", Event.class);
+        page.waitForTimeout(1000);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type = event.get(1).getType();
         assertEquals("CLIENT_ASSIGNED", type);
         String system = event.get(1).getInitiatedBySystem();

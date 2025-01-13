@@ -33,6 +33,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator fraudSelectItem;
     private final Locator fraudSelectApplyButton;
     private final Locator clientRestrictionItem;
+    private final Locator approveSecondButton;
 
     public ResolvePage(Page page) {
         super(page);
@@ -47,6 +48,7 @@ public class ResolvePage extends AbstractPage {
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
+        this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
         this.successToast = page.locator(".g-toast__title").getByText("Investigation completed");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
