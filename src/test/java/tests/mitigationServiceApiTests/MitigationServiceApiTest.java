@@ -146,7 +146,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
                 response.body().string(), PostRestrictionResponse.class
         );
         String restrictionID = restrictionBody.id.toString();
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = 'vantage-10081449'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = 'vantage-10081449'", Event.class);
         String type1 = event.get(0).getType();
         assertEquals(type1, "RESTRICTION_REQUESTED");
         String type2 = event.get(1).getType();

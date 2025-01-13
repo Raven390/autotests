@@ -477,20 +477,20 @@ public class RestrictionPage extends AbstractPage {
         List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {
             String Id = i.id.toString();
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.action", "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "action", "clients_restriction_id = " + Id);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.kafka_request", "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_request", "clients_restriction_id = " + Id);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.kafka_response", "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_response", "clients_restriction_id = " + Id);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "mi.mi.clients_restriction", "id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "clients_restriction", "id = " + Id);
             Thread.sleep(200);
         }
     }
 
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'");
+        deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
         Thread.sleep(200);
     }
 
@@ -517,7 +517,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAudit(String ucid, String detail) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
         String details = event.get(2).getDetails();
@@ -529,7 +529,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAudit(String ucid, String type, String expectedDetails) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, " event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
         assertNotNull(event.get(0).getKafkaMessageId());
         assertNotNull(event.get(0).getId());
@@ -542,7 +542,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionApplymentAudit(String ucid, String detail) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(0).getType();
         assertEquals("RESTRICTION_REQUESTED", type1);
         String details = event.get(0).getDetails();
@@ -563,10 +563,9 @@ public class RestrictionPage extends AbstractPage {
         }
     }
 
-    @Step("Check if the page loaded")
-    public void cleanKafka(String userId) throws Exception {
-        readMessagesFromClientApply(userId);
-        readMessagesFromWithdrawalApprovals(userId);
+    public void cleanKafka(String ucid) throws Exception {
+        readMessagesFromClientApply(ucid);
+        readMessagesFromWithdrawalApprovals(ucid);
 
     }
 

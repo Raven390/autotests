@@ -8,7 +8,7 @@ public class AuditHelper {
 
     @Step("clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.AUDIT, "au.au.event", "ucid = '" + ucid + "'");
+        deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
 
     }
 }

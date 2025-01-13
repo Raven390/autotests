@@ -47,6 +47,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("resolve client with withdrawal transactions reject all")
     public void resolveWithWithdrawalsRejectAllTest() throws Exception {
         cleanUserAudit("infinox-141402");
+//        restrictionPage.cleanKafka("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response = enableCRMEmulator();
         assertNotNull(response);
@@ -59,7 +60,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.resolveWithdrawalsAllReject();
         String details = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("141401", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("141404", "4");
     }
 
     @Test
@@ -80,9 +81,10 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveFirst();
+        resolvePage.resolveWithdrawalsApproveFirst();
         String details1 = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
         restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("141402", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("141404", "4");
         //second run
         cleanUserAudit("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
