@@ -84,10 +84,9 @@ public class Constants {
     // TABLES
     public static final String CRM_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
-    public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm__tb_bonus";
-    public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm__tb_deposit";
+    public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm___tb_bonus";
+    public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm___tb_deposit";
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm___tb_withdrawal";
-    //public static final String MT_USER_TABLE_NAME = "vindex_test.mt__tb_user";
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt___credit_orders";
     public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt___balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";

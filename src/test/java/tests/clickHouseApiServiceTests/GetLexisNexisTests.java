@@ -223,9 +223,13 @@ public class GetLexisNexisTests extends TestBaseApi {
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
         GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
-
+        System.out.println(lexisNexisResponse.eventId);
+        System.out.println(event3.eventId);
+        System.out.println(event3.id);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response code", lexisNexisResponse.eventId, is(event3.eventId));
+
+
     }
 
     @Test
