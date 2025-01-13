@@ -115,7 +115,7 @@ public class AuditTrailTest extends TestBaseWeb {
         AuditTrailItem item = auditTrailItems.getFirst();
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         User user = coreUser();
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s in Vindex BO", "Comment added", user.getFirstName(), user.getLastName())));
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Comment added", user.getFirstName(), user.getLastName())));
         assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
     }
 
@@ -143,7 +143,7 @@ public class AuditTrailTest extends TestBaseWeb {
         AuditTrailItem item = auditTrailItems.getFirst();
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         User user = coreUser();
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s in Vindex BO", "Client assigned", user.getFirstName(), user.getLastName())));
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Client assigned", user.getFirstName(), user.getLastName())));
     }
 
     @Test
@@ -174,6 +174,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.filterAll();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
@@ -181,7 +182,7 @@ public class AuditTrailTest extends TestBaseWeb {
         AuditTrailItem item = auditTrailItems.get(1);
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         User user = coreUser();
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s in Vindex BO", "Investigation completed", user.getFirstName(), user.getLastName())));
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Investigation completed", user.getFirstName(), user.getLastName())));
         assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
         assertThat("Verify audit trail item details", item.getDetails(), equalTo(String.format("Confirmed fraud type: %s", "Market manipulation")));
     }
@@ -218,16 +219,16 @@ public class AuditTrailTest extends TestBaseWeb {
         }
         User user = coreUser();
         AuditTrailItem restrictionRequested = new AuditTrailItem(
-                String.format("%s%s %s in Vindex BO", "Restriction requested", user.getFirstName(), user.getLastName()), commentSet, "Login CRM", null
+                String.format("%s%s %s", "Restriction requested", user.getFirstName(), user.getLastName()), commentSet, "Login CRM", null
         );
         AuditTrailItem restrictionApplied = new AuditTrailItem(
-                String.format("%s%s %s in Vindex BO", "Restriction applied", user.getFirstName(), user.getLastName()), null, "Login CRM", null
+                String.format("%s%s %s", "Restriction applied", user.getFirstName(), user.getLastName()), null, "Login CRM", null
         );
         AuditTrailItem cancellationRequested = new AuditTrailItem(
-                String.format("%s%s %s in Vindex BO", "Cancellation requested", user.getFirstName(), user.getLastName()), commentCancel, "Login CRM", null
+                String.format("%s%s %s", "Cancellation requested", user.getFirstName(), user.getLastName()), commentCancel, "Login CRM", null
         );
         AuditTrailItem restrictionCancelled = new AuditTrailItem(
-                String.format("%s%s %s in Vindex BO", "Restriction cancelled", user.getFirstName(), user.getLastName()), null, "Login CRM", null
+                String.format("%s%s %s", "Restriction cancelled", user.getFirstName(), user.getLastName()), null, "Login CRM", null
         );
         assertThat("Verify audit trail items", auditTrailItems, hasItems(restrictionRequested, restrictionApplied, cancellationRequested, restrictionCancelled));
     }
@@ -268,7 +269,7 @@ public class AuditTrailTest extends TestBaseWeb {
         }
         User user = coreUser();
         AuditTrailItem cancellationRequested = new AuditTrailItem(
-                String.format("%s%s %s in Vindex BO", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Accept", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
+                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Accept", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
         );
         assertThat("Verify audit trail items", auditTrailItems, hasItem(cancellationRequested));
     }
