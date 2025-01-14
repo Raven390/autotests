@@ -86,6 +86,7 @@ public class ConnectionPage extends AbstractPage {
     private final Locator connectionTableUserIds;
     private final Locator appliedFilters;
     private final Locator filtersCounter;
+    private final Locator appliedFiltersHidden;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -113,7 +114,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String CHECKBOX_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::input[@type='checkbox']";
     private static final String BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::button";
     private static final String ATTRIBUTE_FILTER_NAME_PATTERN = "//div[@class='v-drop-down-menu__menu']/descendant::div[text()='%s']";
-    private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[@data-dd-value='%s']/descendant::div[text()='%s']";
+    private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
     private static final String GRAPH_NODES_GROUP = "//div[@class='v-connection-search-graph-view__group']";
     private static final String CONNECTION_TABLE_ROW = "//tbody/tr";
 
@@ -183,6 +184,7 @@ public class ConnectionPage extends AbstractPage {
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
         this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::div[@class='v-connection-search-table-view__client']/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
+        this.appliedFiltersHidden = page.locator("//div[contains(@class,'v-collapsible-horizontal-list__item_hidden')]/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button__filters']/div");
     }
 
@@ -873,6 +875,16 @@ public class ConnectionPage extends AbstractPage {
         List<String> filtersList = new ArrayList<>();
         for (int i = 0; i < appliedFilters.count(); i++) {
             Locator filter = appliedFilters.nth(i);
+            filtersList.add(filter.textContent());
+        }
+        return filtersList;
+    }
+
+    @Step("Get list of applied hidden filters")
+    public List<String> getAppliedFiltersHiddenList() {
+        List<String> filtersList = new ArrayList<>();
+        for (int i = 0; i < appliedFiltersHidden.count(); i++) {
+            Locator filter = appliedFiltersHidden.nth(i);
             filtersList.add(filter.textContent());
         }
         return filtersList;
