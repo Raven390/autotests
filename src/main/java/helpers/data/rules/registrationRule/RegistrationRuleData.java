@@ -4,7 +4,7 @@ import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
-import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
 

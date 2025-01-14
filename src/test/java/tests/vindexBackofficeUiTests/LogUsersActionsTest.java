@@ -4,7 +4,7 @@ import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.backofficeDb.userActionAudit.UserActionAudit;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
+import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -22,7 +22,7 @@ import static businessObjects.api.mitigationService.MitigationServiceRequest.pos
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbKycFiles.KycFilesTableEntryFactory.getKycFile;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.ctmTbIdProof.IdProofTableEntryFactory.getIdProof;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static businessObjects.ui.user.UserFactory.coreUser;
@@ -308,7 +308,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
+        deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }

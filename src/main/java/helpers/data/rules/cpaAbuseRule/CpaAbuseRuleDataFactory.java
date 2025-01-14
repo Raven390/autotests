@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
-import static businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObjectFactory.generateMtTbUserData;
+import static businessObjects.db.clickhouse.mtTbUser.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpa;
 import static helpers.database.BoHelper.closeAlert;

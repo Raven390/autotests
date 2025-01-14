@@ -3,7 +3,7 @@ package tests.vindexBackofficeUiTests;
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
+import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import businessObjects.ui.auditTrail.AuditTrailItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,7 @@ import java.util.List;
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -391,7 +391,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s", account.account));
+        deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }

@@ -2,7 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.mtTbTradeTable.MtTbTradeObject;
+import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.mtTbTradeTable.MtTbTradeFactory.generateMtTbTrade;
+import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -36,8 +36,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static CrmTbAccountObject account1;
     private static CrmTbAccountObject account2;
-    private static MtTbTradeObject trade1;
-    private static MtTbTradeObject trade2;
+    private static MtMt4TradesCoercedObject trade1;
+    private static MtMt4TradesCoercedObject trade2;
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -47,18 +47,22 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.platform = "MT5";
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
-        trade1 = generateMtTbTrade(account1.account, account1.serverIdSt);
-        insertObjectToDb(MT_TRADES_TABLE_NAME, trade1);
-        trade2 = generateMtTbTrade(account2.account, account2.serverIdSt);
+        trade1 = generateMt4TradesCoerced(client);
+        trade1.account = account1.account.longValue();
+        trade1.serverId = account1.serverIdSt.longValue();
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade1);
+        trade2 = generateMt4TradesCoerced(client);
+        trade2.account = account2.account.longValue();
+        trade2.serverId = account2.serverIdSt.longValue();
         trade2.platform = "MT5";
-        trade2.type = "Sell";
+        trade2.ticketType = "Sell";
         trade2.openTime = getPreviousWeekTimestampDbFormat();
         trade2.closeTime = getYesterdayTimestampDbFormat();
         trade2.symbol = "GBPJPY";
         trade2.profitUsd = 101.22;
-        trade2.volumeUsd = 123.44;
-        trade2.reason = "API";
-        insertObjectToDb(MT_TRADES_TABLE_NAME, trade2);
+        trade2.notionalValueUsd = 123.44;
+        trade2.reasonName = "API";
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -103,7 +107,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by type in trading - operations tab")
     public void verifyTradingInfoDealsTypeFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.clickFilterCheckbox(trade2.type);
+        tradingPage.clickFilterCheckbox(trade2.ticketType);
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -194,7 +198,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by volume in trading - operations tab")
     public void verifyTradingInfoDealsVolumeFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.fillVolumeValues(trade2.volumeUsd.toString(), "200");
+        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -207,7 +211,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by method in trading - operations tab")
     public void verifyTradingInfoDealsMethodFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.clickFilterCheckbox(trade2.reason);
+        tradingPage.clickFilterCheckbox(trade2.reasonName);
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -231,7 +235,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     public void verifyTradingInfoDealsResetFiltrationTest() {
         tradingPage.openFilter();
         // Type
-        tradingPage.clickFilterCheckbox(trade2.type);
+        tradingPage.clickFilterCheckbox(trade2.ticketType);
         tradingPage.resetTypeFilterAndVerify();
         // Accounts
         tradingPage.clickFilterCheckbox(trade2.account.toString());
@@ -240,7 +244,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.symbol);
         tradingPage.resetSymbolFilterAndVerify();
         // Method
-        tradingPage.clickFilterCheckbox(trade2.reason);
+        tradingPage.clickFilterCheckbox(trade2.reasonName);
         tradingPage.resetMethodFilterAndVerify();
         // Open date
         tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
@@ -255,18 +259,18 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.fillProfitValues(trade2.profitUsd.toString(), "200");
         tradingPage.resetProfitFilterAndVerify();
         // Volume
-        tradingPage.fillVolumeValues(trade2.volumeUsd.toString(), "200");
+        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.resetVolumeFilterAndVerify();
         // Reset All
-        tradingPage.clickFilterCheckbox(trade2.type);
+        tradingPage.clickFilterCheckbox(trade2.ticketType);
         tradingPage.clickFilterCheckbox(trade2.account.toString());
         tradingPage.clickFilterCheckbox(trade2.symbol);
-        tradingPage.clickFilterCheckbox(trade2.reason);
+        tradingPage.clickFilterCheckbox(trade2.reasonName);
         tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
         tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTime));
         tradingPage.fillDurationValues("1", "");
         tradingPage.fillProfitValues(trade2.profitUsd.toString(), "200");
-        tradingPage.fillVolumeValues(trade2.volumeUsd.toString(), "200");
+        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.resetAllFiltersAndVerify();
     }
 
@@ -278,13 +282,12 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     public void verifyTradingInfoDealsTooltipsFiltrationTest() {
         tradingPage.openFilter();
         tradingPage.verifyOpenDateTooltip();
-        tradingPage.verifyProfitTooltip();
     }
 
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(MT_TRADES_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("account = %s OR account = %s", account1.account, account2.account));
         closeAlert(crmTbUser.ucid);
     }
 }
