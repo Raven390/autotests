@@ -537,8 +537,8 @@ public class InvestigationPage extends AbstractPage {
 
     public void scrollClientCardsToBottom() throws InterruptedException {
         clientContainer.first().hover();
-        for (int i = 0; i < 10; i++) {
-            Thread.sleep(200);
+        for (int i = 0; i < 20; i++) {
+            Thread.sleep(100);
             page.mouse().wheel(0, 500);
         }
     }
