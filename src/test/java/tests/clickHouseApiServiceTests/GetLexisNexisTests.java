@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisResponse;
-import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
-import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;

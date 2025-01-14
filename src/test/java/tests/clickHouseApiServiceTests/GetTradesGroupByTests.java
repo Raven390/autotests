@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByResponse;
-import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBy;
-import static businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedFactory.*;
+import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;

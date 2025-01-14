@@ -7,11 +7,11 @@ import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.crmTbWithdrawalTable.CrmTbWithdrawalObject;
+import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
-import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
-import businessObjects.db.clickhouse.mtMt5DealsCoercedTable.Mt5DealsCoercedObject;
-import businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObject;
+import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
+import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
 

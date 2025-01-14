@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataResponse;
-import businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObject;
+import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataRequest.getLexisNexisData;
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataResponse.Items.getItem;
-import static businessObjects.db.clickhouse.lnSessionParsedTable.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;

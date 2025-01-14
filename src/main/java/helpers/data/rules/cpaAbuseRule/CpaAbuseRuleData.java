@@ -3,7 +3,7 @@ package helpers.data.rules.cpaAbuseRule;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
-import businessObjects.db.clickhouse.mtTbUserTable.MtTbUserObject;
+import businessObjects.db.clickhouse.mtTbUser.MtTbUserObject;
 import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import helpers.data.ClientHelper;
 

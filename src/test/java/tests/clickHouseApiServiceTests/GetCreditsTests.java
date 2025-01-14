@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getCredits.GetCreditsResponse;
-import businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObject;
+import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCredits.GetCreditsRequest.getCredits;
-import static businessObjects.db.clickhouse.mtTbCreditsTable.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
