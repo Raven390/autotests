@@ -112,7 +112,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.account));
         assertThat("Assert profitUSD", mappedResponse.getFirst().profitUsd, is(trade1.profit));
         assertThat("Assert profit", mappedResponse.getFirst().profit, is(trade1.profit));
@@ -138,7 +138,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradeDate", mappedResponse.getFirst().tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse.getFirst().tradingAccount, is(trade1.account));
         assertThat("Assert profitUSD", mappedResponse.getFirst().profitUsd, is(trade1.profit));
         assertThat("Assert profit", mappedResponse.getFirst().profit, is(trade1.profit));

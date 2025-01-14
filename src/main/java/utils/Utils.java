@@ -50,6 +50,12 @@ public class Utils {
         return now.format(formatter);
     }
 
+    public static String getCurrentTimestampDbFormatMinusDays(int days) {
+        LocalDateTime now = LocalDateTime.now().minusDays(days);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
+    }
+
     public static String getTomorrowTimestampDbFormat() {
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -401,11 +407,6 @@ public class Utils {
 
     public static String formatTimeToUtc(String time) {
         return time.split("\\.")[0].replace(" ", "T") + "Z";
-    }
-
-    public static String formatTimeToUtcWithMs(String time) {
-        time = time.substring(0, time.length() - 3);
-        return time.replace(" ", "T") + "Z";
     }
 
     public static String getPrevious14DaysDateUtc() {

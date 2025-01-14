@@ -38,7 +38,6 @@ public class GetTradesTests extends TestBaseApi {
     private static Mt5DealsCoercedObject trade2;
     private static Mt5DealsCoercedObject trade3;
     private static Integer account;
-    private static final Integer serverId = 24;
 
     @BeforeAll
     public static void setupTrades() throws ReflectiveOperationException, SQLException {
@@ -83,7 +82,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", formatTimeToUtc(mappedResponse[0].tradeDate), is(formatTimeToUtc(trade1.time)));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.account));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
@@ -176,7 +175,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.deal));
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtcWithMs(trade1.time)));
+        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.time)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.account));
         assertThat("Assert action", mappedResponse[0].action, is(trade1.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade1.entry));
