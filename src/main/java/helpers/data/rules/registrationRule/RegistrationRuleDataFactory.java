@@ -7,7 +7,7 @@ import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import businessObjects.kafka.crmEvents.RegistrationEvent;
 import helpers.data.ClientHelper;
-import helpers.data.enums.Brands;
+import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
 
 import java.sql.SQLException;
@@ -297,12 +297,12 @@ public class RegistrationRuleDataFactory {
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version4Data() {
-        registrationRuleExitEventEnd7Version4Client.setBrand(Brands.VJP);
+        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.VJP);
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version4Client);
 
         // Abuser connected clients
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        connectedClientBonusAbuser.setBrand(Brands.VJP);
+        connectedClientBonusAbuser.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
@@ -381,12 +381,12 @@ public class RegistrationRuleDataFactory {
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version9Data() {
-        registrationRuleExitEventEnd7Version9Client.setBrand(Brands.VJP);
+        registrationRuleExitEventEnd7Version9Client.setBrand(Brand.VJP);
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version9Client);
 
         // Abuser connected clients
         ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        connectedClientNewsTrader.setBrand(Brands.VJP);
+        connectedClientNewsTrader.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version9Client, connectedClientNewsTrader);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));

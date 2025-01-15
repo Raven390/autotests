@@ -72,7 +72,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
@@ -103,7 +102,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -130,7 +128,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -157,7 +154,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -184,7 +180,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -211,7 +206,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -238,7 +232,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -265,7 +258,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -292,7 +284,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -319,7 +310,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -346,7 +336,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -375,7 +364,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser.brand);
         investigationPage.clickApplyFiltrationButton();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
         int initialItemsCount = auditTrailPage.getAuditTrailItems().size();

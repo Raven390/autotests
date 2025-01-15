@@ -535,17 +535,8 @@ public class InvestigationPage extends AbstractPage {
         );
     }
 
-    public void scrollClientCardsToBottom() throws InterruptedException {
-        clientContainer.first().hover();
-        for (int i = 0; i < 20; i++) {
-            Thread.sleep(100);
-            page.mouse().wheel(0, 500);
-        }
-    }
-
     @Step("Verify client cards count is equal to actual number of client cards in the list")
     public void verifyClientCardsCount() throws InterruptedException {
-        scrollClientCardsToBottom();
         String style = clientContainer.last().getAttribute("style");
         String regex = "top:\\s*(\\d+)px";
         Pattern pattern = Pattern.compile(regex);
@@ -708,9 +699,23 @@ public class InvestigationPage extends AbstractPage {
     }
 
     @Step("Click client card with client id {clientId}")
-    public void clickClientCardByClientId(String clientId) {
+    public void clickClientCardByClientId(String clientId) throws InterruptedException {
         Locator clientCard = page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId));
-        clientCard.hover();
-        clientCard.click();
+        if (clientCard.isVisible()) {
+            clientCard.hover();
+            clientCard.click();
+        } else {
+            clientContainer.first().hover();
+            for (int i = 0; i < 50; i++) {
+                Thread.sleep(100);
+                page.mouse().wheel(0, 500);
+                if (clientCard.isVisible()) {
+                    clientCard.hover();
+                    clientCard.click();
+                    return;
+                }
+            }
+            assert false : "The client card has not appeared after the scroll";
+        }
     }
 }

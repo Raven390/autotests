@@ -779,22 +779,22 @@ public class TradingPage extends AbstractPage {
         String volume = "Volume";
         // Open date
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today")).click();
-        assertThat(openDatePicker).hasValue(getCurrentDateUtc());
+        assertThat(openDatePicker).hasValue(Utils.getCurrentDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Yesterday")).click();
-        assertThat(openDatePicker).hasValue(getYesterdayDateUtc());
+        assertThat(openDatePicker).hasValue(Utils.getYesterdayDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 7 days")).click();
-        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPreviousWeekDateUtc(), getCurrentDateUtc()));
+        assertThat(openDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Last 30 days")).click();
-        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDateUtc(), getCurrentDateUtc()));
+        assertThat(openDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Close date
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Today")).click();
-        assertThat(closeDatePicker).hasValue(getCurrentDateUtc());
+        assertThat(closeDatePicker).hasValue(Utils.getCurrentDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Yesterday")).click();
-        assertThat(closeDatePicker).hasValue(getYesterdayDateUtc());
+        assertThat(closeDatePicker).hasValue(Utils.getYesterdayDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 7 days")).click();
-        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPreviousWeekDateUtc(), getCurrentDateUtc()));
+        assertThat(closeDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, closeDate, "Last 30 days")).click();
-        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDateUtc(), getCurrentDateUtc()));
+        assertThat(closeDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         // Profit
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, profit, "0-50")).click();
         assertThat(profitFromInput).hasValue("0 USD");

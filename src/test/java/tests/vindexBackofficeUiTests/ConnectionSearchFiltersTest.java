@@ -116,7 +116,7 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
+//        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(client.getUserId()));
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
@@ -330,7 +330,7 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
     @DisplayName("Verify connection search filtration. Last login filter")
     public void verifyConnectionSearchFiltration11Test() {
         connectionPage.clickFilterButton();
-        connectionPage.selectLastLogin(getCurrentDate(), getCurrentDateMinus7Days());
+        connectionPage.selectLastLogin(getCurrentDate(), getPreviousWeekDate());
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesUcids = connectionPage.getAllUnhiddenNodesUcids();
         assertThat("Verify all expected unhidden nodes are present", unhiddenNodesUcids, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient6.getUcid()));
