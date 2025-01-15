@@ -96,7 +96,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         generalPage.clickGeneralTabButton();
         generalPage.clickShowHiddenDataButton();
@@ -122,7 +121,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         generalPage.clickGeneralTabButton();
         generalPage.kycDetailsOpen("Proof of identity");
@@ -148,7 +146,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         generalPage.clickGeneralTabButton();
@@ -190,7 +187,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        investigationPage.scrollClientCardsToBottom();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class

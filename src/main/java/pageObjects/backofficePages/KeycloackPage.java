@@ -8,8 +8,7 @@ import io.qameta.allure.Step;
 
 import java.util.regex.Pattern;
 
-import static businessObjects.ui.user.UserFactory.coreUser;
-import static businessObjects.ui.user.UserFactory.firstLoginUser;
+import static businessObjects.ui.user.UserFactory.*;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class KeycloackPage extends AbstractPage {
@@ -54,6 +53,11 @@ public class KeycloackPage extends AbstractPage {
     @Step("Log in as core user")
     public void loginAsCoreUser() {
         loginWithUser(coreUser());
+    }
+
+    @Step("Log in as dev user")
+    public void loginAsDevUser() {
+        loginWithUser(devUser());
     }
 
     @Step("Check that authorisation is failed")

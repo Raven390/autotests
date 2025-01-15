@@ -7,6 +7,7 @@ import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.hamcrest.MatcherAssert;
+import utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Utils.*;
-import static utils.Utils.getCurrentDateUtc;
 
 public class ConnectionPage extends AbstractPage {
 
@@ -404,7 +404,7 @@ public class ConnectionPage extends AbstractPage {
 
     public void ccCheckDirectConnectionRows(String clientToName, String rowTitle, String expectedVale) {
         Allure.step("Check direct connection values, connect to user in field " + rowTitle);
-        String locator = ("//div[text() = 'Direct connections']/../../..//div[text() = 'Connect Tenthman']/../..//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
+        String locator = ("//div[text() = 'Direct connections']/../../..//div[text() = '" + clientToName + "']/../..//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
         System.out.println("searched element is " + locator);
         page.waitForSelector(locator);
         String actualValue = page.locator(locator).textContent();
@@ -651,17 +651,17 @@ public class ConnectionPage extends AbstractPage {
         waitForFilterToLoad();
         String lastLogin = "Last login";
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Today")).click();
-        assertThat(lastLoginDatePicker).hasValue(getCurrentDateUtc());
+        assertThat(lastLoginDatePicker).hasValue(Utils.getCurrentDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Yesterday")).click();
-        assertThat(lastLoginDatePicker).hasValue(getYesterdayDateUtc());
+        assertThat(lastLoginDatePicker).hasValue(Utils.getYesterdayDate());
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 7 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPreviousWeekDateUtc(), getCurrentDateUtc()));
+        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", Utils.getPreviousWeekDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 14 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious14DaysDateUtc(), getCurrentDateUtc()));
+        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious14DaysDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 30 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDateUtc(), getCurrentDateUtc()));
+        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious30DaysDate(), Utils.getCurrentDate()));
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, lastLogin, "Last 90 days")).click();
-        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious90DaysDateUtc(), getCurrentDateUtc()));
+        assertThat(lastLoginDatePicker).hasValue(String.format("%s to %s", getPrevious90DaysDateUtc(), Utils.getCurrentDate()));
     }
 
     @Step("Select Level filter option")

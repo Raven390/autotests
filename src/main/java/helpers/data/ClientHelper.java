@@ -1,8 +1,8 @@
 package helpers.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import helpers.data.enums.Brands;
-import helpers.data.enums.Regulators;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
 
 import java.util.Objects;
 
@@ -12,8 +12,8 @@ public class ClientHelper {
 
     private Integer userId;
     private String uid;
-    private Brands brand;
-    private Regulators regulator;
+    private Brand brand;
+    private Regulator regulator;
     private Integer tradingAccount;
     private Integer tradingAccount2;
     private Integer serverId;
@@ -31,7 +31,7 @@ public class ClientHelper {
     public ClientHelper() {
     }
 
-    public ClientHelper(Integer userId, String uid, Brands brand, Integer tradingAccount, Integer serverId) {
+    public ClientHelper(Integer userId, String uid, Brand brand, Integer tradingAccount, Integer serverId) {
         this.userId = userId;
         this.uid = uid;
         this.brand = brand;
@@ -40,7 +40,7 @@ public class ClientHelper {
     }
 
     public ClientHelper(
-            Integer userId, String uid, Brands brand, Integer tradingAccount, Integer tradingAccount2,
+            Integer userId, String uid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
             Integer serverId) {
         this.userId = userId;
         this.uid = uid;
@@ -50,7 +50,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
-    public ClientHelper(Integer userId, String uid, Regulators regulator, Brands brand, Integer tradingAccount,
+    public ClientHelper(Integer userId, String uid, Regulator regulator, Brand brand, Integer tradingAccount,
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {
         this.userId = userId;
@@ -67,7 +67,7 @@ public class ClientHelper {
     }
 
     public ClientHelper(
-            Integer userId, String uid, Regulators regulator, Brands brand, Integer tradingAccount,
+            Integer userId, String uid, Regulator regulator, Brand brand, Integer tradingAccount,
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
             String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth) {
@@ -119,11 +119,11 @@ public class ClientHelper {
         return regulator.getDisplayName();
     }
 
-    public void setBrand(Brands brand) {
+    public void setBrand(Brand brand) {
         this.brand = brand;
     }
 
-    public void setRegulator(Regulators regulator) {
+    public void setRegulator(Regulator regulator) {
         this.regulator = regulator;
     }
 

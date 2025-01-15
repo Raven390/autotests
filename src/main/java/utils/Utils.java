@@ -3,18 +3,18 @@ package utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import helpers.data.enums.Brands;
+import helpers.data.enums.Brand;
+import helpers.data.enums.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static helpers.data.enums.Brands.*;
+import static helpers.data.enums.Brand.*;
 
 public class Utils {
 
@@ -44,244 +44,141 @@ public class Utils {
         return Instant.now().getEpochSecond();
     }
 
-    public static String getCurrentTimestampDbFormat() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return now.format(formatter);
+    public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,
+            int hours, int minutes) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.US);
+        return LocalDateTime.now(ZoneOffset.UTC).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes).format(formatter);
     }
 
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
+            int hours, int minutes) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes);
+    }
+
+    public static String getCurrentTimestampDbFormat() {
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0);
+    }
+
+    @Deprecated
     public static String getCurrentTimestampDbFormatMinusDays(int days) {
-        LocalDateTime now = LocalDateTime.now().minusDays(days);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return now.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, days, 0, 0);
     }
 
     public static String getTomorrowTimestampDbFormat() {
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, -1, 0, 0);
     }
 
+    @Deprecated
     public static String getYesterdayTimestampDbFormat() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousWeekTimestampDbFormat() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusDays(7);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 0, 0);
     }
 
+    @Deprecated
     public static String getNextYearTimestampDbFormat() {
-        LocalDateTime tomorrow = LocalDateTime.now().plusYears(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, -1, 0, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousYearTimestampDbFormat() {
-        LocalDateTime date = LocalDateTime.now().minusYears(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return date.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 0, 0);
     }
 
-    public static String getPreviousWeekTimestampYearMonthDay() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusWeeks(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return tomorrow.format(formatter);
+    @Deprecated
+    public static String getPreviousWeekDate() {
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 6, 0, 0);
     }
 
+    @Deprecated
     public static String getPrevious90DaysTimestampYearMonthDay() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusDays(90);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 90, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousMonthTimestampYearMonthDay() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusMonths(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 1, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getPrevious6MonthTimestampYearMonthDay() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusMonths(6);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 6, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousYearTimestampYearMonthDay() {
-        LocalDateTime tomorrow = LocalDateTime.now().minusYears(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return tomorrow.format(formatter);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0);
     }
 
-    public static String getPreviousYearMinusDayTimestampYearMonthDayDbFormat() {
-        LocalDateTime date = LocalDateTime.now().minusYears(1).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println("getPreviousYearMinusDayTimestampYearMonthDayDbFormat date is " + date.format(formatter));
-        return date.format(formatter);
+    public static String getYesterdayDate() {
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0);
     }
 
-    public static String getPreviousYearMinusMonthTimestampYearMonthDayDbFormat() {
-        LocalDateTime date = LocalDateTime.now().minusYears(1).minusMonths(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println("getPreviousYearMinusDayTimestampYearMonthDayDbFormat date is " + date.format(formatter));
-        return date.format(formatter);
-    }
-
-    public static String getPreviousDayTimestampYearMonthDay() {
-        LocalDateTime date = LocalDateTime.now().minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
-    }
-
-    public static String getPreviousDayTimestampYearMonthDayByIntDay(int step) {
-        LocalDateTime date = LocalDateTime.now().minusDays(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
-    }
-
-    public static String getPreviousDayTimestampYearMonthDayByIntMonth(int step) {
-        LocalDateTime date = LocalDateTime.now().minusMonths(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
-    }
-
-    public static String getPreviousDayTimestampYearMonthDayByIntMonthMinus1Day(int step) {
-        LocalDateTime date = LocalDateTime.now().minusMonths(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
-    }
-
-    public static String getNextDayTimestampYearMonthDayByInt(int step) {
-        LocalDateTime date = LocalDateTime.now().plusDays(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return date.format(formatter);
-    }
-
+    @Deprecated
     public static String getCurrentDateTime() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted("yyyy-MM-dd_HH-mm-ss", 0, 0, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getCurrentDateMonthDay() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, 0, 0, 0, 0);
     }
 
     public static String getPreviousDayMonthDayByIntDay(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, 0, step, 0, 0);
     }
 
-    public static String getNextDayMonthDayByInt(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().plusDays(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
-        return formatter.format(currentDateTime);
-    }
-
+    @Deprecated
     public static String getPreviousDayMonthDay() {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd", Locale.US);
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, 0, 1, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousDateMonthYearIntYears(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusYears(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
-        return formatter.format(dateTime);
-    }
-
-    public static String getPreviousMonthMonth01YearIntMonth(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM 01’yy");
-        return formatter.format(dateTime);
-    }
-
-    public static String getPreviousMonthMonth01YearIntMonthMinus1day(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM 01’yy");
-        return formatter.format(dateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_YEAR, step, 0, 0, 0, 0);
     }
 
     public static String getPreviousDateMonthYearIntMonth(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusMonths(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
-        return formatter.format(dateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, step, 1, 0, 0);
     }
 
     public static String getCurrentDateMonthYear() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM yyyy", Locale.US);
-        return formatter.format(dateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, 0, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getCurrentYear() {
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
-        return formatter.format(dateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.YEAR, 0, 0, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousYearByInt(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusYears(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
-        return formatter.format(dateTime);
-    }
-
-    public static String getPreviousYearByIntMinus1day(int step) {
-        LocalDateTime dateTime = LocalDateTime.now().minusYears(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
-        return formatter.format(dateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.YEAR, step, 0, 0, 0, 0);
     }
 
     public static String getCurrentDate() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 0, 0, 0);
     }
 
-    public static String getCurrentDateMinus7Days() {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(7);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
-    }
-
-    public static String getPreviousDateYearMonthDayByIntMonth(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusMonths(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
-    }
-
+    @Deprecated
     public static String getPreviousDateYearMonthDayByIntMonthMinus1Day(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusMonths(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, step, 1, 0, 0);
     }
 
     public static String getPreviousDayByIntDaysYearMonthDay(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusDays(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, step, 0, 0);
     }
 
     public static String getPreviousDateByIntYearMonthDay(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, step, 0, 0, 0, 0);
     }
 
+    @Deprecated
     public static String getPreviousYearByIntYearMonthDayMinus1day(int step) {
         LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
-    }
-
-    public static String getNextDayByIntYearMonthDay(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().plusDays(step);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return formatter.format(currentDateTime);
     }
@@ -369,8 +266,8 @@ public class Utils {
         return time;
     }
 
-    public static String getUcidByUserIdAndBrand(Integer userId, Brands brand) {
-        Map<Brands, String> brandToUcidBrandMap = new HashMap<>();
+    public static String getUcidByUserIdAndBrand(Integer userId, Brand brand) {
+        Map<Brand, String> brandToUcidBrandMap = new HashMap<>();
         brandToUcidBrandMap.put(VANTAGE, "vantage");
         brandToUcidBrandMap.put(VJP, "vjp");
         brandToUcidBrandMap.put(VT, "vt");
@@ -389,31 +286,22 @@ public class Utils {
         return dateTime.format(outputFormatter);
     }
 
-    public static String getCurrentDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).toString();
-    }
-
-    public static String getYesterdayDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).minusDays(1).toString();
-    }
-
-    public static String getPreviousWeekDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).minusDays(6).toString();
-    }
-
-    public static String getPrevious30DaysDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).minusDays(29).toString();
+    @Deprecated
+    public static String getPrevious30DaysDate() {
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 29, 0, 0);
     }
 
     public static String formatTimeToUtc(String time) {
         return time.split("\\.")[0].replace(" ", "T") + "Z";
     }
 
-    public static String getPrevious14DaysDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).minusDays(13).toString();
+    @Deprecated
+    public static String getPrevious14DaysDate() {
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 13, 0, 0);
     }
 
+    @Deprecated
     public static String getPrevious90DaysDateUtc() {
-        return LocalDate.now(ZoneOffset.UTC).minusDays(89).toString();
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 89, 0, 0);
     }
 }
