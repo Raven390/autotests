@@ -62,6 +62,9 @@ public class RestrictionPage extends AbstractPage {
     private final Locator approveAllwithdrawalsButton;
     private final Locator rejectAllwithdrawalsButton;
     private final Locator approveFirstButton;
+    private final Locator accountLabel;
+    private final Locator activitySection;
+    private final Locator tooltip;
 
 
     public RestrictionPage(Page page) {
@@ -103,6 +106,9 @@ public class RestrictionPage extends AbstractPage {
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
+        this.accountLabel = page.locator(".v-restriction-tab-trading-modal__labels");
+        this.activitySection = page.locator(".v-restriction-tab-trading-modal__activity");
+        this.tooltip = page.locator(".g-tooltip__content");
     }
 
     @Step("Open users restriction tab")
@@ -339,8 +345,24 @@ public class RestrictionPage extends AbstractPage {
         page.waitForTimeout(1000);
     }
 
+
+    public void fillCancelReasonManualWithdrawalApproveOneByPaymentType(String reason, String paymentType) {
+        Allure.step("Approve one withdrawal while reject all others");
+        page.waitForTimeout(1000);
+        isPageLoaded();
+        assertTrue(dialog.isVisible());
+        assertTrue(withdrawalList.isVisible());
+        rejectAllwithdrawalsButton.click();
+        clickApproveWithdrawalByPaymentType(paymentType);
+        reasonInput.fill(reason);
+        restrictionCancelSet.click();
+        cancelToast.isVisible();
+        page.waitForTimeout(1000);
+    }
+
     @Step("Fill cancel reason")
     public void fillCancelReasonTrade(String reason) {
+        Allure.step("Fill cancel reason");
         page.waitForTimeout(1000);
         isPageLoaded();
         dialog.isVisible();
@@ -351,8 +373,22 @@ public class RestrictionPage extends AbstractPage {
         page.waitForTimeout(1000);
     }
 
+    public void clickApproveWithdrawalByPaymentType(String paymentType) {
+        Allure.step("click approve withdrawal on selected transaction");
+        String locator = "//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[1]";
+        page.waitForSelector(locator);
+        page.locator(locator).click();
+    }
+
+    public void clickRefuseWithdrawalByPaymentType(String paymentType) {
+        Allure.step("click refuse withdrawal on selected transaction");
+        page.waitForSelector("//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[2]");
+        page.locator("//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[2]").click();
+    }
+
     @Step("Check request to apply message")
-    public void checkKafkaRequestApplyUCID(String userId) throws JsonProcessingException, InterruptedException {
+    public void checkKafkaRequestApplyUCID(int userIdInt) throws JsonProcessingException, InterruptedException {
+        String userId = String.valueOf(userIdInt);
         Thread.sleep(4000);
         System.out.println("we search user " + userId);
         KafkaHelper helper = new KafkaHelper();
@@ -386,7 +422,7 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
-        apply.transferId.toString().equals(transactionID);
+        assertEquals(apply.transferId.toString(), (transactionID));
         assertNotNull((apply.regulator));
         assertNotNull((apply.brand));
         assertNotNull((apply.timestamp));
@@ -444,7 +480,7 @@ public class RestrictionPage extends AbstractPage {
         String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        apply.clientId.equals(userId);
+        assertEquals(apply.clientId.toString(), userId);
         assertNotNull((apply.clientId));
         assertNotNull((apply.timestamp));
         assertNotNull((apply.messageId));
@@ -567,6 +603,24 @@ public class RestrictionPage extends AbstractPage {
         readMessagesFromClientApply(ucid);
         readMessagesFromWithdrawalApprovals(ucid);
 
+    }
+
+    public void isInactiveAccountLabelPresented() {
+        Allure.step("check that account label is presented and have text 'inactive'");
+        String label = accountLabel.nth(0).textContent();
+        assertEquals("Inactive", label);
+
+    }
+
+    public void hoverOverActivitySection() {
+        Allure.step("hover mouse over account activity section (with the date or day)");
+        activitySection.nth(0).hover();
+    }
+
+    public void checkTooltipText(String text) {
+        Allure.step("check that appeared tooltip have text '" + text + "'");
+        String label = tooltip.textContent();
+        assertEquals(text, label);
     }
 
 
