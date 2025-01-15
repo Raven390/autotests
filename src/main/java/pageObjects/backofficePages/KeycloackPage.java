@@ -29,6 +29,7 @@ public class KeycloackPage extends AbstractPage {
         this.breadcrumbs = page.locator(".breadcrumps");
     }
 
+    @Deprecated
     @Step("Log In trough UI")
     public void loginWeb(String userName, String userPass) {
         Allure.step("Login Web");

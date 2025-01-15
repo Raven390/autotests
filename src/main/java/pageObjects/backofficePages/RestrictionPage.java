@@ -32,6 +32,7 @@ public class RestrictionPage extends AbstractPage {
     private final Locator withdrawalsSwitch;
     private final Locator loginSwitch;
     private final Locator manualSwitch;
+    private final Locator creditAndBonusSwitch;
     private final Locator closeSwitch;
     private final Locator offQuotesSwitch;
     private final Locator abBookSwitch;
@@ -52,6 +53,7 @@ public class RestrictionPage extends AbstractPage {
     private final Locator checkedWithdrawals;
     private final Locator checkedLogin;
     private final Locator checkedManual;
+    private final Locator checkedCreditAndBonus;
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
     private final Locator selectAllAccCheckbox;
@@ -78,6 +80,7 @@ public class RestrictionPage extends AbstractPage {
         this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Withdrawals");
         this.loginSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Login CRM");
         this.manualSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Manual Withdrawal Review");
+        this.creditAndBonusSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Credit and Bonus");
         this.closeSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Close only mode");
         this.offQuotesSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Off quotes");
         this.abBookSwitch = page.locator(".v-restrictions-tab-item__name").getByText("B-Book -> A-Book");
@@ -99,6 +102,7 @@ public class RestrictionPage extends AbstractPage {
         this.checkedWithdrawals = page.locator(".v-restrictions-tab-item_checked").getByText("Withdrawals");
         this.checkedLogin = page.locator(".v-restrictions-tab-item_checked").getByText("Login CRM");
         this.checkedManual = page.locator(".v-restrictions-tab-item_checked").getByText("Manual Withdrawal Review");
+        this.checkedCreditAndBonus = page.locator(".v-restrictions-tab-item_checked").getByText("Credit and Bonus");
         this.checkedCloseOnlyMode = page.locator(".v-restrictions-tab-item_checked").getByText("Close only mode");
         this.checkedOffQuotesMode = page.locator(".v-restrictions-tab-item_checked").getByText("Off quotes");
         this.checkedAbBook = page.locator(".v-restrictions-tab-item_checked").getByText("B-Book -> A-Book");
@@ -172,6 +176,11 @@ public class RestrictionPage extends AbstractPage {
         manualSwitch.click();
     }
 
+    @Step("Set Credit and Bonus restriction")
+    public void clickCreditAndBonusSwitch() {
+        creditAndBonusSwitch.click();
+    }
+
     @Step("Set Close only mode restriction")
     public void clickCloseOnlyModeSwitch() {
         closeSwitch.click();
@@ -232,6 +241,11 @@ public class RestrictionPage extends AbstractPage {
         checkedManual.isVisible();
     }
 
+    @Step("Check that Credit and Bonus restriction tumbler is checked")
+    public void checkThatCreditAndBonusIsChecked() {
+        checkedCreditAndBonus.isVisible();
+    }
+
     @Step("Click checked account tumbler")
     public void clickCheckedAccount() {
         checkedAccount.click();
@@ -260,6 +274,11 @@ public class RestrictionPage extends AbstractPage {
     @Step("Click checked Manual Withdrawal Review tumbler")
     public void clickCheckedManual() {
         checkedManual.click();
+    }
+
+    @Step("Click checked Credit and Bonus tumbler")
+    public void clickCheckedCreditAndBonus() {
+        checkedCreditAndBonus.click();
     }
 
     @Step("Click checked Close Only Mode tumbler")

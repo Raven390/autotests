@@ -11,7 +11,6 @@ import io.qameta.allure.Step;
 import java.sql.SQLException;
 import java.util.List;
 
-import static businessObjects.ui.user.UserFactory.coreUser;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,8 +26,8 @@ public class BoHelper {
         );
     }
 
-    @Step("delete user from BO")
-    public static void deleteUserBO(String ucid) throws Exception {
+    @Step("Delete user from BO")
+    public static void deleteUserBO(String ucid) {
         Allure.step("delete user from BO");
         try {
             List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
@@ -44,8 +43,8 @@ public class BoHelper {
         }
     }
 
-    public static void cleanUserFraudsDb(String ucid) throws Exception {
-        Allure.step("delete user's frauds from BO");
+    public static void cleanUserFraudsDb(String ucid) {
+        Allure.step("Delete user's frauds from BO");
         try {
             List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
             int boId = client.getFirst().id;
@@ -78,7 +77,6 @@ public class BoHelper {
     public static void checkUserNoFraudDb(String ucid) throws Exception {
         Allure.step("Check that user not have records about frauds in db");
         Thread.sleep(2000);
-        long fraud = 0;
 
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
@@ -107,7 +105,6 @@ public class BoHelper {
     public static void checkUserAlertConfirmation(String ucid, boolean expectedConfirmation) throws Exception {
         Allure.step("Check confirmation status of alert in DB");
         Thread.sleep(2000);
-        long fraud = 0;
 
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
@@ -121,7 +118,7 @@ public class BoHelper {
     @Step("Get user_id from bo db by user")
     public static String getUserIdByUser(User user) throws Exception {
         return getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", coreUser().getEmail()), BackofficeUser.class
+                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", user.getEmail()), BackofficeUser.class
         ).getFirst().id;
     }
 

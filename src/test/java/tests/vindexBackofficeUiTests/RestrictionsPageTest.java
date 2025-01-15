@@ -268,6 +268,38 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
+    @AllureId("742")
+    @DisplayName("Restriction tab set Credit and Bonus Review restriction UI")
+    void setCreditAndBonusRestrictionUITest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.clickCreditAndBonusSwitch();
+        restrictionPage.fillApplyReason("test reason");
+        restrictionPage.checkThatCreditAndBonusIsChecked();
+        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Credit and Bonus");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("743")
+    @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
+    void cancelCreditAndBonusRestrictionUITest() throws Exception {
+        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "14");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.checkThatCreditAndBonusIsChecked();
+        restrictionPage.clickCheckedCreditAndBonus();
+        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Credit and Bonus");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
     @AllureId("361")
     @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions all green")
     void cancelManualWithdrawalRestrictionUITestWithTransactionsGreenTest() throws Exception {

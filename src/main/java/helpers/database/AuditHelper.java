@@ -6,9 +6,8 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 
 public class AuditHelper {
 
-    @Step("clean users audit history")
+    @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
-
     }
 }
