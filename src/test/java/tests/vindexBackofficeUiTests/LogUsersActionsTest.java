@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbKycFiles.KycFilesTableEntryFactory.getKycFile;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
@@ -40,6 +41,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static CrmTbUserObject crmTbUser;
+    private static CrmTbUserObject crmTbUserConnected;
     private static CrmTbAccountObject account;
     private static String userId;
     private static CrmTbWithdrawalObject withdrawal;
@@ -48,7 +50,11 @@ public class LogUsersActionsTest extends TestBaseWeb {
     public static void setup() throws Exception {
         ClientHelper client = getRandomVantageClientAllFields();
         crmTbUser = generateUserByClient(client);
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        crmTbUserConnected = generateUserByClient(connectedClient);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUserConnected);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, getConnectionTableEntryForUi(client, connectedClient));
         insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
         insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
         account = generateCrmTbAccountDataForUi(client);
@@ -99,11 +105,18 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         generalPage.clickGeneralTabButton();
         generalPage.clickShowHiddenDataButton();
+        connectionPage.clickConnectionTabButton();
+        connectionPage.openConnectionCard(crmTbUser.ucid);
+        connectionPage.clickUnmaskConnectionCardDataButton();
+        connectionPage.openConnectionTable();
+        connectionPage.clickUnmaskConnectionTableDataButton();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
+                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s' AND entity = 'SENSITIVE_DATA'", userId), UserActionAudit.class
         );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
+        UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditConnectionTable = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditGeneral, expectedUserActionAuditConnection, expectedUserActionAuditConnectionTable));
     }
 
     @Test
@@ -304,7 +317,6 @@ public class LogUsersActionsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }
