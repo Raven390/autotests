@@ -54,6 +54,8 @@ public class ConfigFactory {
     public static final String CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT = CONFIG.connectionSearchGetAbuseTypesByClient();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES = CONFIG.connectionSearchGetAbuseTypesByAttributes();
     // Mitigation service
     public static final String MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath();
     public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
@@ -262,6 +264,12 @@ public class ConfigFactory {
 
         @Key("connectionSearchGetConnectionsByAttributes")
         String connectionSearchGetConnectionsByAttributes();
+
+        @Key("connectionSearchGetAbuseTypesByClient")
+        String connectionSearchGetAbuseTypesByClient();
+
+        @Key("connectionSearchGetAbuseTypesByAttributes")
+        String connectionSearchGetAbuseTypesByAttributes();
 
         // Mitigation service
 
