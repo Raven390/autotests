@@ -1,21 +1,59 @@
 package tests.vindexBackofficeUiTests;
 
-import helpers.kafka.alerts.CreateSimpleAlert;
+
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import okhttp3.Response;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
 import static helpers.database.AuditHelper.cleanUserAudit;
 import static helpers.database.BoHelper.*;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static utils.Constants.LAYER_WEB;
-import static utils.Constants.TEAM_BACKOFFICE;
+import static utils.Constants.*;
 
 public class ResolveTest extends TestBaseWeb {
+
+
+    static ClientHelper withdrawalClient = new ClientHelper(141_402, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.INFINOX, Regulator.VFSC2, 14_140_102, 42);
+
+    @BeforeAll
+    public static void setup() throws Exception {
+        CrmTbUserObject withdrawalClientDB = generateStaticUserByClient(withdrawalClient);
+        CrmTbWithdrawalObject withdrawal1 = generateStaticWithdrawalByClient(withdrawalClient, "first withdrawal", 1);
+        CrmTbWithdrawalObject withdrawal2 = generateStaticWithdrawalByClient(withdrawalClient, "second withdrawal", 2);
+        CrmTbWithdrawalObject withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
+
+        insertObjectToDb(CRM_USER_TABLE_NAME, withdrawalClientDB);
+
+        List<CrmTbWithdrawalObject> withdrawals = new ArrayList<>();
+        withdrawals.add(withdrawal1);
+        withdrawals.add(withdrawal2);
+        withdrawals.add(withdrawal3);
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawals);
+
+
+        CrmTbAccountObject account = generateStaticCrmTbAccountActive(withdrawalClient);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -28,15 +66,15 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
+        createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove();
-        String details = "Transaction ID 141402; 5.00 USD 2024-11-13 10:11 crypto; Accept";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("141402", "5");
+        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
 
     }
 
@@ -52,15 +90,15 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
+        createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
-        String details = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("141404", "4");
+        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Refuse";
+        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "4");
     }
 
     @Test
@@ -77,27 +115,26 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
+        createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveWithdrawalsApproveFirst();
-        resolvePage.resolveWithdrawalsApproveFirst();
-        String details1 = "Transaction ID 141404; 71.00 USDT 2024-11-13 10:11 bank trasfer; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("141404", "4");
+        resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
+        String details1 = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
         //second run
         cleanUserAudit("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
         Response response1 = enableCRMEmulator();
         assertNotNull(response1);
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        CreateSimpleAlert.createSimpleAlert("infinox-141402", "CPA");
+        createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveWithdrawalsApproveFirst();
-        String details2 = "Transaction ID 141401; 5.00 USD 2024-11-13 10:11 bank card; Accept";
-        restrictionPage.checkRestrictionCancellationAudit("infinox-141402", "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("141401", "5");
+        resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
+        String details2 = "Transaction ID 14140203; 71.00 USDT 2024-11-13 10:11 third withdrawal; Refuse";
+        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
+        restrictionPage.checkKafkaRequestWithdrawal("14140203", "4");
     }
 
     @Test
@@ -110,7 +147,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientId = "161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigate();
@@ -128,7 +165,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -145,7 +182,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "AFFILIATE_ABUSE");
+        createSimpleAlert(clientUcid, "AFFILIATE_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -165,7 +202,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -185,7 +222,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "GAP_TRADING");
+        createSimpleAlert(clientUcid, "GAP_TRADING");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -204,7 +241,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "HEDGING");
+        createSimpleAlert(clientUcid, "HEDGING");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -223,7 +260,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "LATENCY_ARBITRAGE");
+        createSimpleAlert(clientUcid, "LATENCY_ARBITRAGE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -242,7 +279,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "LOSS_VOUCHER_ABUSE");
+        createSimpleAlert(clientUcid, "LOSS_VOUCHER_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -261,7 +298,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "MARKET_MANIPULATION");
+        createSimpleAlert(clientUcid, "MARKET_MANIPULATION");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -280,7 +317,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "NBP_ABUSE");
+        createSimpleAlert(clientUcid, "NBP_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -299,7 +336,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "POTENTIAL_ABUSE");
+        createSimpleAlert(clientUcid, "POTENTIAL_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -318,7 +355,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "PRICING_ERRORS");
+        createSimpleAlert(clientUcid, "PRICING_ERRORS");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -337,7 +374,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "RAF_ABUSE");
+        createSimpleAlert(clientUcid, "RAF_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -356,7 +393,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "REBATE_CHURNING");
+        createSimpleAlert(clientUcid, "REBATE_CHURNING");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -375,7 +412,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "SWAP_ARBITRAGE");
+        createSimpleAlert(clientUcid, "SWAP_ARBITRAGE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -394,7 +431,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -413,7 +450,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -433,7 +470,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -452,7 +489,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -470,7 +507,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -489,7 +526,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -508,7 +545,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -531,7 +568,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "01");
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
         keycloackPage.loginWeb("dev", "123");
         investigationPage.navigateToClient(clientUcid);
@@ -545,10 +582,32 @@ public class ResolveTest extends TestBaseWeb {
         Response response2 = enableCRMEmulator();
         assertNotNull(response2);
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "05");
-        CreateSimpleAlert.createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.checkRestrictionIsDisplayed("Login CRM");
     }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("744")
+    @DisplayName("Resolve Flow. User can comment suspicious client outside of resolve screen")
+    public void commentOutsideResolve() throws Exception {
+        String clientUcid = "infinox-161601";
+        String comment = "test" + timestamp;
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        createSimpleAlert(clientUcid, "CPA");
+        investigationPage.navigate();
+        keycloackPage.loginWeb("dev", "123");
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        investigationPage.openCommentForm();
+        investigationPage.fillCommentForm(comment);
+        investigationPage.submitCommentForm();
+
+    }
+
 }

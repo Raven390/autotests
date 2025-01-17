@@ -92,6 +92,8 @@ public class InvestigationPage extends AbstractPage {
     private final Locator countryCheckboxes;
     private final Locator assigneeCheckboxes;
     private final Locator assignButton;
+    private final Locator commentButton;
+    private final Locator closeToastButtom;
 
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
@@ -172,6 +174,8 @@ public class InvestigationPage extends AbstractPage {
         this.countryCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__countries']/descendant::label[contains(@class,'g-checkbox')]");
         this.assigneeCheckboxes = page.locator("//div[@data-qa='suspicious_client_filters__assignees']/descendant::label[contains(@class,'g-checkbox')]");
         this.assignButton = page.locator("//button[@data-qa='investigation_tools__client_card_assign_button']");
+        this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
+        this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
     }
 
     @Step("Open the BackOffice main page")
@@ -365,7 +369,7 @@ public class InvestigationPage extends AbstractPage {
     }
 
     @Step("Open add comment form")
-    public void openCommentForm() {
+    public void openCommentFormResolve() {
         Allure.step("Open add comment form");
         addCommentButton.click();
         assertTrue(addCommentPopup.isVisible());
@@ -398,7 +402,7 @@ public class InvestigationPage extends AbstractPage {
     public void investigateUserAlertList(String userId) {
         Allure.step("take client to investigation from the alert list");
         int attempts = 0;
-        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 50) {
+        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 500) {
             suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
 //            page.waitForTimeout(500);
@@ -416,6 +420,11 @@ public class InvestigationPage extends AbstractPage {
         investigateButton.click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
+        if (successToast.isVisible()) {
+            closeToastButtom.click();
+        } else {
+            page.waitForTimeout(1);
+        }
     }
 
     public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
@@ -696,6 +705,13 @@ public class InvestigationPage extends AbstractPage {
     @Step("Verify client card with client id {clientId} is visible")
     public void verifyClientCardWithClientIdVisible(String clientId) {
         assertThat("Assert client card with client id is visible", page.locator(String.format(CLIENT_CARD_BY_CLIENT_ID_PATTERN, clientId)).isVisible(), equalTo(true));
+    }
+
+
+    public void openCommentForm() {
+        commentButton.click();
+        addCommentInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+
     }
 
     @Step("Click client card with client id {clientId}")

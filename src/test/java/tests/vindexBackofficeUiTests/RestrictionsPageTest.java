@@ -44,6 +44,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         CrmTbWithdrawalObject withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
 
         CrmTbAccountObject active = generateStaticCrmTbAccountActive(restrictionClient);
+        CrmTbAccountObject active2 = generateStaticCrmTbAccountActive(withdrawalClient);
         CrmTbAccountObject inactive = generateStaticCrmTbAccountInactive(labelClient);
 
         List<CrmTbUserObject> testUser = new ArrayList<>();
@@ -61,6 +62,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         List<CrmTbAccountObject> accounts = new ArrayList<>();
         accounts.add(active);
         accounts.add(inactive);
+        accounts.add(active2);
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, accounts);
     }
 
