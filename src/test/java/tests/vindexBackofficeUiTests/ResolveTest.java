@@ -68,7 +68,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove();
@@ -92,7 +92,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
         createSimpleAlert("infinox-141402", "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
@@ -108,7 +108,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOneTest() throws Exception {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         //first run
         cleanUserAudit("infinox-141402");
         restrictionPage.cleanUserRestriction("infinox-141402");
@@ -149,7 +149,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigate();
         investigationPage.filterUnassigned();
         investigationPage.investigateUserAlertList(clientId);
@@ -167,7 +167,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         investigationPage.checkInvestigationAssigmentAudit(clientUcid);
@@ -177,34 +177,33 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("301")
-    @DisplayName("BO user can resolve client in with fraud type Affiliate abuse")
-    public void resolveClientAffiliateAbuseTest() throws Exception {
+    @DisplayName("BO user can resolve client in with fraud type BONUS_ABUSE")
+    public void resolveClientBonusAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "AFFILIATE_ABUSE");
+        createSimpleAlert(clientUcid, "BONUS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 8);
-
+        checkUserFraudDb(clientUcid, 15);
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("300")
-    @DisplayName("BO user can resolve client in with fraud type CPA")
+    @DisplayName("BO user can resolve client in with fraud type CPA_ABUSE")
     public void resolveClientCpaTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, "CPA_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -217,14 +216,14 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("298")
-    @DisplayName("BO user can resolve client in with fraud type Gap trading")
+    @DisplayName("BO user can resolve client in with fraud type GAP_TRADING")
     public void resolveClientGapTradingTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "GAP_TRADING");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -243,7 +242,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "HEDGING");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -262,7 +261,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "LATENCY_ARBITRAGE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -281,7 +280,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "LOSS_VOUCHER_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -300,7 +299,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "MARKET_MANIPULATION");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -319,7 +318,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "NBP_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -338,7 +337,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "POTENTIAL_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -357,7 +356,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "PRICING_ERRORS");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -376,7 +375,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "RAF_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -395,7 +394,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "REBATE_CHURNING");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -414,7 +413,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "SWAP_ARBITRAGE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -433,12 +432,88 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveSimple("test" + timestamp);
         checkUserFraudDb(clientUcid, 13);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("762")
+    @DisplayName("BO user can resolve client in with fraud type LOOPHOLE_ABUSE")
+    public void resolveClientLoopholeAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        createSimpleAlert(clientUcid, "LOOPHOLE_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
+        checkUserFraudDb(clientUcid, 16);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("763")
+    @DisplayName("BO user can resolve client in with fraud type HFT_ABUSE")
+    public void resolveClientHfyAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        createSimpleAlert(clientUcid, "HFT_ABUSE");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
+        checkUserFraudDb(clientUcid, 17);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("764")
+    @DisplayName("BO user can resolve client in with fraud type NEWS_TRADER")
+    public void resolveClientNewsTraderAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        createSimpleAlert(clientUcid, "NEWS_TRADER");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
+        checkUserFraudDb(clientUcid, 18);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("765")
+    @DisplayName("BO user can resolve client in with fraud type ANOMALOUS_PROFIT")
+    public void resolveClientAnomalousProfitAbuseTest() throws Exception {
+        String clientUcid = "infinox-161601";
+        deleteUserBO(clientUcid);
+        cleanUserAudit(clientUcid);
+        createSimpleAlert(clientUcid, "ANOMALOUS_PROFIT");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        investigationPage.navigateToClient(clientUcid);
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveSimple("test" + timestamp);
+        checkUserFraudDb(clientUcid, 19);
     }
 
     @Test
@@ -452,7 +527,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -472,7 +547,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -491,7 +566,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -509,7 +584,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -528,7 +603,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -547,7 +622,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -570,7 +645,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "01");
         createSimpleAlert(clientUcid, "TLS_ABUSE");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -601,7 +676,7 @@ public class ResolveTest extends TestBaseWeb {
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, "CPA");
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         investigationPage.openCommentForm();
