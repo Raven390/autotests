@@ -313,9 +313,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllGreen("test reason");
-        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
     }
 
@@ -333,9 +333,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
-        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Refuse";
+        String details = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
     }
 
@@ -355,9 +355,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
-        String details1 = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
         //second run
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
@@ -366,9 +366,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
-        String details2 = "Transaction ID 14140203; 71.00 USDT 2024-11-13 10:11 third withdrawal; Refuse";
+        String details2 = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("14140203", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("14140203", "Refuse");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
     }
 

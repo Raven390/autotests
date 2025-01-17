@@ -19,6 +19,9 @@ public class WithdrawalApprovals {
     @JsonProperty("regulator")
     public String regulator;
 
+    @JsonProperty("internalReason")
+    public String internalReason;
+
     @JsonProperty("status")
     public String status;
 

@@ -61,20 +61,20 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions approve all")
     public void resolveWithWithdrawalsApproveAllTest() throws Exception {
-        cleanUserAudit("infinox-141402");
-        restrictionPage.cleanUserRestriction("infinox-141402");
+        cleanUserAudit(withdrawalClient.getUcid());
+        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        createSimpleAlert("infinox-141402", "CPA");
+        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
+        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove();
-        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
 
     }
 
@@ -84,21 +84,20 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions reject all")
     public void resolveWithWithdrawalsRejectAllTest() throws Exception {
-        cleanUserAudit("infinox-141402");
-//        restrictionPage.cleanKafka("infinox-141402");
-        restrictionPage.cleanUserRestriction("infinox-141402");
+        cleanUserAudit(withdrawalClient.getUcid());
+        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        createSimpleAlert("infinox-141402", "CPA");
+        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
+        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
-        String details = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Refuse";
+        String details = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
     }
 
     @Test
@@ -110,31 +109,31 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         //first run
-        cleanUserAudit("infinox-141402");
-        restrictionPage.cleanUserRestriction("infinox-141402");
+        cleanUserAudit(withdrawalClient.getUcid());
+        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        createSimpleAlert("infinox-141402", "CPA");
-        investigationPage.navigateToClient("infinox-141402");
+        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
+        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
-        String details1 = "Transaction ID 14140201; 71.00 USDT 2024-11-13 10:11 first withdrawal; Accept";
+        String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "5");
+        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
         //second run
-        cleanUserAudit("infinox-141402");
-        restrictionPage.cleanUserRestriction("infinox-141402");
+        cleanUserAudit(withdrawalClient.getUcid());
+        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response1 = enableCRMEmulator();
         assertNotNull(response1);
-        restrictionPage.setRestrictionAPIGeneral("infinox-141402", "13");
-        createSimpleAlert("infinox-141402", "CPA");
-        investigationPage.navigateToClient("infinox-141402");
+        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
+        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
-        String details2 = "Transaction ID 14140203; 71.00 USDT 2024-11-13 10:11 third withdrawal; Refuse";
+        String details2 = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("14140203", "4");
+        restrictionPage.checkKafkaRequestWithdrawal("14140203", "Refuse");
     }
 
     @Test
