@@ -216,6 +216,7 @@ public class ResolvePage extends AbstractPage {
         assertNotNull((apply.brand));
         assertNotNull((apply.timestamp));
         assertNotNull((apply.status));
+        assertNotNull((apply.internalReason));
         assertEquals(expectedStatus, (apply.status));
     }
 
