@@ -49,6 +49,7 @@ public class AssignmentTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
