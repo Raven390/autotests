@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import helpers.data.enums.Brand;
 import helpers.data.enums.DateTimeFormat;
@@ -181,6 +182,16 @@ public class Utils {
         LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step).minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return formatter.format(currentDateTime);
+    }
+
+    public static Double getRandomDouble(double min, double max) {
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
+
+    public static Double getRandomRoundedDouble(double min, double max) {
+        double random = ThreadLocalRandom.current().nextDouble(min, max);
+        double rounded = roundDouble(random, 2);
+        return rounded;
     }
 
     public static Integer getRandomIntNotInRange(int lowerBound, int upperBound) {

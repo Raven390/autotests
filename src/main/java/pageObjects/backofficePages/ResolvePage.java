@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -34,6 +35,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator fraudSelectApplyButton;
     private final Locator clientRestrictionItem;
     private final Locator approveSecondButton;
+    private final Locator submitCommentButton;
 
     public ResolvePage(Page page) {
         super(page);
@@ -49,13 +51,14 @@ public class ResolvePage extends AbstractPage {
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
         this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
-        this.successToast = page.locator(".g-toast__title").getByText("Investigation completed");
+        this.successToast = page.locator(".g-toast__container");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
         this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
         this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
+        this.submitCommentButton = page.locator("[data-qa='investigation_tools__add_comment_textarea_container']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -65,7 +68,7 @@ public class ResolvePage extends AbstractPage {
     public void isPageLoaded() {
         int n = 0;
         page.waitForTimeout(2000);
-        while ((loaderAnimation.isVisible() || loaderSpin.isVisible()) && n < 8) {
+        while (loaderAnimation.isVisible() || (loaderSpin.isVisible()) && n < 8) {
             page.waitForTimeout(2000);
             n += 1;
         }
@@ -81,43 +84,64 @@ public class ResolvePage extends AbstractPage {
             resolveButton.click();
         }
         isPageLoaded();
-
+        if (successToast.isVisible()) {
+            closeToastButtom.click();
+        } else {
+            page.waitForTimeout(1);
+        }
     }
 
     @Step("Resolve and approve all withdrawals")
     public void resolveWithdrawalsAllApprove() {
 //        page.waitForSelector(resolutionForm.toString());
-        assertTrue(resolutionForm.isVisible());
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         approveAllwithdrawalsButton.click();
         commentInput.fill("autotest to withdrawals");
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve and reject all withdrawals")
     public void resolveWithdrawalsAllReject() {
-        assertTrue(resolutionForm.isVisible());
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         rejectAllwithdrawalsButton.click();
         commentInput.fill("autotest to withdrawals");
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve and approve one withdrawal")
     public void resolveWithdrawalsApproveFirst() {
-        assertTrue(resolutionForm.isVisible());
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         rejectAllwithdrawalsButton.click();
         approveFirstButton.click();
         commentInput.fill("autotest to withdrawals");
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void clickApproveWithdrawalByPaymentType(String paymentType) {
+        Allure.step("click approve withdrawal on selected transaction");
+        String locator = "//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[1]";
+        page.waitForSelector(locator);
+        page.locator(locator).click();
+    }
+
+    @Step("Resolve and approve one withdrawal")
+    public void resolveWithdrawalsApproveOneByType(String paymentType) {
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        rejectAllwithdrawalsButton.click();
+        clickApproveWithdrawalByPaymentType(paymentType);
+        commentInput.fill("autotest to withdrawals");
+        completeInvestigationButton.click();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve without any actions")
     public void resolveSimple(String comment) {
         commentInput.fill(comment);
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve with adding fraud")
@@ -127,7 +151,7 @@ public class ResolvePage extends AbstractPage {
         fraudSelectItem.getByText(addedFraud).click();
         fraudSelectApplyButton.click();
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
 
@@ -143,7 +167,7 @@ public class ResolvePage extends AbstractPage {
 
     public void checkRestrictionIsDisplayed(String restriction) {
         Allure.step("Check if the restriction " + restriction + " is displayed on resolve screen");
-        assertTrue(clientRestrictionItem.getByText(restriction).isVisible());
+        clientRestrictionItem.getByText(restriction).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve test 250 symbols in comment")
@@ -157,7 +181,23 @@ public class ResolvePage extends AbstractPage {
         commentInput.fill(comment);
         cleanFraudListButton.click();
         completeInvestigationButton.click();
-        successToast.isVisible();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        String actual = successToast.textContent();
+        assertEquals("Investigation completed", actual);
+    }
+
+    public void fillCommentForm(String comment) {
+        Allure.step("Fill comment form");
+        commentInput.fill(comment);
+        assertEquals(commentInput.inputValue(), comment);
+    }
+
+    public void submitCommentForm() {
+        Allure.step("click on the add comment button");
+        submitCommentButton.click();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        String actual = successToast.textContent();
+        assertEquals("Comment added to Audit trail", actual);
     }
 
     @Step("Check withdrawal approval message in Kafka")
