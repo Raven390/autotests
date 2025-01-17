@@ -92,11 +92,11 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     public void verifyTradingInfoDealsOpenSortingTest() {
         assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
-        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Oldest opened → Newest opened"));
+        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Newest opened → Oldest opened"));
         tradingPage.sortByOpen();
         assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
-        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Newest opened → Oldest opened"));
+        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Oldest opened → Newest opened"));
     }
 
     @Test
