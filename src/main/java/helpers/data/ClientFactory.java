@@ -27,14 +27,14 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), faker.country().countryCode2().toUpperCase(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString()
+                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString()
         );
     }
 
     public static ClientHelper getRandomVantageClientNoCpa() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), faker.country().countryCode2().toUpperCase(), null, null, null, null, null, null
+                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null
         );
     }
 

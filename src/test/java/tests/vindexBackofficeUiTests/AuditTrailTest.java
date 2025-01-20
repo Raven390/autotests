@@ -262,7 +262,7 @@ public class AuditTrailTest extends TestBaseWeb {
         }
         User user = coreUser();
         AuditTrailItem cancellationRequested = new AuditTrailItem(
-                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Accept", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
+                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Approve", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
         );
         assertThat("Verify audit trail items", auditTrailItems, hasItem(cancellationRequested));
     }
