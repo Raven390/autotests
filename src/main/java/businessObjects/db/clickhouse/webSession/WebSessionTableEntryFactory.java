@@ -9,4 +9,11 @@ public class WebSessionTableEntryFactory {
                 client.getUserId(), client.getBrand().toLowerCase(), client.getWebSessionId()
         );
     }
+
+    public static WebSessionTableEntry webSessionTableEntryForConnectionSearch(ClientHelper client,
+            String webSessionId) {
+        return new WebSessionTableEntry(
+                client.getUserId(), client.getBrand().toLowerCase(), webSessionId
+        );
+    }
 }

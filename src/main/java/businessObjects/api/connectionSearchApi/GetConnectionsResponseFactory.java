@@ -90,31 +90,31 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionScoreToBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, null, null, "about:blank", "Bad Request", "Failed to convert 'connectionScoreTo' with value: 'test'", "/v1/connections/byClientId"
+                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionDepthBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, null, null, "about:blank", "Bad Request", "Failed to convert 'connectionDepth' with value: 'test'", "/v1/connections/byClientId"
+                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; For input string: \"test\"", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionScoreFromBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, null, null, "about:blank", "Bad Request", "Failed to convert 'connectionScoreFrom' with value: 'test'", "/v1/connections/byClientId"
+                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsByAttributesResponseErrorConnectionScoreToBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, null, null, "about:blank", "Bad Request", "Failed to convert 'connectionScoreTo' with value: 'test'", "/v1/connections/byAttributes"
+                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsByAttributesResponseErrorConnectionScoreFromBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, null, null, "about:blank", "Bad Request", "Failed to convert 'connectionScoreFrom' with value: 'test'", "/v1/connections/byAttributes"
+                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 }

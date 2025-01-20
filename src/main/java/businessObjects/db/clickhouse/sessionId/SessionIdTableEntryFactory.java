@@ -9,4 +9,10 @@ public class SessionIdTableEntryFactory {
                 client.getUserId(), client.getBrand().toLowerCase(), client.getSessionId()
         );
     }
+
+    public static SessionIdTableEntry sessionIdTableEntryForConnectionSearch(ClientHelper client, String sessionId) {
+        return new SessionIdTableEntry(
+                client.getUserId(), client.getBrand().toLowerCase(), sessionId
+        );
+    }
 }
