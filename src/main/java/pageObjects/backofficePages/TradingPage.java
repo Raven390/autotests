@@ -133,6 +133,7 @@ public class TradingPage extends AbstractPage {
     private static final String CHECKBOXES_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::input[@type='checkbox']";
     private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='Reset']";
     private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
+    private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
 
     public TradingPage(Page page) {
         super(page);
@@ -180,7 +181,7 @@ public class TradingPage extends AbstractPage {
         this.durationToInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.profitFromInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
         this.profitToInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
-        this.accountCard = page.locator("//div[@class='v-trading-tab-accounts-card']");
+        this.accountCard = page.locator(ACCOUNT_CARD_XPATH);
         this.accountId = page.locator("//span[contains(@class,'g-text_variant_subheader-2')]");
         this.balanceElement = page.locator("//div[@class='v-trading-tab-accounts-card__balance']");
         this.statusElement = page.locator("//div[contains(@class,'v-trading-account-status-label')]/div[@class='v-text-with-icon__text']");
@@ -260,16 +261,14 @@ public class TradingPage extends AbstractPage {
 
     @Step("Open users trading tab")
     public void openTradingTab() {
-        waitForPageToLoad();
         tradingTab.click();
         waitForPageToLoad();
     }
 
     @Step("Open users trading-operations tab")
     public void openOperationsTab() {
-        waitForPageToLoad();
         operationsTab.click();
-        waitForPageToLoad();
+        super.waitForPageToLoad();
     }
 
 
@@ -360,7 +359,7 @@ public class TradingPage extends AbstractPage {
     public void clickApplyButton() {
         Allure.step("Click apply button");
         applyFiltersButton.click();
-        waitForPageToLoad();
+        super.waitForPageToLoad();
     }
 
     @Step("Fill volume values")
@@ -443,8 +442,7 @@ public class TradingPage extends AbstractPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
-        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
-        page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        page.waitForSelector(ACCOUNT_CARD_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     private int getAccountIndex(int accId) {

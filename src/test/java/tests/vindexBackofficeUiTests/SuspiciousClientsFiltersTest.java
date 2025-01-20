@@ -111,7 +111,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
-    public void verifyAssigneeFiltrationTest() {
+    public void verifyAssigneeFiltrationTest() throws InterruptedException {
         investigationPage.navigate();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
@@ -120,6 +120,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.clickSuspiciousClientsFiltration();
         User user = coreUser();

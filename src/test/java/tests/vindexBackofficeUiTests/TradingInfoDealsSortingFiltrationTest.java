@@ -69,15 +69,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
 
     @BeforeEach
     public void loginAndGoToOperations() throws InterruptedException {
-        investigationPage.navigate();
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openOperationsTab();

@@ -201,7 +201,7 @@ public class OperationsPage extends AbstractPage {
 
     public void hoverOverFinancialTransactionsGraphByDateSingleDay(String dateString) throws ParseException {
         Allure.step("Hover over financial transactions graph by date");
-        System.out.println("searced date is " + dateString);
+        System.out.println("searched date is " + dateString);
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
         System.out.println("number of containers is " + count);
@@ -317,7 +317,7 @@ public class OperationsPage extends AbstractPage {
         System.out.println("the searched section is have date text " + date);
         Allure.step("check that timeline section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
-        assertTrue(timelineSection.getByText(date).isVisible());
+        assertTrue(timelineSection.getByText(date).last().isVisible());
     }
 
     public void checkFinancialTransactionSectionVisibleByDate(String date) {

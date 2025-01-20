@@ -28,7 +28,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator approveFirstButton;
     private final Locator completeInvestigationButton;
     private final Locator successToast;
-    private final Locator closeToastButtom;
+    private final Locator closeToastButton;
     private final Locator cleanFraudListButton;
     private final Locator fraudListButton;
     private final Locator fraudSelectItem;
@@ -52,7 +52,7 @@ public class ResolvePage extends AbstractPage {
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
         this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
         this.successToast = page.locator(".g-toast__container");
-        this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
+        this.closeToastButton = page.locator(".g-button.g-toast__btn-close");
         this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
         this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
         this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
@@ -84,8 +84,8 @@ public class ResolvePage extends AbstractPage {
             resolveButton.click();
         }
         isPageLoaded();
-        if (successToast.isVisible()) {
-            closeToastButtom.click();
+        if (successToast.first().isVisible()) {
+            closeToastButton.first().click();
         } else {
             page.waitForTimeout(1);
         }
