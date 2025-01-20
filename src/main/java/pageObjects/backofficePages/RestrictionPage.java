@@ -72,7 +72,7 @@ public class RestrictionPage extends AbstractPage {
     public RestrictionPage(Page page) {
         super(page);
         this.loaderAnimation = page.locator(".v-loader");
-        this.loaderSpin = page.locator(".g-spin");
+        this.loaderSpin = page.locator(".g-spin").first();
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
         this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Open new account");
         this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Internal transfer");
