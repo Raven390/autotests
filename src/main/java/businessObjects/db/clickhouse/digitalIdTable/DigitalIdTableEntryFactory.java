@@ -9,4 +9,10 @@ public class DigitalIdTableEntryFactory {
                 client.getUserId(), client.getBrand().toLowerCase(), client.getDigitalId()
         );
     }
+
+    public static DigitalIdTableEntry digitalIdTableEntryForConnectionSearch(ClientHelper client, String digitalId) {
+        return new DigitalIdTableEntry(
+                client.getUserId(), client.getBrand().toLowerCase(), digitalId
+        );
+    }
 }

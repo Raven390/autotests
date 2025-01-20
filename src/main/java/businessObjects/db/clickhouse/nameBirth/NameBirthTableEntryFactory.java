@@ -9,4 +9,10 @@ public class NameBirthTableEntryFactory {
                 client.getUserId(), client.getBrand().toLowerCase(), client.getNamedateofbirth()
         );
     }
+
+    public static NameBirthTableEntry nameBirthTableEntryForConnectionSearch(ClientHelper client, String nameBirth) {
+        return new NameBirthTableEntry(
+                client.getUserId(), client.getBrand().toLowerCase(), nameBirth
+        );
+    }
 }
