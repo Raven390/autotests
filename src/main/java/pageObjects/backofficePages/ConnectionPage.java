@@ -9,9 +9,7 @@ import io.qameta.allure.Step;
 import org.hamcrest.MatcherAssert;
 import utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -87,6 +85,8 @@ public class ConnectionPage extends AbstractPage {
     private final Locator appliedFilters;
     private final Locator filtersCounter;
     private final Locator appliedFiltersHidden;
+    private final Locator connectionTableBehaviorValue;
+    private final Locator connectionTableScoreValue;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -186,6 +186,8 @@ public class ConnectionPage extends AbstractPage {
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
         this.appliedFiltersHidden = page.locator("//div[contains(@class,'v-collapsible-horizontal-list__item_hidden')]/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button__filters']/div");
+        this.connectionTableBehaviorValue = page.locator("div.v-connection-search-table-view__behavior");
+        this.connectionTableScoreValue = page.locator("//td[contains(@class,'v-connection-search-table-view__column_type_connection')]/descendant::div[contains(@class,'g-color-text_color_secondary')]");
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -307,43 +309,61 @@ public class ConnectionPage extends AbstractPage {
         assertTrue(graphLinkHeader.isVisible());
     }
 
-    public void testSortingLevel() {
-        Allure.step("Test sorting by level. users must be sorted  in ascending order");
-        page.waitForTimeout(2000);
-        int level = 0;
-        int numberOfLevelCells = levelCell.count();
-        assertNotEquals(0, numberOfLevelCells);
-        for (int i = 0; i < numberOfLevelCells - 1; i++) {
-            String currentLevel = levelCell.nth(i).textContent();
-            int currentLevelInt = Integer.parseInt(currentLevel);
-            assertTrue(level <= currentLevelInt);
-            level = currentLevelInt;
+    @Step("Verify sorting in connection table is by Behavior - Level - Connection Score")
+    public void verifyTableSorting() {
+        String fraudster = "fraudster";
+        String suspicious = "suspicious";
+        String normal = "normal";
+        String behavior = "behavior";
+        String level = "level";
+        String score = "score";
+        List<Map<String, String>> table = new ArrayList<>();
+        Locator tableRows = page.locator(CONNECTION_TABLE_ROW);
+        // Read all table rows and put values in a list
+        for (int i = 0; i < tableRows.count(); i++) {
+            Map<String, String> row = new HashMap<>();
+            String rowLevel = levelCell.nth(i).textContent();
+            String rowScore = connectionTableScoreValue.nth(i).textContent();
+            String rowBehavior;
+            if (connectionTableBehaviorValue.nth(i).getAttribute("class").contains("v-connection-search-table-view__behavior_fraudster")) {
+                rowBehavior = fraudster;
+            } else
+                if (connectionTableBehaviorValue.nth(i).getAttribute("class").contains("v-connection-search-table-view__behavior_suspicious")) {
+                    rowBehavior = suspicious;
+                } else {
+                    rowBehavior = normal;
+                }
+            row.put(behavior, rowBehavior);
+            row.put(level, rowLevel);
+            row.put(score, rowScore);
+            table.add(row);
         }
-    }
-
-    public void testSortingConnection() {
-        Allure.step("Test sorting by connectionScoreToInitial. users must be sorted by connectionScoreToInitial in descending order inside one level");
-        page.waitForTimeout(2000);
-        int level = 0;
-        float connectionToInit = 1.0F;
-        int numberOfLevelCells = levelCell.count();
-        int numberOfConnectionCells = page.locator(CONNECTION_CELL_SELECTOR + " .g-color-text_color_secondary").count();
-        System.out.println("Number of connection cells: " + numberOfConnectionCells);
-        assertNotEquals(0, numberOfConnectionCells);
-        for (int i = 0; i < numberOfConnectionCells - 1; i++) {
-            String currentLevel = levelCell.nth(i).textContent();
-            int currentLevelInt = Integer.parseInt(currentLevel);
-            String currentconnectionToInit = page.locator(CONNECTION_CELL_SELECTOR + " .g-color-text_color_secondary").nth(i).textContent();
-            Float currentconnectionToInitF = Float.parseFloat(currentconnectionToInit);
-            if (currentLevelInt > level) {
-                connectionToInit = 1;
-                level = currentLevelInt;
+        // Verify sorting in previously created list
+        List<String> behaviorOrder = Arrays.asList(fraudster, suspicious, normal);
+        for (int i = 0; i < table.size() - 1; i++) {
+            Map<String, String> current = table.get(i);
+            Map<String, String> next = table.get(i + 1);
+            // Compare behaviors
+            String behavior1 = current.get(behavior);
+            String behavior2 = next.get(behavior);
+            int behaviorComparison = behaviorOrder.indexOf(behavior1) - behaviorOrder.indexOf(behavior2);
+            if (behaviorComparison > 0) {
+                MatcherAssert.assertThat("The sorting by Behavior is incorrect", false, equalTo(true));
+            } else if (behaviorComparison == 0) {
+                // Behaviors are the same, compare levels
+                int level1 = Integer.parseInt(current.get(level));
+                int level2 = Integer.parseInt(next.get(level));
+                if (level1 > level2) {
+                    MatcherAssert.assertThat("The sorting by Level is incorrect", false, equalTo(true));
+                } else if (level1 == level2) {
+                    // Levels are the same, compare scores
+                    double score1 = Double.parseDouble(current.get(score));
+                    double score2 = Double.parseDouble(next.get(score));
+                    if (score1 < score2) {
+                        MatcherAssert.assertThat("The sorting by Score is incorrect", false, equalTo(true));
+                    }
+                }
             }
-
-            System.out.println("connectionToInit: " + connectionToInit);
-            System.out.println("currentconnectionToInitF: " + currentconnectionToInitF);
-            assertTrue(connectionToInit <= currentconnectionToInitF);
-            connectionToInit = currentconnectionToInitF;
         }
     }
 

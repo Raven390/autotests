@@ -19,7 +19,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("positive login test")
     void PositiveloginUITest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("DEV", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
@@ -44,7 +44,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("alert page rendered basic elements")
     void alertPageRendersTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.isAlertPageBasicElementsVisible();
     }
 
@@ -57,7 +57,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that side menu folds")
     void sideMenuFoldsTest() throws InterruptedException {
         investigationPage.navigate();
-        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.sideMenuFoldButtonTest();
     }
 
@@ -70,7 +70,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that side menu renders")
     void sidebarRenderTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.foldSidebar();
         investigationPage.unfoldSidebar();
     }
@@ -84,7 +84,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test that color scheme is changing")
     void colorThemeSwitchTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("DEV", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.colorThemeSwitch();
     }
 
@@ -112,7 +112,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test folding feature of suspicious client list section in investigation tool")
     void susClientFoldButtonTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.foldSusClientFoldSection();
         investigationPage.unfoldSusClientFoldSection();
@@ -126,7 +126,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("test quick filter")
     void quickFiltersTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123"); // call the method for log in thought UI login form
+        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.filterAssignedMe();
         investigationPage.filterUnassigned();
@@ -142,7 +142,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("B0 user must see error message if commenting suspicious client failed")
     void commentErrorScreenTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-424242");
         investigationPage.mockCommentError("infinox-424242");
         investigationPage.openCommentForm();
@@ -158,7 +158,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @DisplayName("BO user can add commentary to the suspicious client's audit trail")
     void commentTest() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-424242");
         investigationPage.openCommentForm();
         String message = "comment test " + timestamp;

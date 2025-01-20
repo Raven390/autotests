@@ -53,16 +53,9 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("560")
     @DisplayName("Verify all data is present in trading info - accounts. Card view")
-    public void verifyAccountsCardViewTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyAccountsCardViewTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         // Verify 1st account card
@@ -110,16 +103,9 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("561")
     @DisplayName("Verify all data is present in trading info - accounts. Table view")
-    public void verifyAccountsTableViewTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyAccountsTableViewTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.clickTableViewButton();

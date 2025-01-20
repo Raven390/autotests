@@ -107,17 +107,9 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
     }
 
     @BeforeEach
-    public void goToConnectionSearchPage() throws InterruptedException {
-        investigationPage.navigate();
+    public void goToConnectionSearchPage() {
+        investigationPage.navigateToClient(client.getUcid());
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(client.getBrand());
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-//        investigationPage.scrollClientCardsToBottom();
-        investigationPage.clickClientCardByClientId(String.valueOf(client.getUserId()));
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
     }

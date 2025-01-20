@@ -67,16 +67,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("601")
     @DisplayName("Audit trail. Verify message for 'Alert received' action type")
-    public void verifyAlertReceivedTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyAlertReceivedTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
@@ -92,16 +85,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("602")
     @DisplayName("Audit trail. Verify message for 'Comment added' action type")
-    public void verifyCommentAddedTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyCommentAddedTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         investigationPage.openCommentForm();
         String comment = "Test comment added action type";
@@ -149,15 +135,8 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("604")
     @DisplayName("Audit trail. Verify message for 'Investigation completed' action type")
     public void verifyInvestigationCompletedTest() throws JsonProcessingException, InterruptedException {
-        investigationPage.navigate();
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
 
         resolvePage.openResolveSuspicious();
@@ -187,16 +166,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("605")
     @DisplayName("Audit trail. Verify message for restrictions action types")
-    public void verifyRestrictionsTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyRestrictionsTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickLoginSwitch();
@@ -232,23 +204,15 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("606")
     @DisplayName("Audit trail. Verify message for withdrawal request decision action type")
-    public void verifyWithdrawalRequestDecisionTest() throws IOException, ReflectiveOperationException, SQLException,
-            InterruptedException {
+    public void verifyWithdrawalRequestDecisionTest() throws IOException, ReflectiveOperationException, SQLException {
         Response response = postRestriction(new PostRestrictionRequestBody(
                 crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
         CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-        investigationPage.navigate();
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickCheckedManual();

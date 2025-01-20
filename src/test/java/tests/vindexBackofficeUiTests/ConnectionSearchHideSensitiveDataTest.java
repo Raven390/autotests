@@ -49,16 +49,9 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("687")
     @DisplayName("Verify sensitive data hiding in connection search card view")
-    public void verifyConnectionSearchHideSensitiveDataCardTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyConnectionSearchHideSensitiveDataCardTest() {
+        investigationPage.navigateToClient(client.getUcid());
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(client.getBrand());
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(client.getUserId()));
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionCard(client.getUcid());
@@ -78,16 +71,9 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("688")
     @DisplayName("Verify sensitive data hiding in connection search table view")
-    public void verifyConnectionSearchHideSensitiveDataTableTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyConnectionSearchHideSensitiveDataTableTest() {
+        investigationPage.navigateToClient(client.getUcid());
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(client.getBrand());
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(client.getUserId()));
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionTable();

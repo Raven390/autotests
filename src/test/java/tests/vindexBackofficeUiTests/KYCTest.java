@@ -18,7 +18,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Check correct status display Submitted")
     public void checkCorrectStatusDisplaySubmitted() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525206");
         generalPage.checkKycStatusGeneral("Proof of identity", "Submitted");
     }
@@ -30,7 +30,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Check correct status display Rejected")
     public void checkCorrectStatusDisplayRejected() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525208");
         generalPage.checkKycStatusGeneral("Proof of identity", "Rejected");
     }
@@ -42,7 +42,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Check correct status display Pending")
     public void checkCorrectStatusDisplayPending() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525207");
         generalPage.checkKycStatusGeneral("Proof of identity", "Pending");
     }
@@ -54,7 +54,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Check correct status display Completed")
     public void checkCorrectStatusDisplayCompleted() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525205");
         generalPage.checkKycStatusGeneral("Proof of identity", "Approved");
     }
@@ -66,7 +66,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("KYC File viewer BO user can zoom displayed file using buttons in UI")
     public void userCanZoom() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.kycDetailsOpen("Proof of identity");
         generalPage.FVZoomFunctions();
@@ -79,7 +79,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("KYC File viewer BO user can rotate displayed file using buttons in UI")
     public void userCanRotate() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.kycDetailsOpen("Proof of identity");
         generalPage.FVRotateFunctions();
@@ -92,7 +92,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("KYC File viewer BO user can mirror displayed file using buttons in UI")
     public void userCanMirror() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.kycDetailsOpen("Proof of identity");
         generalPage.FVMirrorFunctions();
@@ -105,7 +105,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("KYC File viewer BO user can slide displayed file using buttons in UI")
     public void userCanSlide() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.kycDetailsOpen("Proof of identity");
         generalPage.FVSlideFunctions();
@@ -118,7 +118,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("User has history drawer")
     public void userHasHistoryDrawer() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.kycDetailsOpen("Proof of identity");
         generalPage.kycHistoryDrawerDisplayed();
@@ -131,7 +131,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Client without KYC applyment must have placeholder")
     public void userHavePlaceholderNoKYC() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525201");
         generalPage.noAppliedIsVisible();
     }
@@ -143,7 +143,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Client without multiple KYC attempts must have displayed number of attempts")
     public void userHaveNumberOfAttempt() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.checkKycAttemptsGeneral("Proof of identity", "2");
         generalPage.checkKycAttemptsGeneral("Proof of address", "2");
@@ -156,7 +156,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Client applied ID must have address info on general tab")
     public void clientHaveAddressInfoGeneral() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525204");
         generalPage.poaDetailsGeneral("USA, DC, Washington", "321 Main St, 654321");
     }
@@ -168,7 +168,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Client applied only POI must have placeholder about POA")
     public void clientHavePlaceholderPOA() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525202");
         generalPage.poaPlaceholderIsVisible();
     }
@@ -180,7 +180,7 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("Client have placeholder if not applied POI")
     public void clientHavePlaceholderPOI() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         generalPage.navigateGeneralTab("infinox-525203");
         generalPage.poiPlaceholderIsVisible();
     }

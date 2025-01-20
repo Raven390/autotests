@@ -18,7 +18,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that operations subtab renders all basic elements")
     public void resolveWithWithdrawalsApproveAll() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.operationsRendersTest();
     }
@@ -30,7 +30,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter list contains all necessary types")
     public void testTypeFilterList() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.checkTypeFilterList();
@@ -43,7 +43,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Sell")
     public void testTypeFilterSell() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell");
@@ -58,7 +58,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Balance")
     public void testTypeFilterBalance() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Balance");
@@ -73,7 +73,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Buy")
     public void testTypeFilterBuy() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy");
@@ -88,7 +88,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Buy Limit")
     public void testTypeFilterBuyLimit() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy Limit");
@@ -103,7 +103,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Buy Stop")
     public void testTypeFilterBuyStop() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy Stop");
@@ -118,7 +118,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Credit")
     public void testTypeFilterCredit() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Credit");
@@ -133,7 +133,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Sell Limit")
     public void testTypeFilterSellLimit() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell Limit");
@@ -148,7 +148,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that type filter works Sell Stop")
     public void testTypeFilterSellStop() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell Stop");
@@ -165,7 +165,7 @@ public class TradingTest extends TestBaseWeb {
         int from = 4;
         int to = 8;
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.fillVolumeValues(String.valueOf(from), String.valueOf(to));
@@ -182,7 +182,7 @@ public class TradingTest extends TestBaseWeb {
         int from = 4;
         int to = 8;
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.fillDurationValues(String.valueOf(from), String.valueOf(to));
@@ -197,7 +197,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works API")
     public void testMethodFilterAPI() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("API");
@@ -212,7 +212,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Client")
     public void testMethodFilterClient() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Client");
@@ -227,7 +227,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Dealer")
     public void testMethodFilterDealer() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Dealer");
@@ -242,7 +242,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Expert")
     public void testMethodFilterExpert() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Expert");
@@ -257,7 +257,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Gateway")
     public void testMethodFilterGateway() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Gateway");
@@ -272,7 +272,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Mobile")
     public void testMethodFilterMobile() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Mobile");
@@ -287,7 +287,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Signal")
     public void testMethodFilterSignal() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Signal");
@@ -302,7 +302,7 @@ public class TradingTest extends TestBaseWeb {
     @DisplayName("Test that method filter works Web")
     public void testMethodFilterWeb() {
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Web");
@@ -319,7 +319,7 @@ public class TradingTest extends TestBaseWeb {
         int from = 4;
         int to = 80;
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.fillProfitValues(String.valueOf(from), String.valueOf(to));
@@ -336,7 +336,7 @@ public class TradingTest extends TestBaseWeb {
         int from = 36;
         int to = 38;
         investigationPage.navigate();
-        keycloackPage.loginWeb("dev", "123");
+        keycloackPage.loginAsDevUser();
         tradingPage.navigateOperations("infinox-151501");
         tradingPage.openFilter();
         tradingPage.fillProfitValues(String.valueOf(from), String.valueOf(to));

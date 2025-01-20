@@ -143,7 +143,7 @@ public class Utils {
     }
 
     public static String getPreviousDateMonthYearIntMonth(int step) {
-        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, step, 1, 0, 0);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_YEAR, 0, step, 1, 0, 0);
     }
 
     public static String getCurrentDateMonthYear() {

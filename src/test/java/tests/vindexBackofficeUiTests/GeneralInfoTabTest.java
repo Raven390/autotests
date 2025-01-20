@@ -40,16 +40,10 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("559")
     @DisplayName("Verify all data is present in general tab")
-    public void verifyGeneralInfoTabTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyGeneralInfoTabTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        alertsPage.waitForPageToLoad();
         generalPage.clickGeneralTabButton();
         assertThat("Assert that full name is correct", generalPage.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
         String registrationDateAgoPattern = "^(?:\\d+ year(?:s)? )?\\d+ month(?:s)?$";

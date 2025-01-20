@@ -67,15 +67,8 @@ public class TradingInfoDealsTest extends TestBaseWeb {
     @AllureId("563")
     @DisplayName("Verify all data is present in trading info - operations tab")
     public void verifyTradingInfoDealsTest() throws InterruptedException {
-        investigationPage.navigate();
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openOperationsTab();

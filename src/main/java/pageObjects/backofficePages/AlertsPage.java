@@ -27,6 +27,7 @@ public class AlertsPage extends AbstractPage {
     private final Locator alertStatusDropdownAll;
     private final Locator refreshButtonDisabled;
     private final Locator alertsLoading;
+    private final Locator alertsTab;
 
     public AlertsPage(Page page) {
         super(page);
@@ -47,6 +48,13 @@ public class AlertsPage extends AbstractPage {
         this.alertStatusDropdownAll = page.locator("//*[text()='All alerts']");
         this.refreshButtonDisabled = page.locator("//button[@data-qa='investigation_tools_client_alerts_refresher' and contains(@class,'g-button_disabled')]");
         this.alertsLoading = page.locator("//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]").first();
+        this.alertsTab = page.locator("[role=\"tab\"][title=\"Alerts\"]");
+    }
+
+    @Step("Open Alerts tab")
+    public void openAlertsTab() {
+        alertsTab.click();
+        waitForPageToLoad();
     }
 
     @Step("Get rule name of the first alert")
