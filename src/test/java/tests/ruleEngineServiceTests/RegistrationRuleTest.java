@@ -101,6 +101,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score"));
+        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-50"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
@@ -155,7 +156,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Ip country does not equal address country"));
-        assertThat("Verify rule attributes ipAddress is correct", alert.rule.attributes.ipAddress, equalTo(data.lnSessionParsedObject.trueIp));
+        assertThat("Verify rule attributes ipCountry is correct", alert.rule.attributes.ipCountry, equalTo("US"));
         assertThat("Verify rule attributes country is correct", alert.rule.attributes.country, equalTo(data.crmTbUserObject.isoCountryCode));
 
         List<Alert> dbAlerts = getObjectsFromDB(
@@ -294,6 +295,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score, same Identity"));
+        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-49"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class

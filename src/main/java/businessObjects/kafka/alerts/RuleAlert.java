@@ -64,6 +64,12 @@ public class RuleAlert {
 
             @JsonProperty("clones")
             public String clones;
+
+            @JsonProperty("policyScore")
+            public String policyScore;
+
+            @JsonProperty("ipCountry")
+            public String ipCountry;
         }
     }
 }
