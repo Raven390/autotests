@@ -38,6 +38,9 @@ workflow:
    # Rule for nightly job
    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
      when: always
+    # Rule for prod smoke job
+   - if: '$CI_PIPELINE_SOURCE == "schedule" && $PRODUCTION_SMOKE_RUN == "true"'
+     when: always
    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
      when: always
    # Rule for jobs run on MR
@@ -57,6 +60,8 @@ workflow:
      when: always
    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
      when: always
+   - if: '$PROD_TESTS == "true"'
+     when: always
    # Default: Disable pipeline for other scenarios
    - when: never
 
@@ -65,7 +70,7 @@ job_build:
   stage: build
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$APP_NAME == null'
+    - if: '$APP_NAME == null && $PROD_TESTS == null'
   script:
     - echo "Building the project"
     - ./gradlew clean
@@ -79,7 +84,7 @@ job_code_check:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$APP_NAME == null'
+    - if: '$APP_NAME == null && $PROD_TESTS == null'
   script:
     - echo "Checking the code"
     - ./gradlew spotlessCheck
@@ -90,7 +95,7 @@ job_build_generator_jar:
   image: gradle:8.10.0-jdk22
   stage: build
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
   needs: ["job_build"]
   variables:
     IMAGE_NAME: generator
@@ -111,7 +116,7 @@ job_publish_generator_image:
   image: public.ecr.aws/docker/library/docker:latest
   stage: build
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
   needs: ["job_build_generator_jar"]
   before_script:
     - apk add aws-cli
@@ -127,7 +132,7 @@ job_deploy_generator:
   stage: build
   image: alpine/helm:3.15.4
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null'
+    - if: '$CI_COMMIT_BRANCH == "main" && $DATA_GENERATOR == "true" && $APP_NAME == null && $PROD_TESTS == null'
   needs: ["job_publish_generator_image"]
   when: manual
   script:
@@ -137,22 +142,6 @@ job_deploy_generator:
     - helm package --app-version="$IMAGE_VERSION" .helm/"$CHART_NAME"
     - helm upgrade "$IMAGE_NAME" "$CHART_NAME"-"$CHART_VERSION".tgz --version "$CHART_VERSION" --install --atomic --timeout $HELM_TIMEOUT -f values.yml --namespace test --set appVersion="$IMAGE_VERSION"
 
-#Job to check that base tests are working
-job_run_minimal_tests:
-  timeout: 3 hours
-  stage: test
-  needs: ["job_build"]
-  image: gradle:8.10.0-jdk22
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $APP_NAME == null'
-    - if: '$CI_COMMIT_BRANCH != "main" && $CI_PIPELINE_SOURCE == "push" && $APP_NAME == null'
-  script:
-    - echo "Run the minimal tests set to ensure that framework works"
-    - ./gradlew installDeps
-    - ./gradlew installChromium
-    - ./gradlew testBuildCheck
-    - echo "Run minimal tests set SUCCESS"
-
 #Job for core team nightly tests
 job_test_core:
   timeout: 3 hours
@@ -160,8 +149,8 @@ job_test_core:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_CORE_RUN == "true" && $CI_COMMIT_BRANCH == "main" && $PROD_TESTS == null'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "core" && $PROD_TESTS == null'
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Nightly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
@@ -194,8 +183,8 @@ job_test_backoffice:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $NIGHTLY_BACKOFFICE_RUN == "true" && $CI_COMMIT_BRANCH == "main" && $PROD_TESTS == null'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $TESTS_GROUP == "backoffice" && $PROD_TESTS == null'
   variables:
     ALLURE_LAUNCH_NAME: "[Backoffice team] Nightly run at $CI_PIPELINE_CREATED_AT"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
@@ -226,7 +215,7 @@ job_test_downstream_end_to_end:
   stage: test
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$APP_NAME != null'
+    - if: '$APP_NAME != null && $PROD_TESTS == null'
       when: always
   variables:
     ALLURE_LAUNCH_NAME: "[Core team] Triggered by $APP_NAME"
@@ -255,4 +244,36 @@ job_test_downstream_end_to_end:
     paths:
       - build/reports/
       - allure-results
+    expire_in: 1 day
+
+#Job for production smoke tests
+job_test_smoke_production:
+  timeout: 3 hours
+  stage: test
+  image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$PROD_TESTS == "true"'
+  variables:
+    ALLURE_LAUNCH_NAME: "[Core team] Production smoke run at $CI_PIPELINE_CREATED_AT triggered by $APP_NAME"
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_PROJECT_ID: 3
+    ALLURE_RESULTS: allure-results
+    RUNNER: "GITLAB_CI"
+    TAG: 'team_core'
+  before_script:
+    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
+    - chmod +x allurectl
+  script:
+    - echo "Running tests"
+    - ./gradlew installDeps
+    - ./gradlew installChromium
+    - ./allurectl watch -- gradle clean testSuiteSmokeProduction
+    - echo "TEST SUCCESS"
+  artifacts:
+    when: always
+    paths:
+      - playwright-report
+      - build/reports/
+      - allure-results
+      - test-output/videos
     expire_in: 1 day

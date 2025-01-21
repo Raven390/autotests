@@ -29,12 +29,13 @@ public class ConfigFactory {
     public static final String REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin();
     public static final String REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword();
     // Clickhouse api
-    public static final String CLICKHOUSE_API_BASE_PATH = CONFIG.clickhouseBasePath();
-    public static final String CLICKHOUSE_API_GET_CLIENT_PATH = CONFIG.clickhouseGetClientPath();
-    public static final String CLICKHOUSE_API_GET_CLIENTS_PATH = CONFIG.clickhouseGetClientsPath();
-    public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS_PATH = CONFIG.clickhouseGetClientTradingAccountsPath();
-    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_PATH = CONFIG.clickhouseGetLexisNexisPath();
-    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA_PATH = CONFIG.clickhouseGetLexisNexisDataPath();
+    public static final String CLICKHOUSE_API_BASE_TEST = CONFIG.clickhouseBasePathTest();
+    public static final String CLICKHOUSE_API_BASE_PROD = CONFIG.clickhouseBasePathProd();
+    public static final String CLICKHOUSE_API_GET_CLIENT = CONFIG.clickhouseGetClientPath();
+    public static final String CLICKHOUSE_API_GET_CLIENTS = CONFIG.clickhouseGetClientsPath();
+    public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS = CONFIG.clickhouseGetClientTradingAccountsPath();
+    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS = CONFIG.clickhouseGetLexisNexisPath();
+    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA = CONFIG.clickhouseGetLexisNexisDataPath();
     public static final String CLICKHOUSE_API_GET_TRADES_GROUP_BY = CONFIG.clickhouseGetTradesGroupByPath();
     public static final String CLICKHOUSE_API_GET_TRADES = CONFIG.clickhouseGetTradesPath();
     public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES = CONFIG.clickhouseGetUnclosedTradesPath();
@@ -42,16 +43,17 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_WITHDRAWALS = CONFIG.clickhouseGetWithdrawalsPath();
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
     public static final String CLICKHOUSE_API_GET_BONUSES = CONFIG.clickhouseGetBonusesPath();
-    public static final String CLICKHOUSE_API_GET_CREDIT_EQUITY_PATH = CONFIG.clickhouseGetCreditEquityRatio();
-    public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY_PATH = CONFIG.clickhouseGetFloatingTradesGroupBy();
-    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES_PATH = CONFIG.clickhouseGetMirrorAccountsByTrades();
+    public static final String CLICKHOUSE_API_GET_CREDIT_EQUITY = CONFIG.clickhouseGetCreditEquityRatio();
+    public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY = CONFIG.clickhouseGetFloatingTradesGroupBy();
+    public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES = CONFIG.clickhouseGetMirrorAccountsByTrades();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
-    public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO_PATH = CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
+    public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO = CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_FEES = CONFIG.clickhouseGetSwapFreeFees();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES = CONFIG.clickhouseGetSwapFreeVolumes();
     public static final String CLICKHOUSE_API_GET_BALANCE_ORDERS = CONFIG.clickhouseGetBalanceOrders();
     // Connection search
-    public static final String CONNECTION_SEARCH_BASE_PATH = CONFIG.connectionSearchBasePath();
+    public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
+    public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes();
     public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT = CONFIG.connectionSearchGetAbuseTypesByClient();
@@ -191,11 +193,15 @@ public class ConfigFactory {
 
         // Clickhouse api helper
 
-        @Key("clickhouseBasePath")
-        String clickhouseBasePath();
+        @Key("clickhouseBasePathTest")
+        String clickhouseBasePathTest();
+
 
         @Key("clickhouseGetClientPath")
         String clickhouseGetClientPath();
+
+        @Key("clickhouseBasePathProd")
+        String clickhouseBasePathProd();
 
         @Key("clickhouseGetClientsPath")
         String clickhouseGetClientsPath();
@@ -256,8 +262,11 @@ public class ConfigFactory {
 
         // Connection search
 
-        @Key("connectionSearchBasePath")
-        String connectionSearchBasePath();
+        @Key("connectionSearchBasePathTest")
+        String connectionSearchBasePathTest();
+
+        @Key("connectionSearchBasePathProd")
+        String connectionSearchBasePathProd();
 
         @Key("connectionSearchGetConnectionsByClient")
         String connectionSearchGetConnectionsByClient();

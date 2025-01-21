@@ -13,7 +13,7 @@ public class GetTradesRequest {
 
     @Step("Get client trades")
     public static Response getTrades(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_TRADES, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_TRADES, null, paramsMap);
     }
 
 }

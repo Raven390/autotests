@@ -13,6 +13,6 @@ public class GetCreditRiskFreeRevenueRatioRequest {
 
     @Step("Get client withdrawals")
     public static Response getCreditRiskFreeRevenueRatio(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO_PATH, paramsMap, null);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO, paramsMap, null);
     }
 }

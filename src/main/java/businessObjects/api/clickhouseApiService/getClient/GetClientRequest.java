@@ -16,11 +16,11 @@ public class GetClientRequest {
 
     @Step("Get client data by client id")
     public static Response getClient(String clientId) throws IOException {
-        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
+        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CLIENT + clientId).build()).execute();
     }
 
     @Step("Get client data by client id in wrong format")
     public static Response getClient(Integer clientId) throws IOException {
-        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CLIENT_PATH + clientId).build()).execute();
+        return httpClient.newCall(new Request.Builder().url(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CLIENT + clientId).build()).execute();
     }
 }
