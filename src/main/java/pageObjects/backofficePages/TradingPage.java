@@ -8,8 +8,7 @@ import io.qameta.allure.Step;
 import org.hamcrest.MatcherAssert;
 import utils.Utils;
 
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.*;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -120,6 +119,8 @@ public class TradingPage extends AbstractPage {
     private final Locator resetAllButton;
     private final Locator openDateTooltip;
     private final Locator profitTooltip;
+    private final Locator typeCheckboxLabels;
+    private final Locator methodCheckboxLabels;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -134,6 +135,7 @@ public class TradingPage extends AbstractPage {
     private static final String RESET_BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER + "/descendant::span[text()='Reset']";
     private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
     private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
+    private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
 
     public TradingPage(Page page) {
         super(page);
@@ -238,6 +240,8 @@ public class TradingPage extends AbstractPage {
         this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
         this.openDateTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Open date"));
         this.profitTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Profit"));
+        this.typeCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Type"));
+        this.methodCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Method"));
     }
 
     @Step("Navigate to users trading tab")
@@ -316,17 +320,24 @@ public class TradingPage extends AbstractPage {
         assertTrue(commentColumnHeader.getByText("COMMENT").isVisible());
     }
 
-    @Step("Check list of types for necessary types")
+    @Step("Check list of Type filter options")
     public void checkTypeFilterList() {
-        Allure.step("Check list of types for necessary types");
-        assertEquals("Buy", checkboxItem.nth(0).textContent());
-        assertEquals("Sell", checkboxItem.nth(1).textContent());
-        assertEquals("Balance", checkboxItem.nth(2).textContent());
-        assertEquals("Credit", checkboxItem.nth(3).textContent());
-        assertEquals("Buy Limit", checkboxItem.nth(4).textContent());
-        assertEquals("Sell Limit", checkboxItem.nth(5).textContent());
-        assertEquals("Buy Stop", checkboxItem.nth(6).textContent());
-        assertEquals("Sell Stop", checkboxItem.nth(7).textContent());
+        page.waitForTimeout(100);
+        List<String> actualTypesList = new ArrayList<>();
+        for (int i = 0; i < typeCheckboxLabels.count(); i++) {
+            actualTypesList.add(typeCheckboxLabels.nth(i).textContent());
+        }
+        MatcherAssert.assertThat("Verify that Type filter contains all expected options", actualTypesList, contains("Buy", "Sell", "Balance", "Credit", "Buy Limit", "Sell Limit", "Buy Stop", "Sell Stop"));
+    }
+
+    @Step("Check list of Method filter options")
+    public void checkMethodFilterList() {
+        page.waitForTimeout(100);
+        List<String> actualMethodsList = new ArrayList<>();
+        for (int i = 0; i < methodCheckboxLabels.count(); i++) {
+            actualMethodsList.add(methodCheckboxLabels.nth(i).textContent());
+        }
+        MatcherAssert.assertThat("Verify that Type filter contains all expected options", actualMethodsList, contains("API", "Client", "Dealer", "Expert", "Gateway", "Mobile", "Signal", "Web"));
     }
 
     @Step("Open filter")

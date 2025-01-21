@@ -546,6 +546,11 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Verify client cards count is equal to actual number of client cards in the list")
     public void verifyClientCardsCount() throws InterruptedException {
+        clientContainer.first().hover();
+        for (int i = 0; i < 50; i++) {
+            Thread.sleep(100);
+            page.mouse().wheel(0, 500);
+        }
         String style = clientContainer.last().getAttribute("style");
         String regex = "top:\\s*(\\d+)px";
         Pattern pattern = Pattern.compile(regex);
