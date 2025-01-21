@@ -51,8 +51,8 @@ public class ResolvePage extends AbstractPage {
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
         this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
-        this.successToast = page.locator(".g-toast__container");
-        this.closeToastButton = page.locator(".g-button.g-toast__btn-close");
+        this.successToast = page.locator(".g-toast__container").first();
+        this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
         this.cleanFraudListButton = page.locator("button[data-qa='fraud_type_selector_clear_button']");
         this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
         this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
@@ -84,8 +84,8 @@ public class ResolvePage extends AbstractPage {
             resolveButton.click();
         }
         isPageLoaded();
-        if (successToast.first().isVisible()) {
-            closeToastButton.first().click();
+        if (successToast.isVisible()) {
+            closeToastButton.click();
         } else {
             page.waitForTimeout(1);
         }

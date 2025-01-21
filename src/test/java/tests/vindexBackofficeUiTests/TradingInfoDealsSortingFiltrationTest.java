@@ -276,6 +276,17 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.verifyOpenDateTooltip();
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("818")
+    @DisplayName("Verify Type and Method filter options in trading - operations tab")
+    public void verifyTradingInfoDealsFilterOptionsTest() {
+        tradingPage.openFilter();
+        tradingPage.checkTypeFilterList();
+        tradingPage.checkMethodFilterList();
+    }
+
     @AfterAll
     public static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));

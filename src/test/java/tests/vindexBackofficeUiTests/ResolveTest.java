@@ -95,7 +95,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
-        String details = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
+        String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
     }
@@ -131,9 +131,9 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
-        String details2 = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
+        String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("14140203", "Refuse");
+        restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
     }
 
     @Test

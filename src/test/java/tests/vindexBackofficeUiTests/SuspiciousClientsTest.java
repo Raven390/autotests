@@ -51,6 +51,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
