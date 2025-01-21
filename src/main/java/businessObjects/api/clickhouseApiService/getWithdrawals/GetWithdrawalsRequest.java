@@ -13,7 +13,7 @@ public class GetWithdrawalsRequest {
 
     @Step("Get client withdrawals")
     public static Response getWithdrawals(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_WITHDRAWALS, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_WITHDRAWALS, null, paramsMap);
     }
 
 }

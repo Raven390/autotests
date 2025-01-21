@@ -7,6 +7,7 @@ public class Constants {
     // SUITE
     public static final String SUITE_REGRESSION = "suite_regression";
     public static final String SUITE_SMOKE = "suite_smoke";
+    public static final String SUITE_SMOKE_PROD = "suite_smoke_production";
     public static final String SUITE_CLICKHOUSE_API_SERVICE = "suite_clickhouse_api_service";
     public static final String SUITE_CONNECTION_SEARCH_SERVICE = "suite_connection_search_service";
     public static final String SUITE_EVENT_GENERATOR_SERVICE = "suite_event_generator_service";
@@ -23,6 +24,7 @@ public class Constants {
     public static final String FEATURE_EVENT_GENERATOR_SERVICE = "Event generator service";
     public static final String FEATURE_CONNECTION_SEARCH_API_SERVICE = "Connection search api service";
     // STORIES
+    public static final String STORY_PRODUCTION_TESTS = "Production smoke test cases";
     public static final String STORY_EVENT_GENERATOR_SERVICE_LOGIN = "Login event in Event Generator";
     public static final String STORY_EVENT_GENERATOR_SERVICE_REGISTRATION = "Registration event in Event Generator";
     public static final String STORY_EVENT_GENERATOR_SERVICE_WITHDRAWAL = "Withdrawal event in Event Generator";
@@ -61,7 +63,6 @@ public class Constants {
     // PAYMENT PROVIDERS
     public static final String PAYMENT_PROVIDER_FASAPAY = "fasapay";
     // OTHER
-    public static final String TAG_BUILD_CHECK = "build_check";
     public static final String TAG_AUTOMATED = "automated";
     public static final String TAG_MANUAL = "manual";
     public static final String ROLE_UNKNOWN = "unknown";

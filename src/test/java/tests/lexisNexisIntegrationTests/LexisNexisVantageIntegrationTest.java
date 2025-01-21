@@ -61,6 +61,8 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
         ResultSet result = MySqlHelper.makeQuery("SELECT raw_result FROM dev_m_regulator_global.tb_tmx_session_query WHERE raw_result LIKE '%" + email + "%'", 30);
         String raw_result = result.getString("raw_result");
         System.out.println("raw_result: " + raw_result);
+        System.out.println("user_id: " + result.getString("user_id"));
+        System.out.println("ucid: " + result.getString("ucid"));
 
         // Assertions
         Assertions.assertTrue(raw_result.contains("\"account_email\":\"" + email + "\""));

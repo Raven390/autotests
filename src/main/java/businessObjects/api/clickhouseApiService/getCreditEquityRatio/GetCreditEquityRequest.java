@@ -13,7 +13,7 @@ public class GetCreditEquityRequest {
 
     @Step("Get credit equity by trading account")
     public static Response getCreditEquity(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_CREDIT_EQUITY_PATH, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CREDIT_EQUITY, null, paramsMap);
     }
 
 }

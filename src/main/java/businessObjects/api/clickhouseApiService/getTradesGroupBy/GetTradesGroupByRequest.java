@@ -13,6 +13,6 @@ public class GetTradesGroupByRequest {
 
     @Step("Get client trades group by symbol")
     public static Response getTradesGroupBy(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_TRADES_GROUP_BY, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_TRADES_GROUP_BY, null, paramsMap);
     }
 }

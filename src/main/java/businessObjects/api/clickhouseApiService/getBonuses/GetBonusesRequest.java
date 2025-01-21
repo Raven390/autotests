@@ -13,7 +13,7 @@ public class GetBonusesRequest {
 
     @Step("Get client bonuses")
     public static Response getBonuses(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_BONUSES, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_BONUSES, null, paramsMap);
     }
 
 }

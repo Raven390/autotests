@@ -17,7 +17,7 @@ public class GetAbuseTypesRequest {
     public static Response getAbuseTypes(List<String> clientIds) throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", clientIds);
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_ABUSE_TYPES, null, queryParamsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_ABUSE_TYPES, null, queryParamsMap);
     }
 
 }

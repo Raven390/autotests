@@ -13,6 +13,6 @@ public class GetBalanceOrdersRequest {
 
     @Step("Get balance orders for user")
     public static Response getBalanceOrders(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_BALANCE_ORDERS, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_BALANCE_ORDERS, null, paramsMap);
     }
 }

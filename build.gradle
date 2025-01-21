@@ -181,15 +181,15 @@ test {
     useJUnitPlatform()
 }
 
-task testBuildCheck(type: Test) {
-    useJUnitPlatform(){
-        includeTags "build_check"
-    }
-}
-
 task testSuiteSmoke(type: Test) {
     useJUnitPlatform() {
         includeTags 'suite_smoke'
+    }
+}
+
+task testSuiteSmokeProduction(type: Test) {
+    useJUnitPlatform() {
+        includeTags 'suite_smoke_production'
     }
 }
 

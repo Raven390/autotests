@@ -13,7 +13,7 @@ public class GetDepositsRequest {
 
     @Step("Get client deposits")
     public static Response getDeposits(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PATH + CLICKHOUSE_API_GET_DEPOSITS, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_DEPOSITS, null, paramsMap);
     }
 
 }
