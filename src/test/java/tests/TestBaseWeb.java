@@ -41,6 +41,7 @@ public class TestBaseWeb {
     public AuditTrailPage auditTrailPage;
     public AlertsPage alertsPage;
     public OperationsPage operationsPage;
+    public ActivityTab activityTab;
 
     @BeforeAll
     static void setupBrowser() {
@@ -79,6 +80,7 @@ public class TestBaseWeb {
         auditTrailPage = new AuditTrailPage(page);
         alertsPage = new AlertsPage(page);
         operationsPage = new OperationsPage(page);
+        activityTab = new ActivityTab(page);
     }
 
     @AfterEach

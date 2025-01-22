@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public abstract class AbstractPage {
 
@@ -32,6 +33,11 @@ public abstract class AbstractPage {
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
         page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    public void navigateToMain() {
+        page.navigate(BASE_URL_E2E);
+        waitForPageToLoad();
     }
 
     @Step("Select dates from date picker by label")
