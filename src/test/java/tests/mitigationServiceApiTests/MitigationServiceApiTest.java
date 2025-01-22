@@ -36,7 +36,6 @@ public class MitigationServiceApiTest extends TestBaseApi {
     }
 
     @BeforeEach
-    @Test
     public void before() throws Exception {
         MitigationHelper.cleanUserRestriction("vantage-10081449");
         AuditHelper.cleanUserAudit("vantage-10081449");

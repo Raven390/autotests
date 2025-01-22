@@ -147,7 +147,7 @@ public class Utils {
     }
 
     public static String getCurrentDateMonthYear() {
-        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_DAY, 0, 0, 0, 0, 0);
+        return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.MONTH_TEXT_AND_YEAR, 0, 0, 0, 0, 0);
     }
 
     @Deprecated
@@ -175,13 +175,6 @@ public class Utils {
 
     public static String getPreviousDateByIntYearMonthDay(int step) {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, step, 0, 0, 0, 0);
-    }
-
-    @Deprecated
-    public static String getPreviousYearByIntYearMonthDayMinus1day(int step) {
-        LocalDateTime currentDateTime = LocalDateTime.now().minusYears(step).minusDays(1);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return formatter.format(currentDateTime);
     }
 
     public static Double getRandomDouble(double min, double max) {

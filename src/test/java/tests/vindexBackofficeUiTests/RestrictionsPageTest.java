@@ -333,7 +333,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
-        String details = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
+        String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
@@ -343,7 +343,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("366")
-    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions  approve one")
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions approve one")
     void cancelManualWithdrawalRestrictionUITestWithTransactionsApproveOneTest() throws Exception {
         //login
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
@@ -366,9 +366,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
-        String details2 = "Transaction ID 14140203; 1.00 USD 2024-10-13 12:03 third withdrawal; Refuse";
+        String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("14140203", "Refuse");
+        restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
         restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
     }
 
