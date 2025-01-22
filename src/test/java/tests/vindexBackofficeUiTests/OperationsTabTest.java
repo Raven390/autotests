@@ -602,7 +602,7 @@ public class OperationsTabTest extends TestBaseWeb {
         operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
         page.reload();
         Allure.step("filter 3 years");
-        operationsPage.selectDatesInCalendar(getPreviousYearByIntYearMonthDayMinus1day(2), getCurrentDate());
+        operationsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
         operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
         operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
     }
