@@ -218,7 +218,7 @@ job_test_downstream_end_to_end:
     - if: '$APP_NAME != null && $PROD_TESTS == null'
       when: always
   variables:
-    ALLURE_LAUNCH_NAME: "[Core team] Triggered by $APP_NAME. $CI_COMMIT_AUTHOR"
+    ALLURE_LAUNCH_NAME: "[Core team] Triggered by $APP_NAME"
     ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
     ALLURE_PROJECT_ID: 3
     ALLURE_RESULTS: allure-results
