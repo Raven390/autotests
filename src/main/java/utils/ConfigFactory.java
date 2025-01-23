@@ -51,6 +51,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_FEES = CONFIG.clickhouseGetSwapFreeFees();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES = CONFIG.clickhouseGetSwapFreeVolumes();
     public static final String CLICKHOUSE_API_GET_BALANCE_ORDERS = CONFIG.clickhouseGetBalanceOrders();
+    public static final String CLICKHOUSE_API_GET_FAST_TRADES = CONFIG.clickhouseGetFastTrades();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
@@ -259,6 +260,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetBalanceOrders")
         String clickhouseGetBalanceOrders();
+
+        @Key("clickhouseGetFastTrades")
+        String clickhouseGetFastTrades();
 
         // Connection search
 
