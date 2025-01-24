@@ -254,7 +254,7 @@ public class ActivityTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @DisplayName("Activity tab filter by date - Last 7 Days")
-    @AllureId("792")
+    @AllureId("819")
     public void filterDateLast7daysTest() throws SQLException, ReflectiveOperationException {
         deleteLexis(activityClient);
 
@@ -354,7 +354,7 @@ public class ActivityTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @DisplayName("Activity tab filter by date - Last 90 Days")
-    @AllureId("820")
+    @AllureId("821")
     public void filterDateLast90daysTest() throws SQLException, ReflectiveOperationException {
         deleteLexis(activityClient);
 
@@ -564,6 +564,323 @@ public class ActivityTabTest extends TestBaseWeb {
         activityTab.checkDateColumnIsDesc();
         activityTab.setSortByDateAsc();
         activityTab.checkDateColumnIsAsc();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Activity tab - Summary, risk score section test")
+    @AllureId("834")
+    public void summaryRiskScoreShowDataFromDB() throws SQLException, ReflectiveOperationException {
+
+        deleteLexis(activityClient);
+
+        LnSessionParsedObject firstLexis = generateLexisNexisDataByClient(activityClient);
+        firstLexis.eventDatetime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        firstLexis.eventType = "account_creation";
+        firstLexis.conditionAttrib_5 = "mobile_app";
+        firstLexis.os = "android";
+        firstLexis.riskRating = "high";
+        firstLexis.policyScore = 99;
+        firstLexis.emailageEmailriskscoreEascore = 11;
+        firstLexis.emailageEmailriskscoreEariskbandid = 22;
+        firstLexis.emailageEmailriskscoreEaadvice = "test advice";
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
+        activityTab.positiveScoreMeterDisplayed();
+        activityTab.positiveScoreMeterDisplayed();
+        activityTab.setSuccessLabelDisplayed();
+        activityTab.checkTextInLabel(firstLexis.riskRating);
+        activityTab.checkPositionOfTheLineDivider("99.5");
+
+        deleteLexis(activityClient);
+
+        firstLexis.riskRating = "low";
+        firstLexis.policyScore = 50;
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        page.reload();
+        activityTab.clickOnDataRow();
+        activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
+        activityTab.positiveScoreMeterDisplayed();
+        activityTab.positiveScoreMeterDisplayed();
+        activityTab.setSuccessLabelDisplayed();
+        activityTab.checkTextInLabel(firstLexis.riskRating);
+        activityTab.checkPositionOfTheLineDivider("75");
+
+        deleteLexis(activityClient);
+
+        firstLexis.riskRating = "medium";
+        firstLexis.policyScore = 0;
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        page.reload();
+        activityTab.clickOnDataRow();
+        activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
+        activityTab.checkNeutralLabelDisplayed();
+        activityTab.checkTextInLabel(firstLexis.riskRating);
+        activityTab.checkPositionOfTheLineDivider("50");
+
+
+        deleteLexis(activityClient);
+
+        firstLexis.riskRating = "trusted";
+        firstLexis.policyScore = -50;
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        page.reload();
+        activityTab.clickOnDataRow();
+        activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
+        activityTab.checkDangerLabelDisplayed();
+        activityTab.checkTextInLabel(firstLexis.riskRating);
+        activityTab.checkPositionOfTheLineDivider("25");
+
+        deleteLexis(activityClient);
+
+        firstLexis.riskRating = "low";
+        firstLexis.policyScore = -99;
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        page.reload();
+        activityTab.clickOnDataRow();
+        activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
+        activityTab.checkDangerLabelDisplayed();
+        activityTab.checkTextInLabel(firstLexis.riskRating);
+        activityTab.checkPositionOfTheLineDivider("0.5");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Activity tab - Summary, applied policies section test")
+    @AllureId("836")
+    public void summaryAppliedPoliciesShowDataFromDB() throws SQLException, ReflectiveOperationException {
+
+        deleteLexis(activityClient);
+
+        LnSessionParsedObject firstLexis = generateLexisNexisDataByClient(activityClient);
+        firstLexis.eventDatetime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        firstLexis.eventType = "account_creation";
+        firstLexis.conditionAttrib_5 = "mobile_app";
+        firstLexis.os = "android";
+        firstLexis.riskRating = "high";
+        firstLexis.policyScore = 99;
+        firstLexis.emailageEmailriskscoreEascore = 11;
+        firstLexis.emailageEmailriskscoreEariskbandid = 22;
+        firstLexis.emailageEmailriskscoreEaadvice = "test advice";
+
+        Allure.step("Prepare data for DB with riskRating = " + firstLexis.riskRating + ", and policyScore = " + firstLexis.policyScore);
+
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkTitleOfPoliciesSection("Applied policies");
+        activityTab.checkRuleName("testRule");
+        activityTab.checkRuleScore("-10", "testRule");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Activity tab - Summary, TMX reason section test")
+    @AllureId("842")
+    public void summaryTmxShowDataFromDB() throws SQLException, ReflectiveOperationException {
+
+        deleteLexis(activityClient);
+
+        LnSessionParsedObject firstLexis = generateLexisNexisDataByClient(activityClient);
+        firstLexis.eventDatetime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        firstLexis.eventType = "account_creation";
+        firstLexis.conditionAttrib_5 = "mobile_app";
+        firstLexis.os = "android";
+        firstLexis.riskRating = "high";
+        firstLexis.policyScore = 99;
+        firstLexis.emailageEmailriskscoreEascore = 11;
+        firstLexis.emailageEmailriskscoreEariskbandid = 22;
+
+        Allure.step("Prepare data for DB with the tmxSummaryReasonCode equals " + firstLexis.tmxSummaryReasonCode);
+
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkTitleOfTmxReasonSection("TMX reason codes");
+        activityTab.checkThatTmxReasonCodeIsDisplayed(firstLexis.tmxSummaryReasonCode);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Activity tab - Summary, score section test")
+    @AllureId("843")
+    public void summaryScoresDataFromDB() throws SQLException, ReflectiveOperationException {
+
+        deleteLexis(activityClient);
+
+        LnSessionParsedObject firstLexis = generateLexisNexisDataByClient(activityClient);
+        firstLexis.eventDatetime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        firstLexis.eventType = "account_creation";
+        firstLexis.conditionAttrib_5 = "mobile_app";
+        firstLexis.os = "android";
+        firstLexis.riskRating = "high";
+        firstLexis.policyScore = 99;
+
+        firstLexis.emailageEmailriskscoreEascore = 1;
+        firstLexis.emailageEmailriskscoreEaadvice = "some advice" + getCurrentTimestamp();
+
+        firstLexis.emailageEmailriskscoreIpRisklevel = "Review";
+
+        firstLexis.emailageEmailriskscoreOveralldigitalidentityscore = 100;
+        firstLexis.emailageEmailriskscoreDisdescription = "some description" + getCurrentTimestamp();
+
+        Allure.step("Prepare data for DB with the first set of data");
+
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskLevelNumber(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskBarStyle(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkEmailScoreAdvice(firstLexis.emailageEmailriskscoreEaadvice);
+        activityTab.checkEmailScoreValue(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkEmailScoreRiskBarStyle(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkDigitalIdentityScoreNumber(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+        activityTab.checkDigitalIdentityScoreTitle(firstLexis.emailageEmailriskscoreDisdescription);
+        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+
+        deleteLexis(activityClient);
+        //email
+        firstLexis.emailageEmailriskscoreEascore = 300;
+        firstLexis.emailageEmailriskscoreEaadvice = "some advice" + getCurrentTimestamp();
+        //ip
+        firstLexis.emailageEmailriskscoreIpRisklevel = "Very low";
+        //digital identity
+        firstLexis.emailageEmailriskscoreOveralldigitalidentityscore = 80;
+        firstLexis.emailageEmailriskscoreDisdescription = "some description" + getCurrentTimestamp();
+
+        Allure.step("Prepare data for DB with the new set of data");
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskLevelNumber(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskBarStyle(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkEmailScoreAdvice(firstLexis.emailageEmailriskscoreEaadvice);
+        activityTab.checkEmailScoreValue(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkEmailScoreRiskBarStyle(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkDigitalIdentityScoreNumber(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+        activityTab.checkDigitalIdentityScoreTitle(firstLexis.emailageEmailriskscoreDisdescription);
+        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+
+        deleteLexis(activityClient);
+        //email
+        firstLexis.emailageEmailriskscoreEascore = 301;
+        firstLexis.emailageEmailriskscoreEaadvice = "some advice" + getCurrentTimestamp();
+        //ip
+        firstLexis.emailageEmailriskscoreIpRisklevel = "Low";
+        //digital identity
+        firstLexis.emailageEmailriskscoreOveralldigitalidentityscore = 79;
+        firstLexis.emailageEmailriskscoreDisdescription = "some description" + getCurrentTimestamp();
+
+        Allure.step("Prepare data for DB with the new set of data");
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskLevelNumber(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskBarStyle(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkEmailScoreAdvice(firstLexis.emailageEmailriskscoreEaadvice);
+        activityTab.checkEmailScoreValue(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkEmailScoreRiskBarStyle(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkDigitalIdentityScoreNumber(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+        activityTab.checkDigitalIdentityScoreTitle(firstLexis.emailageEmailriskscoreDisdescription);
+        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+
+        deleteLexis(activityClient);
+        //email
+        firstLexis.emailageEmailriskscoreEascore = 600;
+        //ip
+        firstLexis.emailageEmailriskscoreIpRisklevel = "Moderate";
+        //digital identity
+        firstLexis.emailageEmailriskscoreOveralldigitalidentityscore = 60;
+
+        Allure.step("Prepare data for DB with the new set of data");
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskLevelNumber(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskBarStyle(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkEmailScoreAdvice(firstLexis.emailageEmailriskscoreEaadvice);
+        activityTab.checkEmailScoreValue(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkEmailScoreRiskBarStyle(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkDigitalIdentityScoreNumber(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+        activityTab.checkDigitalIdentityScoreTitle(firstLexis.emailageEmailriskscoreDisdescription);
+        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+
+        deleteLexis(activityClient);
+        //email
+        firstLexis.emailageEmailriskscoreEascore = 601;
+        //ip
+        firstLexis.emailageEmailriskscoreIpRisklevel = "High";
+        //digital identity
+        firstLexis.emailageEmailriskscoreOveralldigitalidentityscore = 59;
+
+        Allure.step("Prepare data for DB with the new set of data");
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+        activityTab.navigateToMain();
+        keycloackPage.loginAsDevUser();
+        activityTab.navigate(activityClient.getUcid());
+        activityTab.clickOnDataRow();
+        activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskLevelNumber(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkIpScoreRiskBarStyle(firstLexis.emailageEmailriskscoreIpRisklevel);
+        activityTab.checkEmailScoreAdvice(firstLexis.emailageEmailriskscoreEaadvice);
+        activityTab.checkEmailScoreValue(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkEmailScoreRiskBarStyle(firstLexis.emailageEmailriskscoreEascore);
+        activityTab.checkDigitalIdentityScoreNumber(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+        activityTab.checkDigitalIdentityScoreTitle(firstLexis.emailageEmailriskscoreDisdescription);
+        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.emailageEmailriskscoreOveralldigitalidentityscore);
+
+
     }
 
 }
