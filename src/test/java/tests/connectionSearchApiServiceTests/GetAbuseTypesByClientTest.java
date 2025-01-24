@@ -1,6 +1,6 @@
 package tests.connectionSearchApiServiceTests;
 
-import businessObjects.api.connectionSearchApi.GetAbuseTypesResponse;
+import businessObjects.api.connectionSearchApi.getAbuseTypes.GetAbuseTypesResponse;
 import businessObjects.api.connectionSearchApi.ConnectionSearchResponseError;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.api.connectionSearchApi.GetAbuseTypesRequest.getAbuseTypesByClientId;
-import static businessObjects.api.connectionSearchApi.GetAbuseTypesResponseFactory.*;
+import static businessObjects.api.connectionSearchApi.getAbuseTypes.GetAbuseTypesRequest.getAbuseTypesByClientId;
+import static businessObjects.api.connectionSearchApi.getAbuseTypes.GetAbuseTypesResponseFactory.*;
 import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudType.*;

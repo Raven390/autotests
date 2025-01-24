@@ -20,7 +20,7 @@ import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactor
 import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
 import static businessObjects.db.clickhouse.mtTbUser.MtTbUserObjectFactory.generateMtTbUserData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.ClientFactory.getRandomVantageClientNoCpa;
+import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
@@ -29,8 +29,8 @@ import static utils.Utils.*;
 
 @RuleTestData("cpa-abuse")
 public class CpaAbuseRuleDataFactory {
-    private static final ClientHelper cpaAbuseRuleExitEventEnd1_1Client = getRandomVantageClientNoCpa();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd1_2Client = getRandomVantageClientNoCpa();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd1_1Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd1_2Client = getRandomVantageClientNoCpaIbRef();
 
     @Step("Create data for Mirror trading rule")
     private static CpaAbuseRuleData getCpaAbuseRuleData(ClientHelper client) {

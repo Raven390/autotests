@@ -1,5 +1,7 @@
-package businessObjects.api.connectionSearchApi;
+package businessObjects.api.connectionSearchApi.getAbuseTypes;
 
+
+import businessObjects.api.connectionSearchApi.ConnectionSearchResponseError;
 
 public class GetAbuseTypesResponseFactory {
 

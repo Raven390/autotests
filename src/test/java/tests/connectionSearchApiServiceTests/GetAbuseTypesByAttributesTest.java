@@ -1,7 +1,7 @@
 package tests.connectionSearchApiServiceTests;
 
 import businessObjects.api.connectionSearchApi.ConnectionSearchResponseError;
-import businessObjects.api.connectionSearchApi.GetAbuseTypesResponse;
+import businessObjects.api.connectionSearchApi.getAbuseTypes.GetAbuseTypesResponse;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.deviceIdTable.DeviceIdTableEntry;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.api.connectionSearchApi.GetAbuseTypesRequest.getAbuseTypesByAttributes;
+import static businessObjects.api.connectionSearchApi.getAbuseTypes.GetAbuseTypesRequest.getAbuseTypesByAttributes;
 import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
 import static businessObjects.db.clickhouse.deviceIdTable.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.digitalIdTable.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;

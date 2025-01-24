@@ -9,4 +9,10 @@ public class IpTableEntryFactory {
                 client.getUserId(), client.getBrand().toLowerCase(), "111.111.111.111"
         );
     }
+
+    public static IpTableEntry ipTableEntryForConnectionSearch(ClientHelper client, String ip) {
+        return new IpTableEntry(
+                client.getUserId(), client.getBrand().toLowerCase(), ip
+        );
+    }
 }

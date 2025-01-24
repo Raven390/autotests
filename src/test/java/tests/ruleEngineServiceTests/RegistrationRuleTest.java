@@ -560,13 +560,17 @@ public class RegistrationRuleTest extends TestBaseRule {
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(4));
 
         ClientsRestriction expectedRestriction1 = new ClientsRestriction(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_2", "APPLIED");
         ClientsRestriction expectedRestriction2 = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 5L, "Registration_block_user_restriction_bonus", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction1, expectedRestriction2));
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 5L, "Registration_block_user_restriction_tls", "APPLIED");
+        ClientsRestriction expectedRestriction3 = new ClientsRestriction(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestriction expectedRestriction4 = new ClientsRestriction(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction1, expectedRestriction2, expectedRestriction3, expectedRestriction4));
     }
 
     @Test
@@ -866,14 +870,16 @@ public class RegistrationRuleTest extends TestBaseRule {
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(2));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 5L, "Registration_block_user_restriction_bonus", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
-        // TODO add check for one more restriction when it's implemented
+        ClientsRestriction restriction1 = clientsRestrictions.getFirst();
+        ClientsRestriction expectedRestriction1 = new ClientsRestriction(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        assertThat("Verify that the restriction is as expected", restriction1, equalTo(expectedRestriction1));
+        ClientsRestriction restriction2 = clientsRestrictions.getLast();
+        ClientsRestriction expectedRestriction2 = new ClientsRestriction(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        assertThat("Verify that the restriction is as expected", restriction2, equalTo(expectedRestriction2));
     }
 
     @Test

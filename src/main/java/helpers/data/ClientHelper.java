@@ -22,6 +22,8 @@ public class ClientHelper {
     private String ipAddress;
     private String countryCode;
     private Integer cpaId;
+    private Integer ibId;
+    private Integer referrerId;
     private String deviceId;
     private String webSessionId;
     private String sessionId;
@@ -86,6 +88,7 @@ public class ClientHelper {
             Integer userId, String uid, Regulator regulator, Brand brand, Integer tradingAccount,
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
+            Integer ibId, Integer referrerId,
             String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth) {
         this.userId = userId;
         this.uid = uid;
@@ -98,6 +101,8 @@ public class ClientHelper {
         this.phoneNumber = phoneNumber;
         this.ipAddress = ipAddress;
         this.countryCode = countryCode;
+        this.ibId = ibId;
+        this.referrerId = referrerId;
         this.cpaId = cpaId;
         this.deviceId = deviceId;
         this.webSessionId = webSessionId;
@@ -203,8 +208,24 @@ public class ClientHelper {
         return cpaId;
     }
 
+    public Integer getReferrerId() {
+        return referrerId;
+    }
+
+    public Integer getIbId() {
+        return ibId;
+    }
+
     public void setCpaId(Integer cpaId) {
         this.cpaId = cpaId;
+    }
+
+    public void setReferrerId(Integer referrerId) {
+        this.referrerId = referrerId;
+    }
+
+    public void setIbId(Integer ibId) {
+        this.ibId = ibId;
     }
 
     public void setDeviceId(String deviceId) {
