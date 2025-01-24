@@ -28,9 +28,6 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_SERVICE)
-@Tag(TAG_MANUAL)
-@Disabled
-@Muted
 public class MirrorTradeRuleTest extends TestBaseRule {
 
     public static Map<String, MirrorTradingRuleData> dbDataMap = new HashMap<>();

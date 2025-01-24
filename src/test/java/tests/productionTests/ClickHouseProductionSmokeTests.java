@@ -9,7 +9,6 @@ import helpers.httpHelper.HttpHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Story;
 import okhttp3.Response;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -186,7 +185,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert clientId not null", mappedResponse[0].clientId, is(notNullValue()));
     }
 
-    @Disabled
+    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get floating trades group by (200)")
     @AllureId("808")

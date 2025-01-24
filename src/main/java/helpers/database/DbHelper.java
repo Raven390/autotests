@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.net.InetAddress;
+import java.util.stream.Collectors;
 
 import static utils.ConfigFactory.*;
 
@@ -160,6 +161,43 @@ public class DbHelper {
     @Step("Delete {where} from {tableName}")
     public static void deleteEntryFromDb(String tableName, String where) throws SQLException {
         deleteEntryFromDb(DbName.CLICKHOUSE, tableName, where);
+    }
+
+    @Step("Delete entries from {tableName} in {dbName} where {columnName} matches the provided values")
+    public static void deleteObjectsFromDb(DbName dbName, String tableName, String columnName, List<?> values)
+            throws SQLException {
+        if (values == null || values.isEmpty()) {
+            throw new IllegalArgumentException("The 'values' list cannot be null or empty to prevent unintended deletions.");
+        }
+
+        // Ensure all values are of supported types (String or Number)
+        for (Object value : values) {
+            if (!(value instanceof String || value instanceof Number)) {
+                throw new IllegalArgumentException(
+                        "Unsupported value type: " + value.getClass().getSimpleName() + ". Only String or Number is allowed.");
+            }
+        }
+
+        // Build the IN clause dynamically
+        String placeholders = values.stream().map(value -> {
+            if (value instanceof Number) {
+                return String.valueOf(value); // Numbers are added directly without quotes
+            } else if (value instanceof String) {
+                return String.format("'%s'", ((String) value).replace("'", "''").replace("[", "").replace("]", "").replace(", ", "','")); // Escape and quote strings
+            } else {
+                throw new IllegalArgumentException(
+                        "Unsupported value type: " + value.getClass().getSimpleName());
+            }
+        }).collect(Collectors.joining(", "));
+
+        // Generate the SQL query
+        String query = String.format("DELETE FROM %s WHERE %s IN (%s)", tableName, columnName, placeholders);
+
+        // Execute the query
+        try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+            System.out.println("Executing query: " + query);
+            statement.executeUpdate();
+        }
     }
 
     @Step("Delete {where} from {tableName} in {dbName}")
@@ -373,4 +411,5 @@ public class DbHelper {
         }
         return result.toString();
     }
+
 }

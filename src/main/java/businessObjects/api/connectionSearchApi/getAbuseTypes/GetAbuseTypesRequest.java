@@ -1,4 +1,4 @@
-package businessObjects.api.connectionSearchApi;
+package businessObjects.api.connectionSearchApi.getAbuseTypes;
 
 import helpers.httpHelper.HttpHelper;
 import io.qameta.allure.Step;

@@ -1,7 +1,7 @@
 package tests.connectionSearchApiServiceTests;
 
-import businessObjects.api.connectionSearchApi.GetConnectionsResponse;
-import businessObjects.api.connectionSearchApi.GetConnectionsResponseError;
+import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponse;
+import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseError;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.deviceIdTable.DeviceIdTableEntry;
 import businessObjects.db.clickhouse.digitalIdTable.DigitalIdTableEntry;
@@ -28,8 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.api.connectionSearchApi.GetConnectionsRequest.getConnectionsByAttributes;
-import static businessObjects.api.connectionSearchApi.GetConnectionsResponseFactory.*;
+import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsRequest.getConnectionsByAttributes;
+import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseFactory.*;
 import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
 import static businessObjects.db.clickhouse.deviceIdTable.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.digitalIdTable.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;

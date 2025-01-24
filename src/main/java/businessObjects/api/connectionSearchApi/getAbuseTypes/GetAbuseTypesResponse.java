@@ -1,4 +1,4 @@
-package businessObjects.api.connectionSearchApi;
+package businessObjects.api.connectionSearchApi.getAbuseTypes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
