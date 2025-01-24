@@ -119,7 +119,7 @@ public class DbHelper {
             String columnName = metaData.getColumnName(i);
 
             for (Field field : className.getDeclaredFields()) {
-                if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName)) {
+                if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName.replaceAll("_+", "_"))) {
                     fieldMappings.put(columnName, field);
                     break;
                 }
@@ -387,11 +387,25 @@ public class DbHelper {
             Class<?> objClass) throws SQLException {
         Map<String, String> columnMappings = new HashMap<>();
         DatabaseMetaData metaData = connection.getMetaData();
-        try (ResultSet columns = metaData.getColumns(null, null, tableName, null)) {
+        String catalog = null;
+        String schema = null;
+        String table;
+        String[] arr = tableName.split("\\.");
+        if (arr.length == 3) {
+            catalog = arr[0];
+            schema = arr[1];
+            table = arr[2];
+        } else if (arr.length == 2) {
+            schema = arr[0];
+            table = arr[1];
+        } else {
+            table = tableName;
+        }
+        try (ResultSet columns = metaData.getColumns(catalog, schema, table, null)) {
             while (columns.next()) {
                 String columnName = columns.getString("COLUMN_NAME");
                 for (Field field : objClass.getDeclaredFields()) {
-                    if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName)) {
+                    if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName.replaceAll("_+", "_"))) {
                         columnMappings.put(field.getName(), columnName);
                     }
                 }
