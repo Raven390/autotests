@@ -104,7 +104,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         openTradeEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventCloseTime), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));
+        kafka.produceMessages("QA", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventCloseTime), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
@@ -148,7 +148,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
         String openTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(openTradeEventTableNameObject), "table-name");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, openTradeEventOpenTime, openTradeEventTradeId, openTradeEventMtAccount, openTradeEventServerId, openTradeEventMt4Cmd, openTradeEventMt5Entry, openTradeEventMt5Action, openTradeEventTableName);
+        kafka.produceMessages("QA", KAFKA_TOPIC_MT_DB_EVENTS, openTradeEventOpenTime, openTradeEventTradeId, openTradeEventMtAccount, openTradeEventServerId, openTradeEventMt4Cmd, openTradeEventMt5Entry, openTradeEventMt5Action, openTradeEventTableName);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

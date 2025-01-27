@@ -19,6 +19,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -33,7 +34,7 @@ public class GetLexisNexisTests extends TestBaseApi {
 
     static String eventTypeRegistration = "registration";
     static String eventTypeLogin = "login";
-    static ClientHelper client = getRandomVantageClient();
+    static ClientHelper client = getRandomVantageClientAllFields();
     static ClientHelper client2 = getRandomVantageClient();
     static ClientHelper client3 = getRandomVantageClient();
     static ClientHelper client4 = getRandomVantageClient();
@@ -76,7 +77,7 @@ public class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response createTime", lexisNexisResponse.createTime, is("1970-01-01T00:00:00Z"));
         assertThat("Check response policyScore", lexisNexisResponse.policyScore, is(0));
         assertThat("Check response riskRating", lexisNexisResponse.riskRating, is("12"));
-        assertThat("Check response deviceId", lexisNexisResponse.deviceId, is("device_id"));
+        assertThat("Check response deviceId", lexisNexisResponse.deviceId, is(client.getDeviceId()));
         assertThat("Check response digitalId", lexisNexisResponse.digitalId, is("12345"));
         assertThat("Check response eventDateTime", lexisNexisResponse.eventDatetime, is("1971-01-01T00:00:00Z"));
         assertThat("Check response eventId", lexisNexisResponse.eventId, is(123));

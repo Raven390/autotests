@@ -8,6 +8,9 @@ public class GetCreditsResponse {
     @JsonProperty("tradeId")
     public Integer tradeId;
 
+    @JsonProperty("clientId")
+    public String clientId;
+
     @JsonProperty("createTime")
     public String createTime;
 
@@ -25,6 +28,6 @@ public class GetCreditsResponse {
 
     @Override
     public String toString() {
-        return "GetCreditsResponse{" + "tradeId=" + tradeId + ", createTime='" + createTime + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", profitUSD=" + profitUSD + ", profit=" + profit + ", comment='" + comment + '\'' + '}';
+        return "GetCreditsResponse{" + "tradeId=" + tradeId + ", clientId=" + clientId + ", createTime='" + createTime + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", profitUSD=" + profitUSD + ", profit=" + profit + ", comment='" + comment + '\'' + '}';
     }
 }

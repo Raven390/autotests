@@ -20,8 +20,8 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataRequest.getLexisNexisData;
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataResponse.Items.getItem;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
-import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -35,7 +35,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
 
     static String eventTypeRegistration = "registration";
     static String eventTypeLogin = "login";
-    static ClientHelper client = getRandomVantageClient();
+    static ClientHelper client = getRandomVantageClientAllFields();
     static LnSessionParsedObject object1 = generateLexisNexisDataByClient(client);
     static LnSessionParsedObject object2 = generateLexisNexisDataByClient(client);
 
@@ -44,15 +44,14 @@ public class GetLexisNexisDataTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object1);
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, object2);
+        insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(object1, object2));
     }
 
-//    @AfterAll
-//    public static void teardownData() throws SQLException {
-//        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid1));
-//        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid2));
-//    }
+    @AfterAll
+    public static void teardownData() throws SQLException {
+        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid1));
+        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid2));
+    }
 
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexisData success response by brand+userId (200)")
@@ -140,7 +139,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or userId and brand must be provided."));
+        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.status, is(400));
     }
 
@@ -157,7 +156,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or userId and brand must be provided."));
+        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.status, is(400));
     }
 
@@ -174,7 +173,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or userId and brand must be provided."));
+        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.status, is(400));
     }
 
@@ -189,7 +188,7 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or userId and brand must be provided."));
+        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
         assertThat("Check response status", mappedResponse.status, is(400));
     }
 
@@ -245,5 +244,23 @@ public class GetLexisNexisDataTests extends TestBaseApi {
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response", mappedResponse.totalCount, is(2));
         assertThat("Check response item", mappedResponse.items, containsInAnyOrder(getItem(String.valueOf(object1.id), 60, 123), getItem(String.valueOf(object2.id), 60, 123)));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get lexisNexisData success response by brand+userId (200)")
+    @AllureId("676")
+    public void getLexisNexisDataTest12() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("deviceId", client.getDeviceId());
+        queryParams.put("columnNames", "id");
+        Response response = getLexisNexisData(queryParams);
+        String responseBody = response.body().string();
+
+        GetLexisNexisDataResponse mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisDataResponse.class);
+
+        assertThat("Check response code", response.code(), is(200));
+        assertThat("Check response id", mappedResponse.totalCount, is(2));
+        assertThat("Check response item", mappedResponse.items.toString(), containsString(object1.id.toString()));
+        assertThat("Check response item", mappedResponse.items.toString(), containsString(object2.id.toString()));
     }
 }

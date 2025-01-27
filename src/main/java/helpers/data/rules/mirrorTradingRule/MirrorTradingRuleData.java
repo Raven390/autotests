@@ -1,7 +1,7 @@
 package helpers.data.rules.mirrorTradingRule;
 
 import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
-import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObject;
+import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObject;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
@@ -33,7 +33,7 @@ public class MirrorTradingRuleData {
     public List<CrmTbBonusObject> crmTbBonusObjects;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
-    public AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades;
+    public MirrorLoginObject aggrMirrorAccountsByTrades;
 
     public MirrorTradingRuleData() {
     }
@@ -46,7 +46,7 @@ public class MirrorTradingRuleData {
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
             List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsObjects,
             AggrCreditEquityRateObject aggrCreditEquityRate,
-            AggrMirrorAccountsByTradesObject aggrMirrorAccountsByTrades) {
+            MirrorLoginObject aggrMirrorAccountsByTrades) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;

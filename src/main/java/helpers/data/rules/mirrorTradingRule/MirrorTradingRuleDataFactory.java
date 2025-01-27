@@ -1,7 +1,7 @@
 package helpers.data.rules.mirrorTradingRule;
 
 import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
-import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObject;
+import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObject;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
-import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObjectFactory.generateMirrorTradesByAccount;
+import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObjectFactory.generateMirrorTradesByAccount;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
@@ -241,8 +241,8 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for no dummy trades?
         data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
         // TODO add balanceOrders with comment "WO"
-        AggrMirrorAccountsByTradesObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
-        mirrorAccountsByTrades.requestVolumeInLots = 3d;
+        MirrorLoginObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
+        mirrorAccountsByTrades.lots_1 = 3d;
         data.aggrMirrorAccountsByTrades = mirrorAccountsByTrades;
         return data;
     }
@@ -273,8 +273,8 @@ public class MirrorTradingRuleDataFactory {
         // TODO add data for risk free revenue ratio > 0.5
         // TODO add data for trading on news periods?
         data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
-        AggrMirrorAccountsByTradesObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
-        mirrorAccountsByTrades.requestVolumeInLots = 3d;
+        MirrorLoginObject mirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
+        mirrorAccountsByTrades.lots_1 = 3d;
         data.aggrMirrorAccountsByTrades = mirrorAccountsByTrades;
         return data;
     }

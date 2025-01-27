@@ -35,7 +35,7 @@ public class MtDbEventsCloseTradeTest {
         CloseTradeMtDbEventMt4 closeTradeMtDbEventMt4 = generateCloseTradeMtDbEventMt4();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtDbEventMt4), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(closeTradeMtDbEventMt4), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt4.data.closeTime, true);
@@ -58,7 +58,7 @@ public class MtDbEventsCloseTradeTest {
         CloseTradeMtDbEventMt5 closeTradeMtDbEventMt5 = generateCloseTradeMtDbEventMt5();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(closeTradeMtDbEventMt5), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(closeTradeMtDbEventMt5), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, closeTradeMtDbEventMt5.data.closeTime, true);

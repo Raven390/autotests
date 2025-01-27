@@ -119,7 +119,7 @@ public class DbHelper {
             String columnName = metaData.getColumnName(i);
 
             for (Field field : className.getDeclaredFields()) {
-                if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName.replaceAll("_+", "_"))) {
+                if (field.getName().equalsIgnoreCase(columnName.replaceAll("_", ""))) {
                     fieldMappings.put(columnName, field);
                     break;
                 }
@@ -405,7 +405,7 @@ public class DbHelper {
             while (columns.next()) {
                 String columnName = columns.getString("COLUMN_NAME");
                 for (Field field : objClass.getDeclaredFields()) {
-                    if (field.getName().equalsIgnoreCase(columnName) || camelToSnake(field.getName()).equalsIgnoreCase(columnName.replaceAll("_+", "_"))) {
+                    if (field.getName().equalsIgnoreCase(columnName.replaceAll("_", ""))) {
                         columnMappings.put(field.getName(), columnName);
                     }
                 }

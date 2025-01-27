@@ -79,6 +79,7 @@ public class GetCreditsTests extends TestBaseApi {
         assertThat("Assert profitUSD", mappedResponse[0].profitUSD, is(credit2.amountUsd));
         assertThat("Assert profit", mappedResponse[0].profit, is(credit2.amount));
         assertThat("Assert comment", mappedResponse[0].comment, is(credit2.comment));
+        assertThat("Assert comment", mappedResponse[0].clientId, is(credit1.ucid));
     }
 
     @Test
@@ -196,7 +197,7 @@ public class GetCreditsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert error message", mappedResponse.error, is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
@@ -217,7 +218,7 @@ public class GetCreditsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert error message", mappedResponse.error, is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
@@ -238,7 +239,7 @@ public class GetCreditsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert error message", mappedResponse.error, is("Either clientId or tradingAccount and serverId must be provided."));
         assertThat("Assert error status", mappedResponse.status, is(400));
     }
 
