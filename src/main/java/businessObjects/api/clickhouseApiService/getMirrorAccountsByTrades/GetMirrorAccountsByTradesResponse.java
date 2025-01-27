@@ -2,36 +2,25 @@ package businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.List;
 
 public class GetMirrorAccountsByTradesResponse {
 
-    @JsonProperty("originalAccount")
-    public originalAccount originalAccount;
+    @JsonProperty("originalTradingAccount")
+    public String originalTradingAccount;
 
-    public static class originalAccount {
-        @JsonProperty("tradingAccount")
-        public String requestTradingAccount;
+    @JsonProperty("originalServerId")
+    public String originalServerId;
 
-        @JsonProperty("serverId")
-        public String requestServerId;
+    @JsonProperty("originalVolumeInLots")
+    public String originalVolumeInLots;
 
-        @JsonProperty("volumeInLots")
-        public String requestVolumeInLots;
-    }
+    @JsonProperty("mirrorTradingAccount")
+    public String mirrorTradingAccount;
 
-    @JsonProperty("mirrorAccounts")
-    public List<MirrorAccounts> mirrorAccounts;
+    @JsonProperty("mirrorServerId")
+    public String mirrorServerId;
 
-    public static class MirrorAccounts {
+    @JsonProperty("mirrorVolumeInLots")
+    public String mirrorVolumeInLots;
 
-        @JsonProperty("tradingAccount")
-        public String tradingAccount;
-
-        @JsonProperty("serverId")
-        public String serverId;
-
-        @JsonProperty("volumeInLots")
-        public String volumeInLots;
-    }
 }

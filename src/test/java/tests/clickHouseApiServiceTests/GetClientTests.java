@@ -1,7 +1,7 @@
 package tests.clickHouseApiServiceTests;
 
 import static businessObjects.api.clickhouseApiService.getClient.GetClientRequest.getClient;
-import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +36,7 @@ public class GetClientTests extends TestBaseApi {
     public void getClientSuccessTest() throws IOException, ReflectiveOperationException, SQLException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomVantageClient();
-        insertObjectToDb(CRM_USER_TABLE_NAME, generateUserByClient(client));
+        insertObjectToDb(CRM_USER_TABLE_NAME, generateStaticUserByClient(client));
         // Execute request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", client.getUcid());

@@ -2,17 +2,16 @@ package businessObjects.kafka.mtDbEvents.closeTrade;
 
 import io.qameta.allure.Step;
 
-import static utils.Utils.getRandomInt;
-import static utils.Utils.getRandomIntNotInRange;
-
 import java.time.Instant;
+
+import static utils.Utils.*;
 
 public class CloseTradeMtDbEventFactory {
 
     @Step("Generate close trade db event metadata")
     private static CloseTradeMtDbEventMetadata generateCloseTradeMtDbEventMetadata() {
         return new CloseTradeMtDbEventMetadata(
-                Instant.now().toString(), "test_record_type", "insert", "test_partition_key_type", "test_schema_name", null);
+                Instant.now().toString(), "event", "INSERT", "HASH", "events", "mt4_trades");
     }
 
     @Step("Generate close trade db event mt4 metadata")
@@ -32,13 +31,13 @@ public class CloseTradeMtDbEventFactory {
     @Step("Generate close trade db event mt4 data")
     private static CloseTradeMtDbEventMt4Data generateCloseTradeMtDbEventMt4Data() {
         return new CloseTradeMtDbEventMt4Data(
-                Instant.now().toString(), getRandomInt(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "test_symbol", 0, 9);
+                Instant.now().toString(), Instant.now().plusMillis(100_000).toString(), getRandomIntPositive(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "EURUSD", 1, 9);
     }
 
     @Step("Generate close trade db event mt5 data")
     private static CloseTradeMtDbEventMt5Data generateCloseTradeMtDbEventMt5Data() {
         return new CloseTradeMtDbEventMt5Data(
-                Instant.now().toString(), getRandomInt(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "test_symbol", 1, 0, 9);
+                Instant.now().toString(), getRandomInt(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "EURUSD", 1, 0, 9);
     }
 
     @Step("Generate close trade db event mt4")

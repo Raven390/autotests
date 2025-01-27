@@ -34,7 +34,7 @@ public class EventGeneratorLoginTests {
         LoginDbEvent loginDbEvent = generateLoginDbEvent();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(loginDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(loginDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, loginDbEvent.data.userId.toString());

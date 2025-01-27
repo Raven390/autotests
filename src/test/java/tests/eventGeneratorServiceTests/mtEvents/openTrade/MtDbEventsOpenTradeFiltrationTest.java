@@ -18,6 +18,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE)
 @Tag(TEAM_CORE)
@@ -46,8 +48,8 @@ public class MtDbEventsOpenTradeFiltrationTest {
         openTradeEventTradeIdAccountServerId2.data.mtAccount = openTradeEventTradeIdAccountServerId1.data.mtAccount;
 
         OpenTradeMtDbEventMt4 openTradeEventTestCloseTime = generateOpenTradeMtDbEventMt4();
-        openTradeEventTestCloseTime.data.closeTime = "2024-09-30T16:24:35.142706Z";
-
+        openTradeEventTestCloseTime.data.closeTime = Instant.now().toString();
+        openTradeEventTestCloseTime.data.modifyTime = Instant.now().plusMillis(100_000).toString();
         OpenTradeMtDbEventMt4 openTradeEventMt4Cmd1 = generateOpenTradeMtDbEventMt4();
         openTradeEventMt4Cmd1.data.cmd = -1;
 
@@ -79,7 +81,7 @@ public class MtDbEventsOpenTradeFiltrationTest {
         openTradeEventTestCloseTimeNull.data.closeTime = "1970-01-01T00:00:00Z";
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventTestAccount1), objectMapper.writeValueAsString(openTradeEventTestAccount2), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId1), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId2), objectMapper.writeValueAsString(openTradeEventMt4Cmd1), objectMapper.writeValueAsString(openTradeEventMt4Cmd2), objectMapper.writeValueAsString(openTradeEventMt5Entry1), objectMapper.writeValueAsString(openTradeEventMt5Entry2), objectMapper.writeValueAsString(openTradeEventMt5Action1), objectMapper.writeValueAsString(openTradeEventMt5Action2));
+        kafka.produceMessages("QA", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventTestAccount1), objectMapper.writeValueAsString(openTradeEventTestAccount2), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId1), objectMapper.writeValueAsString(openTradeEventTradeIdAccountServerId2), objectMapper.writeValueAsString(openTradeEventMt4Cmd1), objectMapper.writeValueAsString(openTradeEventMt4Cmd2), objectMapper.writeValueAsString(openTradeEventMt5Entry1), objectMapper.writeValueAsString(openTradeEventMt5Entry2), objectMapper.writeValueAsString(openTradeEventMt5Action1), objectMapper.writeValueAsString(openTradeEventMt5Action2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

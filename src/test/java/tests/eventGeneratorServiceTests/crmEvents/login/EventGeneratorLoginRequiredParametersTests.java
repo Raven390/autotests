@@ -50,7 +50,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         loginDbEventMetadata.metadata = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(loginDbEventLoginTime), objectMapper.writeValueAsString(loginDbEventUserId), objectMapper.writeValueAsString(loginDbEventBrand), objectMapper.writeValueAsString(loginDbEventTableName), objectMapper.writeValueAsString(loginDbEventData), objectMapper.writeValueAsString(loginDbEventMetadata));
+        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(loginDbEventLoginTime), objectMapper.writeValueAsString(loginDbEventUserId), objectMapper.writeValueAsString(loginDbEventBrand), objectMapper.writeValueAsString(loginDbEventTableName), objectMapper.writeValueAsString(loginDbEventData), objectMapper.writeValueAsString(loginDbEventMetadata));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -93,7 +93,7 @@ public class EventGeneratorLoginRequiredParametersTests {
         loginDbEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(loginDbEventIpAddress), objectMapper.writeValueAsString(loginDbEventUaString), objectMapper.writeValueAsString(loginDbEventCookie), objectMapper.writeValueAsString(loginDbEventTimestamp), objectMapper.writeValueAsString(loginDbEventRecordType), objectMapper.writeValueAsString(loginDbEventOperation), objectMapper.writeValueAsString(loginDbEventPartitionType), objectMapper.writeValueAsString(loginDbEventSchemaName));
+        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(loginDbEventIpAddress), objectMapper.writeValueAsString(loginDbEventUaString), objectMapper.writeValueAsString(loginDbEventCookie), objectMapper.writeValueAsString(loginDbEventTimestamp), objectMapper.writeValueAsString(loginDbEventRecordType), objectMapper.writeValueAsString(loginDbEventOperation), objectMapper.writeValueAsString(loginDbEventPartitionType), objectMapper.writeValueAsString(loginDbEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(

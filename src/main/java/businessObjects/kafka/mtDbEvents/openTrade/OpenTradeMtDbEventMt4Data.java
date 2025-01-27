@@ -28,6 +28,9 @@ public class OpenTradeMtDbEventMt4Data {
     @JsonProperty("CLOSE_TIME")
     public String closeTime;
 
+    @JsonProperty("MODIFY_TIME")
+    public String modifyTime;
+
     @JsonProperty("ServerID")
     public Integer serverId;
 

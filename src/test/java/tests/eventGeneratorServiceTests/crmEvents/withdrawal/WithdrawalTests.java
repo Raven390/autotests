@@ -37,7 +37,7 @@ public class WithdrawalTests {
         WithdrawalDbEvent withdrawalDbEvent = generateWithdrawalDbEvent();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(withdrawalDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(withdrawalDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, withdrawalDbEvent.data.id.toString());
@@ -62,7 +62,7 @@ public class WithdrawalTests {
         WithdrawalDbEventCps withdrawalDbEventCps = generateWithdrawalDbEventCps();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(withdrawalDbEventCps), KAFKA_TOPIC_CRM_DB_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(withdrawalDbEventCps), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, withdrawalDbEventCps.data.id.toString());

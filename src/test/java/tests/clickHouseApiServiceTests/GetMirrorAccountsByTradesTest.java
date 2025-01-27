@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades.GetMirrorAccountsByTradesResponse;
-import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObject;
+import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getMirrorAccountsByTrades.GetMirrorAccountsByTradesRequest.getMirrorAccountsByTrades;
-import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.AggrMirrorAccountsByTradesObjectFactory.generateMirrorTradesByAccount;
+import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObjectFactory.generateMirrorTradesByAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -34,22 +34,22 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetMirrorAccountsByTradesTest extends TestBaseApi {
 
-    private static AggrMirrorAccountsByTradesObject data1;
+    private static MirrorLoginObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
     private static final String symbol = "EURUSD";
-    public static final String dateTo = getCurrentTimestampDbFormat();
-    public static final String dateFrom = getTomorrowTimestampDbFormat();
+    public static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
+    public static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
 
 
     @BeforeAll
     public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
         data1 = generateMirrorTradesByAccount(client1);
-        insertObjectToDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, data1);
+        insertObjectToDb(DATA_SCIENCE_MIRROR_LOGIN, data1);
     }
 
     @AfterAll
     public static void teardownMirrorTrades() throws SQLException {
-        deleteEntryFromDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, String.format("request_trading_account = '%s'", data1.requestTradingAccount));
+        deleteEntryFromDb(DATA_SCIENCE_MIRROR_LOGIN, String.format("login_1 = '%s'", data1.login_1));
     }
 
     @Test
@@ -60,21 +60,21 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateFrom", dateFrom.replace(" ", "T"));
-        queryParams.put("dateTo", dateTo.replace(" ", "T"));
+        queryParams.put("dateFrom", dateFrom);
+        queryParams.put("dateTo", dateTo);
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert requestTradingAccount", mappedResponse.originalAccount.requestTradingAccount, is(data1.requestTradingAccount));
-        assertThat("Assert requestServerId", mappedResponse.originalAccount.requestServerId, is(data1.requestServerId));
-        assertThat("Assert requestVolumeInLots", mappedResponse.originalAccount.requestVolumeInLots, is(data1.requestVolumeInLots.toString()));
-        assertThat("Assert list size", mappedResponse.mirrorAccounts.size(), is(1));
-        assertThat("Assert tradingAccount", mappedResponse.mirrorAccounts.getFirst().tradingAccount, is(data1.mirrorAccounts));
-        assertThat("Assert serverId", mappedResponse.mirrorAccounts.getFirst().serverId, is(data1.mirrorServerId));
-        assertThat("Assert volumeInLots", mappedResponse.mirrorAccounts.getFirst().volumeInLots, is(data1.mirrorVolumeInLots.toString()));
+        assertThat("Assert requestTradingAccount", mappedResponse[0].originalTradingAccount, is(data1.login_1));
+        assertThat("Assert requestServerId", mappedResponse[0].originalServerId, is(data1.server_id_1));
+        assertThat("Assert requestVolumeInLots", mappedResponse[0].originalVolumeInLots, is(data1.lots_1.toString()));
+        assertThat("Assert list size", mappedResponse.length, is(1));
+        assertThat("Assert tradingAccount", mappedResponse[0].mirrorTradingAccount, is(data1.login_2));
+        assertThat("Assert serverId", mappedResponse[0].mirrorServerId, is(data1.server_id_2));
+        assertThat("Assert volumeInLots", mappedResponse[0].mirrorVolumeInLots, is(data1.lots_2.toString()));
     }
 
     @Test
@@ -89,7 +89,6 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -157,7 +156,6 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -174,7 +172,6 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -190,10 +187,9 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert that original account is null", mappedResponse.originalAccount, is(nullValue()));
-        assertThat("Assert that mirror accounts list is empty", mappedResponse.mirrorAccounts, is(empty()));
+        assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }
 
     @Test
@@ -208,10 +204,9 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert that original account is null", mappedResponse.originalAccount, is(nullValue()));
-        assertThat("Assert that mirror accounts list is empty", mappedResponse.mirrorAccounts, is(empty()));
+        assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }
 
     @Test
@@ -226,9 +221,8 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
         Response response = getMirrorAccountsByTrades(queryParams);
 
         assert response.body() != null;
-        GetMirrorAccountsByTradesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse.class);
+        GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert that original account is null", mappedResponse.originalAccount, is(nullValue()));
-        assertThat("Assert that mirror accounts list is empty", mappedResponse.mirrorAccounts, is(empty()));
+        assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
     }
 }

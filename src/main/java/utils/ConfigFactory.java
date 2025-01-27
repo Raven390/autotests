@@ -75,6 +75,8 @@ public class ConfigFactory {
     public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
     public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
     public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
+    // data science db
+    public static final String DATA_SCIENCE_MIRROR_LOGIN = CONFIG.mitigationDbName();
     // Audit service db
     public static final String AUDIT_DB_USER = CONFIG.auditDbUser();
     public static final String AUDIT_DB_PASSWORD = CONFIG.auditDbPassword();
