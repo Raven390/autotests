@@ -62,11 +62,11 @@ public class GetBonusesTests extends TestBaseApi {
         queryParams.put("dateFrom", bonus1.createTime.replace(" ", "T"));
         queryParams.put("dateTo", bonus2.createTime.replace(" ", "T"));
         queryParams.put("bonusType", bonus1.typeRemark);
+        queryParams.put("bonusGroup", bonus1.type);
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
         Response response = getBonuses(queryParams);
-
         assert response.body() != null;
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
@@ -75,6 +75,7 @@ public class GetBonusesTests extends TestBaseApi {
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(bonus2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(bonus2.ucid));
         assertThat("Assert bonusType", mappedResponse[0].bonusType, is(bonus2.typeRemark));
+        assertThat("Assert bonusGroup", mappedResponse[0].bonusGroup, is(bonus2.type));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(bonus2.amountUsd));
         assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(bonus2.amount));
     }
