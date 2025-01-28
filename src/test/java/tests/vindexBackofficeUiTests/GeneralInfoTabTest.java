@@ -59,8 +59,8 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         assertThat("Assert that encoded phone number is correct", generalPage.getPhoneNumber(), equalTo("+1*********3"));
         assertThat("Assert that 2 factor auth is correct", generalPage.get2FactorAuth(), equalTo("Yes"));
         generalPage.verifyKycSectionIsVisible();
-        assertThat("Assert that registration source ib is correct", generalPage.getRegistrationSourceIb(), equalTo("1"));
-        assertThat("Assert that registration source cpa is correct", generalPage.getRegistrationSourceCpa(), equalTo("2"));
+        assertThat("Assert that registration source ib is correct", generalPage.getRegistrationSourceIb(), equalTo(crmTbUser.ibId.toString()));
+        assertThat("Assert that registration source cpa is correct", generalPage.getRegistrationSourceCpa(), equalTo(crmTbUser.cpaId.toString()));
         generalPage.clickShowHiddenDataButton();
         assertThat("Assert that email is correct", generalPage.getEmailAddress(), equalTo("test14@example.com"));
         assertThat("Assert that phone number is correct", generalPage.getPhoneNumber(), equalTo("+1810347493"));
