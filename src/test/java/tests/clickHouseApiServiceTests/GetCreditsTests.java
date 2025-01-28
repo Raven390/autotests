@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCredits.GetCreditsRequest.getCredits;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -45,6 +46,7 @@ public class GetCreditsTests extends TestBaseApi {
         credit2.account = credit1.account;
         credit2.createTime = getTomorrowTimestampDbFormat();
         credit2.amountUsd = 2.0;
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
         insertObjectToDb(MT_CREDITS_TABLE_NAME, credit1);
         insertObjectToDb(MT_CREDITS_TABLE_NAME, credit2);
     }
@@ -58,7 +60,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits by all params")
     @AllureId("402")
     public void getCreditsAllParamsTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -74,6 +75,34 @@ public class GetCreditsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(credit2.ticket));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(credit2.ucid));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(credit2.createTime)));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(credit2.account.toString()));
+        assertThat("Assert profitUSD", mappedResponse[0].profitUSD, is(credit2.amountUsd));
+        assertThat("Assert profit", mappedResponse[0].profit, is(credit2.amount));
+        assertThat("Assert comment", mappedResponse[0].comment, is(credit2.comment));
+        assertThat("Assert comment", mappedResponse[0].clientId, is(credit1.ucid));
+    }
+
+    @Test
+    @DisplayName("Clickhouse Api. Get client credits by all params with clientId")
+    @AllureId("894")
+    public void getCreditsAllParamsClientIdTest() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientIds", credit1.ucid);
+        queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
+        queryParams.put("dateTo", credit2.createTime.replace(" ", "T"));
+        queryParams.put("orderBy", "createTime");
+        queryParams.put("sortOrder", "desc");
+        queryParams.put("limit", "2");
+        Response response = getCredits(queryParams);
+
+        assert response.body() != null;
+        GetCreditsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetCreditsResponse[].class);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.length, is(2));
+        assertThat("Assert tradeId", mappedResponse[0].tradeId, is(credit2.ticket));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(credit2.ucid));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(credit2.createTime)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(credit2.account.toString()));
         assertThat("Assert profitUSD", mappedResponse[0].profitUSD, is(credit2.amountUsd));
@@ -86,7 +115,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits by empty params")
     @AllureId("403")
     public void getCreditsEmptyParamsTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -107,7 +135,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits mandatory parameters(200)")
     @AllureId("211")
     public void getCreditsClientIdTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -123,7 +150,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits by mandatory params and limit")
     @AllureId("404")
     public void getCreditsLimitTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -137,6 +163,7 @@ public class GetCreditsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(credit2.ticket));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(credit2.ucid));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(credit2.createTime)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(credit2.account.toString()));
         assertThat("Assert profitUSD", mappedResponse[0].profitUSD, is(credit2.amountUsd));
@@ -148,7 +175,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits order by create time default order")
     @AllureId("405")
     public void getCreditsDefaultSortOrderTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -160,6 +186,7 @@ public class GetCreditsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(credit1.ticket));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(credit1.ucid));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(credit1.createTime)));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(credit1.account.toString()));
         assertThat("Assert profitUSD", mappedResponse[0].profitUSD, is(credit1.amountUsd));
@@ -171,7 +198,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client bonuses order by profitUSD")
     @AllureId("406")
     public void getCreditsOrderByAmountUsdTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -190,7 +216,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits no params")
     @AllureId("407")
     public void getCreditsNoParamsTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getCredits(queryParams);
 
@@ -205,7 +230,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits no tradingAccount")
     @AllureId("408")
     public void getCreditsNoTradingAccountTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", credit1.serverId);
         queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
@@ -226,7 +250,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits no serverId")
     @AllureId("409")
     public void getCreditsNoServerIdTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
@@ -247,7 +270,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits incorrect dateFrom")
     @AllureId("410")
     public void getCreditsIncorrectDateFromTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -267,7 +289,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits incorrect dateTo")
     @AllureId("411")
     public void getCreditsIncorrectDateToTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -287,7 +308,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits incorrect orderBy")
     @AllureId("412")
     public void getCreditsIncorrectOrderByTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -305,7 +325,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits incorrect sortOrder")
     @AllureId("413")
     public void getCreditsIncorrectSortOrderTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -323,7 +342,6 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get credits incorrect limit")
     @AllureId("414")
     public void getCreditsIncorrectLimitTest() throws IOException {
-
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
