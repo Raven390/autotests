@@ -73,6 +73,7 @@ public class GetClientTests extends TestBaseApi {
         assertThat("Check rafReferrerId", getClientResponse.rafReferrerId, is("3"));
         assertThat("Check kycStatus", getClientResponse.kycStatus, is("PARTIAL_KYC_ID_PASS"));
         assertThat("Check lastUpdated", getClientResponse.lastUpdated, is("2024-10-29T09:55:01.3Z"));
+        assertThat("Check poi completion time", getClientResponse.poiCompletionTime, is("2024-11-29T09:55:01Z"));
     }
 
     @Test

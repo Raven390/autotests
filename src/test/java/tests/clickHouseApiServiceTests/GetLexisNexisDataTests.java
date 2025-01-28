@@ -247,8 +247,8 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get lexisNexisData success response by brand+userId (200)")
-    @AllureId("676")
+    @DisplayName("Clickhouse Api. Get lexisNexisData success response by deviceId (200)")
+    @AllureId("874")
     public void getLexisNexisDataTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("deviceId", client.getDeviceId());

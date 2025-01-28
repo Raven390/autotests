@@ -88,4 +88,7 @@ public class GetClientResponse {
     @JsonProperty("kycStatus")
     public String kycStatus;
 
+    @JsonProperty("poiCompletionTime")
+    public String poiCompletionTime;
+
 }

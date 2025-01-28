@@ -62,68 +62,68 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventId", event.eventId);
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
-        GetLexisNexisResponse[] lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse[].class);
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response id", lexisNexisResponse[0].id, is(event.id));
-        assertThat("Check response brand", lexisNexisResponse[0].brand, is(client.getBrand()));
-        assertThat("Check response sessionId", lexisNexisResponse[0].sessionId, is(event.sessionId));
-        assertThat("Check response userId", lexisNexisResponse[0].userId, is(client.getUserId()));
-        assertThat("Check response email", lexisNexisResponse[0].email, is(event.email));
-        assertThat("Check response mobileCode", lexisNexisResponse[0].mobileCode, is("60"));
-        assertThat("Check response mobile", lexisNexisResponse[0].mobile, is("123456"));
-        assertThat("Check response eventType", lexisNexisResponse[0].eventType, is("registration"));
-        assertThat("Check response isFromApp", lexisNexisResponse[0].isFromApp, is(true));
-        assertThat("Check response createTime", lexisNexisResponse[0].createTime, is("1970-01-01T00:00:00Z"));
-        assertThat("Check response policyScore", lexisNexisResponse[0].policyScore, is(0));
-        assertThat("Check response riskRating", lexisNexisResponse[0].riskRating, is("12"));
-        assertThat("Check response deviceId", lexisNexisResponse[0].deviceId, is(client.getDeviceId()));
-        assertThat("Check response digitalId", lexisNexisResponse[0].digitalId, is("12345"));
-        assertThat("Check response eventDateTime", lexisNexisResponse[0].eventDatetime, is("1971-01-01T00:00:00Z"));
-        assertThat("Check response eventId", lexisNexisResponse[0].eventId, is(123));
-        assertThat("Check response proxyIp", lexisNexisResponse[0].proxyIp, is("127.0.0.1"));
-        //assertThat("Check response proxyIpActivities", Arrays.asList(lexisNexisResponse[0].proxyIpActivities), is(List.of("proxyIpActivities")));
-        //assertThat("Check response proxyIpAttributes", Arrays.asList(lexisNexisResponse[0].proxyIpAttributes), is(Arrays.asList("String_1", "String_2")));
-        assertThat("Check response proxyIpCity", lexisNexisResponse[0].proxyIpCity, is("proxyIpCity"));
-        assertThat("Check response proxyIpConnectionType", lexisNexisResponse[0].proxyIpConnectionType, is("proxyIpConnection"));
-        assertThat("Check response proxyIpFirstSeen", lexisNexisResponse[0].proxyIpFirstSeen, is("1972-01-01"));
-        assertThat("Check response proxyIpGeo", lexisNexisResponse[0].proxyIpGeo, is("proxyIpGeo"));
-        assertThat("Check response proxyIpHome", lexisNexisResponse[0].proxyIpHome, is("proxyIpHome"));
-        assertThat("Check response proxyIpIsp", lexisNexisResponse[0].proxyIpIsp, is("proxyIpIsp"));
-        assertThat("Check response proxyIpLatitude", lexisNexisResponse[0].proxyIpLatitude, is(30.300_00));
-        assertThat("Check response proxyIpLongitude", lexisNexisResponse[0].proxyIpLongitude, is(40.400_00));
-        assertThat("Check response proxyIpOrganization", lexisNexisResponse[0].proxyIpOrganization, is("proxyIpOrganization"));
-        assertThat("Check response proxyIpOrganizationType", lexisNexisResponse[0].proxyIpOrganizationType, is("proxyIpOrganizationType"));
-        assertThat("Check response proxyIpPostalCode", lexisNexisResponse[0].proxyIpPostalCode, is("proxyIpPostalCode"));
-        assertThat("Check response proxyIpRegion", lexisNexisResponse[0].proxyIpRegion, is("proxyIpRegion"));
-        assertThat("Check response proxyIpResult", lexisNexisResponse[0].proxyIpResult, is("proxyIpResult"));
-        assertThat("Check response proxyIpRoutingType", lexisNexisResponse[0].proxyIpRoutingType, is("proxyIpRoutingType"));
-        assertThat("Check response proxyIpScore", lexisNexisResponse[0].proxyIpScore, is(2));
-        assertThat("Check response proxyIpWorstScore", lexisNexisResponse[0].proxyIpWorstScore, is(2));
-        assertThat("Check response proxyIpV6", lexisNexisResponse[0].proxyIpv6, is("proxyIpV6"));
-        assertThat("Check response proxyName", lexisNexisResponse[0].proxyName, is("proxyName"));
-        assertThat("Check response proxyScore", lexisNexisResponse[0].proxyScore, is(3.00));
-        assertThat("Check response proxyType", lexisNexisResponse[0].proxyType, is("proxyType"));
-        assertThat("Check response trueIp", lexisNexisResponse[0].trueIp, is("192.168.0.1"));
-        assertThat("Check response trueIpActivities", lexisNexisResponse[0].trueIpActivities, is("trueIpActivities"));
-        //assertThat("Check response trueIpAttributes", Arrays.asList(lexisNexisResponse[0].trueIpAttributes), is(Arrays.asList("String_1", "String_2")));
-        assertThat("Check response proxyIpCity", lexisNexisResponse[0].proxyIpCity, is("proxyIpCity"));
-        assertThat("Check response trueIpCity", lexisNexisResponse[0].trueIpCity, is("trueIpCity"));
-        assertThat("Check response trueIpCountryConfidence", lexisNexisResponse[0].trueIpCountryConfidence, is(4));
-        assertThat("Check response trueIpFirstSeen", lexisNexisResponse[0].trueIpFirstSeen, is("1973-01-01"));
-        assertThat("Check response trueIpGeo", lexisNexisResponse[0].trueIpGeo, is("trueIpGeo"));
-        assertThat("Check response trueIpIsp", lexisNexisResponse[0].trueIpIsp, is("trueIpIsp"));
-        assertThat("Check response trueIpLastEvent", lexisNexisResponse[0].trueIpLastEvent, is("1973-01-01"));
-        assertThat("Check response trueIpOrganization", lexisNexisResponse[0].trueIpOrganization, is("trueIpOrganization"));
-        assertThat("Check response trueIpOrganizationType", lexisNexisResponse[0].trueIpOrganizationType, is("trueIpOrganizationType"));
-        assertThat("Check response trueIpPostalCode", lexisNexisResponse[0].trueIpPostalCode, is("trueIpPostalCode"));
-        assertThat("Check response trueIpRegion", lexisNexisResponse[0].trueIpRegion, is("trueIpRegion"));
-        assertThat("Check response trueIpResult", lexisNexisResponse[0].trueIpResult, is("trueIpResult"));
-        assertThat("Check response trueIpRoutingType", lexisNexisResponse[0].trueIpRoutingType, is("trueIpRoutingType"));
-        assertThat("Check response trueIpScore", lexisNexisResponse[0].trueIpScore, is(100));
-        assertThat("Check response trueIpWorstScore", lexisNexisResponse[0].trueIpWorstScore, is(1));
-        assertThat("Check response trueIpv6", lexisNexisResponse[0].trueIpv6, is("1"));
-        assertThat("Check response vpnScore", lexisNexisResponse[0].vpnScore, is(1));
+        assertThat("Check response id", lexisNexisResponse.id, is(event.id));
+        assertThat("Check response brand", lexisNexisResponse.brand, is(client.getBrand()));
+        assertThat("Check response sessionId", lexisNexisResponse.sessionId, is(event.sessionId));
+        assertThat("Check response userId", lexisNexisResponse.userId, is(client.getUserId()));
+        assertThat("Check response email", lexisNexisResponse.email, is(event.email));
+        assertThat("Check response mobileCode", lexisNexisResponse.mobileCode, is("60"));
+        assertThat("Check response mobile", lexisNexisResponse.mobile, is("123456"));
+        assertThat("Check response eventType", lexisNexisResponse.eventType, is("registration"));
+        assertThat("Check response isFromApp", lexisNexisResponse.isFromApp, is(true));
+        assertThat("Check response createTime", lexisNexisResponse.createTime, is("1970-01-01T00:00:00Z"));
+        assertThat("Check response policyScore", lexisNexisResponse.policyScore, is(0));
+        assertThat("Check response riskRating", lexisNexisResponse.riskRating, is("12"));
+        assertThat("Check response deviceId", lexisNexisResponse.deviceId, is(client.getDeviceId()));
+        assertThat("Check response digitalId", lexisNexisResponse.digitalId, is("12345"));
+        assertThat("Check response eventDateTime", lexisNexisResponse.eventDatetime, is("1971-01-01T00:00:00Z"));
+        assertThat("Check response eventId", lexisNexisResponse.eventId, is(123));
+        assertThat("Check response proxyIp", lexisNexisResponse.proxyIp, is("127.0.0.1"));
+        //assertThat("Check response proxyIpActivities", Arrays.asList(lexisNexisResponse.proxyIpActivities), is(List.of("proxyIpActivities")));
+        //assertThat("Check response proxyIpAttributes", Arrays.asList(lexisNexisResponse.proxyIpAttributes), is(Arrays.asList("String_1", "String_2")));
+        assertThat("Check response proxyIpCity", lexisNexisResponse.proxyIpCity, is("proxyIpCity"));
+        assertThat("Check response proxyIpConnectionType", lexisNexisResponse.proxyIpConnectionType, is("proxyIpConnection"));
+        assertThat("Check response proxyIpFirstSeen", lexisNexisResponse.proxyIpFirstSeen, is("1972-01-01"));
+        assertThat("Check response proxyIpGeo", lexisNexisResponse.proxyIpGeo, is("proxyIpGeo"));
+        assertThat("Check response proxyIpHome", lexisNexisResponse.proxyIpHome, is("proxyIpHome"));
+        assertThat("Check response proxyIpIsp", lexisNexisResponse.proxyIpIsp, is("proxyIpIsp"));
+        assertThat("Check response proxyIpLatitude", lexisNexisResponse.proxyIpLatitude, is(30.300_00));
+        assertThat("Check response proxyIpLongitude", lexisNexisResponse.proxyIpLongitude, is(40.400_00));
+        assertThat("Check response proxyIpOrganization", lexisNexisResponse.proxyIpOrganization, is("proxyIpOrganization"));
+        assertThat("Check response proxyIpOrganizationType", lexisNexisResponse.proxyIpOrganizationType, is("proxyIpOrganizationType"));
+        assertThat("Check response proxyIpPostalCode", lexisNexisResponse.proxyIpPostalCode, is("proxyIpPostalCode"));
+        assertThat("Check response proxyIpRegion", lexisNexisResponse.proxyIpRegion, is("proxyIpRegion"));
+        assertThat("Check response proxyIpResult", lexisNexisResponse.proxyIpResult, is("proxyIpResult"));
+        assertThat("Check response proxyIpRoutingType", lexisNexisResponse.proxyIpRoutingType, is("proxyIpRoutingType"));
+        assertThat("Check response proxyIpScore", lexisNexisResponse.proxyIpScore, is(2));
+        assertThat("Check response proxyIpWorstScore", lexisNexisResponse.proxyIpWorstScore, is(2));
+        assertThat("Check response proxyIpV6", lexisNexisResponse.proxyIpv6, is("proxyIpV6"));
+        assertThat("Check response proxyName", lexisNexisResponse.proxyName, is("proxyName"));
+        assertThat("Check response proxyScore", lexisNexisResponse.proxyScore, is(3.00));
+        assertThat("Check response proxyType", lexisNexisResponse.proxyType, is("proxyType"));
+        assertThat("Check response trueIp", lexisNexisResponse.trueIp, is("192.168.0.1"));
+        assertThat("Check response trueIpActivities", lexisNexisResponse.trueIpActivities, is("trueIpActivities"));
+        //assertThat("Check response trueIpAttributes", Arrays.asList(lexisNexisResponse.trueIpAttributes), is(Arrays.asList("String_1", "String_2")));
+        assertThat("Check response proxyIpCity", lexisNexisResponse.proxyIpCity, is("proxyIpCity"));
+        assertThat("Check response trueIpCity", lexisNexisResponse.trueIpCity, is("trueIpCity"));
+        assertThat("Check response trueIpCountryConfidence", lexisNexisResponse.trueIpCountryConfidence, is(4));
+        assertThat("Check response trueIpFirstSeen", lexisNexisResponse.trueIpFirstSeen, is("1973-01-01"));
+        assertThat("Check response trueIpGeo", lexisNexisResponse.trueIpGeo, is("trueIpGeo"));
+        assertThat("Check response trueIpIsp", lexisNexisResponse.trueIpIsp, is("trueIpIsp"));
+        assertThat("Check response trueIpLastEvent", lexisNexisResponse.trueIpLastEvent, is("1973-01-01"));
+        assertThat("Check response trueIpOrganization", lexisNexisResponse.trueIpOrganization, is("trueIpOrganization"));
+        assertThat("Check response trueIpOrganizationType", lexisNexisResponse.trueIpOrganizationType, is("trueIpOrganizationType"));
+        assertThat("Check response trueIpPostalCode", lexisNexisResponse.trueIpPostalCode, is("trueIpPostalCode"));
+        assertThat("Check response trueIpRegion", lexisNexisResponse.trueIpRegion, is("trueIpRegion"));
+        assertThat("Check response trueIpResult", lexisNexisResponse.trueIpResult, is("trueIpResult"));
+        assertThat("Check response trueIpRoutingType", lexisNexisResponse.trueIpRoutingType, is("trueIpRoutingType"));
+        assertThat("Check response trueIpScore", lexisNexisResponse.trueIpScore, is(100));
+        assertThat("Check response trueIpWorstScore", lexisNexisResponse.trueIpWorstScore, is(1));
+        assertThat("Check response trueIpv6", lexisNexisResponse.trueIpv6, is("1"));
+        assertThat("Check response vpnScore", lexisNexisResponse.vpnScore, is(1));
     }
 
     @Test
@@ -189,10 +189,8 @@ public class GetLexisNexisTests extends TestBaseApi {
         assert response.body() != null;
         String responseBody = response.body().string();
 
-        GetLexisNexisResponse[] mappedResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse[].class);
-
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert that body is empty", mappedResponse.length, is(0));
+        assertThat("Assert that body is empty", responseBody, is("{}"));
     }
 
     @Test
@@ -213,10 +211,10 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventId", event2.eventId);
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
-        GetLexisNexisResponse[] lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse[].class);
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response code", lexisNexisResponse[0].eventId, is(event2.eventId));
+        assertThat("Check response code", lexisNexisResponse.eventId, is(event2.eventId));
     }
 
     @Test
@@ -228,12 +226,12 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventType", eventTypeRegistration);
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
-        GetLexisNexisResponse[] lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse[].class);
-        System.out.println(lexisNexisResponse[0].eventId);
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
+        System.out.println(lexisNexisResponse.eventId);
         System.out.println(event3.eventId);
         System.out.println(event3.id);
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response code", lexisNexisResponse[0].eventId, is(event3.eventId));
+        assertThat("Check response code", lexisNexisResponse.eventId, is(event3.eventId));
 
 
     }
@@ -248,11 +246,11 @@ public class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("eventType", eventTypeRegistration);
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
-        GetLexisNexisResponse[] lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse[].class);
+        GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
 
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check response code", lexisNexisResponse[0].uid, is(client4.getUcid()));
-        assertThat("Check response code", lexisNexisResponse[0].eventId, is(event4.eventId));
+        assertThat("Check response code", lexisNexisResponse.uid, is(client4.getUcid()));
+        assertThat("Check response code", lexisNexisResponse.eventId, is(event4.eventId));
     }
 
 }
