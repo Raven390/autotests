@@ -3,8 +3,10 @@ package pageObjects.backofficePages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.enums.Country;
 import io.qameta.allure.Allure;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -65,6 +67,9 @@ public class ActivityTab extends AbstractPage {
     private final Locator emailScore;
     private final Locator digitalIdentytyTitle;
     private final Locator digitalIdentytyScore;
+    private final Locator emailageTab;
+    private final Locator deviceTab;
+    private final Locator ipAddressTab;
 
 
     private static final String COLUMN_DATE_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_date')]";
@@ -93,12 +98,17 @@ public class ActivityTab extends AbstractPage {
     private static final String SUCCESS_LABEL_LOCATOR = "//*[contains(@class, 'g-label_theme_success')]";
     private static final String DANGER_LABEL_LOCATOR = "//*[contains(@class, 'g-label_theme_danger')]";
     private static final String SCORE_BAR_SUCCESS_LOCATOR = "//*[contains(@class, 'v-score-bar__score-bar_color_success')]";
+    private static final String SCORE_BAR_WARNING_LOCATOR = "//*[contains(@class, 'v-score-bar__score-bar_color_warning')]";
+    private static final String SCORE_BAR_DANGER_LOCATOR = "//*[contains(@class, 'v-score-bar__score-bar_color_danger')]";
     private static final String IP_SCORE_TEXTS_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='IP address']/preceding-sibling::div";
     private static final String EMAIL_SCORE_TEXTS_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='email']/preceding-sibling::div";
     private static final String DIGITAL_IDENTITY_SCORE_TEXTS_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='digital identity']/preceding-sibling::div";
     private static final String IP_SCORE_BAR_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='IP address']/../..//*[@class = 'v-score-bar__score-line']";
     private static final String EMAIL_SCORE_BAR_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='email']/../..//*[@class = 'v-score-bar__score-line']";
     private static final String DIGITAL_IDENTITY_SCORE_BAR_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']//*[text()='digital identity']/../..//*[@class = 'v-score-bar__score-line']";
+
+    DecimalFormat df = new DecimalFormat("#.");
+
 
     public ActivityTab(Page page) {
         super(page);
@@ -125,6 +135,9 @@ public class ActivityTab extends AbstractPage {
         this.columnPoliciesHeader = page.locator(TABLE_HEADERS_LOCATOR + COLUMN_POLICIES_LOCATOR);
         this.columnPoliciesData = page.locator(TABLE_BODY_LOCATOR + COLUMN_POLICIES_LOCATOR);
         this.activityTab = page.locator("[role=\"tab\"][title=\"Activity\"]");
+        this.emailageTab = page.locator("[role=\"tab\"][title=\"Emailage\"]");
+        this.deviceTab = page.locator("[role=\"tab\"][title=\"Device\"]");
+        this.ipAddressTab = page.locator("[role=\"tab\"][title=\"IP address\"]");
         this.filterOs = page.locator("//*[contains(@class, 'v-activity-tab-filters__filter-section')]//*[text()='Any OS']");
         this.filterRisk = page.locator("//*[contains(@class, 'v-activity-tab-filters__filter-section')]//*[text()='Any risk rating']");
         this.filterDate = page.locator("//*[contains(@class, 'v-activity-tab-filters__filter-section')]//*[text()='Lifetime']");
@@ -168,6 +181,24 @@ public class ActivityTab extends AbstractPage {
         page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/");
         waitForPageToLoad();
         activityTab.click();
+        waitForPageToLoad();
+    }
+
+    public void openTabEmailage() {
+        Allure.step("Open users Emailage tab by click tab");
+        emailageTab.click();
+        waitForPageToLoad();
+    }
+
+    public void openTabDevice() {
+        Allure.step("Open users Emailage tab by click tab");
+        deviceTab.click();
+        waitForPageToLoad();
+    }
+
+    public void openTabIpAdress() {
+        Allure.step("Open users Emailage tab by click tab");
+        ipAddressTab.click();
         waitForPageToLoad();
     }
 
@@ -227,13 +258,29 @@ public class ActivityTab extends AbstractPage {
     public void checkAgentColumnValue(String expectedValue) {
         Allure.step("Check values in the agent column");
         String expectedText = switch (expectedValue) {
-            case "agent_mobile" -> " Mobile app";
-            case "browser_mobile" -> " Mobile browser";
-            case "browser_computer" -> " Web browser";
+            case "agent_mobile", "Mobile app" -> " Mobile app";
+            case "browser_mobile", "Mobile browser" -> " Mobile browser";
+            case "browser_computer", "Web browser" -> " Web browser";
             default -> " Other";
         };
 
         String actualValue = columnAgentData.textContent();
+        assertEquals(expectedText, actualValue);
+    }
+
+    public void checkAgentColumnValueDeviceSubTab(String expectedValue) {
+        Allure.step("Check values in the agent column");
+        String expectedText = switch (expectedValue) {
+            case "agent_mobile", "Mobile app" -> "Mobile app";
+            case "browser_mobile", "Mobile browser" -> "Mobile browser";
+            case "browser_computer", "Web browser" -> "Web browser";
+            default -> "Other";
+        };
+
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Device')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'agent')]/../following-sibling::div";
+        page.waitForSelector(locator);
+
+        String actualValue = page.locator(locator).textContent();
         assertEquals(expectedText, actualValue);
     }
 
@@ -592,27 +639,26 @@ public class ActivityTab extends AbstractPage {
                 break;
             case "Low":
                 page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 50%;");
                 break;
             case "Moderate":
-                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style"), "width: 66.6667%;");
                 break;
             case "High":
-                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style"), "width: 83.3333%;");
                 break;
             case "Very high":
-                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style"), "width: 100%;");
                 break;
             case "Null":
                 page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style"), "width: 16.6667%;");
                 break;
             case null:
-                page.waitForSelector(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 16.6667%;");
+                assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 0%;");
                 break;
             default:
                 System.out.println("unhandled value");
@@ -630,13 +676,36 @@ public class ActivityTab extends AbstractPage {
         assertEquals(expectedValue, Integer.parseInt(emailScore.textContent()));
     }
 
-    public void checkEmailScoreRiskBarStyle(int expectedValue) {
+    public void checkEmailScoreRiskBarStyle(Integer expectedValue) {
         Allure.step("Check score bar in email sub-section");
+        if (expectedValue == null) {
+            expectedValue = 0;
+        }
+
         if ((0 < expectedValue) && (expectedValue < 301)) {
-            page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-            String expectedWidth = String.valueOf((float) (expectedValue * 100) / 999);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
+            System.out.println("width style is " + widthStyle);
+            assertTrue(widthStyle.contains(expectedWidth));
+        } else if (0 == expectedValue) {
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
+            System.out.println("expected width is " + expectedWidth);
+            String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
+            System.out.println("width style is " + widthStyle);
+            assertTrue(widthStyle.contains(expectedWidth));
+        } else if ((300 < expectedValue) && (expectedValue < 601)) {
+            page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
+            System.out.println("expected width is " + expectedWidth);
+            String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
+            System.out.println("width style is " + widthStyle);
+            assertTrue(widthStyle.contains(expectedWidth));
+        } else if ((600 < expectedValue) && (expectedValue < 1000)) {
+            page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
+            System.out.println("expected width is " + expectedWidth);
+            String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth));
         } else {
@@ -647,55 +716,145 @@ public class ActivityTab extends AbstractPage {
 
     public void checkDigitalIdentityScoreTitle(String expectedValue) {
         Allure.step("Check advice text in email section");
-        if ((expectedValue.isEmpty()) || (expectedValue == null)) {
+        if ((expectedValue.isEmpty()) || ("0".equals(expectedValue))) {
             expectedValue = "confidence unknown";
         }
         assertEquals(expectedValue, digitalIdentytyTitle.textContent());
     }
 
-    public void checkDigitalIdentityScoreNumber(int expectedValue) {
+    public void checkDigitalIdentityScoreNumber(Integer expectedValue) {
         Allure.step("Check advice text in email section");
-        String expectedText = String.valueOf(expectedValue) + "%";
-        if (expectedValue == 0) {
+        String expectedText;
+        if (expectedValue == null) {
             expectedText = "0";
+        } else if (expectedValue == 0) {
+            expectedText = "0";
+        } else {
+            expectedText = String.valueOf(expectedValue) + "%";
         }
         assertEquals(expectedText, digitalIdentytyScore.textContent());
     }
 
-    public void checkDigitalIdentityScoreRiskBarStyle(int expectedValue) {
+    public void checkDigitalIdentityScoreRiskBarStyle(Integer expectedValue) {
         Allure.step("Check score bar in email sub-section");
+        if (expectedValue == null) {
+            expectedValue = 0;
+        }
+
         if ((expectedValue < 101) && (expectedValue > 59)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-            String expectedWidth = String.format("%.2f", (float) (expectedValue * 100) / 99);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth));
         } else if ((expectedValue < 60) && (expectedValue > 39)) {
-            page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-            String expectedWidth = String.format("%.2f", (float) (expectedValue * 100) / 99);
+            page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
-            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
+            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth));
-        } else if ((expectedValue < 40) && (expectedValue > 1)) {
-            page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-            String expectedWidth = String.format("%.2f", (float) (expectedValue * 100) / 99);
+        } else if ((expectedValue < 40) && (expectedValue > 0)) {
+            page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
-            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
+            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth));
         } else if (expectedValue == 0) {
-            page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
-            String expectedWidth = String.format("%.2f", (float) (expectedValue * 100) / 99);
+            String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
-            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
+            String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth));
         } else {
             System.out.println("UNHANDLED VALUE");
             assertTrue(false);
         }
+    }
+
+    public void checkValueOfSubTableRowNAmeConfidence(String sectionTitle, String rowTitle, int expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        assertEquals(String.valueOf(expectedValue) + "% confidence", page.locator(locator).textContent());
+    }
+
+    public void checkValueOfSubTableRowPhoneOwner(String expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Phone')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'owner')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        page.waitForSelector(locator);
+        String owner = page.locator(locator).textContent();
+        String result = switch (expectedValue) {
+            case "U" -> "Unknown";
+            case "N" -> "No Match";
+            case "Y" -> "Full Match";
+            case "P" -> "Partial Match";
+            default -> "unhandled value";
+        };
+        assertEquals(result, owner);
+    }
+
+    public void checkValueOfSubTableRowDomainCountry(String expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Domain')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'country')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        String actualValue = page.locator(locator).textContent();
+        String result = switch (expectedValue) {
+            case "US" -> "United States";
+            case "JP" -> "Japan";
+            case "CY" -> "Cyprus";
+            case "PH" -> "Philippines";
+            default -> "unhandled value";
+        };
+        assertEquals(result, actualValue);
+    }
+
+    public void checkValueOfSubTableRowDomainCountryByCode(String expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Domain')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'country')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        String result = Country.getCountryNameByCode(expectedValue);
+        String actualValue = page.locator(locator).textContent();
+        assertEquals(result, actualValue);
+    }
+
+    public void checkValueOfSubTableRow(String sectionTitle, String rowTitle, int expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkValueOfSubTableRow(String sectionTitle, String rowTitle, double expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkValueOfSubTableRow(String sectionTitle, String rowTitle, String expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
+        page.waitForSelector(locator);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkValueOfBrowserLanguageRow(String expectedValue) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Browser')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'languages')]/../../following-sibling::div";
+        page.waitForSelector(locator);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkSubTableRowNotPresented(String sectionTitle, String rowTitle) {
+        String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
+        assertFalse(page.locator(locator).isVisible());
+    }
+
+    public void checkIpSubTableRow(String rowTitle, String trueIpExpectedVal, String inputIpExpectedVal) {
+        String locator1 = "//div[(@class='v-drawer-tab-ip-address__row')]/div[(text() = '" + rowTitle + "')]/following-sibling::div[1]";
+        String locator2 = "//div[(@class='v-drawer-tab-ip-address__row')]/div[(text() = '" + rowTitle + "')]/following-sibling::div[2]";
+        System.out.println("locator1: " + locator1);
+        System.out.println("locator2: " + locator2);
+        page.waitForSelector(locator1);
+        page.waitForSelector(locator2);
+        assertEquals(trueIpExpectedVal, page.locator(locator1).textContent(), "test true IP value");
+        assertEquals(inputIpExpectedVal, page.locator(locator2).textContent(), "test input IP value");
     }
 
 
