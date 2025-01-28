@@ -26,6 +26,10 @@ public class Utils {
         return new Random().nextInt();
     }
 
+    public static String startFromUpper(String lowerCase) {
+        return lowerCase.substring(0, 1).toUpperCase() + lowerCase.substring(1);
+    }
+
     public static Integer getRandomIntPositive() {
         return new Random().nextInt(Integer.MAX_VALUE) + 1;
     }
