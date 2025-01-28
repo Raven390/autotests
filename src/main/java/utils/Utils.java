@@ -2,10 +2,13 @@ package utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -307,5 +310,52 @@ public class Utils {
     @Deprecated
     public static String getPrevious90DaysDateUtc() {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 89, 0, 0);
+    }
+
+    public static String transformDate(String dateTimeString, DateTimeFormat formatFrom, DateTimeFormat formatTo) {
+        try {
+            DateTimeFormatter sourceFormatter = DateTimeFormatter.ofPattern(formatFrom.getDisplayName(), Locale.US);
+            DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern(formatTo.getDisplayName(), Locale.US);
+            // Determine if the input format is for a date or date-time
+            if (DateTimeFormat.DATE.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_DAY.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_YEAR.equals(formatFrom) || DateTimeFormat.YEAR.equals(formatFrom)) {
+                // Parse as LocalDate if only a date is present
+                LocalDate date = LocalDate.parse(dateTimeString, sourceFormatter);
+                return date.format(targetFormatter);
+            } else {
+                // Parse as LocalDateTime if time is present
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, sourceFormatter);
+                return dateTime.format(targetFormatter);
+            }
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Date string, formatFrom or formatTo is incorrect!");
+        }
+    }
+
+    public static String calculatePercentageFromList(List<Long> numerators, List<Long> denominators) {
+        if (numerators.size() != denominators.size()) {
+            throw new IllegalArgumentException("Lists must have the same size"); // Handle mismatch in list sizes
+        }
+        double totalNumerator = 0;
+        double totalDenominator = 0;
+        // Calculate the sum of numerators and denominators
+        for (int i = 0; i < numerators.size(); i++) {
+            totalNumerator += numerators.get(i);
+            totalDenominator += denominators.get(i);
+        }
+
+        // Check for division by zero
+        if (totalDenominator == 0) {
+            throw new IllegalArgumentException("Division by zero!"); // Handle division by zero
+        }
+
+        // Perform the division, multiply by 100, round to 1 decimal place
+        double result = (totalNumerator / totalDenominator) * 100;
+        result = Math.round(result * 10.0) / 10.0; // Round to 1 decimal place
+
+        // Use DecimalFormat to format the result without decimals when unnecessary
+        DecimalFormat formatter = new DecimalFormat(result % 1 == 0 ? "#,###" : "#,###.0");
+
+        // Return the formatted result as a percentage string
+        return formatter.format(result) + "%";
     }
 }

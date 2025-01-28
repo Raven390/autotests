@@ -121,6 +121,22 @@ public class TradingPage extends AbstractPage {
     private final Locator profitTooltip;
     private final Locator typeCheckboxLabels;
     private final Locator methodCheckboxLabels;
+    private final Locator summaryTab;
+    private final Locator totalPnlMaxProfitValue;
+    private final Locator totalPnlMaxProfitLabel;
+    private final Locator totalPnlMaxLossValue;
+    private final Locator totalPnlMaxLossLabel;
+    private final Locator totalPnlMaxProfitGraphDot;
+    private final Locator totalPnlMaxLossGraphDot;
+    private final Locator totalPnlYAxisLabel;
+    private final Locator totalPnlTooltip;
+    private final Locator totalPnlChartTitle;
+    private final Locator performanceOverviewTableTitle;
+    private final Locator performanceOverviewTableHeaders;
+    private final Locator performanceOverviewSymbols;
+    private final Locator winrateWidget;
+    private final Locator winrateWidgetValue;
+    private final Locator winrateWidgetInfo;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -136,6 +152,18 @@ public class TradingPage extends AbstractPage {
     private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
     private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
     private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
+    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL");
+    private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__chart-container']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Performance overview");
+    private static final String CHART_TITLE = "//div[@class='v-chart-wrapper__title']";
+    private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
+    private static final String PERFORMANCE_OVERVIEW_DEALS_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_deals')]";
+    private static final String PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_winrate')]";
+    private static final String PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_os')]";
+    private static final String PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_risk')]";
+    private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-number-widget__title') and text()='%s']/..";
 
     public TradingPage(Page page) {
         super(page);
@@ -242,6 +270,22 @@ public class TradingPage extends AbstractPage {
         this.profitTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Profit"));
         this.typeCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Type"));
         this.methodCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Method"));
+        this.summaryTab = page.locator(".g-radio-button__option-control[value=\"Summary\"]");
+        this.totalPnlMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES));
+        this.totalPnlMaxLossValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES));
+        this.totalPnlMaxProfitLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", TOTAL_PNL_CHART_FEATURES));
+        this.totalPnlMaxLossLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", TOTAL_PNL_CHART_FEATURES));
+        this.totalPnlMaxProfitGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART));
+        this.totalPnlMaxLossGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART));
+        this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
+        this.totalPnlTooltip = page.locator(".v-trading-summary-total-pnl__tooltip");
+        this.totalPnlChartTitle = page.locator(TOTAL_PNL_CHART_CONTAINER).locator(CHART_TITLE);
+        this.performanceOverviewTableTitle = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator(CHART_TITLE);
+        this.performanceOverviewTableHeaders = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//th");
+        this.performanceOverviewSymbols = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//td[contains(@class,'v-trading-summary-performance__column_type_date')]");
+        this.winrateWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Win rate"));
+        this.winrateWidgetValue = winrateWidget.locator(".v-number-widget__value");
+        this.winrateWidgetInfo = winrateWidget.locator(".v-number-widget__info");
     }
 
     @Step("Navigate to users trading tab")
@@ -453,7 +497,7 @@ public class TradingPage extends AbstractPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
-        page.waitForSelector(ACCOUNT_CARD_XPATH, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
+        page.waitForSelector(TOTAL_PNL_CHART_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     private int getAccountIndex(int accId) {
@@ -961,5 +1005,104 @@ public class TradingPage extends AbstractPage {
     public void verifyProfitTooltip() {
         profitTooltip.hover();
         assertThat(popupElement).containsText("Profit date for trading operations/ Amount for payments operations");
+    }
+
+    @Step("Open users trading-summary tab")
+    public void openSummaryTab() {
+        summaryTab.click();
+        super.waitForPageToLoad();
+    }
+
+    @Step("Get Total PNL max profit value")
+    public String getTotalPnlMaxProfitValue() {
+        return totalPnlMaxProfitValue.textContent();
+    }
+
+    @Step("Get Total PNL max profit label")
+    public String getTotalPnlMaxProfitLabel() {
+        return totalPnlMaxProfitLabel.textContent();
+    }
+
+    @Step("Get Total PNL max loss value")
+    public String getTotalPnlMaxLossValue() {
+        return totalPnlMaxLossValue.textContent();
+    }
+
+    @Step("Get Total PNL max loss label")
+    public String getTotalPnlMaxLossLabel() {
+        return totalPnlMaxLossLabel.textContent();
+    }
+
+    @Step("Get Total PNL max profit graph dot label")
+    public String getTotalPnlMaxProfitGraphDot() {
+        return totalPnlMaxProfitGraphDot.textContent();
+    }
+
+    @Step("Get Total PNL max loss graph dot label")
+    public String getTotalPnlMaxLossGraphDot() {
+        return totalPnlMaxLossGraphDot.textContent();
+    }
+
+    @Step("Get Total PNL Y axis label")
+    public String getTotalPnlYAxisLabel() {
+        return totalPnlYAxisLabel.textContent();
+    }
+
+    @Step("Get Total PNL chart title")
+    public String getTotalPnlChartTitle() {
+        return totalPnlChartTitle.textContent();
+    }
+
+    @Step("Get Performance overview title")
+    public String getPerformanceOverviewTableTitle() {
+        return performanceOverviewTableTitle.textContent();
+    }
+
+    @Step("Get Performance overview table headers")
+    public List<String> getPerformanceOverviewTableHeaders() {
+        List<String> headers = new ArrayList<>();
+        for (int i = 0; i < performanceOverviewTableHeaders.count(); i++) {
+            headers.add(performanceOverviewTableHeaders.nth(i).textContent());
+        }
+        return headers;
+    }
+
+    @Step("Get Performance overview symbols")
+    public List<String> getPerformanceOverviewSymbols() {
+        List<String> symbols = new ArrayList<>();
+        for (int i = 0; i < performanceOverviewSymbols.count(); i++) {
+            symbols.add(performanceOverviewSymbols.nth(i).textContent());
+        }
+        return symbols;
+    }
+
+    @Step("Get Performance overview deals by symbol {symbol}")
+    public String getPerformanceOverviewDealsBySymbol(String symbol) {
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_DEALS_BY_SYMBOL_PATTERN, symbol)).textContent();
+    }
+
+    @Step("Get Performance overview winrate by symbol {symbol}")
+    public String getPerformanceOverviewWinrateBySymbol(String symbol) {
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN, symbol)).textContent();
+    }
+
+    @Step("Get Performance overview HFT by symbol {symbol}")
+    public String getPerformanceOverviewHftBySymbol(String symbol) {
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN, symbol)).textContent();
+    }
+
+    @Step("Get Performance overview PNL by symbol {symbol}")
+    public String getPerformanceOverviewPnlBySymbol(String symbol) {
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN, symbol)).textContent();
+    }
+
+    @Step("Get Winrate widget value")
+    public String getWinrateWidgetValue() {
+        return winrateWidgetValue.textContent();
+    }
+
+    @Step("Get Winrate widget info")
+    public String getWinrateWidgetInfo() {
+        return winrateWidgetInfo.textContent();
     }
 }
