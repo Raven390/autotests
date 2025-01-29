@@ -44,12 +44,12 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @BeforeAll
     public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
         data1 = generateMirrorTradesByAccount(client1);
-        insertObjectToDb(DATA_SCIENCE_MIRROR_LOGIN, data1);
+        insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data1);
     }
 
     @AfterAll
     public static void teardownMirrorTrades() throws SQLException {
-        deleteEntryFromDb(DATA_SCIENCE_MIRROR_LOGIN, String.format("login_1 = '%s'", data1.login_1));
+        deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = '%s'", data1.login_1));
     }
 
     @Test

@@ -14,6 +14,7 @@ import tests.TestBaseApi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
@@ -50,9 +51,7 @@ public class GetTradesTests extends TestBaseApi {
         trade2.action = 2;
         trade2.entry = 2;
         trade3.serverId = 1000;
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
     }
 
     @AfterAll

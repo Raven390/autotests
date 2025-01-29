@@ -17,8 +17,8 @@ import java.util.List;
 
 import static businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesRequest.getAbuseTypes;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -40,15 +40,12 @@ public class GetAbuseTypesTests extends TestBaseApi {
         fraud1 = new BoClientFraudTypesObject(client.getUcid(), 1, "HEDGING");
         fraud2 = new BoClientFraudTypesObject(client.getUcid(), 2, "CPA");
         fraud3 = new BoClientFraudTypesObject(getRandomVantageClient().getUcid(), 3, "LOSS_VOUCHER_ABUSE");
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
+        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
     }
 
     @AfterAll
-    public static void teardownAbuseTypes() throws SQLException {
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1.ucid));
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.ucid));
+    public static void teardownAbuseTypes() throws Exception {
+        cleanFraudTypeTableByClient(fraud1.ucid, fraud2.ucid, fraud3.ucid);
     }
 
     @Test

@@ -14,12 +14,13 @@ import tests.TestBaseApi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdrawalsRequest.getWithdrawals;
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanWithdrawalsTableByUcid;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -44,13 +45,12 @@ public class GetWithdrawalsTests extends TestBaseApi {
         withdrawal2 = generateWithdrawalByClient(client);
         withdrawal2.createTime = getTomorrowTimestampDbFormat();
         withdrawal2.amountUsd = 3.0;
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal1);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal2);
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2));
     }
 
     @AfterAll
-    public static void teardownWithdrawals() throws SQLException {
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal1.ucid));
+    public static void teardownWithdrawals() throws Exception {
+        cleanWithdrawalsTableByUcid(withdrawal1.ucid, withdrawal2.ucid);
     }
 
     @Test

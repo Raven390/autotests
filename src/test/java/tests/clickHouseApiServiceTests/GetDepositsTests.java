@@ -14,12 +14,13 @@ import tests.TestBaseApi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getDeposits.GetDepositsRequest.getDeposits;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanDepositsTableByUcid;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -44,13 +45,12 @@ public class GetDepositsTests extends TestBaseApi {
         deposit2 = generateDepositByClient(client);
         deposit2.createTime = getTomorrowTimestampDbFormat();
         deposit2.amountUsd = 3.0;
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit1);
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
     }
 
     @AfterAll
-    public static void teardownDeposits() throws SQLException {
-        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit1.ucid));
+    public static void teardownDeposits() throws Exception {
+        cleanDepositsTableByUcid(deposit1.ucid, deposit2.ucid);
     }
 
     @Test

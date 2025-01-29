@@ -21,7 +21,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getSwapFreeFees.GetSwapFreeFeesRequest.getSwapFreeFees;
 import static businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObjectFactory.generateBalanceOrders;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanMtBalanceOrdersTableByClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -50,14 +50,12 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     public static void setupData() throws ReflectiveOperationException, SQLException {
         data1 = generateBalanceOrders(client1, 1d, 2d, tradeDate1);
         data2 = generateBalanceOrders(client1, 3d, 4d, tradeDate2);
-        insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, data1);
-        insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, data2);
+        insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
     }
 
     @AfterAll
-    public static void teardownData() throws SQLException {
-        deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", data1.ucid));
-        deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", data2.ucid));
+    public static void teardownData() throws Exception {
+        cleanMtBalanceOrdersTableByClient(data1.ucid, data2.ucid);
     }
 
     @Test
