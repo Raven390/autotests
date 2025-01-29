@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.random.RandomGenerator;
 
@@ -33,6 +34,8 @@ public class ActivityTabTest extends TestBaseWeb {
     public void deleteLexis(ClientHelper client) throws SQLException {
         deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
     }
+
+    DecimalFormat df = new DecimalFormat("#.00");
 
     static ClientHelper activityClient = new ClientHelper(181_801, Brand.INFINOX, Regulator.FCA);
 
