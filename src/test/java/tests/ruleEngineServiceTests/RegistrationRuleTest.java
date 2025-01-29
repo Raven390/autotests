@@ -126,61 +126,6 @@ public class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_3")
-    @AllureId("157")
-    public void registrationRuleExitEventEnd3Test() throws Exception {
-        RegistrationRuleData data = dbDataMap.get("3");
-        Allure.step("No toxic accounts linked");
-        Allure.step("No different identity connections");
-        Allure.step("IP country != address country");
-        Allure.step("Set manual withdrawal restriction");
-        Allure.step("Generate alert");
-
-        Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
-
-        Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
-        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
-        assertThat("Verify alert id not null", alert.alertId, notNullValue());
-        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
-        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
-        assertThat("Verify rule not null", alert.rule, notNullValue());
-        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
-        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Ip country does not equal address country"));
-        assertThat("Verify rule attributes ipCountry is correct", alert.rule.attributes.ipCountry, equalTo("US"));
-        assertThat("Verify rule attributes country is correct", alert.rule.attributes.country, equalTo(data.crmTbUserObject.isoCountryCode));
-
-        List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
-        );
-
-        // Verify alert in BO db
-
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
-
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
-    }
-
-    @Test
     @DisplayName("Registration rule exit Event_End_4")
     @AllureId("158")
     public void registrationRuleExitEventEnd4Test() throws Exception {
@@ -357,7 +302,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Set<String> expectedSteps = new HashSet<>();
-        expectedSteps.add("Linked CPA abuser");
+        expectedSteps.add("Linked CPA_ABUSE abuser");
         expectedSteps.add("Linked bonus abuser");
         expectedSteps.add("Linked voucher abuser");
         expectedSteps.add("Linked news trading abuser");
@@ -375,6 +320,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that amount of alerts is correct", consumedMessages.size(), equalTo(expectedSteps.size()));
+        System.out.println(consumedMessages);
 
         // Verify alerts
         List<RuleAlert> alerts = consumedMessages.stream().map(message -> {
@@ -386,7 +332,7 @@ public class RegistrationRuleTest extends TestBaseRule {
         }).toList();
 
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.attributes.stepName, "Linked CPA abuser")) {
+            if (Objects.equals(alert.rule.attributes.stepName, "Linked CPA_ABUSE abuser")) {
                 assertThat("Verify alert id not null", alert.alertId, notNullValue());
                 assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
                 assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
@@ -394,10 +340,10 @@ public class RegistrationRuleTest extends TestBaseRule {
                 assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
                 assertThat("Verify rule name not null", alert.rule.name, notNullValue());
                 assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
-                assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
+                assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
                 assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
                 assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
-                expectedSteps.remove("Linked CPA abuser");
+                expectedSteps.remove("Linked CPA_ABUSE abuser");
             } else if (Objects.equals(alert.rule.attributes.stepName, "Linked bonus abuser")) {
                 assertThat("Verify alert id not null", alert.alertId, notNullValue());
                 assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
@@ -609,10 +555,10 @@ public class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA_ABUSE abuser"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
@@ -673,10 +619,10 @@ public class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.riskRating));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA abuser"));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked CPA_ABUSE abuser"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class

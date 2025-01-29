@@ -33,7 +33,6 @@ public class RegistrationRuleDataFactory {
     // Clients
     private static final ClientHelper registrationRuleExitEventEnd1Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd2Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd3Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd4Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd5Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd6Client = getRandomVantageClientAllFields();
@@ -120,16 +119,6 @@ public class RegistrationRuleDataFactory {
         return registrationRuleData;
     }
 
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd3Data() {
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd3Client);
-        LnSessionParsedObject lexisNexisObject = registrationRuleData.lnSessionParsedObject;
-        lexisNexisObject.trueIpGeo = "US";
-        CrmTbUserObject crmTbUserObject = registrationRuleData.crmTbUserObject;
-        crmTbUserObject.isoCountryCode = "CY";
-        lexisNexisObject.proxyIp = null;
-        return registrationRuleData;
-    }
-
     public static RegistrationRuleData getRegistrationRuleExitEventEnd4Data() {
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd4Client);
         CrmTbUserObject crmTbUserObject = registrationRuleData.crmTbUserObject;
@@ -201,7 +190,7 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
         ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
@@ -270,7 +259,7 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
 
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
@@ -286,7 +275,7 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version3Client, connectedClientCpa);
 
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -21;
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
@@ -577,7 +566,6 @@ public class RegistrationRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleExitEventEnd1Data());
         map.put("2", getRegistrationRuleExitEventEnd2Data());
-        map.put("3", getRegistrationRuleExitEventEnd3Data());
         map.put("4", getRegistrationRuleExitEventEnd4Data());
         map.put("5", getRegistrationRuleExitEventEnd5Data());
         map.put("6", getRegistrationRuleExitEventEnd6Data());

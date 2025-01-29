@@ -25,10 +25,8 @@ import java.util.Map;
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObjectFactory.generateMirrorTradesByAccount;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObjectFactory.generateCreditsByClient;
@@ -182,24 +180,16 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
-        Allure.step("CreditEquityRatio > 0.7");
-        Allure.step("Client use payment method from a gray list");
-        Allure.step("Payment method is on the gray list. + 1 abuse score");
-        Allure.step("tdBonus.amount/ ftdDeposit.amount >= 0.3. + 1 abuse score");
-        Allure.step("trades.groupBySymbol < 5. + 1 abuse score");
-        Allure.step("now() - ftddeposit.createTime < 168h. + 1 abuse score");
         Allure.step("Sum of abuse score > 4 is False");
         Allure.step("Exit without alert");
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd5_1Client);
-        data.mtTbCreditsObjects.add(generateCreditsByClient(data.clientHelper));
-        data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
-        data.crmTbWithdrawalObjects.add(generateWithdrawalByClient(data.clientHelper));
-        CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.paymentChannel = "DebitCard";
-        data.crmTbDepositObjects.add(crmTbDepositObject);
-        data.crmTbBonusObjects.add(generateBonusByClient(data.clientHelper));
-        data.crmTbDepositObjects.add(generateDepositByClient(data.clientHelper));
-        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
+        MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd5_1Client);
+        data.lnSessionParsedObjectLogin.trueIpGeo = "CY";
+        data.lnSessionParsedObjectRegistration.trueIpGeo = "CY";
+        data.lnSessionParsedObjectLogin.trueIpCountryConfidence = 86;
+        credit.amount = 10D;
+        credit.regulator = "VFSC";
+        data.mtTbCreditsObjects.add(credit);
         return data;
     }
 
@@ -312,34 +302,31 @@ public class MirrorTradingRuleDataFactory {
     }
 
     public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_1Data() {
+        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_1Client);
+        MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd7_1Client);
+        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
+        Mt5DealsCoercedObject trade1 = generateTradeByClient(mirrorTradingRuleExitEventEnd7_1Client);
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
-        Allure.step("CreditEquityRatio > 0.7");
-        Allure.step("Client use payment method from a gray list");
-        Allure.step("Sum of abuse score > 4");
-        Allure.step("RiskFreeRevenueRatio > 0.5");
-        Allure.step("TradingOnNewsPeriods is False");
-        Allure.step("Dummy trades is False");
-        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 is False");
-        Allure.step("count(balanceOrdersWithTypeWO) > 0 is True");
-        Allure.step("SUM(mirrorAccountsByTradesClient.Volime)/SUM(mirrorAccountsByTradesDoppelganger) > 0.9 is False");
-        Allure.step("Set restriction");
-        Allure.step("Send alert");
-        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_1Client);
-        data.mtTbCreditsObjects.add(generateCreditsByClient(data.clientHelper));
-        data.aggrCreditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
+        credit.regulator = "VFSC";
+        Allure.step("Payment channel is in the gray list");
+        deposit.paymentChannel = "CreditCard";
+        Allure.step("ftdCredit.amount/ ftdDeposit.amount >= 0.4");
+        credit.amountUsd = 10D;
+        deposit.amountUsd = 2D;
+        Allure.step("number of traded symbols < 3");
+        trade1.symbol = "EURUSD";
+        Allure.step("lexisNexis.riskRating in ('high', 'medium')");
         data.lnSessionParsedObjectRegistration.riskRating = "medium";
-        CrmTbDepositObject crmTbDepositObject = generateDepositByClient(data.clientHelper);
-        crmTbDepositObject.createTime = data.crmTbUserObject.createTime;
-        data.crmTbDepositObjects.add(crmTbDepositObject);
-        data.lnSessionParsedObjectLogin.trueIpGeo = "US";
-        // TODO add data for risk free revenue ratio > 0.5
-        // TODO add data for no trading on news periods?
-        // TODO add data for no dummy trades?
-        data.mt5DealsObjects.add(generateTradeByClient(data.clientHelper));
-        // TODO add balanceOrders with comment "WO"
-        data.aggrMirrorAccountsByTrades = generateMirrorTradesByAccount(data.clientHelper);
+        Allure.step("now() -firstDeposit < 7 days");
+        Allure.step("lexisNexis.country = client.country? = false");
+        data.lnSessionParsedObjectLogin.trueIpCountryConfidence = 50;
+        Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 = false");
+        Allure.step("count(balanceOrdersWithTypeWO) > 0 = false");
+        data.crmTbDepositObjects.add(deposit);
+        data.mtTbCreditsObjects.add(credit);
+        data.mt5DealsObjects.add(trade1);
         return data;
     }
 
@@ -470,12 +457,12 @@ public class MirrorTradingRuleDataFactory {
         //map.put("4_2", getMirrorTradingRuleExitEventEnd4_2Data());
         map.put("4_3", getMirrorTradingRuleExitEventEnd4_3Data());
         map.put("4_4", getMirrorTradingRuleExitEventEnd4_4Data());
-//        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
+        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
 //        map.put("5_2", getMirrorTradingRuleExitEventEnd5_2Data());
 //        map.put("6", getMirrorTradingRuleExitEventEnd6Data());
 //        map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
 //        map.put("1_2", getMirrorTradingRuleExitEventEnd1_2Data());
-//        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
+        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
 //        map.put("7_2", getMirrorTradingRuleExitEventEnd7_2Data());
 //        map.put("7_3", getMirrorTradingRuleExitEventEnd7_3Data());
 //        map.put("7_4", getMirrorTradingRuleExitEventEnd7_4Data());

@@ -70,6 +70,12 @@ public class RuleAlert {
 
             @JsonProperty("ipCountry")
             public String ipCountry;
+
+            @JsonProperty("mirrorTradeScore")
+            public String mirrorTradeScore;
+
+            @JsonProperty("mirrorTrades")
+            public String mirrorTrades;
         }
     }
 }
