@@ -687,27 +687,27 @@ public class ActivityTab extends AbstractPage {
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if (0 == expectedValue) {
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((300 < expectedValue) && (expectedValue < 601)) {
             page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((600 < expectedValue) && (expectedValue < 1000)) {
             page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else {
             System.out.println("UNHANDLED VALUE");
             assertTrue(false);
@@ -740,37 +740,36 @@ public class ActivityTab extends AbstractPage {
         if (expectedValue == null) {
             expectedValue = 0;
         }
-
         if ((expectedValue < 101) && (expectedValue > 59)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((expectedValue < 60) && (expectedValue > 39)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((expectedValue < 40) && (expectedValue > 0)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if (expectedValue == 0) {
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
             System.out.println("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
             System.out.println("width style is " + widthStyle);
-            assertTrue(widthStyle.contains(expectedWidth));
+            assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else {
             System.out.println("UNHANDLED VALUE");
-            assertTrue(false);
+            assertTrue(false, "UNHANDLED VALUE");
         }
     }
 

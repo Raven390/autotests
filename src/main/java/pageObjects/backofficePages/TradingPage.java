@@ -319,6 +319,13 @@ public class TradingPage extends AbstractPage {
         super.waitForPageToLoad();
     }
 
+    @Step("Open users trading-accounts tab")
+    public void openAccountsTab() {
+        Allure.step("Open users trading-accounts tab");
+        accountsTab.click();
+        super.waitForPageToLoad();
+    }
+
 
     @Step("Check if the trading/operations tab renders all basic elements")
     public void operationsRendersTest() {
