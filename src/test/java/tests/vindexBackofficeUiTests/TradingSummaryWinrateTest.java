@@ -2,7 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.tsBySymbolDaily.TsBySymbolDailyObject;
+import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,12 +13,11 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.tsBySymbolDaily.TsBySymbolDailyFactory.generateTsBySymbolDailyByClient;
+import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -35,8 +34,6 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily1 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily2 = generateTsBySymbolDailyByClient(client);
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -48,7 +45,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
 
     @AfterEach
     public void teardownEach() throws SQLException {
-        deleteEntryFromDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
     @Test
@@ -57,17 +54,14 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @AllureId("870")
     @DisplayName("Verify Winrate widget 100% in Trading - Summary")
     public void verifyTradingSummaryWinrate1Test() throws ReflectiveOperationException, SQLException {
-        tsBySymbolDaily1.countTotalDeals = 1L;
-        tsBySymbolDaily1.countWinDeals = 1L;
-        insertObjectToDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, tsBySymbolDaily1);
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, generateMt4TradesCoerced(client));
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("100%"));
-        DecimalFormat format = new DecimalFormat("#,###");
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s operation", format.format(tsBySymbolDaily1.countTotalDeals))));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deal", "1")));
     }
 
     @Test
@@ -76,20 +70,18 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @AllureId("871")
     @DisplayName("Verify Winrate widget 0% in Trading - Summary")
     public void verifyTradingSummaryWinrate2Test() throws ReflectiveOperationException, SQLException {
-        tsBySymbolDaily1.countTotalDeals = 13213L;
-        tsBySymbolDaily1.countWinDeals = 0L;
-        tsBySymbolDaily2.symbol = "GBPJPY";
-        tsBySymbolDaily2.countTotalDeals = 31321L;
-        tsBySymbolDaily2.countWinDeals = 0L;
-        insertObjectsToDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, List.of(tsBySymbolDaily1, tsBySymbolDaily2));
+        MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
+        trade.profitUsd = 0d;
+        trade.storageUsd = 0d;
+        trade.commissionUsd = 0d;
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade);
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("0%"));
-        DecimalFormat format = new DecimalFormat("#,###");
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s operations", format.format(tsBySymbolDaily1.countTotalDeals + tsBySymbolDaily2.countTotalDeals))));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deal", "1")));
     }
 
     @Test
@@ -98,20 +90,18 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @AllureId("872")
     @DisplayName("Verify Winrate widget 66.67% in Trading - Summary")
     public void verifyTradingSummaryWinrate3Test() throws ReflectiveOperationException, SQLException {
-        tsBySymbolDaily1.countTotalDeals = 9L;
-        tsBySymbolDaily1.countWinDeals = 6L;
-        tsBySymbolDaily2.symbol = "GBPJPY";
-        tsBySymbolDaily2.countTotalDeals = 9L;
-        tsBySymbolDaily2.countWinDeals = 6L;
-        insertObjectsToDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, List.of(tsBySymbolDaily1, tsBySymbolDaily2));
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
+        trade1.profitUsd = 0d;
+        trade1.storageUsd = 0d;
+        trade1.commissionUsd = 0d;
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, generateMt4TradesCoerced(client), generateMt4TradesCoerced(client)));
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("66.67%"));
-        DecimalFormat format = new DecimalFormat("#,###");
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s operations", format.format(tsBySymbolDaily1.countTotalDeals + tsBySymbolDaily2.countTotalDeals))));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deals", "3")));
     }
 
     @Test
@@ -126,13 +116,13 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("No data"));
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo("on 0 operations"));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo("on 0 deals"));
     }
 
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        deleteEntryFromDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         closeAlert(crmTbUser.ucid);
     }
 }
