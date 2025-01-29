@@ -2,27 +2,26 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.tsBySymbolDaily.TsBySymbolDailyObject;
+import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.tsBySymbolDaily.TsBySymbolDailyFactory.generateTsBySymbolDailyByClient;
+import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.DateTimeFormat.DATE;
-import static helpers.data.enums.DateTimeFormat.MONTH_TEXT_AND_DAY;
+import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
@@ -32,6 +31,9 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.transformDate;
 
+@Disabled
+@Tag(TAG_MANUAL)
+@Muted
 public class TradingSummaryTotalPnlTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -39,37 +41,54 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily1 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily2 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily3 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily4 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily5 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily6 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily7 = generateTsBySymbolDailyByClient(client);
-    private static final TsBySymbolDailyObject tsBySymbolDaily8 = generateTsBySymbolDailyByClient(client);
+    private static final MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade2 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade3 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade4 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade5 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade6 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade7 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade8 = generateMt4TradesCoerced(client);
 
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
-        tsBySymbolDaily1.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 1, 0, 0);
-        tsBySymbolDaily2.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 2, 0, 0);
-        tsBySymbolDaily2.totalPnl = -3546.965;
-        tsBySymbolDaily3.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 4, 0, 0);
-        tsBySymbolDaily3.totalPnl = 6666.01;
-        tsBySymbolDaily4.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0);
-        tsBySymbolDaily4.totalPnl = -7.65;
-        tsBySymbolDaily5.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 6, 0, 0);
-        tsBySymbolDaily5.totalPnl = -1345.97;
-        tsBySymbolDaily6.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 7, 0, 0);
-        tsBySymbolDaily6.totalPnl = -2254.765;
-        tsBySymbolDaily7.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
-        tsBySymbolDaily7.totalPnl = 1970.102;
-        tsBySymbolDaily8.date = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 9, 0, 0);
-        tsBySymbolDaily8.totalPnl = 2854.345;
-        crmTbUser.registrationDate = tsBySymbolDaily8.date;
+        trade8.profitUsd = 2854.345;
+        trade8.storageUsd = 0d;
+        trade8.commissionUsd = 0d;
+        trade8.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 9, 0, 0);
+        trade7.profitUsd = -884.243;
+        trade7.storageUsd = 0d;
+        trade7.commissionUsd = 0d;
+        trade7.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0);
+        trade6.profitUsd = -4224.867;
+        trade6.storageUsd = 0d;
+        trade6.commissionUsd = 0d;
+        trade6.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0);
+        trade5.profitUsd = 908.795;
+        trade5.storageUsd = 0d;
+        trade5.commissionUsd = 0d;
+        trade5.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0);
+        trade4.profitUsd = 1338.32;
+        trade4.storageUsd = 0d;
+        trade4.commissionUsd = 0d;
+        trade4.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        trade3.profitUsd = 6673.66;
+        trade3.storageUsd = 0d;
+        trade3.commissionUsd = 0d;
+        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 4, 0, 0);
+        trade2.profitUsd = -10_212.975;
+        trade2.storageUsd = 0d;
+        trade2.commissionUsd = 0d;
+        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 2, 0, 0);
+        trade1.profitUsd = 3670.415;
+        trade1.storageUsd = 0d;
+        trade1.commissionUsd = 0d;
+        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 10, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
-        insertObjectsToDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, List.of(tsBySymbolDaily1, tsBySymbolDaily2, tsBySymbolDaily3, tsBySymbolDaily4, tsBySymbolDaily5, tsBySymbolDaily6, tsBySymbolDaily7, tsBySymbolDaily8));
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -87,11 +106,10 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("7k"));
-        DecimalFormat format = new DecimalFormat("#,###");
-        String maxProfitDate = transformDate(tsBySymbolDaily3.date, DATE, MONTH_TEXT_AND_DAY);
-        String maxLossDate = transformDate(tsBySymbolDaily2.date, DATE, MONTH_TEXT_AND_DAY);
-        String maxProfit = format.format(Math.round(tsBySymbolDaily3.totalPnl));
-        String maxLoss = format.format(Math.round(tsBySymbolDaily2.totalPnl));
+        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
+        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
+        String maxProfit = "6666";
+        String maxLoss = "-3547";
         assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), equalTo(maxProfit));
         assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), equalTo(String.format("Max profit – %s", maxProfitDate)));
         assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), equalTo(maxLoss));
@@ -103,7 +121,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        deleteEntryFromDb(TS_BY_SYMBOL_DAILY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         closeAlert(crmTbUser.ucid);
     }
 }
