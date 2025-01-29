@@ -63,4 +63,15 @@ public class ConnectionSearchProductionSmokeTests {
         Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES, null, queryParams);
         assertThat("Check the response code is 200", response.code(), is(200));
     }
+
+    @Test
+    @DisplayName("Connections smoke test. Check connected ib (200)")
+    @AllureId("898")
+    public void testConnectionSearchProd5() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", "vantage-123");
+        queryParams.put("emailAddress", "mail@mail.com");
+        Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_CHECK_CONNECTED_IB, null, queryParams);
+        assertThat("Check the response code is 200", response.code(), is(200));
+    }
 }

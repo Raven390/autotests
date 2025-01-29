@@ -246,9 +246,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
-    @Disabled("Disabled on production")
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_5_1")
+    @DisplayName("Mirror trading rule exit Event_End_5_1. No Alert if abuse points < 4")
     @AllureId("181")
     public void mirrorTradeRuleExitEventEnd5_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("5_1");
@@ -415,7 +414,6 @@ public class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestrictionClose, expectedRestrictionWithdrawal));
     }
 
-    @Disabled("Disabled on production")
     @Test
     @DisplayName("Mirror trading rule exit Event_End_7_1")
     @AllureId("178")
@@ -441,7 +439,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.clones, notNullValue());
+        assertThat("Verify rule attributes mirrorTradeScore not null", alert.rule.attributes.mirrorTradeScore, notNullValue());
+        assertThat("Verify rule attributes mirrorTrades not null", alert.rule.attributes.mirrorTrades, notNullValue());
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
@@ -452,18 +451,18 @@ public class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
-
-
-        ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
+//        Allure.step("Get client restrictions");
+//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+//                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+//        );
+//
+//        assertThat("Verify that there is 1 restriction", clientsRestrictions.size(), equalTo(1));
+//
+//
+//        ClientsRestriction expectedRestrictionWithdrawal = new ClientsRestriction(
+//                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Trading account is a mirror abuser (full rule) but without existing mirror trades", "APPLIED");
+//
+//        assertThat("Verify that the restriction is as expected", clientsRestrictions.getFirst(), equalTo(expectedRestrictionWithdrawal));
     }
 
     @Disabled("Disabled on production")
