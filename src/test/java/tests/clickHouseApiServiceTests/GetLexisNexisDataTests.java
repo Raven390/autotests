@@ -21,6 +21,7 @@ import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexi
 import static businessObjects.api.clickhouseApiService.getLexisNexisData.GetLexisNexisDataResponse.Items.getItem;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.CleanTableHelper.cleanLexisNexisTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -48,9 +49,8 @@ public class GetLexisNexisDataTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownData() throws SQLException {
-        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid1));
-        deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("ucid = '%s'", ucid2));
+    public static void teardownData() throws Exception {
+        cleanLexisNexisTableByUcid(ucid1, ucid2);
     }
 
     @Test

@@ -14,6 +14,7 @@ import tests.TestBaseApi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNexisRequest.getLexisNexis;
@@ -45,10 +46,7 @@ public class GetLexisNexisTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, event);
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, event2);
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, event3);
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, event4);
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
     @Test
@@ -232,8 +230,6 @@ public class GetLexisNexisTests extends TestBaseApi {
         System.out.println(event3.id);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response code", lexisNexisResponse.eventId, is(event3.eventId));
-
-
     }
 
     @Test

@@ -4,12 +4,12 @@ import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateOb
 import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObject;
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
-import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
+import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
@@ -46,6 +46,8 @@ public class MirrorTradingRuleDataFactory {
     private static final ClientHelper mirrorTradingRuleExitEventEnd3_2Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd4_1Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd4_2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper mirrorTradingRuleExitEventEnd4_3Client = getRandomVantageClientAllFields();
+    private static final ClientHelper mirrorTradingRuleExitEventEnd4_4Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd5_1Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd5_2Client = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradingRuleExitEventEnd6Client = getRandomVantageClientAllFields();
@@ -75,7 +77,7 @@ public class MirrorTradingRuleDataFactory {
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
                 getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), crmTbAccountObject.account, 100d, "USDEUR", crmTbAccountObject.serverIdSt, "closeTrade"
         );
-        return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
+        return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
@@ -103,7 +105,7 @@ public class MirrorTradingRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), 6, "HEDGING"
+                connectedClient.getUcid(), 1, "HEDGING"
         );
         data.clientFraudTypes.add(boClientFraudTypesObject);
         return data;
@@ -118,9 +120,10 @@ public class MirrorTradingRuleDataFactory {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd3_2Client);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        CrmTbBonusObject connectionBonus = generateBonusByClient(connectedClient);
-        connectionBonus.regulator = "VFSC";
-        data.crmTbBonusObjects.add(connectionBonus);
+        MtTbCreditsObject credit = generateCreditsByClient(connectedClient);
+        credit.amount = 10D;
+        credit.regulator = "VFSC";
+        data.mtTbCreditsObjects.add(credit);
         return data;
     }
 
@@ -143,6 +146,35 @@ public class MirrorTradingRuleDataFactory {
         AggrCreditEquityRateObject creditEquityRate = generateCreditEquityRatioAccount(data.clientHelper);
         creditEquityRate.creditEquityRatio = 0.4d;
         data.aggrCreditEquityRate = creditEquityRate;
+        return data;
+    }
+
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_3Data() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has connected account, not a mirror abuser");
+        Allure.step("Clone has a credit");
+        Allure.step("User has no credit");
+        Allure.step("Exit without alert");
+        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd4_3Client);
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        MtTbCreditsObject credit = generateCreditsByClient(connectedClient);
+        credit.amount = 10D;
+        credit.regulator = "VFSC";
+        data.mtTbCreditsObjects.add(credit);
+        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
+        return data;
+    }
+
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_4Data() {
+        Allure.step("Client has no previous restrictions");
+        Allure.step("Client has connected account, not a mirror abuser");
+        Allure.step("Clone has no credits");
+        Allure.step("User has no credits");
+        Allure.step("Exit without alert");
+        MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd4_4Client);
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
         return data;
     }
 
@@ -431,21 +463,23 @@ public class MirrorTradingRuleDataFactory {
         startSshTunnel();
         Map<String, MirrorTradingRuleData> map = new HashMap<>();
         // Put all the db data for setup in a list
-        map.put("2", getMirrorTradingRuleExitEventEnd2Data());
+        //map.put("2", getMirrorTradingRuleExitEventEnd2Data());
         map.put("3_1", getMirrorTradingRuleExitEventEnd3_1Data());
-        map.put("3_2", getMirrorTradingRuleExitEventEnd3_2Data());
+        //map.put("3_2", getMirrorTradingRuleExitEventEnd3_2Data());
         map.put("4_1", getMirrorTradingRuleExitEventEnd4_1Data());
-        map.put("4_2", getMirrorTradingRuleExitEventEnd4_2Data());
-        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
-        map.put("5_2", getMirrorTradingRuleExitEventEnd5_2Data());
-        map.put("6", getMirrorTradingRuleExitEventEnd6Data());
-        map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
-        map.put("1_2", getMirrorTradingRuleExitEventEnd1_2Data());
-        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
-        map.put("7_2", getMirrorTradingRuleExitEventEnd7_2Data());
-        map.put("7_3", getMirrorTradingRuleExitEventEnd7_3Data());
-        map.put("7_4", getMirrorTradingRuleExitEventEnd7_4Data());
-        map.put("7_5", getMirrorTradingRuleExitEventEnd7_5Data());
+        //map.put("4_2", getMirrorTradingRuleExitEventEnd4_2Data());
+        map.put("4_3", getMirrorTradingRuleExitEventEnd4_3Data());
+        map.put("4_4", getMirrorTradingRuleExitEventEnd4_4Data());
+//        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
+//        map.put("5_2", getMirrorTradingRuleExitEventEnd5_2Data());
+//        map.put("6", getMirrorTradingRuleExitEventEnd6Data());
+//        map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
+//        map.put("1_2", getMirrorTradingRuleExitEventEnd1_2Data());
+//        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
+//        map.put("7_2", getMirrorTradingRuleExitEventEnd7_2Data());
+//        map.put("7_3", getMirrorTradingRuleExitEventEnd7_3Data());
+//        map.put("7_4", getMirrorTradingRuleExitEventEnd7_4Data());
+//        map.put("7_5", getMirrorTradingRuleExitEventEnd7_5Data());
 
         // Loop through the list with data and insert all the data into the according tables
         for (MirrorTradingRuleData data : map.values()) {
@@ -473,6 +507,13 @@ public class MirrorTradingRuleDataFactory {
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
+            data.crmTbAccountObjectConnections.forEach(credit -> {
+                try {
+                    insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             data.mtTbCreditsObjects.forEach(credit -> {
                 try {
                     insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
@@ -512,7 +553,7 @@ public class MirrorTradingRuleDataFactory {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
             if (data.aggrMirrorAccountsByTrades != null) {
-                insertObjectToDb(AGGR_MIRROR_ACCOUNTS_BY_TRADES, data.aggrMirrorAccountsByTrades);
+                insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data.aggrMirrorAccountsByTrades);
             }
         }
         return map;

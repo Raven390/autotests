@@ -115,7 +115,6 @@ public class Constants {
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
-    public static final String AGGR_MIRROR_ACCOUNTS_BY_TRADES = "vindex_test_api.aggr__mirror_accounts_by_trades";
     public static final String AGGR_CREDIT_EQUITY_RATE = "vindex_test_api.aggr__credit_equity_rate";
     public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO = "vindex_test_api.aggr__credit_risk_free_revenue_ratio";
     public static final String BO_USER_ACTION_AUDIT_TABLE_NAME = "postgres.bo.user_action_audit";
@@ -124,7 +123,7 @@ public class Constants {
     public static final String KYC_FILES_TABLE_NAME = "vindex_test.crm___tb_kyc_files";
     public static final String ID_PROOF_TABLE_NAME = "vindex_test.crm___tb_id_proof";
     public static final String CLIENT_METRICS_LIFETIME_TABLE_NAME = "vindex_test.client_metrics_lifetime";
-    public static final String DATA_SCIENCE_MIRROR_LOGIN = "vindex_test.mirror_login";
+    public static final String MIRROR_LOGIN_TABLE_NAME = "vindex_test.mirror_login";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";

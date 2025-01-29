@@ -20,7 +20,7 @@ import static businessObjects.api.clickhouseApiService.getCredits.GetCreditsRequ
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanMtCreditsTableByUcid;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -52,8 +52,8 @@ public class GetCreditsTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownCredits() throws SQLException {
-        deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit1.ucid));
+    public static void teardownCredits() throws Exception {
+        cleanMtCreditsTableByUcid(credit1.ucid, credit2.ucid);
     }
 
     @Test
@@ -115,6 +115,7 @@ public class GetCreditsTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client credits by empty params")
     @AllureId("403")
     public void getCreditsEmptyParamsTest() throws IOException {
+
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);

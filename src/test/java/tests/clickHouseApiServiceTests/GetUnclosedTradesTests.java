@@ -22,7 +22,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getUnclosedTrades.GetUnclosedTradesRequest.getUnclosedTrades;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByAccount;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -78,23 +78,12 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade6.deal = 1;
         trade7.deal = 2;
         trade8.deal = 3;
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade5);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade6);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade7);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade8);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
     @AfterAll
-    public static void teardownTests() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client1.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client2.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client3.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client4.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client5.getTradingAccount()));
+    public static void teardownTests() throws Exception {
+        cleanMt5CoercedTableByAccount(client1.getTradingAccount(), client2.getTradingAccount(), client3.getTradingAccount(), client4.getTradingAccount(), client5.getTradingAccount());
     }
 
     @Test
@@ -474,6 +463,5 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
         assertThat("Assert response length", mappedResponse.getFirst().tradeId, is(3));
-
     }
 }

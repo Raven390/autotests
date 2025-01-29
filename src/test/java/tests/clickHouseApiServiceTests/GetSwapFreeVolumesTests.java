@@ -16,13 +16,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getSwapFreeVolumes.GetSwapFreeVolumesRequest.getSwapFreeVolumes;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAccountByClient;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
+import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByComment;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -57,26 +59,17 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal1);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal2);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal3);
-
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal5);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal6);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 
     //TODO uncomment after solving error with delete statement
     @AfterAll
-    public static void teardownData() throws SQLException {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+    public static void teardownData() throws Exception {
+        cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
+        cleanMt5CoercedTableByComment(deal1.comment, deal2.comment);
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("comment = '%s'", deal1.comment));
-
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client2.getTradingAccount()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("comment = '%s'", deal2.comment));
     }
 
     @Test
@@ -282,6 +275,5 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
         assertThat("Check volumeOpened", mappedResponse.tradingIndicators.get(1).volumeOpened, is("0.0000"));
         assertThat("Check volumeClosed", mappedResponse.tradingIndicators.get(2).volumeClosed, is("0.0000"));
         assertThat("Check volumeEndOfDay", mappedResponse.tradingIndicators.getLast().volumeEndOfDay, is("0.0000"));
-
     }
 }

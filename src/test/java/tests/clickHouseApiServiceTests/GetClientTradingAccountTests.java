@@ -19,7 +19,7 @@ import static businessObjects.api.clickhouseApiService.getClientTradingAccounts.
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -36,8 +36,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateAdditionalCrmTbAccountData(client));
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
     }
 
     @Test

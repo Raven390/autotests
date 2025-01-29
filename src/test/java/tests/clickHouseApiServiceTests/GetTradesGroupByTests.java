@@ -43,11 +43,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupTradesGroupBy() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade1);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade2);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade3);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade4);
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, trade5);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
     }
 
     @AfterAll
