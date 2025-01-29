@@ -88,6 +88,7 @@ public class ResolvePage extends AbstractPage {
     @Step("Open resolve form in suspicious client")
     public void openResolveSuspicious() {
         isPageLoaded();
+        page.waitForTimeout(200);
         if (resolveButton.isVisible()) {
             resolveButton.click();
         } else {
@@ -112,11 +113,30 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
+    @Step("Resolve and approve all withdrawals")
+    public void resolveWithdrawalsAllApprove(String comment) {
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        approveAllwithdrawalsButton.click();
+        commentInput.fill(comment);
+        completeInvestigationButton.click();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
     @Step("Resolve and reject all withdrawals")
     public void resolveWithdrawalsAllReject() {
         resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         rejectAllwithdrawalsButton.click();
         commentInput.fill("autotest to withdrawals");
+        completeInvestigationButton.click();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Resolve and reject all withdrawals")
+    public void resolveWithdrawalsAllReject(String comment) {
+        Allure.step("Resolve and reject all withdrawals");
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        rejectAllwithdrawalsButton.click();
+        commentInput.fill(comment);
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }

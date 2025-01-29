@@ -34,12 +34,15 @@ public class OperationsPage extends AbstractPage {
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
-    private final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']/..//span[contains(text(), 'No operations to display')]";
-    private final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Cashflow']/..//span[contains(text(), 'No operations to display')]";
+    private final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
+    private final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
     private final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private final String TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container')]";
     private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
+    private final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
+    private final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
+    private final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
 
 
     public OperationsPage(Page page) {
@@ -49,7 +52,7 @@ public class OperationsPage extends AbstractPage {
         this.financialTransactionsChart = page.locator(FINANCIAL_TRANSACTIONS_SELECTOR);
         this.cashflowDepositEmptyState = page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR);
         this.transactionTooltipTitleDate = page.locator(".v-payments-summary-transcations-tooltip__title");
-        this.financialDateGraphContainer = page.locator("//div[text()='Financial transactions']/..//div/div[@class='v-bar-chart__section']");
+        this.financialDateGraphContainer = page.locator("//div[text()='Financial transactions']/ancestor::div//div/div[@class='v-bar-chart__section']");
         this.financialTransactionGraphSection = page.locator(".v-bar-chart__section-container");
         this.financialDateGraphContainerTooltipTitle = page.locator("//div[contains(@class,'v-payments-summary-transcations-tooltip__title')]");
         this.financialDateGraphContainerTooltip = page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
@@ -149,29 +152,45 @@ public class OperationsPage extends AbstractPage {
 
     public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategory, String expectedAmount) {
         Allure.step("Check top payment category and its total amount in usd Deposit");
-        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[1]/div[2]");
-        String topCategory = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[1]/div[2]").textContent();
+        String topCatLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Deposit')]");
+        page.waitForSelector(topCatLocator);
+        String topCategory = page.locator(topCatLocator).textContent();
         System.out.println("Top category in Deposit: " + topCategory);
         assertTrue(topCategory.contains(expectedCategory));
-        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[1]/div[1]");
-        String totalAmount = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[1]/div[1]").textContent();
+        String topSumLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Deposit')]/preceding-sibling::div");
+        page.waitForSelector(topSumLocator);
+        String totalAmount = page.locator(topSumLocator).textContent();
         System.out.println("totalAmount in Deposit: " + totalAmount);
         assertEquals(expectedAmount, totalAmount);
     }
 
     public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, String expectedAmount) {
         Allure.step("Check top payment category and its total amount in usd Withdrawal");
-        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]");
-        String totalAmount = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]").textContent();
-        System.out.println("Total amount in usd Withdrawal: " + totalAmount);
-        assertEquals(expectedAmount, totalAmount);
-        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]");
-        String topCategory = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]").textContent();
-        System.out.println("current top category: " + topCategory);
+        String topCatLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Withdrawal')]");
+        page.waitForSelector(topCatLocator);
+        String topCategory = page.locator(topCatLocator).textContent();
+        System.out.println("Top category in Withdrawal: " + topCategory);
         assertTrue(topCategory.contains(expectedCategory));
+        String topSumLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Withdrawal')]/preceding-sibling::div");
+        page.waitForSelector(topSumLocator);
+        String totalAmount = page.locator(topSumLocator).textContent();
+        System.out.println("totalAmount in Withdrawal: " + totalAmount);
+        assertEquals(expectedAmount, totalAmount);
     }
 
-    public void hoverOverFinancialTransactionsGraphByDate(String dateString) throws ParseException {
+//    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, String expectedAmount) {
+//        Allure.step("Check top payment category and its total amount in usd Withdrawal");
+//        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]");
+//        String totalAmount = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]").textContent();
+//        System.out.println("Total amount in usd Withdrawal: " + totalAmount);
+//        assertEquals(expectedAmount, totalAmount);
+//        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]");
+//        String topCategory = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]").textContent();
+//        System.out.println("current top category: " + topCategory);
+//        assertTrue(topCategory.contains(expectedCategory));
+//    }
+
+    public void hoverOverFinancialTransactionsGraphByDateMMMdd(String dateString) throws ParseException {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
@@ -184,6 +203,34 @@ public class OperationsPage extends AbstractPage {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
                 System.out.println("interval is " + interval);
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
+                Date date1 = formatter.parse(dateString);
+                String[] dateIntervals = interval.split(" - ");
+                System.out.println("interval 1 is " + dateIntervals[0]);
+                System.out.println("interval 2 is " + dateIntervals[1]);
+                Date date2 = formatter.parse(dateIntervals[0]);
+                Date date3 = formatter.parse(dateIntervals[1]);
+
+                if ((date1.after(date2) || date1.equals(date2)) && (date1.before(date3) || date1.equals(date3))) {
+                    System.out.println("SUCCESS date " + date1 + " is found");
+                    found = true;
+                }
+            }
+        }
+    }
+
+    public void hoverOverFinancialTransactionsGraphByDateMMMyyyy(String dateString) throws ParseException {
+        Allure.step("Hover over financial transactions graph by date");
+        page.waitForTimeout(1000);
+        int count = financialDateGraphContainer.count();
+        System.out.println("number of containers is " + count);
+        boolean found = false;
+        for (int i = 0; i < count && found == false; i++) {
+            financialDateGraphContainer.nth(i).hover();
+            page.waitForTimeout(200);
+            if (financialDateGraphContainerTooltipTitle.isVisible()) {
+                String interval = financialDateGraphContainerTooltipTitle.textContent();
+                System.out.println("interval is " + interval);
+                SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
                 Date date1 = formatter.parse(dateString);
                 String[] dateIntervals = interval.split(" - ");
                 System.out.println("interval 1 is " + dateIntervals[0]);

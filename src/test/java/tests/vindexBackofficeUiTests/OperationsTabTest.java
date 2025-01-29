@@ -399,8 +399,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("615")
-    @DisplayName("Operations tab. User can filter operations by Dates Last 6 monts")
+    @AllureId("897")
+    @DisplayName("Operations tab. User can filter operations by Dates Last 6 months")
     public void filterLast6MonthsTest() throws Exception {
         investigationPage.navigate();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
@@ -423,7 +423,7 @@ public class OperationsTabTest extends TestBaseWeb {
         Allure.step("filter test date");
         operationsPage.selectDateFilter("Last 6 months");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
+        operationsPage.hoverOverFinancialTransactionsGraphByDateMMMyyyy(getPreviousDayMonthDay());
         operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
         operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
         operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));

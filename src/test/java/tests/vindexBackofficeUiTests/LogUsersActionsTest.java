@@ -146,6 +146,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         generalPage.clickGeneralTabButton();
         operationsPage.clickOperationsTabButton();
         tradingPage.openTradingTab();
+        tradingPage.openAccountsTab();
         tradingPage.clickTableViewButton();
         tradingPage.openOperationsTab();
         restrictionPage.openRestrictionsTab();
@@ -159,6 +160,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/general", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/operations/summary", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditTradingAccountsCards = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/cards", "ucid", crmTbUser.ucid));
+        UserActionAudit expectedUserActionAuditTradingSummary = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/summary", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditTradingAccountsTable = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/accounts/table", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditTradingOperations = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/trading/operations", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditRestrictions = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/restrictions", "ucid", crmTbUser.ucid));
