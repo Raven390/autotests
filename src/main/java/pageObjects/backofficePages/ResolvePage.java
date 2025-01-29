@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -36,16 +37,24 @@ public class ResolvePage extends AbstractPage {
     private final Locator clientRestrictionItem;
     private final Locator approveSecondButton;
     private final Locator submitCommentButton;
+    private final Locator reportFraudButton;
+    private final Locator reportForm;
+    private final Locator submitFraudButton;
+    private final Locator selectedFraudLabel;
+
+    private final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
 
     public ResolvePage(Page page) {
         super(page);
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin");
         this.resolveButton = page.locator(".g-button__text").getByText("Resolve");
+        this.reportFraudButton = page.locator("[data-qa=investigation_tools__report_fraud_button]");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.completeInvestigationButton = page.locator(".g-button__text").getByText("Complete investigation");
         this.resolutionForm = page.locator("[data-qa='drawer_body']").getByText("Resolution");
-        this.commentInput = page.locator(".v-investigation-tools-client-resolving-drawer__textarea-container textarea");
+        this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Report fraud");
+        this.commentInput = page.locator(".v-drawer-section-layout textarea");
         this.withdrawalList = page.locator(".v-withdrawals-list");
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
@@ -59,6 +68,8 @@ public class ResolvePage extends AbstractPage {
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
         this.submitCommentButton = page.locator("[data-qa='investigation_tools__add_comment_textarea_container']");
+        this.submitFraudButton = page.locator("button[data-qa='report_fraud_drawer__submit_button']");
+        this.selectedFraudLabel = page.locator(SELECTED_FRAUD_LOCATOR);
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -218,6 +229,30 @@ public class ResolvePage extends AbstractPage {
         assertNotNull((apply.status));
         assertNotNull((apply.internalReason));
         assertEquals(expectedStatus, (apply.status));
+    }
+
+    public void openReportFraudForm() {
+        isPageLoaded();
+        reportFraudButton.click();
+        reportForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(reportForm.isVisible());
+    }
+
+    @Step("Resolve with adding fraud")
+    public void reportAddFraud(String comment, String addedFraud) {
+        commentInput.fill(comment);
+        fraudListButton.click();
+        fraudSelectItem.getByText(addedFraud).click();
+        fraudSelectApplyButton.click();
+        submitFraudButton.click();
+        successToast.getByText("Fraud reported. Good job!").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(successToast.getByText("Fraud reported. Good job!").isVisible());
+    }
+
+    @Step("Resolve with adding fraud")
+    public void checkPreviousConfirmedFraudDisplayed(String addedFraud) {
+        String locator = "//div[@data-qa='selected_fraud_type_item']//div[text()='Previously confirmed']/preceding-sibling::div[text()='" + addedFraud + "']";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
     }
 
 

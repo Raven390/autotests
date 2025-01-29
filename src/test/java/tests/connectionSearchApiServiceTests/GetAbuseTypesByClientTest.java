@@ -66,8 +66,8 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
         connectionTableEntry1_1.connectionInfo = "[{\"connectionAttributeName\": \"digital\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]";
         fraud1_1 = new BoClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-        fraud1_2 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA.getFraudTypeId(), CPA.getDisplayName());
-        fraud2_2 = new BoClientFraudTypesObject(userTo2_3.getUcid(), CPA.getFraudTypeId(), CPA.getDisplayName());
+        fraud1_2 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
+        fraud2_2 = new BoClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_1);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_2);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
@@ -107,7 +107,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
-        assertThat("Check the response body", responseBody[0].abuseType, is(CPA.getDisplayName()));
+        assertThat("Check the response body", responseBody[0].abuseType, is(CPA_ABUSE.getDisplayName()));
         assertThat("Check the response body", responseBody[1].abuseType, is(HEDGING.getDisplayName()));
     }
 
@@ -148,7 +148,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
     public void getAbuseTypesByClientTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
-        queryParams.put("abuseTypes", CPA.getDisplayName());
+        queryParams.put("abuseTypes", CPA_ABUSE.getDisplayName());
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
@@ -158,7 +158,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
-        assertThat("Check the response body", responseBody[0].abuseType, is(CPA.getDisplayName()));
+        assertThat("Check the response body", responseBody[0].abuseType, is(CPA_ABUSE.getDisplayName()));
     }
 
     @Test
@@ -385,7 +385,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 0);
         queryParams.put("connectionScoreTo", 2);
         queryParams.put("connectionDepth", 1);
-        queryParams.put("abuseTypes", List.of(CPA.getDisplayName(), HEDGING.getDisplayName()));
+        queryParams.put("abuseTypes", List.of(CPA_ABUSE.getDisplayName(), HEDGING.getDisplayName()));
         queryParams.put("connectionAttributes", List.of("digital", "payoutId"));
 
         Response response = getAbuseTypesByClientId(queryParams);

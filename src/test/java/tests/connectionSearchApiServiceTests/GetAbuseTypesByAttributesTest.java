@@ -134,7 +134,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     // Frauds
     private static final BoClientFraudTypesObject fraudEmailTo = new BoClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudEmail1 = new BoClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudEmail2 = new BoClientFraudTypesObject(userTo2Depth.getUcid(), CPA.getFraudTypeId(), CPA.getDisplayName());
+    private static final BoClientFraudTypesObject fraudEmail2 = new BoClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
     private static final BoClientFraudTypesObject fraudEmail3 = new BoClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getFraudTypeId(), LOSS_VOUCHER_ABUSE.getDisplayName());
     private static final BoClientFraudTypesObject fraudDocumentTo = new BoClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudIpTo = new BoClientFraudTypesObject(userToIp.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
