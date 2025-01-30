@@ -10,6 +10,7 @@ import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
+import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
@@ -35,6 +36,8 @@ public class MirrorTradingRuleData {
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
     public MirrorLoginObject aggrMirrorAccountsByTrades;
+    public List<MtBalanceOrdersObject> mtBalanceOrdersObjects;
+    public List<MirrorLoginObject> mirrorLoginObjects;
 
     public MirrorTradingRuleData() {
     }
@@ -48,7 +51,8 @@ public class MirrorTradingRuleData {
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
             List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsObjects,
             AggrCreditEquityRateObject aggrCreditEquityRate,
-            MirrorLoginObject aggrMirrorAccountsByTrades) {
+            MirrorLoginObject aggrMirrorAccountsByTrades, List<MtBalanceOrdersObject> mtBalanceOrdersObjects,
+            List<MirrorLoginObject> mirrorLoginObjects) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;
@@ -66,10 +70,12 @@ public class MirrorTradingRuleData {
         this.mt5DealsObjects = mt5DealsObjects;
         this.aggrCreditEquityRate = aggrCreditEquityRate;
         this.aggrMirrorAccountsByTrades = aggrMirrorAccountsByTrades;
+        this.mtBalanceOrdersObjects = mtBalanceOrdersObjects;
+        this.mirrorLoginObjects = mirrorLoginObjects;
     }
 
     @Override
     public String toString() {
-        return "MirrorTradingRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", closeTradeMtEvent=" + closeTradeMtEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + '}';
+        return "MirrorTradingRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", closeTradeMtEvent=" + closeTradeMtEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + '}';
     }
 }
