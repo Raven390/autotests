@@ -76,6 +76,9 @@ public class RuleAlert {
 
             @JsonProperty("mirrorTrades")
             public String mirrorTrades;
+
+            @JsonProperty("hedgingClone")
+            public String hedgingClone;
         }
     }
 }

@@ -56,6 +56,8 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd7Version18Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version19Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version20Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd7Version21Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd7Version22Client = getRandomVantageClientAllFields();
 
     private static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
@@ -559,6 +561,44 @@ public class RegistrationRuleDataFactory {
         return registrationRuleData;
     }
 
+    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version21Data() {
+        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.VJP);
+        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version21Client);
+
+        // Abuser connected clients
+        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientBonusAbuser2 = getRandomVantageClientAllFields();
+        connectedClientBonusAbuser.setBrand(Brand.VJP);
+        connectedClientBonusAbuser2.setBrand(Brand.VJP);
+        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version21Client, connectedClientBonusAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser2 = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version21Client, connectedClientBonusAbuser2);
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "BONUS_ABUSE"));
+
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
+        return registrationRuleData;
+    }
+
+    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version22Data() {
+        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.VJP);
+        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version4Client);
+
+        // Abuser connected clients
+        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
+        connectedClientBonusAbuser.setBrand(Brand.VJP);
+        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
+
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
+        return registrationRuleData;
+    }
+
     public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException,
             SQLException {
         startSshTunnel();
@@ -589,6 +629,8 @@ public class RegistrationRuleDataFactory {
         map.put("7v18", getRegistrationRuleExitEventEnd7Version18Data());
         map.put("7v19", getRegistrationRuleExitEventEnd7Version19Data());
         map.put("7v20", getRegistrationRuleExitEventEnd7Version20Data());
+        map.put("7v21", getRegistrationRuleExitEventEnd7Version21Data());
+        map.put("7v22", getRegistrationRuleExitEventEnd7Version22Data());
 
         // Loop through the map with data and insert all the data into the according tables
         for (RegistrationRuleData data : map.values()) {

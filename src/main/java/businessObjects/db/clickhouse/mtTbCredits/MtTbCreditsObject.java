@@ -17,7 +17,7 @@ public class MtTbCreditsObject {
     public String serverName;
     public Integer ticket;
     public String ucid;
-    public String uid;
+    //public String uid;
     public Integer userId;
 
     public MtTbCreditsObject() {
@@ -38,25 +38,29 @@ public class MtTbCreditsObject {
         this.serverName = serverName;
         this.ticket = ticket;
         this.ucid = ucid;
-        this.uid = uid;
+        //this.uid = uid;
         this.userId = userId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MtTbCreditsObject that = (MtTbCreditsObject) o;
-        return Objects.equals(account, that.account) && Objects.equals(amount, that.amount) && Objects.equals(amountUsd, that.amountUsd) && Objects.equals(brand, that.brand) && Objects.equals(comment, that.comment) && Objects.equals(createTime, that.createTime) && Objects.equals(currency, that.currency) && Objects.equals(regulator, that.regulator) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(ticket, that.ticket) && Objects.equals(ucid, that.ucid) && Objects.equals(uid, that.uid) && Objects.equals(userId, that.userId);
+        return Objects.equals(account, that.account) && Objects.equals(amount, that.amount) && Objects.equals(
+                amountUsd, that.amountUsd) && Objects.equals(brand, that.brand) && Objects.equals(
+                        comment, that.comment) && Objects.equals(createTime, that.createTime) && Objects.equals(
+                                currency, that.currency) && Objects.equals(regulator, that.regulator) && Objects.equals(
+                                        serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(ticket, that.ticket) && Objects.equals(
+                                                ucid, that.ucid) && Objects.equals(userId, that.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, amount, amountUsd, brand, comment, createTime, currency, regulator, serverId, serverName, ticket, ucid, uid, userId);
+        return Objects.hash(account, amount, amountUsd, brand, comment, createTime, currency, regulator, serverId, serverName, ticket, ucid, userId);
     }
 
     @Override
     public String toString() {
-        return "MtTbCreditsObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", comment='" + comment + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", regulator='" + regulator + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", ticket=" + ticket + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", userId=" + userId + '}';
+        return "MtTbCreditsObject{" + "account=" + account + ", amount=" + amount + ", amountUsd=" + amountUsd + ", brand='" + brand + '\'' + ", comment='" + comment + '\'' + ", createTime='" + createTime + '\'' + ", currency='" + currency + '\'' + ", regulator='" + regulator + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", ticket=" + ticket + ", ucid='" + ucid + '\'' + ", userId=" + userId + '}';
     }
 }
