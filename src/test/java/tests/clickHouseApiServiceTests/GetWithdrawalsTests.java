@@ -21,7 +21,7 @@ import static businessObjects.api.clickhouseApiService.getWithdrawals.GetWithdra
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanWithdrawalsTableByUcid;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -45,7 +45,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
         withdrawal2 = generateWithdrawalByClient(client);
         withdrawal2.createTime = getTomorrowTimestampDbFormat();
         withdrawal2.amountUsd = 3.0;
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2));
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2));
     }
 
     @AfterAll

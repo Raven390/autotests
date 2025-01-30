@@ -22,7 +22,7 @@ import static businessObjects.api.clickhouseApiService.getSwapFreeFees.GetSwapFr
 import static businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObjectFactory.generateBalanceOrders;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanMtBalanceOrdersTableByClient;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -50,7 +50,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     public static void setupData() throws ReflectiveOperationException, SQLException {
         data1 = generateBalanceOrders(client1, 1d, 2d, tradeDate1);
         data2 = generateBalanceOrders(client1, 3d, 4d, tradeDate2);
-        insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
+        insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
     }
 
     @AfterAll

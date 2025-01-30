@@ -21,7 +21,7 @@ import static businessObjects.api.clickhouseApiService.getLexisNexis.GetLexisNex
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -46,7 +46,7 @@ public class GetLexisNexisTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
+        insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
     @Test

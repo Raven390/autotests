@@ -20,8 +20,7 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getTrades.GetTradesRequest.getTrades;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -51,7 +50,7 @@ public class GetTradesTests extends TestBaseApi {
         trade2.action = 2;
         trade2.entry = 2;
         trade3.serverId = 1000;
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
     }
 
     @AfterAll
