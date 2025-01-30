@@ -3,27 +3,27 @@ package businessObjects.db.backofficeDb.clientFraudTypes;
 import java.util.Objects;
 
 public class ClientFraudTypes {
-    public Long clientId;
+    public String clientUcid;
     public Long fraudTypeId;
 
     public ClientFraudTypes() {
     }
 
-    public ClientFraudTypes(Long fraudTypeId, Long clientId) {
+    public ClientFraudTypes(Long fraudTypeId, String clientUcid) {
         this.fraudTypeId = fraudTypeId;
-        this.clientId = clientId;
+        this.clientUcid = clientUcid;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public String getClientUcid() {
+        return clientUcid;
     }
 
     public Long getFraudTypeId() {
         return fraudTypeId;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setClientUcid(String clientUcid) {
+        this.clientUcid = clientUcid;
     }
 
     public void setFraudTypeId(Long fraudTypeId) {
@@ -35,16 +35,16 @@ public class ClientFraudTypes {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientFraudTypes that = (ClientFraudTypes) o;
-        return Objects.equals(clientId, that.clientId) && Objects.equals(fraudTypeId, that.fraudTypeId);
+        return Objects.equals(clientUcid, that.clientUcid) && Objects.equals(fraudTypeId, that.fraudTypeId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, fraudTypeId);
+        return Objects.hash(clientUcid, fraudTypeId);
     }
 
     @Override
     public String toString() {
-        return "ClientFraudtypes{" + "clientId=" + clientId + ", fraudType=" + fraudTypeId + '}';
+        return "ClientFraudtypes{" + "clientId=" + clientUcid + ", fraudType=" + fraudTypeId + '}';
     }
 }

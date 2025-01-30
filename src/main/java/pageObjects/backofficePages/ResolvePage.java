@@ -7,11 +7,11 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.enums.FraudType;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -188,8 +188,9 @@ public class ResolvePage extends AbstractPage {
 
     public void checkFraudsList() {
         fraudListButton.click();
-        List<String> frauds = Arrays.asList("CPA", "Hedging", "Market manipulation", "Pricing errors", "Gap trading", "Swap arbitrage", "RAF abuse", "Rebate churning", "Loss voucher abuse", "NBP abuse", "TLS abuse", "Potential abuse");
-        for (String item : frauds) {
+        FraudType[] fraudsTypes = FraudType.values();
+        for (FraudType i : fraudsTypes) {
+            String item = i.getDisplayName();
             assertTrue(fraudSelectItem.getByText(item).isVisible());
         }
 

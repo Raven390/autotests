@@ -96,7 +96,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
-        FraudType fraudType = FraudType.PRICING_ERRORS;
+        FraudType fraudType = FraudType.PRICING_ERROR;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
         checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }

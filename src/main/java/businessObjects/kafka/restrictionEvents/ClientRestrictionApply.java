@@ -28,6 +28,9 @@ public class ClientRestrictionApply {
         @JsonProperty("restrictionId")
         public Integer restrictionId;
 
+        @JsonProperty("internalReason")
+        public String internalReason;
+
         @JsonProperty("restrictionCode")
         public String restrictionCode;
     }
