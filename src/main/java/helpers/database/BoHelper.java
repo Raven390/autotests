@@ -32,7 +32,7 @@ public class BoHelper {
         try {
             List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
             int boId = client.getFirst().id;
-            deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_id = '" + boId + "'");
+            deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
             deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'");
             Thread.sleep(100);
@@ -48,7 +48,7 @@ public class BoHelper {
         try {
             List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
             int boId = client.getFirst().id;
-            deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_id = '" + boId + "'");
+            deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
         } catch (Exception NoSuchElementException) {
             System.out.println("No such user");
@@ -64,7 +64,7 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_id = '" + boId + "' AND fraud_type_id = '" + expectedFraud + "'", ClientFraudTypes.class);
+        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientFraudTypes.class);
         Thread.sleep(100);
 
         fraud = clientFraudTypes.getFirst().getFraudTypeId();
@@ -81,7 +81,7 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_id = '" + boId + "'", ClientFraudTypes.class);
+        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientFraudTypes.class);
         Thread.sleep(100);
 
         assertEquals(clientFraudTypes.size(), 0);
@@ -92,11 +92,8 @@ public class BoHelper {
     public static void createUserFraudsDb(String ucid, long... fraudIds) throws Exception {
         Allure.step("create fraud for user in DB");
         Thread.sleep(2000);
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
-        long boId = client.getFirst().id;
-        System.out.println("CLIENT ID IN BO " + boId);
         for (long fraudId : fraudIds) {
-            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientFraudTypes(fraudId, boId));
+            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientFraudTypes(fraudId, ucid));
         }
         Thread.sleep(100);
     }

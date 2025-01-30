@@ -76,7 +76,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("Test withdrawal request decision action type");
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("Test investigation completed action type");
+        resolvePage.resolveWithdrawalsAllApprove("Test investigation completed action type");
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }

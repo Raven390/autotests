@@ -6,6 +6,7 @@ import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
+import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import okhttp3.Response;
@@ -66,7 +67,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
@@ -89,7 +90,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient("infinox-141402");
@@ -114,7 +115,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
         investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
@@ -127,7 +128,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response1 = enableCRMEmulator();
         assertNotNull(response1);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), "HEDGING");
+        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
         investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
@@ -146,7 +147,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientId = "161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigate();
@@ -164,7 +165,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -181,7 +182,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "BONUS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.BONUS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -200,7 +201,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "CPA_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -220,7 +221,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "GAP_TRADING");
+        createSimpleAlert(clientUcid, FraudType.GAP_TRADING.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -239,7 +240,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "HEDGING");
+        createSimpleAlert(clientUcid, FraudType.HEDGING.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -258,7 +259,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "LATENCY_ARBITRAGE");
+        createSimpleAlert(clientUcid, FraudType.LATENCY_ARBITRAGE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -277,7 +278,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "LOSS_VOUCHER_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.LOSS_VOUCHER_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -296,7 +297,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "MARKET_MANIPULATION");
+        createSimpleAlert(clientUcid, FraudType.MARKET_MANIPULATION.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -315,7 +316,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "NBP_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.NBP_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -334,7 +335,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "POTENTIAL_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.POTENTIAL_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -353,7 +354,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "PRICING_ERRORS");
+        createSimpleAlert(clientUcid, FraudType.PRICING_ERROR.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -372,7 +373,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "RAF_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.RAF_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -391,7 +392,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "REBATE_CHURNING");
+        createSimpleAlert(clientUcid, FraudType.REBATE_CHURNING.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -410,7 +411,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "SWAP_ARBITRAGE");
+        createSimpleAlert(clientUcid, FraudType.SWAP_ARBITRAGE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -429,7 +430,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -448,7 +449,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "LOOPHOLE_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.LOOPHOLE_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -467,7 +468,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "HFT_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.HFT_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -486,7 +487,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "NEWS_TRADER");
+        createSimpleAlert(clientUcid, FraudType.NEWS_TRADER.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -505,7 +506,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "ANOMALOUS_PROFIT");
+        createSimpleAlert(clientUcid, FraudType.ANOMALOUS_PROFIT.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -524,7 +525,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -544,7 +545,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -563,7 +564,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -581,7 +582,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -600,7 +601,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -619,7 +620,7 @@ public class ResolveTest extends TestBaseWeb {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -642,7 +643,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "01");
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
@@ -656,7 +657,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response2 = enableCRMEmulator();
         assertNotNull(response2);
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "05");
-        createSimpleAlert(clientUcid, "TLS_ABUSE");
+        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -673,7 +674,7 @@ public class ResolveTest extends TestBaseWeb {
         String comment = "test" + timestamp;
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, "CPA");
+        createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
         investigationPage.navigate();
         keycloackPage.loginAsDevUser();
         investigationPage.navigateToClient(clientUcid);
