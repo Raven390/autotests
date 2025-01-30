@@ -23,7 +23,7 @@ import static businessObjects.api.clickhouseApiService.getUnclosedTrades.GetUncl
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByAccount;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -78,7 +78,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade6.deal = 1;
         trade7.deal = 2;
         trade8.deal = 3;
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
     @AfterAll

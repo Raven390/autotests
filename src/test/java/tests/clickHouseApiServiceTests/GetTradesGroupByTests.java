@@ -19,8 +19,7 @@ import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBy;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -43,7 +42,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupTradesGroupBy() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
     }
 
     @AfterAll

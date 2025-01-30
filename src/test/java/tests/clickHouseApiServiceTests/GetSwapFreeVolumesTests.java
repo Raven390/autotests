@@ -25,7 +25,7 @@ import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFac
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByComment;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -59,8 +59,8 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
 
     @BeforeAll
     public static void setupData() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
-        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 
     //TODO uncomment after solving error with delete statement

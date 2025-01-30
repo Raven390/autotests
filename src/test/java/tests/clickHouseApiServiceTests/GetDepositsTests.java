@@ -21,7 +21,7 @@ import static businessObjects.api.clickhouseApiService.getDeposits.GetDepositsRe
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanDepositsTableByUcid;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -45,7 +45,7 @@ public class GetDepositsTests extends TestBaseApi {
         deposit2 = generateDepositByClient(client);
         deposit2.createTime = getTomorrowTimestampDbFormat();
         deposit2.amountUsd = 3.0;
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
     }
 
     @AfterAll
