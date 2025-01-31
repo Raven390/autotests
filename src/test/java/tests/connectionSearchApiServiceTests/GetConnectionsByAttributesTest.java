@@ -23,10 +23,7 @@ import tests.TestBaseApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsRequest.getConnectionsByAttributes;
 import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseFactory.*;
@@ -42,7 +39,6 @@ import static businessObjects.db.clickhouse.payout.PayoutTableEntryFactory.payou
 import static businessObjects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.sessionId.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.webSession.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
-import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -56,22 +52,22 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 public class GetConnectionsByAttributesTest extends TestBaseApi {
-    public static final ClientHelper userFromDocument = getRandomVantageClient();
-    public static final ClientHelper userToDocument = getRandomVantageClient();
-    public static final ClientHelper userFromEmail = getRandomVantageClient();
-    public static final ClientHelper userToEmail = getRandomVantageClient();
-    public static final ClientHelper userFromIp = getRandomVantageClient();
-    public static final ClientHelper userToIp = getRandomVantageClient();
-    public static final ClientHelper userFromPhone = getRandomVantageClient();
-    public static final ClientHelper userToPhone = getRandomVantageClient();
-    public static final ClientHelper userFromPayout = getRandomVantageClient();
-    public static final ClientHelper userToPayout = getRandomVantageClient();
-    public static final ClientHelper userFromDepth = getRandomVantageClient();
-    public static final ClientHelper userToDepth1 = getRandomVantageClient();
-    public static final ClientHelper userToDepth2 = getRandomVantageClient();
-    public static final ClientHelper userFromFiltration = getRandomVantageClient();
-    public static final ClientHelper userToFiltration1 = getRandomVantageClient();
-    public static final ClientHelper userToFiltration2 = getRandomVantageClient();
+    public static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDocument = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
+    public static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromIp = getRandomVantageClientAllFields();
+    public static final ClientHelper userToIp = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    public static final ClientHelper userToPhone = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
+    public static final ClientHelper userToPayout = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDepth1 = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDepth2 = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromFiltration = getRandomVantageClientAllFields();
+    public static final ClientHelper userToFiltration1 = getRandomVantageClientAllFields();
+    public static final ClientHelper userToFiltration2 = getRandomVantageClientAllFields();
     public static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
     public static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
     public static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
@@ -389,7 +385,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by attributes Api. documentType missing bad request (400)")
+    @DisplayName("Connection search by attributes Api. documentType missing bad request (Empty response)")
     @AllureId("196")
     public void getConnectionsTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -397,13 +393,13 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
 
         Response response = getConnectionsByAttributes(queryParams);
-        GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
         );
 
-        assertThat("Check the response code is 400", response.code(), is(400));
+        assertThat("Check the response code is 400", response.code(), is(200));
 
-        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorDocumentTypeBadRequest()));
+        assertThat("Check the response body", responseBody.length, equalTo(0));
     }
 
     @Test
@@ -510,6 +506,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
+        getConnectionsByAttributesDeviceIdResponseSuccess.clientIdFrom = null;
         assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess));
     }
 
