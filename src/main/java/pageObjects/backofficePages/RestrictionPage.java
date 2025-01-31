@@ -3,8 +3,7 @@ package pageObjects.backofficePages;
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.auditServiceDb.Event;
 import businessObjects.db.mitigationServiceDb.ClientsRestriction;
-import businessObjects.kafka.restrictionEvents.ClientRestrictionApply;
-import businessObjects.kafka.restrictionEvents.WithdrawalApprovals;
+import businessObjects.kafka.restrictionEvents.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
@@ -22,6 +21,7 @@ import static businessObjects.api.mitigationService.MitigationServiceRequest.pos
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.Constants.*;
 
 public class RestrictionPage extends AbstractPage {
 
@@ -425,6 +425,69 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((apply.messageId));
         assertNotNull((apply.regulator));
         assertNotNull((apply.restrictions));
+    }
+
+    @Step("Check request to cancel message")
+    public void checkKafkaRequestCancelUcid(int userIdInt) throws JsonProcessingException, InterruptedException {
+        String userId = String.valueOf(userIdInt);
+        Thread.sleep(4000);
+        KafkaHelper helper = new KafkaHelper();
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL, userId);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
+        String kafkaResponse = kafkaResponses.getLast();
+        ObjectMapper objectMapper = new ObjectMapper();
+        ClientRestrictionCancel cancel = objectMapper.readValue(kafkaResponse, ClientRestrictionCancel.class);
+        assertNotNull((cancel.clientId));
+        assertNotNull((cancel.timestamp));
+        assertNotNull((cancel.messageId));
+        assertNotNull((cancel.brand));
+        assertNotNull((cancel.regulator));
+        assertNotNull((cancel.restrictions));
+    }
+
+    @Step("Check request to apply message")
+    public void checkKafkaRequestApplyAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
+        String accoundId = String.valueOf(accoundIdInt);
+        Thread.sleep(4000);
+        KafkaHelper helper = new KafkaHelper();
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
+        String kafkaResponse = kafkaResponses.getLast();
+        System.out.println("tested message is " + kafkaResponse);
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
+        assertNotNull((apply.accountId));
+        assertNotNull((apply.timestamp));
+        assertNotNull((apply.messageId));
+        assertNotNull((apply.serverId));
+        assertNotNull((apply.initialBanDurationInMinutes));
+        assertNotNull((apply.modifier));
+        assertNotNull((apply.restrictions));
+    }
+
+    @Step("Check request to apply message")
+    public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
+        String accoundId = String.valueOf(accoundIdInt);
+        Thread.sleep(4000);
+        KafkaHelper helper = new KafkaHelper();
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL, accoundId);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
+        String kafkaResponse = kafkaResponses.getLast();
+        System.out.println("tested message is " + kafkaResponse);
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccountRestrictionCancel cancel = objectMapper.readValue(kafkaResponse, AccountRestrictionCancel.class);
+        assertNotNull((cancel.accountId));
+        assertNotNull((cancel.timestamp));
+        assertNotNull((cancel.messageId));
+        assertNotNull((cancel.serverId));
+        assertNotNull((cancel.modifier));
+        assertNotNull((cancel.restrictions));
     }
 
     @Step("Check withdrawal approval message")

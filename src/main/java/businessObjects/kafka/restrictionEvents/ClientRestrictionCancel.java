@@ -2,7 +2,7 @@ package businessObjects.kafka.restrictionEvents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ClientRestrictionApply {
+public class ClientRestrictionCancel {
 
     @JsonProperty("timestamp")
     public String timestamp;
@@ -29,9 +29,6 @@ public class ClientRestrictionApply {
 
         @JsonProperty("internalReason")
         public String internalReason;
-
-        @JsonProperty("restrictionCode")
-        public String restrictionCode;
     }
 
 }
