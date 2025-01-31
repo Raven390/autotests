@@ -97,8 +97,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
-        generalPage.clickGeneralTabButton();
-        generalPage.clickShowHiddenDataButton();
+        generalTab.clickGeneralTabButton();
+        generalTab.clickShowHiddenDataButton();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionCard(crmTbUser.ucid);
         connectionPage.clickUnmaskConnectionCardDataButton();
@@ -123,8 +123,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
-        generalPage.clickGeneralTabButton();
-        generalPage.kycDetailsOpen("Proof of identity");
+        generalTab.clickGeneralTabButton();
+        generalTab.kycDetailsOpen("Proof of identity");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
         );
@@ -143,7 +143,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         alertsPage.openAlertsTab();
-        generalPage.clickGeneralTabButton();
+        generalTab.clickGeneralTabButton();
         operationsPage.clickOperationsTabButton();
         tradingPage.openTradingTab();
         tradingPage.openAccountsTab();

@@ -44,26 +44,26 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
-        generalPage.clickGeneralTabButton();
-        assertThat("Assert that full name is correct", generalPage.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
+        generalTab.clickGeneralTabButton();
+        assertThat("Assert that full name is correct", generalTab.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
         String registrationDateAgoPattern = "^(?:\\d+ year(?:s)? )?\\d+ month(?:s)?$";
-        assertThat("Assert that registration date ago is correct", generalPage.getRegistrationDateAgo(), matchesPattern(registrationDateAgoPattern));
-        assertThat("Assert that client id is correct", generalPage.getClientId(), equalTo(String.valueOf(crmTbUser.userId)));
-        assertThat("Assert that registration date is correct", generalPage.getRegistrationDate(), equalTo(crmTbUser.createTime.split(" ")[0]));
-        assertThat("Assert that regulator is correct", generalPage.getRegulator(), equalTo(crmTbUser.regulator));
-        assertThat("Assert that gender is correct", generalPage.getGender(), equalTo(crmTbUser.gender));
-        assertThat("Assert that date of birth is correct", generalPage.getDateOfBirth(), equalTo(crmTbUser.birthday));
-        assertThat("Assert that country is correct", generalPage.getCountry(), equalTo(crmTbUser.country));
-        assertThat("Assert that nationality is correct", generalPage.getNationality(), equalTo(crmTbUser.nationality));
-        assertThat("Assert that encoded email is correct", generalPage.getEmailAddress(), equalTo("t***4@example.com"));
-        assertThat("Assert that encoded phone number is correct", generalPage.getPhoneNumber(), equalTo("+1*********3"));
-        assertThat("Assert that 2 factor auth is correct", generalPage.get2FactorAuth(), equalTo("Yes"));
-        generalPage.verifyKycSectionIsVisible();
-        assertThat("Assert that registration source ib is correct", generalPage.getRegistrationSourceIb(), equalTo(crmTbUser.ibId.toString()));
-        assertThat("Assert that registration source cpa is correct", generalPage.getRegistrationSourceCpa(), equalTo(crmTbUser.cpaId.toString()));
-        generalPage.clickShowHiddenDataButton();
-        assertThat("Assert that email is correct", generalPage.getEmailAddress(), equalTo("test14@example.com"));
-        assertThat("Assert that phone number is correct", generalPage.getPhoneNumber(), equalTo("+1810347493"));
+        assertThat("Assert that registration date ago is correct", generalTab.getRegistrationDateAgo(), matchesPattern(registrationDateAgoPattern));
+        assertThat("Assert that client id is correct", generalTab.getClientId(), equalTo(String.valueOf(crmTbUser.userId)));
+        assertThat("Assert that registration date is correct", generalTab.getRegistrationDate(), equalTo(crmTbUser.createTime.split(" ")[0]));
+        assertThat("Assert that regulator is correct", generalTab.getRegulator(), equalTo(crmTbUser.regulator));
+        assertThat("Assert that gender is correct", generalTab.getGender(), equalTo(crmTbUser.gender));
+        assertThat("Assert that date of birth is correct", generalTab.getDateOfBirth(), equalTo(crmTbUser.birthday));
+        assertThat("Assert that country is correct", generalTab.getCountry(), equalTo(crmTbUser.country));
+        assertThat("Assert that nationality is correct", generalTab.getNationality(), equalTo(crmTbUser.nationality));
+        assertThat("Assert that encoded email is correct", generalTab.getEmailAddress(), equalTo("t***4@example.com"));
+        assertThat("Assert that encoded phone number is correct", generalTab.getPhoneNumber(), equalTo("+1*********3"));
+        assertThat("Assert that 2 factor auth is correct", generalTab.get2FactorAuth(), equalTo("Yes"));
+        generalTab.verifyKycSectionIsVisible();
+        assertThat("Assert that registration source ib is correct", generalTab.getRegistrationSourceIb(), equalTo(crmTbUser.ibId.toString()));
+        assertThat("Assert that registration source cpa is correct", generalTab.getRegistrationSourceCpa(), equalTo(crmTbUser.cpaId.toString()));
+        generalTab.clickShowHiddenDataButton();
+        assertThat("Assert that email is correct", generalTab.getEmailAddress(), equalTo("test14@example.com"));
+        assertThat("Assert that phone number is correct", generalTab.getPhoneNumber(), equalTo("+1810347493"));
     }
 
     @AfterAll
