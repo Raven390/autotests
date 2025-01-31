@@ -1,5 +1,6 @@
 package tests.connectionSearchApiServiceTests;
 
+import businessObjects.api.connectionSearchApi.ConnectionSearchResponseError;
 import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponse;
 import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseError;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
@@ -125,13 +126,13 @@ public class GetConnectionsByClientTest extends TestBaseApi {
         queryParams.put("connectionDepth", -99);
 
         Response response = getConnectionsByClientId(queryParams);
-        GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+        ConnectionSearchResponseError responseBody = objectMapper.readValue(
+                response.body().string(), ConnectionSearchResponseError.class
         );
 
-        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response code is 200", response.code(), is(400));
 
-        assertThat("Check the response body is not empty", responseBody.length == 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.error, equalTo("Depth must be positive"));
     }
 
     @Test
@@ -171,6 +172,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
+        getConnectionsResponsesForFiltration[1].connectionDepth = 2;
         assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
     }
 
@@ -191,6 +193,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
+        getConnectionsResponsesForFiltration[1].connectionDepth = 2;
         assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
     }
 
@@ -211,6 +214,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
+        getConnectionsResponsesForFiltration[1].connectionDepth = 2;
         assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
     }
 

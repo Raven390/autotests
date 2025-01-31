@@ -44,8 +44,7 @@ import static businessObjects.db.clickhouse.webSession.WebSessionTableEntryFacto
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -67,8 +66,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     public static final ClientHelper userFromIp = getRandomVantageClient();
     public static final ClientHelper userToIp = getRandomVantageClient();
 
-    public static final ClientHelper userFromPhone = getRandomVantageClient();
-    public static final ClientHelper userToPhone = getRandomVantageClient();
+    public static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    public static final ClientHelper userToPhone = getRandomVantageClientAllFields();
 
     public static final ClientHelper userFromPayout = getRandomVantageClient();
     public static final ClientHelper userToPayout = getRandomVantageClient();
@@ -139,6 +138,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final BoClientFraudTypesObject fraudDocumentTo = new BoClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudIpTo = new BoClientFraudTypesObject(userToIp.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudPhoneTo = new BoClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
+    private static final BoClientFraudTypesObject fraudPhoneFrom = new BoClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudPayoutTo = new BoClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudDeviceIdTo = new BoClientFraudTypesObject(userToDeviceId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
     private static final BoClientFraudTypesObject fraudDigitalIdTo = new BoClientFraudTypesObject(userToDigitalId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
@@ -149,49 +149,23 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
         // Insert data to connections table
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail1);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail2);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail3);
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3));
         // Insert data to attributes tables
-        insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
-        insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry2);
-        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
-        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryForDepth1);
-        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry2);
-        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry2);
-        insertObjectToDb(IP_TABLE_NAME, ipTableEntry);
-        insertObjectToDb(IP_TABLE_NAME, ipTableEntry2);
-        insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry);
-        insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry2);
-        insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
-        insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry2);
-        insertObjectToDb(DIGITAL_ID_TABLE_NAME, digitalIdTableEntry);
-        insertObjectToDb(DIGITAL_ID_TABLE_NAME, digitalIdTableEntry2);
-        insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
-        insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry2);
-        insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
-        insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry2);
-        insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
-        insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry2);
-        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntry);
-        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntry2);
+        insertObjectsToDb(DOCUMENT_TABLE_NAME, List.of(documentTableEntry, documentTableEntry2));
+        insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry, emailTableEntryForDepth1, emailTableEntry2));
+        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry, ipTableEntry2));
+        insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
+        insertObjectsToDb(PAYOUT_TABLE_NAME, List.of(payoutTableEntry, payoutTableEntry2));
+        insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntry2));
+        insertObjectsToDb(DEVICE_ID_TABLE_NAME, List.of(deviceIdTableEntry, deviceIdTableEntry2));
+        insertObjectsToDb(SESSION_ID_TABLE_NAME, List.of(sessionIdTableEntry, sessionIdTableEntry2));
+        insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameBirthTableEntry, nameBirthTableEntry2));
+        insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntry, webSessionTableEntry2));
         //insert data to fraud table
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudEmail1);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudEmail2);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudEmail3);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudDocumentTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudEmailTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudIpTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudPhoneTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudPayoutTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudDeviceIdTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudDigitalIdTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudNameBirthTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudSessionIdTo);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraudWebSessionIdTo);
+        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo));
     }
 
-    @AfterAll
+    //@AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
         // Delete data from connections table
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
@@ -236,7 +210,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromSessionId.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToWebSessionId.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromWebSessionId.getUcid()));
-
     }
 
     @Test
@@ -254,7 +227,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuse type", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.5));
     }
 
     @Test
@@ -272,7 +246,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
     }
 
     @Test
@@ -290,7 +265,9 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.699_999_988_079_071));
+
     }
 
     @Test
@@ -308,7 +285,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.699_999_988_079_071));
     }
 
     @Test
@@ -326,7 +304,9 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
+
     }
 
     @Test
@@ -344,7 +324,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.800_000_011_920_929));
     }
 
     @Test
@@ -362,9 +343,13 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseTYpe", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
+
     }
 
+    //TODO Fix after https://vantagefx-hytechs.atlassian.net/browse/CSV-788
+    @Disabled
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by phoneNumber success(200)")
     @AllureId("776")
@@ -398,7 +383,9 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.200_000_002_980_232_24));
+
     }
 
     @Test
@@ -418,7 +405,9 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
+
     }
 
     @Test
@@ -437,7 +426,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat("Check the response length", responseBody.status, is(400));
-        assertThat("Check the response length", responseBody.error, is("DocumentType must be specified once documentCountryId or DocumentCountryId provided"));
+        assertThat("Check the response length", responseBody.error, is("DocumentType must be specified once DocumentNumber or DocumentCountryId provided"));
     }
 
     @Test

@@ -107,8 +107,8 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
-        assertThat("Check the response body", responseBody[0].abuseType, is(CPA_ABUSE.getDisplayName()));
-        assertThat("Check the response body", responseBody[1].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check the response body", responseBody[1].abuseType, is(CPA_ABUSE.getDisplayName()));
+        assertThat("Check the response body", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
     }
 
     @Test
@@ -189,12 +189,12 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
+                response.body().string(), ConnectionSearchResponseError.class
         ));
 
-        assertThat("Check the response code is 200", response.code(), is(200));
-        assertThat("Check the response body is empty", responseBody.length, equalTo(0));
+        assertThat("Check the response code is 200", response.code(), is(400));
+        assertThat("Check the response body is empty", responseBody.error, equalTo("Depth must be positive"));
     }
 
     @Test

@@ -77,7 +77,7 @@ public class GetConnectionsResponseFactory {
         return new GetConnectionsResponse[]{new GetConnectionsResponse(
                 userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 1, null, 1d, 1d, 1d
         ), new GetConnectionsResponse(
-                userTo1.getUcid(), userTo2.getUcid(), 0.2d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "matisse@gmx.net", "maatiuss@gmail.com", "similar")}, "Same Network", 2, null, 0.2d, 0.2d, 0.2d
+                userTo1.getUcid(), userTo2.getUcid(), 0.200_000_002_980_232_24, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "matisse@gmx.net", "maatiuss@gmail.com", "similar")}, "Same Network", 3, null, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24
         )
         };
     }

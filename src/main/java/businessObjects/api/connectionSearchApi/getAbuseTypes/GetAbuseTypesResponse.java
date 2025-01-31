@@ -9,27 +9,23 @@ public class GetAbuseTypesResponse {
     @JsonProperty("abuseType")
     public String abuseType;
 
-    public GetAbuseTypesResponse() {
-    }
-
-    public GetAbuseTypesResponse(String abuseType) {
-        this.abuseType = abuseType;
-    }
+    @JsonProperty("maxScoreToInitial")
+    public Double maxScoreToInitial;
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         GetAbuseTypesResponse that = (GetAbuseTypesResponse) o;
-        return Objects.equals(abuseType, that.abuseType);
+        return Objects.equals(abuseType, that.abuseType) && Objects.equals(maxScoreToInitial, that.maxScoreToInitial);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(abuseType);
+        return Objects.hash(abuseType, maxScoreToInitial);
     }
 
     @Override
     public String toString() {
-        return "GetAbuseTypesResponse{" + "abuseType='" + abuseType + '\'' + '}';
+        return "GetAbuseTypesResponse{" + "abuseType='" + abuseType + '\'' + ", maxScoreToInitial='" + maxScoreToInitial + '\'' + '}';
     }
 }
