@@ -137,6 +137,13 @@ public class TradingPage extends AbstractPage {
     private final Locator winrateWidget;
     private final Locator winrateWidgetValue;
     private final Locator winrateWidgetInfo;
+    private final Locator volumeChartTitle;
+    private final Locator volumeYAxisLabel;
+    private final Locator volumeMaxValue;
+    private final Locator volumeTotalValue;
+    private final Locator volumeMaxLabel;
+    private final Locator volumeTotalLabel;
+    private final Locator volumeMaxGraphDot;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -152,11 +159,12 @@ public class TradingPage extends AbstractPage {
     private static final String TOOLTIP_BY_LABEL_PATTERN = "//div[text()='%s']/following-sibling::div";
     private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
     private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
-    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL");
+    private static final String WIDGET_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL", "total, USD");
     private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
     private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__chart-container']", TOTAL_PNL_CHART_CONTAINER);
-    private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Performance overview");
+    private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(WIDGET_CONTAINER_PATTERN, "Performance overview");
     private static final String CHART_TITLE = "//div[@class='v-chart-wrapper__title']";
     private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
     private static final String PERFORMANCE_OVERVIEW_DEALS_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_deals')]";
@@ -164,6 +172,9 @@ public class TradingPage extends AbstractPage {
     private static final String PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_os')]";
     private static final String PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_risk')]";
     private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-number-widget__title') and text()='%s']/..";
+    private static final String VOLUME_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Volume", "USD");
+    private static final String VOLUME_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", VOLUME_CHART_CONTAINER);
+    private static final String VOLUME_CHART = String.format("%s/descendant::div[@class='v-trading-summary-volume__chart-container']", VOLUME_CHART_CONTAINER);
 
     public TradingPage(Page page) {
         super(page);
@@ -286,6 +297,13 @@ public class TradingPage extends AbstractPage {
         this.winrateWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Win rate"));
         this.winrateWidgetValue = winrateWidget.locator(".v-number-widget__value");
         this.winrateWidgetInfo = winrateWidget.locator(".v-number-widget__info");
+        this.volumeChartTitle = page.locator(VOLUME_CHART_CONTAINER).locator(CHART_TITLE);
+        this.volumeYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-volume__padded-value']/div", VOLUME_CHART_CONTAINER));
+        this.volumeMaxValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES));
+        this.volumeTotalValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES));
+        this.volumeMaxLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", VOLUME_CHART_FEATURES));
+        this.volumeTotalLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", VOLUME_CHART_FEATURES));
+        this.volumeMaxGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
     }
 
     @Step("Navigate to users trading tab")
@@ -1072,6 +1090,41 @@ public class TradingPage extends AbstractPage {
             headers.add(performanceOverviewTableHeaders.nth(i).textContent());
         }
         return headers;
+    }
+
+    @Step("Get Volume chart title")
+    public String getVolumeChartTitle() {
+        return volumeChartTitle.textContent();
+    }
+
+    @Step("Get Volume Y axis label")
+    public String getVolumeYAxisLabel() {
+        return volumeYAxisLabel.textContent();
+    }
+
+    @Step("Get Volume max value")
+    public String getVolumeMaxValue() {
+        return volumeMaxValue.textContent();
+    }
+
+    @Step("Get Volume max label")
+    public String getVolumeMaxLabel() {
+        return volumeMaxLabel.textContent();
+    }
+
+    @Step("Get Volume total value")
+    public String getVolumeTotalValue() {
+        return volumeTotalValue.textContent();
+    }
+
+    @Step("Get Volume total label")
+    public String getVolumeTotalLabel() {
+        return volumeTotalLabel.textContent();
+    }
+
+    @Step("Get Volume max graph dot label")
+    public String getVolumeMaxGraphDot() {
+        return volumeMaxGraphDot.textContent();
     }
 
     @Step("Get Performance overview symbols")

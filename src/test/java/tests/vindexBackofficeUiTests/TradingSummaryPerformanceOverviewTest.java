@@ -26,6 +26,7 @@ import static helpers.data.enums.DateTimeFormat.DATE;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
+import static helpers.database.CleanTableHelper.cleanMt4CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -163,7 +164,7 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        cleanMt4CoercedTableByUcid(client.getUcid());
         closeAlert(crmTbUser.ucid);
     }
 }
