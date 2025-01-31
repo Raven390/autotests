@@ -3,13 +3,19 @@ package pageObjects.backofficePages;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
 
-public class GeneralPage extends AbstractPage {
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.Constants.ID_PROOF_TABLE_NAME;
+import static utils.Constants.KYC_FILES_TABLE_NAME;
+
+public class GeneralTab extends AbstractPage {
 
     private final Locator generalTab;
     private final Locator loaderAnimation;
@@ -47,19 +53,30 @@ public class GeneralPage extends AbstractPage {
     private final Locator showHiddenDataButton;
     private final Locator registrationSourceIb;
     private final Locator registrationSourceCpa;
+    private final Locator fileViewerImage;
+    private final Locator fileViewerImagePresentation;
+    private final Locator attemptItem;
 
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
-    private static final String KYC_STATUS_SELECTOR = "[data-qa=\"investigation_tools_kyc__status\"]";
+    private static final String KYC_STATUS_SELECTOR = "[data-qa='investigation_tools_kyc__status']";
     private static final String GENERAL_TAB_LOADING_ELEMENT = "//div[contains(@class,'v-investigation-tools-general-skeleton__skeleton')]";
     private static final String GENERAL_INFO_HEADER = "//div[@class='v-investigation-tools-general-info__header']";
     private static final String ELEMENT_BY_LABEL_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-investigation-tools-general-info__item']/descendant::div[@class='v-text-with-icon__text']";
     private static final String BUTTON_LOADING = "//button[contains(@class,'g-button_loading')]";
+    private static final String POF_ROW_SELECTOR = "//tr[@data-qa='investigation_tools_kyc__face_row']";
+    private static final String KYC_ROW_TITLE = "//td[@data-qa='investigation_tools_kyc_row__title']";
+    private static final String KYC_ROW_STATUS = "//td[@data-qa='investigation_tools_kyc_row__status']";
+    private static final String KYC_ROW_DATE = "//td[@data-qa='investigation_tools_kyc_row__date']";
+    private static final String KYC_ROW_PARAMS = "//td[@data-qa='investigation_tools_kyc_row__params']";
+    private static final String KYC_ROW_ATTEMPT = "//td[@data-qa='investigation_tools_kyc_row__attempts']";
+    private static final String SECONDARY_TEXT_SELECTOR = "//*[contains(@class,'g-color-text_color_secondary')]";
+    private static final String NOT_SECONDARY_TEXT_SELECTOR = "//*[not (contains(@class,'g-color-text_color_secondary'))]";
 
-    public GeneralPage(Page page) {
+    public GeneralTab(Page page) {
         super(page);
         this.loaderAnimation = page.locator(LOADING_SPINNER_SELECTOR);
-        this.generalTab = page.locator("[role=\"tab\"][title=\"General\"]");
+        this.generalTab = page.locator("[role='tab'][title='General']");
         this.generalInfoSection = page.locator(".v-investigation-tools-general-info");
         this.generalInfoHeader = page.locator(".v-investigation-tools-kyc__header");
         this.generalInfoBody = page.locator(".v-investigation-tools-general-info__content");
@@ -84,16 +101,19 @@ public class GeneralPage extends AbstractPage {
         this.poaNotAppliedPlaceholder = page.locator(KYC_STATUS_SELECTOR).getByText("Proof of address not applied");
         this.poiNotAppliedPlaceholder = page.locator(KYC_STATUS_SELECTOR).getByText("Proof of identity not applied");
         this.attemptSection = page.locator(".v-investigation-tools-kyc-row__cell_type_attempts");
-        this.kycAddressRow = page.locator("[data-qa=\"investigation_tools_kyc__address_row\"]");
-        this.kycAddressRowDetails = page.locator("[data-qa=\"investigation_tools_kyc__address_row\"] [data-qa=\"investigation_tools_kyc_row__params\"]");
-        this.kycIdRow = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"]");
-        this.kycIdRowDetails = page.locator("[data-qa=\"investigation_tools_kyc__identity_row\"] [data-qa=\"investigation_tools_kyc_row__params\"]");
-        this.historyDrawer = page.locator("[data-qa=\"drawer_body\"]");
+        this.kycAddressRow = page.locator("[data-qa='investigation_tools_kyc__address_row']");
+        this.kycAddressRowDetails = page.locator("[data-qa='investigation_tools_kyc__address_row'] [data-qa='investigation_tools_kyc_row__params']");
+        this.kycIdRow = page.locator("[data-qa='investigation_tools_kyc__identity_row']");
+        this.kycIdRowDetails = page.locator("[data-qa='investigation_tools_kyc__identity_row'] [data-qa='investigation_tools_kyc_row__params']");
+        this.historyDrawer = page.locator("[data-qa='drawer_body']");
         this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
         this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
         this.showHiddenDataButton = page.locator("//button[@data-qa='investigation_page__general_info_unmask_btn']");
         this.registrationSourceIb = page.locator("//span[text()='IB']/following-sibling::span");
         this.registrationSourceCpa = page.locator("//span[text()='CPA']/following-sibling::span");
+        this.fileViewerImage = page.locator("[data-qa='gallery__image']");
+        this.fileViewerImagePresentation = page.locator("[data-qa='gallery__slide']");
+        this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
     }
 
     @Step("Open users general tab")
@@ -102,6 +122,7 @@ public class GeneralPage extends AbstractPage {
         waitForPageToLoad();
         generalTab.click();
         waitForPageToLoad();
+
     }
 
     @Step("Click general tab")
@@ -155,48 +176,48 @@ public class GeneralPage extends AbstractPage {
 
     @Step("Check fv zoom functions")
     public void FVZoomFunctions() {
-        displayedFile.isVisible();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1)"));
+        fileViewerImage.isVisible();
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1)"));
         plusZoomButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1.1)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1.1)"));
         plusZoomButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1.2)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1.2)"));
         originalSizeButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1)"));
         plusZoomButton.click();
         plusZoomButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1.2)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1.2)"));
         minusZoomButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scale(1.1)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scale(1.1)"));
     }
 
     @Step("Check fv rotate functions")
     public void FVRotateFunctions() {
-        displayedFile.isVisible();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(0deg)"));
+        fileViewerImage.isVisible();
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("rotate(0deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(-90deg)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("rotate(-90deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(-180deg)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("rotate(-180deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(-270deg)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("rotate(-270deg)"));
         rotateButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("rotate(0deg)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("rotate(0deg)"));
     }
 
     @Step("Check fv mirror functions")
     public void FVMirrorFunctions() {
-        displayedFile.isVisible();
-        assertTrue(displayedFile.getAttribute("style").contains("scaleX(1)"));
+        fileViewerImage.isVisible();
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scaleX(1)"));
         mirrorButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scaleX(-1)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scaleX(-1)"));
         mirrorButton.click();
-        assertTrue(displayedFile.getAttribute("style").contains("scaleX(1)"));
+        assertTrue(fileViewerImagePresentation.getAttribute("style").contains("scaleX(1)"));
     }
 
     @Step("Check fv slide functions")
     public void FVSlideFunctions() {
-        displayedFile.isVisible();
+        fileViewerImage.isVisible();
         String image1 = imageFile.getAttribute("src");
         String[] splitedSource1 = image1.split("/");
         sliderForwardButton.click();
@@ -233,8 +254,16 @@ public class GeneralPage extends AbstractPage {
         assertTrue(poiNotAppliedPlaceholder.isVisible());
     }
 
+    @Step("POI placeholder is visible")
+    public void pofPlaceholderIsNotVisible() {
+        Allure.step("POF placeholder is not visible");
+        page.waitForSelector(KYC_STATUS_SELECTOR);
+        assertFalse(page.getByText("Proof of face").isVisible());
+    }
+
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
+        page.waitForTimeout(500);
         page.waitForSelector(GENERAL_TAB_LOADING_ELEMENT, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
@@ -327,5 +356,49 @@ public class GeneralPage extends AbstractPage {
     public void verifyKycSectionIsVisible() {
         assertThat(kyclInfoSection).isVisible();
     }
+
+    public void deleteClientsPoiAttempts(String ucid) throws SQLException {
+        deleteEntryFromDb(ID_PROOF_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 12");
+    }
+
+    public void deleteClientsPofAttempts(String ucid) throws SQLException {
+        deleteEntryFromDb(ID_PROOF_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 27");
+    }
+
+    public void deleteClientsPofFileRecord(String ucid) throws SQLException {
+        deleteEntryFromDb(KYC_FILES_TABLE_NAME, "ucid ='" + ucid + "' and file_type_id = 27");
+    }
+
+    public void checkRightImage(String sourceLinkLastPart) {
+        String source = fileViewerImage.getAttribute("src");
+        String[] splitedSource1 = source.split("/");
+        System.out.println("searched text is " + splitedSource1[splitedSource1.length - 1]);
+        assertTrue(splitedSource1[splitedSource1.length - 1].contains(sourceLinkLastPart));
+    }
+
+    public void checkNumberOfAttemptsInViewer(int expectedNumberOfAttempts) {
+        assertEquals(expectedNumberOfAttempts, attemptItem.count());
+    }
+
+    public void checkValueKycPofTitle(String expectedValue) {
+        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_TITLE).textContent());
+    }
+
+    public void checkValueKycPofStatus(String expectedValue) {
+        assertEquals(expectedValue.toLowerCase(), page.locator(POF_ROW_SELECTOR + KYC_ROW_STATUS).textContent().toLowerCase());
+    }
+
+    public void checkValueKycPofDate(String expectedValue) {
+        assertEquals(expectedValue.toLowerCase(), page.locator(POF_ROW_SELECTOR + KYC_ROW_DATE + NOT_SECONDARY_TEXT_SELECTOR).textContent().toLowerCase());
+    }
+
+    public void checkValueKycPofParameters(String expectedValue) {
+        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_PARAMS).textContent());
+    }
+
+    public void checkValueKycPofAttempts(String expectedValue) {
+        assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_ATTEMPT).first().textContent());
+    }
+
 }
 
