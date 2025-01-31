@@ -105,4 +105,9 @@ public class CleanTableHelper {
     public static void cleanLexisNexisTableByUcid(String... values) throws Exception {
         deleteObjectsFromDb(CLICKHOUSE, LEXIS_NEXIS_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
+
+    @Step("Clean mt4 trades coerced table by ucid")
+    public static void cleanMt4CoercedTableByUcid(String... values) throws Exception {
+        deleteObjectsFromDb(CLICKHOUSE, MT4_TRADES_COERCED_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+    }
 }
