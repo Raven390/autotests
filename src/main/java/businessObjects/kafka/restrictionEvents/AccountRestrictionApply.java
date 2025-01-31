@@ -2,7 +2,7 @@ package businessObjects.kafka.restrictionEvents;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ClientRestrictionApply {
+public class AccountRestrictionApply {
 
     @JsonProperty("timestamp")
     public String timestamp;
@@ -10,14 +10,17 @@ public class ClientRestrictionApply {
     @JsonProperty("messageId")
     public String messageId;
 
-    @JsonProperty("clientId")
-    public Integer clientId;
+    @JsonProperty("accountId")
+    public Integer accountId;
 
-    @JsonProperty("brand")
-    public String brand;
+    @JsonProperty("serverId")
+    public Integer serverId;
 
-    @JsonProperty("regulator")
-    public String regulator;
+    @JsonProperty("initialBanDurationInMinutes")
+    public Integer initialBanDurationInMinutes;
+
+    @JsonProperty("modifier")
+    public String modifier;
 
     @JsonProperty("restrictions")
     public Restriction[] restrictions;

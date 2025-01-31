@@ -78,6 +78,9 @@ public class Constants {
     public static final String KAFKA_ALL_PARAMETERS_FOUND = "All the parameters were found in messages.";
     public static final String KAFKA_SOME_PARAMETERS_FOUND = "Some of the parameters were not found in messages.";
     public static final String KAFKA_NO_PARAMETERS_PROVIDED = "No search parameters provided.";
+    public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY = "account.restrictions.apply";
+    public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL = "account.restrictions.cancel";
+    public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL = "account.restrictions.cancel";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_SECOND_NAME = "User";
