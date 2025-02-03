@@ -17,6 +17,17 @@ public class MtMt4TradesCoercedObjectFactory {
         return new MtMt4TradesCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId().longValue(), client.getUcid(), client.getTradingAccount().longValue(), "MT4", client.getServerId().longValue(), "serverName", "accountType", "accountGroup", "USD", getRandomIntPositive().longValue(), 1L, "Buy", 1L, "Client", 1L, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.55, 33.44, 55.66, "EURUSD", "GBPJPY", "EUR", "GBP", 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1L, 87.43, 76.54, 1.1, 1.1, 1.1, 1.1, 1.1, 78.99, 22.33, 11.22, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.66, 1L, "comment_autotest", 123.78, 32.56, 12.98, 1L, getCurrentTimestampDbFormat(), "internalComment");
     }
 
+    @Step("Generate mt___mt4_trades_coerced object by client object")
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
+            double profit, String closeTime) {
+        MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
+        trade.storageUsd = 0d;
+        trade.commissionUsd = 0d;
+        trade.profitUsd = profit;
+        trade.closeTimeUtc = closeTime;
+        return trade;
+    }
+
 
     @Step("Generate mt___mt4_trades_coerced object by client object")//todo add enums for types, currencies(to create pairs), and logic based on type to select limits for values
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedRandomized(ClientHelper client) {

@@ -10,7 +10,7 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 import static utils.Constants.*;
 
 public class MitigationHelper {
-    @Step("clean users restriction history")
+    @Step("Clean users restriction history for ucid '{ucid}'")
     public static void cleanUserRestriction(String ucid) throws Exception {
         List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {

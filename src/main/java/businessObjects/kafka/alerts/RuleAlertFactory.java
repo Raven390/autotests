@@ -1,10 +1,13 @@
 package businessObjects.kafka.alerts;
 
+import io.qameta.allure.Step;
+
 import java.time.Instant;
 
 import static utils.Utils.getRandomUuidString;
 
 public class RuleAlertFactory {
+    @Step("Generate rule alert for client with ucid '{ucid}'")
     public static RuleAlert generateRuleAlertByUcid(String ucid) {
         RuleAlert alert = new RuleAlert();
         alert.alertId = getRandomUuidString();

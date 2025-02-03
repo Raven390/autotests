@@ -108,16 +108,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("603")
     @DisplayName("Audit trail. Verify message for 'Client assigned' action type")
-    public void verifyClientAssignedTest() throws InterruptedException {
-        investigationPage.navigate();
+    public void verifyClientAssignedTest() {
+        investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
         alertsPage.waitForPageToLoad();
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
         auditTrailPage.openAuditTrailTab();
@@ -134,22 +127,17 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("604")
     @DisplayName("Audit trail. Verify message for 'Investigation completed' action type")
-    public void verifyInvestigationCompletedTest() throws JsonProcessingException, InterruptedException {
+    public void verifyInvestigationCompletedTest() throws JsonProcessingException {
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
-
         resolvePage.openResolveSuspicious();
         String comment = "Test investigation completed action type";
         resolvePage.resolveSimple(comment);
-
         alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
-
-        investigationPage.filterAll();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are 4 audit trail items", auditTrailItems, hasSize(4));

@@ -28,7 +28,7 @@ import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.CleanTableHelper.cleanMt4CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -52,6 +52,9 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     private static final MtMt4TradesCoercedObject trade10 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade11 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade12 = generateMt4TradesCoerced(client);
+    private static final String MONTH_DAY_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
+    private static final String MONTH_YEAR_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4}$";
+    private static final String YEAR_LABEL_PATTERN = "^\\d{4}$";
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -108,7 +111,9 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        String xAxisLabel = transformDate(trade1.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
     }
 
     @Order(2)
@@ -136,7 +141,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -164,7 +170,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
         assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(YEAR_LABEL_PATTERN)));
     }
 
     @AfterAll

@@ -26,7 +26,7 @@ import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.CleanTableHelper.cleanMt4CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -46,7 +46,8 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     private static final MtMt4TradesCoercedObject trade6 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade7 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade8 = generateMt4TradesCoerced(client);
-
+    private static final String MONTH_DAY_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
+    private static final String MONTH_YEAR_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4}$";
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -114,6 +115,9 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
         assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
+        tradingPage.hoverOverTotalPnlXAxisLabelWithOffset(getCurrentTimestampMinusOffsetFormatted(MONTH_TEXT_AND_DAY, 0, 0, 2, 0, 0));
+        assertThat(tradingPage.getTotalPnlTooltip(), is(String.format("%s%s USD", getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 2, 0, 0), maxProfit)));
     }
 
     @Order(2)
@@ -143,6 +147,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
         assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @Order(3)
@@ -172,6 +177,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
         assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
     @AfterAll

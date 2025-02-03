@@ -19,6 +19,7 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class BoHelper {
 
+    @Step("Close alerts for user {ucid}")
     public static void closeAlert(String ucid) throws SQLException {
         executeQueryToDb(
                 DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s' WHERE client_id = (select id from %s where ucid = '%s')", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", BO_CLIENT_TABLE_NAME, ucid
@@ -43,8 +44,8 @@ public class BoHelper {
         }
     }
 
+    @Step("Delete user's frauds from BO")
     public static void cleanUserFraudsDb(String ucid) {
-        Allure.step("Delete user's frauds from BO");
         try {
             List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
             int boId = client.getFirst().id;
@@ -89,8 +90,8 @@ public class BoHelper {
         assertTrue(clientFraudTypes.isEmpty());
     }
 
+    @Step("Create fraud for user with ucid '{ucid}' in DB")
     public static void createUserFraudsDb(String ucid, long... fraudIds) throws Exception {
-        Allure.step("create fraud for user in DB");
         Thread.sleep(2000);
         for (long fraudId : fraudIds) {
             insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientFraudTypes(fraudId, ucid));
