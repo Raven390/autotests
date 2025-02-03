@@ -2,6 +2,7 @@ package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.BoundingBox;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -144,6 +145,8 @@ public class TradingPage extends AbstractPage {
     private final Locator volumeMaxLabel;
     private final Locator volumeTotalLabel;
     private final Locator volumeMaxGraphDot;
+    private final Locator totalPnlXAxisLabels;
+    private final Locator volumeXAxisLabels;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -164,6 +167,7 @@ public class TradingPage extends AbstractPage {
     private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL", "total, USD");
     private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
     private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__chart-container']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = "//div[@class='v-trading-summary-total-pnl__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
     private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(WIDGET_CONTAINER_PATTERN, "Performance overview");
     private static final String CHART_TITLE = "//div[@class='v-chart-wrapper__title']";
     private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
@@ -291,6 +295,7 @@ public class TradingPage extends AbstractPage {
         this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
         this.totalPnlTooltip = page.locator(".v-trading-summary-total-pnl__tooltip");
         this.totalPnlChartTitle = page.locator(TOTAL_PNL_CHART_CONTAINER).locator(CHART_TITLE);
+        this.totalPnlXAxisLabels = page.locator("//div[@class='v-trading-summary-total-pnl__ticks-container']/descendant::div[contains(@class,'g-text')]");
         this.performanceOverviewTableTitle = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator(CHART_TITLE);
         this.performanceOverviewTableHeaders = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//th");
         this.performanceOverviewSymbols = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//td[contains(@class,'v-trading-summary-performance__column_type_date')]");
@@ -304,6 +309,7 @@ public class TradingPage extends AbstractPage {
         this.volumeMaxLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", VOLUME_CHART_FEATURES));
         this.volumeTotalLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", VOLUME_CHART_FEATURES));
         this.volumeMaxGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
+        this.volumeXAxisLabels = page.locator("//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
     }
 
     @Step("Navigate to users trading tab")
@@ -1078,6 +1084,35 @@ public class TradingPage extends AbstractPage {
         return totalPnlChartTitle.textContent();
     }
 
+    @Step("Get Total PNL chart x axis labels")
+    public List<String> getTotalPnlXAxisLabels() {
+        List<String> xAxisLabels = new ArrayList<>();
+        for (int i = 0; i < totalPnlXAxisLabels.count(); i++) {
+            Locator label = totalPnlXAxisLabels.nth(i);
+            xAxisLabels.add(label.textContent());
+        }
+        return xAxisLabels;
+    }
+
+    public void hoverOverTotalPnlXAxisLabelWithOffset(String labelText) {
+        BoundingBox box = page.locator(String.format(TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN, labelText)).last().boundingBox();
+        if (box != null) {
+            double centerX = box.x + box.width / 2;
+            double centerY = box.y + box.height / 2;
+
+            // Hover over the center of the element
+            page.mouse().move(centerX, centerY);
+
+            // Move the mouse 50 pixels up (negative y direction)
+            page.mouse().move(centerX, centerY - 50);
+        }
+    }
+
+    @Step("Get Total PNL tooltip")
+    public String getTotalPnlTooltip() {
+        return totalPnlTooltip.textContent();
+    }
+
     @Step("Get Performance overview title")
     public String getPerformanceOverviewTableTitle() {
         return performanceOverviewTableTitle.textContent();
@@ -1125,6 +1160,16 @@ public class TradingPage extends AbstractPage {
     @Step("Get Volume max graph dot label")
     public String getVolumeMaxGraphDot() {
         return volumeMaxGraphDot.textContent();
+    }
+
+    @Step("Get Volume chart x axis labels")
+    public List<String> getVolumeXAxisLabels() {
+        List<String> xAxisLabels = new ArrayList<>();
+        for (int i = 0; i < volumeXAxisLabels.count(); i++) {
+            Locator label = volumeXAxisLabels.nth(i);
+            xAxisLabels.add(label.textContent());
+        }
+        return xAxisLabels;
     }
 
     @Step("Get Performance overview symbols")
