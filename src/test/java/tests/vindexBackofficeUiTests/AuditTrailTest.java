@@ -112,7 +112,7 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
-        investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
+        investigationPage.investigateClientCard();
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));

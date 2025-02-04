@@ -8,6 +8,7 @@ public class BoClientFraudTypesObject {
     public String ucid;
     public Integer fraudTypeId;
     public String fraudTypeCode;
+    public String updateTimeUtc;
 
     public BoClientFraudTypesObject() {
     }
@@ -16,6 +17,13 @@ public class BoClientFraudTypesObject {
         this.ucid = ucid;
         this.fraudTypeId = fraudTypeId;
         this.fraudTypeCode = fraudTypeCode;
+    }
+
+    public BoClientFraudTypesObject(String ucid, Integer fraudTypeId, String fraudTypeCode, String updateTimeUtc) {
+        this.ucid = ucid;
+        this.fraudTypeId = fraudTypeId;
+        this.fraudTypeCode = fraudTypeCode;
+        this.updateTimeUtc = updateTimeUtc;
     }
 
     @Override
