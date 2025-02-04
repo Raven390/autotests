@@ -79,19 +79,27 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
     public static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
     // Expected responses
-    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsResponseSuccess(userFromDocument, userToDocument);
-    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsResponseSuccess(userFromEmail, userToEmail);
-    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsResponseSuccess(userFromIp, userToIp);
-    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsResponseSuccess(userFromPhone, userToPhone);
-    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsResponseSuccess(userFromPayout, userToPayout);
-    public final GetConnectionsResponse getConnectionsByAttributesConnDepthResponseSuccess = getConnectionsByAttributesForDepth(userToDepth1, userToDepth2);
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDocumentInitial(userFromDocument);
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesResponseSuccessDocumentLvl2(userFromDocument, userToDocument);
+    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccessInitial = getConnectionsByAttributesResponseSuccessEmailInitial(userFromEmail);
+    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsByAttributesResponseSuccessEmailLvl2(userFromEmail, userToEmail);
+    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccessInitial = getConnectionsByAttributesResponseSuccessIpInitial(userFromIp);
+    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesResponseSuccessIpLvl2(userFromIp, userToIp);
+    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPhoneInitial(userFromPhone);
+    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesResponseSuccessPhoneLvl2(userFromPhone, userToPhone);
+    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPayoutInitial(userFromPayout);
+    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesResponseSuccessPayoutLvl2(userFromPayout, userToPayout);
     public final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
-    public final GetConnectionsResponseError getConnectionsResponseError = getConnectionsByAttributesResponseErrorBadRequest();
-    public static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsResponseSuccess(userFromDeviceId, userToDeviceId);
-    public static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsResponseSuccess(userFromDigitalId, userToDigitalId);
-    public static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsResponseSuccess(userFromNameBirth, userToNameBirth);
-    public static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsResponseSuccess(userFromSessionId, userToSessionId);
-    public static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsResponseSuccess(userFromWebSessionId, userToWebSessionId);
+    public final GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDeviceIdInitial(userFromDeviceId);
+    public static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsByAttributesResponseSuccessDeviceIdLvl2(userFromDeviceId, userToDeviceId);
+    public final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
+    public static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsByAttributesResponseSuccessDigitalIdLvl2(userFromDigitalId, userToDigitalId);
+    public final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
+    public static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsByAttributesResponseSuccessNameBirthLvl2(userFromNameBirth, userToNameBirth);
+    public final GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessSessionIdInitial(userFromSessionId);
+    public static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessSessionIdLvl2(userFromSessionId, userToSessionId);
+    public final GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessWebSessionIdInitial(userFromWebSessionId);
+    public static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(userFromWebSessionId, userToWebSessionId);
 
     // Objects to insert to connections table
     public static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
@@ -170,7 +178,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDocumentResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDocumentResponseSuccessInitial, getConnectionsByAttributesDocumentResponseSuccess));
     }
 
     @Test
@@ -190,10 +198,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesDocumentResponseSuccess));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesDocumentResponseSuccessInitial));
     }
 
     @Test
@@ -210,10 +217,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesEmailResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesEmailResponseSuccessInitial, getConnectionsByAttributesEmailResponseSuccess));
     }
 
     @Test
@@ -230,10 +236,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesIpResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesIpResponseSuccess, getConnectionsByAttributesIpResponseSuccessInitial));
     }
 
     @Test
@@ -250,10 +255,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesPhoneResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPhoneResponseSuccessInitial));
     }
 
     @Test
@@ -270,10 +274,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
-        GetConnectionsResponse firstResponse = responseBody[0];
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", firstResponse, equalTo(getConnectionsByAttributesPayoutResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
     }
 
     @Test
@@ -296,13 +299,13 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(10));
 
-        assertThat("Check that response body has object found by document", responseBody, hasItemInArray(getConnectionsByAttributesDocumentResponseSuccess));
-        assertThat("Check that response body has object found by emailAddress", responseBody, hasItemInArray(getConnectionsByAttributesEmailResponseSuccess));
-        assertThat("Check that response body has object found by ipAddress", responseBody, hasItemInArray(getConnectionsByAttributesIpResponseSuccess));
-        assertThat("Check that response body has object found by phoneNumber", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccess));
-        assertThat("Check that response body has object found by payoutId", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccess));
+        assertThat("Check that response body has object found by document", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesDocumentResponseSuccess, getConnectionsByAttributesDocumentResponseSuccessInitial));
+        assertThat("Check that response body has object found by emailAddress", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesEmailResponseSuccess, getConnectionsByAttributesEmailResponseSuccessInitial));
+        assertThat("Check that response body has object found by ipAddress", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesIpResponseSuccess, getConnectionsByAttributesIpResponseSuccessInitial));
+        assertThat("Check that response body has object found by phoneNumber", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPhoneResponseSuccessInitial));
+        assertThat("Check that response body has object found by payoutId", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
     }
 
     @Test
@@ -311,7 +314,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public void getConnectionsTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreFrom", 1);
+        queryParams.put("connectionScoreFrom", 0.4);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -320,9 +323,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[0]));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesFiltrationResponseSuccess[0], getConnectionsByAttributesFiltrationResponseSuccess[1]));
     }
 
     @Test
@@ -331,7 +334,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreTo", 0.9);
+        queryParams.put("connectionScoreTo", 0.4);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -362,7 +365,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[1]));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[2]));
     }
 
     @Test
@@ -504,10 +507,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        getConnectionsByAttributesDeviceIdResponseSuccess.clientIdFrom = null;
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess, getConnectionsByAttributesDeviceIdResponseSuccessInitial));
     }
 
     @Test
@@ -524,9 +526,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccess, getConnectionsByAttributesDigitalIdResponseSuccessInitial));
     }
 
     @Test
@@ -543,9 +545,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccess, getConnectionsByAttributesNameBirthResponseSuccessInitial));
     }
 
     @Test
@@ -562,9 +564,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccess, getConnectionsByAttributesSessionIdResponseSuccessInitial));
     }
 
     @Test
@@ -581,9 +583,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccess));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccess, getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
     }
 
     @AfterAll
