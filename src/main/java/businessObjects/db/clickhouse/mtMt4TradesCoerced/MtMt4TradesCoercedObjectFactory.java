@@ -14,7 +14,7 @@ public class MtMt4TradesCoercedObjectFactory {
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
     public static MtMt4TradesCoercedObject generateMt4TradesCoerced(ClientHelper client) {
-        return new MtMt4TradesCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId().longValue(), client.getUcid(), client.getTradingAccount().longValue(), "MT4", client.getServerId().longValue(), "serverName", "accountType", "accountGroup", "USD", getRandomIntPositive().longValue(), 1L, "Buy", 1L, "Client", 1L, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.55, 33.44, 55.66, "EURUSD", "GBPJPY", "EUR", "GBP", 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1L, 87.43, 76.54, 1.1, 1.1, 1.1, 1.1, 1.1, 78.99, 22.33, 11.22, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.66, 1L, "comment_autotest", 123.78, 32.56, 12.98, 1L, getCurrentTimestampDbFormat(), "internalComment");
+        return new MtMt4TradesCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId().longValue(), client.getUcid(), client.getTradingAccount().longValue(), "MT4", client.getServerId().longValue(), "serverName", "accountType", "accountGroup", "USD", getRandomIntPositive().longValue(), 1L, "Buy", 1L, "Client", 1L, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.55, 33.44, 55.66, "EURUSD", "GBPJPY", "EUR", "GBP", 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1L, 87.43, 76.54, 1.1, 1.1, 1.1, 1.1, 1.1, 78.99, 22.33, 11.22, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), 1234.66, 1L, "comment_autotest", 123.78, 32.56, 12.98, 0L, getCurrentTimestampDbFormat(), "internalComment");
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
@@ -49,9 +49,9 @@ public class MtMt4TradesCoercedObjectFactory {
         trade.profit = getRandomRoundedDouble(0.00, 5000);
         trade.storage = getRandomRoundedDouble(0.00, 5000);
         trade.commission = getRandomRoundedDouble(0.00, 5000);
-        trade.profitUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.storageUsd = getRandomRoundedDouble(0.00, 5000);
-        trade.commissionUsd = getRandomRoundedDouble(0.00, 5000);
+        trade.profitUsd = getRandomRoundedDouble(-5000, 5000);
+        trade.storageUsd = getRandomRoundedDouble(-5000, 5000);
+        trade.commissionUsd = getRandomRoundedDouble(-5000, 5000);
         trade.closePrice = getRandomRoundedDouble(0.00, 5000);
         trade.spreadRevenueUsd = getRandomRoundedDouble(0.00, 5000);
         trade.taxesUsd = getRandomRoundedDouble(0.00, 5000);

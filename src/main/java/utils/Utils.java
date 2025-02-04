@@ -58,9 +58,20 @@ public class Utils {
         return LocalDateTime.now(ZoneOffset.UTC).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes).format(formatter);
     }
 
+    public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,
+            int hours, int minutes, int seconds) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.US);
+        return LocalDateTime.now(ZoneOffset.UTC).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes).minusSeconds(seconds).format(formatter);
+    }
+
     public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
             int hours, int minutes) {
-        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes);
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes, 0);
+    }
+
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
+            int hours, int minutes, int seconds) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes, seconds);
     }
 
     public static String getCurrentTimestampDbFormat() {

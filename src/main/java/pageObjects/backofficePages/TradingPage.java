@@ -9,12 +9,16 @@ import io.qameta.allure.Step;
 import org.hamcrest.MatcherAssert;
 import utils.Utils;
 
+import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.*;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
 import static utils.Utils.*;
 
 public class TradingPage extends AbstractPage {
@@ -145,6 +149,8 @@ public class TradingPage extends AbstractPage {
     private final Locator volumeMaxLabel;
     private final Locator volumeTotalLabel;
     private final Locator volumeMaxGraphDot;
+    private final Locator pnlByDurationGraphSection;
+    private final Locator pnlByDurationTooltip;
     private final Locator totalPnlXAxisLabels;
     private final Locator volumeXAxisLabels;
 
@@ -179,6 +185,17 @@ public class TradingPage extends AbstractPage {
     private static final String VOLUME_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Volume", "USD");
     private static final String VOLUME_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", VOLUME_CHART_CONTAINER);
     private static final String VOLUME_CHART = String.format("%s/descendant::div[@class='v-trading-summary-volume__chart-container']", VOLUME_CHART_CONTAINER);
+    private static final String PNL_BY_DURATION = "//div[text()='PNL']/following-sibling::span[text()='by trade duration, USD']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String PNL_BY_DURATION_0_10_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 94.9px), 196px);']";
+    private static final String PNL_BY_DURATION_10_30_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 284.7px), 196px);']";
+    private static final String PNL_BY_DURATION_05_6_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 474.5px), 196px);']";
+    private static final String PNL_BY_DURATION_6_24_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 664.3px), 196px);']";
+    private static final String PNL_BY_DURATION_MORE24_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 854.1px), 196px);']";
+    private static final String PNL_BY_DURATION_ANNOTATION = "//div[@class='v-trading-summary-pnl-by-duration__ticks-container']/div/div";
+    private static final String PNL_BY_DURATION_TOOLTIP = "//div[@class='v-trading-summary-pnl-by-duration__tooltip']";
+    private static final String GREEN_TEXT = "//*[contains(@class, 'g-color-text_color_brand')]";
+    private static final String RED_TEXT = "//*[contains(@class, 'g-color-text_color_danger')]";
+    private static final String PNL_DURATION_GRAPH = "//*[contains(@class, 'v-trading-summary-pnl-by-duration')]";
 
     public TradingPage(Page page) {
         super(page);
@@ -309,24 +326,22 @@ public class TradingPage extends AbstractPage {
         this.volumeMaxLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", VOLUME_CHART_FEATURES));
         this.volumeTotalLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", VOLUME_CHART_FEATURES));
         this.volumeMaxGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
+        this.pnlByDurationGraphSection = page.locator(PNL_BY_DURATION);
+        this.pnlByDurationTooltip = page.locator(PNL_BY_DURATION_TOOLTIP);
         this.volumeXAxisLabels = page.locator("//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
     }
 
     @Step("Navigate to users trading tab")
     public void navigate(String ucid) {
         Allure.step("Navigate to users trading tab");
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
-        waitForPageToLoad();
-        tradingTab.click();
-        waitForPageToLoad();
+        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid + "/trading");
+        super.waitForPageToLoad();
     }
 
     @Step("Navigate to users restriction tab/operations")
     public void navigateOperations(String ucid) {
         Allure.step("Navigate to users trading tab/operations");
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
-        waitForPageToLoad();
-        tradingTab.click();
+        navigate(ucid);
         operationsTab.click();
         waitForPageToLoad();
     }
@@ -1210,4 +1225,89 @@ public class TradingPage extends AbstractPage {
     public String getWinrateWidgetInfo() {
         return winrateWidgetInfo.textContent();
     }
+
+    public void deleteAccountDeals(int accountNumber) throws SQLException {
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "account =" + accountNumber);
+    }
+
+    public void deleteClientDeals(String ucid) throws SQLException {
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + ucid + "'");
+    }
+
+    public void openPnlDurationTooltip(String annotationText) {
+        page.waitForTimeout(100);
+        String locator = PNL_BY_DURATION + PNL_BY_DURATION_ANNOTATION + "[text()='" + annotationText + "']";
+        page.hover(locator, new Page.HoverOptions().setForce(true));
+        Locator target = page.locator(locator);
+        int i = 1;
+        while ((!(pnlByDurationTooltip.isVisible())) && (i < 100)) {
+            page.waitForTimeout(10);
+            page.mouse().move(target.boundingBox().x, target.boundingBox().y - (i));
+            page.waitForTimeout(10);
+            i++;
+        }
+        page.waitForTimeout(100);
+        System.out.println(pnlByDurationTooltip.textContent());
+        assertThat(pnlByDurationTooltip).isVisible();
+    }
+
+    public void checkTextPnlDurationTooltipAmount(String sumAmout) {
+        assertThat(pnlByDurationTooltip).isVisible();
+        String locator = (PNL_BY_DURATION_TOOLTIP + "//*[contains(text(),'" + sumAmout + "')]");
+        assertThat(page.locator(locator)).hasText(sumAmout + " USD");
+    }
+
+    public void checkTextPnlDurationTooltipAmount(double innerText) {
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        int roundedInnerText = (int) Math.round(innerText);
+        checkTextPnlDurationTooltipAmount(formatter.format(roundedInnerText));
+    }
+
+    public void checkTextPnlDurationTooltipAmount(int innerText) {
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        checkTextPnlDurationTooltipAmount(formatter.format(innerText));
+    }
+
+    public void checkTextPnlDurationTooltipPercentage(String percentage) {
+        assertThat(pnlByDurationTooltip).isVisible();
+        String locator = (PNL_BY_DURATION_TOOLTIP + "//*[contains(text(),'" + percentage + "')]");
+        assertThat(page.locator(locator)).hasText(percentage + "% of all deals");
+    }
+
+    public void checkTextPnlDurationTooltipPercentage(double innerText) {
+        checkTextPnlDurationTooltipPercentage(String.valueOf((int) innerText));
+    }
+
+    public void checkTextPnlDurationTooltipPercentage(int innerText) {
+        checkTextPnlDurationTooltipPercentage(String.valueOf(innerText));
+    }
+
+    public void checkMaxProfitableValue(int expectedValue) {
+        Locator element = page.locator(PNL_DURATION_GRAPH + GREEN_TEXT);
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        assertEquals(formatter.format(expectedValue), element.textContent());
+    }
+
+    public void checkMaxProfitableValue(double expectedValue) {
+        checkMaxProfitableValue((int) Math.round(expectedValue));
+    }
+
+    public void checkMaxLossValue(int expectedValue) {
+        Locator element = page.locator(PNL_DURATION_GRAPH + RED_TEXT);
+        NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+        assertEquals(formatter.format(expectedValue), element.textContent());
+    }
+
+    public void checkMaxLossValue(double expectedValue) {
+        checkMaxLossValue((int) Math.round(expectedValue));
+    }
+
+    public void checkTopProfitCategory(String expectedValue) {
+        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/preceding-sibling::div").textContent());
+    }
+
+    public void checkTopLossCategory(String expectedValue) {
+        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max loosing']/preceding-sibling::div").textContent());
+    }
 }
+
