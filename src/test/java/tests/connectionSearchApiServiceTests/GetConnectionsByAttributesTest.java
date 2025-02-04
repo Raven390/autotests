@@ -345,7 +345,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[1]));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[2]));
     }
 
     @Test
