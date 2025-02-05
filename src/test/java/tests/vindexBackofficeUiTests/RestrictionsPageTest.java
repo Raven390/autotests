@@ -7,6 +7,7 @@ import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -85,8 +86,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickAccountSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatAccountIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Open new account");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Open new account");
     }
 
     @Test
@@ -103,7 +104,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedAccount();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Open new account");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Open new account");
     }
 
     @Test
@@ -118,8 +119,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickTransferSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatTransferIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Internal transfer");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Internal transfer");
     }
 
     @Test
@@ -136,7 +137,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedTransfer();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Internal transfer");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Internal transfer");
     }
 
     @Test
@@ -151,8 +152,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickDepositsSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatDepositsIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Deposits");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Deposits");
     }
 
     @Test
@@ -169,7 +170,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedDeposits();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Deposits");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Deposits");
     }
 
     @Test
@@ -184,8 +185,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickWithdrawalsSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatWithdrawalsIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Withdrawals");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Withdrawals");
     }
 
     @Test
@@ -202,7 +203,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedWithdrawals();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Withdrawals");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Withdrawals");
     }
 
     @Test
@@ -217,8 +218,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickLoginSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatLoginIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Login CRM");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Login CRM");
     }
 
     @Test
@@ -235,7 +236,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedLogin();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Login CRM");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Login CRM");
     }
 
 
@@ -251,8 +252,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickManualWithdrawalSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Manual Withdrawal Review");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Manual Withdrawal Review");
     }
 
     @Test
@@ -269,7 +270,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Manual Withdrawal Review");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Manual Withdrawal Review");
     }
 
     @Test
@@ -284,8 +285,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCreditAndBonusSwitch();
         restrictionPage.fillApplyReason("test reason");
         restrictionPage.checkThatCreditAndBonusIsChecked();
-        restrictionPage.checkKafkaRequestApplyUCID(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Credit and Bonus");
+        restrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Credit and Bonus");
     }
 
     @Test
@@ -302,7 +303,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedCreditAndBonus();
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Credit and Bonus");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Credit and Bonus");
     }
 
     @Test
@@ -320,9 +321,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllGreen("test reason");
         String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
-        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
+        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
-        restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
+        restrictionPage.checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
     }
 
     @Test
@@ -340,9 +341,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
         String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
+        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
-        restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
+        restrictionPage.checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
     }
 
     @Test
@@ -362,9 +363,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
         String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
-        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
+        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
-        restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
+        restrictionPage.checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
         //second run
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
@@ -373,9 +374,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
         String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
-        restrictionPage.checkRestrictionCancellationAudit(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
+        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
         restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
-        restrictionPage.checkKafkaRequestApplyUCID(withdrawalClient.getUserId());
+        restrictionPage.checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
     }
 
 
@@ -392,7 +393,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
         restrictionPage.checkThatCloseOnlyIsChecked();
         restrictionPage.checkKafkaRequestApplyAccount(14_140_101);
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Close only mode; account: 14140101");
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Close only mode; account: 14140101");
     }
 
     @Test
@@ -409,78 +410,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCheckedCloseOnly();
         restrictionPage.fillCancelReasonTrade("test reason");
         restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Close only mode; account: 14140101");
-    }
-
-
-    @Disabled
-    //restriction abadoned
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("341")
-    @DisplayName("Restriction tab set Off quotes Review restriction UI")
-    void setOffQuotesRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickOffQuotesModeSwitch();
-        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
-        restrictionPage.checkThatAOffQuotesIsChecked();
-//        restrictionPage.checkKafkaRequestApplyTradeUCID("141401");
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "Off quotes; account: 14140101");
-    }
-
-    @Disabled
-    //restriction abadoned
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("342")
-    @DisplayName("Restriction tab remove Off quotes restriction UI")
-    void cancelOffQuotesRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "08");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatAOffQuotesIsChecked();
-        restrictionPage.clickCheckedOffQuotes();
-        restrictionPage.fillCancelReasonTrade("test reason");
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "Off quotes; account: 14140101");
-    }
-
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("343")
-    @DisplayName("Restriction tab set AB book Review restriction UI")
-    void setAbBookRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickAbBookSwitch();
-        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
-        restrictionPage.checkThatAbBookIsChecked();
-        restrictionPage.checkKafkaRequestApplyAccount(14_140_101);
-        restrictionPage.checkRestrictionApplymentAudit(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("344")
-    @DisplayName("Restriction tab remove AB book restriction UI")
-    void cancelAbBookRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "09");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatAbBookIsChecked();
-        restrictionPage.clickCheckedAbBook();
-        restrictionPage.fillCancelReasonTrade("test reason");
-        restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
-        restrictionPage.checkRestrictionCancellationAudit(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Close only mode; account: 14140101");
     }
 
     @Test
@@ -508,6 +438,107 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickCloseOnlyModeSwitch();
         restrictionPage.hoverOverActivitySection();
         restrictionPage.checkTooltipText("Last activity");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("918")
+    @Feature("BMS-755 Add new restrictions")
+    @DisplayName("Restriction tab. check descriptions for restrictions displayed on UI")
+    void descriptionsUiTest() {
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(labelClient.getUcid());
+        restrictionPage.checkDisplayedRestrictionsDetails();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("919")
+    @Feature("BMS-755 Add new restrictions")
+    @DisplayName("Restriction tab. check that only restrictions with bo_visibility == true is displayed")
+    void displayedRestrictionsUiTest() {
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(labelClient.getUcid());
+        restrictionPage.checkDisplayedRestrictions();
+    }
+
+
+    @Disabled
+    //restriction hidden from UI
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("341")
+    @DisplayName("Restriction tab set Off quotes Review restriction UI")
+    void setOffQuotesRestrictionUITest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.clickOffQuotesModeSwitch();
+        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
+        restrictionPage.checkThatAOffQuotesIsChecked();
+//        restrictionPage.checkKafkaRequestApplyTradeUCID("141401");
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Off quotes; account: 14140101");
+    }
+
+    @Disabled
+    //restriction hidden from UI
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("342")
+    @DisplayName("Restriction tab remove Off quotes restriction UI")
+    void cancelOffQuotesRestrictionUITest() throws Exception {
+        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "08");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.checkThatAOffQuotesIsChecked();
+        restrictionPage.clickCheckedOffQuotes();
+        restrictionPage.fillCancelReasonTrade("test reason");
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Off quotes; account: 14140101");
+    }
+
+
+    @Disabled
+    //restriction hidden from UI
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("343")
+    @DisplayName("Restriction tab set AB book Review restriction UI")
+    void setAbBookRestrictionUITest() throws Exception {
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.clickAbBookSwitch();
+        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
+        restrictionPage.checkThatAbBookIsChecked();
+        restrictionPage.checkKafkaRequestApplyAccount(14_140_101);
+        restrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
+    }
+
+    @Disabled
+    //restriction hidden from UI
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("344")
+    @DisplayName("Restriction tab remove AB book restriction UI")
+    void cancelAbBookRestrictionUITest() throws Exception {
+        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "09");
+        investigationPage.navigate();
+        keycloackPage.loginAsDevUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.checkThatAbBookIsChecked();
+        restrictionPage.clickCheckedAbBook();
+        restrictionPage.fillCancelReasonTrade("test reason");
+        restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
     }
 
 }
