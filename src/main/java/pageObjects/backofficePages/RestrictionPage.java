@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import helpers.data.enums.Restriction;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -18,6 +19,9 @@ import java.io.IOException;
 import java.util.List;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
@@ -123,14 +127,16 @@ public class RestrictionPage extends AbstractPage {
         isPageLoaded();
     }
 
-    @Step("Open general tab")
+
     public void openRestrictionsTab() {
+        Allure.step("Open restrictions tab bi click tab button in ui");
         restrictionTab.click();
         waitForPageToLoad();
     }
 
-    @Step("Check that restriction tab rendered properly")
+
     public void checkUI() {
+        Allure.step("Check that restriction tab rendered properly");
         accountSwitch.isVisible();
         transferSwitch.isVisible();
         depositsSwitch.isVisible();
@@ -146,93 +152,100 @@ public class RestrictionPage extends AbstractPage {
         header2.getByText("Restrictions on selected client’s trading accounts").isVisible();
     }
 
-    @Step("Set account restriction")
+
     public void clickAccountSwitch() {
+        Allure.step("Set account restriction");
         accountSwitch.click();
     }
 
-    @Step("Set transfer restriction")
+
     public void clickTransferSwitch() {
+        Allure.step("Set transfer restriction");
         transferSwitch.click();
     }
 
-    @Step("Set deposit restriction")
+
     public void clickDepositsSwitch() {
+        Allure.step("Set deposit restriction");
         depositsSwitch.click();
     }
 
-    @Step("Set Withdrawals restriction")
+
     public void clickWithdrawalsSwitch() {
+        Allure.step("Set Withdrawals restriction");
         withdrawalsSwitch.click();
     }
 
-    @Step("Set login restriction")
+
     public void clickLoginSwitch() {
+        Allure.step("Set login restriction");
         loginSwitch.click();
     }
 
-    @Step("Set ManualWithdrawal restriction")
+
     public void clickManualWithdrawalSwitch() {
+        Allure.step("Set 'Manual Withdrawal' restriction");
         manualSwitch.click();
     }
 
-    @Step("Set Credit and Bonus restriction")
     public void clickCreditAndBonusSwitch() {
+        Allure.step("Set Credit and Bonus restriction");
         creditAndBonusSwitch.click();
     }
 
-    @Step("Set Close only mode restriction")
     public void clickCloseOnlyModeSwitch() {
+        Allure.step("Set Close only mode restriction");
         closeSwitch.click();
     }
 
-    @Step("Set OffQuotes restriction")
     public void clickOffQuotesModeSwitch() {
+        Allure.step("Set OffQuotes restriction");
         offQuotesSwitch.click();
     }
 
-    @Step("Set AbBook restriction")
     public void clickAbBookSwitch() {
+        Allure.step("Set AB Book restriction");
         abBookSwitch.click();
     }
 
-    @Step("Check that account restriction tumbler is checked")
+
     public void checkThatAccountIsChecked() {
+        Allure.step("Check that account restriction tumbler is checked");
         checkedAccount.isVisible();
     }
 
-    @Step("Check that OffQuotes tumbler is checked")
     public void checkThatAOffQuotesIsChecked() {
+        Allure.step("Check that OffQuotes tumbler is checked");
         checkedOffQuotesMode.isVisible();
     }
 
-    @Step("Check that AbBook tumbler is checked")
     public void checkThatAbBookIsChecked() {
+        Allure.step("Check that AbBook tumbler is checked");
         checkedAbBook.isVisible();
     }
 
-    @Step("Check that Transfer restriction tumbler is checked")
     public void checkThatTransferIsChecked() {
+        Allure.step("Check that Transfer restriction tumbler is checked");
         checkedTransfer.isVisible();
     }
 
-    @Step("Check that Deposits restriction tumbler is checked")
     public void checkThatDepositsIsChecked() {
+        Allure.step("Check that Deposits restriction tumbler is checked");
         checkedDeposits.isVisible();
     }
 
-    @Step("Check that Withdrawals restriction tumbler is checked")
     public void checkThatWithdrawalsIsChecked() {
+        Allure.step("Check that Withdrawals restriction tumbler is checked");
         checkedWithdrawals.isVisible();
     }
 
-    @Step("Check that Login restriction tumbler is checked")
     public void checkThatLoginIsChecked() {
+        Allure.step("Check that Login restriction tumbler is checked");
         checkedLogin.isVisible();
     }
 
-    @Step("Check that ManualWithdrawal restriction tumbler is checked")
     public void checkThatCloseOnlyIsChecked() {
+        Allure.step("Check that ManualWithdrawal restriction tumbler is checked");
         checkedCloseOnlyMode.isVisible();
     }
 
@@ -296,8 +309,9 @@ public class RestrictionPage extends AbstractPage {
         checkedAbBook.click();
     }
 
-    @Step("Fill apply reason")
+
     public void fillApplyReason(String reason) {
+        Allure.step("Fill apply reason");
         dialog.isVisible();
         reasonInput.fill(reason);
         restrictionSetSet.click();
@@ -379,7 +393,6 @@ public class RestrictionPage extends AbstractPage {
         page.waitForTimeout(1000);
     }
 
-    @Step("Fill cancel reason")
     public void fillCancelReasonTrade(String reason) {
         Allure.step("Fill cancel reason");
         page.waitForTimeout(1000);
@@ -405,8 +418,9 @@ public class RestrictionPage extends AbstractPage {
         page.locator("//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[2]").click();
     }
 
-    @Step("Check request to apply message")
-    public void checkKafkaRequestApplyUCID(int userIdInt) throws JsonProcessingException, InterruptedException {
+    public static void checkKafkaRequestApplyUserId(int userIdInt) throws JsonProcessingException,
+            InterruptedException {
+        Allure.step("Check request message for apply cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
         Thread.sleep(4000);
         System.out.println("we search user " + userId);
@@ -427,8 +441,8 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((apply.restrictions));
     }
 
-    @Step("Check request to cancel message")
     public void checkKafkaRequestCancelUcid(int userIdInt) throws JsonProcessingException, InterruptedException {
+        Allure.step("Check request message for restriction cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
         Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
@@ -447,8 +461,13 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((cancel.restrictions));
     }
 
-    @Step("Check request to apply message")
     public void checkKafkaRequestApplyAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
+        checkKafkaRequestApplyAccount(accoundIdInt, 525_600);
+    }
+
+    public void checkKafkaRequestApplyAccount(int accoundIdInt, int banDurationMin) throws JsonProcessingException,
+            InterruptedException {
+        Allure.step("Check request message for restriction apply for account in kafka");
         String accoundId = String.valueOf(accoundIdInt);
         Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
@@ -460,17 +479,46 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
-        assertNotNull((apply.accountId));
+        assertEquals(accoundIdInt, apply.accountId);
         assertNotNull((apply.timestamp));
         assertNotNull((apply.messageId));
         assertNotNull((apply.serverId));
-        assertNotNull((apply.initialBanDurationInMinutes));
+        assertEquals(banDurationMin, (apply.initialBanDurationInMinutes));
         assertNotNull((apply.modifier));
         assertNotNull((apply.restrictions));
     }
 
-    @Step("Check request to apply message")
+    public static void checkKafkaRequestApplyAccount(int accoundIdInt, int serverId, int banDurationMin,
+            int restrictionId, String reason, String restrictionCode) throws JsonProcessingException,
+            InterruptedException {
+        Allure.step("Check request message for restriction apply for account in kafka");
+        String accoundId = String.valueOf(accoundIdInt);
+        Thread.sleep(7000);
+        KafkaHelper helper = new KafkaHelper();
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
+        for (String response : kafkaResponses) {
+            System.out.println(response);
+        }
+        String kafkaResponse = kafkaResponses.getLast();
+        System.out.println("tested message is " + kafkaResponse);
+        ObjectMapper objectMapper = new ObjectMapper();
+        AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
+        assertEquals(accoundIdInt, apply.accountId);
+        assertNotNull((apply.timestamp));
+        assertNotNull((apply.messageId));
+        assertEquals(serverId, (apply.serverId));
+        assertEquals(banDurationMin, (apply.initialBanDurationInMinutes));
+        assertNotNull((apply.modifier));
+        AccountRestrictionApply.Restriction[] restriction = apply.restrictions;
+        AccountRestrictionApply.Restriction testRestriction = restriction[0];
+        assertEquals(restrictionId, testRestriction.restrictionId);
+        assertEquals(reason, testRestriction.internalReason);
+        assertEquals(restrictionCode, testRestriction.restrictionCode);
+    }
+
+
     public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
+        Allure.step("Check request message for restriction cancellation for account in kafka");
         String accoundId = String.valueOf(accoundIdInt);
         Thread.sleep(4000);
         KafkaHelper helper = new KafkaHelper();
@@ -490,9 +538,10 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((cancel.restrictions));
     }
 
-    @Step("Check withdrawal approval message")
+
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
+        Allure.step("Check withdrawal approval message");
         Thread.sleep(4000);
         System.out.println("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
@@ -512,69 +561,6 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(expectedStatus, (apply.status));
     }
 
-
-    @Step("Check request to apply message trade")
-    public void checkKafkaRequestApplyTradeUCID(String userId) throws InterruptedException, JsonProcessingException {
-        KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        apply.clientId.equals(userId);
-        assertNotNull((apply.clientId));
-        assertNotNull((apply.timestamp));
-        assertNotNull((apply.messageId));
-        assertNotNull((apply.regulator));
-        assertNotNull((apply.restrictions));
-        assertNotEquals((apply.clientId), "null");
-        assertNotEquals((apply.timestamp), "null");
-        assertNotEquals((apply.messageId), "null");
-        assertNotEquals((apply.regulator), "null");
-        assertNotEquals((apply.restrictions), "null");
-    }
-
-    @Step
-    public void checkKafkaRequestApplyTradeUCIDID(String userId, String Id) throws InterruptedException,
-            JsonProcessingException {
-        Thread.sleep(4000);
-        KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("account.restrictions.apply", userId);
-        System.out.println(kafkaResponse);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        apply.clientId.toString().equals(userId);
-        assertNotNull((apply.clientId));
-        assertNotNull((apply.timestamp));
-        assertNotNull((apply.messageId));
-        assertNotNull((apply.regulator));
-        assertNotNull((apply.restrictions));
-        assertNotEquals((apply.clientId), null);
-        assertNotEquals((apply.timestamp), "null");
-        assertNotEquals((apply.messageId), "null");
-        assertNotEquals((apply.regulator), "null");
-        assertNotEquals((apply.restrictions), null);
-    }
-
-    @Step
-    public void checkKafkaRequestApplyUCIDID(String userId, String Id) throws InterruptedException,
-            JsonProcessingException {
-        Thread.sleep(2000);
-        KafkaHelper helper = new KafkaHelper();
-        String kafkaResponse = helper.consumeMessage("client.restrictions.apply", userId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
-        assertEquals(apply.clientId.toString(), userId);
-        assertNotNull((apply.clientId));
-        assertNotNull((apply.timestamp));
-        assertNotNull((apply.messageId));
-        assertNotNull((apply.regulator));
-        assertNotNull((apply.restrictions));
-        assertNotEquals((apply.clientId), "null");
-        assertNotEquals((apply.timestamp), "null");
-        assertNotEquals((apply.messageId), "null");
-        assertNotEquals((apply.regulator), "null");
-        assertNotEquals((apply.restrictions), "null");
-    }
-
     @Step
     public void readMessagesFromClientApply(String userId) throws InterruptedException {
         Thread.sleep(4000);
@@ -591,7 +577,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     @Step("Clean users restriction history")
-    public void cleanUserRestriction(String ucid) throws Exception {
+    public static void cleanUserRestriction(String ucid) throws Exception {
         List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {
             String Id = i.id.toString();
@@ -606,19 +592,41 @@ public class RestrictionPage extends AbstractPage {
         }
     }
 
+
+    public static void checkUserHaveRestriction(String ucid, int restrictionId, String applicationReason,
+            String expectedStatus) throws Exception {
+        Allure.step("check user have restriction in Mitigation DataBase");
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
+        ClientsRestriction restriction = restrictionList.getLast();
+        assertEquals(ucid, restriction.ucid);
+        assertEquals(restrictionId, restriction.restrictionId);
+        assertEquals(expectedStatus, restriction.status);
+        assertEquals(applicationReason, restriction.applicationReason);
+
+    }
+
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
         Thread.sleep(200);
     }
 
+    public static void setRestrictionAPIGeneral(String ucid, String code, String applyReason, String updatedBySystem,
+            String updatedByUser) throws IOException {
+        Allure.step("Set restriction though API GENERAL");
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
+        );
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertNotNull(response);
+        assertEquals(response.code(), 200);
+    }
+
     @Step("Set restriction though API")
-    public void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
+    public static void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
         Allure.step("Set restriction though API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("test", "automation")
-
-
         );
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
@@ -634,7 +642,22 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull(response);
     }
 
-    public void checkRestrictionCancellationAudit(String ucid, String detail) throws Exception {
+    @Step
+    public static String setRestrictionAPITradeResponse(String ucid, String code, int accId, int serverId,
+            String applyReason,
+            String updatedBySystem, String updatedByUser) throws IOException {
+        Allure.step("Set restriction though API TRADE");
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                ucid, code, "TRADING", accId, serverId, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
+        );
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertNotNull(response);
+        assert response.body() != null;
+        String responseVal = response.body().string();
+        return responseVal;
+    }
+
+    public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
@@ -646,32 +669,79 @@ public class RestrictionPage extends AbstractPage {
         assertEquals("Vindex BO", system);
     }
 
-    public void checkRestrictionCancellationAudit(String ucid, String type, String expectedDetails) throws Exception {
+    public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
         List<Event> event = getObjectsFromDB(DbName.AUDIT, " event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
-        assertNotNull(event.get(0).getKafkaMessageId());
-        assertNotNull(event.get(0).getId());
-        assertNotNull(event.get(0).getUcid());
-        assertNotNull(event.get(0).getType());
-        assertNotNull(event.get(0).getCreatedAt());
-        assertNotNull(event.get(0).getInitiatedBySystem());
-        assertNotNull(event.get(0).getInitiatedByUser());
-        assertNotNull(event.get(0).getComment());
+        assertNotNull(event.getLast().getKafkaMessageId());
+        assertNotNull(event.getLast().getId());
+        assertNotNull(event.getLast().getUcid());
+        assertNotNull(event.getLast().getType());
+        assertNotNull(event.getLast().getCreatedAt());
+        assertNotNull(event.getLast().getInitiatedBySystem());
+        assertNotNull(event.getLast().getInitiatedByUser());
+        assertNotNull(event.getLast().getComment());
     }
 
-    public void checkRestrictionApplymentAudit(String ucid, String detail) throws Exception {
+    public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
+        Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
-        String type1 = event.get(0).getType();
+        String type1 = event.get(event.size() - 2).getType();
         assertEquals("RESTRICTION_REQUESTED", type1);
-        String details = event.get(0).getDetails();
+        String details = event.get(event.size() - 2).getDetails();
         assertEquals(details, detail);
-        String type2 = event.get(1).getType();
+        String type2 = event.getLast().getType();
         assertEquals("RESTRICTION_APPLIED", type2);
-        String system = event.get(0).getInitiatedBySystem();
+        String system = event.getLast().getInitiatedBySystem();
         assertEquals("Vindex BO", system);
     }
 
-    @Step("Check if the page loaded")
+    public static void checkRestrictionApplymentAuditGeneral(String ucid, String expectedSystem, String expectedUser,
+            String expectedComment, String detail) throws Exception {
+        Allure.step("check that record about restriction apply appeared in the audit trail");
+        Thread.sleep(7000);
+        List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        Event event1 = events.get(events.size() - 2);
+        System.out.println("event1 = " + event1);
+        Event event2 = events.getLast();
+        System.out.println("event2 = " + event2);
+        assertEquals("RESTRICTION_REQUESTED", event1.getType());
+        assertEquals(expectedSystem, event1.getInitiatedBySystem());
+        assertEquals(expectedUser, event1.getInitiatedByUser());
+        assertEquals(expectedComment, event1.getComment());
+        assertEquals(detail, event1.getDetails());
+
+        assertEquals("RESTRICTION_APPLIED", event2.getType());
+        assertEquals(expectedSystem, event2.getInitiatedBySystem());
+        assertEquals(expectedUser, event2.getInitiatedByUser());
+        assertNull(event2.getComment());
+        assertEquals(detail, event2.getDetails());
+    }
+
+    public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
+            String expectedComment, String detail, int accountId) throws Exception {
+        Allure.step("check that record about restriction apply appeared in the audit trail");
+        Thread.sleep(3000);
+        List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        Event event1 = events.get(events.size() - 2);
+        System.out.println("event1 = " + event1);
+        Event event2 = events.getLast();
+        System.out.println("event2 = " + event2);
+        assertEquals("RESTRICTION_REQUESTED", event1.getType());
+        assertEquals(expectedSystem, event1.getInitiatedBySystem());
+        assertEquals(expectedUser, event1.getInitiatedByUser());
+        assertEquals(expectedComment, event1.getComment());
+        assertEquals(detail, event1.getDetails().split("; ")[0]);
+        assertEquals(String.valueOf(accountId), event1.getDetails().split("; account: ")[1]);
+
+        assertEquals("RESTRICTION_APPLIED", event2.getType());
+        assertEquals(expectedSystem, event2.getInitiatedBySystem());
+        assertEquals(expectedUser, event2.getInitiatedByUser());
+        assertNull(event2.getComment());
+        assertEquals(detail, event2.getDetails().split("; ")[0]);
+        assertEquals(String.valueOf(accountId), event2.getDetails().split("; account: ")[1]);
+    }
+
+
     public void isPageLoaded() {
         int n = 0;
         page.waitForTimeout(2000);
@@ -705,6 +775,28 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(text, label);
     }
 
+    public void checkDisplayedRestrictionsDetails() {
+        Allure.step("check that text displayed near restrictions is correct'");
+        for (Restriction restriction : Restriction.values()) {
+            if (restriction.isBoVisibility()) {
+                assertThat(page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div")).hasText(restriction.getDetails());
+                System.out.println("restriction '" + restriction.getName() + "' have correct description :'" + restriction.getDetails() + "'");
+            }
+        }
+    }
 
+    public void checkDisplayedRestrictions() {
+        Allure.step("check that only restrictions with bo_visibility == true in database is displayed");
+        for (Restriction restriction : Restriction.values()) {
+            if (restriction.isBoVisibility()) {
+                page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div").waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+                System.out.println("restriction '" + restriction.getName() + " is visible");
+            } else {
+
+                page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div").waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+                System.out.println("restriction '" + restriction.getName() + " is not visible");
+            }
+        }
+    }
 }
 
