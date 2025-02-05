@@ -10,6 +10,13 @@ public class GetConnectionsResponseFactory {
         );
     }
 
+    public static GetConnectionsResponse getConnectionsResponseSuccessWithLevel(ClientHelper userFrom,
+            ClientHelper userTo, int level) {
+        return new GetConnectionsResponse(
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", level, null, 1d, 1d, 1d
+        );
+    }
+
     public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
@@ -70,6 +77,16 @@ public class GetConnectionsResponseFactory {
         return new GetConnectionsResponse(
                 userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 2, null, 1d, 1d, 1d
         );
+    }
+
+    public static GetConnectionsResponse[] getConnectionsByClientForFiltrationByParams(ClientHelper userFrom,
+            ClientHelper userTo1, ClientHelper userTo2) {
+        return new GetConnectionsResponse[]{new GetConnectionsResponse(
+                userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("payoutId", "535456**** **0344", "535456**** **0344", "exact")}, "Same Person", 1, null, 1d, 1d, 1d
+        ), new GetConnectionsResponse(
+                userTo1.getUcid(), userTo2.getUcid(), 0.200_000_002_980_232_24, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail("emailAddress", "matisse@gmx.net", "maatiuss@gmail.com", "similar")}, "Same Network", 3, null, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24
+        )
+        };
     }
 
     public static GetConnectionsResponse[] getConnectionsForFiltrationByParams(ClientHelper userFrom,

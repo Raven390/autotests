@@ -21,10 +21,11 @@ import java.util.Map;
 
 import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsRequest.getConnectionsByClientId;
 import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseFactory.*;
+import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponseFactory.getConnectionsResponseSuccess;
 import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.*;
+import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -42,22 +43,34 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     public static final ClientHelper userFrom2 = getRandomVantageClient();
     public static final ClientHelper userTo2_1 = getRandomVantageClient();
     public static final ClientHelper userTo2_2 = getRandomVantageClient();
+    public static final ClientHelper userFrom3 = getRandomVantageClient();
+    public static final ClientHelper userTo3_1 = getRandomVantageClient();
+    public static final ClientHelper userTo3_2 = getRandomVantageClient();
+    public static final ClientHelper userFrom4 = getRandomVantageClient();
+    public static final ClientHelper userTo4_1 = getRandomVantageClient();
+    public static final ClientHelper userTo4_2 = getRandomVantageClient();
+    public static final ClientHelper userTo4_3 = getRandomVantageClient();
+
     public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
     public final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
-    public final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
+    public final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
     public final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
 
     public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
     public static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
     public static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
     public static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
+    public static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
+    public static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
+    public static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
+    public static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
+    public static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
+    public static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
+    public static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryLvl2);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForFiltration1);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForFiltration2);
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntryForFiltration2, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
     }
 
     @Test
@@ -77,6 +90,44 @@ public class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
         assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess, getConnectionsLvl2ResponseSuccess));
+    }
+
+    @Test
+    @DisplayName("Connection search by client Api. Get connection by clientId with 1 and 2 level connections to the same client success(200)")
+    @AllureId("939")
+    public void getConnectionsByClient1And2LevelSuccessTest() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", userFrom3.getUcid());
+
+        Response response = getConnectionsByClientId(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+
+        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess(userFrom3, userTo3_1), getConnectionsResponseSuccess(userFrom3, userTo3_2)));
+    }
+
+    @Test
+    @DisplayName("Connection search by client Api. Get connection by clientId with same level connections different score to the same client success(200)")
+    @AllureId("940")
+    public void getConnectionsByClientSameLevelScoreSuccessTest() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", userFrom4.getUcid());
+
+        Response response = getConnectionsByClientId(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+
+        assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess(userFrom4, userTo4_1), getConnectionsResponseSuccess(userFrom4, userTo4_2), getConnectionsResponseSuccessWithLevel(userTo4_2, userTo4_3, 2)));
     }
 
     @Test
@@ -326,9 +377,6 @@ public class GetConnectionsByClientTest extends TestBaseApi {
 
     @AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryLvl2.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration1.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForFiltration2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntryForFiltration2.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom));
     }
 }
