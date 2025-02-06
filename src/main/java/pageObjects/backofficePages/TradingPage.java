@@ -1,5 +1,6 @@
 package pageObjects.backofficePages;
 
+import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.BoundingBox;
@@ -1308,6 +1309,10 @@ public class TradingPage extends AbstractPage {
 
     public void checkTopLossCategory(String expectedValue) {
         assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max loosing']/preceding-sibling::div").textContent());
+    }
+
+    public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {
+        return deal.profitUsd + deal.commissionUsd + deal.storageUsd;
     }
 }
 
