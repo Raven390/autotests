@@ -9,5 +9,7 @@ public class AuditHelper {
     @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
+        Thread.sleep(100);
+
     }
 }

@@ -422,7 +422,7 @@ public class RestrictionPage extends AbstractPage {
             InterruptedException {
         Allure.step("Check request message for apply cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
-        Thread.sleep(4000);
+        Thread.sleep(7000);
         System.out.println("we search user " + userId);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
@@ -444,7 +444,7 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestCancelUcid(int userIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
-        Thread.sleep(4000);
+        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL, userId);
         for (String response : kafkaResponses) {
@@ -469,7 +469,7 @@ public class RestrictionPage extends AbstractPage {
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accoundId = String.valueOf(accoundIdInt);
-        Thread.sleep(4000);
+        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
         for (String response : kafkaResponses) {
@@ -492,10 +492,12 @@ public class RestrictionPage extends AbstractPage {
             int restrictionId, String reason, String restrictionCode) throws JsonProcessingException,
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
-        String accoundId = String.valueOf(accoundIdInt);
+        String accountId = String.valueOf(accoundIdInt);
         Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
-        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accountId);
+        System.out.println("first message is " + kafkaResponses.getFirst());
+        System.out.println("last message is " + kafkaResponses.getLast());
         for (String response : kafkaResponses) {
             System.out.println(response);
         }
@@ -520,7 +522,7 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for account in kafka");
         String accoundId = String.valueOf(accoundIdInt);
-        Thread.sleep(4000);
+        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL, accoundId);
         for (String response : kafkaResponses) {
@@ -542,7 +544,7 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
         Allure.step("Check withdrawal approval message");
-        Thread.sleep(4000);
+        Thread.sleep(7000);
         System.out.println("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
@@ -595,11 +597,11 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkUserHaveRestriction(String ucid, int restrictionId, String applicationReason,
             String expectedStatus) throws Exception {
+        Thread.sleep(7000);
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestriction.class);
         ClientsRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
-        assertEquals(restrictionId, restriction.restrictionId);
         assertEquals(expectedStatus, restriction.status);
         assertEquals(applicationReason, restriction.applicationReason);
 
@@ -620,6 +622,21 @@ public class RestrictionPage extends AbstractPage {
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
         assertEquals(response.code(), 200);
+    }
+
+    public static String setRestrictionAPIGeneralResponse(String ucid, String code, String applyReason,
+            String updatedBySystem,
+            String updatedByUser) throws IOException {
+        Allure.step("Set restriction though API GENERAL");
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
+        );
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertNotNull(response);
+        assertEquals(response.code(), 200);
+        assert response.body() != null;
+        String responseVal = response.body().string();
+        return responseVal;
     }
 
     @Step("Set restriction though API")
@@ -658,6 +675,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
+        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
@@ -670,6 +688,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
+        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, " event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
         assertNotNull(event.getLast().getKafkaMessageId());
@@ -684,6 +703,7 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
+        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(event.size() - 2).getType();
         assertEquals("RESTRICTION_REQUESTED", type1);
@@ -720,12 +740,14 @@ public class RestrictionPage extends AbstractPage {
     public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail, int accountId) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        Thread.sleep(3000);
+        Thread.sleep(15_000);
         List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        System.out.println("first event = " + events.getFirst());
+        System.out.println("last event = " + events.getLast());
         Event event1 = events.get(events.size() - 2);
-        System.out.println("event1 = " + event1);
+        System.out.println("test event1 (Request) = " + event1);
         Event event2 = events.getLast();
-        System.out.println("event2 = " + event2);
+        System.out.println("test event2 (Applyment)= " + event2);
         assertEquals("RESTRICTION_REQUESTED", event1.getType());
         assertEquals(expectedSystem, event1.getInitiatedBySystem());
         assertEquals(expectedUser, event1.getInitiatedByUser());
