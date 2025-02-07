@@ -79,6 +79,9 @@ public class RuleAlert {
 
             @JsonProperty("hedgingClone")
             public String hedgingClone;
+
+            @JsonProperty("cpaId")
+            public String cpaId;
         }
     }
 }
