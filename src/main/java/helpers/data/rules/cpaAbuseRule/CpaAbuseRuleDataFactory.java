@@ -2,8 +2,12 @@ package helpers.data.rules.cpaAbuseRule;
 
 import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
+import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 
+import businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
@@ -18,28 +22,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
+import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObjectFactory.generateMirrorUcidObjectByClient;
+import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
-import static helpers.database.BoHelper.closeAlert;
+import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
+import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
-import static helpers.database.MitigationHelper.cleanUserRestriction;
-import static utils.Constants.*;
 import static utils.Utils.*;
 
 @RuleTestData("cpa-abuse")
 public class CpaAbuseRuleDataFactory {
     private static final ClientHelper cpaAbuseRuleExitEventEnd1Client = getRandomVantageClientNoCpaIbRef();
     private static final ClientHelper cpaAbuseRuleExitEventEnd2_1Client = getRandomVantageClientAllFields();
-
+    private static final ClientHelper cpaAbuseRuleExitEventEnd2_2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd3Client = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd4_1Client = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd4_2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleExitEventEnd4_3Client = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getCpaAbuseRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal"
-        );
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>());
+        CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
+        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
+        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
@@ -58,7 +69,7 @@ public class CpaAbuseRuleDataFactory {
     public static RuleDataHelper getCpaAbuseRuleExitEventEnd2_1Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2_1Client);
-        Allure.step("Client has mirror trading abuse connected account");
+        Allure.step("Client has cpa abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
@@ -70,6 +81,224 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd2_2Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2_2Client);
+        Allure.step("Client has not cpa abuse connected account");
+        Allure.step("At least 70% have any CPA value");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
+        connectedUserCrmTbUserObject.cpaId = 1;
+        data.connectedUsers.add(connectedUserCrmTbUserObject);
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        Allure.step("Set restriction");
+        Allure.step("Send alert");
+        return data;
+    }
+
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd3Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd3Client);
+        Allure.step("Client has not cpa abuse connected account");
+        Allure.step("At least 70% have any CPA value");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        connectedUserCrmTbUserObject.cpaId = 0;
+        Allure.step("Send alert");
+        Allure.step("Send restriction");
+        data.connectedUsers.add(connectedUserCrmTbUserObject);
+        data.connectedUsers.add(connectedUserCrmTbUserObject2);
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        return data;
+    }
+
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd4_1Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4_1Client);
+        Allure.step("Client has not cpa abuse connected account");
+        Allure.step("At least 70% have any CPA value");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
+        connectedUserCrmTbUserObject.cpaId = 0;
+        Allure.step("Deposit is crypto = true");
+        Allure.step("1 deposit, value 10%+-. 500 USD = true");
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        deposit.paymentChannel = "Crypto";
+        deposit.amountUsd = 500d;
+        Allure.step("Approx. 2-7 lots traded = true");
+        Mt5DealsCoercedObject deal = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        Mt5DealsCoercedObject deal2 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        Mt5DealsCoercedObject deal3 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        Allure.step("Any mirror trades? = true");
+        MirrorUcidObject mirrorUcid = generateMirrorUcidObjectByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        Allure.step("HFT trades = true");
+        Mt5DealsCoercedObject trade1Open;
+        Mt5DealsCoercedObject trade1Close;
+        Mt5DealsCoercedObject trade2Open;
+        Mt5DealsCoercedObject trade2Close;
+        trade1Open = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade1Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2);
+        trade1Open.timeUtc = trade1Open.time;
+        trade1Open.entry = 0;
+        trade1Open.volumeLots = 0.1;
+        trade1Close.positionId = trade1Open.positionId;
+        trade1Close.comment = "trade 1 close";
+        trade1Close.time = getCurrentTimestampDbFormat();
+        trade1Close.timeUtc = trade1Close.time;
+        trade1Close.entry = 1;
+        trade1Close.symbol = "USDEUR";
+        trade1Close.profit = 111.11;
+        trade1Close.profitUsd = 123.12;
+        trade1Close.volumeLots = 0.1;
+        trade2Open = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade2Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade2Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 1);
+        trade2Open.timeUtc = trade2Open.time;
+        trade2Open.entry = 0;
+        trade2Close.volumeLots = 0.1;
+        trade2Open.volumeLots = 0.1;
+        trade2Close.positionId = trade2Open.positionId;
+        trade2Close.comment = "trade 2 close";
+        trade2Close.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        trade2Close.timeUtc = trade2Close.time;
+        trade2Close.entry = 1;
+        trade2Close.symbol = "GBPJPY";
+        trade2Close.profit = 222.22;
+        trade2Close.profitUsd = 234.15;
+        Mt5DealsCoercedObject trade3 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade3.entry = 0;
+        trade3.volumeLots = 0.1;
+        Mt5DealsCoercedObject trade4 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_1Client);
+        trade4.entry = 1;
+        trade4.volumeLots = 0.1;
+        Allure.step("Send alert");
+        data.mirrorUcidObjects.add(mirrorUcid);
+        data.mt5DealsObjects.add(deal);
+        data.mt5DealsObjects.add(deal2);
+        data.mt5DealsObjects.add(deal3);
+        data.mt5DealsObjects.add(trade1Open);
+        data.mt5DealsObjects.add(trade1Close);
+        data.mt5DealsObjects.add(trade2Open);
+        data.mt5DealsObjects.add(trade2Close);
+        data.mt5DealsObjects.add(trade3);
+        data.mt5DealsObjects.add(trade4);
+        data.crmTbDepositObjects.add(deposit);
+        data.connectedUsers.add(connectedUserCrmTbUserObject);
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        return data;
+    }
+
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd4_2Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4_2Client);
+        Allure.step("Client has not cpa abuse connected account");
+        Allure.step("At least 70% have any CPA value");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        connectedUserCrmTbUserObject.cpaId = 0;
+        connectedUserCrmTbUserObject2.cpaId = cpaAbuseRuleExitEventEnd4_2Client.getCpaId();
+        Allure.step("Deposit is crypto = true");
+        Allure.step("1 deposit, value 10%+-. 500 USD = true");
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        deposit.paymentChannel = "Crypto";
+        deposit.amountUsd = 500d;
+        Allure.step("Approx. 2-7 lots traded = true");
+        Mt5DealsCoercedObject deal = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        Mt5DealsCoercedObject deal2 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        Mt5DealsCoercedObject deal3 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        Allure.step("Any mirror trades? = true");
+        MirrorUcidObject mirrorUcid = generateMirrorUcidObjectByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        Allure.step("HFT trades = true");
+        Mt5DealsCoercedObject trade1Open;
+        Mt5DealsCoercedObject trade1Close;
+        Mt5DealsCoercedObject trade2Open;
+        Mt5DealsCoercedObject trade2Close;
+        trade1Open = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade1Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2);
+        trade1Open.timeUtc = trade1Open.time;
+        trade1Open.entry = 0;
+        trade1Open.volumeLots = 0.1;
+        trade1Close.positionId = trade1Open.positionId;
+        trade1Close.comment = "trade 1 close";
+        trade1Close.time = getCurrentTimestampDbFormat();
+        trade1Close.timeUtc = trade1Close.time;
+        trade1Close.entry = 1;
+        trade1Close.symbol = "USDEUR";
+        trade1Close.profit = 111.11;
+        trade1Close.profitUsd = 123.12;
+        trade1Close.volumeLots = 0.1;
+        trade2Open = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade2Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade2Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 1);
+        trade2Open.timeUtc = trade2Open.time;
+        trade2Open.entry = 0;
+        trade2Close.volumeLots = 0.1;
+        trade2Open.volumeLots = 0.1;
+        trade2Close.positionId = trade2Open.positionId;
+        trade2Close.comment = "trade 2 close";
+        trade2Close.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        trade2Close.timeUtc = trade2Close.time;
+        trade2Close.entry = 1;
+        trade2Close.symbol = "GBPJPY";
+        trade2Close.profit = 222.22;
+        trade2Close.profitUsd = 234.15;
+        Mt5DealsCoercedObject trade3 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade3.entry = 0;
+        trade3.volumeLots = 0.1;
+        Mt5DealsCoercedObject trade4 = generateTradeByClient(cpaAbuseRuleExitEventEnd4_2Client);
+        trade4.entry = 1;
+        trade4.volumeLots = 0.1;
+        Allure.step("Connection has same cpa id = true");
+        connectedUserCrmTbUserObject.cpaId = 0;
+
+        Allure.step("Send alert");
+        Allure.step("Send restriction");
+
+        data.mirrorUcidObjects.add(mirrorUcid);
+        data.mt5DealsObjects.add(deal);
+        data.mt5DealsObjects.add(deal2);
+        data.mt5DealsObjects.add(deal3);
+        data.mt5DealsObjects.add(trade1Open);
+        data.mt5DealsObjects.add(trade1Close);
+        data.mt5DealsObjects.add(trade2Open);
+        data.mt5DealsObjects.add(trade2Close);
+        data.mt5DealsObjects.add(trade3);
+        data.mt5DealsObjects.add(trade4);
+        data.crmTbDepositObjects.add(deposit);
+        data.connectedUsers.add(connectedUserCrmTbUserObject);
+        data.connectedUsers.add(connectedUserCrmTbUserObject2);
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        return data;
+    }
+
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd4_3Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4_3Client);
+        Allure.step("Client has not cpa abuse connected account");
+        Allure.step("At least 70% have any CPA value");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
+        CrmTbUserObject connectedUserCrmTbUserObject2 = generateUserByClient(connectedClient2);
+        connectedUserCrmTbUserObject.cpaId = 0;
+        connectedUserCrmTbUserObject2.cpaId = cpaAbuseRuleExitEventEnd4_3Client.getCpaId();
+        Allure.step("Send alert");
+        Allure.step("Send restriction");
+        data.connectedUsers.add(connectedUserCrmTbUserObject);
+        data.connectedUsers.add(connectedUserCrmTbUserObject2);
+        data.connections.add(getConnection(data.clientHelper, connectedClient));
+        data.connections.add(getConnection(data.clientHelper, connectedClient2));
+        return data;
+    }
+
     public static Map<String, RuleDataHelper> setupCpaAbuseRuleData() throws ReflectiveOperationException,
             SQLException {
         startSshTunnel();
@@ -77,165 +306,18 @@ public class CpaAbuseRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
         map.put("2_1", getCpaAbuseRuleExitEventEnd2_1Data());
+        map.put("2_2", getCpaAbuseRuleExitEventEnd2_2Data());
+        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
+        map.put("4_1", getCpaAbuseRuleExitEventEnd4_1Data());
+        map.put("4_2", getCpaAbuseRuleExitEventEnd4_2Data());
+        map.put("4_3", getCpaAbuseRuleExitEventEnd4_3Data());
 
         // Loop through the list with data and insert all the data into the according tables
-        for (RuleDataHelper data : map.values()) {
-            insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
-            data.connections.forEach(connection -> {
-                try {
-                    insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            if (data.crmTbAccountObject != null) {
-                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
-            }
-            data.crmTbAccountObjectConnections.forEach(credit -> {
-                try {
-                    insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mtTbCreditsObjects.forEach(credit -> {
-                try {
-                    insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                try {
-                    insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbDepositObjects.forEach(deposit -> {
-                try {
-                    insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbBonusObjects.forEach(bonus -> {
-                try {
-                    insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mt5DealsObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mtBalanceOrdersObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mirrorLoginObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            if (data.aggrCreditEquityRate != null) {
-                insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
-            }
-            if (data.aggrMirrorAccountsByTrades != null) {
-                insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data.aggrMirrorAccountsByTrades);
-            }
-        }
+        setupRuleData(map);
         return map;
     }
 
     public static void deleteCpaAbuseRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        // Loop through the list with data and delete all the previously created data into the according tables
-        for (RuleDataHelper data : map.values()) {
-            deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
-            data.connections.forEach(connection -> {
-                try {
-                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
-            deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.userId));
-            data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mtTbCreditsObjects.forEach(credit -> {
-                try {
-                    deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                try {
-                    deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbDepositObjects.forEach(deposit -> {
-                try {
-                    deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.crmTbBonusObjects.forEach(bonus -> {
-                try {
-                    deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mtBalanceOrdersObjects.forEach(bonus -> {
-                try {
-                    deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mt5DealsObjects.forEach(deal -> {
-                try {
-                    deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            data.mirrorLoginObjects.forEach(mirrorLoginObject -> {
-                try {
-                    deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            cleanUserRestriction(data.clientHelper.getUcid());
-            closeAlert(data.clientHelper.getUcid());
-        }
-        stopSshTunnel();
+        deleteRuleData(map);
     }
 }
