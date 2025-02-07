@@ -18,8 +18,10 @@ import java.util.Map;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static businessObjects.db.clickhouse.sessionId.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
@@ -58,6 +60,7 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd7Version20Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version21Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version22Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd7Version23Client = getRandomVantageClientAllFields();
 
     private static RegistrationRuleData getRegistrationRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
@@ -70,6 +73,7 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.userId = client.getUserId();
         lexisNexisObject.proxyIp = client.getIpAddress();
         lexisNexisObject.trueIpGeo = client.getCountryCode();
+        lexisNexisObject.sessionId = client.getSessionId();
         lexisNexisObject.policyScore = -49;
         lexisNexisObject.riskRating = "low";
         RegistrationEvent registrationEvent = new RegistrationEvent();
@@ -80,7 +84,7 @@ public class RegistrationRuleDataFactory {
         registrationEvent.id = getRandomUuidString();
         registrationEvent.createTime = Instant.now().toString();
         registrationEvent.type = "clientRegistration";
-        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>(), null);
+        return new RegistrationRuleData(client, userObject, lexisNexisObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), registrationEvent, new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>());
     }
 
     private static class ConnectionAndConnectedUser {
@@ -125,6 +129,7 @@ public class RegistrationRuleDataFactory {
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd4Client);
         CrmTbUserObject crmTbUserObject = registrationRuleData.crmTbUserObject;
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd4Client, connectedClient);
         CrmTbUserObject crmTbUserToObject = connectionAndConnectedUser.crmTbUserObject;
         crmTbUserObject.rafReferrerId = crmTbUserToObject.rafReferrerId;
@@ -132,29 +137,37 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(crmTbUserToObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd5Data() {
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd5Client);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd5Client, connectedClient);
         CrmTbUserObject crmTbUserToObject = connectionAndConnectedUser.crmTbUserObject;
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(crmTbUserToObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
     public static RegistrationRuleData getRegistrationRuleExitEventEnd6Data() {
         RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd6Client);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd6Client, connectedClient);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -176,6 +189,20 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClientNbpAbuser = getRandomVantageClientAllFields();
         ClientHelper connectedClientHftAbuser = getRandomVantageClientAllFields();
         ClientHelper connectedClientLoopholeAbuser = getRandomVantageClientAllFields();
+        connectedClientCpa.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientVoucherAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientTls.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientSwapAbuse.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientMarketManipulator.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientUnknownAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientGapAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientLatencyAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientPricingErrorAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientNbpAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientHftAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientLoopholeAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
 
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
@@ -251,6 +278,21 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserLoophole.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserLoophole.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientLoopholeAbuser);
+
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientCpa));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientBonusAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientVoucherAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientSwapAbuse));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientMarketManipulator));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientUnknownAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientGapAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientLatencyAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientPricingErrorAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNbpAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientHftAbuser));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientLoopholeAbuser));
         return registrationRuleData;
     }
 
@@ -259,6 +301,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
+        connectedClientCpa.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
@@ -267,23 +310,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
-        return registrationRuleData;
-    }
-
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version3Data() {
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version3Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
-        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version3Client, connectedClientCpa);
-
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
-
-        registrationRuleData.lnSessionParsedObject.policyScore = -21;
-        registrationRuleData.lnSessionParsedObject.riskRating = "high";
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientCpa));
         return registrationRuleData;
     }
 
@@ -293,6 +321,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
+        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
         connectedClientBonusAbuser.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
 
@@ -301,6 +330,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientBonusAbuser));
         return registrationRuleData;
     }
 
@@ -309,31 +340,17 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
+        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version5Client, connectedClientBonusAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "BONUS_ABUSE"));
 
         registrationRuleData.lnSessionParsedObject.policyScore = -19;
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-        return registrationRuleData;
-    }
-
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version6Data() {
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version6Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version6Client, connectedClientBonusAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
-
-        registrationRuleData.lnSessionParsedObject.policyScore = -21;
-        registrationRuleData.lnSessionParsedObject.riskRating = "high";
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientBonusAbuser));
         return registrationRuleData;
     }
 
@@ -342,6 +359,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
+        connectedClientVoucherAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version7Client, connectedClientVoucherAbuser);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
@@ -350,24 +368,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
-        return registrationRuleData;
-    }
-
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version8Data() {
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version8Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
-        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version8Client, connectedClientVoucherAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
-
-
-        registrationRuleData.lnSessionParsedObject.policyScore = -21;
-        registrationRuleData.lnSessionParsedObject.riskRating = "high";
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientVoucherAbuser));
         return registrationRuleData;
     }
 
@@ -377,6 +379,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
+        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
         connectedClientNewsTrader.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version9Client, connectedClientNewsTrader);
 
@@ -386,6 +389,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
         return registrationRuleData;
     }
 
@@ -394,6 +399,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
+        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version10Client, connectedClientNewsTrader);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
@@ -402,6 +408,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
         return registrationRuleData;
     }
 
@@ -410,6 +418,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientTls = getRandomVantageClientAllFields();
+        connectedClientTls.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version11Client, connectedClientTls);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientTls.getUcid(), 1, "TLS_ABUSE"));
@@ -417,6 +426,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientTls);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientTls));
         return registrationRuleData;
     }
 
@@ -425,6 +436,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
+        connectedClientSwapAbuse.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version12Client, connectedClientSwapAbuse);
 
         registrationRuleData.lnSessionParsedObject.riskRating = "high";
@@ -434,6 +446,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientSwapAbuse);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientSwapAbuse));
         return registrationRuleData;
     }
 
@@ -442,6 +456,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
+        connectedClientMarketManipulator.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version13Client, connectedClientMarketManipulator);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), 1, "MARKET_MANIPULATION"));
@@ -451,6 +466,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
 
         registrationRuleData.crmTbAccountObject = generateCrmTbAccountData(registrationRuleData.clientHelper);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientMarketManipulator));
         return registrationRuleData;
     }
 
@@ -459,6 +476,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
+        connectedClientUnknownAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserUnknownAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version14Client, connectedClientUnknownAbuser);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), 1, "UNKNOWN"));
@@ -468,6 +486,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientUnknownAbuser);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientUnknownAbuser));
         return registrationRuleData;
     }
 
@@ -476,6 +496,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version15Client, connectedClient);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClient.getUcid(), 1, "GAP_TRADING"));
@@ -483,6 +504,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -491,6 +514,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version16Client, connectedClient);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClient.getUcid(), 1, "LATENCY_ABUSE"));
@@ -498,6 +522,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -506,6 +532,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version17Client, connectedClient);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClient.getUcid(), 1, "PRICING_ERROR"));
@@ -513,6 +540,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -528,6 +557,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -536,6 +567,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version19Client, connectedClient);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClient.getUcid(), 1, "HFT_ABUSE"));
@@ -543,6 +575,8 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
@@ -551,6 +585,7 @@ public class RegistrationRuleDataFactory {
 
         // Abuser connected clients
         ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version20Client, connectedClient);
 
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClient.getUcid(), 1, "LOOPHOLE_ABUSE"));
@@ -558,44 +593,133 @@ public class RegistrationRuleDataFactory {
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClient);
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
         return registrationRuleData;
     }
 
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version21Data() {
-        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.VJP);
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version21Client);
+    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version23Data() {
+        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version23Client);
 
         // Abuser connected clients
+        ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
         ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientBonusAbuser2 = getRandomVantageClientAllFields();
-        connectedClientBonusAbuser.setBrand(Brand.VJP);
-        connectedClientBonusAbuser2.setBrand(Brand.VJP);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version21Client, connectedClientBonusAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser2 = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version21Client, connectedClientBonusAbuser2);
+        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
+        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
+        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
+        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
+        ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientGapAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientLatencyAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientPricingErrorAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientNbpAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientHftAbuser = getRandomVantageClientAllFields();
+        ClientHelper connectedClientLoopholeAbuser = getRandomVantageClientAllFields();
+        connectedClientCpa.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientBonusAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
+        connectedClientVoucherAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientNewsTrader.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientTls.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientSwapAbuse.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientMarketManipulator.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientUnknownAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientGapAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientLatencyAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientPricingErrorAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientNbpAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientHftAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+        connectedClientLoopholeAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
 
+        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
+        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNewsTrader);
+        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
+        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
+        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
+        ConnectionAndConnectedUser connectionAndConnectedUserUnknownFraudster = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientUnknownAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserGap = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientGapAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserLatency = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLatencyAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserPricingError = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientPricingErrorAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserNbp = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNbpAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
+        ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
+
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientCpa.getUcid(), 1, "CPA_ABUSE"));
         registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "BONUS_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), 1, "LOSS_VOUCHER_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNewsTrader.getUcid(), 1, "NEWS_TRADER"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientTls.getUcid(), 1, "TLS_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), 1, "SWAP_ARBITRAGE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), 1, "MARKET_MANIPULATION"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), 1, "UNKNOWN"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientGapAbuser.getUcid(), 1, "GAP_TRADING"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientLatencyAbuser.getUcid(), 1, "LATENCY_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientPricingErrorAbuser.getUcid(), 1, "PRICING_ERROR"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientNbpAbuser.getUcid(), 1, "NBP_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientHftAbuser.getUcid(), 1, "HFT_ABUSE"));
+        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientLoopholeAbuser.getUcid(), 1, "LOOPHOLE_ABUSE"));
 
+        registrationRuleData.lnSessionParsedObject.policyScore = -21;
+        registrationRuleData.lnSessionParsedObject.riskRating = "high";
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-        return registrationRuleData;
-    }
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientTls);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientSwapAbuse);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownFraudster.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientUnknownAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserGap.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserGap.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientGapAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLatency.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserLatency.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientLatencyAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserPricingError.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserPricingError.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientPricingErrorAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNbp.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserNbp.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientNbpAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserHft.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserHft.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientHftAbuser);
+        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLoophole.crmTbUserObject);
+        registrationRuleData.connections.add(connectionAndConnectedUserLoophole.connectionTableEntry);
+        registrationRuleData.connectedClientHelpers.add(connectedClientLoopholeAbuser);
 
-    public static RegistrationRuleData getRegistrationRuleExitEventEnd7Version22Data() {
-        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.VJP);
-        RegistrationRuleData registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version4Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        connectedClientBonusAbuser.setBrand(Brand.VJP);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new BoClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), 1, "HEDGING"));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientCpa));
+        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientBonusAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientVoucherAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientNewsTrader));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientSwapAbuse));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientMarketManipulator));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientUnknownAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientGapAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientLatencyAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientPricingErrorAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientNbpAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientHftAbuser));
+        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientLoopholeAbuser));
         return registrationRuleData;
     }
 
@@ -611,12 +735,9 @@ public class RegistrationRuleDataFactory {
         map.put("6", getRegistrationRuleExitEventEnd6Data());
         map.put("7v1", getRegistrationRuleExitEventEnd7Version1Data());
         map.put("7v2", getRegistrationRuleExitEventEnd7Version2Data());
-        map.put("7v3", getRegistrationRuleExitEventEnd7Version3Data());
         map.put("7v4", getRegistrationRuleExitEventEnd7Version4Data());
         map.put("7v5", getRegistrationRuleExitEventEnd7Version5Data());
-        map.put("7v6", getRegistrationRuleExitEventEnd7Version6Data());
         map.put("7v7", getRegistrationRuleExitEventEnd7Version7Data());
-        map.put("7v8", getRegistrationRuleExitEventEnd7Version8Data());
         map.put("7v9", getRegistrationRuleExitEventEnd7Version9Data());
         map.put("7v10", getRegistrationRuleExitEventEnd7Version10Data());
         map.put("7v11", getRegistrationRuleExitEventEnd7Version11Data());
@@ -629,13 +750,25 @@ public class RegistrationRuleDataFactory {
         map.put("7v18", getRegistrationRuleExitEventEnd7Version18Data());
         map.put("7v19", getRegistrationRuleExitEventEnd7Version19Data());
         map.put("7v20", getRegistrationRuleExitEventEnd7Version20Data());
-        map.put("7v21", getRegistrationRuleExitEventEnd7Version21Data());
-        map.put("7v22", getRegistrationRuleExitEventEnd7Version22Data());
+        map.put("7v23", getRegistrationRuleExitEventEnd7Version23Data());
 
         // Loop through the map with data and insert all the data into the according tables
         for (RegistrationRuleData data : map.values()) {
             insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
-            insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(data.clientHelper));
+            data.sessionIdTableEntries.forEach(sessionIdTableEntry -> {
+                try {
+                    insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.emailTableEntries.forEach(emailTableEntry -> {
+                try {
+                    insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
+                } catch (SQLException | ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             data.connectedUsers.forEach(user -> {
                 try {
                     insertObjectToDb(CRM_USER_TABLE_NAME, user);
@@ -676,7 +809,20 @@ public class RegistrationRuleDataFactory {
         // Loop through the map with data and delete all the previously created data into the according tables
         for (RegistrationRuleData data : map.values()) {
             deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
-            deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            data.sessionIdTableEntries.forEach(sessionIdTableEntry -> {
+                try {
+                    deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            data.emailTableEntries.forEach(emailTableEntry -> {
+                try {
+                    deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             data.connectedUsers.forEach(user -> {
                 try {
                     deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", user.userId));
