@@ -121,84 +121,40 @@ public class RuleDataHelper {
         for (RuleDataHelper data : map.values()) {
             insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
             data.connections.forEach(connection -> {
-                try {
-                    insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
             });
             data.connectedUsers.forEach(user -> {
-                try {
-                    insertObjectToDb(CRM_USER_TABLE_NAME, user);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_USER_TABLE_NAME, user);
             });
             data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
             data.crmTbAccountObjectConnections.forEach(credit -> {
-                try {
-                    insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
             });
             data.mtTbCreditsObjects.forEach(credit -> {
-                try {
-                    insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
             });
             data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                try {
-                    insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
             });
             data.crmTbDepositObjects.forEach(deposit -> {
-                try {
-                    insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
             });
             data.crmTbBonusObjects.forEach(bonus -> {
-                try {
-                    insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
             });
             data.mt5DealsObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
             });
             data.mtBalanceOrdersObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal);
             });
             data.mirrorLoginObjects.forEach(deal -> {
-                try {
-                    insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal);
             });
             if (data.aggrCreditEquityRate != null) {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
@@ -210,18 +166,10 @@ public class RuleDataHelper {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
             data.connectedClientHelpers.forEach(user -> {
-                try {
-                    insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(user));
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(user));
             });
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
-                try {
-                    insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
             });
         }
     }
@@ -230,11 +178,7 @@ public class RuleDataHelper {
         for (RuleDataHelper data : map.values()) {
             deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             data.connections.forEach(connection -> {
-                try {
-                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
             });
             if (data.lnSessionParsedObjectRegistration != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
@@ -245,67 +189,31 @@ public class RuleDataHelper {
 
             }
             data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
             });
             data.mtTbCreditsObjects.forEach(credit -> {
-                try {
-                    deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
             });
             data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                try {
-                    deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid));
             });
             data.crmTbDepositObjects.forEach(deposit -> {
-                try {
-                    deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid));
             });
             data.crmTbBonusObjects.forEach(bonus -> {
-                try {
-                    deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
             });
             data.mtBalanceOrdersObjects.forEach(bonus -> {
-                try {
-                    deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
             });
             data.mt5DealsObjects.forEach(deal -> {
-                try {
-                    deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
             });
             data.mirrorLoginObjects.forEach(mirrorLoginObject -> {
-                try {
-                    deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));
             });
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
-                try {
-                    deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1));
             });
             if (data.aggrCreditEquityRate != null) {
                 deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));

@@ -17,19 +17,23 @@ import static utils.ConfigFactory.*;
 
 public class DbHelper {
 
+    private static final int MAX_RETRIES = 5;
+    private static final long RETRY_DELAY_MS = 1000;
     private static Process sshTunnelProcess;
 
     @Step("Get objects from table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(String tableName, String where, Class<T> className) throws Exception {
-        return getObjectsFromDB(DbName.CLICKHOUSE, tableName, where, className);
+        return executeWithRetry(() -> getObjectsFromDB(DbName.CLICKHOUSE, tableName, where, className));
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className)
             throws Exception {
-        try (Connection connection = createConnection(dbName)) {
-            return fetchObjects(connection, tableName, where, className);
-        }
+        return executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                return fetchObjects(connection, tableName, where, className);
+            }
+        });
     }
 
     private static <T> List<T> fetchObjects(Connection connection, String tableName, String where, Class<T> className)
@@ -129,38 +133,48 @@ public class DbHelper {
     }
 
     @Step("Insert objects: {objects}")
-    public static <T> void insertObjectsToDb(String tableName, List<T> objects) throws SQLException,
-            ReflectiveOperationException {
-        insertObjectsToDb(DbName.CLICKHOUSE, tableName, objects);
+    public static <T> void insertObjectsToDb(String tableName, List<T> objects) {
+        executeWithRetry(() -> {
+            insertObjectsToDb(DbName.CLICKHOUSE, tableName, objects);
+            return null;
+        });
     }
 
     @Step("Insert objects: {objects} to {dbName}")
-    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws SQLException,
-            ReflectiveOperationException {
+    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws Exception {
         if (objects == null || objects.isEmpty()) return;
-
-        try (Connection connection = createConnection(dbName)) {
-            insertObjects(connection, tableName, objects);
-        }
+        executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                insertObjects(connection, tableName, objects);
+            }
+            return null;
+        });
     }
 
     @Step("Insert single object: {object}")
-    public static <T> void insertObjectToDb(String tableName, T object) throws SQLException,
-            ReflectiveOperationException {
-        insertObjectToDb(DbName.CLICKHOUSE, tableName, object);
+    public static <T> void insertObjectToDb(String tableName, T object) {
+        executeWithRetry(() -> {
+            insertObjectToDb(DbName.CLICKHOUSE, tableName, object);
+            return null;
+        });
     }
 
     @Step("Insert single object: {object} to {dbName}")
-    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws SQLException,
-            ReflectiveOperationException {
-        try (Connection connection = createConnection(dbName)) {
-            insertSingleObject(connection, tableName, object);
-        }
+    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws Exception {
+        executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                insertSingleObject(connection, tableName, object);
+            }
+            return null;
+        });
     }
 
     @Step("Delete {where} from {tableName}")
-    public static void deleteEntryFromDb(String tableName, String where) throws SQLException {
-        deleteEntryFromDb(DbName.CLICKHOUSE, tableName, where);
+    public static void deleteEntryFromDb(String tableName, String where) {
+        executeWithRetry(() -> {
+            deleteEntryFromDb(DbName.CLICKHOUSE, tableName, where);
+            return null;
+        });
     }
 
     @Step("Delete entries from {tableName} in {dbName} where {columnName} matches the provided values")
@@ -201,25 +215,29 @@ public class DbHelper {
     }
 
     @Step("Delete {where} from {tableName} in {dbName}")
-    public static void deleteEntryFromDb(DbName dbName, String tableName, String where) throws SQLException {
+    public static void deleteEntryFromDb(DbName dbName, String tableName, String where) throws Exception {
         if (where == null || where.trim().isEmpty()) {
             throw new IllegalArgumentException("The 'where' clause cannot be empty to prevent deleting all rows.");
         }
 
         String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
-        try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
-            System.out.println(query);
-            statement.executeUpdate();
-        }
+        executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+                System.out.println(query);
+                statement.executeUpdate();
+            }
+            return null;
+        });
     }
 
     @Step("Execute query: {query} to {dbName}")
-    public static void executeQueryToDb(DbName dbName, String query) throws SQLException {
-        try (Connection connection = createConnection(dbName)) {
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
+    public static void executeQueryToDb(DbName dbName, String query) {
+        executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.executeUpdate();
             }
-        }
+            return null;
+        });
     }
 
     private static Connection createConnection(DbName dbName) throws SQLException {
@@ -424,6 +442,36 @@ public class DbHelper {
             }
         }
         return result.toString();
+    }
+
+    // Generic method to handle retries
+    private static <T> T executeWithRetry(DatabaseOperation<T> operation) {
+        int attempt = 0;
+        while (attempt < MAX_RETRIES) {
+            try {
+                return operation.execute();
+            } catch (SQLException | ReflectiveOperationException e) {
+                attempt++;
+                System.err.println("Database operation failed (attempt " + attempt + "): " + e.getMessage());
+                if (attempt >= MAX_RETRIES) {
+                    throw new RuntimeException("Operation failed after " + MAX_RETRIES + " attempts"); // Give up after 5 attempts
+                }
+                try {
+                    Thread.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RuntimeException("Operation failed after " + MAX_RETRIES + " attempts");
+    }
+
+    // Functional interface for retry logic
+    @FunctionalInterface
+    private interface DatabaseOperation<T> {
+        T execute() throws Exception;
     }
 
 }

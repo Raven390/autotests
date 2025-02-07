@@ -3,7 +3,6 @@ package helpers.database;
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import helpers.data.ClientHelper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateBunchMt4TradesCoerced;
@@ -12,13 +11,12 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
 
 public class TradesOperationsHelper {
-    public static void createDemoTrades(ClientHelper client, int size) throws ReflectiveOperationException,
-            SQLException {
+    public static void createDemoTrades(ClientHelper client, int size) {
         ArrayList<MtMt4TradesCoercedObject> trades = generateBunchMt4TradesCoerced(client, size);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, trades);
     }
 
-    public static void cleanAccountTrades(int account) throws SQLException {
+    public static void cleanAccountTrades(int account) {
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "account =" + account);
     }
 

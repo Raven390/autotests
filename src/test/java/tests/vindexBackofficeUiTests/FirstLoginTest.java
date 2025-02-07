@@ -7,7 +7,6 @@ import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static businessObjects.ui.user.UserFactory.firstLoginUser;
@@ -50,7 +49,7 @@ public class FirstLoginTest extends TestBaseWeb {
     }
 
     @AfterAll
-    public static void teardown() throws SQLException {
+    public static void teardown() throws Exception {
         deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
         deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
         deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()));
