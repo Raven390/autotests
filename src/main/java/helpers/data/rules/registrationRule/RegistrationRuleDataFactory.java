@@ -756,47 +756,23 @@ public class RegistrationRuleDataFactory {
         for (RegistrationRuleData data : map.values()) {
             insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
             data.sessionIdTableEntries.forEach(sessionIdTableEntry -> {
-                try {
-                    insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
             });
             data.emailTableEntries.forEach(emailTableEntry -> {
-                try {
-                    insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
             });
             data.connectedUsers.forEach(user -> {
-                try {
-                    insertObjectToDb(CRM_USER_TABLE_NAME, user);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CRM_USER_TABLE_NAME, user);
             });
             data.connectedClientHelpers.forEach(user -> {
-                try {
-                    insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(user));
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(user));
             });
             data.connections.forEach(connection -> {
-                try {
-                    insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
             });
             insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
             data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
-                } catch (SQLException | ReflectiveOperationException e) {
-                    throw new RuntimeException(e);
-                }
+                insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
@@ -810,47 +786,23 @@ public class RegistrationRuleDataFactory {
         for (RegistrationRuleData data : map.values()) {
             deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             data.sessionIdTableEntries.forEach(sessionIdTableEntry -> {
-                try {
-                    deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
             });
             data.emailTableEntries.forEach(emailTableEntry -> {
-                try {
-                    deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
             });
             data.connectedUsers.forEach(user -> {
-                try {
-                    deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", user.userId));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", user.userId));
             });
             data.connectedUsers.forEach(user -> {
-                try {
-                    deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", user.userId));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", user.userId));
             });
             data.connections.forEach(connection -> {
-                try {
-                    deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
             });
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.userId));
             data.clientFraudTypes.forEach(fraud -> {
-                try {
-                    deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+                deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
             });
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
