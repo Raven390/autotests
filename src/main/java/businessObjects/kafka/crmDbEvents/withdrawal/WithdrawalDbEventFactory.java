@@ -11,7 +11,7 @@ public class WithdrawalDbEventFactory {
     @Step("Generate withdrawal db event Metadata without table name")
     private static WithdrawalDbEventMetadata generateWithdrawalDbEventNoTableNameMetadata() {
         return new WithdrawalDbEventMetadata(
-                Instant.now().toString(), "test_record_type", "update", "test_partition_key_type", "test_schema_name", getRandomInt().toString(), getRandomInt().toString(), getRandomInt().toString(), getRandomInt().toString(), Instant.now().toString(), "test_stream_position"
+                Instant.now().toString(), "test_record_type", "insert", "test_partition_key_type", "test_schema_name", getRandomInt().toString(), getRandomInt().toString(), getRandomInt().toString(), getRandomInt().toString(), Instant.now().toString(), "test_stream_position"
         );
     }
 
