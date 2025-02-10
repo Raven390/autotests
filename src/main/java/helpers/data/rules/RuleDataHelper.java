@@ -19,7 +19,6 @@ import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -115,8 +114,7 @@ public class RuleDataHelper {
         return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
     }
 
-    public static void setupRuleData(Map<String, RuleDataHelper> map) throws ReflectiveOperationException,
-            SQLException {
+    public static void setupRuleData(Map<String, RuleDataHelper> map) {
         startSshTunnel();
         for (RuleDataHelper data : map.values()) {
             insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
@@ -171,6 +169,9 @@ public class RuleDataHelper {
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
                 insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
             });
+            data.floatingTrades.forEach(floatingTradesGroupBy -> {
+                insertObjectToDb(AGGR_FLOATING_TRADES_GROUP_BY, floatingTradesGroupBy);
+            });
         }
     }
 
@@ -214,6 +215,9 @@ public class RuleDataHelper {
             });
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
                 deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1));
+            });
+            data.floatingTrades.forEach(floatingTradesGroupBy -> {
+                deleteEntryFromDb(AGGR_FLOATING_TRADES_GROUP_BY, String.format("trading_account = %s", floatingTradesGroupBy.tradingAccount));
             });
             if (data.aggrCreditEquityRate != null) {
                 deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));

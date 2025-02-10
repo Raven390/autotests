@@ -53,9 +53,6 @@ public class WithdrawalEvent {
     @JsonProperty("updateTime")
     public String updateTime;
 
-    @JsonProperty("cpsAttachVariable")
-    public String cpsAttachVariable;
-
     @JsonProperty("orderNumber")
     public String orderNumber;
 
@@ -104,7 +101,7 @@ public class WithdrawalEvent {
     public WithdrawalEvent(String eventDate, Integer withdrawalId, Integer clientId, Integer metaTraderAccount,
             String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
             Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
-            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
+            String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
             String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
             String withdrawalCurrency, Integer checkingStatus, Integer wdIsTrade, Double rate, Integer wdIsNonApp,
             Double toUsdRate, String type) {
@@ -123,7 +120,6 @@ public class WithdrawalEvent {
         this.cardHash = cardHash;
         this.wdIsDel = wdIsDel;
         this.updateTime = updateTime;
-        this.cpsAttachVariable = cpsAttachVariable;
         this.orderNumber = orderNumber;
         this.cpsMandatoryField = cpsMandatoryField;
         this.wdIsRememberInfo = wdIsRememberInfo;
@@ -144,7 +140,7 @@ public class WithdrawalEvent {
             Integer metaTraderAccount,
             String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
             Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
-            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
+            String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
             String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
             String withdrawalCurrency, Integer checkingStatus, Integer wdIsTrade, Double rate, Integer wdIsNonApp,
             Double toUsdRate, String type) {
@@ -164,7 +160,6 @@ public class WithdrawalEvent {
         this.cardHash = cardHash;
         this.wdIsDel = wdIsDel;
         this.updateTime = updateTime;
-        this.cpsAttachVariable = cpsAttachVariable;
         this.orderNumber = orderNumber;
         this.cpsMandatoryField = cpsMandatoryField;
         this.wdIsRememberInfo = wdIsRememberInfo;
@@ -183,19 +178,18 @@ public class WithdrawalEvent {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WithdrawalEvent that = (WithdrawalEvent) o;
-        return Objects.equals(eventDate, that.eventDate) && Objects.equals(withdrawalId, that.withdrawalId) && Objects.equals(clientId, that.clientId) && Objects.equals(metaTraderAccount, that.metaTraderAccount) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawalAmount, that.withdrawalAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardHash, that.cardHash) && Objects.equals(wdIsDel, that.wdIsDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(cpsAttachVariable, that.cpsAttachVariable) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(wdIsRememberInfo, that.wdIsRememberInfo) && Objects.equals(upiAccountName, that.upiAccountName) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(withdrawalCurrency, that.withdrawalCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(wdIsTrade, that.wdIsTrade) && Objects.equals(rate, that.rate) && Objects.equals(wdIsNonApp, that.wdIsNonApp) && Objects.equals(toUsdRate, that.toUsdRate) && Objects.equals(type, that.type);
+        return Objects.equals(id, that.id) && Objects.equals(eventDate, that.eventDate) && Objects.equals(withdrawalId, that.withdrawalId) && Objects.equals(clientId, that.clientId) && Objects.equals(metaTraderAccount, that.metaTraderAccount) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawalAmount, that.withdrawalAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardHash, that.cardHash) && Objects.equals(wdIsDel, that.wdIsDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(wdIsRememberInfo, that.wdIsRememberInfo) && Objects.equals(upiAccountName, that.upiAccountName) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(withdrawalCurrency, that.withdrawalCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(wdIsTrade, that.wdIsTrade) && Objects.equals(rate, that.rate) && Objects.equals(wdIsNonApp, that.wdIsNonApp) && Objects.equals(toUsdRate, that.toUsdRate) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventDate, withdrawalId, clientId, metaTraderAccount, brand, regulator, paymentMethodCode, withdrawType, withdrawalAmount, fee, actualAmount, paymentAmount, cardHash, wdIsDel, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, wdIsRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, withdrawalCurrency, checkingStatus, wdIsTrade, rate, wdIsNonApp, toUsdRate, type);
+        return Objects.hash(id, eventDate, withdrawalId, clientId, metaTraderAccount, brand, regulator, paymentMethodCode, withdrawType, withdrawalAmount, fee, actualAmount, paymentAmount, cardHash, wdIsDel, updateTime, orderNumber, cpsMandatoryField, wdIsRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, withdrawalCurrency, checkingStatus, wdIsTrade, rate, wdIsNonApp, toUsdRate, type);
     }
 
     @Override
     public String toString() {
-        return "WithdrawalEvent{" + "id='" + id + '\'' + ", eventDate='" + eventDate + '\'' + ", withdrawalId=" + withdrawalId + ", clientId=" + clientId + ", metaTraderAccount=" + metaTraderAccount + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawalAmount=" + withdrawalAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardHash='" + cardHash + '\'' + ", wdIsDel=" + wdIsDel + ", updateTime='" + updateTime + '\'' + ", cpsAttachVariable='" + cpsAttachVariable + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", wdIsRememberInfo=" + wdIsRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", withdrawalCurrency='" + withdrawalCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", wdIsTrade=" + wdIsTrade + ", rate=" + rate + ", wdIsNonApp=" + wdIsNonApp + ", toUsdRate=" + toUsdRate + ", type='" + type + '\'' + '}';
+        return "WithdrawalEvent{" + "id='" + id + '\'' + ", eventDate='" + eventDate + '\'' + ", withdrawalId=" + withdrawalId + ", clientId=" + clientId + ", metaTraderAccount=" + metaTraderAccount + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawalAmount=" + withdrawalAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardHash='" + cardHash + '\'' + ", wdIsDel=" + wdIsDel + ", updateTime='" + updateTime + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", wdIsRememberInfo=" + wdIsRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", withdrawalCurrency='" + withdrawalCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", wdIsTrade=" + wdIsTrade + ", rate=" + rate + ", wdIsNonApp=" + wdIsNonApp + ", toUsdRate=" + toUsdRate + ", type='" + type + '\'' + '}';
     }
 }

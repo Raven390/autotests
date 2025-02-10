@@ -32,7 +32,7 @@ public class WithdrawalDbEventFactory {
     @Step("Generate withdrawal db event Data")
     private static WithdrawalDbEventData generateWithdrawalDbEventData() {
         return new WithdrawalDbEventData(
-                Instant.now().toString(), getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), "test_brand", "test_regulator", "test_payment_method_type", 1, 1.2d, 1.2d, 1.2d, 1.2d, "test_card_number", 1, "test_update_time", "test_cps_attach_variable", "test_order_number", "test,cps,mandatory,field", 1, "test_upi_account_name", 1.2d, 1, 1, "test_order_currency", 1, 1, 1.2d, 1, 1.2d
+                Instant.now().toString(), getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), "test_brand", "test_regulator", "test_payment_method_type", 1, 1.2d, 1.2d, 1.2d, 1.2d, "test_card_number", 1, "test_update_time", "test_order_number", "test,cps,mandatory,field", 1, "test_upi_account_name", 1.2d, 1, 1, "test_order_currency", 1, 1, 1.2d, 1, 1.2d
         );
     }
 

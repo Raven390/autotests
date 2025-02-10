@@ -58,6 +58,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE = "Market manipulation rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
@@ -130,6 +131,7 @@ public class Constants {
     public static final String MIRROR_LOGIN_TABLE_NAME = "vindex_test.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "vindex_test.mirror_ucid";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
+    public static final String AGGR_FLOATING_TRADES_GROUP_BY = "vindex_test_api.aggr__floating_trades_group_by";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

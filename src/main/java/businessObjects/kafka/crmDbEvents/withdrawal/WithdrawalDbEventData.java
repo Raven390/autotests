@@ -51,9 +51,6 @@ public class WithdrawalDbEventData {
     @JsonProperty("update_time")
     public String updateTime;
 
-    @JsonProperty("cps_attach_variable")
-    public String cpsAttachVariable;
-
     @JsonProperty("order_number")
     public String orderNumber;
 
@@ -99,7 +96,7 @@ public class WithdrawalDbEventData {
     public WithdrawalDbEventData(String createTime, Integer id, Integer userId, Integer mt4Account, String brand,
             String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawAmount, Double fee,
             Double actualAmount, Double paymentAmount, String cardNumber, Integer isDel, String updateTime,
-            String cpsAttachVariable, String orderNumber, String cpsMandatoryField, Integer isRememberInfo,
+            String orderNumber, String cpsMandatoryField, Integer isRememberInfo,
             String upiAccountName, Double deductCredit, Integer userSalesId, Integer accountSalesId,
             String orderCurrency, Integer checkingStatus, Integer isTrade, Double rate, Integer isNonApp,
             Double toUsdRate) {
@@ -118,7 +115,6 @@ public class WithdrawalDbEventData {
         this.cardNumber = cardNumber;
         this.isDel = isDel;
         this.updateTime = updateTime;
-        this.cpsAttachVariable = cpsAttachVariable;
         this.orderNumber = orderNumber;
         this.cpsMandatoryField = cpsMandatoryField;
         this.isRememberInfo = isRememberInfo;
@@ -136,19 +132,18 @@ public class WithdrawalDbEventData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WithdrawalDbEventData that = (WithdrawalDbEventData) o;
-        return Objects.equals(createTime, that.createTime) && Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(mt4Account, that.mt4Account) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawAmount, that.withdrawAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardNumber, that.cardNumber) && Objects.equals(isDel, that.isDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(cpsAttachVariable, that.cpsAttachVariable) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(isRememberInfo, that.isRememberInfo) && Objects.equals(upiAccountName, that.upiAccountName) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(orderCurrency, that.orderCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(isTrade, that.isTrade) && Objects.equals(rate, that.rate) && Objects.equals(isNonApp, that.isNonApp) && Objects.equals(toUsdRate, that.toUsdRate);
+        return Objects.equals(createTime, that.createTime) && Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(mt4Account, that.mt4Account) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawAmount, that.withdrawAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardNumber, that.cardNumber) && Objects.equals(isDel, that.isDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(isRememberInfo, that.isRememberInfo) && Objects.equals(upiAccountName, that.upiAccountName) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(orderCurrency, that.orderCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(isTrade, that.isTrade) && Objects.equals(rate, that.rate) && Objects.equals(isNonApp, that.isNonApp) && Objects.equals(toUsdRate, that.toUsdRate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createTime, id, userId, mt4Account, brand, regulator, paymentMethodCode, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, updateTime, cpsAttachVariable, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, checkingStatus, isTrade, rate, isNonApp, toUsdRate);
+        return Objects.hash(createTime, id, userId, mt4Account, brand, regulator, paymentMethodCode, withdrawType, withdrawAmount, fee, actualAmount, paymentAmount, cardNumber, isDel, updateTime, orderNumber, cpsMandatoryField, isRememberInfo, upiAccountName, deductCredit, userSalesId, accountSalesId, orderCurrency, checkingStatus, isTrade, rate, isNonApp, toUsdRate);
     }
 
     @Override
     public String toString() {
-        return "WithdrawalDbEventData{" + "createTime='" + createTime + '\'' + ", id=" + id + ", userId='" + userId + '\'' + ", mt4Account=" + mt4Account + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawAmount=" + withdrawAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardNumber='" + cardNumber + '\'' + ", isDel=" + isDel + ", updateTime='" + updateTime + '\'' + ", cpsAttachVariable='" + cpsAttachVariable + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", isRememberInfo=" + isRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", orderCurrency='" + orderCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", isTrade=" + isTrade + ", rate=" + rate + ", isNonApp=" + isNonApp + ", toUsdRate=" + toUsdRate + '}';
+        return "WithdrawalDbEventData{" + "createTime='" + createTime + '\'' + ", id=" + id + ", userId=" + userId + ", mt4Account=" + mt4Account + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", paymentMethodCode='" + paymentMethodCode + '\'' + ", withdrawType=" + withdrawType + ", withdrawAmount=" + withdrawAmount + ", fee=" + fee + ", actualAmount=" + actualAmount + ", paymentAmount=" + paymentAmount + ", cardNumber='" + cardNumber + '\'' + ", isDel=" + isDel + ", updateTime='" + updateTime + '\'' + ", orderNumber='" + orderNumber + '\'' + ", cpsMandatoryField='" + cpsMandatoryField + '\'' + ", isRememberInfo=" + isRememberInfo + ", upiAccountName='" + upiAccountName + '\'' + ", deductCredit=" + deductCredit + ", userSalesId=" + userSalesId + ", accountSalesId=" + accountSalesId + ", orderCurrency='" + orderCurrency + '\'' + ", checkingStatus=" + checkingStatus + ", isTrade=" + isTrade + ", rate=" + rate + ", isNonApp=" + isNonApp + ", toUsdRate=" + toUsdRate + '}';
     }
 }

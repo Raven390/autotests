@@ -10,7 +10,6 @@ import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -723,8 +722,7 @@ public class RegistrationRuleDataFactory {
         return registrationRuleData;
     }
 
-    public static Map<String, RegistrationRuleData> setupRegistrationRuleData() throws ReflectiveOperationException,
-            SQLException {
+    public static Map<String, RegistrationRuleData> setupRegistrationRuleData() {
         startSshTunnel();
         Map<String, RegistrationRuleData> map = new HashMap<>();
         // Put all the db data for setup in a map
