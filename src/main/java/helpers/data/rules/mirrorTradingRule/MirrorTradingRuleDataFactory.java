@@ -18,7 +18,6 @@ import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -487,8 +486,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() throws ReflectiveOperationException,
-            SQLException {
+    public static Map<String, MirrorTradingRuleData> setupMirrorTradingRuleData() {
         startSshTunnel();
         Map<String, MirrorTradingRuleData> map = new HashMap<>();
         // Put all the db data for setup in a list

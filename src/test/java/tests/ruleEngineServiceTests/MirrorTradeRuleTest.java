@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     public static Map<String, MirrorTradingRuleData> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    public static void setupDbData() throws ReflectiveOperationException, SQLException, IOException {
+    public static void setupDbData() throws IOException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingRuleData();
