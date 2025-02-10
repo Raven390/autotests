@@ -91,6 +91,7 @@ public class Constants {
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
     // TABLES
     public static final String CRM_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
+    public static final String MT_ACCOUNT_TABLE_NAME = "vindex_test.mt___account";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm___tb_bonus";
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm___tb_deposit";
