@@ -5,6 +5,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -14,6 +15,8 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
 public abstract class AbstractPage {
+
+    DecimalFormat df = new DecimalFormat("#,###");
 
     protected final Page page;
     protected final Locator calendar;
@@ -32,7 +35,11 @@ public abstract class AbstractPage {
 
     @Step("Wait for page to load")
     public void waitForPageToLoad() {
-        page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+        while (page.locator(LOADING_ANIMATION_SELECTOR).isVisible() || page.locator(LOADER_SPIN_LOCATOR).isVisible()) {
+            page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+            page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
+            page.waitForTimeout(100);
+        }
     }
 
     public void navigateToMain() {

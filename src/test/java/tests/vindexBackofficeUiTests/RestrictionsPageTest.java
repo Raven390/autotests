@@ -6,6 +6,8 @@ import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
+import helpers.database.AuditHelper;
+import helpers.database.MitigationHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
@@ -539,6 +541,12 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReasonTrade("test reason");
         restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
+    }
+
+    @Test
+    void delete() throws Exception {
+        MitigationHelper.cleanUserRestriction("vantage-10105625");
+        AuditHelper.cleanUserAudit("vantage-10105625");
     }
 
 }

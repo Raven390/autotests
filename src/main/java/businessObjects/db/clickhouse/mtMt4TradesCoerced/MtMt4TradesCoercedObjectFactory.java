@@ -43,7 +43,7 @@ public class MtMt4TradesCoercedObjectFactory {
         trade.openRateUsdQuote = getRandomRoundedDouble(0.00, 5000);
         trade.openRateUsdAcc = getRandomRoundedDouble(0.00, 5000);
         trade.volumeLots = getRandomRoundedDouble(0.00, 5000);
-        trade.notionalValueUsd = getRandomRoundedDouble(0.00, 5000);
+        trade.notionalValueUsd = getRandomRoundedDouble(0.00, 50_000);
         trade.openNotionalValueUsd = getRandomRoundedDouble(0.00, 5000);
         trade.closeNotionalValueUsd = getRandomRoundedDouble(0.00, 5000);
         trade.profit = getRandomRoundedDouble(0.00, 5000);

@@ -48,7 +48,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
     @AllureId("914")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct amounts in tooltips")
-    public void pnlByDurationAmountsTest() throws ReflectiveOperationException, SQLException {
+    public void pnlByDurationAmountsTest() throws ReflectiveOperationException, SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 
@@ -113,7 +113,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
     @AllureId("914")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct percentage in tooltips")
-    public void pnlByDurationPercentage() throws ReflectiveOperationException, SQLException {
+    public void pnlByDurationPercentage() throws ReflectiveOperationException, SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 
@@ -182,7 +182,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
     @AllureId("915")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct tops")
-    public void pnlByDurationTop() throws ReflectiveOperationException, SQLException {
+    public void pnlByDurationTop() throws ReflectiveOperationException, SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 

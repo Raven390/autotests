@@ -4,6 +4,7 @@ import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.BoundingBox;
+import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -197,6 +198,29 @@ public class TradingPage extends AbstractPage {
     private static final String GREEN_TEXT = "//*[contains(@class, 'g-color-text_color_brand')]";
     private static final String RED_TEXT = "//*[contains(@class, 'g-color-text_color_danger')]";
     private static final String PNL_DURATION_GRAPH = "//*[contains(@class, 'v-trading-summary-pnl-by-duration')]";
+    private static final String PNL_SYMBOL_SECTION = "//span[text() = 'per symbol, USD']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String SYMBOL_TRADED_SECTION = "//div[text() = 'Symbol traded']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String PNL_SYMBOL_BAR_DESCRIPTION = "//div[(@class='v-pnl-symbol-bar__bar-description') and not (contains(@class,'v-pnl-symbol-bar__bar-description_right'))]";
+    private static final String PNL_SYMBOL_BAR_DESCRIPTION_RIGHT = "//div[contains(@class,'v-pnl-symbol-bar__bar-description_right')]";
+    private static final String PNL_SYMBOL_BAR_EMPTY = "//div[@class='v-pnl-symbol-bar__no-data']";
+    private static final String SYMBOL_TRADED_EMPTY = "//div[@class='v-symbol-traded-bar__no-data']";
+    private static final String PNL_SYMBOL_BAR = "//div[@class='v-pnl-symbol-bar__bar']";
+    private static final String DANGER_HEAVY_TEXT = "//*[contains(@class,'g-color-text_color_danger-heavy')]";
+    private static final String PRIMARY_TEXT = "//*[contains(@class,'g-color-text_color_primary')]";
+    private static final String SECONDARY_TEXT = "//*[contains(@class,'g-color-text_color_secondary')]";
+    private static final String SUBHEADER_2_TEXT = "//*[contains(@class,'g-text_variant_subheader-2')]";
+    private static final String PNL_SYMBOL_BAR_NEGATIVE = "//*[contains(@class,'v-pnl-symbol-bar__bar_negative')]";
+    private static final String PNL_SYMBOL_BAR_POSITIVE = "//div[(@class='v-pnl-symbol-bar__bar') or (contains(@class,'v-pnl-symbol-bar__bar') and contains(@class,'v-pnl-symbol-bar__bar_begin'))]";
+    private static final String PNL_SYMBOL_BAR_POSITIVE_BEGIN = "//div[contains(@class,'v-pnl-symbol-bar__bar_begin')]";
+    private static final String SYMBOL_TRADED_BAR = "//div[@class='v-symbol-traded-bar__bar' or @class='v-symbol-traded-bar__bar v-symbol-traded-bar__bar_isFirst' ]";
+    private static final String SYMBOL_TRADED_BAR_FIRST = "//div[contains(@class,'v-symbol-traded-bar__bar_isFirst')]";
+    private static final String PNL_SYMBOL_TOOLTIP_LINE = "//div[(@class='v-pnl-symbol-tooltip__symbol')]";
+    private static final String SYMBOL_TRADED_TOOLTIP = "//div[(@class='v-symbol-traded-tooltip')]";
+    private static final String SYMBOL_TRADED_TOOLTIP_LINE = "//div[(@class='v-symbol-traded-tooltip__symbol')]";
+    private static final String SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE = "//div[(@class='v-symbol-traded-tooltip__other-title')]";
+    private static final String SYMBOL_TRADED_BAR_DESCRIPTION = "//div[(@class='v-symbol-traded-bar__bar-description')]";
+    private static final String TRADING_CHART_FEATURE = "//div[@class='v-chart-wrapper__feature']";
+    private static final String TRADING_CHART_FEATURE_VALUE = "//div[contains(@class,'v-chart-wrapper__feature-value')]";
 
     public TradingPage(Page page) {
         super(page);
@@ -1231,11 +1255,13 @@ public class TradingPage extends AbstractPage {
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "account =" + accountNumber);
     }
 
-    public void deleteClientDeals(String ucid) throws SQLException {
+    public void deleteClientDeals(String ucid) throws SQLException, InterruptedException {
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + ucid + "'");
+        Thread.sleep(1000);
     }
 
     public void openPnlDurationTooltip(String annotationText) {
+        Allure.step("Hover mouse over graph section to open tooltip");
         page.waitForTimeout(100);
         String locator = PNL_BY_DURATION + PNL_BY_DURATION_ANNOTATION + "[text()='" + annotationText + "']";
         page.hover(locator, new Page.HoverOptions().setForce(true));
@@ -1270,6 +1296,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public void checkTextPnlDurationTooltipPercentage(String percentage) {
+        Allure.step("Check duration percentage in the tooltip");
         assertThat(pnlByDurationTooltip).isVisible();
         String locator = (PNL_BY_DURATION_TOOLTIP + "//*[contains(text(),'" + percentage + "')]");
         assertThat(page.locator(locator)).hasText(percentage + "% of all deals");
@@ -1284,6 +1311,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public void checkMaxProfitableValue(int expectedValue) {
+        Allure.step("Check value in max profitable");
         Locator element = page.locator(PNL_DURATION_GRAPH + GREEN_TEXT);
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
         assertEquals(formatter.format(expectedValue), element.textContent());
@@ -1294,6 +1322,7 @@ public class TradingPage extends AbstractPage {
     }
 
     public void checkMaxLossValue(int expectedValue) {
+        Allure.step("Check value in max loss");
         Locator element = page.locator(PNL_DURATION_GRAPH + RED_TEXT);
         NumberFormat formatter = NumberFormat.getInstance(Locale.US);
         assertEquals(formatter.format(expectedValue), element.textContent());
@@ -1304,15 +1333,265 @@ public class TradingPage extends AbstractPage {
     }
 
     public void checkTopProfitCategory(String expectedValue) {
+        Allure.step("Check category in top profit header");
         assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/preceding-sibling::div").textContent());
     }
 
     public void checkTopLossCategory(String expectedValue) {
+        Allure.step("Check category in top loss header");
         assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max loosing']/preceding-sibling::div").textContent());
     }
 
     public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {
         return deal.profitUsd + deal.commissionUsd + deal.storageUsd;
     }
+
+    public int calculatePnlByDealInt(MtMt4TradesCoercedObject trade1, MtMt4TradesCoercedObject trade2) {
+        return (int) (Math.round(calculatePnlByDeal(trade1) + calculatePnlByDeal(trade2)));
+    }
+
+    public int calculatePnlByDealInt(MtMt4TradesCoercedObject... trades) {
+        double result = 0;
+        for (MtMt4TradesCoercedObject i : trades) {
+            result += (calculatePnlByDeal(i));
+        }
+        return (int) (Math.round(result));
+    }
+
+    public int calculatePnlByDealInt(MtMt4TradesCoercedObject deal) {
+        return ((int) Math.round(deal.profitUsd + deal.commissionUsd + deal.storageUsd));
+    }
+
+    public void checkBothPnlBySymbolBarsEmpty() {
+        Allure.step("Check bars section is empty");
+        page.waitForSelector(PNL_SYMBOL_BAR_EMPTY).isVisible();
+        assertEquals(2, page.locator(PNL_SYMBOL_BAR_EMPTY).count());
+    }
+
+    public void checkProfitPnlBySymbolBarsEmpty() {
+        Allure.step("Check profits side of bars section is empty");
+        page.waitForSelector(PNL_SYMBOL_BAR_EMPTY).isVisible();
+        page.waitForSelector(PNL_SYMBOL_BAR_NEGATIVE).isVisible();
+        assertEquals(1, page.locator(PNL_SYMBOL_BAR_EMPTY).count());
+    }
+
+    public void checkLossesPnlBySymbolBarsEmpty() {
+        Allure.step("Check loses side of bars section is empty");
+        page.waitForSelector(PNL_SYMBOL_BAR_EMPTY).isVisible();
+        page.waitForSelector(PNL_SYMBOL_BAR_POSITIVE).isVisible();
+        assertEquals(1, page.locator(PNL_SYMBOL_BAR_EMPTY).count());
+    }
+
+    public void checkPnlBySymbolBarDescriptionProfits(String expectedText) {
+        Allure.step("Check description near profits bar");
+        page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION_RIGHT).isVisible();
+        assertEquals(expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION_RIGHT).textContent());
+    }
+
+    public void checkPnlBySymbolBarDescriptionProfits(String amount, String symbol) {
+        Allure.step("Check description near profits bar");
+        page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
+        assertEquals(amount, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + GREEN_TEXT).textContent());
+        assertEquals(symbol, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(1).textContent());
+    }
+
+    public void checkPnlBySymbolBarDescriptionLoses(String expectedText) {
+        Allure.step("Check description near loses bar");
+        page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
+        assertEquals(expectedText, page.locator(PNL_SYMBOL_BAR_DESCRIPTION).nth(0).textContent());
+    }
+
+    public void checkPnlBySymbolBarDescriptionLoses(String amount, String symbol) {
+        Allure.step("Check description near loses bar");
+        page.waitForSelector(PNL_SYMBOL_BAR_DESCRIPTION).isVisible();
+        assertEquals(amount, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + DANGER_HEAVY_TEXT).textContent());
+        assertEquals(symbol, page.locator(PNL_SYMBOL_BAR_DESCRIPTION + SECONDARY_TEXT).nth(0).textContent());
+    }
+
+    public void checkPnlBySymbolBarPositiveCount(int expectedCount) {
+        Allure.step("count displayed positive bars in PNL per Symbol graph");
+        page.waitForSelector(PNL_SYMBOL_SECTION).waitForElementState(ElementState.VISIBLE);
+        super.waitForPageToLoad();
+        assertEquals(expectedCount, page.locator(PNL_SYMBOL_BAR_POSITIVE).count());
+    }
+
+    public void checkPnlBySymbolBarNegativeCount(int expectedCount) {
+        Allure.step("count displayed negative bars in PNL per Symbol graph");
+        page.waitForSelector(PNL_SYMBOL_SECTION).waitForElementState(ElementState.VISIBLE);
+        super.waitForPageToLoad();
+        assertEquals(expectedCount, page.locator(PNL_SYMBOL_BAR_NEGATIVE).count());
+    }
+
+    public void hoverOverRightPositiveBarPnlSymbol() {
+        Allure.step("hover cursor over the rightest bar in PNL per Symbol graph");
+        page.locator(PNL_SYMBOL_BAR).last().hover();
+        page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+    }
+
+    public void checkPnlBySymbolTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
+        Allure.step("Check the symbol and PNL amount in the tooltip");
+        page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(1).textContent();
+        assertEquals(expectedSymbol, actualSymbol);
+        assertEquals(expectedAmount + " USD", actualAmount);
+    }
+
+    public void checkPnlBySymbolTooltipValue(String expectedSymbol, String expectedAmount) {
+        checkPnlBySymbolTooltipValue(0, expectedSymbol, expectedAmount);
+    }
+
+    public void checkPnlBySymbolTooltipValue(String expectedSymbol, int expectedAmount) {
+        checkPnlBySymbolTooltipValue(expectedSymbol, (df.format(expectedAmount)));
+    }
+
+    public void hoverOverOtherPositiveBarPnlSymbol() {
+        Allure.step("hover cursor over the 'Other' bar in PNL per Symbol graph");
+        page.locator(PNL_SYMBOL_BAR_POSITIVE_BEGIN).hover();
+        page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+    }
+
+    public void checkPnlBySymbolOtherTooltipHeaderValue(String expectedSymbols, String expectedAmount) {
+        Allure.step("Check the symbol and PNL amount in the tooltip");
+        page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(1).textContent();
+        assertEquals(expectedSymbols + " symbols", actualSymbol);
+        assertEquals(expectedAmount + " USD", actualAmount);
+    }
+
+    public void checkPnlBySymbolOtherTooltipLinesCount(int expectedCount) {
+        Allure.step("Check the count inside the tooltip including header and footer");
+        page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedCount, page.locator(PNL_SYMBOL_TOOLTIP_LINE).count());
+    }
+
+    public void checkPnlBySymbolOtherTooltipHeaderValue(int expectedSymbols, int expectedAmount) {
+        checkPnlBySymbolOtherTooltipHeaderValue(String.valueOf(expectedSymbols), String.valueOf(expectedAmount));
+    }
+
+    public void symbolTradedEmptyState() {
+        Allure.step("Check that Symbol Traded empty state is shown");
+        page.waitForSelector(SYMBOL_TRADED_SECTION).waitForElementState(ElementState.VISIBLE);
+        page.waitForSelector(SYMBOL_TRADED_EMPTY).waitForElementState(ElementState.VISIBLE);
+    }
+
+    public void hoverOverSymbolTradedBar(int index) {
+        Allure.step("Hover over Symbol traded graph bar");
+        page.waitForSelector(SYMBOL_TRADED_BAR).waitForElementState(ElementState.VISIBLE);
+        page.locator(SYMBOL_TRADED_BAR).nth(index).hover();
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP).waitForElementState(ElementState.VISIBLE);
+    }
+
+    public void countSymbolTradedBar(int expectedCount) {
+        Allure.step("Count Symbol traded graph bar");
+        page.waitForSelector(SYMBOL_TRADED_BAR).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedCount, page.locator(SYMBOL_TRADED_BAR).count());
+    }
+
+    public void checkSymbolTradedOtherTooltipHeaderValue(String expectedSymbols, String expectedAmount) {
+        Allure.step("Check the symbol and amount in the tooltip");
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + SUBHEADER_2_TEXT).nth(1).textContent();
+        assertEquals(expectedSymbols + " symbols", actualSymbol);
+        assertEquals(expectedAmount + " USD", actualAmount);
+    }
+
+    public void checkSymbolTradedOtherTooltipHeaderValue(String expectedSymbols, int expectedAmount) {
+        checkSymbolTradedOtherTooltipHeaderValue(expectedSymbols, String.valueOf(expectedAmount));
+    }
+
+    public void checkSymbolTradedOtherTooltipHeaderValue(int expectedSymbols, int expectedAmount) {
+        checkSymbolTradedOtherTooltipHeaderValue(String.valueOf(expectedSymbols), String.valueOf(expectedAmount));
+    }
+
+    public void checkSymbolTradedOtherTooltipHeaderValue(int expectedSymbols, Double expectedAmount) {
+        checkSymbolTradedOtherTooltipHeaderValue(expectedSymbols, (int) Math.round(expectedAmount));
+    }
+
+    public int calculateNotionValueUsdByDealInt(MtMt4TradesCoercedObject... trades) {
+        double result = 0;
+        for (MtMt4TradesCoercedObject i : trades) {
+            result += i.notionalValueUsd;
+        }
+        return (int) (Math.round(result));
+    }
+
+    public double calculateNotionValueUsdByDealDouble(MtMt4TradesCoercedObject... trades) {
+        double result = 0;
+        for (MtMt4TradesCoercedObject i : trades) {
+            result += i.notionalValueUsd;
+        }
+        return result;
+    }
+
+    public void checkSymbolTradedOtherTooltipLinesCount(int expectedCount) {
+        Allure.step("Check the count inside the tooltip including header and footer");
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedCount, page.locator(SYMBOL_TRADED_TOOLTIP_LINE).count());
+    }
+
+    public void checkSymbolTradedOtherTooltipFooter(int expectedCount, int expectedAmount) {
+        Allure.step("Check the count inside the tooltip including header and footer");
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedCount, page.locator(SYMBOL_TRADED_TOOLTIP_LINE).count());
+        assertEquals("Others", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + PRIMARY_TEXT).textContent());
+        assertEquals(df.format(expectedCount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + SECONDARY_TEXT).textContent());
+        assertEquals(df.format(expectedAmount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div").textContent());
+    }
+
+    public void checkSymbolTradedHeaderMostTraded(String expectedSymbol) {
+        Allure.step("Check the most traded symbol info above the graph");
+        page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(0).textContent());
+        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + GREEN_TEXT).nth(0).textContent());
+        assertEquals("Most tradeable", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(0).textContent());
+    }
+
+    public void checkSymbolTradedHeader(int position, String expectedSymbol) {
+        Allure.step("Check the most traded symbol info above the graph");
+        page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
+        if (position == 2) {
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + PRIMARY_TEXT).nth(0).textContent());
+            assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(1).textContent());
+        } else if (position == 3) {
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + PRIMARY_TEXT).nth(1).textContent());
+            assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(2).textContent());
+        } else {
+            System.out.println("unexpected position " + position);
+            assertTrue(false);
+        }
+    }
+
+    public void checkSymbolTradedGraphDescription(int expectedAmountInt, String expectedSymbol) {
+        Allure.step("Check the most traded symbol info above the bar in graph");
+        String expectedAmount = df.format(expectedAmountInt);
+        assertEquals(expectedAmount, page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + GREEN_TEXT).textContent());
+        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT).textContent());
+    }
+
+
+    public void checkSymbolTradedTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
+        Allure.step("Check the symbol and PNL amount in the tooltip");
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(1).textContent();
+        assertEquals(expectedSymbol, actualSymbol);
+        assertEquals(expectedAmount + " USD", actualAmount);
+    }
+
+    public void checkSymbolTradedTooltipValue(String expectedSymbol, String expectedAmount) {
+        checkSymbolTradedTooltipValue(0, expectedSymbol, expectedAmount);
+    }
+
+    public void checkSymbolTradedTooltipValue(String expectedSymbol, int expectedAmount) {
+        checkSymbolTradedTooltipValue(expectedSymbol, (df.format(expectedAmount)));
+    }
+
+    public void checkSymbolTradedTooltipValue(String expectedSymbol, double expectedAmount) {
+        checkSymbolTradedTooltipValue(expectedSymbol, (df.format((int) Math.round(expectedAmount))));
+    }
+
 }
 

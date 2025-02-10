@@ -7,6 +7,8 @@ import static utils.ConfigFactory.*;
 import com.microsoft.playwright.*;
 import java.io.IOException;
 import java.nio.file.Paths;
+
+import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import pageObjects.backofficePages.*;
@@ -42,6 +44,8 @@ public class TestBaseWeb {
     public AlertsPage alertsPage;
     public OperationsPage operationsPage;
     public ActivityTab activityTab;
+
+    public Faker faker = new Faker();
 
     @BeforeAll
     static void setupBrowser() {
