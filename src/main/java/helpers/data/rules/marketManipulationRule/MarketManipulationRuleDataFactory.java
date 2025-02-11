@@ -16,6 +16,7 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.rules.RuleDataHelper;
 import net.datafaker.Faker;
 
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -224,7 +225,8 @@ public class MarketManipulationRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupMarketManipulationRuleData() {
+    public static Map<String, RuleDataHelper> setupMarketManipulationRuleData()
+            throws ReflectiveOperationException, SQLException {
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
 //        map.put("1", getMarketManipulationRuleExit1Data());
