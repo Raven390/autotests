@@ -19,12 +19,10 @@ import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static businessObjects.db.clickhouse.emailTable.EmailTableEntryFactory.getEmailTableEntryByClient;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.MitigationHelper.cleanUserRestriction;
@@ -115,12 +113,15 @@ public class RuleDataHelper {
         return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
     }
 
-    public static void setupRuleData(Map<String, RuleDataHelper> map) throws ReflectiveOperationException,
-            SQLException {
+    public static void setupRuleData(Map<String, RuleDataHelper> map) {
         startSshTunnel();
         for (RuleDataHelper data : map.values()) {
-            insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
-            insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            if (data.lnSessionParsedObjectRegistration != null) {
+                insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
+            }
+            if (data.crmTbUserObject != null) {
+                insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            }
             data.connections.forEach(connection -> {
                 insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
             });
@@ -166,9 +167,6 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
-            data.connectedClientHelpers.forEach(user -> {
-                insertObjectToDb(EMAIL_TABLE_NAME, getEmailTableEntryByClient(user));
-            });
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
                 insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
             });
@@ -177,7 +175,9 @@ public class RuleDataHelper {
 
     public static void deleteRuleData(Map<String, RuleDataHelper> map) throws Exception {
         for (RuleDataHelper data : map.values()) {
-            deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            if (data.crmTbUserObject != null) {
+                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            }
             data.connections.forEach(connection -> {
                 deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
             });
@@ -219,7 +219,6 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));
             }
-            deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }

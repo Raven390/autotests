@@ -19,7 +19,7 @@ public class CrmTbDepositObject {
     public String paymentSystemCurrency;
     public String paymentType;
     public String regulator;
-    public Integer status;
+    public String status;
     public Integer transferId;
     public String ucid;
     public String updateTime;
@@ -32,7 +32,7 @@ public class CrmTbDepositObject {
             Integer account, Double amount, Double amountUsd, String brand, String createTime,
             String currency, Double fee, String paymentChannel, String paymentDetails,
             String paymentExpirationDate, String paymentSystemAccount,
-            String paymentSystemCurrency, String paymentType, String regulator, Integer status,
+            String paymentSystemCurrency, String paymentType, String regulator, String status,
             Integer ticketId, Integer transferId, String ucid, String uid, String updateTime, Integer userId) {
         this.account = account;
         this.amount = amount;

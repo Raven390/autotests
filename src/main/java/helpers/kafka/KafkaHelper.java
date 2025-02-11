@@ -453,7 +453,7 @@ public class KafkaHelper {
     }
 
     @Step("Consume messages with ids={idList} from {topic}")
-    public Map<String, String> consumeMessages(String topic, String... idList) throws InterruptedException {
+    public Map<String, List<String>> consumeMessages(String topic, String... idList) throws InterruptedException {
         ConsumerRecords<String, String> records;
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
@@ -479,7 +479,7 @@ public class KafkaHelper {
 
         int maxAttempts = MAX_ATTEMPTS;
         int attempts = 0;
-        Map<String, String> foundMessages = new HashMap<>(); // Store the messages corresponding to each id
+        Map<String, List<String>> foundMessages = new HashMap<>(); // Store the messages corresponding to each id
 
         try {
             while (attempts < maxAttempts && foundMessages.size() < idList.length) {
@@ -496,7 +496,11 @@ public class KafkaHelper {
                     // Check each id in the idList for a match in the record value
                     for (String id : idList) {
                         if (!foundMessages.containsKey(id) && record.value() != null && record.value().contains(id)) {
-                            foundMessages.put(id, record.value()); // Store the found message
+                            if (foundMessages.get(id) != null) {
+                                foundMessages.get(id).add(record.value());
+                            } else {
+                                foundMessages.put(id, List.of(record.value()));// Store the found message
+                            }
                         }
                     }
                 }

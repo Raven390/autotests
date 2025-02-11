@@ -61,6 +61,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE = "Market manipulation rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FAST_TRADES = "Clickhouse api. Get fast trades";
+    public static final String STORY_RULE_ENGINE_NPB_LOSING_LEG_RULE = "NBP losing leg rule in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_WITHDRAWAL = "withdrawal";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
