@@ -346,9 +346,10 @@ public class KafkaHelper {
         }
     }
 
-    @Step("Consume message")
-    public String consumeMessage(String topic, String id, Integer maxAttempts) throws InterruptedException {
+    @Step("Consume messages")
+    public List<String> consumeMessages(String topic, String id, int retriesNumber) throws InterruptedException {
         ConsumerRecords<String, String> records;
+        List<String> matchingMessages = new ArrayList<>();
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
         String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
@@ -374,7 +375,7 @@ public class KafkaHelper {
         int attempts = 0;
 
         try {
-            while (attempts < maxAttempts) {
+            while (attempts < retriesNumber) {
                 // Poll the Kafka broker for new records (with a timeout of 1000 ms)
                 records = consumer.poll(Duration.ofMillis(1000));
                 attempts++; // Increment the attempt count
@@ -385,17 +386,24 @@ public class KafkaHelper {
                     System.out.printf(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
 
-                    // If the record contains the specified id, return it
+                    // If the record contains the specified id, add it to the list
                     if (record.value() != null && record.value().contains(id)) {
-                        return record.value();
+                        matchingMessages.add(record.value());
                     }
                 }
+
+                // Exit early if messages are found
+                if (!matchingMessages.isEmpty()) {
+                    cleanConsumerIdAfterUse(consumerGroupId, consumerId);
+                    return matchingMessages;
+                }
             }
-            // After maxAttempts, if no matching message is found, return message
-            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
-            return KAFKA_NO_MESSAGE_FOUND_ERROR;
+
+            // After maxAttempts, return the list (it might be empty)
+            cleanConsumerIdAfterUse(consumerGroupId, consumerId);
+            return matchingMessages;
         } finally {
-            cleanConsumerIdAfterUse(consumerGroupId, consumerGroupId);
+            cleanConsumerIdAfterUse(consumerGroupId, consumerId);
             consumer.close(); // Ensure the consumer is closed
         }
     }

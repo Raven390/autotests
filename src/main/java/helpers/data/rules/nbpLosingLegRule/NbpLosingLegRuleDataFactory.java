@@ -1,4 +1,4 @@
-package helpers.data.rules.NbpLosingLegRule;
+package helpers.data.rules.nbpLosingLegRule;
 
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;

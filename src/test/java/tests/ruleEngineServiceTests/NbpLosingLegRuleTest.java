@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.util.*;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.NbpLosingLegRule.NbpLosingLegRuleDataFactory.deleteNbpLosingLegRuleData;
-import static helpers.data.rules.NbpLosingLegRule.NbpLosingLegRuleDataFactory.setupNbpLosingLegRuleData;
+import static helpers.data.rules.nbpLosingLegRule.NbpLosingLegRuleDataFactory.deleteNbpLosingLegRuleData;
+import static helpers.data.rules.nbpLosingLegRule.NbpLosingLegRuleDataFactory.setupNbpLosingLegRuleData;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

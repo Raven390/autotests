@@ -28,6 +28,14 @@ public class RulesAssertHelper {
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(alertsNumber));
     }
 
+    @Step("Assert that there are no alerts by client")
+    public static void asserAlertsAmountByClient(ClientHelper client, int alertsNumber, int retries)
+            throws InterruptedException {
+
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid(), retries);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(alertsNumber));
+    }
+
     @Step("Assert that there are no restrictions by client")
     public static void assertRestrictionsAmountByClient(ClientHelper client, int restrictionsAmount) throws Exception {
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientsRestriction.class);
