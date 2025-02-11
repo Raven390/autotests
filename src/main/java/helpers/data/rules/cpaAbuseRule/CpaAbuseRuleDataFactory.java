@@ -33,6 +33,7 @@ import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
+import static utils.Constants.*;
 import static utils.Utils.*;
 
 @RuleTestData("cpa-abuse")

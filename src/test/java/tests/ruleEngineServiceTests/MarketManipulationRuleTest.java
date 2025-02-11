@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
@@ -34,7 +35,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     public static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    public static void setupDbData() throws IOException {
+    public static void setupDbData() throws IOException, ReflectiveOperationException, SQLException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMarketManipulationRuleData();
