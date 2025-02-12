@@ -87,7 +87,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
         // Verify alert
         boolean isAlertPresent = false;
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.name, "Manual withdrawal restriction")) {
+            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client1.getUcid())) {
                 isAlertPresent = true;
                 break;
             }
@@ -120,7 +120,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
         // Verify alert
         boolean isAlertPresent = false;
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.name, "Manual withdrawal restriction")) {
+            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client1.getUcid())) {
                 isAlertPresent = true;
                 break;
             }
@@ -145,7 +145,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
         // Verify alert
         boolean isAlertPresent = false;
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.name, "Manual withdrawal restriction")) {
+            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client1.getUcid())) {
                 isAlertPresent = true;
                 break;
             }
