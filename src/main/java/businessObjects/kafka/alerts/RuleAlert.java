@@ -82,6 +82,15 @@ public class RuleAlert {
 
             @JsonProperty("cpaId")
             public String cpaId;
+
+            @JsonProperty("Withdrawal ID")
+            public String withdrawalId;
+
+            @JsonProperty("Amount")
+            public String amount;
+
+            @JsonProperty("Currency")
+            public String currency;
         }
     }
 }
