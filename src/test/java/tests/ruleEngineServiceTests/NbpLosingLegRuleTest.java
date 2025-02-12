@@ -135,7 +135,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, hasItem(expectedRestriction));
     }
@@ -190,7 +190,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, hasItem(expectedRestriction));
     }
@@ -258,7 +258,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", clientsRestrictions, hasItem(expectedRestriction));
 
