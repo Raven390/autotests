@@ -45,7 +45,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 1")
     @AllureId("974")
-    public void marketManipulationRuleExitEventEnd1Test() throws Exception {
+    public void nbpLosingLegEnd1Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
@@ -66,7 +66,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 2")
     @AllureId("975")
-    public void marketManipulationRuleExitEventEnd2Test() throws Exception {
+    public void nbpLosingLegEnd2Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit < 80%");
         RuleDataHelper data = dbDataMap.get("2");
@@ -88,7 +88,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 3v1")
     @AllureId("976")
-    public void marketManipulationRuleExitEventEnd3v1Test() throws Exception {
+    public void nbpLosingLegEnd3v1Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("No mirror clients");
@@ -143,7 +143,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 3v2")
     @AllureId("977")
-    public void marketManipulationRuleExitEventEnd3v2Test() throws Exception {
+    public void nbpLosingLegEnd3v2Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("Mirror client without abnormal profit");
@@ -198,7 +198,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 4")
     @AllureId("978")
-    public void marketManipulationRuleExitEventEnd4Test() throws Exception {
+    public void nbpLosingLegEnd4Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("Mirror client with abnormal profit");

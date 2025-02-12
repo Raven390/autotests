@@ -24,7 +24,7 @@ import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static utils.Utils.*;
 
-@RuleTestData("market-manipulation")
+@RuleTestData("nbp-losing-leg")
 public class NbpLosingLegRuleDataFactory {
 
     // Clients
@@ -144,11 +144,11 @@ public class NbpLosingLegRuleDataFactory {
     public static Map<String, RuleDataHelper> setupNbpLosingLegRuleData() {
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-//        map.put("1", getNbpLosingLegExit1Data());
-//        map.put("2", getNbpLosingLegExit2Data());
-//        map.put("3v1", getNbpLosingLegExit3v1Data());
+        map.put("1", getNbpLosingLegExit1Data());
+        map.put("2", getNbpLosingLegExit2Data());
+        map.put("3v1", getNbpLosingLegExit3v1Data());
         map.put("3v2", getNbpLosingLegExit3v2Data());
-//        map.put("4", getNbpLosingLegExit4Data());
+        map.put("4", getNbpLosingLegExit4Data());
         setupRuleData(map);
         return map;
     }
