@@ -51,12 +51,12 @@ public class ClientsRestriction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientsRestriction that = (ClientsRestriction) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(applicationReason, that.applicationReason) && Objects.equals(status, that.status);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, regulator, restrictionId, applicationReason, status);
+        return Objects.hash(ucid, regulator, restrictionId, status);
     }
 
     @Override
