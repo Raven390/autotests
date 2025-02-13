@@ -35,7 +35,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+    public static void setup() throws SQLException, JsonProcessingException {
         crmTbUser.firstName = "Pienell";
         crmTbUser.lastName = "Symboll";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
@@ -51,11 +51,11 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("941")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that PNL by symbol shows correct empty states")
-    public void pnlBySymbolEmptyStatesTest() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlBySymbolEmptyStatesTest() throws SQLException, InterruptedException {
         Allure.step("clean client's trade DB");
         tradingPage.deleteClientDeals(client.getUcid());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.checkBothPnlBySymbolBarsEmpty();
         tradingPage.checkPnlBySymbolBarDescriptionProfits("No profits");
@@ -89,7 +89,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("941")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that PNL by symbol group trades by symbol")
-    public void pnlBySymbolGroupTradesTest() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlBySymbolGroupTradesTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -112,8 +112,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("clean client's trade DB, and add one 3 trades with positive PNL, with 2 of them have same symbol");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.checkPnlBySymbolBarPositiveCount(2);
         tradingPage.checkPnlBySymbolBarNegativeCount(0);
@@ -169,7 +169,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("944")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that tooltip show correct data PNL by symbol")
-    public void pnlBySymbolTooltipShowCorrectDataTest() throws ReflectiveOperationException, SQLException,
+    public void pnlBySymbolTooltipShowCorrectDataTest() throws SQLException,
             InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
@@ -195,8 +195,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("clean client's trade DB, and add one 3 trades with positive PNL, with 2 of them have same symbol");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
         tradingPage.checkPnlBySymbolTooltipValue(trade1.symbol, tradingPage.calculatePnlByDealInt(trade1, trade2));
@@ -207,7 +207,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("943")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that symbols that have PNL less than 10 percent from total PNL united to 'other' bar")
-    public void pnlBySymbolOtherBarTest() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlBySymbolOtherBarTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
@@ -261,8 +261,8 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         Allure.step("clean client's trade DB, sdd 4 trades, 2 of with have PNL less than 10% of total PNL");
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade11, trade12, trade13, trade14));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.checkPnlBySymbolBarPositiveCount(3);
         tradingPage.hoverOverOtherPositiveBarPnlSymbol();
@@ -276,7 +276,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
     @AllureId("942")
     @Feature("BMS-721 PNL by symbol")
     @DisplayName("Test that tooltip for 'other' tab have counter of symbols and shows more as 10 symbols as other")
-    public void pnlBySymbolOtherBarTooltipTest() throws ReflectiveOperationException, SQLException,
+    public void pnlBySymbolOtherBarTooltipTest() throws SQLException,
             InterruptedException {
 
 
@@ -385,11 +385,9 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         trade34.symbol = "NEGEURSUR";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade31, trade32, trade33, trade34));
-        List<MtMt4TradesCoercedObject> smallTrades = List.of(trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13);
 
-
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.checkPnlBySymbolBarPositiveCount(2);
         tradingPage.hoverOverOtherPositiveBarPnlSymbol();

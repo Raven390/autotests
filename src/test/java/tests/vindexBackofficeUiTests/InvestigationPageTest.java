@@ -18,8 +18,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("132")
     @DisplayName("positive login test")
     void PositiveloginUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.isLoggedIn(); // check some simple and bulletproof marker of logging into the system
     }
 
@@ -30,7 +30,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("133")
     @DisplayName("negative login test")
     void NegativeLoginUITest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginWeb("WrongUserNameString", "userPassString"); // call the method for log in thought UI login form
         investigationPage.isNotLoggedIn(); // check some simple and bulletproof marker of logging error
         keycloackPage.errorMessageIsShown();
@@ -43,8 +43,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("134")
     @DisplayName("alert page rendered basic elements")
     void alertPageRendersTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.isAlertPageBasicElementsVisible();
     }
 
@@ -56,8 +56,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("135")
     @DisplayName("test that side menu folds")
     void sideMenuFoldsTest() throws InterruptedException {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.sideMenuFoldButtonTest();
     }
 
@@ -69,8 +69,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("136")
     @DisplayName("test that side menu renders")
     void sidebarRenderTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.foldSidebar();
         investigationPage.unfoldSidebar();
     }
@@ -83,8 +83,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("137")
     @DisplayName("test that color scheme is changing")
     void colorThemeSwitchTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.colorThemeSwitch();
     }
 
@@ -97,7 +97,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("138")
     @DisplayName("user can go to profile page from alert page")
     void alertPageOpenProfilePageTest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginWeb("valid user name", "userPassString"); // call the method for log in thought UI login form
         investigationPage.isProfileButtonVisible();
         investigationPage.clickProfileButton();
@@ -111,8 +111,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("139")
     @DisplayName("test folding feature of suspicious client list section in investigation tool")
     void susClientFoldButtonTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.foldSusClientFoldSection();
         investigationPage.unfoldSusClientFoldSection();
@@ -125,8 +125,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("140")
     @DisplayName("test quick filter")
     void quickFiltersTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser(); // call the method for log in thought UI login form
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.filterAssignedMe();
         investigationPage.filterUnassigned();
@@ -141,8 +141,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("324")
     @DisplayName("B0 user must see error message if commenting suspicious client failed")
     void commentErrorScreenTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient("infinox-424242");
         investigationPage.mockCommentError("infinox-424242");
         investigationPage.openCommentForm();
@@ -157,8 +157,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     @AllureId("227")
     @DisplayName("BO user can add commentary to the suspicious client's audit trail")
     void commentTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient("infinox-424242");
         investigationPage.openCommentForm();
         String message = "comment test " + timestamp;

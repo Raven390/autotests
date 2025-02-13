@@ -51,7 +51,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @AllureId("549")
     @DisplayName("Verify filtration by brand for suspicious clients")
     public void verifyBrandFiltrationTest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
@@ -72,7 +72,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @AllureId("550")
     @DisplayName("Verify filtration by rule for suspicious clients")
     public void verifyRuleFiltrationTest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
@@ -91,7 +91,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @AllureId("551")
     @DisplayName("Verify filtration by country for suspicious clients")
     public void verifyCountryFiltrationTest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
@@ -112,7 +112,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
     public void verifyAssigneeFiltrationTest() throws InterruptedException {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
@@ -138,7 +138,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @AllureId("553")
     @DisplayName("Verify reset filtration functionality for suspicious clients")
     public void verifyResetFiltrationTest() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();

@@ -30,7 +30,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Check line width")
     void csPageConnectionLinesStileTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkLineStyle("infinox-424201", "infinox-424202", 1.0);
         connectionPage.checkLineStyle("infinox-424201", "infinox-424203", 16.0);
@@ -52,7 +52,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Check that connection node have right client name")
     void csPageConnectionNodesHaveRightClientNamesTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientNodeText("infinox-424201", "Connect Firstman");
         connectionPage.checkClientNodeText("infinox-424202", "Connect Secondman");
@@ -67,7 +67,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     void csPageConnectionNodesHaveRightClientStatusTest() {
         createSimpleAlert("infinox-424201", "HEDGING");
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientNodeText("infinox-424201", "Suspicious");
         connectionPage.checkClientNodeText("infinox-424202", "Normal");
@@ -81,7 +81,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Check that connection table opens")
     void csPageConnectionTableOpensTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         connectionPage.connectionTableIsRendered();
@@ -94,7 +94,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Check that sorting works")
     void csPageConnectionTableSortTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         connectionPage.verifyTableSorting();
@@ -107,7 +107,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection Search connection search tab can switches between graph and table mode")
     void csPageConnectionTableSwitchesBackToGraphTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         connectionPage.openConnectionGraph();
@@ -120,7 +120,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test the same user save highlighted state between different modes of the connection search when you switches view mode")
     void csPageConnectionSelectionSwitchViewTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         connectionPage.checkSelection("424202", "infinox-424202");
@@ -133,7 +133,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test the same user save highlighted state between different modes of the connection search when you click link button")
     void csPageConnectionSelectionLinkButtonTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         connectionPage.checkSelectionTransitByLinkButton("424202", "infinox-424202");
@@ -146,7 +146,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection Search. User can go to clients card from connection table")
     void csPageGoToClientCardTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionTable();
         Page newPage = context.waitForPage(() -> {
@@ -170,7 +170,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection search Connection Card user can open clients page from the connection card")
     void csPageGoToClientCardFromConnectionCardTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424202");
         Page newPage = context.waitForPage(() -> {
@@ -192,7 +192,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test connection card content Direct Connections")
     void csPageConnectionCardDirectConnectionContentTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
         connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "Type", "Same Identity");
@@ -207,7 +207,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test connection card content General info")
     void csPageConnectionCardGeneralInfoContentTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
         connectionPage.ccCheckGeneralInfoRows("Brand", "Infinox");
@@ -227,7 +227,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test connection card content Summary")
     void csPageConnectionCardSummaryContentTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
         connectionPage.ccCheckSummaryRows("Trading", "26 closed deals");
@@ -243,7 +243,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Test connection card content Header")
     void csPageConnectionCardHeaderContentTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.openConnectionCard("infinox-424213");
         connectionPage.ccCheckHeaderClientName("Connect Threerteenhman");
@@ -259,7 +259,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection Search clients frauds must be taken from DB")
     void csGraphPageConnectionHaveFraudsFromDBTest() throws Exception {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         cleanUserFraudsDb("infinox-424204");
         connectionPage.navigateConnectionTab("infinox-424201");
@@ -347,7 +347,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId", getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.crm___tb_user", testUser);
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.checkClientName("infinox-424204", "Connect Fourthman");
     }
@@ -360,7 +360,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     void csAttributeCardHaveDataFromDbTest() {
 
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.ccClickAttributeChevron("infinox-424213");
         Allure.step("list of user connection attributes must unfolds");
@@ -382,7 +382,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Connection Search Connection Graph user can unmask data on Attribute Card")
     void csAttributeCardCanBeUnmaskedTest() {
         connectionPage.navigateMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab("infinox-424201");
         connectionPage.ccClickAttributeChevron("infinox-424208");
         Allure.step("list of user connection attributes must unfolds");

@@ -19,7 +19,7 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("Compare Alert Page with baseline Dark Mode, Unfolded Sidebar")
     void compareAScreenshotAPDMUS() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginWeb("DEV", "123");
         investigationPage.isLoggedIn();
         investigationPage.navigateMock();
@@ -36,7 +36,7 @@ public class InvestigationPageVisualTest extends TestBaseWeb {
     @AllureId("")
     @DisplayName("Compare Alert Page with baseline Light Mode, Folded Sidebar")
     void compareAScreenshotAPLMFS() {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginWeb("DEV", "123");
         investigationPage.isLoggedIn();
         investigationPage.navigateMock();

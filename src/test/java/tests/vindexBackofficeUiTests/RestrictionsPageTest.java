@@ -82,8 +82,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("327")
     @DisplayName("Restriction tab set account restriction UI")
     void setAccountRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickAccountSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -99,8 +99,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove account restriction UI")
     void cancelAccountRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "01");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatAccountIsChecked();
         restrictionPage.clickCheckedAccount();
@@ -115,8 +115,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("329")
     @DisplayName("Restriction tab set transfer restriction UI")
     void setTransferRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickTransferSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -132,8 +132,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Transfer Restriction UI")
     void cancelTransferRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "02");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatTransferIsChecked();
         restrictionPage.clickCheckedTransfer();
@@ -148,8 +148,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("331")
     @DisplayName("Restriction tab set Deposits restriction UI")
     void setDepositsRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickDepositsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -165,8 +165,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Deposits restriction UI")
     void cancelDepositsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "03");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatDepositsIsChecked();
         restrictionPage.clickCheckedDeposits();
@@ -181,8 +181,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("333")
     @DisplayName("Restriction tab set Withdrawals restriction UI")
     void setWithdrawalsRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickWithdrawalsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -198,8 +198,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Withdrawals restriction UI")
     void cancelWithdrawalsRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "04");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatWithdrawalsIsChecked();
         restrictionPage.clickCheckedWithdrawals();
@@ -214,8 +214,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("335")
     @DisplayName("Restriction tab set Login CRM restriction UI")
     void setLoginCRMRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickLoginSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -231,8 +231,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Login CRM restriction UI")
     void cancelLoginCRMRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "05");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatLoginIsChecked();
         restrictionPage.clickCheckedLogin();
@@ -248,8 +248,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("337")
     @DisplayName("Restriction tab set Manual Withdrawal Review restriction UI")
     void setManualWithdrawalRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickManualWithdrawalSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -265,8 +265,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client without transactions")
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "13");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -281,8 +281,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("742")
     @DisplayName("Restriction tab set Credit and Bonus Review restriction UI")
     void setCreditAndBonusRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickCreditAndBonusSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -298,8 +298,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
     void cancelCreditAndBonusRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "14");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatCreditAndBonusIsChecked();
         restrictionPage.clickCheckedCreditAndBonus();
@@ -316,8 +316,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelManualWithdrawalRestrictionUITestWithTransactionsGreenTest() throws Exception {
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(withdrawalClient.getUcid());
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -336,8 +336,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     void cancelManualWithdrawalRestrictionUITestWithTransactionsRefuseTest() throws Exception {
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(withdrawalClient.getUcid());
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -357,9 +357,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
         //login
         restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         //first run
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(withdrawalClient.getUcid());
         restrictionPage.checkThatManualWithdrawalIsChecked();
         restrictionPage.clickCheckedManual();
@@ -388,8 +388,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("339")
     @DisplayName("Restriction tab set Close only mode Review restriction UI")
     void setCloseOnlyModeRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickCloseOnlyModeSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -405,8 +405,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Close only mode restriction UI")
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "06");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatCloseOnlyIsChecked();
         restrictionPage.clickCheckedCloseOnly();
@@ -421,8 +421,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("739")
     @DisplayName("Restriction tab. indicator 'inactive' must be presenr on row with account with 'inactive' status in trade restriction applyment/removal menu")
     void inactiveAccountIndicatorTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
         restrictionPage.clickCloseOnlyModeSwitch();
         restrictionPage.isInactiveAccountLabelPresented();
@@ -434,8 +434,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("738")
     @DisplayName("Restriction tab. Popup with tip about last active date must appear on hover to last activity date in trade restriction applyment/removal menu")
     void activityTooltipTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
         restrictionPage.clickCloseOnlyModeSwitch();
         restrictionPage.hoverOverActivitySection();
@@ -449,8 +449,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Feature("BMS-755 Add new restrictions")
     @DisplayName("Restriction tab. check descriptions for restrictions displayed on UI")
     void descriptionsUiTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
         restrictionPage.checkDisplayedRestrictionsDetails();
     }
@@ -462,8 +462,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Feature("BMS-755 Add new restrictions")
     @DisplayName("Restriction tab. check that only restrictions with bo_visibility == true is displayed")
     void displayedRestrictionsUiTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
         restrictionPage.checkDisplayedRestrictions();
     }
@@ -477,8 +477,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("341")
     @DisplayName("Restriction tab set Off quotes Review restriction UI")
     void setOffQuotesRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickOffQuotesModeSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -496,8 +496,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove Off quotes restriction UI")
     void cancelOffQuotesRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "08");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatAOffQuotesIsChecked();
         restrictionPage.clickCheckedOffQuotes();
@@ -514,8 +514,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("343")
     @DisplayName("Restriction tab set AB book Review restriction UI")
     void setAbBookRestrictionUITest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.clickAbBookSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
@@ -533,8 +533,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @DisplayName("Restriction tab remove AB book restriction UI")
     void cancelAbBookRestrictionUITest() throws Exception {
         restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "09");
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
         restrictionPage.checkThatAbBookIsChecked();
         restrictionPage.clickCheckedAbBook();

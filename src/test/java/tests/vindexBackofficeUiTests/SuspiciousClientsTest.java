@@ -43,7 +43,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     @AllureId("525")
     @DisplayName("Verify that all elements are present for all suspicious clients")
     public void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
@@ -51,6 +51,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
+        System.out.println("test client: " + crmTbUser1.ucid);
         investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
         investigationPage.filterAssignedMe();

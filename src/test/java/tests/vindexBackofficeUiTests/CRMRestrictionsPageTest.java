@@ -28,14 +28,20 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
         assertNotNull(response);
     }
 
+//    @Test
+//    void ddd() throws Exception {
+//        RestrictionPage.cleanUserRestriction("vantage-10103201");
+//        restrictionPage.cleanUserAudit("vantage-10103201");
+//    }
+
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("345")
     @DisplayName("CRM restriction tab  account restriction UI")
     void CRMAccountRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickAccountSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -52,8 +58,8 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @AllureId("346")
     @DisplayName("CRM restriction tab transfer restriction UI")
     void CRMTransferRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickTransferSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -70,8 +76,8 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @AllureId("347")
     @DisplayName("CRM restriction tab  Deposits restriction UI")
     void CRMDepositsRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickDepositsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -88,8 +94,8 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @AllureId("348")
     @DisplayName("CRM restriction tab Withdrawals restriction UI")
     void CRMWithdrawalsRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickWithdrawalsSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -106,8 +112,8 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @AllureId("349")
     @DisplayName("CRM restriction tab Login CRM restriction UI")
     void CRMLoginCRMRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickLoginSwitch();
         restrictionPage.fillApplyReason("test reason");
@@ -125,8 +131,8 @@ public class CRMRestrictionsPageTest extends TestBaseWeb {
     @AllureId("350")
     @DisplayName("CRM restriction tab Manual Withdrawal Review restriction UI")
     void CRMManualWithdrawalRestrictionUITest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(CRM_INEGRATION_USER_UCID);
         restrictionPage.clickManualWithdrawalSwitch();
         restrictionPage.fillApplyReason("test reason");

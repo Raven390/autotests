@@ -171,7 +171,7 @@ public class ActivityTab extends AbstractPage {
 
     public void navigate(String ucid) {
         Allure.step("Navigate to users activity tab");
-        page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/activity");
+        page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/sessions");
         waitForPageToLoad();
         waitForPageToLoad();
     }
@@ -335,6 +335,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void checkScoreColumnIsAsc() {
+        Allure.step("Check that record is sorted by score in ASC order");
         waitForPageToLoad();
         assertTrue(columnScoreData.count() > 1);
         int firstScore = Integer.parseInt(columnScoreData.first().textContent());
@@ -343,6 +344,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void checkScoreColumnIsDesc() {
+        Allure.step("Check that record is sorted by score in DESC order");
         waitForPageToLoad();
         assertTrue(columnScoreData.count() > 1);
         int firstScore = Integer.parseInt(columnScoreData.first().textContent());
@@ -426,7 +428,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void setSortByScoreDesc() {
-        Allure.step("Filter record by score desc");
+        Allure.step("Sort record by score desc");
         sortByScoreButton.first().click();
         sortByScoreButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -438,7 +440,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void setSortByDateAsc() {
-        Allure.step("Filter record by score desc");
+        Allure.step("Sort record by score desc");
         sortByDateButton.first().click();
         sortByDateButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -450,7 +452,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void setSortByDateDesc() {
-        Allure.step("Filter record by score desc");
+        Allure.step("Sort record by score desc");
         sortByDateButton.first().click();
         sortByDateButton.first().hover();
         tooltip.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -462,6 +464,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void checkDateColumnIsAsc() {
+        Allure.step("Sort record by date ASC");
         waitForPageToLoad();
         assertTrue(columnDateData.count() > 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -474,6 +477,7 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void checkDateColumnIsDesc() {
+        Allure.step("Sort record by date DESC");
         waitForPageToLoad();
         assertTrue(columnDateData.count() > 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -486,11 +490,13 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void clickOnDataRow() {
+        Allure.step("click on data row");
         waitForPageToLoad();
         dataRow.click();
     }
 
     public void clickOnDataRow(int index) {
+        Allure.step("click on data row");
         waitForPageToLoad();
         dataRow.nth(index).click();
     }
@@ -774,12 +780,14 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void checkValueOfSubTableRowNAmeConfidence(String sectionTitle, String rowTitle, int expectedValue) {
+        Allure.step("Check value of row " + rowTitle);
         String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = '" + sectionTitle + "')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = '" + rowTitle + "')]/../following-sibling::div";
         page.waitForSelector(locator);
         assertEquals(String.valueOf(expectedValue) + "% confidence", page.locator(locator).textContent());
     }
 
     public void checkValueOfSubTableRowPhoneOwner(String expectedValue) {
+        Allure.step("Check value of row owner");
         String locator = "//div[contains(@class, 'v-attribute-table-section__title') and (text() = 'Phone')]/..//div[contains(@class, 'g-color-text_color_secondary') and (text() = 'owner')]/../following-sibling::div";
         page.waitForSelector(locator);
         page.waitForSelector(locator);

@@ -57,6 +57,11 @@ public class KeycloackPage extends AbstractPage {
     }
 
     @Step("Log in as dev user")
+    public void loginAsAutotestUser() {
+        loginWithUser(autotestUserOne());
+    }
+
+    @Step("Log in as dev user")
     public void loginAsDevUser() {
         loginWithUser(devUser());
     }

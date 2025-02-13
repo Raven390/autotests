@@ -16,4 +16,8 @@ public class UserFactory {
     public static User devUser() {
         return new User(ID_DEV, USERNAME_DEV, PASSWORD_DEV, FIRST_NAME_DEV, LAST_NAME_DEV, EMAIL_DEV, ROLE_UNKNOWN);
     }
+
+    public static User autotestUserOne() {
+        return new User(ID_AUTOTEST_ONE, USERNAME_AUTOTEST_ONE, PASSWORD_AUTOTEST_ONE, FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE, EMAIL_AUTOTEST_ONE, ROLE_UNKNOWN);
+    }
 }

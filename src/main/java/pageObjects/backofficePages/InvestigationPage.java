@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.ConfigFactory.ENTER_PAGE_E2E;
 import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
 import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
@@ -178,8 +179,14 @@ public class InvestigationPage extends AbstractPage {
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
     }
 
+    @Step("Open the autotest login page main page")
+    public void navigateEnterPage() {
+        page.navigate(ENTER_PAGE_E2E);
+        super.waitForPageToLoad();
+    }
+
     @Step("Open the BackOffice main page")
-    public void navigate() {
+    public void navigateBase() {
         page.navigate(BASE_URL_E2E);
         super.waitForPageToLoad();
     }
@@ -547,7 +554,7 @@ public class InvestigationPage extends AbstractPage {
     @Step("Verify client cards count is equal to actual number of client cards in the list")
     public void verifyClientCardsCount() throws InterruptedException {
         clientContainer.first().hover();
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 100; i++) {
             Thread.sleep(100);
             page.mouse().wheel(0, 500);
         }
@@ -727,7 +734,7 @@ public class InvestigationPage extends AbstractPage {
             clientCard.click();
         } else {
             clientContainer.first().hover();
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 100; i++) {
                 Thread.sleep(100);
                 page.mouse().wheel(0, 500);
                 if (clientCard.isVisible()) {

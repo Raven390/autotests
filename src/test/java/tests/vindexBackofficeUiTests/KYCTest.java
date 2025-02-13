@@ -45,8 +45,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("351")
     @DisplayName("Check correct status display Submitted")
     public void checkCorrectStatusDisplaySubmittedTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525206");
         generalTab.checkKycStatusGeneral("Proof of identity", "Submitted");
     }
@@ -57,8 +57,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("354")
     @DisplayName("Check correct status display Rejected")
     public void checkCorrectStatusDisplayRejectedTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525208");
         generalTab.checkKycStatusGeneral("Proof of identity", "Rejected");
     }
@@ -69,8 +69,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("352")
     @DisplayName("Check correct status display Pending")
     public void checkCorrectStatusDisplayPendingTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525207");
         generalTab.checkKycStatusGeneral("Proof of identity", "Pending");
     }
@@ -81,8 +81,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("353")
     @DisplayName("Check correct status display Completed")
     public void checkCorrectStatusDisplayCompletedTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525205");
         generalTab.checkKycStatusGeneral("Proof of identity", "Approved");
     }
@@ -93,8 +93,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("357")
     @DisplayName("KYC File viewer BO user can zoom displayed file using buttons in UI")
     public void userCanZoomTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVZoomFunctions();
@@ -106,8 +106,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("358")
     @DisplayName("KYC File viewer BO user can rotate displayed file using buttons in UI")
     public void userCanRotateTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVRotateFunctions();
@@ -119,8 +119,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("359")
     @DisplayName("KYC File viewer BO user can mirror displayed file using buttons in UI")
     public void userCanMirrorTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVMirrorFunctions();
@@ -132,8 +132,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("356")
     @DisplayName("KYC File viewer BO user can slide displayed file using buttons in UI")
     public void userCanSlideTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVSlideFunctions();
@@ -145,8 +145,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("326")
     @DisplayName("User has history drawer")
     public void userHasHistoryDrawerTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.kycHistoryDrawerDisplayed();
@@ -158,8 +158,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("318")
     @DisplayName("Client without KYC applyment must have placeholder")
     public void userHavePlaceholderNoKYCTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525201");
         generalTab.noAppliedIsVisible();
     }
@@ -170,8 +170,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("321")
     @DisplayName("Client without multiple KYC attempts must have displayed number of attempts")
     public void userHaveNumberOfAttemptTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.checkKycAttemptsGeneral("Proof of identity", "2");
         generalTab.checkKycAttemptsGeneral("Proof of address", "2");
@@ -183,8 +183,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("320")
     @DisplayName("Client applied ID must have address info on general tab")
     public void clientHaveAddressInfoGeneralTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525204");
         generalTab.poaDetailsGeneral("USA, DC, Washington", "321 Main St, 654321");
     }
@@ -195,8 +195,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("319")
     @DisplayName("Client applied only POI must have placeholder about POA")
     public void clientHavePlaceholderPOATest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525202");
         generalTab.poaPlaceholderIsVisible();
     }
@@ -207,8 +207,8 @@ public class KYCTest extends TestBaseWeb {
     @AllureId("320")
     @DisplayName("Client have placeholder if not applied POI")
     public void clientHavePlaceholderPOI() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab("infinox-525203");
         generalTab.poiPlaceholderIsVisible();
     }
@@ -220,8 +220,8 @@ public class KYCTest extends TestBaseWeb {
     @DisplayName("KYC - Client not have placeholder if not applied POF")
     public void clientNotHavePlaceholderPofTest() throws SQLException {
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.pofPlaceholderIsNotVisible();
     }
@@ -247,8 +247,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkKycStatusGeneral("Proof of face", "Submitted");
 
@@ -276,8 +276,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkKycStatusGeneral("Proof of face", "Rejected");
 
@@ -305,8 +305,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkKycStatusGeneral("Proof of face", "Approved");
     }
@@ -332,8 +332,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkKycStatusGeneral("Proof of face", "Pending");
     }
@@ -359,8 +359,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.kycDetailsOpen("Proof of face");
         generalTab.checkRightImage("H23GMk+EzskgAAAAAElFTkSuQmCC");
@@ -401,8 +401,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject1);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject2);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.kycDetailsOpen("Proof of face");
         generalTab.checkNumberOfAttemptsInViewer(2);
@@ -447,8 +447,8 @@ public class KYCTest extends TestBaseWeb {
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject1);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject2);
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkValueKycPofTitle("Proof of face");
         generalTab.checkValueKycPofStatus(idProofObject2.status);
