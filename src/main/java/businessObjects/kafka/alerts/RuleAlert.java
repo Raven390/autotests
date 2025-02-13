@@ -21,6 +21,9 @@ public class RuleAlert {
         @JsonProperty("ver")
         public String ver;
 
+        @JsonProperty("code")
+        public Integer code;
+
         @JsonProperty("name")
         public String name;
 

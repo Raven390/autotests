@@ -68,8 +68,8 @@ public class ResolveTest extends TestBaseWeb {
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
         createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove();
@@ -91,8 +91,8 @@ public class ResolveTest extends TestBaseWeb {
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
         createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient("infinox-141402");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
@@ -107,8 +107,8 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOneTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         //first run
         cleanUserAudit(withdrawalClient.getUcid());
         restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
@@ -148,9 +148,9 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateEnterPage();
         investigationPage.filterUnassigned();
         investigationPage.investigateUserAlertList(clientId);
         investigationPage.checkInvestigationAssigmentAudit(clientUcid);
@@ -166,8 +166,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         investigationPage.checkInvestigationAssigmentAudit(clientUcid);
@@ -183,8 +183,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.BONUS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -202,8 +202,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -222,8 +222,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.GAP_TRADING.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -241,8 +241,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.HEDGING.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -260,8 +260,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.LATENCY_ARBITRAGE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -279,8 +279,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.LOSS_VOUCHER_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -298,8 +298,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.MARKET_MANIPULATION.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -317,8 +317,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.NBP_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -336,8 +336,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.POTENTIAL_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -355,8 +355,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.PRICING_ERROR.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -374,8 +374,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.RAF_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -393,8 +393,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.REBATE_CHURNING.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -412,8 +412,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.SWAP_ARBITRAGE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -431,8 +431,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -450,8 +450,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.LOOPHOLE_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -469,8 +469,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.HFT_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -488,8 +488,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.NEWS_TRADER.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -507,8 +507,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.ANOMALOUS_PROFIT.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -526,8 +526,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -546,8 +546,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -565,8 +565,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -583,8 +583,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -602,8 +602,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -621,8 +621,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -644,8 +644,8 @@ public class ResolveTest extends TestBaseWeb {
         assertNotNull(response);
         restrictionPage.setRestrictionAPIGeneral(clientUcid, "01");
         createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -675,8 +675,8 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
         createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         investigationPage.openCommentForm();

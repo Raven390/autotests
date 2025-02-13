@@ -28,8 +28,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("562")
     @DisplayName("Operations tab. Cashflow chart show empty state when it not have data DB")
     public void cashflowEmptyStateTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
         operationsPage.navigateOperationsTab(testUserUcid);
         operationsPage.checkCashflowEmptyStateIsVisible();
@@ -41,8 +41,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("573")
     @DisplayName("Operations tab. Cashflow chart show empty one side on deposit when it not have data DB")
     public void cashflowOnlyOneWithdrawalFilledTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
         dpAndWdByChannelObject withtdrawal = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about withdrawal");
@@ -57,8 +57,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("574")
     @DisplayName("Operations tab. Cashflow chart show empty one side on deposit when it not have data DB")
     public void CashflowOnlyDepositSideFilledTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
         dpAndWdByChannelObject withtdrawal = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
@@ -73,8 +73,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("588")
     @DisplayName("Operations tab. Cashflow chart show data from DB")
     public void cashflowTotalValueInTipTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
         dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
@@ -152,8 +152,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("589")
     @DisplayName("Operations tab. Cashflow header show data from DB")
     public void cashflowValueInHeaderTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
         dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.1, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
@@ -198,8 +198,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("574")
     @DisplayName("Operations tab. financialTransaction chart show empty state when it not have data DB")
     public void financialTransactionEmptyStateTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         operationsPage.navigateOperationsTab(testUserUcid);
         operationsPage.checkFinancialTransactionEmptyStateIsVisible();
@@ -211,8 +211,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("597")
     @DisplayName("Operations tab. financialTransaction tabs show data from DB")
     public void financialTransactionTabsShowsDataFromDb() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction with another category  and the bigger amount than previous category ");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -231,8 +231,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("597")
     @DisplayName("Operations tab. financialTransaction graph show data from DB")
     public void financialTransactionGraphShowsDataFromDb() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction with another category  and the bigger amount than previous category ");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -252,8 +252,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("617")
     @DisplayName("Operations tab. user can filter data by account")
     public void operationsTabCanBeFilteredByAccount() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction with financial transaction fot the first trade account");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -295,10 +295,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("610")
     @DisplayName("Operations tab. User can filter operations by Dates Custom - one day")
     public void filterCustomOneDayTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, "2024-12-11", 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -334,10 +334,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("615")
     @DisplayName("Operations tab. User can filter operations by Dates Last 1 year")
     public void filterLastYearTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -368,10 +368,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("611")
     @DisplayName("Operations tab. User can filter operations by Dates Last 30 days")
     public void filterLast30DaysTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -402,10 +402,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("897")
     @DisplayName("Operations tab. User can filter operations by Dates Last 6 months")
     public void filterLast6MonthsTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -436,10 +436,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("609")
     @DisplayName("Operations tab. User can filter operations by Dates Last 7 days")
     public void filterLast7DaysTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -470,10 +470,10 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("609")
     @DisplayName("Operations tab. User can filter operations by Dates Last 90 days")
     public void filterLast90DaysTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         cleanUserCashflowDb(testUserUcid);
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction to a test date");
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
@@ -504,8 +504,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("642")
     @DisplayName("Operations tab. User can manipulate timeline by click to a half of timeline")
     public void manipulateTimelineByClickTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         operationsPage.clickOnPreLastTimelineSection();
         operationsPage.checkLastTimelineSectionInactive();
@@ -519,8 +519,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("641")
     @DisplayName("Operations tab. User can manipulate timeline by drag")
     public void manipulateTimelineByDragTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         operationsPage.shiftRightTimelineThumbToPreLastTimelineSection();
         operationsPage.checkLastTimelineSectionInactive();
@@ -534,8 +534,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("636")
     @DisplayName("Operations tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
     public void filterLegend1And7DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter one day");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
@@ -553,8 +553,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("637")
     @DisplayName("Operations tab. When user filters 8-30 days one division on timeline is 1 day with date for every two days")
     public void filterLegend8And31DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 8 day");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
@@ -573,8 +573,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("638")
     @DisplayName("Operations tab. When user filters 31-98 days one division on timeline is 1 week with legend for every section")
     public void filterLegend31And98DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 31 day");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
@@ -593,8 +593,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("639")
     @DisplayName("Operations tab. When user filters 99 days - 3 years one division on timeline is month with legend for every two months")
     public void filterLegend98DaysAnd3YearTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 99 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
@@ -613,8 +613,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("640")
     @DisplayName("Operations tab. When user filters 3+ years division on timeline is 1 year with legend for every year")
     public void filterLegend3YearsTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 3 years");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
@@ -628,8 +628,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("635")
     @DisplayName("Operations tab. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
     public void timelineInactiveDaysFilter6DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 6 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
@@ -642,8 +642,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("634")
     @DisplayName("Operations tab. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
     public void timelineInactiveDaysFilter5DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 5 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
@@ -657,8 +657,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("633")
     @DisplayName("Operations tab. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
     public void timelineInactiveDaysFilter4DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 4 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
@@ -673,8 +673,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("632")
     @DisplayName("Operations tab. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
     public void timelineInactiveDaysFilter3DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 3 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
@@ -690,8 +690,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("631")
     @DisplayName("Operations tab. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
     public void timelineInactiveDaysFilter2DaysTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 2 days");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
@@ -708,8 +708,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("630")
     @DisplayName("Operations tab. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
     public void timelineInactiveDaysFilter1DayTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         operationsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 1 day");
         operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
@@ -727,8 +727,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("658")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 99 days - 9 months Division = months Timeline = every month")
     public void filterLegendFinancialTransaction99DaysAnd10monthsTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -752,8 +752,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("701")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 10 months - 20 months Division = months Timeline = every 4 month")
     public void filterLegendFinancialTransaction10monthsAnd20monthsTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -781,8 +781,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("655")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 1-14 days Division = 1 day Timeline = every day")
     public void filterLegendFinancialTransaction1DayAnd14DaysTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -804,8 +804,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("656")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 15-20 days Division = 1 day Timeline = every 4 day")
     public void filterLegendFinancialTransaction15DaysAnd20DaysTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -828,8 +828,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("702")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 20+ months Division = years Timeline = every year")
     public void filterLegendFinancialTransactionMoreThan20monthsDaysTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -847,8 +847,8 @@ public class OperationsTabTest extends TestBaseWeb {
     @AllureId("657")
     @DisplayName("Operations tab. Financial transaction graph, when filtered 21-98 days Division = week Timeline = every week")
     public void filterLegendFinancialTransaction21DaysAnd98DaysTest() throws Exception {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());

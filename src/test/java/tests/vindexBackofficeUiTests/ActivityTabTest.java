@@ -64,7 +64,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         String[] dates = lexis.eventDatetime.split(" ");
         activityTab.checkDateColumnValue(dates[0], dates[1].substring(0, 5));
@@ -119,7 +119,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOsFilter();
         activityTab.checkThatOptionPresented(androidLexis.os);
@@ -193,7 +193,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickRiskFilter();
         activityTab.checkThatOptionPresented(highLexis.riskRating);
@@ -248,7 +248,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
         activityTab.clickFilterOption("Today");
@@ -297,7 +297,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
         activityTab.clickFilterOption("Last 7 days");
@@ -347,7 +347,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
         activityTab.clickFilterOption("Last 30 days");
@@ -397,7 +397,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
         activityTab.clickFilterOption("Last 90 days");
@@ -447,7 +447,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
         activityTab.setCustomDates(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0), getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 98, 0, 0));
@@ -506,7 +506,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.setSortByScoreDesc();
         activityTab.checkScoreColumnIsDesc();
@@ -564,7 +564,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.setSortByDateDesc();
         activityTab.checkDateColumnIsDesc();
@@ -598,7 +598,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.checkScoreHeaderValueScoreLine(firstLexis.policyScore);
@@ -702,7 +702,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.checkTitleOfPoliciesSection("Applied policies");
@@ -735,7 +735,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.checkTitleOfTmxReasonSection("TMX reason codes");
@@ -771,7 +771,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.checkIpScoreRiskLevelValue(firstLexis.emailageEmailriskscoreIpRisklevel);
@@ -1011,7 +1011,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.openTabEmailage();
@@ -1111,7 +1111,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.openTabDevice();
@@ -1213,7 +1213,7 @@ public class ActivityTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @DisplayName("Activity tab - Device sub-tab test, Browser")
     @AllureId("865")
-    public void browserDataFromDB() throws SQLException, ReflectiveOperationException {
+    public void browserDataFromDB() throws SQLException {
 
         deleteLexis(activityClient);
 
@@ -1237,7 +1237,7 @@ public class ActivityTabTest extends TestBaseWeb {
         String expectedLanguages = "100% English (United States)90% English80% Chinese (China)70% Chinese (Taiwan, Province of China)60% Chinese";
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.openTabDevice();
@@ -1273,7 +1273,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.openTabDevice();
@@ -1321,7 +1321,7 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
         activityTab.openTabIpAdress();

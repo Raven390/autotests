@@ -254,6 +254,7 @@ public class ResolvePage extends AbstractPage {
 
     public void openReportFraudForm() {
         isPageLoaded();
+        reportFraudButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         reportFraudButton.click();
         reportForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(reportForm.isVisible());

@@ -9,6 +9,7 @@ public class ConfigFactory {
 
     // URLs
     public static final String BASE_URL_E2E = CONFIG.baseURLE2E();
+    public static final String ENTER_PAGE_E2E = CONFIG.enterPageE2E();
     public static final String BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount();
     // Kafka
     public static final String KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic();
@@ -116,6 +117,12 @@ public class ConfigFactory {
     public static final String FIRST_NAME_DEV = CONFIG.firstNameDev();
     public static final String LAST_NAME_DEV = CONFIG.lastNameDev();
     public static final String EMAIL_DEV = CONFIG.emailDev();
+    public static final String ID_AUTOTEST_ONE = CONFIG.idAutotestOne();
+    public static final String USERNAME_AUTOTEST_ONE = CONFIG.usernameAutotestOne();
+    public static final String PASSWORD_AUTOTEST_ONE = CONFIG.passwordAutotestOne();
+    public static final String FIRST_NAME_AUTOTEST_ONE = CONFIG.firstNameAutotestOne();
+    public static final String LAST_NAME_AUTOTEST_ONE = CONFIG.lastNameAutotestOne();
+    public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -124,6 +131,9 @@ public class ConfigFactory {
 
         @Key("baseUrlE2e")
         String baseURLE2E();
+
+        @Key("enterPageE2E")
+        String enterPageE2E();
 
         @Key("baseUrlVantageAccount")
         String baseUrlVantageAccount();
@@ -428,6 +438,24 @@ public class ConfigFactory {
 
         @Key("lastNameDev")
         String lastNameDev();
+
+        @Key("idAutotestOne")
+        String idAutotestOne();
+
+        @Key("usernameAutotestOne")
+        String usernameAutotestOne();
+
+        @Key("passwordAutotestOne")
+        String passwordAutotestOne();
+
+        @Key("emailAutotestOne")
+        String emailAutotestOne();
+
+        @Key("firstNameAutotestOne")
+        String firstNameAutotestOne();
+
+        @Key("lastNameAutotestOne")
+        String lastNameAutotestOne();
     }
 
     public static boolean isGitlab() {

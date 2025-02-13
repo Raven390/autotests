@@ -55,8 +55,8 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
     @Feature("BMS-724 Symbols traded")
     @DisplayName("Test that Symbol Traded show empty state when there is no trades to display")
     public void SymbolsTradedEmptyStateTest() {
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.symbolTradedEmptyState();
     }
@@ -119,8 +119,8 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.countSymbolTradedBar(1);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16);
@@ -161,8 +161,8 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.countSymbolTradedBar(4);
         tradingPage.checkSymbolTradedHeaderMostTraded(trade1.symbol);
@@ -202,8 +202,8 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
 
-        investigationPage.navigate();
-        keycloackPage.loginAsDevUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2);

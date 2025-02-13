@@ -1,8 +1,10 @@
 package pageObjects.backofficePages;
 
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
+import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Route;
 import com.microsoft.playwright.options.BoundingBox;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -155,6 +157,7 @@ public class TradingPage extends AbstractPage {
     private final Locator pnlByDurationTooltip;
     private final Locator totalPnlXAxisLabels;
     private final Locator volumeXAxisLabels;
+    private final Locator holdingTimeTooltip;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -221,6 +224,13 @@ public class TradingPage extends AbstractPage {
     private static final String SYMBOL_TRADED_BAR_DESCRIPTION = "//div[(@class='v-symbol-traded-bar__bar-description')]";
     private static final String TRADING_CHART_FEATURE = "//div[@class='v-chart-wrapper__feature']";
     private static final String TRADING_CHART_FEATURE_VALUE = "//div[contains(@class,'v-chart-wrapper__feature-value')]";
+    private static final String HOLDING_TIME_SECTION = "//*[text()='Holding time']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String HOLDING_TIME_BAR_ANNOTATION = "//div[@class='v-trading-summary-holding-time__ticks-container']/div/div";
+    private static final String HOLDING_TIME_TOOLTIP = "//div[@class='v-trading-summary-holding-time__tooltip']";
+    private static final String ERROR_CONTAINER = "//div[@class='v-error-view__container']";
+    private static final String RETRY_BUTTON = "//button/span[text()='Retry']";
+    private final String TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container')]";
+    private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
 
     public TradingPage(Page page) {
         super(page);
@@ -354,6 +364,7 @@ public class TradingPage extends AbstractPage {
         this.pnlByDurationGraphSection = page.locator(PNL_BY_DURATION);
         this.pnlByDurationTooltip = page.locator(PNL_BY_DURATION_TOOLTIP);
         this.volumeXAxisLabels = page.locator("//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
+        this.holdingTimeTooltip = page.locator(HOLDING_TIME_TOOLTIP);
     }
 
     @Step("Navigate to users trading tab")
@@ -1274,11 +1285,11 @@ public class TradingPage extends AbstractPage {
             i++;
         }
         page.waitForTimeout(100);
-        System.out.println(pnlByDurationTooltip.textContent());
         assertThat(pnlByDurationTooltip).isVisible();
     }
 
     public void checkTextPnlDurationTooltipAmount(String sumAmout) {
+        Allure.step("Check that PNL by duration tooltip shows right amount");
         assertThat(pnlByDurationTooltip).isVisible();
         String locator = (PNL_BY_DURATION_TOOLTIP + "//*[contains(text(),'" + sumAmout + "')]");
         assertThat(page.locator(locator)).hasText(sumAmout + " USD");
@@ -1591,6 +1602,85 @@ public class TradingPage extends AbstractPage {
 
     public void checkSymbolTradedTooltipValue(String expectedSymbol, double expectedAmount) {
         checkSymbolTradedTooltipValue(expectedSymbol, (df.format((int) Math.round(expectedAmount))));
+    }
+
+    public void openHoldingTimeTooltip(String annotationText) {
+        Allure.step("Hover mouse over graph section to open tooltip");
+        page.waitForTimeout(1000);
+        String locator = HOLDING_TIME_SECTION + HOLDING_TIME_BAR_ANNOTATION + "[text()='" + annotationText + "']";
+        page.hover(locator, new Page.HoverOptions().setForce(true));
+        Locator target = page.locator(locator);
+        int i = 1;
+        while ((!(holdingTimeTooltip.isVisible())) && (i < 100)) {
+            page.waitForTimeout(10);
+            page.mouse().move(target.boundingBox().x, target.boundingBox().y - (i));
+            page.waitForTimeout(10);
+            i++;
+        }
+        page.waitForTimeout(100);
+        assertThat(holdingTimeTooltip).isVisible();
+    }
+
+    public void checkHoldingTimeTooltip(int numberOfDeals, int percentageOfDeals) {
+        Allure.step("Check that tooltip show data from DB");
+        assertThat(holdingTimeTooltip).isVisible();
+        if (numberOfDeals == 1) {
+            assertEquals(String.valueOf(numberOfDeals) + " deal", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[1]").textContent());
+        } else {
+            assertEquals(String.valueOf(numberOfDeals) + " deals", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[1]").textContent());
+        }
+        assertEquals(String.valueOf(percentageOfDeals) + "% of all deals", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[2]").textContent());
+    }
+
+    public void checkHoldingTimeEmpty() {
+        Allure.step("Check that Holding Time annotations show empty state");
+        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
+        assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
+
+        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + PRIMARY_TEXT).textContent());
+        assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
+    }
+
+    public void checkHoldingTimeHeader(String expectedInterval, String percentageOfDeals) {
+        Allure.step("Check that Holding Time annotations show data from DB");
+        assertEquals(expectedInterval, page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
+        assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
+
+        assertEquals(percentageOfDeals + "%", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + PRIMARY_TEXT).textContent());
+        assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
+    }
+
+    public void checkHoldingTimeHeader(String expectedInterval, int percentageOfDeals) {
+        checkHoldingTimeHeader(expectedInterval, String.valueOf(percentageOfDeals));
+    }
+
+    public void mockDurationError(String ucid) {
+        Allure.step("mock duration return error");
+        page.route("**/api/clients/" + ucid + "/trading/summaryDuration", route -> {
+            APIResponse response = route.fetch();
+            Map<String, String> headers = response.headers();
+            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+        });
+    }
+
+    public void mockDurationError() {
+        Allure.step("mock duration return error");
+        page.route("**/api/clients/**/trading/summaryDuration", route -> {
+            APIResponse response = route.fetch();
+            Map<String, String> headers = response.headers();
+            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
+        });
+    }
+
+    public void checkHoldingTimeErrorState() {
+        Allure.step("Check that Holding Time error state is shown");
+        checkHoldingTimeEmpty();
+        super.waitForPageToLoad();
+        String errorLocator = HOLDING_TIME_SECTION + ERROR_CONTAINER;
+        page.waitForSelector(errorLocator).waitForElementState(ElementState.VISIBLE);
+        assertEquals("An error occurred. Please try visualizing the data again.Retry", page.locator(errorLocator).textContent());
+        page.waitForSelector(errorLocator + RETRY_BUTTON).waitForElementState(ElementState.VISIBLE);
+
     }
 
 }

@@ -37,7 +37,7 @@ public class FirstLoginTest extends TestBaseWeb {
     @AllureId("524")
     @DisplayName("Verify that user data is saved to backoffice db after first login")
     public void verifyUserDataSavedAfterFirstLoginTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsFirstLoginUser();
         investigationPage.waitForPageToLoad();
         List<BackofficeUser> usersList = getObjectsFromDB(

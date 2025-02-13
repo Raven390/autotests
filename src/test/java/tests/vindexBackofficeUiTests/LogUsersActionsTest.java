@@ -176,7 +176,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("650")
     @DisplayName("Log users actions. Assign client")
     public void verifyLogUsersActionsAssignClientTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();

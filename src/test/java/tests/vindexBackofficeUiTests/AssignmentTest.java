@@ -41,7 +41,7 @@ public class AssignmentTest extends TestBaseWeb {
     @AllureId("548")
     @DisplayName("Assign a client to the current user and verify")
     public void assignClientAndVerifyTest() throws Exception {
-        investigationPage.navigate();
+        investigationPage.navigateEnterPage();
         keycloackPage.loginAsCoreUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();

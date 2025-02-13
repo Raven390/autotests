@@ -51,6 +51,18 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
+    public ClientHelper(Integer userId, String uid, Brand brand, Regulator regulator, Integer tradingAccount,
+            Integer tradingAccount2,
+            Integer serverId) {
+        this.userId = userId;
+        this.uid = uid;
+        this.brand = brand;
+        this.regulator = regulator;
+        this.tradingAccount = tradingAccount;
+        this.tradingAccount2 = tradingAccount2;
+        this.serverId = serverId;
+    }
+
     public ClientHelper(Integer userId, Brand brand, Regulator regulator) {
         this.userId = userId;
         this.brand = brand;

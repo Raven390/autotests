@@ -42,7 +42,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.HEDGING;
@@ -59,7 +59,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
@@ -76,7 +76,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.MARKET_MANIPULATION;
@@ -93,7 +93,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.PRICING_ERROR;
@@ -110,7 +110,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.GAP_TRADING;
@@ -127,7 +127,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.SWAP_ARBITRAGE;
@@ -144,7 +144,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.RAF_ABUSE;
@@ -161,7 +161,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.REBATE_CHURNING;
@@ -178,7 +178,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LOSS_VOUCHER_ABUSE;
@@ -195,7 +195,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.NBP_ABUSE;
@@ -212,7 +212,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.TLS_ABUSE;
@@ -229,7 +229,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.POTENTIAL_ABUSE;
@@ -246,7 +246,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.BONUS_ABUSE;
@@ -263,7 +263,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
@@ -280,7 +280,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.HFT_ABUSE;
@@ -297,7 +297,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.NEWS_TRADER;
@@ -314,7 +314,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.ANOMALOUS_PROFIT;
@@ -331,7 +331,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.CPA_ABUSE;
@@ -353,7 +353,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         activityTab.navigateToMain();
-        keycloackPage.loginAsDevUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
         resolvePage.reportAddFraud("test1" + timestamp, fraud1.getDisplayName());

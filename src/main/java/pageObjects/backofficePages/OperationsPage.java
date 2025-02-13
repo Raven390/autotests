@@ -38,9 +38,13 @@ public class OperationsPage extends AbstractPage {
     private final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
     private final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
-    private final String TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container')]";
+    private final String TIMELINE_BAR_CONTAINER = "//*[contains(@class, 'v-range-timeline__section-container')]";
+    private final String TIMELINE_BAR = "//*[contains(@class, 'v-range-timeline__bar')]";
+    private final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
+    private final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
     private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
+    private final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]";
     private final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
     private final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
 
@@ -58,7 +62,7 @@ public class OperationsPage extends AbstractPage {
         this.financialDateGraphContainerTooltip = page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
         this.clearSelectedAccountsButton = page.locator(".g-select-clear");
         this.accountSelectionWindow = page.locator(".v-payments-summary-filters__accounts button.g-select-control__button");
-        this.timelineSection = page.locator(TIMELINE_SECTION_SELECTOR);
+        this.timelineSection = page.locator(TIMELINE_BAR_CONTAINER);
         this.dateFilterSelectionButton = page.locator(".v-date-picker__select  button");
         this.calendarSelectionButton = page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='Custom dates']");
         this.timelineThumb = page.locator(".v-range-timeline__thumb");
@@ -279,6 +283,10 @@ public class OperationsPage extends AbstractPage {
         page.locator("//div[@data-qa='select-list']//*[text()='" + accountId + "']").click();
     }
 
+    public void selectTradingAccount(int accountId) {
+        selectTradingAccount(String.valueOf(accountId));
+    }
+
     public void clearSelectedTradingAccount() {
         Allure.step("Click on clear selected accounts button in account selection window");
         if (clearSelectedAccountsButton.isVisible()) {
@@ -290,7 +298,8 @@ public class OperationsPage extends AbstractPage {
 
     public void clickOnAccountSelectionWindow() {
         Allure.step("Click on account selection window");
-        accountSelectionWindow.click();
+        waitForPageToLoad();
+        page.locator(ACCOUNT_SELECTION).click();
     }
 
     public void selectDatesInCalendar(String fromDate, String toDate) {
@@ -372,6 +381,27 @@ public class OperationsPage extends AbstractPage {
         Allure.step("check that financial transaction graph section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(financialTransactionGraphSection.getByText(date).isVisible());
+    }
+
+    public void clickActivityButtonTimeline() {
+        Allure.step("click activity button on timeline");
+        waitForPageToLoad();
+        page.locator(TIMELINE_ACTIVITY_BUTTON).click();
+        waitForPageToLoad();
+    }
+
+    public void clickVolumeButtonTimeline() {
+        Allure.step("click volume button on timeline");
+        waitForPageToLoad();
+        page.locator(TIMELINE_VOLUME_BUTTON).click();
+        waitForPageToLoad();
+    }
+
+    public void checkStileValueOfTimelineBar(int barIndex, String expectedStyle) {
+        Allure.step("click volume button on timeline");
+        waitForPageToLoad();
+        String actualStyle = page.locator(TIMELINE_BAR).nth(barIndex).getAttribute("style");
+        assertEquals(expectedStyle, actualStyle);
     }
 
 }

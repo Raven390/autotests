@@ -14,6 +14,7 @@ public class RuleAlertFactory {
         alert.timestamp = Instant.now().toString();
         alert.ucid = ucid;
         alert.rule = new RuleAlert.Rule();
+        alert.rule.code = 11;
         alert.rule.ver = "01";
         alert.rule.name = "Registration";
         alert.rule.trigger = "clientRegistration";
