@@ -32,10 +32,10 @@ public class MitigationServiceRequest {
     }
 
     public static Response enableCRMEmulator() throws IOException {
-        return new HttpHelper().sendPostRequest("http://k8s-test-emulator-6a1119759b-161076615.us-east-1.elb.amazonaws.com/mitigation/enabled", null, null, "true");
+        return new HttpHelper().sendPostRequest(BASE_URL_CRM_EMULATOR + "/mitigation/enabled", null, null, "true");
     }
 
     public static Response disableCRMEmulator() throws IOException {
-        return new HttpHelper().sendPostRequest("http://k8s-test-emulator-6a1119759b-161076615.us-east-1.elb.amazonaws.com/mitigation/enabled", null, null, "false");
+        return new HttpHelper().sendPostRequest(BASE_URL_CRM_EMULATOR + "/mitigation/enabled", null, null, "false");
     }
 }
