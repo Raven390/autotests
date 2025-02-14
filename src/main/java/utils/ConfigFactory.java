@@ -11,6 +11,7 @@ public class ConfigFactory {
     public static final String BASE_URL_E2E = CONFIG.baseURLE2E();
     public static final String ENTER_PAGE_E2E = CONFIG.enterPageE2E();
     public static final String BASE_URL_VANTAGE_ACCOUNT = CONFIG.baseUrlVantageAccount();
+    public static final String BASE_URL_CRM_EMULATOR = CONFIG.crmEmulatorBaseUrl();
     // Kafka
     public static final String KAFKA_PUBLIC = CONFIG.testClusterKafkaPublic();
     public static final String KAFKA_PRIVATE = CONFIG.testClusterKafkaPrivate();
@@ -137,6 +138,9 @@ public class ConfigFactory {
 
         @Key("baseUrlVantageAccount")
         String baseUrlVantageAccount();
+
+        @Key("crmEmulatorBaseUrl")
+        String crmEmulatorBaseUrl();
 
         // Settings
 

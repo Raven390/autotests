@@ -6,7 +6,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
+import javax.net.ssl.*;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +18,46 @@ public class HttpHelper {
     private final ObjectMapper objectMapper;
 
     public HttpHelper() {
-        this.client = new OkHttpClient();
+        // Regular client
+        // this.client = new OkHttpClient();
+        // Client with ssl errors ignore
+        this.client = getUnsafeOkHttpClient();
         this.objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    }
+
+    private static OkHttpClient getUnsafeOkHttpClient() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            TrustManager[] trustAllCertificates = new TrustManager[]{new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }
+            };
+
+            // Install the all-trusting trust manager
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, trustAllCertificates, new java.security.SecureRandom());
+
+            // Create an SSL socket factory with our all-trusting manager
+            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            return new OkHttpClient.Builder().sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCertificates[0]).hostnameVerifier((
+                    hostname, session) -> true) // Disable hostname verification
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Step("Send get request: {url}, {headersMap}, {queryParamsMap}")
