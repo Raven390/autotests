@@ -54,7 +54,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("870")
     @DisplayName("Verify Winrate widget 100% in Trading - Summary")
-    public void verifyTradingSummaryWinrate1Test() throws ReflectiveOperationException, SQLException {
+    public void verifyTradingSummaryWinrate1Test() {
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, generateMt4TradesCoerced(client));
         investigationPage.navigateToClient(crmTbUser.ucid);
         keycloackPage.loginAsCoreUser();
@@ -70,7 +70,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("871")
     @DisplayName("Verify Winrate widget 0% in Trading - Summary")
-    public void verifyTradingSummaryWinrate2Test() throws ReflectiveOperationException, SQLException {
+    public void verifyTradingSummaryWinrate2Test() {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
         trade.profitUsd = 0d;
         trade.storageUsd = 0d;
@@ -90,7 +90,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("872")
     @DisplayName("Verify Winrate widget 66.67% in Trading - Summary")
-    public void verifyTradingSummaryWinrate3Test() throws ReflectiveOperationException, SQLException {
+    public void verifyTradingSummaryWinrate3Test() {
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
         trade1.profitUsd = 0d;
         trade1.storageUsd = 0d;

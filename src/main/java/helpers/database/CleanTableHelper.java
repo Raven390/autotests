@@ -110,4 +110,9 @@ public class CleanTableHelper {
     public static void cleanMt4CoercedTableByUcid(String... values) throws Exception {
         deleteObjectsFromDb(CLICKHOUSE, MT4_TRADES_COERCED_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
+
+    @Step("Clean mt5 coerced toxicity table by ucid")
+    public static void cleanMt5CoercedToxicityTableByUcid(String... values) throws Exception {
+        deleteObjectsFromDb(CLICKHOUSE, MT5_DEALS_COERCED_TOXICITY_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+    }
 }

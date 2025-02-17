@@ -158,6 +158,20 @@ public class TradingPage extends AbstractPage {
     private final Locator totalPnlXAxisLabels;
     private final Locator volumeXAxisLabels;
     private final Locator holdingTimeTooltip;
+    private final Locator toxicityAndProfitChartTitle;
+    private final Locator toxicityAndProfitYAxisLabel;
+    private final Locator toxicityAndProfitMaxToxicityValue;
+    private final Locator toxicityAndProfitMaxProfitValue;
+    private final Locator toxicityAndProfitMaxToxicityLabel;
+    private final Locator toxicityAndProfitMaxProfitLabel;
+    private final Locator toxicityAndProfitMaxToxicityGraphDot;
+    private final Locator toxicityAndProfitXAxisLabels;
+    private final Locator toxicityAndProfitTooltipIcon;
+    private final Locator tooltip;
+    private final Locator absoluteToxicityWidget;
+    private final Locator absoluteToxicityWidgetValue;
+    private final Locator absoluteToxicityWidgetInfo;
+    private final Locator absoluteToxicityWidgetTitle;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -174,7 +188,7 @@ public class TradingPage extends AbstractPage {
     private static final String ACCOUNT_CARD_XPATH = "//div[@class='v-trading-tab-accounts-card']";
     private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
     private static final String WIDGET_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
-    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[contains(@class,'v-trading-summary__chart') and not(contains(@class,'v-trading-summary__charts'))]";
     private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL", "total, USD");
     private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
     private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__chart-container']", TOTAL_PNL_CHART_CONTAINER);
@@ -231,6 +245,10 @@ public class TradingPage extends AbstractPage {
     private static final String RETRY_BUTTON = "//button/span[text()='Retry']";
     private final String TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container')]";
     private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
+    private static final String TOXICITY_AND_PROFIT_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Toxicity and profit", "USD");
+    private static final String TOXICITY_AND_PROFIT_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
+    private static final String TOXICITY_AND_PROFIT_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
+    private static final String WIDGET_TITLE = "//div[contains(@class,'v-number-widget__title')]";
 
     public TradingPage(Page page) {
         super(page);
@@ -365,6 +383,20 @@ public class TradingPage extends AbstractPage {
         this.pnlByDurationTooltip = page.locator(PNL_BY_DURATION_TOOLTIP);
         this.volumeXAxisLabels = page.locator("//div[@class='v-trading-summary-volume__ticks-container']/descendant::div[contains(@class,'g-text')]");
         this.holdingTimeTooltip = page.locator(HOLDING_TIME_TOOLTIP);
+        this.toxicityAndProfitChartTitle = page.locator(TOXICITY_AND_PROFIT_CHART_CONTAINER).locator(CHART_TITLE);
+        this.toxicityAndProfitYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOXICITY_AND_PROFIT_CHART_CONTAINER));
+        this.toxicityAndProfitMaxToxicityValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES));
+        this.toxicityAndProfitMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES));
+        this.toxicityAndProfitMaxToxicityLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", TOXICITY_AND_PROFIT_CHART_FEATURES));
+        this.toxicityAndProfitMaxProfitLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", TOXICITY_AND_PROFIT_CHART_FEATURES));
+        this.toxicityAndProfitMaxToxicityGraphDot = page.locator(String.format("%s/descendant::div[@class='v-peak-point__point-label']", TOXICITY_AND_PROFIT_CHART));
+        this.toxicityAndProfitXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]", TOXICITY_AND_PROFIT_CHART));
+        this.toxicityAndProfitTooltipIcon = page.locator(String.format("%s/descendant::div[@class='v-chart-wrapper__info-hint']", TOXICITY_AND_PROFIT_CHART_CONTAINER));
+        this.tooltip = page.locator("//div[contains(@class,'g-tooltip__content')]");
+        this.absoluteToxicityWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Absolute toxicity"));
+        this.absoluteToxicityWidgetTitle = absoluteToxicityWidget.locator(WIDGET_TITLE);
+        this.absoluteToxicityWidgetValue = absoluteToxicityWidget.locator(".v-number-widget__value");
+        this.absoluteToxicityWidgetInfo = absoluteToxicityWidget.locator(".v-number-widget__info");
     }
 
     @Step("Navigate to users trading tab")
@@ -1683,5 +1715,71 @@ public class TradingPage extends AbstractPage {
 
     }
 
+    @Step("Get Toxicity & Profit chart title")
+    public String getToxicityAndProfitChartTitle() {
+        toxicityAndProfitChartTitle.hover();
+        return toxicityAndProfitChartTitle.textContent();
+    }
+
+    @Step("Get Toxicity & Profit Y axis label")
+    public String getToxicityAndProfitYAxisLabel() {
+        return toxicityAndProfitYAxisLabel.textContent();
+    }
+
+    @Step("Get Toxicity & Profit max toxicity value")
+    public String getToxicityAndProfitMaxToxicityValue() {
+        return toxicityAndProfitMaxToxicityValue.textContent();
+    }
+
+    @Step("Get Toxicity & Profit max toxicity label")
+    public String getToxicityAndProfitMaxToxicityLabel() {
+        return toxicityAndProfitMaxToxicityLabel.textContent();
+    }
+
+    @Step("Get Toxicity & Profit max profit value")
+    public String getToxicityAndProfitMaxProfitValue() {
+        return toxicityAndProfitMaxProfitValue.textContent();
+    }
+
+    @Step("Get Toxicity & Profit max profit label")
+    public String getToxicityAndProfitMaxProfitLabel() {
+        return toxicityAndProfitMaxProfitLabel.textContent();
+    }
+
+    @Step("Get Toxicity & Profit max toxicity graph dot label")
+    public String getToxicityAndProfitMaxToxicityGraphDot() {
+        return toxicityAndProfitMaxToxicityGraphDot.textContent();
+    }
+
+    @Step("Get Toxicity & Profit chart x axis labels")
+    public List<String> getToxicityAndProfitXAxisLabels() {
+        List<String> xAxisLabels = new ArrayList<>();
+        for (int i = 0; i < toxicityAndProfitXAxisLabels.count(); i++) {
+            Locator label = toxicityAndProfitXAxisLabels.nth(i);
+            xAxisLabels.add(label.textContent());
+        }
+        return xAxisLabels;
+    }
+
+    @Step("Get Toxicity & Profit tooltip text")
+    public String getToxicityAndProfitTooltip() {
+        toxicityAndProfitTooltipIcon.hover();
+        return tooltip.textContent();
+    }
+
+    @Step("Get Absolute toxicity widget title")
+    public String getAbsoluteToxicityWidgetTitle() {
+        return absoluteToxicityWidgetTitle.textContent();
+    }
+
+    @Step("Get Absolute toxicity widget value")
+    public String getAbsoluteToxicityWidgetValue() {
+        return absoluteToxicityWidgetValue.textContent();
+    }
+
+    @Step("Get Absolute toxicity widget info")
+    public String getAbsoluteToxicityWidgetInfo() {
+        return absoluteToxicityWidgetInfo.textContent();
+    }
 }
 
