@@ -24,6 +24,9 @@ public class GetDepositsResponse {
     @JsonProperty("paymentChannel")
     public String paymentChannel;
 
+    @JsonProperty("paymentType")
+    public String paymentType;
+
     public GetDepositsResponse() {
     }
 
