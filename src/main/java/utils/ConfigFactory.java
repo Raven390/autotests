@@ -54,6 +54,14 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES = CONFIG.clickhouseGetSwapFreeVolumes();
     public static final String CLICKHOUSE_API_GET_BALANCE_ORDERS = CONFIG.clickhouseGetBalanceOrders();
     public static final String CLICKHOUSE_API_GET_FAST_TRADES = CONFIG.clickhouseGetFastTrades();
+    public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_V2 = CONFIG.clickhouseGetLexisNexisV2();
+    public static final String CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID = CONFIG.clickhouseGetTradesByTradeId();
+    public static final String CLICKHOUSE_API_GET_TOTAL_LOYALTIES = CONFIG.clickhouseGetTotalLoyalties();
+    public static final String CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES = CONFIG.clickhouseGetMirrorClientsByTrades();
+    public static final String CLICKHOUSE_API_GET_FINANCIAL_CALENDAR = CONFIG.clickhouseGetFinancialCalendar();
+    public static final String CLICKHOUSE_API_GET_DUMMY_TRADE_DATA = CONFIG.clickhouseGetDummyTradeData();
+    public static final String CLICKHOUSE_API_GET_ACCOUNT_BALANCE = CONFIG.clickhouseGetAccountBalance();
+    public static final String CLICKHOUSE_API_GET_ABNORMAL_PROFIT = CONFIG.clickhouseGetAbnormalProfit();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
@@ -280,6 +288,30 @@ public class ConfigFactory {
 
         @Key("clickhouseGetFastTrades")
         String clickhouseGetFastTrades();
+
+        @Key("clickhouseGetLexisNexisV2")
+        String clickhouseGetLexisNexisV2();
+
+        @Key("clickhouseGetTradesByTradeId")
+        String clickhouseGetTradesByTradeId();
+
+        @Key("clickhouseGetTotalLoyalties")
+        String clickhouseGetTotalLoyalties();
+
+        @Key("clickhouseGetMirrorClientsByTrades")
+        String clickhouseGetMirrorClientsByTrades();
+
+        @Key("clickhouseGetFinancialCalendar")
+        String clickhouseGetFinancialCalendar();
+
+        @Key("clickhouseGetDummyTradeData")
+        String clickhouseGetDummyTradeData();
+
+        @Key("clickhouseGetAccountBalance")
+        String clickhouseGetAccountBalance();
+
+        @Key("clickhouseGetAbnormalProfit")
+        String clickhouseGetAbnormalProfit();
 
         // Connection search
 
