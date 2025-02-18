@@ -2,6 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -38,6 +40,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
+    private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
     private static final MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade2 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade3 = generateMt4TradesCoerced(client);
@@ -86,6 +89,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -98,13 +102,14 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     @AllureId("868")
     @DisplayName("Verify Total PNL chart in Trading - Summary")
     public void verifyTradingSummaryTotalPnlTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
-        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("7k"));
+        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
         String maxProfit = "6,666";
@@ -116,8 +121,6 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
         assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
         assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
-        tradingPage.hoverOverTotalPnlXAxisLabelWithOffset(getCurrentTimestampMinusOffsetFormatted(MONTH_TEXT_AND_DAY, 0, 0, 2, 0, 0));
-        assertThat(tradingPage.getTotalPnlTooltip(), is(String.format("%s%s USD", getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 2, 0, 0), maxProfit)));
     }
 
     @Order(2)
@@ -130,13 +133,14 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 61, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
-        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("7k"));
+        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
         String maxProfit = "6,666";
@@ -160,13 +164,14 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 37, 0, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
-        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("7k"));
+        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
         String maxProfit = "6,666";

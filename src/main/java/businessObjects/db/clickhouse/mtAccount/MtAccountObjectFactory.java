@@ -5,10 +5,10 @@ import helpers.data.ClientHelper;
 
 import static utils.Utils.getCurrentTimestampDbFormat;
 
-public class mtAccountObjectFactory {
+public class MtAccountObjectFactory {
 
-    public static mtAccountObject generateMtAccountByClient(ClientHelper client) {
-        mtAccountObject mtAccount = new mtAccountObject();
+    public static MtAccountObject generateMtAccountByClient(ClientHelper client) {
+        MtAccountObject mtAccount = new MtAccountObject();
         mtAccount.sourceIdSt = client.getServerId();
         mtAccount.account = client.getTradingAccount();
         mtAccount.server = "MT5-UK";
@@ -37,8 +37,8 @@ public class mtAccountObjectFactory {
         return mtAccount;
     }
 
-    public static mtAccountObject generateMtAccountByCrmTbAccount(CrmTbAccountObject account) {
-        mtAccountObject mtAccount = new mtAccountObject();
+    public static MtAccountObject generateMtAccountByCrmTbAccount(CrmTbAccountObject account) {
+        MtAccountObject mtAccount = new MtAccountObject();
         mtAccount.sourceIdSt = account.serverIdSt;
         mtAccount.account = account.account;
         mtAccount.server = account.serverName;

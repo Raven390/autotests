@@ -129,7 +129,7 @@ public class RuleDataHelper {
                 insertObjectToDb(CRM_USER_TABLE_NAME, user);
             });
             data.clientFraudTypes.forEach(fraud -> {
-                insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
@@ -190,7 +190,7 @@ public class RuleDataHelper {
 
             }
             data.clientFraudTypes.forEach(fraud -> {
-                deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
             });
             data.mtTbCreditsObjects.forEach(credit -> {
                 deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));

@@ -2,7 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.mtAccount.mtAccountObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoercedToxicity.Mt5DealsCoercedToxicityObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +19,7 @@ import java.util.List;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.mtAccount.mtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt5DealsCoercedToxicity.Mt5DealsCoercedToxicityFactory.generateMt5DealsCoercedToxicityAdditionalByClient;
 import static businessObjects.db.clickhouse.mtMt5DealsCoercedToxicity.Mt5DealsCoercedToxicityFactory.generateMt5DealsCoercedToxicityByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -42,8 +42,8 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
     private static final CrmTbAccountObject account2 = generateAdditionalCrmTbAccountData(client);
-    private static final mtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
-    private static final mtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
+    private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
+    private static final MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
     private static final Mt5DealsCoercedToxicityObject trade1 = generateMt5DealsCoercedToxicityByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade2 = generateMt5DealsCoercedToxicityByClient(client);
     private static final Mt5DealsCoercedToxicityObject trade3 = generateMt5DealsCoercedToxicityAdditionalByClient(client);

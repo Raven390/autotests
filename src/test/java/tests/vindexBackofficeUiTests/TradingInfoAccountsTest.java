@@ -2,6 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,15 +13,18 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByUcid;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -40,10 +44,23 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = "EUR";
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
         account2.accountStatus = "Inactive";
+        Mt5DealsCoercedObject trade1 = generateTradeByClient(client);
+        trade1.profitUsd = 22.2;
+        trade1.storageUsd = 0;
+        trade1.commissionUsd = 0.0;
+        Mt5DealsCoercedObject trade2 = generateTradeByClient(client);
+        trade2.account = account2.account;
+        trade2.serverId = account2.serverIdSt;
+        trade2.profitUsd = 22.2;
+        trade2.storageUsd = 0;
+        trade2.commissionUsd = 0.0;
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account2));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2));
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -54,10 +71,12 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     @AllureId("560")
     @DisplayName("Verify all data is present in trading info - accounts. Card view")
     public void verifyAccountsCardViewTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
+        tradingPage.openAccountsTab();
         // Verify 1st account card
         assertThat("Assert that account balance in card view is as expected", tradingPage.getAccountBalance(account1.account), equalTo(String.format("%s %s", account1.balance, account1.currency)));
         assertThat("Assert that account balance usd in card view is as expected", tradingPage.getAccountBalanceUsd(account1.account), equalTo(String.format("%s %s", account1.balanceUsd, "USD")));
@@ -104,10 +123,12 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     @AllureId("561")
     @DisplayName("Verify all data is present in trading info - accounts. Table view")
     public void verifyAccountsTableViewTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
+        tradingPage.openAccountsTab();
         tradingPage.clickTableViewButton();
         // Verify table headers
         tradingPage.verifyAccountTableHeaders();
@@ -142,8 +163,9 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     }
 
     @AfterAll
-    public static void teardown() throws SQLException {
+    public static void teardown() throws Exception {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        cleanMt5CoercedTableByUcid(MT5_DEALS_COERCED_TABLE_NAME, crmTbUser.ucid);
         closeAlert(crmTbUser.ucid);
     }
 }

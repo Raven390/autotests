@@ -5,7 +5,6 @@ import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
-import com.microsoft.playwright.options.BoundingBox;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
@@ -191,12 +190,12 @@ public class TradingPage extends AbstractPage {
     private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[contains(@class,'v-trading-summary__chart') and not(contains(@class,'v-trading-summary__charts'))]";
     private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL", "total, USD");
     private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
-    private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__chart-container']", TOTAL_PNL_CHART_CONTAINER);
-    private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = "//div[@class='v-trading-summary-total-pnl__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
+    private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOTAL_PNL_CHART_CONTAINER);
+    private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = TOTAL_PNL_CHART + "/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
     private static final String PERFORMANCE_OVERVIEW_CHART_CONTAINER = String.format(WIDGET_CONTAINER_PATTERN, "Performance overview");
     private static final String CHART_TITLE = "//div[@class='v-chart-wrapper__title']";
     private static final String PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_CHART_CONTAINER + "/descendant::td[text()='%s']/parent::tr";
-    private static final String PERFORMANCE_OVERVIEW_DEALS_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_deals')]";
+    private static final String PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_tickets')]";
     private static final String PERFORMANCE_OVERVIEW_WINRATE_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_winrate')]";
     private static final String PERFORMANCE_OVERVIEW_HFT_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_os')]";
     private static final String PERFORMANCE_OVERVIEW_PNL_BY_SYMBOL_PATTERN = PERFORMANCE_OVERVIEW_ROW_BY_SYMBOL_PATTERN + "/td[contains(@class,'v-trading-summary-performance__column_type_risk')]";
@@ -360,12 +359,12 @@ public class TradingPage extends AbstractPage {
         this.totalPnlMaxLossValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES));
         this.totalPnlMaxProfitLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", TOTAL_PNL_CHART_FEATURES));
         this.totalPnlMaxLossLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", TOTAL_PNL_CHART_FEATURES));
-        this.totalPnlMaxProfitGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART));
-        this.totalPnlMaxLossGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART));
-        this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-total-pnl__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
+        this.totalPnlMaxProfitGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(77, 215, 175);']", TOTAL_PNL_CHART));
+        this.totalPnlMaxLossGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(249, 116, 144);']", TOTAL_PNL_CHART));
+        this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
         this.totalPnlTooltip = page.locator(".v-trading-summary-total-pnl__tooltip");
         this.totalPnlChartTitle = page.locator(TOTAL_PNL_CHART_CONTAINER).locator(CHART_TITLE);
-        this.totalPnlXAxisLabels = page.locator("//div[@class='v-trading-summary-total-pnl__ticks-container']/descendant::div[contains(@class,'g-text')]");
+        this.totalPnlXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]", TOTAL_PNL_CHART));
         this.performanceOverviewTableTitle = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator(CHART_TITLE);
         this.performanceOverviewTableHeaders = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//th");
         this.performanceOverviewSymbols = page.locator(PERFORMANCE_OVERVIEW_CHART_CONTAINER).locator("//td[contains(@class,'v-trading-summary-performance__column_type_date')]");
@@ -1177,25 +1176,6 @@ public class TradingPage extends AbstractPage {
         return xAxisLabels;
     }
 
-    public void hoverOverTotalPnlXAxisLabelWithOffset(String labelText) {
-        BoundingBox box = page.locator(String.format(TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN, labelText)).last().boundingBox();
-        if (box != null) {
-            double centerX = box.x + box.width / 2;
-            double centerY = box.y + box.height / 2;
-
-            // Hover over the center of the element
-            page.mouse().move(centerX, centerY);
-
-            // Move the mouse 50 pixels up (negative y direction)
-            page.mouse().move(centerX, centerY - 50);
-        }
-    }
-
-    @Step("Get Total PNL tooltip")
-    public String getTotalPnlTooltip() {
-        return totalPnlTooltip.textContent();
-    }
-
     @Step("Get Performance overview title")
     public String getPerformanceOverviewTableTitle() {
         return performanceOverviewTableTitle.textContent();
@@ -1264,9 +1244,9 @@ public class TradingPage extends AbstractPage {
         return symbols;
     }
 
-    @Step("Get Performance overview deals by symbol {symbol}")
-    public String getPerformanceOverviewDealsBySymbol(String symbol) {
-        return page.locator(String.format(PERFORMANCE_OVERVIEW_DEALS_BY_SYMBOL_PATTERN, symbol)).textContent();
+    @Step("Get Performance overview tickets by symbol {symbol}")
+    public String getPerformanceOverviewTicketsBySymbol(String symbol) {
+        return page.locator(String.format(PERFORMANCE_OVERVIEW_TICKETS_BY_SYMBOL_PATTERN, symbol)).textContent();
     }
 
     @Step("Get Performance overview winrate by symbol {symbol}")
@@ -1382,7 +1362,7 @@ public class TradingPage extends AbstractPage {
 
     public void checkTopLossCategory(String expectedValue) {
         Allure.step("Check category in top loss header");
-        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max loosing']/preceding-sibling::div").textContent());
+        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max losing']/preceding-sibling::div").textContent());
     }
 
     public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {

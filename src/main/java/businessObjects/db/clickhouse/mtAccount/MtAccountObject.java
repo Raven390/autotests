@@ -2,7 +2,7 @@ package businessObjects.db.clickhouse.mtAccount;
 
 import java.util.Objects;
 
-public class mtAccountObject {
+public class MtAccountObject {
 
     public Integer sourceIdSt;
     public Integer account;
@@ -30,11 +30,11 @@ public class mtAccountObject {
     public Double marginFreeUsd;
     public String lastUpdated;
 
-    public mtAccountObject() {
+    public MtAccountObject() {
 
     }
 
-    public mtAccountObject(Integer sourceIdSt, Integer account, String server, String accountGroup, String platform,
+    public MtAccountObject(Integer sourceIdSt, Integer account, String server, String accountGroup, String platform,
             String currency, String createTime, String createTimeUtc, String lastLogin, String lastLoginUtc,
             Integer leverage, Integer agentAccount, Double balance, Double balanceUsd, Double credit, Double creditUsd,
             Double equity, Double equityUsd, Double floatingPnl, Double floatingPnlUsd, Double margin, Double marginUsd,
@@ -75,7 +75,7 @@ public class mtAccountObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        mtAccountObject that = (mtAccountObject) o;
+        MtAccountObject that = (MtAccountObject) o;
         return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(account, that.account) && Objects.equals(server, that.server) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(platform, that.platform) && Objects.equals(currency, that.currency) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(lastLogin, that.lastLogin) && Objects.equals(lastLoginUtc, that.lastLoginUtc) && Objects.equals(leverage, that.leverage) && Objects.equals(agentAccount, that.agentAccount) && Objects.equals(balance, that.balance) && Objects.equals(balanceUsd, that.balanceUsd) && Objects.equals(credit, that.credit) && Objects.equals(creditUsd, that.creditUsd) && Objects.equals(equity, that.equity) && Objects.equals(equityUsd, that.equityUsd) && Objects.equals(floatingPnl, that.floatingPnl) && Objects.equals(floatingPnlUsd, that.floatingPnlUsd) && Objects.equals(margin, that.margin) && Objects.equals(marginUsd, that.marginUsd) && Objects.equals(marginFree, that.marginFree) && Objects.equals(marginFreeUsd, that.marginFreeUsd) && Objects.equals(lastUpdated, that.lastUpdated);
     }
 

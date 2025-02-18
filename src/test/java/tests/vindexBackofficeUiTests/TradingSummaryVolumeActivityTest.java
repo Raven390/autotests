@@ -2,7 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.mtAccount.mtAccountObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
@@ -24,7 +24,7 @@ import java.util.List;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static businessObjects.db.clickhouse.mtAccount.mtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -41,8 +41,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
-    private static mtAccountObject mtAccount1 = generateMtAccountByCrmTbAccount(account1);
-    private static mtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
+    private static MtAccountObject mtAccount1 = generateMtAccountByCrmTbAccount(account1);
+    private static MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -61,10 +61,10 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        operationsPage.shiftRightTimelineThumbToPreLastTimelineSection();
-        operationsPage.checkLastTimelineSectionInactive();
-        operationsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
+        paymentsPage.checkLastTimelineSectionInactive();
+        paymentsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -75,10 +75,10 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        operationsPage.clickOnPreLastTimelineSection();
-        operationsPage.checkLastTimelineSectionInactive();
-        operationsPage.clickOnTimelineSectionByIndex(1);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.clickOnPreLastTimelineSection();
+        paymentsPage.checkLastTimelineSectionInactive();
+        paymentsPage.clickOnTimelineSectionByIndex(1);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -92,13 +92,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter one day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
         page.reload();
         Allure.step("filter seven days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
     }
 
     @Test
@@ -112,14 +112,14 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 8 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
         page.reload();
         Allure.step("filter 30 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
     }
 
     @Test
@@ -133,14 +133,14 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 31 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
         page.reload();
         Allure.step("filter 98 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
     }
 
     @Test
@@ -154,14 +154,14 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 99 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
         page.reload();
         Allure.step("filter 3 years");
-        operationsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
     }
 
     @Test
@@ -175,9 +175,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 3 years");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
     }
 
     @Test
@@ -191,8 +191,8 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 6 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
-        operationsPage.checkTimelineSectionInactive(6);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
+        paymentsPage.checkTimelineSectionInactive(6);
     }
 
     @Test
@@ -206,9 +206,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 5 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -222,10 +222,10 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 4 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -239,11 +239,11 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 3 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
     }
 
     @Test
@@ -257,12 +257,12 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 2 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(4);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(4);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
     }
 
     @Test
@@ -276,13 +276,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 1 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(4);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
-        operationsPage.checkTimelineSectionInactive(2);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(4);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
+        paymentsPage.checkTimelineSectionInactive(2);
     }
 
     @Test
@@ -325,13 +325,13 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 2 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
-        operationsPage.clickVolumeButtonTimeline();
-        operationsPage.checkStileValueOfTimelineBar(2, "height: 33.3333%;");
-        operationsPage.checkStileValueOfTimelineBar(3, "height: 100%;");
-        operationsPage.clickActivityButtonTimeline();
-        operationsPage.checkStileValueOfTimelineBar(2, "height: 100%;");
-        operationsPage.checkStileValueOfTimelineBar(3, "height: 33.3333%;");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
+        paymentsPage.clickVolumeButtonTimeline();
+        paymentsPage.checkStileValueOfTimelineBar(2, "height: 33.3333%;");
+        paymentsPage.checkStileValueOfTimelineBar(3, "height: 100%;");
+        paymentsPage.clickActivityButtonTimeline();
+        paymentsPage.checkStileValueOfTimelineBar(2, "height: 100%;");
+        paymentsPage.checkStileValueOfTimelineBar(3, "height: 33.3333%;");
     }
 
 
@@ -359,9 +359,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 1 year");
+        paymentsPage.selectDateFilter("Last 1 year");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -388,9 +388,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 30 days");
+        paymentsPage.selectDateFilter("Last 30 days");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -417,9 +417,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 6 months");
+        paymentsPage.selectDateFilter("Last 6 months");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -446,9 +446,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 7 days");
+        paymentsPage.selectDateFilter("Last 7 days");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -475,9 +475,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 7 days");
+        paymentsPage.selectDateFilter("Last 7 days");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -504,9 +504,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        operationsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
+        paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
         Allure.step("check that only data for the test date is displayed");
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
 
     @Test
@@ -532,11 +532,11 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test account");
         Allure.step("check that only data for the selected account is displayed");
-        operationsPage.clickOnAccountSelectionWindow();
-        operationsPage.selectTradingAccount(account1.account);
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("2"));
-        operationsPage.clearSelectedTradingAccount();
-        operationsPage.selectTradingAccount(account2.account);
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("1"));
+        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.selectTradingAccount(account1.account);
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.selectTradingAccount(account2.account);
+        assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("1"));
     }
 }

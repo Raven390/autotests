@@ -3,7 +3,7 @@ package helpers.database;
 import businessObjects.db.backofficeDb.alert.Alert;
 import businessObjects.db.backofficeDb.backofficeUser.BackofficeUser;
 import businessObjects.db.backofficeDb.client.Client;
-import businessObjects.db.backofficeDb.clientFraudTypes.ClientFraudTypes;
+import businessObjects.db.backofficeDb.clientsFraudTypes.ClientsFraudTypes;
 import businessObjects.ui.user.User;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -65,10 +65,10 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
-        fraud = clientFraudTypes.getFirst().getFraudTypeId();
+        fraud = clientsFraudTypes.getFirst().getFraudTypeId();
         System.out.println("FRAUD ID " + fraud);
 
         assertEquals(expectedFraud, fraud);
@@ -82,19 +82,19 @@ public class BoHelper {
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientFraudTypes> clientFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
-        assertEquals(clientFraudTypes.size(), 0);
+        assertEquals(clientsFraudTypes.size(), 0);
 
-        assertTrue(clientFraudTypes.isEmpty());
+        assertTrue(clientsFraudTypes.isEmpty());
     }
 
     @Step("Create fraud for user with ucid '{ucid}' in DB")
     public static void createUserFraudsDb(String ucid, long... fraudIds) throws Exception {
         Thread.sleep(2000);
         for (long fraudId : fraudIds) {
-            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientFraudTypes(fraudId, ucid));
+            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(fraudId, ucid));
         }
         Thread.sleep(100);
     }

@@ -12,10 +12,10 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
-public class OperationsPage extends AbstractPage {
+public class PaymentsPage extends AbstractPage {
 
     private final Locator loaderAnimation;
-    private final Locator operationsTab;
+    private final Locator paymentsTab;
     private final Locator financialTransactionsChart;
     private final Locator cashflowDepositEmptyState;
     private final Locator transactionTooltipTitleDate;
@@ -49,10 +49,10 @@ public class OperationsPage extends AbstractPage {
     private final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
 
 
-    public OperationsPage(Page page) {
+    public PaymentsPage(Page page) {
         super(page);
         this.loaderAnimation = page.locator(".v-loader");
-        this.operationsTab = page.locator("[role=\"tab\"][title=\"Operations\"]");
+        this.paymentsTab = page.locator("[role=\"tab\"][title=\"Payments\"]");
         this.financialTransactionsChart = page.locator(FINANCIAL_TRANSACTIONS_SELECTOR);
         this.cashflowDepositEmptyState = page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR);
         this.transactionTooltipTitleDate = page.locator(".v-payments-summary-transcations-tooltip__title");
@@ -75,12 +75,12 @@ public class OperationsPage extends AbstractPage {
         Allure.step("Navigate to user's operations tab");
         page.navigate(BASE_URL_E2E + "investigation/" + ucid);
         waitForPageToLoad();
-        operationsTab.click();
+        paymentsTab.click();
     }
 
-    @Step("Click operations tab")
-    public void clickOperationsTabButton() {
-        operationsTab.click();
+    @Step("Click payments tab")
+    public void clickPaymentsTabButton() {
+        paymentsTab.click();
         waitForPageToLoad();
     }
 
