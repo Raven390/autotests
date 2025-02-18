@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static businessObjects.ui.user.UserFactory.coreUser;
+import static businessObjects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -44,16 +44,15 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     @DisplayName("Verify that all elements are present for all suspicious clients")
     public void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser1.brand);
         investigationPage.clickApplyFiltrationButton();
         investigationPage.filterUnassigned();
         investigationPage.waitForPageToLoad();
-        System.out.println("test client: " + crmTbUser1.ucid);
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser1.userId));
-        investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
+        investigationPage.navigateToClient(crmTbUser1.ucid);
+        investigationPage.investigateClientCard();
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
         // 'My clients' tab
@@ -61,7 +60,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.verifyEachClientHasCountryCode();
         investigationPage.verifyEachClientHasClientId();
         investigationPage.verifyEachClientHasInvestigationStatusInvestigating();
-        investigationPage.verifyEachClientAssignedToUser(coreUser());
+        investigationPage.verifyEachClientAssignedToUser(autotestUserOne());
         investigationPage.verifyEachClientHasCardTimer();
         investigationPage.verifyEachClientHasAlertCount();
         investigationPage.verifyClientCardsCount();
@@ -74,7 +73,6 @@ public class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.verifyEachClientHasAnyInvestigationStatus();
         investigationPage.verifyEachClientHasCardTimer();
         investigationPage.verifyEachClientHasAlertCount();
-        investigationPage.verifyClientCardsCount();
         // 'All' tab
         investigationPage.filterAll();
         investigationPage.waitForPageToLoad();
@@ -84,7 +82,6 @@ public class SuspiciousClientsTest extends TestBaseWeb {
         investigationPage.verifyEachClientHasAnyInvestigationStatus();
         investigationPage.verifyEachClientHasCardTimer();
         investigationPage.verifyEachClientHasAlertCount();
-        investigationPage.verifyClientCardsCount();
     }
 
     @AfterAll

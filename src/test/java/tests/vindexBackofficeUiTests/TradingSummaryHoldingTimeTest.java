@@ -2,7 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.mtAccount.mtAccountObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static businessObjects.db.clickhouse.mtAccount.mtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -35,7 +35,7 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
     private static ClientHelper client = new ClientHelper(202_006, "e5880ca5-8578-4a1e-969d-7a64716ca50f", Brand.INFINOX, Regulator.FCA, 202_006_001, 42);
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
-    private static mtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account1);
+    private static MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account1);
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {

@@ -68,9 +68,9 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
         fraud1_1 = new BoClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
         fraud1_2 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
         fraud2_2 = new BoClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_1);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_2);
-        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
+        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_1);
+        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud1_2);
+        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry1_1);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry1_2);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry1_3);
@@ -87,9 +87,9 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry2_1.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry2_2.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry2_3.userFrom));
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1_1.ucid));
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1_2.ucid));
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.ucid));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1_1.ucid));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud1_2.ucid));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.ucid));
     }
 
     @Test

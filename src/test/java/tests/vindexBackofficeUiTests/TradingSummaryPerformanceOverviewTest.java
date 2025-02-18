@@ -2,6 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +20,7 @@ import java.util.stream.Stream;
 
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -42,6 +44,7 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
+    private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
     private static final MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade2 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade3 = generateMt4TradesCoerced(client);
@@ -109,6 +112,7 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         crmTbUser.registrationDate = transformDate(trade9.openTimeUtc, DATE_AND_TIME, DATE);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12));
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -120,20 +124,21 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
     @AllureId("869")
     @DisplayName("Verify Performance overview table in Trading - Summary")
     public void verifyTradingSummaryPerformanceOverviewTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify title", tradingPage.getPerformanceOverviewTableTitle(), equalTo("Performance overview"));
-        assertThat("Verify headers", tradingPage.getPerformanceOverviewTableHeaders(), contains("SYMBOL", "DEALS", "WINRATE", "HFT", "PNL, USD"));
+        assertThat("Verify headers", tradingPage.getPerformanceOverviewTableHeaders(), contains("SYMBOL", "TICKETS", "WINRATE", "HFT", "PNL, USD"));
         assertThat("Verify symbols", tradingPage.getPerformanceOverviewSymbols(), contains("GBPJPY", "USDEUR", "CZKAED", "EURUSD", "AEDCZK"));
         // Deals
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("EURUSD"), equalTo("3"));
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("CZKAED"), equalTo("1"));
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("AEDCZK"), equalTo("1"));
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("USDEUR"), equalTo("3"));
-        assertThat("Verify deals", tradingPage.getPerformanceOverviewDealsBySymbol("GBPJPY"), equalTo("3"));
+        assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("3"));
+        assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("CZKAED"), equalTo("1"));
+        assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("AEDCZK"), equalTo("1"));
+        assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("USDEUR"), equalTo("3"));
+        assertThat("Verify tickets", tradingPage.getPerformanceOverviewTicketsBySymbol("GBPJPY"), equalTo("3"));
         // Winrate
         assertThat("Verify winrate", tradingPage.getPerformanceOverviewWinrateBySymbol("EURUSD"), equalTo("0%"));
         assertThat("Verify winrate", tradingPage.getPerformanceOverviewWinrateBySymbol("CZKAED"), equalTo("100%"));

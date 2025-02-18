@@ -45,7 +45,7 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     }
 
     @AfterEach
-    public void teardownEach() throws SQLException {
+    public void teardownEach() {
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 
@@ -56,13 +56,14 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @DisplayName("Verify Winrate widget 100% in Trading - Summary")
     public void verifyTradingSummaryWinrate1Test() {
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, generateMt4TradesCoerced(client));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("100%"));
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deal", "1")));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s ticket", "1")));
     }
 
     @Test
@@ -76,13 +77,14 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
         trade.storageUsd = 0d;
         trade.commissionUsd = 0d;
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("0%"));
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deal", "1")));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s ticket", "1")));
     }
 
     @Test
@@ -96,13 +98,14 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
         trade1.storageUsd = 0d;
         trade1.commissionUsd = 0d;
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, generateMt4TradesCoerced(client), generateMt4TradesCoerced(client)));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("66.67%"));
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s deals", "3")));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo(String.format("on %s tickets", "3")));
     }
 
     @Test
@@ -111,13 +114,14 @@ public class TradingSummaryWinrateTest extends TestBaseWeb {
     @AllureId("873")
     @DisplayName("Verify Winrate widget no data in Trading - Summary")
     public void verifyTradingSummaryWinrate4Test() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify value", tradingPage.getWinrateWidgetValue(), equalTo("No data"));
-        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo("on 0 deals"));
+        assertThat("Verify info", tradingPage.getWinrateWidgetInfo(), equalTo("on 0 tickets"));
     }
 
     @AfterAll

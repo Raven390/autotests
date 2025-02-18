@@ -521,7 +521,7 @@ public class MirrorTradingRuleDataFactory {
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectLogin);
             }
             data.clientFraudTypes.forEach(fraud -> {
-                insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
@@ -570,7 +570,7 @@ public class MirrorTradingRuleDataFactory {
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.userId));
             data.clientFraudTypes.forEach(fraud -> {
-                deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
             });
             data.mtTbCreditsObjects.forEach(credit -> {
                 deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));

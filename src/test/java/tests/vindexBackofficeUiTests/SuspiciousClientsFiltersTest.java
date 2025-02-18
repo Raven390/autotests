@@ -15,6 +15,7 @@ import java.sql.SQLException;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static businessObjects.ui.user.UserFactory.autotestUserOne;
 import static businessObjects.ui.user.UserFactory.coreUser;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -52,7 +53,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @DisplayName("Verify filtration by brand for suspicious clients")
     public void verifyBrandFiltrationTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText("Vantage");
@@ -73,7 +74,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @DisplayName("Verify filtration by rule for suspicious clients")
     public void verifyRuleFiltrationTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         String ruleName = "Registration";
@@ -92,7 +93,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @DisplayName("Verify filtration by country for suspicious clients")
     public void verifyCountryFiltrationTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectCountryFilter("Cyprus");
@@ -111,19 +112,15 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
-    public void verifyAssigneeFiltrationTest() throws InterruptedException {
+    public void verifyAssigneeFiltrationTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
+        investigationPage.navigateToClient(crmTbUser1.ucid);
+        investigationPage.investigateClientCard();
+        page.waitForTimeout(1000);
         investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser1.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser1.userId));
-        investigationPage.assignClientByClientId(String.valueOf(crmTbUser1.userId));
-        investigationPage.clickSuspiciousClientsFiltration();
-        User user = coreUser();
+        User user = autotestUserOne();
         investigationPage.selectAssigneeFilter(user);
         investigationPage.clickApplyFiltrationButton();
         investigationPage.verifyAllCardsFilteredByAssignee(user);
@@ -139,7 +136,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @DisplayName("Verify reset filtration functionality for suspicious clients")
     public void verifyResetFiltrationTest() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         // Brand

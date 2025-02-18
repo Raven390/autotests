@@ -63,7 +63,7 @@ public class CleanTableHelper {
 
     @Step("Clean fraud type table by client")
     public static void cleanFraudTypeTableByClient(String... values) throws Exception {
-        deleteObjectsFromDb(CLICKHOUSE, CLIENT_FRAUD_TYPES_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+        deleteObjectsFromDb(CLICKHOUSE, BO_CLIENT_FRAUD_TYPES_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
 
     @Step("Clean mt balance orders table by client")
@@ -86,7 +86,7 @@ public class CleanTableHelper {
         deleteObjectsFromDb(CLICKHOUSE, CRM_DEPOSIT_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
 
-    @Step("Clean mt5 coerced table by ucid")
+    @Step("Clean mt5 coerced table by comment")
     public static void cleanMt5CoercedTableByComment(String... values) throws Exception {
         deleteObjectsFromDb(CLICKHOUSE, MT5_DEALS_COERCED_TABLE_NAME, "comment", List.of(Arrays.toString(values)));
     }
@@ -96,9 +96,14 @@ public class CleanTableHelper {
         deleteObjectsFromDb(CLICKHOUSE, MT5_DEALS_COERCED_TABLE_NAME, "account", List.of(Arrays.toString(values)));
     }
 
+    @Step("Clean mt5 coerced table by ucid")
+    public static void cleanMt5CoercedTableByUcid(String... values) throws Exception {
+        deleteObjectsFromDb(CLICKHOUSE, MT5_DEALS_COERCED_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+    }
+
     @Step("Clean withdrawals table by account")
     public static void cleanWithdrawalsTableByUcid(String... values) throws Exception {
-        deleteObjectsFromDb(CLICKHOUSE, MT5_DEALS_COERCED_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+        deleteObjectsFromDb(CLICKHOUSE, CRM_WITHDRAWAL_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
 
     @Step("Clean lexisNexis table by ucid")

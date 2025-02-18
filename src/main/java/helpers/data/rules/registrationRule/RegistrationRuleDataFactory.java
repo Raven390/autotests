@@ -770,7 +770,7 @@ public class RegistrationRuleDataFactory {
             });
             insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
             data.clientFraudTypes.forEach(fraud -> {
-                insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+                insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
@@ -800,7 +800,7 @@ public class RegistrationRuleDataFactory {
             });
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.userId));
             data.clientFraudTypes.forEach(fraud -> {
-                deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
             });
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());

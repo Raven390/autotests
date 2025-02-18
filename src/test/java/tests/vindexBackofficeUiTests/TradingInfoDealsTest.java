@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -44,9 +45,11 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.platform = "MT5";
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account2));
         trade1 = generateMt4TradesCoerced(client);
         trade1.serverId = account1.serverIdSt.longValue();
         trade1.ticketType = "Sell";
@@ -66,9 +69,10 @@ public class TradingInfoDealsTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("563")
     @DisplayName("Verify all data is present in trading info - operations tab")
-    public void verifyTradingInfoDealsTest() throws InterruptedException {
+    public void verifyTradingInfoDealsTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openOperationsTab();

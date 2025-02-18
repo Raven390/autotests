@@ -42,7 +42,7 @@ public class TestBaseWeb {
     public TradingPage tradingPage;
     public AuditTrailPage auditTrailPage;
     public AlertsPage alertsPage;
-    public OperationsPage operationsPage;
+    public PaymentsPage paymentsPage;
     public ActivityTab activityTab;
 
     public Faker faker = new Faker();
@@ -83,7 +83,7 @@ public class TestBaseWeb {
         tradingPage = new TradingPage(page);
         auditTrailPage = new AuditTrailPage(page);
         alertsPage = new AlertsPage(page);
-        operationsPage = new OperationsPage(page);
+        paymentsPage = new PaymentsPage(page);
         activityTab = new ActivityTab(page);
     }
 

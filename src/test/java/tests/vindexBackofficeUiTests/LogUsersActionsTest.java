@@ -26,7 +26,7 @@ import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactor
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.ctmTbIdProof.IdProofTableEntryFactory.getIdProof;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static businessObjects.ui.user.UserFactory.coreUser;
+import static businessObjects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.BoHelper.getUserIdByUser;
@@ -67,7 +67,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
         withdrawal = generateWithdrawalByClient(client);
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-        userId = getUserIdByUser(coreUser());
+        userId = getUserIdByUser(autotestUserOne());
     }
 
     @Test
@@ -77,8 +77,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("646")
     @DisplayName("Log users actions. Verify login")
     public void verifyLogUsersActionsLoginTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
@@ -94,8 +95,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("647")
     @DisplayName("Log users actions. Sensitive data")
     public void verifyLogUsersActionsSensitiveDataTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         generalTab.clickGeneralTabButton();
         generalTab.clickShowHiddenDataButton();
@@ -120,8 +122,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("648")
     @DisplayName("Log users actions. KYC data")
     public void verifyLogUsersActionsKycDataTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         generalTab.clickGeneralTabButton();
         generalTab.kycDetailsOpen("Proof of identity");
@@ -139,12 +142,13 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("649")
     @DisplayName("Log users actions. Routing")
     public void verifyLogUsersActionsRoutingTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         alertsPage.openAlertsTab();
         generalTab.clickGeneralTabButton();
-        operationsPage.clickOperationsTabButton();
+        paymentsPage.clickPaymentsTabButton();
         tradingPage.openTradingTab();
         tradingPage.openAccountsTab();
         tradingPage.clickTableViewButton();
@@ -177,15 +181,10 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @DisplayName("Log users actions. Assign client")
     public void verifyLogUsersActionsAssignClientTest() throws Exception {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
-        investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        investigationPage.investigateClientCard();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s'", userId), UserActionAudit.class
         );
@@ -200,8 +199,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("651")
     @DisplayName("Log users actions. Comment")
     public void verifyLogUsersActionsCommentTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         investigationPage.openCommentForm();
         investigationPage.fillCommentForm("Test log users actions comment");
@@ -220,8 +220,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("652")
     @DisplayName("Log users actions. Restriction")
     public void verifyLogUsersActionsRestrictionTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickLoginSwitch();
@@ -243,8 +244,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("653")
     @DisplayName("Log users actions. Withdrawal")
     public void verifyLogUsersActionsWithdrawalTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickCheckedManual();
@@ -263,8 +265,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("654")
     @DisplayName("Log users actions. Resolve")
     public void verifyLogUsersActionsResolveTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveSimple("Test log users actions resolve");

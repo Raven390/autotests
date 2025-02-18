@@ -31,8 +31,8 @@ public class OperationsTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         cleanUserCashflowDb(testUserUcid);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkCashflowEmptyStateIsVisible();
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkCashflowEmptyStateIsVisible();
     }
 
     @Test
@@ -47,8 +47,8 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject withtdrawal = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about withdrawal");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", withtdrawal);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkCashflowEmptyStateDepositIsVisible();
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkCashflowEmptyStateDepositIsVisible();
     }
 
     @Test
@@ -63,8 +63,8 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject withtdrawal = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", withtdrawal);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkCashflowEmptyStateWithdrawalIsVisible();
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkCashflowEmptyStateWithdrawalIsVisible();
     }
 
     @Test
@@ -79,27 +79,27 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction.paymentSystem, String.valueOf(Math.round(transaction.totalAmountUsd)));
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentSystem, String.valueOf(Math.round(transaction.totalAmountUsd)));
         dpAndWdByChannelObject transaction2 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 11, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction2);
         page.reload();
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction2.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction2.paymentSystem, String.valueOf(Math.round(transaction2.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction2.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction2.paymentSystem, String.valueOf(Math.round(transaction2.totalAmountUsd)));
         dpAndWdByChannelObject transaction3 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentServiceSecond", "Payment Services", 12.0, 6, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction3);
         page.reload();
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction3.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction3.paymentSystem, String.valueOf(Math.round(transaction3.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction3.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction3.paymentSystem, String.valueOf(Math.round(transaction3.totalAmountUsd)));
         dpAndWdByChannelObject transaction4 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestCards", "Cards", 12.0, 6, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction4);
         page.reload();
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction4.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction4.paymentSystem, String.valueOf(Math.round(transaction4.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction4.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction4.paymentSystem, String.valueOf(Math.round(transaction4.totalAmountUsd)));
         dpAndWdByChannelObject transaction5 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 12.1, 6, getCurrentTimestampDbFormat());
         dpAndWdByChannelObject transaction6 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestCrypto", "Crypto", 12.2, 6, getCurrentTimestampDbFormat());
         dpAndWdByChannelObject transaction7 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestP2P", "P2P", 12.3, 6, getCurrentTimestampDbFormat());
@@ -124,26 +124,26 @@ public class OperationsTabTest extends TestBaseWeb {
         page.waitForTimeout(10_000);
         page.reload();
         page.waitForTimeout(10_000);
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction5.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction5.paymentSystem, String.valueOf(Math.round(transaction5.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction6.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction6.paymentSystem, String.valueOf(Math.round(transaction6.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction7.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction7.paymentSystem, String.valueOf(Math.round(transaction7.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeDeposit(transaction8.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction8.paymentSystem, String.valueOf(Math.round(transaction8.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction9.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction9.paymentSystem, String.valueOf(Math.round(transaction9.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction10.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction10.paymentSystem, String.valueOf(Math.round(transaction10.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction11.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction11.paymentSystem, String.valueOf(Math.round(transaction11.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction12.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction12.paymentSystem, String.valueOf(Math.round(transaction12.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction13.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction13.paymentSystem, String.valueOf(Math.round(transaction13.totalAmountUsd)));
-        operationsPage.hoverOverCashflowLineByTypeWithdrawal(transaction14.psCategory);
-        operationsPage.checkTotalCountByPaymentSystem(transaction14.paymentSystem, String.valueOf(Math.round(transaction14.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction5.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction5.paymentSystem, String.valueOf(Math.round(transaction5.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction6.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction6.paymentSystem, String.valueOf(Math.round(transaction6.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction7.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction7.paymentSystem, String.valueOf(Math.round(transaction7.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction8.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction8.paymentSystem, String.valueOf(Math.round(transaction8.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction9.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction9.paymentSystem, String.valueOf(Math.round(transaction9.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction10.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction10.paymentSystem, String.valueOf(Math.round(transaction10.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction11.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction11.paymentSystem, String.valueOf(Math.round(transaction11.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction12.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction12.paymentSystem, String.valueOf(Math.round(transaction12.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction13.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction13.paymentSystem, String.valueOf(Math.round(transaction13.totalAmountUsd)));
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction14.psCategory);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction14.paymentSystem, String.valueOf(Math.round(transaction14.totalAmountUsd)));
     }
 
     @Test
@@ -158,38 +158,38 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.1, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.psCategory, String.valueOf(Math.round(transaction.totalAmountUsd)));
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.psCategory, String.valueOf(Math.round(transaction.totalAmountUsd)));
 
         dpAndWdByChannelObject transaction2 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 24.1, 22, getCurrentTimestampDbFormat());
         Allure.step("override record about deposit");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction2);
         page.reload();
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.psCategory, String.valueOf(Math.round(transaction2.totalAmountUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.psCategory, String.valueOf(Math.round(transaction2.totalAmountUsd)));
 
         dpAndWdByChannelObject transaction3 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService2", "Payment Services", 14.1, 22, getCurrentTimestampDbFormat());
         Allure.step("add record about deposit with same cathegory but different name");
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction3);
         page.reload();
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.psCategory, String.valueOf(Math.round(transaction2.totalAmountUsd + transaction3.totalAmountUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.psCategory, String.valueOf(Math.round(transaction2.totalAmountUsd + transaction3.totalAmountUsd)));
 
         Allure.step("add to DB transaction with another category  and the bigger amount than previous category ");
         dpAndWdByChannelObject transaction5 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction5);
         page.reload();
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction5.psCategory, String.valueOf(Math.round(transaction5.totalAmountUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction5.psCategory, String.valueOf(Math.round(transaction5.totalAmountUsd)));
 
         Allure.step("add to DB withdrawal transaction");
         dpAndWdByChannelObject transaction6 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestBank Transfers", "Bank Transfers", 42.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction6);
         page.reload();
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction6.psCategory, String.valueOf(Math.round(transaction6.totalAmountUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction6.psCategory, String.valueOf(Math.round(transaction6.totalAmountUsd)));
 
         Allure.step("add to DB withdrawal transaction with another category  and the bigger amount than previous category ");
         dpAndWdByChannelObject transaction7 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "P2P withdrawal", "P2P", 43.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transaction7);
         page.reload();
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction7.psCategory, String.valueOf(Math.round(transaction7.totalAmountUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction7.psCategory, String.valueOf(Math.round(transaction7.totalAmountUsd)));
     }
 
     @Test
@@ -201,8 +201,8 @@ public class OperationsTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         cleanUserFinancialTransactionDbUcid(testUserUcid);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkFinancialTransactionEmptyStateIsVisible();
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
     }
 
     @Test
@@ -217,12 +217,12 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkFinancialTransactionsTilesValues("Net deposits", String.valueOf(Math.round((payments.netDepositsUsd))), String.valueOf(Math.round(payments.totalBalanceopsCount)));
-        operationsPage.checkFinancialTransactionsTilesValues("Total deposits", String.valueOf(Math.round((payments.totalDepositUsd))), String.valueOf(Math.round(payments.totalDepositCount)));
-        operationsPage.checkFinancialTransactionsTilesValues("Total withdrawals", String.valueOf(Math.round((payments.totalWithdrawalUsd))), String.valueOf(Math.round(payments.totalWithdrawalCount)));
-        operationsPage.checkFinancialTransactionsTilesValues("Total Internal transfers", String.valueOf(Math.round((payments.totalTransfersUsd))), String.valueOf(Math.round(payments.totalTransfersCount)));
-        operationsPage.checkFinancialTransactionsTilesValues("Total credit", String.valueOf(Math.round((payments.totalCreditsUsd))), String.valueOf(Math.round(payments.totalCreditsCount)));
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkFinancialTransactionsTilesValues("Net deposits", String.valueOf(Math.round((payments.netDepositsUsd))), String.valueOf(Math.round(payments.totalBalanceopsCount)));
+        paymentsPage.checkFinancialTransactionsTilesValues("Total deposits", String.valueOf(Math.round((payments.totalDepositUsd))), String.valueOf(Math.round(payments.totalDepositCount)));
+        paymentsPage.checkFinancialTransactionsTilesValues("Total withdrawals", String.valueOf(Math.round((payments.totalWithdrawalUsd))), String.valueOf(Math.round(payments.totalWithdrawalCount)));
+        paymentsPage.checkFinancialTransactionsTilesValues("Total Internal transfers", String.valueOf(Math.round((payments.totalTransfersUsd))), String.valueOf(Math.round(payments.totalTransfersCount)));
+        paymentsPage.checkFinancialTransactionsTilesValues("Total credit", String.valueOf(Math.round((payments.totalCreditsUsd))), String.valueOf(Math.round(payments.totalCreditsCount)));
     }
 
     @Test
@@ -237,13 +237,13 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 7 days");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.selectDateFilter("Last 7 days");
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
     }
 
     @Test
@@ -263,14 +263,14 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.checkFinancialTransactionEmptyStateIsNotVisible();
-        operationsPage.clickOnAccountSelectionWindow();
-        operationsPage.selectTradingAccount("17170102");
-        operationsPage.checkFinancialTransactionEmptyStateIsVisible();
-        operationsPage.clearSelectedTradingAccount();
-        operationsPage.selectTradingAccount("17170101");
-        operationsPage.checkFinancialTransactionEmptyStateIsNotVisible();
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
+        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.selectTradingAccount("17170102");
+        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.selectTradingAccount("17170101");
+        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
         Allure.step("add to DB transaction with financial transaction fot the second trade account");
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments2 = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_102, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
@@ -280,13 +280,13 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow2 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_102, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow2);
         page.reload();
-        operationsPage.clearSelectedTradingAccount();
-        operationsPage.clickOnAccountSelectionWindow();
-        operationsPage.selectTradingAccount("17170101");
-        operationsPage.checkFinancialTransactionEmptyStateIsVisible();
-        operationsPage.clearSelectedTradingAccount();
-        operationsPage.selectTradingAccount("17170102");
-        operationsPage.checkFinancialTransactionEmptyStateIsNotVisible();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.selectTradingAccount("17170101");
+        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.selectTradingAccount("17170102");
+        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
     }
 
     @Test
@@ -318,14 +318,14 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow3 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, "2024-12-10", "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow3);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
+        paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay("Dec 11");
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay("Dec 11");
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
     }
 
     @Test
@@ -351,15 +351,15 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getPreviousYearTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow1);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 1 year");
+        paymentsPage.selectDateFilter("Last 1 year");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
     }
 
     @Test
@@ -385,15 +385,15 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getPreviousMonthTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow1);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 30 days");
+        paymentsPage.selectDateFilter("Last 30 days");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
     }
 
     @Test
@@ -419,15 +419,15 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getPrevious6MonthTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow1);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 6 months");
+        paymentsPage.selectDateFilter("Last 6 months");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateMMMyyyy(getPreviousDayMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateMMMyyyy(getPreviousDayMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
     }
 
     @Test
@@ -453,15 +453,15 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 7, 0, 0), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow1);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 7 days");
+        paymentsPage.selectDateFilter("Last 7 days");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
     }
 
     @Test
@@ -487,15 +487,15 @@ public class OperationsTabTest extends TestBaseWeb {
         dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getPrevious90DaysTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.dp_and_wd_by_channel", transactionCashFlow1);
         page.reload();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter test date");
-        operationsPage.selectDateFilter("Last 90 days");
+        paymentsPage.selectDateFilter("Last 90 days");
         Allure.step("check that only data for the test date is displayed");
-        operationsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-        operationsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-        operationsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-        operationsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.psCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
     }
 
     @Test
@@ -506,11 +506,11 @@ public class OperationsTabTest extends TestBaseWeb {
     public void manipulateTimelineByClickTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.clickOnPreLastTimelineSection();
-        operationsPage.checkLastTimelineSectionInactive();
-        operationsPage.clickOnTimelineSectionByIndex(1);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.clickOnPreLastTimelineSection();
+        paymentsPage.checkLastTimelineSectionInactive();
+        paymentsPage.clickOnTimelineSectionByIndex(1);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -521,11 +521,11 @@ public class OperationsTabTest extends TestBaseWeb {
     public void manipulateTimelineByDragTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
-        operationsPage.shiftRightTimelineThumbToPreLastTimelineSection();
-        operationsPage.checkLastTimelineSectionInactive();
-        operationsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
+        paymentsPage.checkLastTimelineSectionInactive();
+        paymentsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -536,15 +536,15 @@ public class OperationsTabTest extends TestBaseWeb {
     public void filterLegend1And7DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter one day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
         page.reload();
         Allure.step("filter seven days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
     }
 
     @Test
@@ -555,16 +555,16 @@ public class OperationsTabTest extends TestBaseWeb {
     public void filterLegend8And31DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 8 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
         page.reload();
         Allure.step("filter 30 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
     }
 
     @Test
@@ -575,16 +575,16 @@ public class OperationsTabTest extends TestBaseWeb {
     public void filterLegend31And98DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 31 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
         page.reload();
         Allure.step("filter 98 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
     }
 
     @Test
@@ -595,16 +595,16 @@ public class OperationsTabTest extends TestBaseWeb {
     public void filterLegend98DaysAnd3YearTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 99 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
         page.reload();
         Allure.step("filter 3 years");
-        operationsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
     }
 
     @Test
@@ -615,11 +615,11 @@ public class OperationsTabTest extends TestBaseWeb {
     public void filterLegend3YearsTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 3 years");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
-        operationsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
-        operationsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
     }
 
     @Test
@@ -630,10 +630,10 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter6DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 6 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
-        operationsPage.checkTimelineSectionInactive(6);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
+        paymentsPage.checkTimelineSectionInactive(6);
     }
 
     @Test
@@ -644,11 +644,11 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter5DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 5 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -659,12 +659,12 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter4DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 4 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(0);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(0);
     }
 
     @Test
@@ -675,13 +675,13 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter3DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 3 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
     }
 
     @Test
@@ -692,14 +692,14 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter2DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 2 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(4);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(4);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
     }
 
     @Test
@@ -710,15 +710,15 @@ public class OperationsTabTest extends TestBaseWeb {
     public void timelineInactiveDaysFilter1DayTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 1 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        operationsPage.checkTimelineSectionInactive(6);
-        operationsPage.checkTimelineSectionInactive(5);
-        operationsPage.checkTimelineSectionInactive(4);
-        operationsPage.checkTimelineSectionInactive(0);
-        operationsPage.checkTimelineSectionInactive(1);
-        operationsPage.checkTimelineSectionInactive(2);
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkTimelineSectionInactive(6);
+        paymentsPage.checkTimelineSectionInactive(5);
+        paymentsPage.checkTimelineSectionInactive(4);
+        paymentsPage.checkTimelineSectionInactive(0);
+        paymentsPage.checkTimelineSectionInactive(1);
+        paymentsPage.checkTimelineSectionInactive(2);
     }
 
     @Test
@@ -733,17 +733,17 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 99 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthYear());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthYear());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
         page.reload();
         Allure.step("filter 98 days");
-        operationsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 8, 1, 0, 0), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthYear());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(8));
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 8, 1, 0, 0), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthYear());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(8));
     }
 
     @Test
@@ -758,21 +758,21 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 10 months");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(10));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getPreviousDateMonthYearIntMonth(1));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(4));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(7));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(10));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(10));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getPreviousDateMonthYearIntMonth(1));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(4));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(7));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(10));
         page.reload();
         Allure.step("filter 20 months");
-        operationsPage.selectDatesInCalendar(getPreviousDateYearMonthDayByIntMonthMinus1Day(19), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(4));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(7));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(10));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(19));
+        paymentsPage.selectDatesInCalendar(getPreviousDateYearMonthDayByIntMonthMinus1Day(19), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(4));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(7));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(10));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDateMonthYearIntMonth(19));
     }
 
     @Test
@@ -787,15 +787,15 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 1 day");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthDay());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthDay());
         page.reload();
         Allure.step("filter 14 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(13), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthDay());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(13));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(13), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthDay());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(13));
     }
 
     @Test
@@ -810,16 +810,16 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 15 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(14));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(14));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(14));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(14));
         page.reload();
         Allure.step("filter 20 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(19), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(3));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(19));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(19), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(3));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(19));
     }
 
     @Test
@@ -834,11 +834,11 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 20 months ");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(21));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getCurrentYear());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousYearByInt(1));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(21));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getCurrentYear());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousYearByInt(1));
     }
 
     @Test
@@ -853,16 +853,16 @@ public class OperationsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(testUserUcid);
         PaymentsTotalObject payments = new PaymentsTotalObject(testUserUcid, "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        operationsPage.navigateOperationsTab(testUserUcid);
+        paymentsPage.navigateOperationsTab(testUserUcid);
         Allure.step("filter 21 days");
-        operationsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(20));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(20));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(20));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(20));
         page.reload();
         Allure.step("filter 98 days");
-        operationsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        operationsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
     }
 
 }

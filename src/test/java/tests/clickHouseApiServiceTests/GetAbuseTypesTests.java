@@ -40,7 +40,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
         fraud1 = new BoClientFraudTypesObject(client.getUcid(), 1, "HEDGING");
         fraud2 = new BoClientFraudTypesObject(client.getUcid(), 2, "CPA");
         fraud3 = new BoClientFraudTypesObject(getRandomVantageClient().getUcid(), 3, "LOSS_VOUCHER_ABUSE");
-        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
+        insertObjectsToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
     }
 
     @AfterAll
