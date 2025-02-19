@@ -96,6 +96,7 @@ public class Constants {
     // TABLES
     public static final String CRM_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
     public static final String MT_ACCOUNT_TABLE_NAME = "vindex_test.mt___account";
+    public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "vindex_test.s3___fact_login_metrics";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm___tb_bonus";
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm___tb_deposit";
@@ -137,6 +138,10 @@ public class Constants {
     public static final String MIRROR_UCID_TABLE_NAME = "vindex_test.mirror_ucid";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     public static final String AGGR_FLOATING_TRADES_GROUP_BY = "vindex_test_api.aggr__floating_trades_group_by";
+    public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "vindex_test.account_ib_relation";
+    public static final String S2_FACT_IB_SALES_COMMISSIONS = "vindex_test.s3___fact_ib_sales_commissions";
+    public static final String PAYMENTS_TOTAL_TABLE_NAME = "vindex_test.payments_total";
+    public static final String SEGMENTATION_TABLE_NAME = "data_science_test.segmentation_table";
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced_toxicity";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     // UI

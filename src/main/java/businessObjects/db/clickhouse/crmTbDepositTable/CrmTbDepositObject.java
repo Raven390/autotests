@@ -5,25 +5,37 @@ import java.util.Objects;
 
 public class CrmTbDepositObject {
 
+    public Integer sourceIdSt;
+    public Integer brandUid;
+    public String brand;
+    public String regulator;
+    public Integer userId;
+    public String ucid;
     public Integer account;
+    public Integer transferId;
+    public String createTime;
+    public String createTimeUtc;
+    public String updateTime;
+    public String updateTimeUtc;
     public Double amount;
     public Double amountUsd;
-    public String brand;
-    public String createTime;
     public String currency;
-    public Double fee;
+    public Integer statusId;
+    public String status;
+    public Integer paymentTypeId;
+    public String paymentType;
+    public Integer paymentChannelId;
     public String paymentChannel;
-    public String paymentDetails;
-    public String paymentExpirationDate;
     public String paymentSystemAccount;
     public String paymentSystemCurrency;
-    public String paymentType;
-    public String regulator;
-    public String status;
-    public Integer transferId;
-    public String ucid;
-    public String updateTime;
-    public Integer userId;
+    public String paymentDetails;
+    public String paymentExpirationDate;
+    public String ticket;
+    public Double fee;
+    public String processedNotes;
+    public Integer isDel;
+    public Integer isNonApp;
+    public String lastUpdated;
 
     public CrmTbDepositObject() {
     }

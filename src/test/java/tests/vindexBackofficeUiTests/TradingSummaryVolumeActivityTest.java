@@ -12,23 +12,18 @@ import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
-import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.*;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
@@ -504,7 +499,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
+        paymentsPage.selectDatesInCalendar("2024-02-13", "2024-02-13");
         Allure.step("check that only data for the test date is displayed");
         assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }

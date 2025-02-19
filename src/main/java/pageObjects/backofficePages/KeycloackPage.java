@@ -51,8 +51,15 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(firstLoginUser());
     }
 
+    @Deprecated
     @Step("Log in as core user")
     public void loginAsCoreUser() {
+        loginAsAutotestUser();
+    }
+
+    @Deprecated
+    @Step("Log in as core user")
+    public void loginAsCoreUserOLD() {
         loginWithUser(coreUser());
     }
 

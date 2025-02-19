@@ -1,6 +1,7 @@
 package pageObjects.backofficePages;
 
 import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
+import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -248,6 +249,13 @@ public class TradingPage extends AbstractPage {
     private static final String TOXICITY_AND_PROFIT_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String TOXICITY_AND_PROFIT_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-number-widget__title')]";
+    private final String ACCOUNT_CARD = "//div[@class='v-trading-tab-accounts-card']";
+    private final String ACCOUNT_CARD_IB_ACCOUNT = "//div[@class='v-ib-accounts__ib-accounts']";
+    private final String IB_ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_ib')]";
+    private final String IB_ACCOUNT_REBATES_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_rebates')]";
+    private final String ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column')]";
+    private final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
+
 
     public TradingPage(Page page) {
         super(page);
@@ -1369,6 +1377,10 @@ public class TradingPage extends AbstractPage {
         return deal.profitUsd + deal.commissionUsd + deal.storageUsd;
     }
 
+    public double calculatePnlByDeal(Mt5DealsCoercedObject deal) {
+        return deal.profitUsd + deal.commissionUsd + deal.storageUsd;
+    }
+
     public int calculatePnlByDealInt(MtMt4TradesCoercedObject trade1, MtMt4TradesCoercedObject trade2) {
         return (int) (Math.round(calculatePnlByDeal(trade1) + calculatePnlByDeal(trade2)));
     }
@@ -1761,5 +1773,75 @@ public class TradingPage extends AbstractPage {
     public String getAbsoluteToxicityWidgetInfo() {
         return absoluteToxicityWidgetInfo.textContent();
     }
+
+    public void checkIbAccountValueCard(int account, int expectedValue) {
+        Allure.step("Check that Ib account value is shown and match expected");
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + ACCOUNT_CARD_IB_ACCOUNT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkIbAccountValueCard(int account, int expectedValue, int number) {
+        Allure.step("Check that Ib account value is shown and match expected");
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + ACCOUNT_CARD_IB_ACCOUNT + SECONDARY_TEXT + "[" + number + "]";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        String result = page.locator(locator).textContent().replace(",", "").trim();
+        assertEquals(String.valueOf(expectedValue), result);
+    }
+
+    public void checkIbAccountValueCardMultiple(int account, int expectedValue) {
+        Allure.step("Check that Ib account value is shown and match expected");
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + ACCOUNT_CARD_IB_ACCOUNT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertTrue(page.locator(locator).textContent().contains(String.valueOf(expectedValue)));
+    }
+
+    public void checkIbAccountValueTable(int account, int expectedValue) {
+        Allure.step("Check that Ib account value is shown and match expected in table view");
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkIbAccountValueTable(int account, int expectedValue, int number) {
+        Allure.step("Check that Ib account value is shown and match expected in table view");
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL + PRIMARY_TEXT + "[" + number + "]";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
+    }
+
+    public void checkIbRebatesValueTable(int account, double expectedValue) {
+        Allure.step("Check that Ib account value is shown and match expected in table view");
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(dfd.format(expectedValue)) + " USD", page.locator(locator).textContent());
+    }
+
+    public void checkIbRebatesValueTable(int account, double expectedValue, int number) {
+        Allure.step("Check that Ib account value is shown and match expected in table view");
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL + PRIMARY_TEXT + "[" + number + "]";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(dfd.format(expectedValue)) + " USD", page.locator(locator).textContent());
+    }
+
+    public void checkIbRebatesValueCard(int account, double expectedValue) {
+        Allure.step("Check that Ib rebate value is shown and match expected");
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(dfd.format(expectedValue)) + " USD", page.locator(locator).textContent());
+    }
+
+    public void checkIbRebatesValueCard(int account, double expectedValue, int number) {
+        Allure.step("Check that Ib rebate value is shown and match expected");
+        String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div[contains(@class, 'g-text')][" + number + "]";
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(dfd.format(expectedValue)) + " USD", page.locator(locator).textContent());
+    }
+
+//    public void checkIbRebatesValue(int account, double expectedValue){
+//        int intValue = ((int)Math.round(expectedValue));
+//        checkIbRebatesValue(account, intValue);
+//    }
+
 }
 
