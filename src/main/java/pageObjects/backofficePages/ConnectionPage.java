@@ -87,6 +87,8 @@ public class ConnectionPage extends AbstractPage {
     private final Locator appliedFiltersHidden;
     private final Locator connectionTableBehaviorValue;
     private final Locator connectionTableScoreValue;
+    private final Locator zoomInButton;
+    private final Locator zoomValue;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -117,6 +119,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
     private static final String GRAPH_NODES_GROUP = "//div[@class='v-connection-search-graph-view__group']";
     private static final String CONNECTION_TABLE_ROW = "//tbody/tr";
+    private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls__zoom-controls']";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -188,6 +191,8 @@ public class ConnectionPage extends AbstractPage {
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button__filters']/div");
         this.connectionTableBehaviorValue = page.locator("div.v-connection-search-table-view__behavior");
         this.connectionTableScoreValue = page.locator("//td[contains(@class,'v-connection-search-table-view__column_type_connection')]/descendant::div[contains(@class,'g-color-text_color_secondary')]");
+        this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
+        this.zoomValue = page.locator(String.format("%s/div/descendant::span", ZOOM_CONTROLS));
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -913,5 +918,15 @@ public class ConnectionPage extends AbstractPage {
     @Step("Get applied filters count")
     public String getAppliedFiltersCount() {
         return filtersCounter.textContent();
+    }
+
+    @Step("Click zoom in button")
+    public void clickZoomInButton() {
+        zoomInButton.click();
+    }
+
+    @Step("Get zoom value")
+    public String getZoomValue() {
+        return zoomValue.textContent();
     }
 }
