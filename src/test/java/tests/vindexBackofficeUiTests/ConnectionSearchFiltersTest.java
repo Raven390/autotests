@@ -2,6 +2,7 @@ package tests.vindexBackofficeUiTests;
 
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.backofficeDb.client.Client;
+import businessObjects.db.clickhouse.clientFraudTypes.ClientFraudTypes;
 import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
@@ -95,14 +96,22 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         kafka.produceMessage(connectionAlert2.alertId, objectMapper.writeValueAsString(connectionAlert2), KAFKA_TOPIC_ALERTS);
         Client connectedBoClient1 = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", connectedClient1.getUcid()), Client.class).getFirst();
         Client connectedBoClient6 = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", connectedClient6.getUcid()), Client.class).getFirst();
-        createUserFraudsDb(connectedBoClient1.ucid, 10, 2, 3, 4);
-        createUserFraudsDb(connectedBoClient6.ucid, 5, 6, 9, 10);
+        ClientFraudTypes fraud1 = new ClientFraudTypes(connectedBoClient1.ucid, "REBATE_CHURNING", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud2 = new ClientFraudTypes(connectedBoClient1.ucid, "LATENCY_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud3 = new ClientFraudTypes(connectedBoClient1.ucid, "MARKET_MANIPULATION", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud4 = new ClientFraudTypes(connectedBoClient1.ucid, "PRICING_ERROR", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud5 = new ClientFraudTypes(connectedBoClient6.ucid, "GAP_TRADING", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud6 = new ClientFraudTypes(connectedBoClient6.ucid, "SWAP_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud7 = new ClientFraudTypes(connectedBoClient6.ucid, "RAF_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat());
+        ClientFraudTypes fraud8 = new ClientFraudTypes(connectedBoClient6.ucid, "REBATE_CHURNING", "VINDEX", 0, getCurrentTimestampDbFormat());
+        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3, fraud4, fraud5, fraud6, fraud7, fraud8));
     }
 
     @BeforeEach
     public void goToConnectionSearchPage() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
     }
@@ -338,8 +347,7 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         connectionPage.selectBehaviorFilterOption("Normal");
         connectionPage.fillPnlFromInput("12.45");
         connectionPage.clickApplyFiltersButton();
-        assertThat("Verify applied filters list", connectionPage.getAppliedFiltersList(), containsInAnyOrder("Connection type", "Behavior", "PNL"));
-        assertThat("Verify applied hidden filters list", connectionPage.getAppliedFiltersHiddenList(), containsInAnyOrder("Attribute"));
+        assertThat("Verify applied filters list", connectionPage.getAppliedFiltersList(), containsInAnyOrder("Connection type", "Behavior", "PNL", "Attribute"));
         assertThat("Verify applied filters counter is correct", connectionPage.getAppliedFiltersCount(), equalTo("4"));
     }
 
@@ -353,7 +361,6 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         closeAlert(connectedClient6.getUcid());
         cleanUserRestriction(connectedClient2.getUcid());
         cleanUserRestriction(connectedClient5.getUcid());
-        cleanUserFraudsDb(connectedClient1.getUcid());
-        cleanUserFraudsDb(connectedClient6.getUcid());
+        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid IN ('%s', '%s')", connectedClient1.getUcid(), connectedClient6.getUcid()));
     }
 }

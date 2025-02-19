@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 import java.util.List;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.DETACHED;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 
 public class AlertsPage extends AbstractPage {
 
@@ -28,6 +29,7 @@ public class AlertsPage extends AbstractPage {
     private final Locator refreshButtonDisabled;
     private final Locator alertsLoading;
     private final Locator alertsTab;
+    private final Locator loadedAlertsCount;
 
     public AlertsPage(Page page) {
         super(page);
@@ -48,6 +50,7 @@ public class AlertsPage extends AbstractPage {
         this.alertStatusDropdownAll = page.locator("//*[text()='All alerts']");
         this.refreshButtonDisabled = page.locator("//button[@data-qa='investigation_tools_client_alerts_refresher' and contains(@class,'g-button_disabled')]");
         this.alertsLoading = page.locator("//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]").first();
+        this.loadedAlertsCount = page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div[text()!='']");
         this.alertsTab = page.locator("[role=\"tab\"][title=\"Alerts\"]");
     }
 
@@ -132,6 +135,10 @@ public class AlertsPage extends AbstractPage {
     public String getFirstAlertStatus() {
         alertStatus.first().hover();
         return alertPopup.textContent();
+    }
+
+    public void waitForAlertsCountToLoad() {
+        loadedAlertsCount.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 }
 

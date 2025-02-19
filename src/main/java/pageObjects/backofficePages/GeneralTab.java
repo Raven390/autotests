@@ -109,8 +109,8 @@ public class GeneralTab extends AbstractPage {
         this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
         this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
         this.showHiddenDataButton = page.locator("//button[@data-qa='investigation_page__general_info_unmask_btn']");
-        this.registrationSourceIb = page.locator("//span[text()='IB']/following-sibling::span");
-        this.registrationSourceCpa = page.locator("//span[text()='CPA']/following-sibling::span");
+        this.registrationSourceIb = page.locator("//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
+        this.registrationSourceCpa = page.locator("//span[text()='CPA affiliate']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.fileViewerImage = page.locator("[data-qa='gallery__image']");
         this.fileViewerImagePresentation = page.locator("[data-qa='gallery__slide']");
         this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
@@ -343,7 +343,7 @@ public class GeneralTab extends AbstractPage {
     }
 
     @Step("Get registration source IB")
-    public String getRegistrationSourceIb() {
+    public String getRegistrationSourceRaf() {
         return registrationSourceIb.textContent();
     }
 
