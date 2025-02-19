@@ -20,6 +20,7 @@ import static utils.ConfigFactory.BASE_URL_E2E;
 public abstract class AbstractPage {
 
     DecimalFormat df = new DecimalFormat("#,###");
+    DecimalFormat dfd = new DecimalFormat("##,###.##");
 
     protected final Page page;
     protected final Locator calendar;

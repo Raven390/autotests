@@ -7,6 +7,7 @@ import static utils.ConfigFactory.*;
 import com.microsoft.playwright.*;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
@@ -44,6 +45,9 @@ public class TestBaseWeb {
     public AlertsPage alertsPage;
     public PaymentsPage paymentsPage;
     public ActivityTab activityTab;
+
+    DecimalFormat df = new DecimalFormat("#,###");
+    DecimalFormat dfd = new DecimalFormat("#,###.##");
 
     public Faker faker = new Faker();
 

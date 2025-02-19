@@ -85,7 +85,7 @@ public class CrmTbAccountObjectFactory {
     }
 
     public static CrmTbAccountObject generateStaticCrmTbAccountActive(ClientHelper client) {
-        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getUid(), client.getTradingAccount(), client.getServerId(), "server1", 1, "Standard", "S_VFX_EUR", "MT4", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29", "2024-12-29", "Active", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", 101.5, "USD", 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, 0, 42, 42, 0, 0, 0, 0, 0, 0, 0, "2024-12-29 15:59:30.084000000", "Automation tests");
+        return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getUid(), client.getTradingAccount(), client.getServerId(), "server1", 1, "Standard", "S_VFX_EUR", "MT4", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29", "2024-12-29", "Active", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", "2024-12-29 14:59:30.084000000", 101.5, "USD", 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, 0, 42, 42, 0, 0, 0, 0, 0, 0, 0, "" + getCurrentTimestampDbFormat(), "Automation tests");
     }
 
     public static CrmTbAccountObject generateAdditionalStaticCrmTbAccountActive(ClientHelper client) {

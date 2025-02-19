@@ -39,6 +39,9 @@ public class PaymentsTotalObject {
         return Objects.hash(ucid, brand, regulator, userId, account, date, totalDepositUsd, totalDepositCount, totalWithdrawalUsd, totalWithdrawalCount, netDepositsUsd, totalBalanceopsCount, totalCreditsUsd, totalCreditsCount, totalTransfersUsd, totalTransfersCount, lastUpdated);
     }
 
+    public PaymentsTotalObject() {
+    };
+
     public PaymentsTotalObject(String ucid, String brand, String regulator, long userId, long account, String date,
             double totalDepositUsd, long totalDepositCount, double totalWithdrawalUsd, long totalWithdrawalCount,
             double netDepositsUsd, long totalBalanceopsCount, double totalCreditsUsd, long totalCreditsCount,

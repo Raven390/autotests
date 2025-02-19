@@ -1,5 +1,6 @@
 package helpers.data.enums;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public enum FraudType {
@@ -49,6 +50,16 @@ public enum FraudType {
         FraudType[] frauds = values();
         Random random = new Random();
         return frauds[random.nextInt(frauds.length)];
+    }
+
+    public static FraudType getRandomFraudType(FraudType... fraudType) {
+        FraudType fraud;
+        do {
+            FraudType[] frauds = values();
+            Random random = new Random();
+            fraud = frauds[random.nextInt(frauds.length)];
+        } while (Arrays.stream(fraudType).toList().contains(fraud));
+        return fraud;
     }
 }
 

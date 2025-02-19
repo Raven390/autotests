@@ -3,6 +3,7 @@ package tests.vindexBackofficeUiTests;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,10 +21,12 @@ import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFacto
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByUcid;
+import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -37,6 +40,8 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static CrmTbAccountObject account1;
     private static CrmTbAccountObject account2;
+    private static MtAccountObject mtAccount1;
+    private static MtAccountObject mtAccount2;
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -59,10 +64,21 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         trade2.storageUsd = 0;
         trade2.commissionUsd = 0.0;
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+
+        mtAccount1 = generateMtAccountByCrmTbAccount(account1);
+        mtAccount2 = generateMtAccountByCrmTbAccount(account2);
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account2));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2));
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+    }
+
+    @AfterAll
+    public static void teardown() throws Exception {
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        cleanMt5CoercedTableByUcid(MT5_DEALS_COERCED_TABLE_NAME, crmTbUser.ucid);
+        closeAlert(crmTbUser.ucid);
     }
 
     @Test
@@ -73,6 +89,8 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     public void verifyAccountsCardViewTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsCoreUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
@@ -160,12 +178,5 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account margin free in table view is as expected", tradingPage.getAccountTableMarginFree(account2.account), equalTo(String.format("%s %s", account2.marginFree, account2.currency)));
         assertThat("Assert that account server in table view is as expected", tradingPage.getAccountTableServer(account2.account), equalTo(account2.serverName));
         assertThat("Assert that account group in table view is as expected", tradingPage.getAccountTableGroup(account2.account), equalTo(account2.accountGroup));
-    }
-
-    @AfterAll
-    public static void teardown() throws Exception {
-        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        cleanMt5CoercedTableByUcid(MT5_DEALS_COERCED_TABLE_NAME, crmTbUser.ucid);
-        closeAlert(crmTbUser.ucid);
     }
 }

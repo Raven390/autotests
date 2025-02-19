@@ -2,6 +2,7 @@ package pageObjects.backofficePages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -12,8 +13,10 @@ import java.sql.SQLException;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.ID_PROOF_TABLE_NAME;
 import static utils.Constants.KYC_FILES_TABLE_NAME;
+import static utils.Utils.roundDouble;
 
 public class GeneralTab extends AbstractPage {
 
@@ -72,6 +75,10 @@ public class GeneralTab extends AbstractPage {
     private static final String KYC_ROW_ATTEMPT = "//td[@data-qa='investigation_tools_kyc_row__attempts']";
     private static final String SECONDARY_TEXT_SELECTOR = "//*[contains(@class,'g-color-text_color_secondary')]";
     private static final String NOT_SECONDARY_TEXT_SELECTOR = "//*[not (contains(@class,'g-color-text_color_secondary'))]";
+    private static final String SUMMARY_PANEL = "//*[@data-qa='investigation_page__investigation_tools'";
+    private static final String SUMMARY_PANEL_VALUE = "//div[contains(@class, 'v-client-summary-panel__value')]/div[@class= 'v-text-with-icon__text']";
+    private static final String SUMMARY_PANEL_ITEM = "//div[contains(@class, 'v-client-summary-panel__item')]";
+
 
     public GeneralTab(Page page) {
         super(page);
@@ -118,9 +125,7 @@ public class GeneralTab extends AbstractPage {
 
     @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
-        waitForPageToLoad();
-        generalTab.click();
+        page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/general");
         waitForPageToLoad();
 
     }
@@ -398,6 +403,24 @@ public class GeneralTab extends AbstractPage {
 
     public void checkValueKycPofAttempts(String expectedValue) {
         assertEquals(expectedValue, page.locator(POF_ROW_SELECTOR + KYC_ROW_ATTEMPT).first().textContent());
+    }
+
+    public void checkSummaryPanelValue(String sectionName, String expectedValue) {
+        String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedValue, page.locator(locator).textContent());
+    }
+
+    public void checkSummaryPanelFraudValue(String sectionName, String expectedValue) {
+        String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertTrue(page.locator(locator).textContent().contains(expectedValue));
+    }
+
+    public void checkSummaryPanelValue(String sectionName, double expectedValue) {
+        double rounded = roundDouble(expectedValue, 2);
+        String string = dfd.format(rounded);
+        checkSummaryPanelValue(sectionName, string);
     }
 
 }

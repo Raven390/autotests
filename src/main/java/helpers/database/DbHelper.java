@@ -177,6 +177,10 @@ public class DbHelper {
         });
     }
 
+    public static void deleteObjectFromDb(String tableName, String where) {
+        deleteEntryFromDb(tableName, where);
+    }
+
     @Step("Delete entries from {tableName} in {dbName} where {columnName} matches the provided values")
     public static void deleteObjectsFromDb(DbName dbName, String tableName, String columnName, List<?> values)
             throws SQLException {
