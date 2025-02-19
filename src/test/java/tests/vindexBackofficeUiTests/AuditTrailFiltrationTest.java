@@ -64,8 +64,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("618")
     @DisplayName("Audit trail. Setting up data before filtration test")
     public void setupData() throws JsonProcessingException {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         investigationPage.openCommentForm();
         investigationPage.fillCommentForm("Test comment added action type");
@@ -76,7 +77,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         restrictionPage.clickCheckedManual();
         restrictionPage.fillCancelReasonManualWithdrawalApproveOne("Test withdrawal request decision action type");
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveWithdrawalsAllApprove("Test investigation completed action type");
+        resolvePage.resolveSimple("Test investigation completed action type");
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -88,8 +89,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("619")
     @DisplayName("Audit trail. Verify filtration by Alert received")
     public void verifyAuditTrailFiltrationAlertReceivedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -110,8 +112,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("620")
     @DisplayName("Audit trail. Verify filtration by Comment added")
     public void verifyAuditTrailFiltrationCommentAddedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -132,8 +135,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("621")
     @DisplayName("Audit trail. Verify filtration by Client assigned")
     public void verifyAuditTrailFiltrationClientAssignedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -154,8 +158,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("622")
     @DisplayName("Audit trail. Verify filtration by Investigation completed")
     public void verifyAuditTrailFiltrationInvestigationCompletedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -176,8 +181,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("623")
     @DisplayName("Audit trail. Verify filtration by Restriction cancelled")
     public void verifyAuditTrailFiltrationRestrictionCancelledTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -198,8 +204,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("624")
     @DisplayName("Audit trail. Verify filtration by Restriction applied")
     public void verifyAuditTrailFiltrationRestrictionAppliedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -220,8 +227,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("625")
     @DisplayName("Audit trail. Verify filtration by Restriction requested")
     public void verifyAuditTrailFiltrationRestrictionRequestedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -242,8 +250,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("626")
     @DisplayName("Audit trail. Verify filtration by Cancellation requested")
     public void verifyAuditTrailFiltrationCancellationRequestedTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -264,8 +273,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("627")
     @DisplayName("Audit trail. Verify filtration by Withdrawal request decision")
     public void verifyAuditTrailFiltrationWithdrawalRequestDecisionTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -286,8 +296,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("628")
     @DisplayName("Audit trail. Verify filtration by multiple types")
     public void verifyAuditTrailFiltrationMultipleTypesTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
@@ -310,8 +321,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
     @AllureId("629")
     @DisplayName("Audit trail. Verify clear filtration")
     public void verifyAuditTrailFiltrationClearTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         int initialItemsCount = auditTrailPage.getAuditTrailItems().size();

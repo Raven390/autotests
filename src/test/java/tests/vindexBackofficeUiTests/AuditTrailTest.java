@@ -26,7 +26,7 @@ import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFacto
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static businessObjects.ui.user.UserFactory.coreUser;
+import static businessObjects.ui.user.UserFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -44,6 +44,7 @@ public class AuditTrailTest extends TestBaseWeb {
     private static RuleAlert alert;
     private static ClientHelper client;
     private static final String TIME_PATTERN = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$";
+    private static final User user = autotestUserOne();
 
     @BeforeEach
     public void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -68,8 +69,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("601")
     @DisplayName("Audit trail. Verify message for 'Alert received' action type")
     public void verifyAlertReceivedTest() {
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
@@ -86,8 +88,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("602")
     @DisplayName("Audit trail. Verify message for 'Comment added' action type")
     public void verifyCommentAddedTest() {
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         investigationPage.openCommentForm();
         String comment = "Test comment added action type";
@@ -98,7 +101,6 @@ public class AuditTrailTest extends TestBaseWeb {
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
         AuditTrailItem item = auditTrailItems.getFirst();
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        User user = coreUser();
         assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Comment added", user.getFirstName(), user.getLastName())));
         assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
     }
@@ -109,8 +111,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("603")
     @DisplayName("Audit trail. Verify message for 'Client assigned' action type")
     public void verifyClientAssignedTest() {
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         investigationPage.investigateClientCard();
         auditTrailPage.openAuditTrailTab();
@@ -118,7 +121,6 @@ public class AuditTrailTest extends TestBaseWeb {
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
         AuditTrailItem item = auditTrailItems.getFirst();
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        User user = coreUser();
         assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Client assigned", user.getFirstName(), user.getLastName())));
     }
 
@@ -128,8 +130,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("604")
     @DisplayName("Audit trail. Verify message for 'Investigation completed' action type")
     public void verifyInvestigationCompletedTest() throws JsonProcessingException {
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
         String comment = "Test investigation completed action type";
@@ -143,10 +146,9 @@ public class AuditTrailTest extends TestBaseWeb {
         assertThat("Assert that there are 4 audit trail items", auditTrailItems, hasSize(4));
         AuditTrailItem item = auditTrailItems.get(1);
         assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        User user = coreUser();
         assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Investigation completed", user.getFirstName(), user.getLastName())));
         assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
-        assertThat("Verify audit trail item details", item.getDetails(), equalTo(String.format("Confirmed fraud type: %s", "Market manipulation")));
+        assertThat("Verify audit trail item details", item.getDetails(), equalTo("Fraud type not detected."));
     }
 
     @Test
@@ -155,8 +157,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @AllureId("605")
     @DisplayName("Audit trail. Verify message for restrictions action types")
     public void verifyRestrictionsTest() {
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickLoginSwitch();
@@ -171,7 +174,6 @@ public class AuditTrailTest extends TestBaseWeb {
         for (AuditTrailItem item : auditTrailItems) {
             assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         }
-        User user = coreUser();
         AuditTrailItem restrictionRequested = new AuditTrailItem(
                 String.format("%s%s %s", "Restriction requested", user.getFirstName(), user.getLastName()), commentSet, "Login CRM", null
         );
@@ -192,15 +194,16 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("606")
     @DisplayName("Audit trail. Verify message for withdrawal request decision action type")
-    public void verifyWithdrawalRequestDecisionTest() throws IOException, ReflectiveOperationException, SQLException {
+    public void verifyWithdrawalRequestDecisionTest() throws IOException {
         Response response = postRestriction(new PostRestrictionRequestBody(
                 crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
         CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-        investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
         restrictionPage.clickCheckedManual();
@@ -212,7 +215,6 @@ public class AuditTrailTest extends TestBaseWeb {
         for (AuditTrailItem item : auditTrailItems) {
             assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         }
-        User user = coreUser();
         AuditTrailItem cancellationRequested = new AuditTrailItem(
                 String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Approve", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
         );

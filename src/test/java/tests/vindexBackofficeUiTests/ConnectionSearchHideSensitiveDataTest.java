@@ -50,8 +50,9 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
     @AllureId("687")
     @DisplayName("Verify sensitive data hiding in connection search card view")
     public void verifyConnectionSearchHideSensitiveDataCardTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionCard(client.getUcid());
@@ -72,8 +73,9 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
     @AllureId("688")
     @DisplayName("Verify sensitive data hiding in connection search table view")
     public void verifyConnectionSearchHideSensitiveDataTableTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
         connectionPage.openConnectionTable();

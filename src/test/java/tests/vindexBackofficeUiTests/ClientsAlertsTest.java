@@ -41,10 +41,12 @@ public class ClientsAlertsTest extends TestBaseWeb {
     @AllureId("558")
     @DisplayName("Verify clients alerts functionality, elements, filtration, refresh, sorting")
     public void clientsAlertsTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         alertsPage.openAlertsTab();
+        alertsPage.waitForAlertsCountToLoad();
 
         assertThat("Verify text of the alerts counter", alertsPage.getAlertsCountText(), equalTo("1 active"));
         assertThat("Verify there is 1 alert", alertsPage.getAlertsCount(), equalTo(1));

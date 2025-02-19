@@ -41,8 +41,9 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @AllureId("559")
     @DisplayName("Verify all data is present in general tab")
     public void verifyGeneralInfoTabTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
-        keycloackPage.loginAsCoreUser();
         alertsPage.waitForPageToLoad();
         generalTab.clickGeneralTabButton();
         assertThat("Assert that full name is correct", generalTab.getFullName(), equalTo(String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName)));
@@ -59,7 +60,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         assertThat("Assert that encoded phone number is correct", generalTab.getPhoneNumber(), equalTo("+1*********3"));
         assertThat("Assert that 2 factor auth is correct", generalTab.get2FactorAuth(), equalTo("Yes"));
         generalTab.verifyKycSectionIsVisible();
-        assertThat("Assert that registration source ib is correct", generalTab.getRegistrationSourceIb(), equalTo(crmTbUser.ibId.toString()));
+        assertThat("Assert that registration source raf is correct", generalTab.getRegistrationSourceRaf(), equalTo(crmTbUser.rafReferrerId.toString()));
         assertThat("Assert that registration source cpa is correct", generalTab.getRegistrationSourceCpa(), equalTo(crmTbUser.cpaId.toString()));
         generalTab.clickShowHiddenDataButton();
         assertThat("Assert that email is correct", generalTab.getEmailAddress(), equalTo("test14@example.com"));

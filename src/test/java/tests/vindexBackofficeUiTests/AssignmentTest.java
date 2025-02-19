@@ -14,7 +14,7 @@ import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static businessObjects.ui.user.UserFactory.coreUser;
+import static businessObjects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
@@ -42,20 +42,15 @@ public class AssignmentTest extends TestBaseWeb {
     @DisplayName("Assign a client to the current user and verify")
     public void assignClientAndVerifyTest() throws Exception {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectBrandFilterByText(crmTbUser.brand);
-        investigationPage.clickApplyFiltrationButton();
-        investigationPage.filterUnassigned();
-        investigationPage.waitForPageToLoad();
-        investigationPage.clickClientCardByClientId(String.valueOf(crmTbUser.userId));
-        investigationPage.assignClientByClientId(String.valueOf(crmTbUser.userId));
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        investigationPage.investigateClientCard();
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
         investigationPage.verifyClientCardWithClientIdVisible(String.valueOf(crmTbUser.userId));
         List<Client> clientList = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid), Client.class);
-        assertThat("Assert that client is assigned to current user in db table", clientList.getFirst().assignedUserId, equalTo(coreUser().getId()));
+        assertThat("Assert that client is assigned to current user in db table", clientList.getFirst().assignedUserId, equalTo(autotestUserOne().getId()));
     }
 
     @AfterAll
