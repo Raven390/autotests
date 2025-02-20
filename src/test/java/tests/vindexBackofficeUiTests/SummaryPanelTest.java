@@ -1,14 +1,14 @@
 package tests.vindexBackofficeUiTests;
 
-import businessObjects.db.clickhouse.accountIbRelation.accountIbRelationObject;
+import businessObjects.db.clickhouse.accountIbRelation.AccountIbRelationObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
-import businessObjects.db.clickhouse.s3FactIbSalesCommissions.s3FactIbSalesCommissionsObject;
-import businessObjects.db.clickhouse.s3FactLoginMetrics.s3FactLoginMetricsObject;
+import businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsObject;
+import businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsObject;
 import businessObjects.db.clickhouse.segmentationTableObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
@@ -34,7 +34,7 @@ import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactor
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static businessObjects.db.clickhouse.s3FactLoginMetrics.s3FactLoginMetricsFactory.generates3FactLoginMetricsClient;
+import static businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsFactory.generates3FactLoginMetricsClient;
 import static helpers.data.enums.FraudType.getRandomFraudType;
 import static helpers.database.BoHelper.cleanUserFraudsDb;
 import static helpers.database.BoHelper.createUserFraudsDb;
@@ -49,15 +49,15 @@ public class SummaryPanelTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
-    private static accountIbRelationObject relation;
-    private static s3FactIbSalesCommissionsObject commission;
+    private static AccountIbRelationObject relation;
+    private static S3FactIbSalesCommissionsObject commission;
 
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException,
             InterruptedException {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(S2_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateStaticCrmTbAccountActive(client);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
@@ -77,10 +77,10 @@ public class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount());
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount2());
         Allure.step("Generate historical data what not include current date");
-        s3FactLoginMetricsObject historyMetrics1 = generates3FactLoginMetricsClient(client);
+        S3FactLoginMetricsObject historyMetrics1 = generates3FactLoginMetricsClient(client);
         historyMetrics1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
         historyMetrics1.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
-        s3FactLoginMetricsObject historyMetrics2 = generates3FactLoginMetricsClient(client);
+        S3FactLoginMetricsObject historyMetrics2 = generates3FactLoginMetricsClient(client);
         historyMetrics2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
         historyMetrics2.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
         insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(historyMetrics1, historyMetrics2));

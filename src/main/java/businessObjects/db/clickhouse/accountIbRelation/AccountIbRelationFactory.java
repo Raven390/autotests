@@ -5,8 +5,8 @@ import helpers.data.ClientHelper;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class AccountIbRelationFactory {
-    public static accountIbRelationObject generateAccountIbRelationObjectByClient(ClientHelper client) {
-        accountIbRelationObject relation = new accountIbRelationObject();
+    public static AccountIbRelationObject generateAccountIbRelationObjectByClient(ClientHelper client) {
+        AccountIbRelationObject relation = new AccountIbRelationObject();
         relation.setSourceIdSt(client.getServerId());
         relation.setUserId(client.getUserId());
         relation.setAccount(client.getTradingAccount().longValue());
