@@ -6,10 +6,10 @@ import io.qameta.allure.Step;
 import static utils.Utils.getCurrentDate;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
-public class s3FactIbSalesCommissionsFactory {
+public class S3FactIbSalesCommissionsFactory {
     @Step("Generate data for given account")
-    public static s3FactIbSalesCommissionsObject generateS3FactIbSalesCommissionsClient(ClientHelper client) {
-        s3FactIbSalesCommissionsObject commission = new s3FactIbSalesCommissionsObject();
+    public static S3FactIbSalesCommissionsObject generateS3FactIbSalesCommissionsClient(ClientHelper client) {
+        S3FactIbSalesCommissionsObject commission = new S3FactIbSalesCommissionsObject();
         commission.setDate(getCurrentDate());
         commission.setBrand(client.getBrand());
         commission.setRegulator(client.getRegulator());

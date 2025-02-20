@@ -6,10 +6,10 @@ import io.qameta.allure.Step;
 import static utils.Utils.getCurrentDate;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
-public class s3FactLoginMetricsFactory {
+public class S3FactLoginMetricsFactory {
     @Step("Generate data for given account")
-    public static s3FactLoginMetricsObject generates3FactLoginMetricsClient(ClientHelper client) {
-        s3FactLoginMetricsObject metric = new s3FactLoginMetricsObject();
+    public static S3FactLoginMetricsObject generates3FactLoginMetricsClient(ClientHelper client) {
+        S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
         metric.setDate(getCurrentDate());
         metric.setBrand(client.getBrand());
         metric.setRegulator(client.getRegulator());
@@ -23,8 +23,8 @@ public class s3FactLoginMetricsFactory {
     }
 
     @Step("Generate data for given account")
-    public static s3FactLoginMetricsObject generates3FactLoginMetricsClientAdditionalAccount(ClientHelper client) {
-        s3FactLoginMetricsObject metric = new s3FactLoginMetricsObject();
+    public static S3FactLoginMetricsObject generates3FactLoginMetricsClientAdditionalAccount(ClientHelper client) {
+        S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
         metric.setDate(getCurrentDate());
         metric.setBrand(client.getBrand());
         metric.setRegulator(client.getRegulator());

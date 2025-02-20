@@ -1,10 +1,10 @@
 package tests.vindexBackofficeUiTests;
 
-import businessObjects.db.clickhouse.accountIbRelation.accountIbRelationObject;
+import businessObjects.db.clickhouse.accountIbRelation.AccountIbRelationObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
-import businessObjects.db.clickhouse.s3FactIbSalesCommissions.s3FactIbSalesCommissionsObject;
+import businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -21,7 +21,7 @@ import static businessObjects.db.clickhouse.accountIbRelation.AccountIbRelationF
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.*;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static businessObjects.db.clickhouse.s3FactIbSalesCommissions.s3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
+import static businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomRoundedDouble;
@@ -32,15 +32,15 @@ public class TradingAccountsTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
-    private static accountIbRelationObject relation;
-    private static s3FactIbSalesCommissionsObject commission;
+    private static AccountIbRelationObject relation;
+    private static S3FactIbSalesCommissionsObject commission;
 
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException,
             InterruptedException {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(S2_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateStaticCrmTbAccountActive(client);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
@@ -53,7 +53,7 @@ public class TradingAccountsTest extends TestBaseWeb {
         commission.setIbRebateAccount(relation.getDirectIbRebateAccount());
         commission.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         commission.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
-        insertObjectToDb(S2_FACT_IB_SALES_COMMISSIONS, commission);
+        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission);
 
     }
 
@@ -82,14 +82,14 @@ public class TradingAccountsTest extends TestBaseWeb {
     @DisplayName("Trading/Account. User can see IB account in clients account info more than one account")
     public void ibInfoDisplayedOnCardMultipleTest() {
         Allure.step("create test data for IB relation and commissions with more than one account for the test account");
-        accountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
+        AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
         relation2.setDirectIbRebateAccount(202_007_002);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation2);
-        s3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
+        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
         commission2.setIbRebateAccount(relation2.getDirectIbRebateAccount());
         commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
-        insertObjectToDb(S2_FACT_IB_SALES_COMMISSIONS, commission2);
+        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission2);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());

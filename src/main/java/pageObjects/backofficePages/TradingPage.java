@@ -172,6 +172,10 @@ public class TradingPage extends AbstractPage {
     private final Locator absoluteToxicityWidgetValue;
     private final Locator absoluteToxicityWidgetInfo;
     private final Locator absoluteToxicityWidgetTitle;
+    private final Locator ibRebatesWidget;
+    private final Locator ibRebatesWidgetValue;
+    private final Locator ibRebatesWidgetInfo;
+    private final Locator ibRebatesWidgetTitle;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -404,6 +408,10 @@ public class TradingPage extends AbstractPage {
         this.absoluteToxicityWidgetTitle = absoluteToxicityWidget.locator(WIDGET_TITLE);
         this.absoluteToxicityWidgetValue = absoluteToxicityWidget.locator(".v-number-widget__value");
         this.absoluteToxicityWidgetInfo = absoluteToxicityWidget.locator(".v-number-widget__info");
+        this.ibRebatesWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "IB rebates"));
+        this.ibRebatesWidgetTitle = ibRebatesWidget.locator(WIDGET_TITLE);
+        this.ibRebatesWidgetValue = ibRebatesWidget.locator(".v-number-widget__value");
+        this.ibRebatesWidgetInfo = ibRebatesWidget.locator(".v-number-widget__info");
     }
 
     @Step("Navigate to users trading tab")
@@ -1838,10 +1846,24 @@ public class TradingPage extends AbstractPage {
         assertEquals(String.valueOf(dfd.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
 
-//    public void checkIbRebatesValue(int account, double expectedValue){
-//        int intValue = ((int)Math.round(expectedValue));
-//        checkIbRebatesValue(account, intValue);
-//    }
+    @Step("Get IB rebates widget title")
+    public String getIbRebatesWidgetTitle() {
+        return ibRebatesWidgetTitle.textContent();
+    }
 
+    @Step("Get IB rebates widget value")
+    public String getIbRebatesWidgetValue() {
+        return ibRebatesWidgetValue.textContent();
+    }
+
+    @Step("Get IB rebates widget info")
+    public String getIbRebatesWidgetInfo() {
+        return ibRebatesWidgetInfo.textContent();
+    }
+
+    @Step("Check if IB rebates widget is visible")
+    public boolean isIbRebatesWidgetVisible() {
+        return ibRebatesWidget.isVisible();
+    }
 }
 

@@ -2,7 +2,7 @@ package businessObjects.db.clickhouse.accountIbRelation;
 
 import java.util.Objects;
 
-public class accountIbRelationObject {
+public class AccountIbRelationObject {
     private Integer sourceIdSt;
     private Integer userId;
     private Long account;
@@ -188,7 +188,7 @@ public class accountIbRelationObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        accountIbRelationObject that = (accountIbRelationObject) o;
+        AccountIbRelationObject that = (AccountIbRelationObject) o;
         return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(userId, that.userId) && Objects.equals(account, that.account) && Objects.equals(regulator, that.regulator) && Objects.equals(brand, that.brand) && Objects.equals(ucid, that.ucid) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(directIb, that.directIb) && Objects.equals(directIbLevel, that.directIbLevel) && Objects.equals(directIbRebateAccount, that.directIbRebateAccount) && Objects.equals(masterIb, that.masterIb) && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount) && Objects.equals(salesId, that.salesId) && Objects.equals(salesOrgId, that.salesOrgId) && Objects.equals(accountPIds, that.accountPIds) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(lastUpdated, that.lastUpdated);
     }
 

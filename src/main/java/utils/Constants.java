@@ -139,7 +139,7 @@ public class Constants {
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     public static final String AGGR_FLOATING_TRADES_GROUP_BY = "vindex_test_api.aggr__floating_trades_group_by";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "vindex_test.account_ib_relation";
-    public static final String S2_FACT_IB_SALES_COMMISSIONS = "vindex_test.s3___fact_ib_sales_commissions";
+    public static final String S3_FACT_IB_SALES_COMMISSIONS = "vindex_test.s3___fact_ib_sales_commissions";
     public static final String PAYMENTS_TOTAL_TABLE_NAME = "vindex_test.payments_total";
     public static final String SEGMENTATION_TABLE_NAME = "data_science_test.segmentation_table";
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced_toxicity";

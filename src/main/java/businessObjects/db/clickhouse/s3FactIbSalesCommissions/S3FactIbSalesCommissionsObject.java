@@ -2,7 +2,7 @@ package businessObjects.db.clickhouse.s3FactIbSalesCommissions;
 
 import java.util.Objects;
 
-public class s3FactIbSalesCommissionsObject {
+public class S3FactIbSalesCommissionsObject {
     private String date;
     private Integer brandUid;
     private String brand;
@@ -219,7 +219,7 @@ public class s3FactIbSalesCommissionsObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        s3FactIbSalesCommissionsObject that = (s3FactIbSalesCommissionsObject) o;
+        S3FactIbSalesCommissionsObject that = (S3FactIbSalesCommissionsObject) o;
         return Objects.equals(date, that.date) && Objects.equals(brandUid, that.brandUid) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(userId, that.userId) && Objects.equals(crmServerId, that.crmServerId) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(server, that.server) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(platform, that.platform) && Objects.equals(currency, that.currency) && Objects.equals(salesUserId, that.salesUserId) && Objects.equals(ibUserId, that.ibUserId) && Objects.equals(ibRebateAccount, that.ibRebateAccount) && Objects.equals(salesCommission, that.salesCommission) && Objects.equals(ibCommission, that.ibCommission) && Objects.equals(salesVolume, that.salesVolume) && Objects.equals(idVolume, that.idVolume) && Objects.equals(dlInsertTs, that.dlInsertTs) && Objects.equals(dlUpdateTs, that.dlUpdateTs);
     }
 
