@@ -1,6 +1,7 @@
 package businessObjects.db.clickhouse.mtMt4TradesCoerced;
 
 import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Reason;
 import helpers.data.enums.TicketType;
 import io.qameta.allure.Step;
@@ -56,6 +57,10 @@ public class MtMt4TradesCoercedObjectFactory {
         trade.spreadRevenueUsd = getRandomRoundedDouble(0.00, 5000);
         trade.taxesUsd = getRandomRoundedDouble(0.00, 5000);
         trade.feeUsd = getRandomRoundedDouble(0.00, 5000);
+        trade.closeTime = getCurrentTimestampDbFormat();
+        trade.closeTimeUtc = getCurrentTimestampDbFormat();
+        trade.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
+        trade.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
         return trade;
     }
 

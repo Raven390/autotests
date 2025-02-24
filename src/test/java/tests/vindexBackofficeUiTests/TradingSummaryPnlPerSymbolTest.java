@@ -6,6 +6,7 @@ import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
+import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -25,7 +26,8 @@ import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoerce
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
-import static utils.Utils.getRandomRoundedDouble;
+import static utils.Utils.*;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 
 public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
 
@@ -200,6 +202,56 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         tradingPage.navigate(client.getUcid());
         tradingPage.hoverOverRightPositiveBarPnlSymbol();
         tradingPage.checkPnlBySymbolTooltipValue(trade1.symbol, tradingPage.calculatePnlByDealInt(trade1, trade2));
+
+    }
+
+    @Test
+    @AllureId("1033")
+    @Feature("BMS-929 Trading Summary. PnL per Symbol chart")
+    @DisplayName("Test that PNL by symbol uses not cumulative values")
+    public void pnlBySymbolTooltipShowCorrectDataAndNotCumulativeTest() throws SQLException,
+            InterruptedException {
+
+        tradingPage.deleteClientDeals(client.getUcid());
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade1.commissionUsd = getRandomRoundedDouble(5, 50_000);
+        trade1.profitUsd = getRandomRoundedDouble(5, 50_000);
+        trade1.storageUsd = getRandomRoundedDouble(5, 50_000);
+        trade1.symbol = "USDDTS";
+        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0);
+        trade1.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 10, 0);
+        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
+        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 2, 12, 0);
+
+        trade2.commissionUsd = getRandomRoundedDouble(5, 50_000);
+        trade2.profitUsd = getRandomRoundedDouble(5, 50_000);
+        trade2.storageUsd = getRandomRoundedDouble(5, 50_000);
+        trade2.symbol = "USDDTS";
+        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0);
+        trade2.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 2, 24, 0);
+        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0);
+        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 6, 14, 0);
+
+        trade3.commissionUsd = getRandomRoundedDouble(1, 5000);
+        trade3.profitUsd = getRandomRoundedDouble(1, 5000);
+        trade3.storageUsd = getRandomRoundedDouble(1, 500);
+        trade3.symbol = "USDDTS";
+        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0);
+        trade1.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 10, 0);
+        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0);
+        trade1.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 2, 12, 0);
+
+        Allure.step("clean client's trade DB, and add one 3 trades with positive PNL and the same symbol");
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        tradingPage.navigate(client.getUcid());
+        tradingPage.hoverOverRightPositiveBarPnlSymbol();
+        tradingPage.checkPnlBySymbolTooltipValue(trade1.symbol, tradingPage.calculatePnlByDealInt(trade1, trade2, trade3));
 
     }
 
