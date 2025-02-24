@@ -1,30 +1,41 @@
 package helpers.database;
 
+import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
+import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 
 
-import static helpers.database.DbHelper.deleteEntryFromDb;
+import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
+import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static helpers.database.DbHelper.*;
+import static utils.Constants.CRM_DEPOSIT_TABLE_NAME;
+import static utils.Constants.CRM_WITHDRAWAL_TABLE_NAME;
 
 public class OperationsHelper {
 
     public static void cleanUserCashflowDb(String ucid) throws Exception {
         Allure.step("delete user's cashflow transactions from DB");
-        try {
-            deleteEntryFromDb("vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "'");
-            Thread.sleep(100);
-        } catch (Exception NoSuchElementException) {
-            System.out.println("No such records with provided ucid");
-        }
+
+        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid = '" + ucid + "'");
+        System.out.println("withdrawals deleted");
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid = '" + ucid + "'");
+        System.out.println("deposits deleted");
+        ClientHelper dummy = new ClientHelper(1, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 1001, 1002, 1);
+        CrmTbWithdrawalObject dummyW = generateWithdrawalByClient(dummy);
+        CrmTbDepositObject dummyD = generateDepositByClient(dummy);
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, dummyW);
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, dummyD);
+        Thread.sleep(100);
     }
 
     public static void cleanUserFinancialTransactionDbUcid(String ucid) throws Exception {
         Allure.step("delete user's with financial transactions transactions from DB");
-        try {
-            deleteEntryFromDb("vindex_test.payments_total", "ucid = '" + ucid + "'");
-            Thread.sleep(100);
-        } catch (Exception NoSuchElementException) {
-            System.out.println("No such records with provided ucid");
-        }
+        deleteEntryFromDb("vindex_test.payments_total", "ucid = '" + ucid + "'");
+        Thread.sleep(100);
+
     }
 
     public static void cleanUserCashflowDbDeposit(String ucid) throws Exception {
