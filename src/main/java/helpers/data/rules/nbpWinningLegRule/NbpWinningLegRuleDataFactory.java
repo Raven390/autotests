@@ -59,7 +59,7 @@ public class NbpWinningLegRuleDataFactory {
         data.crmTbDepositObjects.add(deposit);
         Mt5DealsCoercedObject trade = generateTradeByClient(data.clientHelper);
         trade.profitUsd = 4000.0;
-        data.mt5DealsObjects.add(trade);
+        data.mt5DealsCoercedObjects.add(trade);
         data.crmTbAccountObject = generateCrmTbAccountData(data.clientHelper);
         return data;
     }

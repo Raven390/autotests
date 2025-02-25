@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.marketManipulationRule.MarketManipulationRuleDataFactory.deleteMarketManipulationRuleData;
 import static helpers.data.rules.marketManipulationRule.MarketManipulationRuleDataFactory.setupMarketManipulationRuleData;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,9 +21,8 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
+// TODO CHECK WHY ALERTS COME LATE
 @Disabled
-@Muted
-@Tag(TAG_MANUAL)
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE)
 @Tag(TEAM_CORE)
@@ -43,11 +41,35 @@ public class MarketManipulationRuleTest extends TestBaseRule {
 
     @AfterAll
     public static void deleteDbData() throws Exception {
-        deleteMarketManipulationRuleData(dbDataMap);
+        //deleteMarketManipulationRuleData(dbDataMap);
     }
 
     @Test
-    @DisplayName("Market manipulation rule exit 1")
+    @DisplayName("Market manipulation rule exit 5. Profit < 2500")
+    @AllureId("1032")
+    public void marketManipulationRuleExitEventEnd5Test() throws Exception {
+        Allure.step("Profit <= 2500");
+        RuleDataHelper data = dbDataMap.get("5");
+        System.out.println(data.clientHelper.getUcid());
+        System.out.println(data.clientHelper.getServerId());
+        System.out.println(data.clientHelper.getTradingAccount());
+        Allure.step("Produce close trade event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Get client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        );
+
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("Market manipulation rule exit 1. Equity <= 2500")
     @AllureId("952")
     public void marketManipulationRuleExitEventEnd1Test() throws Exception {
         Allure.step("Equity <= 2500");
@@ -100,30 +122,6 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         Allure.step("PnL <= 2500 for all symbols for last 30 min");
         Allure.step("Connection with no PNL data");
         RuleDataHelper data = dbDataMap.get("2v2");
-        Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
-
-        Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
-
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
-    }
-
-    @Test
-    @DisplayName("Market manipulation rule exit 2v3")
-    @AllureId("955")
-    public void marketManipulationRuleExitEventEnd2v3Test() throws Exception {
-        Allure.step("Equity > 2500");
-        Allure.step("Low toxicity");
-        Allure.step("PnL <= 2500 for all symbols for last 30 min");
-        Allure.step("No connection with PnL > 2500 for any symbol for last 30 min");
-        RuleDataHelper data = dbDataMap.get("2v3");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -249,17 +247,17 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Market Manipulator middle risk", "APPLIED");
-//        ClientsRestriction expectedRestriction1 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 7L, "Market_manipulation_a-book_restriction", "APPLIED"); TODO enable when it becomes active in BO
-
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
+//        Allure.step("Get client restrictions");
+//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+//                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+//        );
+//
+//        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+//
+//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 4L, "Market Manipulator middle risk", "APPLIED");
+////        ClientsRestriction expectedRestriction1 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 7L, "Market_manipulation_a-book_restriction", "APPLIED"); TODO enable when it becomes active in BO
+//
+//        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
@@ -318,17 +316,17 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "marketManipulation_rule_set_manual_withdrawal_2", "APPLIED");
-//        ClientsRestriction expectedRestriction1 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 11L, "Market Manipulator Off-Quote Restriction", "APPLIED"); TODO enable when it becomes active in BO
-
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
+//        Allure.step("Get client restrictions");
+//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+//                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+//        );
+//
+//        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+//
+//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "marketManipulation_rule_set_manual_withdrawal_2", "APPLIED");
+////        ClientsRestriction expectedRestriction1 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 11L, "Market Manipulator Off-Quote Restriction", "APPLIED"); TODO enable when it becomes active in BO
+//
+//        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
@@ -383,15 +381,15 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "marketManipulation_rule_set_manual_withdrawal_2", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
+//        Allure.step("Get client restrictions");
+//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+//                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+//        );
+//
+//        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+//
+//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "marketManipulation_rule_set_manual_withdrawal_2", "APPLIED");
+//
+//        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 }

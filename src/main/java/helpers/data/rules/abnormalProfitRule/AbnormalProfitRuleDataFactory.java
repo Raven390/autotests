@@ -37,7 +37,7 @@ public class AbnormalProfitRuleDataFactory {
     private static RuleDataHelper getAbnormalProfitRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade");
+        CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade");
         return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), null, closeTradeMtEvent, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
@@ -51,7 +51,7 @@ public class AbnormalProfitRuleDataFactory {
         trade.profitUsd = 2001d;
 
         data.crmTbDepositObjects.add(deposit);
-        data.mt5DealsObjects.add(trade);
+        data.mt5DealsCoercedObjects.add(trade);
         return data;
     }
 
@@ -64,7 +64,7 @@ public class AbnormalProfitRuleDataFactory {
         trade.profitUsd = 1999d;
 
         data.crmTbDepositObjects.add(deposit);
-        data.mt5DealsObjects.add(trade);
+        data.mt5DealsCoercedObjects.add(trade);
         return data;
     }
 

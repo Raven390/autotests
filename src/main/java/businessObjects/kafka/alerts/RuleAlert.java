@@ -38,6 +38,9 @@ public class RuleAlert {
 
         public static class Attribute {
 
+            @JsonProperty("Reason")
+            public String reason;
+
             @JsonProperty("riskRating")
             public String riskRating;
 
