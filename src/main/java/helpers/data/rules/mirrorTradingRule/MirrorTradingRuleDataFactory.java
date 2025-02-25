@@ -77,7 +77,7 @@ public class MirrorTradingRuleDataFactory {
         lexisNexisObjectLogin.trueIpGeo = "CY";
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade"
+                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade"
         );
         return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>());
     }

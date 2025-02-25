@@ -39,7 +39,7 @@ public class NbpLosingLegRuleDataFactory {
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.closeTradeEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getTradingAccount(), 100d, "USDCZK", client.getServerId(), "closeTrade"
+                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), client.getTradingAccount(), 100d, "USDCZK", client.getServerId(), "closeTrade"
         );
         data.crmTbAccountObject = generateCrmTbAccountData(client);
         CrmTbBonusObject bonus = generateBonusByClient(client);
@@ -52,8 +52,8 @@ public class NbpLosingLegRuleDataFactory {
         Mt5DealsCoercedObject trade2 = generateTradeByClient(client);
         trade2.time = getCurrentTimestampDbFormat();
         trade2.timeUtc = trade2.time;
-        data.mt5DealsObjects.add(trade1);
-        data.mt5DealsObjects.add(trade2);
+        data.mt5DealsCoercedObjects.add(trade1);
+        data.mt5DealsCoercedObjects.add(trade2);
         return data;
     }
 
@@ -63,7 +63,7 @@ public class NbpLosingLegRuleDataFactory {
         stopoutTrade.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0);
         stopoutTrade.timeUtc = stopoutTrade.time;
         stopoutTrade.comment = "S/O";
-        data.mt5DealsObjects.add(stopoutTrade);
+        data.mt5DealsCoercedObjects.add(stopoutTrade);
         return data;
     }
 
@@ -74,7 +74,7 @@ public class NbpLosingLegRuleDataFactory {
             stopoutTrade.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0);
             stopoutTrade.timeUtc = stopoutTrade.time;
             stopoutTrade.comment = "S/O";
-            data.mt5DealsObjects.add(stopoutTrade);
+            data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 200.0;
@@ -89,7 +89,7 @@ public class NbpLosingLegRuleDataFactory {
             stopoutTrade.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0);
             stopoutTrade.timeUtc = stopoutTrade.time;
             stopoutTrade.comment = "S/O";
-            data.mt5DealsObjects.add(stopoutTrade);
+            data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 110.0;
@@ -104,7 +104,7 @@ public class NbpLosingLegRuleDataFactory {
             stopoutTrade.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0);
             stopoutTrade.timeUtc = stopoutTrade.time;
             stopoutTrade.comment = "S/O";
-            data.mt5DealsObjects.add(stopoutTrade);
+            data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 110.0;
@@ -121,7 +121,7 @@ public class NbpLosingLegRuleDataFactory {
             stopoutTrade.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0);
             stopoutTrade.timeUtc = stopoutTrade.time;
             stopoutTrade.comment = "S/O";
-            data.mt5DealsObjects.add(stopoutTrade);
+            data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 110.0;
@@ -130,7 +130,7 @@ public class NbpLosingLegRuleDataFactory {
         data.mirrorUcidObjects.add(generateMirrorUcidObjectByClients(data.clientHelper, mirrorClient));
         Mt5DealsCoercedObject mirrorTrade = generateTradeByClient(mirrorClient);
         mirrorTrade.profitUsd = 4000.0;
-        data.mt5DealsObjects.add(mirrorTrade);
+        data.mt5DealsCoercedObjects.add(mirrorTrade);
         data.connectedClientHelpers.add(mirrorClient);
         CrmTbDepositObject mirrorDeposit = generateDepositByClient(mirrorClient);
         mirrorDeposit.amountUsd = 100.0;

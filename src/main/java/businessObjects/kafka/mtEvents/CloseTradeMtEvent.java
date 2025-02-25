@@ -14,7 +14,7 @@ public class CloseTradeMtEvent {
     public String closeTime;
 
     @JsonProperty("tradeId")
-    public Integer tradeId;
+    public Long tradeId;
 
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
@@ -35,7 +35,7 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-            String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol,
+            String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol,
             Integer serverId) {
         this.id = id;
         this.closeTime = closeTime;
@@ -47,7 +47,7 @@ public class CloseTradeMtEvent {
     }
 
     public CloseTradeMtEvent(
-            String closeTime, Integer tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
+            String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol, Integer serverId,
             String type) {
         this.closeTime = closeTime;
         this.tradeId = tradeId;
@@ -58,7 +58,7 @@ public class CloseTradeMtEvent {
         this.type = type;
     }
 
-    public CloseTradeMtEvent(String id, String closeTime, Integer tradeId, Integer tradingAccount, Double volume,
+    public CloseTradeMtEvent(String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume,
             String symbol, Integer serverId, String type) {
         this.id = id;
         this.closeTime = closeTime;

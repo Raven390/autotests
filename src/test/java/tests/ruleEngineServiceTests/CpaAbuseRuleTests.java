@@ -92,7 +92,8 @@ public class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Linked abuser"));
+        //assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Linked abuser"));
+        assertThat("Verify rule attributes clones not null", alert.rule.attributes.reason, is("One or many connected clients are CPA abusers"));
 //        assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
 //        assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
 //        assertThat("Verify rule attributes clones not null", alert.rule.attributes.hedgingClone, notNullValue());
@@ -110,7 +111,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event_2_2. 70% Connections has CPA")
+    @DisplayName("CPA abuse rule exit Event_2_2. Among connected clients for the same brand, if there are more than 3 clients, do at least 65% of them have the same CPA value as the initial client?")
     @AllureId("921")
     public void mirrorTradeRuleExitEventEnd2_2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2_2");

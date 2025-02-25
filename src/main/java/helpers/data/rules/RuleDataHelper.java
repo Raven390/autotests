@@ -14,6 +14,7 @@ import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObject;
 import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
+import businessObjects.db.clickhouse.mtMt5Positions.MtMt5PositionsObject;
 import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
 import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
@@ -44,7 +45,7 @@ public class RuleDataHelper {
     public List<CrmTbWithdrawalObject> crmTbWithdrawalObjects;
     public List<CrmTbDepositObject> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
-    public List<Mt5DealsCoercedObject> mt5DealsObjects;
+    public List<Mt5DealsCoercedObject> mt5DealsCoercedObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
     public MirrorLoginObject aggrMirrorAccountsByTrades;
     public List<MtBalanceOrdersObject> mtBalanceOrdersObjects;
@@ -52,6 +53,7 @@ public class RuleDataHelper {
     public List<AggrFloatingTradesGroupBy> floatingTrades;
     public List<ClientHelper> connectedClientHelpers;
     public List<MirrorUcidObject> mirrorUcidObjects;
+    public List<MtMt5PositionsObject> mtMt5PositionsObjects;
 
     public RuleDataHelper() {
         this.connections = new ArrayList<>();
@@ -62,12 +64,13 @@ public class RuleDataHelper {
         this.crmTbWithdrawalObjects = new ArrayList<>();
         this.crmTbDepositObjects = new ArrayList<>();
         this.crmTbBonusObjects = new ArrayList<>();
-        this.mt5DealsObjects = new ArrayList<>();
+        this.mt5DealsCoercedObjects = new ArrayList<>();
         this.mtBalanceOrdersObjects = new ArrayList<>();
         this.mirrorLoginObjects = new ArrayList<>();
         this.floatingTrades = new ArrayList<>();
         this.connectedClientHelpers = new ArrayList<>();
         this.mirrorUcidObjects = new ArrayList<>();
+        this.mtMt5PositionsObjects = new ArrayList<>();
     }
 
     public RuleDataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
@@ -78,7 +81,7 @@ public class RuleDataHelper {
             List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
             CrmTbAccountObject crmTbAccountObject,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
-            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsObjects,
+            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsCoercedObjects,
             AggrCreditEquityRateObject aggrCreditEquityRate, MirrorLoginObject aggrMirrorAccountsByTrades,
             List<MtBalanceOrdersObject> mtBalanceOrdersObjects, List<MirrorLoginObject> mirrorLoginObjects,
             List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
@@ -98,7 +101,7 @@ public class RuleDataHelper {
         this.crmTbWithdrawalObjects = crmTbWithdrawalObjects;
         this.crmTbDepositObjects = crmTbDepositObjects;
         this.crmTbBonusObjects = crmTbBonusObjects;
-        this.mt5DealsObjects = mt5DealsObjects;
+        this.mt5DealsCoercedObjects = mt5DealsCoercedObjects;
         this.aggrCreditEquityRate = aggrCreditEquityRate;
         this.aggrMirrorAccountsByTrades = aggrMirrorAccountsByTrades;
         this.mtBalanceOrdersObjects = mtBalanceOrdersObjects;
@@ -110,7 +113,7 @@ public class RuleDataHelper {
 
     @Override
     public String toString() {
-        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
+        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
     }
 
     public static void setupRuleData(Map<String, RuleDataHelper> map) {
@@ -149,8 +152,11 @@ public class RuleDataHelper {
             data.crmTbBonusObjects.forEach(bonus -> {
                 insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
             });
-            data.mt5DealsObjects.forEach(deal -> {
+            data.mt5DealsCoercedObjects.forEach(deal -> {
                 insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
+            });
+            data.mtMt5PositionsObjects.forEach(position -> {
+                insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
             });
             data.mtBalanceOrdersObjects.forEach(deal -> {
                 insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal);
@@ -207,8 +213,11 @@ public class RuleDataHelper {
             data.mtBalanceOrdersObjects.forEach(bonus -> {
                 deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
             });
-            data.mt5DealsObjects.forEach(deal -> {
+            data.mt5DealsCoercedObjects.forEach(deal -> {
                 deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
+            });
+            data.mtMt5PositionsObjects.forEach(position -> {
+                deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("server_id = %s and account = %s", position.serverId, position.account));
             });
             data.mirrorLoginObjects.forEach(mirrorLoginObject -> {
                 deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));

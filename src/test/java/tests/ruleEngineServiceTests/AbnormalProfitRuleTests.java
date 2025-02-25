@@ -65,10 +65,6 @@ public class AbnormalProfitRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
 
-        // "ucid":"vantage-927373042",
-        // "rule":{"name":"Abnormal profit","attributes":{"stepName":"Abnormal profit detected"},
-        // "fraudType":"POTENTIAL_ABUSE",}}, partition = 2, offset = 9160
-
         // Verify alert
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());

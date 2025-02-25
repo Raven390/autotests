@@ -42,7 +42,7 @@ public class MtDbEventsCloseTradeTest {
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId, closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, "closeTrade");
+                closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId.longValue(), closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, "closeTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedCloseTradeMtEvent.id, notNullValue());
@@ -65,7 +65,7 @@ public class MtDbEventsCloseTradeTest {
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId, closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, "closeTrade");
+                closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId.longValue(), closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, "closeTrade");
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedCloseTradeMtEvent.id, notNullValue());
