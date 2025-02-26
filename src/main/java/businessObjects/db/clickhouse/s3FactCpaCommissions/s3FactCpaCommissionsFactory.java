@@ -1,0 +1,30 @@
+package businessObjects.db.clickhouse.s3FactCpaCommissions;
+
+import helpers.data.ClientHelper;
+
+
+import static utils.Utils.*;
+
+public class s3FactCpaCommissionsFactory {
+    public static s3FactCpaCommissionsObject generates3FactCpaCommissionsObject(ClientHelper client) {
+        s3FactCpaCommissionsObject commission = new s3FactCpaCommissionsObject();
+        commission.id = ((long) getRandomIntPositive());
+        commission.date = getCurrentDate();
+        commission.brandUid = 1;
+        commission.brand = client.getBrand();
+        commission.regulator = client.getRegulator();
+        commission.userId = client.getUserId();
+        commission.ucid = client.getUcid();
+        commission.cpaId = client.getCpaId();
+        commission.traderId = "sampleTraderId";
+        commission.afp = "sampleApf";
+        commission.tradingCode = "sampleTradingCode";
+        commission.commissionType = "sampleCommissionTypes";
+        commission.commission = getRandomRoundedDouble(0.01, 99_999_999.99);
+        commission.partitionBrand = "samplePartitionBrand";
+        commission.dlInsertTs = getCurrentTimestampDbFormat();
+        commission.dlUpdateTs = getCurrentTimestampDbFormat();
+
+        return commission;
+    }
+}

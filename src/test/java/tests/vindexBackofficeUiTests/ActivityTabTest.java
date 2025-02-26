@@ -63,7 +63,7 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.policyScore = -50;
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         String[] dates = lexis.eventDatetime.split(" ");
@@ -118,7 +118,7 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(androidLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOsFilter();
@@ -192,7 +192,7 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(trusredlLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickRiskFilter();
@@ -247,7 +247,7 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(yesterdayLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
@@ -296,7 +296,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
@@ -346,7 +346,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
@@ -396,7 +396,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
@@ -446,7 +446,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickDateFilter();
@@ -505,7 +505,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.setSortByScoreDesc();
@@ -563,7 +563,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.setSortByDateDesc();
@@ -597,7 +597,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -701,7 +701,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -734,7 +734,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -770,7 +770,7 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -1010,7 +1010,7 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -1110,7 +1110,7 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data. set conditionAttrib_5 = \"agent_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -1236,7 +1236,7 @@ public class ActivityTabTest extends TestBaseWeb {
 
         String expectedLanguages = "100% English (United States)90% English80% Chinese (China)70% Chinese (Taiwan, Province of China)60% Chinese";
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -1272,7 +1272,7 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();
@@ -1320,7 +1320,8 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateToMain();
+
+        activityTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         activityTab.navigate(activityClient.getUcid());
         activityTab.clickOnDataRow();

@@ -3,12 +3,11 @@ package businessObjects.db.clickhouse.accountIbRelation;
 import java.util.Objects;
 
 public class AccountIbRelationObject {
-    private Integer sourceIdSt;
     private Integer userId;
-    private Long account;
-    private String regulator;
     private String brand;
+    private String regulator;
     private String ucid;
+    private Long account;
     private Integer serverId;
     private String serverName;
     private Integer directIb;
@@ -19,17 +18,31 @@ public class AccountIbRelationObject {
     private Integer salesId;
     private Integer salesOrgId;
     private String accountPIds;
+    private String recordEffectiveStartDate;
+    private String recordEffectiveEndDate;
     private Boolean recordActiveFlag;
+    private Integer isDel;
     private String createTime;
     private String createTimeUtc;
+    private String recordDeletedFlag;
     private String lastUpdated;
 
-    public Integer getSourceIdSt() {
-        return sourceIdSt;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccountIbRelationObject that = (AccountIbRelationObject) o;
+        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(ucid, that.ucid) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(directIb, that.directIb) && Objects.equals(directIbLevel, that.directIbLevel) && Objects.equals(directIbRebateAccount, that.directIbRebateAccount) && Objects.equals(masterIb, that.masterIb) && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount) && Objects.equals(salesId, that.salesId) && Objects.equals(salesOrgId, that.salesOrgId) && Objects.equals(accountPIds, that.accountPIds) && Objects.equals(recordEffectiveStartDate, that.recordEffectiveStartDate) && Objects.equals(recordEffectiveEndDate, that.recordEffectiveEndDate) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(isDel, that.isDel) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(recordDeletedFlag, that.recordDeletedFlag) && Objects.equals(lastUpdated, that.lastUpdated);
     }
 
-    public void setSourceIdSt(Integer sourceIdSt) {
-        this.sourceIdSt = sourceIdSt;
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, brand, regulator, ucid, account, serverId, serverName, directIb, directIbLevel, directIbRebateAccount, masterIb, masterIbRebateAccount, salesId, salesOrgId, accountPIds, recordEffectiveStartDate, recordEffectiveEndDate, recordActiveFlag, isDel, createTime, createTimeUtc, recordDeletedFlag, lastUpdated);
+    }
+
+    @Override
+    public String toString() {
+        return "AccountIbRelationObject{" + "userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb + ", masterIbRebateAccount=" + masterIbRebateAccount + ", salesId=" + salesId + ", salesOrgId=" + salesOrgId + ", accountPIds='" + accountPIds + '\'' + ", recordEffectiveStartDate='" + recordEffectiveStartDate + '\'' + ", recordEffectiveEndDate='" + recordEffectiveEndDate + '\'' + ", recordActiveFlag=" + recordActiveFlag + ", isDel=" + isDel + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", recordDeletedFlag='" + recordDeletedFlag + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 
     public Integer getUserId() {
@@ -40,12 +53,12 @@ public class AccountIbRelationObject {
         this.userId = userId;
     }
 
-    public Long getAccount() {
-        return account;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setAccount(Long account) {
-        this.account = account;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getRegulator() {
@@ -56,20 +69,20 @@ public class AccountIbRelationObject {
         this.regulator = regulator;
     }
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
     public String getUcid() {
         return ucid;
     }
 
     public void setUcid(String ucid) {
         this.ucid = ucid;
+    }
+
+    public Long getAccount() {
+        return account;
+    }
+
+    public void setAccount(Long account) {
+        this.account = account;
     }
 
     public Integer getServerId() {
@@ -152,12 +165,36 @@ public class AccountIbRelationObject {
         this.accountPIds = accountPIds;
     }
 
+    public String getRecordEffectiveStartDate() {
+        return recordEffectiveStartDate;
+    }
+
+    public void setRecordEffectiveStartDate(String recordEffectiveStartDate) {
+        this.recordEffectiveStartDate = recordEffectiveStartDate;
+    }
+
+    public String getRecordEffectiveEndDate() {
+        return recordEffectiveEndDate;
+    }
+
+    public void setRecordEffectiveEndDate(String recordEffectiveEndDate) {
+        this.recordEffectiveEndDate = recordEffectiveEndDate;
+    }
+
     public Boolean getRecordActiveFlag() {
         return recordActiveFlag;
     }
 
     public void setRecordActiveFlag(Boolean recordActiveFlag) {
         this.recordActiveFlag = recordActiveFlag;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
     }
 
     public String getCreateTime() {
@@ -176,29 +213,19 @@ public class AccountIbRelationObject {
         this.createTimeUtc = createTimeUtc;
     }
 
+    public String getRecordDeletedFlag() {
+        return recordDeletedFlag;
+    }
+
+    public void setRecordDeletedFlag(String recordDeletedFlag) {
+        this.recordDeletedFlag = recordDeletedFlag;
+    }
+
     public String getLastUpdated() {
         return lastUpdated;
     }
 
     public void setLastUpdated(String lastUpdated) {
         this.lastUpdated = lastUpdated;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountIbRelationObject that = (AccountIbRelationObject) o;
-        return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(userId, that.userId) && Objects.equals(account, that.account) && Objects.equals(regulator, that.regulator) && Objects.equals(brand, that.brand) && Objects.equals(ucid, that.ucid) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(directIb, that.directIb) && Objects.equals(directIbLevel, that.directIbLevel) && Objects.equals(directIbRebateAccount, that.directIbRebateAccount) && Objects.equals(masterIb, that.masterIb) && Objects.equals(masterIbRebateAccount, that.masterIbRebateAccount) && Objects.equals(salesId, that.salesId) && Objects.equals(salesOrgId, that.salesOrgId) && Objects.equals(accountPIds, that.accountPIds) && Objects.equals(recordActiveFlag, that.recordActiveFlag) && Objects.equals(createTime, that.createTime) && Objects.equals(createTimeUtc, that.createTimeUtc) && Objects.equals(lastUpdated, that.lastUpdated);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(sourceIdSt, userId, account, regulator, brand, ucid, serverId, serverName, directIb, directIbLevel, directIbRebateAccount, masterIb, masterIbRebateAccount, salesId, salesOrgId, accountPIds, recordActiveFlag, createTime, createTimeUtc, lastUpdated);
-    }
-
-    @Override
-    public String toString() {
-        return "accountIbRelationObject{" + "sourceIdSt=" + sourceIdSt + ", userId=" + userId + ", login=" + account + ", regulator='" + regulator + '\'' + ", brand='" + brand + '\'' + ", ucid='" + ucid + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", directIb=" + directIb + ", directIbLevel=" + directIbLevel + ", directIbRebateAccount=" + directIbRebateAccount + ", masterIb=" + masterIb + ", masterIbRebateAccount=" + masterIbRebateAccount + ", salesId=" + salesId + ", salesOrgId=" + salesOrgId + ", accountPIds='" + accountPIds + '\'' + ", recordActiveFlag=" + recordActiveFlag + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
 }

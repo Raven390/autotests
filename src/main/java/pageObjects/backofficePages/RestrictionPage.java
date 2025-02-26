@@ -580,6 +580,7 @@ public class RestrictionPage extends AbstractPage {
 
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
+        Allure.step("Clean user restriction history of client " + ucid);
         List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {
             String Id = i.id.toString();

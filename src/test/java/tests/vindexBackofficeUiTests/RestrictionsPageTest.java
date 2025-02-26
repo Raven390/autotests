@@ -6,8 +6,6 @@ import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
-import helpers.database.AuditHelper;
-import helpers.database.MitigationHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
@@ -24,6 +22,7 @@ import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFacto
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
 import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
 
@@ -545,8 +544,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
     @Test
     void delete() throws Exception {
-        MitigationHelper.cleanUserRestriction("vantage-10105625");
-        AuditHelper.cleanUserAudit("vantage-10105625");
+        cleanUserRestriction("vt-1006127");
+        restrictionPage.cleanUserAudit("vt-1006127 ");
     }
 
 }
