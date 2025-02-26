@@ -78,6 +78,13 @@ public class GeneralTab extends AbstractPage {
     private static final String SUMMARY_PANEL = "//*[@data-qa='investigation_page__investigation_tools'";
     private static final String SUMMARY_PANEL_VALUE = "//div[contains(@class, 'v-client-summary-panel__value')]/div[@class= 'v-text-with-icon__text']";
     private static final String SUMMARY_PANEL_ITEM = "//div[contains(@class, 'v-client-summary-panel__item')]";
+    private static final String IB_ROW = "//*[text()='IB program']//ancestor::tr";
+    private static final String REFERRAL_ROW = "//*[text()='Referral client']//ancestor::tr";
+    private static final String CPA_ROW = "//*[text()='CPA affiliate']//ancestor::tr";
+    private static final String REFERRAL_LOGIN = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_login')]";
+    private static final String REFERRAL_DATE = "//*[contains(@class, 'v-registration-source-row__date')]";
+    private static final String REFERRAL_REBATES = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_rebates')]";
+    private static final String TEXT_ELEMENT = "//*[contains(@class, 'v-text-with-icon__text')]";
 
 
     public GeneralTab(Page page) {
@@ -127,6 +134,12 @@ public class GeneralTab extends AbstractPage {
     public void navigateGeneralTab(String ucid) {
         page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/general");
         waitForPageToLoad();
+
+    }
+
+    @Step("Open users general tab")
+    public void navigate(String ucid) {
+        navigateGeneralTab(ucid);
 
     }
 
@@ -406,12 +419,14 @@ public class GeneralTab extends AbstractPage {
     }
 
     public void checkSummaryPanelValue(String sectionName, String expectedValue) {
+        Allure.step("check value in section " + sectionName + " of the summary panel");
         String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertEquals(expectedValue, page.locator(locator).textContent());
     }
 
     public void checkSummaryPanelFraudValue(String sectionName, String expectedValue) {
+        Allure.step("check value in section fraud of the summary panel");
         String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertTrue(page.locator(locator).textContent().contains(expectedValue));
@@ -421,6 +436,69 @@ public class GeneralTab extends AbstractPage {
         double rounded = roundDouble(expectedValue, 2);
         String string = dfd.format(rounded);
         checkSummaryPanelValue(sectionName, string);
+    }
+
+    public void checkIbRebates(int login, double expectedValue) {
+        Allure.step("check rebates in IB line");
+        String locator = IB_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        String testedValue = dfd.format(expectedValue);
+        assertEquals("IB rebates " + testedValue + "  USD", page.locator(locator).textContent());
+
+    }
+
+    public void IbSectionNotDisplayed() {
+        Allure.step("check that IB section is not displayed");
+        waitForPageToLoad();
+        assertFalse(page.locator(IB_ROW).isVisible());
+    }
+
+    public void clickReferrerLink() {
+        Allure.step("Click referral client link");
+        String locator = REFERRAL_ROW + REFERRAL_LOGIN + TEXT_ELEMENT;
+        page.locator(locator).click();
+    }
+
+    public void checkReferralDisplayed(int userId) {
+        Allure.step("Check that referral client line is displayed with the data from clients record in DB");
+        String locator = REFERRAL_ROW + REFERRAL_LOGIN + TEXT_ELEMENT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(userId), page.locator(locator).textContent());
+    }
+
+    public void checkCpaDisplayed(int userId) {
+        Allure.step("Check that CPA client line is displayed with the data from clients record in DB");
+        String locator = CPA_ROW + REFERRAL_LOGIN + TEXT_ELEMENT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(String.valueOf(userId), page.locator(locator).textContent());
+    }
+
+    public void ReferralSectionNotDisplayed() {
+        Allure.step("check that IB section is not displayed");
+        waitForPageToLoad();
+        assertFalse(page.locator(REFERRAL_ROW).isVisible());
+    }
+
+    public void CpaSectionNotDisplayed() {
+        Allure.step("check that CPA section is not displayed");
+        waitForPageToLoad();
+        assertFalse(page.locator(CPA_ROW).isVisible());
+    }
+
+    public void checkCpaRebates(int login, double expectedValue) {
+        Allure.step("check rebates in CPA line");
+        String locator = CPA_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        String testedValue = dfd.format(expectedValue);
+        assertEquals("CPA rebates " + testedValue + "  USD", page.locator(locator).textContent());
+
+    }
+
+    public void checkCpaDate(int login, String expectedValue) {
+        Allure.step("check rebates in CPA line");
+        String locator = CPA_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_DATE + TEXT_ELEMENT;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedValue, page.locator(locator).textContent());
     }
 
 }

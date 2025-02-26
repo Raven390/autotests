@@ -6,6 +6,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
+import io.qameta.allure.Step;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.ConfigFactory.ENTER_PAGE_E2E;
 
 public abstract class AbstractPage {
 
@@ -47,6 +49,12 @@ public abstract class AbstractPage {
             page.waitForSelector(LOADER_SPIN_LOCATOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));
             page.waitForTimeout(100);
         }
+    }
+
+    @Step("Open the autotest login page main page")
+    public void navigateEnterPage() {
+        page.navigate(ENTER_PAGE_E2E);
+        waitForPageToLoad();
     }
 
     public void navigateToMain() {

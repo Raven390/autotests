@@ -80,6 +80,37 @@ public class TradingAccountsTest extends TestBaseWeb {
     @AllureId("1021")
     @Feature("BMS-744 Display IB info in account card and table")
     @DisplayName("Trading/Account. User can see IB account in clients account info more than one account")
+    public void ibInfoDisplayedMultipleTest() {
+        Allure.step("create test data for IB relation and commissions with more than one account for the test account");
+        AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
+        relation2.setDirectIbRebateAccount(202_007_002);
+        insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation2);
+        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
+        commission2.setIbRebateAccount(relation2.getDirectIbRebateAccount());
+        commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission2);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
+        alertsPage.waitForPageToLoad();
+        tradingPage.openTradingTab();
+        tradingPage.openAccountsTab();
+        tradingPage.checkIbAccountValueCard(client.getTradingAccount(), relation.getDirectIbRebateAccount(), 2);
+        tradingPage.checkIbAccountValueCard(client.getTradingAccount(), relation2.getDirectIbRebateAccount(), 1);
+        tradingPage.checkIbRebatesValueCard(client.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()), 2);
+        tradingPage.checkIbRebatesValueCard(client.getTradingAccount(), (commission2.getSalesCommission() + commission2.getIbCommission()), 1);
+        tradingPage.clickTableViewButton();
+        tradingPage.checkIbAccountValueTable(client.getTradingAccount(), relation.getDirectIbRebateAccount(), 2);
+        tradingPage.checkIbRebatesValueTable(client.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()), 2);
+        tradingPage.checkIbAccountValueTable(client.getTradingAccount(), relation2.getDirectIbRebateAccount(), 1);
+        tradingPage.checkIbRebatesValueTable(client.getTradingAccount(), (commission2.getSalesCommission() + commission2.getIbCommission()), 1);
+    }
+
+    @Test
+    @AllureId("1021")
+    @Feature("BMS-744 Display IB info in account card and table")
+    @DisplayName("Trading/Account. User can see IB account in clients account info more than one account")
     public void ibInfoDisplayedOnCardMultipleTest() {
         Allure.step("create test data for IB relation and commissions with more than one account for the test account");
         AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
