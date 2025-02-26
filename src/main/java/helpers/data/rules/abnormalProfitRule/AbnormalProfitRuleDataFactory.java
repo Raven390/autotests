@@ -38,7 +38,7 @@ public class AbnormalProfitRuleDataFactory {
         CrmTbUserObject userObject = generateUserByClient(client);
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade");
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), null, closeTradeMtEvent, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), null, closeTradeMtEvent, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>());
     }
 
     public static RuleDataHelper getAbnormalProfitRuleExitEventEnd1Data() {

@@ -11,7 +11,9 @@ import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
+import businessObjects.db.clickhouse.loyaltiesRedemption.LoyaltiesRedemptionObject;
 import businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.db.clickhouse.mtMt5Positions.MtMt5PositionsObject;
@@ -53,6 +55,8 @@ public class RuleDataHelper {
     public List<AggrFloatingTradesGroupBy> floatingTrades;
     public List<ClientHelper> connectedClientHelpers;
     public List<MirrorUcidObject> mirrorUcidObjects;
+    public MtAccountObject mtAccountObject;
+    public List<LoyaltiesRedemptionObject> loyaltyObjects;
     public List<MtMt5PositionsObject> mtMt5PositionsObjects;
 
     public RuleDataHelper() {
@@ -85,7 +89,8 @@ public class RuleDataHelper {
             AggrCreditEquityRateObject aggrCreditEquityRate, MirrorLoginObject aggrMirrorAccountsByTrades,
             List<MtBalanceOrdersObject> mtBalanceOrdersObjects, List<MirrorLoginObject> mirrorLoginObjects,
             List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
-            List<MirrorUcidObject> mirrorUcidObjects) {
+            List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
+            List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;
@@ -109,11 +114,14 @@ public class RuleDataHelper {
         this.floatingTrades = floatingTrades;
         this.connectedClientHelpers = connectedClientHelpers;
         this.mirrorUcidObjects = mirrorUcidObjects;
+        this.mtAccountObject = mtAccountObject;
+        this.loyaltyObjects = loyaltyObjects;
+        this.mtMt5PositionsObjects = mtMt5PositionsObjects;
     }
 
     @Override
     public String toString() {
-        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
+        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + '}';
     }
 
     public static void setupRuleData(Map<String, RuleDataHelper> map) {
@@ -170,11 +178,17 @@ public class RuleDataHelper {
             if (data.aggrMirrorAccountsByTrades != null) {
                 insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data.aggrMirrorAccountsByTrades);
             }
+            if (data.mtAccountObject != null) {
+                insertObjectToDb(MT_ACCOUNT_TABLE_NAME, data.mtAccountObject);
+            }
             if (data.aggrCreditEquityRate != null) {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
             data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
                 insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
+            });
+            data.loyaltyObjects.forEach(loyaltyObjects -> {
+                insertObjectToDb(CRM_TB_LOYALTY_REDEMPTION, loyaltyObjects);
             });
         }
     }
@@ -189,11 +203,9 @@ public class RuleDataHelper {
             });
             if (data.lnSessionParsedObjectRegistration != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
-
             }
             if (data.lnSessionParsedObjectLogin != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.userId));
-
             }
             data.clientFraudTypes.forEach(fraud -> {
                 deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
@@ -228,6 +240,9 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));
             }
+            data.loyaltyObjects.forEach(loyaltyObjects -> {
+                deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid));
+            });
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
