@@ -2,6 +2,7 @@ package tests.ruleEngineServiceTests;
 
 
 import businessObjects.db.backofficeDb.alert.Alert;
+import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudType;
 import helpers.data.rules.RuleDataHelper;
@@ -83,6 +84,16 @@ public class AbnormalProfitRuleTests extends TestBaseRule {
         // Verify alert in BO db
 
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
+        // Verify restriction
+        Allure.step("Get client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        );
+
+        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 12L, "Loss voucher", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test

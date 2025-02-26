@@ -245,6 +245,12 @@ public class MirrorTradingRuleDataFactory {
         CrmTbDepositObject deposit = generateDepositByClient(mirrorTradingRuleExitEventEnd1_1Client);
         Mt5DealsCoercedObject trade1 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
         Mt5DealsCoercedObject trade2 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade1 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade2 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade3 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade4 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade5 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
+        Mt5DealsCoercedObject mirrorTrade6 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
         MtBalanceOrdersObject balanceOrder = generateBalanceOrders(mirrorTradingRuleExitEventEnd1_1Client, 1d, 2d, getCurrentTimestampDbFormat());
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
@@ -262,6 +268,19 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("now() -firstDeposit < 7 days");
         Allure.step("lexisNexis.country = client.country? = false");
         data.lnSessionParsedObjectLogin.trueIpCountryConfidence = 50;
+        Allure.step("dummy trade is true");
+        mirrorTrade1.volume = 0.01;
+        mirrorTrade1.volumeLots = 0.01;
+        mirrorTrade2.volume = 1d;
+        mirrorTrade2.volumeLots = 1d;
+        mirrorTrade3.volume = 1d;
+        mirrorTrade3.volumeLots = 1d;
+        mirrorTrade4.volume = 1d;
+        mirrorTrade4.volumeLots = 1d;
+        mirrorTrade5.volume = 1d;
+        mirrorTrade5.volumeLots = 1d;
+        mirrorTrade6.volume = 1d;
+        mirrorTrade6.volumeLots = 1d;
         Allure.step("count(tradesWithStopouts)/count(trades) > 0.8 = true");
         trade2.comment = "S/O";
         Allure.step("count(balanceOrdersWithTypeWO) > 0 = true");
@@ -491,22 +510,9 @@ public class MirrorTradingRuleDataFactory {
         Map<String, MirrorTradingRuleData> map = new HashMap<>();
         // Put all the db data for setup in a list
         //map.put("2", getMirrorTradingRuleExitEventEnd2Data());
-        map.put("3_1", getMirrorTradingRuleExitEventEnd3_1Data());
-        //map.put("3_2", getMirrorTradingRuleExitEventEnd3_2Data());
-        map.put("4_1", getMirrorTradingRuleExitEventEnd4_1Data());
-        //map.put("4_2", getMirrorTradingRuleExitEventEnd4_2Data());
-        map.put("4_3", getMirrorTradingRuleExitEventEnd4_3Data());
-        map.put("4_4", getMirrorTradingRuleExitEventEnd4_4Data());
-        map.put("5_1", getMirrorTradingRuleExitEventEnd5_1Data());
-//        map.put("5_2", getMirrorTradingRuleExitEventEnd5_2Data());
-//        map.put("6", getMirrorTradingRuleExitEventEnd6Data());
+
         map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
-//        map.put("1_2", getMirrorTradingRuleExitEventEnd1_2Data());
-        map.put("7_1", getMirrorTradingRuleExitEventEnd7_1Data());
-        map.put("7_2", getMirrorTradingRuleExitEventEnd7_2Data());
-        map.put("7_3", getMirrorTradingRuleExitEventEnd7_3Data());
-//        map.put("7_4", getMirrorTradingRuleExitEventEnd7_4Data());
-//        map.put("7_5", getMirrorTradingRuleExitEventEnd7_5Data());
+
 
         // Loop through the list with data and insert all the data into the according tables
         for (MirrorTradingRuleData data : map.values()) {

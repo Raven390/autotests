@@ -58,6 +58,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_ABNORMAL_PROFIT_RULE = "Abnormal profit rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_LOSS_VOUCHER_RULE = "Loss voucher rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NDB_ABUSE_RULE = "No deposit bonus abuse rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE = "Market manipulation rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
@@ -96,7 +97,6 @@ public class Constants {
     // TABLES
     public static final String CRM_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
     public static final String MT_ACCOUNT_TABLE_NAME = "vindex_test.mt___account";
-    public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "vindex_test.s3___fact_login_metrics";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_BONUS_TABLE_NAME = "vindex_test.crm___tb_bonus";
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm___tb_deposit";
@@ -147,6 +147,9 @@ public class Constants {
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced_toxicity";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String DP_AND_WD_BY_CHANNEL_TABLE_NAME = "vindex_test.dp_and_wd_by_channel";
+    public static final String CRM_TB_LOYALTY_REDEMPTION = "vindex_test.crm___tb_loyalty_redemption";
+    public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "vindex_test.s3___fact_login_metrics";
+
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

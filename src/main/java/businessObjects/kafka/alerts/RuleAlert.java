@@ -97,6 +97,9 @@ public class RuleAlert {
 
             @JsonProperty("Currency")
             public String currency;
+
+            @JsonProperty("Loss vouchers amount in USD")
+            public String lossVoucherAmount;
         }
     }
 }
