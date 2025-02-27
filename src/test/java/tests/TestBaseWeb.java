@@ -45,6 +45,7 @@ public class TestBaseWeb {
     public AlertsPage alertsPage;
     public PaymentsPage paymentsPage;
     public ActivityTab activityTab;
+    public IbOverviewPage ibOverviewPage;
 
     DecimalFormat df = new DecimalFormat("#,###");
     DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -89,6 +90,7 @@ public class TestBaseWeb {
         alertsPage = new AlertsPage(page);
         paymentsPage = new PaymentsPage(page);
         activityTab = new ActivityTab(page);
+        ibOverviewPage = new IbOverviewPage(page);
     }
 
     @AfterEach

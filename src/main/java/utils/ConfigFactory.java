@@ -72,6 +72,7 @@ public class ConfigFactory {
     public static final String CONNECTION_SEARCH_GET_CHECK_CONNECTED_IB = CONFIG.connectionSearchGetCheckConnectedIb();
     // Mitigation service
     public static final String MITIGATION_SERVICE_BASE_PATH = CONFIG.mitigationServiceBasePath();
+    public static final String MITIGATION_SERVICE_INSIGHT_BASE_PATH = CONFIG.mitigationServiceInsightBasePath();
     public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
     public static final String MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
@@ -340,6 +341,9 @@ public class ConfigFactory {
 
         @Key("mitigationServiceBasePath")
         String mitigationServiceBasePath();
+
+        @Key("mitigationServiceInsightBasePath")
+        String mitigationServiceInsightBasePath();
 
         @Key("mitigationServiceGetRestrictionCatalog")
         String mitigationServiceGetRestrictionCatalog();

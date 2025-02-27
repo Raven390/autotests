@@ -86,7 +86,8 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify IB rebates widget is not visible", tradingPage.isIbRebatesWidgetVisible(), is(false));
+        assertThat("Verify title", tradingPage.getIbRebatesWidgetTitle(), is("IB rebates USD"));
+        assertThat("Verify text", tradingPage.getIbRebatesWidgetText(), is("Not involved in IB program"));
     }
 
     @Order(2)
@@ -163,7 +164,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         assertThat("Verify title", tradingPage.getIbRebatesWidgetTitle(), is("IB rebates USD"));
         String value = formatter.format(commissionsList.stream().mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission()).sum());
         assertThat("Verify value", tradingPage.getIbRebatesWidgetValue(), is(value));
-        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s accounts", "2")));
+        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s accounts", "3")));
     }
 
 

@@ -1,8 +1,8 @@
-package businessObjects.db.clickhouse;
+package businessObjects.db.clickhouse.segmentationTable;
 
 import java.util.Objects;
 
-public class segmentationTableObject {
+public class SegmentationTableObject {
     private String ucid;
     private String brand;
     private String currency;
@@ -24,7 +24,7 @@ public class segmentationTableObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        segmentationTableObject that = (segmentationTableObject) o;
+        SegmentationTableObject that = (SegmentationTableObject) o;
         return Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(currency, that.currency) && Objects.equals(deposit, that.deposit) && Objects.equals(withdraw, that.withdraw) && Objects.equals(netClosedPnl, that.netClosedPnl) && Objects.equals(floating, that.floating) && Objects.equals(tradingVolIn, that.tradingVolIn) && Objects.equals(tradingVolOut, that.tradingVolOut) && Objects.equals(swap, that.swap) && Objects.equals(commission, that.commission) && Objects.equals(spread, that.spread) && Objects.equals(revenue, that.revenue) && Objects.equals(segment, that.segment) && Objects.equals(segmentBrand, that.segmentBrand) && Objects.equals(date, that.date);
     }
 

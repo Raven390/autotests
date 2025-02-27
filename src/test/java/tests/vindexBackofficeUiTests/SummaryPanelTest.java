@@ -9,7 +9,7 @@ import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsObject;
 import businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsObject;
-import businessObjects.db.clickhouse.segmentationTableObject;
+import businessObjects.db.clickhouse.segmentationTable.SegmentationTableObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -158,11 +158,11 @@ public class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Segment test")
     public void clientSummarySegmentTest() {
         Allure.step("Prepare DB data for test user");
-        segmentationTableObject segment1 = new segmentationTableObject();
+        SegmentationTableObject segment1 = new SegmentationTableObject();
         segment1.setUcid(client.getUcid());
         segment1.setSegment("Low");
         segment1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
-        segmentationTableObject segment2 = new segmentationTableObject();
+        SegmentationTableObject segment2 = new SegmentationTableObject();
         segment2.setUcid(client.getUcid());
         segment2.setSegment("Medium");
         segment2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
