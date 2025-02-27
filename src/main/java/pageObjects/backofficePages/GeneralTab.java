@@ -55,11 +55,12 @@ public class GeneralTab extends AbstractPage {
     private final Locator fullNameElement;
     private final Locator registrationDateAgoElement;
     private final Locator showHiddenDataButton;
-    private final Locator registrationSourceIb;
+    private final Locator registrationSourceReferral;
     private final Locator registrationSourceCpa;
     private final Locator fileViewerImage;
     private final Locator fileViewerImagePresentation;
     private final Locator attemptItem;
+    private final Locator ibOverviewButton;
 
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
@@ -86,7 +87,6 @@ public class GeneralTab extends AbstractPage {
     private static final String REFERRAL_DATE = "//*[contains(@class, 'v-registration-source-row__date')]";
     private static final String REFERRAL_REBATES = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_rebates')]";
     private static final String TEXT_ELEMENT = "//*[contains(@class, 'v-text-with-icon__text')]";
-
 
     public GeneralTab(Page page) {
         super(page);
@@ -124,11 +124,12 @@ public class GeneralTab extends AbstractPage {
         this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
         this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
         this.showHiddenDataButton = page.locator("//button[@data-qa='investigation_page__general_info_unmask_btn']");
-        this.registrationSourceIb = page.locator("//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
+        this.registrationSourceReferral = page.locator("//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.registrationSourceCpa = page.locator("//span[text()='CPA affiliate']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.fileViewerImage = page.locator("[data-qa='gallery__image']");
         this.fileViewerImagePresentation = page.locator("[data-qa='gallery__slide']");
         this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
+        this.ibOverviewButton = page.locator("//div[text()='IB overview']");
     }
 
     @Step("Open users general tab")
@@ -361,9 +362,9 @@ public class GeneralTab extends AbstractPage {
         return getElementTextByLabel("2-Factor Auth");
     }
 
-    @Step("Get registration source IB")
+    @Step("Get registration source Referral")
     public String getRegistrationSourceRaf() {
-        return registrationSourceIb.textContent();
+        return registrationSourceReferral.textContent();
     }
 
     @Step("Get registration source CPA")
@@ -502,9 +503,12 @@ public class GeneralTab extends AbstractPage {
         assertEquals(expectedValue, page.locator(locator).textContent());
     }
 
+    public void clickIbOverviewButton() {
+        ibOverviewButton.first().click();
+    }
+
     public Double calculateRevenue(S3FactLoginMetricsObject revenue) {
         return revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyCommissionRevenue() + revenue.getDailySwapsRevenue();
     }
-
 }
 

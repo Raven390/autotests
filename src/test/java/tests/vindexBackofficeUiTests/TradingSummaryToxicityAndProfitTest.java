@@ -114,7 +114,7 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
         assertThat("Verify Toxicity & Profit max profit label", tradingPage.getToxicityAndProfitMaxProfitLabel(), is("Max profit"));
         assertThat("Verify Toxicity & Profit max toxicity graph dot value", tradingPage.getToxicityAndProfitMaxToxicityGraphDot(), is(maxToxicity));
         assertThat("Verify Toxicity & Profit x axis labels match expected pattern", tradingPage.getToxicityAndProfitXAxisLabels(), contains("Deals", "1", "2", "3", "4", "5", "6", "7"));
-        assertThat("Verify Toxicity & Profit tooltip", tradingPage.getToxicityAndProfitTooltip(), is("The chart only displays data available from September 6, 2024, onwards.  Data is updated once per day."));
+        assertThat("Verify Toxicity & Profit tooltip", tradingPage.getToxicityAndProfitTooltip(), is("The chart only displays data available from September 6, 2024, onwards.  Data is updated once per hour."));
     }
 
     @AfterAll

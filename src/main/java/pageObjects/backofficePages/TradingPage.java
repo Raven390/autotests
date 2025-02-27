@@ -135,6 +135,8 @@ public class TradingPage extends AbstractPage {
     private final Locator totalPnlMaxProfitLabel;
     private final Locator totalPnlMaxLossValue;
     private final Locator totalPnlMaxLossLabel;
+    private final Locator totalPnlMaxProfitDate;
+    private final Locator totalPnlMaxLossDate;
     private final Locator totalPnlMaxProfitGraphDot;
     private final Locator totalPnlMaxLossGraphDot;
     private final Locator totalPnlYAxisLabel;
@@ -151,6 +153,7 @@ public class TradingPage extends AbstractPage {
     private final Locator volumeMaxValue;
     private final Locator volumeTotalValue;
     private final Locator volumeMaxLabel;
+    private final Locator volumeMaxDate;
     private final Locator volumeTotalLabel;
     private final Locator volumeMaxGraphDot;
     private final Locator pnlByDurationGraphSection;
@@ -176,6 +179,7 @@ public class TradingPage extends AbstractPage {
     private final Locator ibRebatesWidgetValue;
     private final Locator ibRebatesWidgetInfo;
     private final Locator ibRebatesWidgetTitle;
+    private final Locator ibRebatesWidgetText;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
@@ -367,10 +371,12 @@ public class TradingPage extends AbstractPage {
         this.typeCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Type"));
         this.methodCheckboxLabels = page.locator(String.format(CHECKBOX_LABEL_BY_TITLE_PATTERN, "Method"));
         this.summaryTab = page.locator(".g-radio-button__option-control[value=\"Summary\"]");
-        this.totalPnlMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES));
-        this.totalPnlMaxLossValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES));
-        this.totalPnlMaxProfitLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", TOTAL_PNL_CHART_FEATURES));
-        this.totalPnlMaxLossLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", TOTAL_PNL_CHART_FEATURES));
+        this.totalPnlMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES)).last();
+        this.totalPnlMaxLossValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES)).last();
+        this.totalPnlMaxProfitLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", TOTAL_PNL_CHART_FEATURES)).first();
+        this.totalPnlMaxLossLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_danger-heavy')]", TOTAL_PNL_CHART_FEATURES)).first();
+        this.totalPnlMaxProfitDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]", TOTAL_PNL_CHART_FEATURES)).first();
+        this.totalPnlMaxLossDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary v-chart-wrapper__feature-description')]", TOTAL_PNL_CHART_FEATURES)).last();
         this.totalPnlMaxProfitGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(77, 215, 175);']", TOTAL_PNL_CHART));
         this.totalPnlMaxLossGraphDot = page.locator(String.format("%s/descendant::div[@style='color: rgb(249, 116, 144);']", TOTAL_PNL_CHART));
         this.totalPnlYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOTAL_PNL_CHART_CONTAINER));
@@ -385,10 +391,11 @@ public class TradingPage extends AbstractPage {
         this.winrateWidgetInfo = winrateWidget.locator(".v-number-widget__info");
         this.volumeChartTitle = page.locator(VOLUME_CHART_CONTAINER).locator(CHART_TITLE);
         this.volumeYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-trading-summary-volume__padded-value']/div", VOLUME_CHART_CONTAINER));
-        this.volumeMaxValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES));
-        this.volumeTotalValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES));
-        this.volumeMaxLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", VOLUME_CHART_FEATURES));
-        this.volumeTotalLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", VOLUME_CHART_FEATURES));
+        this.volumeMaxValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES)).last();
+        this.volumeTotalValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES)).last();
+        this.volumeMaxLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART_FEATURES)).first();
+        this.volumeMaxDate = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", VOLUME_CHART_FEATURES)).first();
+        this.volumeTotalLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_primary')]", VOLUME_CHART_FEATURES)).first();
         this.volumeMaxGraphDot = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_brand')]", VOLUME_CHART));
         this.pnlByDurationGraphSection = page.locator(PNL_BY_DURATION);
         this.pnlByDurationTooltip = page.locator(PNL_BY_DURATION_TOOLTIP);
@@ -396,10 +403,10 @@ public class TradingPage extends AbstractPage {
         this.holdingTimeTooltip = page.locator(HOLDING_TIME_TOOLTIP);
         this.toxicityAndProfitChartTitle = page.locator(TOXICITY_AND_PROFIT_CHART_CONTAINER).locator(CHART_TITLE);
         this.toxicityAndProfitYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", TOXICITY_AND_PROFIT_CHART_CONTAINER));
-        this.toxicityAndProfitMaxToxicityValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES));
-        this.toxicityAndProfitMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES));
-        this.toxicityAndProfitMaxToxicityLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[1]", TOXICITY_AND_PROFIT_CHART_FEATURES));
-        this.toxicityAndProfitMaxProfitLabel = page.locator(String.format("(%s/descendant::div[contains(@class,'g-color-text g-color-text_color_secondary')])[2]", TOXICITY_AND_PROFIT_CHART_FEATURES));
+        this.toxicityAndProfitMaxToxicityValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).last();
+        this.toxicityAndProfitMaxProfitValue = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).last();
+        this.toxicityAndProfitMaxToxicityLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_warning')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).first();
+        this.toxicityAndProfitMaxProfitLabel = page.locator(String.format("%s/descendant::div[contains(@class,'g-color-text_color_utility')]", TOXICITY_AND_PROFIT_CHART_FEATURES)).first();
         this.toxicityAndProfitMaxToxicityGraphDot = page.locator(String.format("%s/descendant::div[@class='v-peak-point__point-label']", TOXICITY_AND_PROFIT_CHART));
         this.toxicityAndProfitXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text')]", TOXICITY_AND_PROFIT_CHART));
         this.toxicityAndProfitTooltipIcon = page.locator(String.format("%s/descendant::div[@class='v-chart-wrapper__info-hint']", TOXICITY_AND_PROFIT_CHART_CONTAINER));
@@ -412,6 +419,7 @@ public class TradingPage extends AbstractPage {
         this.ibRebatesWidgetTitle = ibRebatesWidget.locator(WIDGET_TITLE);
         this.ibRebatesWidgetValue = ibRebatesWidget.locator(".v-number-widget__value");
         this.ibRebatesWidgetInfo = ibRebatesWidget.locator(".v-number-widget__info");
+        this.ibRebatesWidgetText = ibRebatesWidget.locator(".v-number-widget__empty");
     }
 
     @Step("Navigate to users trading tab")
@@ -1162,6 +1170,16 @@ public class TradingPage extends AbstractPage {
         return totalPnlMaxLossLabel.textContent();
     }
 
+    @Step("Get Total PNL max profit date")
+    public String getTotalPnlMaxProfitDate() {
+        return totalPnlMaxProfitDate.textContent();
+    }
+
+    @Step("Get Total PNL max loss date")
+    public String getTotalPnlMaxLossDate() {
+        return totalPnlMaxLossDate.textContent();
+    }
+
     @Step("Get Total PNL max profit graph dot label")
     public String getTotalPnlMaxProfitGraphDot() {
         return totalPnlMaxProfitGraphDot.textContent();
@@ -1224,6 +1242,11 @@ public class TradingPage extends AbstractPage {
     @Step("Get Volume max label")
     public String getVolumeMaxLabel() {
         return volumeMaxLabel.textContent();
+    }
+
+    @Step("Get Volume max date")
+    public String getVolumeMaxDate() {
+        return volumeMaxDate.textContent();
     }
 
     @Step("Get Volume total value")
@@ -1851,6 +1874,11 @@ public class TradingPage extends AbstractPage {
         return ibRebatesWidgetTitle.textContent();
     }
 
+    @Step("Get IB rebates widget text")
+    public String getIbRebatesWidgetText() {
+        return ibRebatesWidgetText.textContent();
+    }
+
     @Step("Get IB rebates widget value")
     public String getIbRebatesWidgetValue() {
         return ibRebatesWidgetValue.textContent();
@@ -1859,11 +1887,6 @@ public class TradingPage extends AbstractPage {
     @Step("Get IB rebates widget info")
     public String getIbRebatesWidgetInfo() {
         return ibRebatesWidgetInfo.textContent();
-    }
-
-    @Step("Check if IB rebates widget is visible")
-    public boolean isIbRebatesWidgetVisible() {
-        return ibRebatesWidget.isVisible();
     }
 }
 

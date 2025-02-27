@@ -38,4 +38,24 @@ public class MitigationServiceRequest {
     public static Response disableCRMEmulator() throws IOException {
         return new HttpHelper().sendPostRequest(BASE_URL_CRM_EMULATOR + "/mitigation/enabled", null, null, "false");
     }
+
+    public static Response getRestrictionCatalogInsight(String token) throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_INSIGHT_BASE_PATH + MITIGATION_SERVICE_GET_RESTRICTION_CATALOG, Map.of("Authorization", String.format("Bearer %s", token)), null);
+    }
+
+    public static Response postRestrictionInsight(String token, PostRestrictionRequestBody postRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_INSIGHT_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, Map.of("Authorization", String.format("Bearer %s", token)), null, postRestrictionRequestBody);
+    }
+
+    public static Response getRestrictionsByAccountServerIdInsight(String token, Integer account, Integer serverId)
+            throws IOException {
+        return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_INSIGHT_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, Map.of("Authorization", String.format("Bearer %s", token)), Map.of("accountId", account, "serverId", serverId));
+    }
+
+    public static Response cancelRestrictionInsight(String token, Integer id,
+            CancelRestrictionRequestBody cancelRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_INSIGHT_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, id), Map.of("Authorization", String.format("Bearer %s", token)), null, cancelRestrictionRequestBody);
+    }
 }

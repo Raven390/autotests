@@ -55,20 +55,27 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     private static final MtMt4TradesCoercedObject trade10 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade11 = generateMt4TradesCoerced(client);
     private static final MtMt4TradesCoercedObject trade12 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade13 = generateMt4TradesCoerced(client);
+    private static final MtMt4TradesCoercedObject trade14 = generateMt4TradesCoerced(client);
     private static final String MONTH_DAY_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
+    private static final String WEEK_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2} - (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{2}$";
     private static final String MONTH_YEAR_LABEL_PATTERN = "^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \\d{4}$";
     private static final String YEAR_LABEL_PATTERN = "^\\d{4}$";
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+        trade14.notionalValueUsd = 3670.415;
+        trade14.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
+        trade13.notionalValueUsd = 50_000d;
+        trade13.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
         trade12.notionalValueUsd = 3670.415;
-        trade12.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 2, 0, 1, 0, 0);
+        trade12.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
         trade11.notionalValueUsd = 70_000d;
-        trade11.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 2, 0, 0, 0, 0);
+        trade11.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
         trade10.notionalValueUsd = 3670.415;
-        trade10.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 2, 0, 0, 0);
+        trade10.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
         trade9.notionalValueUsd = 30_000d;
-        trade9.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 2, 0, 0, 0);
+        trade9.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
         trade8.notionalValueUsd = 2854.345;
         trade8.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0);
         trade7.notionalValueUsd = 884.243;
@@ -107,29 +114,29 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), equalTo("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), equalTo("15k"));
+        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15k"));
         String maxVolumeDate = transformDate(trade2.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
         String maxVolume = formatter.format(trade2.notionalValueUsd);
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8).mapToDouble(t -> t.notionalValueUsd).sum());
-        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), equalTo(maxVolume));
-        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
-        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
-        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
+        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
+        assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
+        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
+        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
         assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
-        String xAxisLabel = transformDate(trade1.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
     }
 
     @Order(2)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("910")
-    @DisplayName("Verify Volume chart in Trading - Summary by months")
+    @AllureId("1056")
+    @DisplayName("Verify Volume chart in Trading - Summary by weeks")
     public void verifyTradingSummaryVolume2Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 2, 0, 0, 0);
+        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 62, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade9, trade10));
         investigationPage.navigateEnterPage();
@@ -138,28 +145,29 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), equalTo("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), equalTo("35k"));
+        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35k"));
         String maxVolumeDate = transformDate(trade9.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
         String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
-        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), equalTo(maxVolume));
-        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
-        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
-        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
-        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
+        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
+        assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), matchesPattern(WEEK_LABEL_PATTERN));
+        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
+        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
+        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
     @Order(3)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("911")
-    @DisplayName("Verify Volume chart in Trading - Summary by years")
+    @AllureId("910")
+    @DisplayName("Verify Volume chart in Trading - Summary by months")
     public void verifyTradingSummaryVolume3Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
-        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 37, 0, 0, 0);
+        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 254, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade11, trade12));
         investigationPage.navigateEnterPage();
@@ -168,16 +176,48 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), equalTo("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), equalTo("75k"));
-        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
+        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75k"));
+        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
         String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
-        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), equalTo(maxVolume));
-        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), equalTo(String.format("Max – %s", maxVolumeDate)));
-        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), equalTo(totalVolume));
-        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), equalTo("Total"));
-        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), equalTo(maxVolume));
+        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
+        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
+        assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
+        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
+        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
+        assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
+    }
+
+    @Order(4)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("911")
+    @DisplayName("Verify Volume chart in Trading - Summary by years")
+    public void verifyTradingSummaryVolume4Test() throws Exception {
+        cleanCrmUserTableByClient(crmTbUser.ucid);
+        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade13, trade14));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        tradingPage.openTradingTab();
+        tradingPage.openSummaryTab();
+        assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("150k"));
+        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
+        String maxVolume = formatter.format(Stream.of(trade9, trade10, trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
+        String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(t -> t.notionalValueUsd).sum());
+        assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
+        assertThat("Verify Volume max label", tradingPage.getVolumeMaxLabel(), is("Max"));
+        assertThat("Verify Volume max date", tradingPage.getVolumeMaxDate(), is(maxVolumeDate));
+        assertThat("Verify Volume total value", tradingPage.getVolumeTotalValue(), is(totalVolume));
+        assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
+        assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
         assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(YEAR_LABEL_PATTERN)));
     }
 

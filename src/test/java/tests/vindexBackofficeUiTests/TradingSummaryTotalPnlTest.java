@@ -108,18 +108,20 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
-        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
-        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
-        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
+        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), is("PNLtotal, USD"));
+        assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), is("9k"));
+        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
+        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxProfit = "6,666";
         String maxLoss = "-3,547";
-        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), equalTo(String.format("Max profit – %s", maxProfitDate)));
-        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), equalTo(maxLoss));
-        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), is(maxProfit));
+        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), is("Max profitable"));
+        assertThat("Verify Total PNL max profit date", tradingPage.getTotalPnlMaxProfitDate(), is(maxProfitDate));
+        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
+        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
+        assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
+        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
         assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
@@ -141,16 +143,18 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
-        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
-        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
+        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
+        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxProfit = "6,666";
         String maxLoss = "-3,547";
-        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), equalTo(String.format("Max profit – %s", maxProfitDate)));
-        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), equalTo(maxLoss));
-        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), is(maxProfit));
+        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), is("Max profitable"));
+        assertThat("Verify Total PNL max profit date", tradingPage.getTotalPnlMaxProfitDate(), is(maxProfitDate));
+        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
+        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
+        assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
+        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
         assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
@@ -172,16 +176,18 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         tradingPage.openSummaryTab();
         assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9k"));
-        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DATE);
-        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DATE);
+        String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
+        String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxProfit = "6,666";
         String maxLoss = "-3,547";
-        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), equalTo(String.format("Max profit – %s", maxProfitDate)));
-        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), equalTo(maxLoss));
-        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), equalTo(String.format("Max loss – %s", maxLossDate)));
-        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), equalTo(maxProfit));
-        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), equalTo(maxLoss));
+        assertThat("Verify Total PNL max profit value", tradingPage.getTotalPnlMaxProfitValue(), is(maxProfit));
+        assertThat("Verify Total PNL max profit label", tradingPage.getTotalPnlMaxProfitLabel(), is("Max profitable"));
+        assertThat("Verify Total PNL max profit date", tradingPage.getTotalPnlMaxProfitDate(), is(maxProfitDate));
+        assertThat("Verify Total PNL max loss value", tradingPage.getTotalPnlMaxLossValue(), is(maxLoss));
+        assertThat("Verify Total PNL max loss label", tradingPage.getTotalPnlMaxLossLabel(), is("Max losing"));
+        assertThat("Verify Total PNL max loss date", tradingPage.getTotalPnlMaxLossDate(), is(maxLossDate));
+        assertThat("Verify Total PNL max profit graph dot value", tradingPage.getTotalPnlMaxProfitGraphDot(), is(maxProfit));
+        assertThat("Verify Total PNL max loss graph dot value", tradingPage.getTotalPnlMaxLossGraphDot(), is(maxLoss));
         assertThat("Verify Total PNL x axis labels match expected pattern", tradingPage.getTotalPnlXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
