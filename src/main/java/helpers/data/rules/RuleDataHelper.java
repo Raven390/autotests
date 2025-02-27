@@ -10,6 +10,7 @@ import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
+import businessObjects.db.clickhouse.dictAccountToUcid.DictAccountToUcidObject;
 import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
 import businessObjects.db.clickhouse.loyaltiesRedemption.LoyaltiesRedemptionObject;
 import businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObject;
@@ -34,6 +35,7 @@ import static utils.Constants.*;
 public class RuleDataHelper {
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
+    public DictAccountToUcidObject dictAccountToUcidObject;
     public LnSessionParsedObject lnSessionParsedObjectRegistration;
     public LnSessionParsedObject lnSessionParsedObjectLogin;
     public List<ConnectionTableEntry> connections;
@@ -121,7 +123,7 @@ public class RuleDataHelper {
 
     @Override
     public String toString() {
-        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + '}';
+        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
     }
 
     public static void setupRuleData(Map<String, RuleDataHelper> map) {
@@ -132,6 +134,9 @@ public class RuleDataHelper {
             }
             if (data.crmTbUserObject != null) {
                 insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            }
+            if (data.dictAccountToUcidObject != null) {
+                insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
             }
             data.connections.forEach(connection -> {
                 insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
@@ -197,6 +202,9 @@ public class RuleDataHelper {
         for (RuleDataHelper data : map.values()) {
             if (data.crmTbUserObject != null) {
                 deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
+            }
+            if (data.dictAccountToUcidObject != null) {
+                deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = %s", data.dictAccountToUcidObject.ucid));
             }
             data.connections.forEach(connection -> {
                 deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));

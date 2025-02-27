@@ -25,6 +25,7 @@ import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquit
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.dictAccountToUcid.DictAccountToUcidObjectFactory.generateDictByClient;
 import static businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static businessObjects.db.clickhouse.mtMt5Positions.MtMt5PositionsObjectFactory.generatePositionByOrder;
@@ -55,6 +56,7 @@ public class MarketManipulationRuleDataFactory {
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.crmTbAccountObject = generateCrmTbAccountData(client);
+        data.dictAccountToUcidObject = generateDictByClient(client);
         data.aggrCreditEquityRate = creditEquityRate;
         Integer tradeId = getRandomIntPositive();
         Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", tradeId, getRandomIntPositive().longValue(), 0, 0, 1, 1d, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 2502.0, 1, 1d, 2502.0, 1, 1d, 1L, tradeId.longValue(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
@@ -106,6 +108,27 @@ public class MarketManipulationRuleDataFactory {
     private static RuleDataHelper getMarketManipulationRuleExit2v1Data() {
         RuleDataHelper data = getMarketManipulatorRuleData(marketManipulationExit2v1Client);
         // TODO add low toxicity data
+        data.mt5DealsCoercedObjects.get(0).profit = 3000.0;
+        data.mt5DealsCoercedObjects.get(0).profitUsd = 3000.0;
+
+        Mt5DealsCoercedObject consecutiveTrade1 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade2 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade3 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade4 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade5 = generateTradeByClient(data.clientHelper);
+
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+
+        data.mt5DealsCoercedObjects.add(consecutiveTrade1);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade2);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade3);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade4);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade5);
+        // TODO add low toxicity data
         ClientHelper client = marketManipulationExit2v1Client;
         data.mt5DealsCoercedObjects.getFirst().time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
         data.mt5DealsCoercedObjects.getFirst().timeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
@@ -139,6 +162,27 @@ public class MarketManipulationRuleDataFactory {
     private static RuleDataHelper getMarketManipulationRuleExit3Data() {
         RuleDataHelper data = getMarketManipulatorRuleData(marketManipulationExit3Client);
         data.aggrCreditEquityRate.currentEquity = 2501.0;
+        // TODO add low toxicity data
+        data.mt5DealsCoercedObjects.get(0).profit = 3000.0;
+        data.mt5DealsCoercedObjects.get(0).profitUsd = 3000.0;
+
+        Mt5DealsCoercedObject consecutiveTrade1 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade2 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade3 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade4 = generateTradeByClient(data.clientHelper);
+        Mt5DealsCoercedObject consecutiveTrade5 = generateTradeByClient(data.clientHelper);
+
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+        consecutiveTrade1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 0, 1);
+
+        data.mt5DealsCoercedObjects.add(consecutiveTrade1);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade2);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade3);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade4);
+        data.mt5DealsCoercedObjects.add(consecutiveTrade5);
         // TODO add low toxicity data
         data.floatingTrades.add(new AggrFloatingTradesGroupBy(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId(), getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 20, 0), 0, 0, "USDEUR", 123.45, 2501.0, 123.45));
         Mt5DealsCoercedObject trade1Open;
