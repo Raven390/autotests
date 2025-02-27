@@ -213,5 +213,37 @@ public class SummaryPanelTest extends TestBaseWeb {
         generalTab.checkSummaryPanelFraudValue("Fraud", fraudType2.getDisplayName());
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1055")
+    @Feature("BMS-976 [FE] Implement the version of layout with Revenue")
+    @DisplayName("Clients summary panel Revenue section test")
+    public void clientSummaryRevenueTest() {
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        Allure.step("Prepare DB data for test user");
+        S3FactLoginMetricsObject revenue = generates3FactLoginMetricsClient(client);
+        revenue.setDailyCoreSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyTakerSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyLpSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyVbSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMinSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMaxSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyCoreSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyTakerSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyLpSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyVbSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMinSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMaxSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyCommissionRevenue(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailySwapsRevenue(getRandomRoundedDouble(0.0, 999_999_999.99));
+        insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, revenue);
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalTab.navigateGeneralTab(client.getUcid());
+        generalTab.checkSummaryPanelValue("Revenue", generalTab.calculateRevenue(revenue));
+    }
+
 
 }

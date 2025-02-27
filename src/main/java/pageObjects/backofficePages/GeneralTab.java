@@ -1,5 +1,6 @@
 package pageObjects.backofficePages;
 
+import businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsObject;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.ElementState;
@@ -499,6 +500,10 @@ public class GeneralTab extends AbstractPage {
         String locator = CPA_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_DATE + TEXT_ELEMENT;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertEquals(expectedValue, page.locator(locator).textContent());
+    }
+
+    public Double calculateRevenue(S3FactLoginMetricsObject revenue) {
+        return revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyCommissionRevenue() + revenue.getDailySwapsRevenue();
     }
 
 }

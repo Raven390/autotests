@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class segmentationTableObject {
     private String ucid;
+    private String brand;
     private String currency;
     private String deposit;
     private Double withdraw;
@@ -16,24 +17,25 @@ public class segmentationTableObject {
     private Double spread;
     private Double revenue;
     private String segment;
+    private String segmentBrand;
     private String date;
-
-    @Override
-    public String toString() {
-        return "segmentationTableObject{" + "ucid='" + ucid + '\'' + ", currency='" + currency + '\'' + ", deposit='" + deposit + '\'' + ", withdraw=" + withdraw + ", netClosedPnl=" + netClosedPnl + ", floating=" + floating + ", tradingVolIn=" + tradingVolIn + ", tradingVolOut=" + tradingVolOut + ", swap=" + swap + ", commission=" + commission + ", spread=" + spread + ", revenue=" + revenue + ", segment='" + segment + '\'' + ", date='" + date + '\'' + '}';
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         segmentationTableObject that = (segmentationTableObject) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(currency, that.currency) && Objects.equals(deposit, that.deposit) && Objects.equals(withdraw, that.withdraw) && Objects.equals(netClosedPnl, that.netClosedPnl) && Objects.equals(floating, that.floating) && Objects.equals(tradingVolIn, that.tradingVolIn) && Objects.equals(tradingVolOut, that.tradingVolOut) && Objects.equals(swap, that.swap) && Objects.equals(commission, that.commission) && Objects.equals(spread, that.spread) && Objects.equals(revenue, that.revenue) && Objects.equals(segment, that.segment) && Objects.equals(date, that.date);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(brand, that.brand) && Objects.equals(currency, that.currency) && Objects.equals(deposit, that.deposit) && Objects.equals(withdraw, that.withdraw) && Objects.equals(netClosedPnl, that.netClosedPnl) && Objects.equals(floating, that.floating) && Objects.equals(tradingVolIn, that.tradingVolIn) && Objects.equals(tradingVolOut, that.tradingVolOut) && Objects.equals(swap, that.swap) && Objects.equals(commission, that.commission) && Objects.equals(spread, that.spread) && Objects.equals(revenue, that.revenue) && Objects.equals(segment, that.segment) && Objects.equals(segmentBrand, that.segmentBrand) && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, currency, deposit, withdraw, netClosedPnl, floating, tradingVolIn, tradingVolOut, swap, commission, spread, revenue, segment, date);
+        return Objects.hash(ucid, brand, currency, deposit, withdraw, netClosedPnl, floating, tradingVolIn, tradingVolOut, swap, commission, spread, revenue, segment, segmentBrand, date);
+    }
+
+    @Override
+    public String toString() {
+        return "segmentationTableObject{" + "ucid='" + ucid + '\'' + ", brand='" + brand + '\'' + ", currency='" + currency + '\'' + ", deposit='" + deposit + '\'' + ", withdraw=" + withdraw + ", netClosedPnl=" + netClosedPnl + ", floating=" + floating + ", tradingVolIn=" + tradingVolIn + ", tradingVolOut=" + tradingVolOut + ", swap=" + swap + ", commission=" + commission + ", spread=" + spread + ", revenue=" + revenue + ", segment_overall='" + segment + '\'' + ", segment_brand='" + segmentBrand + '\'' + ", date='" + date + '\'' + '}';
     }
 
     public String getUcid() {
@@ -42,6 +44,14 @@ public class segmentationTableObject {
 
     public void setUcid(String ucid) {
         this.ucid = ucid;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public String getCurrency() {
@@ -138,6 +148,14 @@ public class segmentationTableObject {
 
     public void setSegment(String segment) {
         this.segment = segment;
+    }
+
+    public String getSegmentBrand() {
+        return segmentBrand;
+    }
+
+    public void setSegmentBrand(String segmentBrand) {
+        this.segmentBrand = segmentBrand;
     }
 
     public String getDate() {
