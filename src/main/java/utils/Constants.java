@@ -149,7 +149,7 @@ public class Constants {
     public static final String DP_AND_WD_BY_CHANNEL_TABLE_NAME = "vindex_test.dp_and_wd_by_channel";
     public static final String CRM_TB_LOYALTY_REDEMPTION = "vindex_test.crm___tb_loyalty_redemption";
     public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "vindex_test.s3___fact_login_metrics";
-
+    public static final String DICT_ACCOUNT_TO_UCID = "vindex_test.dict_account_to_ucid";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
