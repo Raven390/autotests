@@ -503,7 +503,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
 //        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
 //    }
-
+//
 //    @Test
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)

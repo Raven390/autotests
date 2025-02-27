@@ -145,7 +145,7 @@ public class ActivityTab extends AbstractPage {
         this.filterClearButton = page.locator("//button[@data-qa='select-clear']");
         this.sortByScoreButton = page.locator(TABLE_HEADERS_LOCATOR + COLUMN_SCORE_LOCATOR + SORTABLE_CELL_LOCATOR);
         this.sortByDateButton = page.locator(TABLE_HEADERS_LOCATOR + COLUMN_DATE_LOCATOR + SORTABLE_CELL_LOCATOR);
-        this.tooltip = page.locator("[role='tooltip']");
+        this.tooltip = page.locator(".v-pointer-tooltip__tooltip");
         this.lineDivider = page.locator("//*[contains(@class, 'v-score-line__divider')]");
         this.dataRow = page.locator("tbody tr.g-table__row");
         this.negativeScoreLine = page.locator(".v-score-line__line_negative");
