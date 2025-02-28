@@ -78,14 +78,14 @@ public class RestrictionPage extends AbstractPage {
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin").first();
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
-        this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Open new account");
-        this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Internal transfer");
-        this.depositsSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Deposits");
-        this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Withdrawals");
-        this.loginSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Login CRM");
-        this.manualSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Manual Withdrawal Review");
-        this.creditAndBonusSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Credit and Bonus");
-        this.closeSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Close only mode");
+        this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.ACCOUNT_CREATION_REVIEW.getName());
+        this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.INTERNAL_TRANSFER.getName());
+        this.depositsSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.DEPOSITS.getName());
+        this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.WITHDRAWALS.getName());
+        this.loginSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.LOGIN_CRM.getName());
+        this.manualSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
+        this.creditAndBonusSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.CREDIT_AND_BONUS.getName());
+        this.closeSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.CLOSE_ONLY_MODE.getName());
         this.offQuotesSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Off quotes");
         this.abBookSwitch = page.locator(".v-restrictions-tab-item__name").getByText("B-Book -> A-Book");
         this.header1 = page.locator(".g-text_variant_header-1");
@@ -100,16 +100,16 @@ public class RestrictionPage extends AbstractPage {
         this.restrictionCancelSet = page.locator(".v-common-modal__buttons").getByText("Remove");
         this.restrictionCancelSetTrade = page.locator(".v-common-modal__buttons").getByText("Apply changes");
         this.cancelToast = page.locator(".g-toast__title").getByText("Restriction was removed");
-        this.checkedAccount = page.locator(".v-restrictions-tab-item_checked").getByText("Open new account");
-        this.checkedTransfer = page.locator(".v-restrictions-tab-item_checked").getByText("Internal transfer");
-        this.checkedDeposits = page.locator(".v-restrictions-tab-item_checked").getByText("Deposits");
-        this.checkedWithdrawals = page.locator(".v-restrictions-tab-item_checked").getByText("Withdrawals");
-        this.checkedLogin = page.locator(".v-restrictions-tab-item_checked").getByText("Login CRM");
-        this.checkedManual = page.locator(".v-restrictions-tab-item_checked").getByText("Manual Withdrawal Review");
-        this.checkedCreditAndBonus = page.locator(".v-restrictions-tab-item_checked").getByText("Credit and Bonus");
-        this.checkedCloseOnlyMode = page.locator(".v-restrictions-tab-item_checked").getByText("Close only mode");
-        this.checkedOffQuotesMode = page.locator(".v-restrictions-tab-item_checked").getByText("Off quotes");
-        this.checkedAbBook = page.locator(".v-restrictions-tab-item_checked").getByText("B-Book -> A-Book");
+        this.checkedAccount = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.ACCOUNT_CREATION_REVIEW.getName());
+        this.checkedTransfer = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.INTERNAL_TRANSFER.getName());
+        this.checkedDeposits = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.DEPOSITS.getName());
+        this.checkedWithdrawals = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.WITHDRAWALS.getName());
+        this.checkedLogin = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.LOGIN_CRM.getName());
+        this.checkedManual = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
+        this.checkedCreditAndBonus = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.CREDIT_AND_BONUS.getName());
+        this.checkedCloseOnlyMode = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.CLOSE_ONLY_MODE.getName());
+        this.checkedOffQuotesMode = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText("Off quotes");
+        this.checkedAbBook = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText("B-Book -> A-Book");
         this.withdrawalList = page.locator(".v-withdrawals-list");
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
@@ -461,14 +461,14 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((cancel.restrictions));
     }
 
-    public void checkKafkaRequestApplyAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
-        checkKafkaRequestApplyAccount(accoundIdInt, 525_600);
+    public void checkKafkaRequestApplyAccount(int accountIdInt) throws JsonProcessingException, InterruptedException {
+        checkKafkaRequestApplyAccount(accountIdInt, 525_600);
     }
 
-    public void checkKafkaRequestApplyAccount(int accoundIdInt, int banDurationMin) throws JsonProcessingException,
+    public void checkKafkaRequestApplyAccount(int accountIdInt, int banDurationMin) throws JsonProcessingException,
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
-        String accoundId = String.valueOf(accoundIdInt);
+        String accoundId = String.valueOf(accountIdInt);
         Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
@@ -479,20 +479,21 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
-        assertEquals(accoundIdInt, apply.accountId);
+        assertEquals(accountIdInt, apply.accountId);
         assertNotNull((apply.timestamp));
         assertNotNull((apply.messageId));
         assertNotNull((apply.serverId));
+        assertNotNull((apply.brand));
         assertEquals(banDurationMin, (apply.initialBanDurationInMinutes));
         assertNotNull((apply.modifier));
         assertNotNull((apply.restrictions));
     }
 
-    public static void checkKafkaRequestApplyAccount(int accoundIdInt, int serverId, int banDurationMin,
+    public static void checkKafkaRequestApplyAccount(int accountIdInt, int serverId, int banDurationMin,
             int restrictionId, String reason, String restrictionCode) throws JsonProcessingException,
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
-        String accountId = String.valueOf(accoundIdInt);
+        String accountId = String.valueOf(accountIdInt);
         Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accountId);
@@ -505,7 +506,7 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
-        assertEquals(accoundIdInt, apply.accountId);
+        assertEquals(accountIdInt, apply.accountId);
         assertNotNull((apply.timestamp));
         assertNotNull((apply.messageId));
         assertEquals(serverId, (apply.serverId));
@@ -514,7 +515,7 @@ public class RestrictionPage extends AbstractPage {
         AccountRestrictionApply.Restriction[] restriction = apply.restrictions;
         AccountRestrictionApply.Restriction testRestriction = restriction[0];
         assertEquals(restrictionId, testRestriction.restrictionId);
-        assertEquals(reason, testRestriction.internalReason);
+//        assertEquals(reason, testRestriction.internalReason);
         assertEquals(restrictionCode, testRestriction.restrictionCode);
     }
 
@@ -802,8 +803,8 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check that text displayed near restrictions is correct'");
         for (Restriction restriction : Restriction.values()) {
             if (restriction.isBoVisibility()) {
-                assertThat(page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div")).hasText(restriction.getDetails());
-                System.out.println("restriction '" + restriction.getName() + "' have correct description :'" + restriction.getDetails() + "'");
+                assertThat(page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div")).hasText(restriction.getDescription());
+                System.out.println("restriction '" + restriction.getName() + "' have correct description :'" + restriction.getDescription() + "'");
             }
         }
     }

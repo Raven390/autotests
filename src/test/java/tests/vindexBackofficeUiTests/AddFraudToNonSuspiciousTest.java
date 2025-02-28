@@ -21,7 +21,7 @@ import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static utils.Constants.*;
 
-public class AddFraudToNonSuspicious extends TestBaseWeb {
+public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
 
 
     static ClientHelper innocentClient = new ClientHelper(191_901, Brand.INFINOX, Regulator.FCA);
@@ -41,7 +41,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestHedging() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -58,7 +58,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestLatencyArbitrage() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -75,7 +75,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestMarketManipulation() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -92,7 +92,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestPricingErrors() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -109,7 +109,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestGapTrading() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -126,7 +126,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestSwapArbitrage() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -143,7 +143,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestRafAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -160,7 +160,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestRebateChurning() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -177,7 +177,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestLossVoucherAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -194,7 +194,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestNbpAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -211,7 +211,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestTlsAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -228,7 +228,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestPotentialAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -245,7 +245,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestBonusAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -262,7 +262,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestLoopholeAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -279,7 +279,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestHftAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -296,7 +296,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestNewsTrader() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -313,7 +313,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestAnomalousProfit() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -330,7 +330,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
     public void reportFraudTestCpaAbuse() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();
@@ -352,7 +352,7 @@ public class AddFraudToNonSuspicious extends TestBaseWeb {
         } while (fraud1.equals(fraud2));
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
-        activityTab.navigateToMain();
+        resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
         resolvePage.openReportFraudForm();

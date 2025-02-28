@@ -13,6 +13,12 @@ public class AccountRestrictionCancel {
     @JsonProperty("accountId")
     public Integer accountId;
 
+    @JsonProperty("clientId")
+    public Integer clientId;
+
+    @JsonProperty("brand")
+    public String brand;
+
     @JsonProperty("serverId")
     public Integer serverId;
 

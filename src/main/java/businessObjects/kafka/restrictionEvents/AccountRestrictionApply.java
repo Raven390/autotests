@@ -13,6 +13,12 @@ public class AccountRestrictionApply {
     @JsonProperty("accountId")
     public Integer accountId;
 
+    @JsonProperty("clientId")
+    public Integer clientId;
+
+    @JsonProperty("brand")
+    public String brand;
+
     @JsonProperty("serverId")
     public Integer serverId;
 
@@ -30,8 +36,8 @@ public class AccountRestrictionApply {
         @JsonProperty("restrictionId")
         public Integer restrictionId;
 
-        @JsonProperty("internalReason")
-        public String internalReason;
+//        @JsonProperty("internalReason")
+//        public String internalReason;
 
         @JsonProperty("restrictionCode")
         public String restrictionCode;

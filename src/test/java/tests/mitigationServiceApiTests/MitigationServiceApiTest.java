@@ -82,7 +82,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
     public void setRestrictionApiOpenNewAccountTest() throws Exception {
-        Restriction restriction = Restriction.OPEN_NEW_ACCOUNT;
+        Restriction restriction = Restriction.ACCOUNT_CREATION_REVIEW;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
         String updatedByUser = "user" + getCurrentTimestamp();
