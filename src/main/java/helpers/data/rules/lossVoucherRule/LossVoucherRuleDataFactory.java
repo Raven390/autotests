@@ -3,8 +3,8 @@ package helpers.data.rules.lossVoucherRule;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.loyaltiesRedemption.LoyaltiesRedemptionObject;
 import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
+import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
 import businessObjects.kafka.crmEvents.WithdrawalEvent;
 import generator.annotations.RuleTestData;
@@ -13,7 +13,6 @@ import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +21,8 @@ import java.util.Map;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObjectFactory.generateBonusByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.loyaltiesRedemption.LoyaltiesRedemptionObjectFactory.generateLoyaltiesRedemptionObjectByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByClient;
+import static businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObjectFactory.generateBalanceOrders;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
@@ -58,11 +57,10 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd1_2Client);
-        LoyaltiesRedemptionObject loyalty = generateLoyaltiesRedemptionObjectByClient(lossVoucherRuleExitEventEnd1_2Client);
-        loyalty.amount = 100d;
-        loyalty.amountUsd = 100d;
-        loyalty.rewardType = 8d;
-        loyalty.status = 1;
+        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        balanceOrder.comment = "Trade Loss";
+        data.mtBalanceOrdersObjects.add(balanceOrder);
+
         bonus.type = "Cash Adjustment - Debt W/O";
         Allure.step("-200 < Lifetime PnL < 200 USD = true");
         data.mtAccountObject.balance = 199d;
@@ -83,7 +81,7 @@ public class LossVoucherRuleDataFactory {
         System.out.println(data.clientHelper.getUcid());
         System.out.println(data.mtAccountObject.account);
 
-        data.loyaltyObjects.add(loyalty);
+//        data.loyaltyObjects.add(loyalty);
         data.crmTbBonusObjects.add(bonus);
         return data;
     }
@@ -92,11 +90,9 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd2Client);
-        LoyaltiesRedemptionObject loyalty = generateLoyaltiesRedemptionObjectByClient(lossVoucherRuleExitEventEnd2Client);
-        loyalty.amount = 100d;
-        loyalty.amountUsd = 100d;
-        loyalty.rewardType = 8d;
-        loyalty.status = 1;
+        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        balanceOrder.comment = "Trade Loss";
+        data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";
 
         Allure.step("-200 < Lifetime PnL < 200 USD = true");
@@ -116,7 +112,6 @@ public class LossVoucherRuleDataFactory {
 
         Allure.step("Sum Loss Vouchers amount = +/-20% |PnL| = false");
 
-        data.loyaltyObjects.add(loyalty);
         data.crmTbBonusObjects.add(bonus);
         data.mt5DealsCoercedObjects.add(deal);
         return data;
@@ -126,11 +121,9 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd3Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd3Client);
-        LoyaltiesRedemptionObject loyalty = generateLoyaltiesRedemptionObjectByClient(lossVoucherRuleExitEventEnd3Client);
-        loyalty.amount = 100d;
-        loyalty.amountUsd = 100d;
-        loyalty.rewardType = 8d;
-        loyalty.status = 1;
+        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
+        balanceOrder.comment = "Trade Loss";
+        data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";
 
         Allure.step("-200 < Lifetime PnL < 200 USD = true");
@@ -150,14 +143,12 @@ public class LossVoucherRuleDataFactory {
 
         Allure.step("Sum Loss Vouchers amount = +/-20% |PnL| = false");
 
-        data.loyaltyObjects.add(loyalty);
         data.crmTbBonusObjects.add(bonus);
         data.mt5DealsCoercedObjects.add(deal);
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupLossVoucherRuleData() throws ReflectiveOperationException,
-            SQLException {
+    public static Map<String, RuleDataHelper> setupLossVoucherRuleData() {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map

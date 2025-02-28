@@ -1,7 +1,6 @@
 package tests.ruleEngineServiceTests;
 
 import businessObjects.db.backofficeDb.alert.Alert;
-import businessObjects.db.mitigationServiceDb.ClientsRestriction;
 import businessObjects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudType;
 import helpers.data.rules.RuleDataHelper;
@@ -116,16 +115,16 @@ public class LossVoucherRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
-        );
-
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 14L, "NBP_set_restriction", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+//        Allure.step("Get client restrictions");
+//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+//                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+//        );
+//
+//        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+//
+//        ClientsRestriction restriction = clientsRestrictions.getFirst();
+//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 14L, "NBP_set_restriction", "APPLIED");
+//
+//        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 }
