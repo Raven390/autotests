@@ -80,6 +80,7 @@ public class TradingPage extends AbstractPage {
     private final Locator createdTimeElement;
     private final Locator updatedTimeElement;
     private final Locator popupElement;
+    private final Locator filterPopupElement;
     private final Locator tableViewButton;
     private final Locator accountRow;
     private final Locator accountTableId;
@@ -109,7 +110,6 @@ public class TradingPage extends AbstractPage {
     private final Locator accountTableHeaderMarginFree;
     private final Locator accountTableHeaderServer;
     private final Locator accountTableHeaderGroup;
-    private final Locator operationOpenSortElement;
     private final Locator openDatePicker;
     private final Locator closeDatePicker;
     private final Locator typeCheckboxes;
@@ -182,7 +182,7 @@ public class TradingPage extends AbstractPage {
     private final Locator ibRebatesWidgetText;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
-    private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup_open')]";
+    private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'v-tooltip-content')]";
     private static final String ACCOUNT_TABLE_COLUMN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
     private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
     private static final String ACCOUNT_TABLE_HEADER_PATTERN = "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
@@ -320,6 +320,7 @@ public class TradingPage extends AbstractPage {
         this.createdTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[1]/descendant::div[@class='v-text-with-icon__text']"));
         this.updatedTimeElement = page.locator(String.format(ACCOUNT_DATES_ELEMENT, "/div[2]/descendant::div[@class='v-text-with-icon__text']"));
         this.popupElement = page.locator(POPUP_ELEMENT_XPATH);
+        this.filterPopupElement = page.locator("//div[contains(@class,'g-popup__content')]");
         this.tableViewButton = page.locator("//input[@value='TABLE']");
         this.accountRow = page.locator("//tr[contains(@class,'g-table__row_vertical-align_top')]");
         this.accountTableId = page.locator(String.format(ACCOUNT_TABLE_COLUMN, "/descendant::div[contains(@class,'g-color-text_color_primary')]"));
@@ -349,7 +350,6 @@ public class TradingPage extends AbstractPage {
         this.accountTableHeaderMarginFree = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "margin-free"));
         this.accountTableHeaderServer = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "server"));
         this.accountTableHeaderGroup = page.locator(String.format(ACCOUNT_TABLE_HEADER_PATTERN, "group"));
-        this.operationOpenSortElement = page.locator("//*[name()='svg' and contains(@data-qa, 'trading_deals__arrow')]/..");
         this.openDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Open date"));
         this.closeDatePicker = page.locator(String.format(DATE_PICKER_BY_LABEL_PATTERN, "Close date"));
         this.typeCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Type"));
@@ -942,12 +942,34 @@ public class TradingPage extends AbstractPage {
 
     @Step("Change sorting by open")
     public void sortByOpen() {
-        operationOpenSortElement.click();
+        openColumnHeader.click();
+    }
+
+    @Step("Change sorting by profit")
+    public void sortByProfit() {
+        profitColumnHeader.click();
+    }
+
+    @Step("Change sorting by close")
+    public void sortByClose() {
+        closeColumnHeader.click();
     }
 
     @Step("Get text of popup when hovering over sorting by open element")
     public String getSortByOpenPopupText() {
-        operationOpenSortElement.hover();
+        openColumnHeader.hover();
+        return popupElement.textContent();
+    }
+
+    @Step("Get text of popup when hovering over sorting by profit element")
+    public String getSortByProfitPopupText() {
+        profitColumnHeader.hover();
+        return popupElement.textContent();
+    }
+
+    @Step("Get text of popup when hovering over sorting by close element")
+    public String getSortByClosePopupText() {
+        closeColumnHeader.hover();
         return popupElement.textContent();
     }
 
@@ -1135,13 +1157,13 @@ public class TradingPage extends AbstractPage {
     @Step("Verify open date tooltip is as expected")
     public void verifyOpenDateTooltip() {
         openDateTooltip.hover();
-        assertThat(popupElement).containsText("Open date for trading operations/ Date for payments operations");
+        assertThat(filterPopupElement).containsText("Open date for trading operations/ Date for payments operations");
     }
 
     @Step("Verify profit tooltip is as expected")
     public void verifyProfitTooltip() {
         profitTooltip.hover();
-        assertThat(popupElement).containsText("Profit date for trading operations/ Amount for payments operations");
+        assertThat(filterPopupElement).containsText("Profit date for trading operations/ Amount for payments operations");
     }
 
     @Step("Open users trading-summary tab")
