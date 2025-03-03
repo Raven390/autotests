@@ -85,7 +85,7 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         assertThat("Verify IB overview summary title", ibOverviewPage.getIbOverviewTitle(), is("IB overview"));
         assertThat("Verify IB overview summary subheader", ibOverviewPage.getIbOverviewSubheaderText(), is(String.format("IB %s, %s, %s level", ibAccount.account, ibAccount.brand, ibSummaryLifetime.ibLevel)));
         assertThat("Verify IB overview summary under this ib title", ibOverviewPage.getUnderThisIbTitle(), is("Under this IB"));
-        assertThat("Verify IB overview summary under this ib items", ibOverviewPage.getUnderThisIbItems(), contains(String.format("%sclients", ibSummaryLifetime.directUsersCount), String.format("%sfraudsters", ibSummaryLifetime.fraudstersCount)));
+        assertThat("Verify IB overview summary under this ib items", ibOverviewPage.getUnderThisIbItems(), contains(String.format("%sclients", ibSummaryLifetime.directUsersCount), String.format("%sfraudsters", ibSummaryLifetime.fraudstersCount), String.format("%slower-level IB", ibSummaryLifetime.subIbsCount)));
         assertThat("Verify IB overview summary clients performance title", ibOverviewPage.getClientsPerformanceTitle(), is("Clients performance USD"));
         assertThat("Verify IB overview summary clients performance items", ibOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(ibSummaryLifetime.rebate)), String.format("%sNet PNL", formatter.format(ibSummaryLifetime.netPnl)), String.format("%sNet deposit", formatter.format(ibSummaryLifetime.netDeposit))));
         assertThat("Verify IB overview summary clients totals title", ibOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
