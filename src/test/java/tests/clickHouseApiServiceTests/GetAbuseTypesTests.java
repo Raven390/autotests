@@ -70,7 +70,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
     @AllureId("430")
     public void getAbuseTypesMultipleClientsTest() throws IOException {
 
-        GetAbuseTypesResponse abuseTypesResponse1 = new GetAbuseTypesResponse(fraud1.ucid, new String[]{fraud1.fraudTypeCode, fraud2.fraudTypeCode});
+        GetAbuseTypesResponse abuseTypesResponse1 = new GetAbuseTypesResponse(fraud1.ucid, new String[]{fraud2.fraudTypeCode, fraud1.fraudTypeCode});
         GetAbuseTypesResponse abuseTypesResponse2 = new GetAbuseTypesResponse(fraud3.ucid, new String[]{fraud3.fraudTypeCode});
 
         Response response = getAbuseTypes(List.of(fraud1.ucid, fraud3.ucid));

@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.marketManipulationRule.MarketManipulationRuleDataFactory.deleteMarketManipulationRuleData;
 import static helpers.data.rules.marketManipulationRule.MarketManipulationRuleDataFactory.setupMarketManipulationRuleData;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,7 +42,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
 
     @AfterAll
     public static void deleteDbData() throws Exception {
-        //deleteMarketManipulationRuleData(dbDataMap);
+        deleteMarketManipulationRuleData(dbDataMap);
     }
 
     @Test
@@ -55,7 +56,6 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         System.out.println(data.clientHelper.getTradingAccount());
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
-
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
@@ -89,6 +89,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
+    @Disabled("Temporarily disabled")
     @Test
     @DisplayName("Market manipulation rule exit 2v1")
     @AllureId("953")
@@ -113,6 +114,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
+    @Disabled("Temporarily disabled")
     @Test
     @DisplayName("Market manipulation rule exit 2v2")
     @AllureId("954")

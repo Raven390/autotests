@@ -19,7 +19,6 @@ import java.util.Map;
 import static businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRequest.getCreditEquity;
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -48,7 +47,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
 
     @AfterAll
     public static void teardownData() throws SQLException {
-        deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
+        //deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
     @Test

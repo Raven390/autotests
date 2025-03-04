@@ -47,6 +47,7 @@ public class GetTradesTests extends TestBaseApi {
         trade3 = generateTradeByClient(client1);
         trade2.time = getTomorrowTimestampDbFormat();
         trade2.profit = 2.0;
+        trade2.profitUsd = 3.0;
         trade2.action = 2;
         trade2.entry = 2;
         trade3.serverId = 1000;
@@ -135,8 +136,8 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.account);
-        queryParams.put("serverId", trade1.serverId);
+        queryParams.put("tradingAccount", trade2.account);
+        queryParams.put("serverId", trade2.serverId);
         queryParams.put("orderBy", "tradeDate");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "1");
@@ -152,7 +153,7 @@ public class GetTradesTests extends TestBaseApi {
         assertThat("Assert action", mappedResponse[0].action, is(trade2.action));
         assertThat("Assert entry", mappedResponse[0].entry, is(trade2.entry));
         assertThat("Assert symbol", mappedResponse[0].symbol, is(trade2.symbol));
-        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade2.profit));
+        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade2.profitUsd));
         assertThat("Assert profit", mappedResponse[0].profit, is(trade2.profit));
         assertThat("Assert comment", mappedResponse[0].comment, is(trade2.comment));
     }
@@ -189,8 +190,8 @@ public class GetTradesTests extends TestBaseApi {
     public void getTradesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", trade1.account);
-        queryParams.put("serverId", trade1.serverId);
+        queryParams.put("tradingAccount", trade2.account);
+        queryParams.put("serverId", trade2.serverId);
         queryParams.put("orderBy", "profitUSD");
         queryParams.put("sortOrder", "desc");
         Response response = getTrades(queryParams);
@@ -199,7 +200,7 @@ public class GetTradesTests extends TestBaseApi {
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade2.profit));
+        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade2.profitUsd));
     }
 
     @Test

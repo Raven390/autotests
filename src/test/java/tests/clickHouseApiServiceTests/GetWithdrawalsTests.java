@@ -173,7 +173,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.amountUsd));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.amountUsd));
     }
 
     @Test

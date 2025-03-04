@@ -7,13 +7,14 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.timestampFromIsoToDb;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClient.GetClientResponse;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,10 +34,11 @@ public class GetClientTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client success(200)")
     @AllureId("59")
-    public void getClientSuccessTest() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientSuccessTest() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomVantageClient();
-        insertObjectToDb(CRM_USER_TABLE_NAME, generateStaticUserByClient(client));
+        CrmTbUserObject userObject = generateStaticUserByClient(client);
+        insertObjectToDb(CRM_USER_TABLE_NAME, userObject);
         // Execute request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", client.getUcid());
@@ -60,8 +62,8 @@ public class GetClientTests extends TestBaseApi {
         assertThat("Check isoCountryCode", getClientResponse.isoCountryCode, is("CY"));
         assertThat("Check language", getClientResponse.language, is("en"));
         assertThat("Check nationality", getClientResponse.nationality, is("RUS"));
-        assertThat("Check email", getClientResponse.email, is("DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS"));
-        assertThat("Check phoneNum", getClientResponse.phoneNum, is("BjrbbdAHkwhBFLnPclfvbg=="));
+        assertThat("Check email", getClientResponse.email, is("VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL"));
+        assertThat("Check phoneNum", getClientResponse.phoneNum, is("cTsGbMYzhsD5SxSOhmgpmQ=="));
         assertThat("Check phoneCountryCode", getClientResponse.phoneCountryCode, is("357"));
         assertThat("Check twoFaUser", getClientResponse.twoFaUser, is("true"));
         assertThat("Check authentication", getClientResponse.authentication, is("2FA"));
@@ -72,8 +74,8 @@ public class GetClientTests extends TestBaseApi {
         assertThat("Check cpaId", getClientResponse.cpaId, is("2"));
         assertThat("Check rafReferrerId", getClientResponse.rafReferrerId, is("3"));
         assertThat("Check kycStatus", getClientResponse.kycStatus, is("PARTIAL_KYC_ID_PASS"));
-        assertThat("Check lastUpdated", getClientResponse.lastUpdated, is("2024-10-29T09:55:01.3Z"));
-        assertThat("Check poi completion time", getClientResponse.poiCompletionTime, is("2024-11-29T09:55:01Z"));
+        assertThat("Check lastUpdated", timestampFromIsoToDb(getClientResponse.lastUpdated), is(userObject.lastUpdated));
+        assertThat("Check poi completion time", timestampFromIsoToDb(getClientResponse.poiCompletionTime), is(userObject.poiCompleteTs));
     }
 
     @Test
