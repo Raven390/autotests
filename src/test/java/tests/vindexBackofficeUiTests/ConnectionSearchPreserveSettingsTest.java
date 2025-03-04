@@ -21,6 +21,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
 
@@ -36,6 +37,7 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, connectedCrmTbUser));
         ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(client, connectedClient);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
+        waitForConnectionSearchToUpdate(client);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -44,15 +46,13 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1028")
-    @DisplayName("Verify connection search preservation of filters and zoom")
+    @DisplayName("Verify connection search preservation of filters")
     public void verifyConnectionSearchPreserveSettingsTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
-        connectionPage.clickZoomInButton();
-        assertThat("Verify zoom has changed", connectionPage.getZoomValue(), is("110%"));
         connectionPage.clickFilterButton();
         connectionPage.selectBehaviorFilterOption("Normal");
         connectionPage.clickApplyFiltersButton();
@@ -63,8 +63,26 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
         connectionPage.clickConnectionTabButton();
         connectionPage.connectionTableIsRendered();
         connectionPage.openConnectionGraph();
-        assertThat("Verify zoom is saved", connectionPage.getZoomValue(), is("110%"));
         assertThat("Verify applied filters are saved", connectionPage.getAppliedFiltersList(), contains("Behavior"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1060")
+    @DisplayName("Verify connection search preservation of zoom")
+    public void verifyConnectionSearchPreserveZoomTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
+        alertsPage.waitForPageToLoad();
+        connectionPage.clickConnectionTabButton();
+        connectionPage.clickZoomInButton();
+        assertThat("Verify zoom has changed", connectionPage.getZoomValue(), is("110%"));
+        generalTab.clickGeneralTabButton();
+        generalTab.waitForPageToLoad();
+        connectionPage.clickConnectionTabButton();
+        assertThat("Verify zoom is saved", connectionPage.getZoomValue(), is("110%"));
     }
 
     @AfterAll

@@ -22,6 +22,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
 
@@ -40,6 +41,7 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, connectedCrmTbUser);
         ConnectionTableEntry connectionTableEntry = getConnectionTableEntryForUi(client, connectedClient);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
+        waitForConnectionSearchToUpdate(client);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }

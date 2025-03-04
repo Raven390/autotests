@@ -12,12 +12,18 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeoutException;
 
+import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.DateTimeFormat;
+import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsRequest.getConnectionsByClientId;
 import static helpers.data.enums.Brand.*;
 
 public class Utils {
@@ -372,5 +378,26 @@ public class Utils {
 
         // Return the formatted result as a percentage string
         return formatter.format(result) + "%";
+    }
+
+    public static void waitForConnectionSearchToUpdate(ClientHelper client) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", client.getUcid());
+        boolean updated = false;
+        for (int i = 0; i < 55; i++) {
+            Response response = getConnectionsByClientId(queryParams);
+            GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                    response.body().string(), GetConnectionsResponse[].class
+            );
+            if (responseBody.length > 0) {
+                updated = true;
+                break;
+            }
+            Thread.sleep(1000);
+        }
+        if (!updated) {
+            throw new TimeoutException("Connection search did not provide a non empty response!");
+        }
     }
 }

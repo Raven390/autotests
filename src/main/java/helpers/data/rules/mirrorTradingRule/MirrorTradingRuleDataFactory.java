@@ -84,7 +84,7 @@ public class MirrorTradingRuleDataFactory {
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
         return new ConnectionTableEntry(
-                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]");
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]", getCurrentTimestampDbFormat());
     }
 
     public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd2Data() {

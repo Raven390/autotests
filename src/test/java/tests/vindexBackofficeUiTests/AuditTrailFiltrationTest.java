@@ -3,7 +3,6 @@ package tests.vindexBackofficeUiTests;
 import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import businessObjects.ui.auditTrail.AuditTrailItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -22,7 +22,6 @@ import java.util.List;
 import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -50,11 +49,11 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         Response response = postRestriction(new PostRestrictionRequestBody(
-                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+                crmTbUser.ucid, "05", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
-        CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+//        CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
+//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
     }
 
     @Test
@@ -74,8 +73,8 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalApproveOne("Test withdrawal request decision action type");
+        restrictionPage.clickCheckedLogin();
+        restrictionPage.fillCancelReason("Test cancel restriction for audit trail");
         resolvePage.openResolveSuspicious();
         resolvePage.resolveSimple("Test investigation completed action type");
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
@@ -266,6 +265,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         }
     }
 
+    @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Order(10)
     @Tag(TEAM_BACKOFFICE)

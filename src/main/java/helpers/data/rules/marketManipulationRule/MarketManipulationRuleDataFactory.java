@@ -89,7 +89,7 @@ public class MarketManipulationRuleDataFactory {
     private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient) {
         ClientHelper toClient = getRandomVantageClientAllFields();
         ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(
-                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]"
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]", getCurrentTimestampDbFormat()
         );
         return new ConnectionAndConnectedUser(connectionTableEntry, generateUserByClient(toClient), toClient, generateCrmTbAccountData(toClient));
     }
