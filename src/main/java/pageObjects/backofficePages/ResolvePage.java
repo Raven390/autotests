@@ -172,7 +172,7 @@ public class ResolvePage extends AbstractPage {
     public void resolveSimple(String comment) {
         commentInput.fill(comment);
         completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        successToast.getByText("Investigation completed").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve with adding fraud")
@@ -181,6 +181,19 @@ public class ResolvePage extends AbstractPage {
         fraudListButton.click();
         fraudSelectItem.getByText(addedFraud).click();
         fraudSelectApplyButton.click();
+        completeInvestigationButton.click();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Resolve with adding a few frauds")
+    public void resolveAddMultipleFraud(String comment, String... addedFraud) {
+        commentInput.fill(comment);
+        for (String i : addedFraud) {
+            fraudListButton.click();
+            fraudSelectItem.getByText(i).click();
+            fraudSelectApplyButton.click();
+        }
+
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
@@ -211,7 +224,9 @@ public class ResolvePage extends AbstractPage {
     @Step("Resolve cleaning fraud list")
     public void resolveNoFrauds(String comment) {
         commentInput.fill(comment);
-        cleanFraudListButton.click();
+        if (cleanFraudListButton.isVisible()) {
+            cleanFraudListButton.click();
+        }
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         String actual = successToast.textContent();

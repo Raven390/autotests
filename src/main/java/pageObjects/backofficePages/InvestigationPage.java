@@ -409,7 +409,7 @@ public class InvestigationPage extends AbstractPage {
     public void investigateUserAlertList(String userId) {
         Allure.step("take client to investigation from the alert list");
         int attempts = 0;
-        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 500) {
+        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 5000) {
             suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
 //            page.waitForTimeout(500);
@@ -423,6 +423,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("take client to investigation from the client card")
     public void investigateClientCard() {
+        waitForPageToLoad();
         Allure.step("take client to investigation from the from the client card");
         investigateButton.click();
         String message = infoToast.textContent();
