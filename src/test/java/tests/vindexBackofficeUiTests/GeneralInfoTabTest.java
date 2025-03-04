@@ -21,6 +21,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Locale;
 
 import static businessObjects.db.clickhouse.accountIbRelation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
@@ -41,7 +42,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
-import static utils.Utils.getRandomRoundedDouble;
+import static utils.Utils.*;
 
 public class GeneralInfoTabTest extends TestBaseWeb {
 
@@ -159,7 +160,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Test
     @AllureId("1045")
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
-    @DisplayName("General Tab. System displays different IB connections between one pair of users as different")
+    @DisplayName("General Tab. System displays different IB connections between one pair of users as one")
     public void ibSeparateTest() {
         ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
@@ -182,7 +183,13 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         commission.setIbRebateAccount(relation.getDirectIbRebateAccount());
         commission.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         commission.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
-        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission);
+        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
+        commission2.setIbRebateAccount(relation.getDirectIbRebateAccount());
+        commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setDlInsertTs("2025-02-23 09:06:22");
+        commission2.setDlUpdateTs("2025-02-23 09:06:21");
+        insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(commission, commission2));
         AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
         relation2.setDirectIbRebateAccount(referral.getTradingAccount());
         relation2.setCreateTimeUtc("2025-02-21 09:06:22");
@@ -193,7 +200,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigate(client.getUcid());
-        generalTab.checkIbRebates(referral.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()));
+        generalTab.checkIbRebates(referral.getTradingAccount(), (commission.getSalesCommission() + commission.getIbCommission()) + (commission2.getSalesCommission() + commission2.getIbCommission()));
     }
 
     @Test

@@ -181,15 +181,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientBonusAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.BONUS_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.BONUS_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 15);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -200,15 +201,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientCpaTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.CPA_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.CPA_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 7);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
 
     }
 
@@ -220,15 +222,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapTradingTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.GAP_TRADING;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.GAP_TRADING.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 5);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -239,15 +242,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientHedgingTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.HEDGING.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 1);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -258,15 +262,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapLatencyArbitrageTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.LATENCY_ARBITRAGE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.LATENCY_ARBITRAGE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 2);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -277,15 +282,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapLossVoucherAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.LOSS_VOUCHER_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.LOSS_VOUCHER_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 11);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -296,15 +302,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapMarketManipulationTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.MARKET_MANIPULATION;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.MARKET_MANIPULATION.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 3);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -315,15 +322,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapNBPAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.NBP_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.NBP_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 12);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -334,15 +342,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapPotentialAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.POTENTIAL_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.POTENTIAL_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 14);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -353,15 +362,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapPricingErrorsTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.PRICING_ERROR;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.PRICING_ERROR.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 4);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -372,15 +382,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapRAFAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.RAF_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.RAF_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 9);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -391,15 +402,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientGapRebateChurningTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.REBATE_CHURNING;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.REBATE_CHURNING.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 10);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -410,15 +422,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientSwapArbitrageTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.SWAP_ARBITRAGE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.SWAP_ARBITRAGE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 6);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -429,15 +442,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientTLSAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.TLS_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 13);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -448,15 +462,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientLoopholeAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.LOOPHOLE_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.LOOPHOLE_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 16);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -467,15 +482,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientHfyAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.HFT_ABUSE;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.HFT_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 17);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -486,15 +502,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientNewsTraderAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.NEWS_TRADER;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.NEWS_TRADER.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 18);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -505,15 +522,16 @@ public class ResolveTest extends TestBaseWeb {
     public void resolveClientAnomalousProfitAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
         deleteUserBO(clientUcid);
+        FraudType fraud = FraudType.ANOMALOUS_PROFIT;
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.ANOMALOUS_PROFIT.getKey());
+        createSimpleAlert(clientUcid, fraud.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
-        checkUserFraudDb(clientUcid, 19);
+        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud.getFraudTypeId());
     }
 
     @Test
@@ -523,17 +541,19 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("BO user can resolve client in with multiple fraud types")
     public void resolveClientMultipleAbuseTest() throws Exception {
         String clientUcid = "infinox-161601";
+        FraudType fraud1 = FraudType.HEDGING;
+        FraudType fraud2 = FraudType.TLS_ABUSE;
         deleteUserBO(clientUcid);
         cleanUserAudit(clientUcid);
-        createSimpleAlert(clientUcid, FraudType.TLS_ABUSE.getKey());
+        createSimpleAlert(clientUcid, fraud1.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, "Hedging");
-        checkUserFraudDb(clientUcid, 13);
-        checkUserFraudDb(clientUcid, 1);
+        resolvePage.resolveAddMultipleFraud("test" + timestamp, fraud1.getDisplayName(), fraud2.getDisplayName());
+        checkUserFraudDb(clientUcid, fraud1.getFraudTypeId());
+        checkUserFraudDb(clientUcid, fraud2.getFraudTypeId());
     }
 
     @Test
@@ -607,7 +627,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.navigateToClient(clientUcid);
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("test" + timestamp);
+        resolvePage.resolveAddFraud("test" + timestamp, FraudType.TLS_ABUSE.getDisplayName());
         checkUserAlertConfirmation(clientUcid, true);
     }
 
