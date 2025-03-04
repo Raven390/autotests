@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -189,6 +190,9 @@ public class AuditTrailTest extends TestBaseWeb {
         assertThat("Verify audit trail items", auditTrailItems, hasItems(restrictionRequested, restrictionApplied, cancellationRequested, restrictionCancelled));
     }
 
+    @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)

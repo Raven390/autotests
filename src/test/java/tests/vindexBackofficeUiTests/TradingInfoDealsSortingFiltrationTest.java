@@ -99,7 +99,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("1058")
     @DisplayName("Verify sorting by profit column in trading - operations tab")
     public void verifyTradingInfoDealsProfitSortingTest() {
         assertThat("Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Sort by profit:Descending"));
@@ -119,7 +119,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("1059")
     @DisplayName("Verify sorting by close column in trading - operations tab")
     public void verifyTradingInfoDealsCloseSortingTest() {
         assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Sort by close time:Newest → Oldest"));

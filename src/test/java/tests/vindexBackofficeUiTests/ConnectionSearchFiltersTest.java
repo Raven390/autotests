@@ -81,7 +81,7 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedForConnectionSearch(connectedClient6, 89.34, getPreviousWeekTimestampDbFormat());
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade, trade1, trade2, trade3, trade4, trade5, trade6));
         Response response1 = postRestriction(new PostRestrictionRequestBody(
-                connectedClient2.getUcid(), "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+                connectedClient2.getUcid(), "03", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response1.code(), equalTo(200));
         Response response2 = postRestriction(new PostRestrictionRequestBody(
@@ -105,6 +105,7 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         ClientFraudTypes fraud7 = new ClientFraudTypes(connectedBoClient6.ucid, "RAF_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat());
         ClientFraudTypes fraud8 = new ClientFraudTypes(connectedBoClient6.ucid, "REBATE_CHURNING", "VINDEX", 0, getCurrentTimestampDbFormat());
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3, fraud4, fraud5, fraud6, fraud7, fraud8));
+        waitForConnectionSearchToUpdate(client);
     }
 
     @BeforeEach

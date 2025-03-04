@@ -29,8 +29,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
+import static utils.Utils.*;
 
 @RuleTestData("no-deposit-bonus")
 public class NdbRuleDataFactory {
@@ -59,7 +58,7 @@ public class NdbRuleDataFactory {
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
         return new ConnectionTableEntry(
-                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]");
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]", getCurrentTimestampDbFormat());
     }
 
     public static RuleDataHelper getNdbRuleExitEventEnd1Data() {

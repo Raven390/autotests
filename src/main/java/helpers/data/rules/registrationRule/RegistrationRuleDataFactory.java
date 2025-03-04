@@ -102,7 +102,7 @@ public class RegistrationRuleDataFactory {
     private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient,
             ClientHelper toClient) {
         ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(
-                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]"
+                fromClient.getUcid(), toClient.getUcid(), "Same Identity", 1d, "[{\"connectionAttributeName\": \"payout\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]", getCurrentTimestampDbFormat()
         );
         // Create connected user
         CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
