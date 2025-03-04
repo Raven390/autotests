@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,56 +34,52 @@ import static utils.Utils.*;
 public class GetFastTradesTests extends TestBaseApi {
 
     private static final ClientHelper client = getRandomVantageClient();
-    private static Mt5DealsCoercedObject trade1Open;
-    private static Mt5DealsCoercedObject trade1Close;
-    private static Mt5DealsCoercedObject trade2Open;
-    private static Mt5DealsCoercedObject trade2Close;
+    private static Mt5DealsCoercedObject tradeOpen1;
+    private static Mt5DealsCoercedObject tradeClose1;
+    private static Mt5DealsCoercedObject tradeOpen2;
+    private static Mt5DealsCoercedObject tradeClose2;
     private static GetFastTradesResponse responseTrade1;
     private static GetFastTradesResponse responseTrade2;
 
     @BeforeAll
-    public static void setupTrades() throws ReflectiveOperationException, SQLException {
-        trade1Open = generateTradeByClient(client);
-        trade1Close = generateTradeByClient(client);
-        trade1Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2);
-        trade1Open.timeUtc = trade1Open.time;
-        trade1Open.entry = 0;
-        trade1Close.positionId = trade1Open.positionId;
-        trade1Close.comment = "trade 1 close";
-        trade1Close.time = getCurrentTimestampDbFormat();
-        trade1Close.timeUtc = trade1Close.time;
-        trade1Close.entry = 1;
-        trade1Close.symbol = "USDEUR";
-        trade1Close.profit = 111.11;
-        trade1Close.profitUsd = 123.12;
-        responseTrade1 = new GetFastTradesResponse(timestampFromDbToIso(trade1Open.timeUtc), timestampFromDbToIso(trade1Close.timeUtc), trade1Close.deal, trade1Close.account, trade1Close.serverId, trade1Close.symbol, trade1Close.profit, trade1Close.profitUsd, trade1Close.comment);
+    public static void setupTrades() {
+        tradeOpen1 = generateTradeByClient(client);
+        tradeOpen1.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2);
+        tradeOpen1.timeUtc = tradeOpen1.time;
+        tradeOpen1.entry = 0;
+        tradeClose1 = generateTradeByClient(client);
+        tradeClose1.positionId = tradeOpen1.positionId;
+        tradeClose1.comment = "trade 1 close";
+        tradeClose1.time = getCurrentTimestampDbFormat();
+        tradeClose1.timeUtc = tradeClose1.time;
+        tradeClose1.entry = 1;
+        tradeClose1.symbol = "USDEUR";
+        tradeClose1.profit = 111.11;
+        tradeClose1.profitUsd = 123.12;
 
-        trade2Open = generateTradeByClient(client);
-        trade2Close = generateTradeByClient(client);
-        trade2Open.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 1);
-        trade2Open.timeUtc = trade2Open.time;
-        trade2Open.entry = 0;
-        trade2Close.positionId = trade2Open.positionId;
-        trade2Close.comment = "trade 2 close";
-        trade2Close.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
-        trade2Close.timeUtc = trade2Close.time;
-        trade2Close.entry = 1;
-        trade2Close.symbol = "GBPJPY";
-        trade2Close.profit = 222.22;
-        trade2Close.profitUsd = 234.15;
-        responseTrade2 = new GetFastTradesResponse(timestampFromDbToIso(trade2Open.timeUtc), timestampFromDbToIso(trade2Close.timeUtc), trade2Close.deal, trade2Close.account, trade2Close.serverId, trade2Close.symbol, trade2Close.profit, trade2Close.profitUsd, trade2Close.comment);
+        responseTrade1 = new GetFastTradesResponse(timestampFromDbToIso(tradeOpen1.timeUtc), timestampFromDbToIso(tradeClose1.timeUtc), tradeClose1.deal, tradeClose1.account, tradeClose1.serverId, tradeClose1.symbol, tradeClose1.profit, tradeClose1.profitUsd, tradeClose1.comment);
 
-        Mt5DealsCoercedObject trade3 = generateTradeByClient(client);
-        trade3.entry = 0;
+        tradeOpen2 = generateTradeByClient(client);
+        tradeOpen2.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 1);
+        tradeOpen2.timeUtc = tradeOpen2.time;
+        tradeOpen2.entry = 0;
 
-        Mt5DealsCoercedObject trade4 = generateTradeByClient(client);
-        trade4.entry = 1;
+        tradeClose2 = generateTradeByClient(client);
+        tradeClose2.positionId = tradeOpen2.positionId;
+        tradeClose2.comment = "trade 2 close";
+        tradeClose2.time = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        tradeClose2.timeUtc = tradeClose2.time;
+        tradeClose2.entry = 1;
+        tradeClose2.symbol = "GBPJPY";
+        tradeClose2.profit = 222.22;
+        tradeClose2.profitUsd = 234.15;
+        responseTrade2 = new GetFastTradesResponse(timestampFromDbToIso(tradeOpen2.timeUtc), timestampFromDbToIso(tradeClose2.timeUtc), tradeClose2.deal, tradeClose2.account, tradeClose2.serverId, tradeClose2.symbol, tradeClose2.profit, tradeClose2.profitUsd, tradeClose2.comment);
 
-        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1Open, trade1Close, trade2Open, trade2Close, trade3, trade4));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(tradeOpen1, tradeClose1, tradeOpen2, tradeClose2));
     }
 
     @AfterAll
-    public static void teardownTrades() throws SQLException {
+    public static void teardownTrades() {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
@@ -96,8 +91,8 @@ public class GetFastTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
-        queryParams.put("dateFrom", trade2Open.time.replace(" ", "T"));
-        queryParams.put("dateTo", trade1Open.time.replace(" ", "T"));
+        queryParams.put("dateFrom", tradeOpen2.time.replace(" ", "T"));
+        queryParams.put("dateTo", tradeOpen1.time.replace(" ", "T"));
         queryParams.put("tradeDurationSeconds", 130);
         queryParams.put("orderBy", "symbol");
         queryParams.put("sortOrder", "desc");
@@ -157,7 +152,7 @@ public class GetFastTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
-        queryParams.put("dateFrom", trade1Open.time.replace(" ", "T"));
+        queryParams.put("dateFrom", tradeOpen1.time.replace(" ", "T"));
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
@@ -175,7 +170,7 @@ public class GetFastTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
-        queryParams.put("dateTo", trade2Open.time.replace(" ", "T"));
+        queryParams.put("dateTo", tradeOpen2.time.replace(" ", "T"));
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 

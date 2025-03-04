@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -42,12 +41,11 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     public static final String dateFrom = getPreviousYearTimestampDbFormat();
     public static String tradeDate1 = "2024-12-10 17:59:14";
     public static String tradeDate2 = "2024-12-10 17:59:15";
-    public static Integer tradeId = 123;
     public static String comment = "Administration Fee Automation test";
 
 
     @BeforeAll
-    public static void setupData() throws ReflectiveOperationException, SQLException {
+    public static void setupData() {
         data1 = generateBalanceOrders(client1, 1d, 2d, tradeDate1);
         data2 = generateBalanceOrders(client1, 3d, 4d, tradeDate2);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
@@ -70,12 +68,12 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
 
         assert response.body() != null;
         List<GetSwapFreeFeesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetSwapFreeFeesResponse[].class)).toList();
-        GetSwapFreeFeesResponse response1 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate1), tradeId, client1.getTradingAccount(), 1d, 2d, comment);
-        GetSwapFreeFeesResponse response2 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate2), tradeId, client1.getTradingAccount(), 3d, 4d, comment);
+        GetSwapFreeFeesResponse response1 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate1), data1.ticket, client1.getTradingAccount(), 1d, 2d, comment);
+        GetSwapFreeFeesResponse response2 = new GetSwapFreeFeesResponse(formatTimeToUtc(tradeDate2), data2.ticket, client1.getTradingAccount(), 3d, 4d, comment);
 
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.size(), is(2));
-        assertThat("Check response", mappedResponse, containsInAnyOrder(response1, response2));
+        assertThat("Check response", mappedResponse, containsInAnyOrder(response2, response1));
     }
 
     @Test
@@ -98,7 +96,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(1));
 
-        assertThat("Assert tradeId", mappedResponse[0].tradeId, is(123));
+        assertThat("Assert tradeId", mappedResponse[0].tradeId, is(data1.ticket));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert profit", mappedResponse[0].profit, is(1.0));
         assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(2.0));

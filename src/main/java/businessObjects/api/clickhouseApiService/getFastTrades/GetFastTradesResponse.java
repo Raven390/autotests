@@ -13,7 +13,7 @@ public class GetFastTradesResponse {
     public String tradeDateClose;
 
     @JsonProperty("tradeId")
-    public Integer tradeId;
+    public Long tradeId;
 
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
@@ -36,7 +36,7 @@ public class GetFastTradesResponse {
     public GetFastTradesResponse() {
     }
 
-    public GetFastTradesResponse(String tradeDateOpen, String tradeDateClose, Integer tradeId, Integer tradingAccount,
+    public GetFastTradesResponse(String tradeDateOpen, String tradeDateClose, Long tradeId, Integer tradingAccount,
             Integer serverId, String symbol, Double profit, Double profitUsd, String comment) {
         this.tradeDateOpen = tradeDateOpen;
         this.tradeDateClose = tradeDateClose;

@@ -77,6 +77,7 @@ public class RuleDataHelper {
         this.connectedClientHelpers = new ArrayList<>();
         this.mirrorUcidObjects = new ArrayList<>();
         this.mtMt5PositionsObjects = new ArrayList<>();
+        this.loyaltyObjects = new ArrayList<>();
     }
 
     public RuleDataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
@@ -204,7 +205,7 @@ public class RuleDataHelper {
                 deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             }
             if (data.dictAccountToUcidObject != null) {
-                deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = %s", data.dictAccountToUcidObject.ucid));
+                deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = '%s'", data.dictAccountToUcidObject.ucid));
             }
             data.connections.forEach(connection -> {
                 deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));

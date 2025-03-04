@@ -60,12 +60,14 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade4 = generateTradeByClient(client4, 0, 0, 0, Utils.getRandomLongPositive());
         trade4.time = "2025-01-01 00:00:00";
         trade4.profit = 1D;
+        trade4.profitUsd = 1D;
         trade5 = generateTradeByClient(client4, 0, 0, 0, Utils.getRandomLongPositive());
         trade5.time = "2025-01-02 00:00:00";
         trade6 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
         trade7 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
         trade8 = generateTradeByClient(client5, 0, 0, 0, Utils.getRandomLongPositive());
         trade5.profit = 2D;
+        trade5.profitUsd = 2D;
         trade6.serverId = 10;
         trade7.serverId = 10;
         trade8.serverId = 11;
@@ -75,9 +77,9 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         trade6.positionId = 1000L;
         trade7.positionId = 1000L;
         trade8.positionId = 1000L;
-        trade6.deal = 1;
-        trade7.deal = 2;
-        trade8.deal = 3;
+        trade6.deal = 1L;
+        trade7.deal = 2L;
+        trade8.deal = 3L;
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }
 
@@ -335,33 +337,33 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
         queryParams.put("serverId", client4.getServerId());
-        queryParams.put("orderBy", "actualAmount");
+        queryParams.put("orderBy", "actualAmountUSD");
         queryParams.put("sortOrder", "asc");
         Response response = getUnclosedTrades(queryParams);
 
         assert response.body() != null;
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert profit", mappedResponse.getFirst().profit, is(1d));
-        assertThat("Assert profit", mappedResponse.getLast().profit, is(2d));
+        assertThat("Assert profit", mappedResponse.getFirst().profitUsd, is(1d));
+        assertThat("Assert profit", mappedResponse.getLast().profitUsd, is(2d));
     }
 
     @Test
-    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmountUSD and sortOrder=desc")
+    @DisplayName("Clickhouse Api. Get unclosed trades by orderBy=actualAmount and sortOrder=desc")
     @AllureId("717")
     public void getUnclosedTradesTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client4.getTradingAccount());
         queryParams.put("serverId", client4.getServerId());
-        queryParams.put("orderBy", "actualAmountUSD");
+        queryParams.put("orderBy", "actualAmount");
         queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
         assert response.body() != null;
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert tradeId", mappedResponse.getFirst().profitUsd, is(2d));
-        assertThat("Assert tradeId", mappedResponse.getLast().profitUsd, is(1d));
+        assertThat("Assert profitUsd", mappedResponse.getFirst().profit, is(2d));
+        assertThat("Assert profitUsd", mappedResponse.getLast().profit, is(1d));
     }
 
     @Test

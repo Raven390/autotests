@@ -15,7 +15,7 @@ public class Mt5DealsCoercedObject {
     public String accountType;
     public String accountGroup;
     public String accountCurrency;
-    public Integer deal;
+    public Long deal;
     public Long order;
     public Integer action;
     public Integer entry;
@@ -59,7 +59,7 @@ public class Mt5DealsCoercedObject {
     public Mt5DealsCoercedObject(
             String brand, String regulator, Integer userId, String ucid, Integer account, String platform,
             Integer serverId,
-            String serverName, String accountType, String accountGroup, String accountCurrency, Integer deal,
+            String serverName, String accountType, String accountGroup, String accountCurrency, Long deal,
             Long order,
             Integer action, Integer entry, Integer reason, Double contractSize, String time, String timeUtc,
             String symbol,

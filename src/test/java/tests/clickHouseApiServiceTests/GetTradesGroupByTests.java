@@ -3,6 +3,7 @@ package tests.clickHouseApiServiceTests;
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByResponse;
 import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
+import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getTradesGroupBy.GetTradesGroupByRequest.getTradesGroupBy;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.*;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_TRADES_GROUP_BY_SYMBOL)
@@ -32,22 +32,45 @@ import static utils.Utils.getRandomIntPositive;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetTradesGroupByTests extends TestBaseApi {
 
-    private static final Integer ACCOUNT_ID = getRandomIntPositive();
-    private static final Integer SERVER_ID = 188;
-    private static final Mt5DealsCoercedObject trade1 = generateTradeForGroupBy1(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsCoercedObject trade2 = generateTradeForGroupBy2(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsCoercedObject trade3 = generateTradeForGroupBy3(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsCoercedObject trade4 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID);
-    private static final Mt5DealsCoercedObject trade5 = generateTradeForGroupBy4(ACCOUNT_ID, SERVER_ID + 1);
+    private static ClientHelper client;
+
+    private static Mt5DealsCoercedObject trade1;
+    private static Mt5DealsCoercedObject trade2;
+    private static Mt5DealsCoercedObject trade3;
+    private static Mt5DealsCoercedObject trade4;
+    private static Mt5DealsCoercedObject trade5;
 
     @BeforeAll
-    public static void setupTradesGroupBy() throws ReflectiveOperationException, SQLException {
+    public static void setupTradesGroupBy() {
+        client = getRandomVantageClientAllFields();
+        trade1 = generateTradeByClient(client);
+        trade1.action = 1;
+        trade1.entry = 1;
+        trade1.time = "2024-01-01 00:00:00";
+        trade1.timeUtc = "2024-01-01 00:00:00";
+        trade2 = generateTradeByClient(client);
+        trade2.action = 0;
+        trade2.time = "2030-01-01 00:00:00";
+        trade2.timeUtc = "2030-01-01 00:00:00";
+        trade3 = generateTradeByClient(client);
+        trade3.entry = 1;
+        trade3.action = 1;
+        trade3.symbol = "GBPJPY";
+        trade3.time = "2024-01-01 00:00:00";
+        trade3.timeUtc = "2024-01-01 00:00:00";
+        trade4 = generateTradeByClient(client);
+        trade4.time = "2030-01-01 00:00:00";
+        trade4.timeUtc = "2030-01-01 00:00:00";
+        trade4.symbol = "GBPJPY";
+        trade5 = generateTradeByClient(client);
+        trade4.symbol = "GBPJPY";
+        trade5.serverId = trade5.serverId + 1;
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
     }
 
     @AfterAll
-    public static void teardownTradesGroupBy() throws SQLException {
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", ACCOUNT_ID));
+    public static void teardownTradesGroupBy() {
+        //deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
     @Test
@@ -55,8 +78,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("213")
     public void getTradesGroupByWithMandatoryParamsTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -74,8 +97,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("485")
     public void getTradesGroupByWithActionTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("action", trade1.action);
         Response response = getTradesGroupBy(queryParams);
 
@@ -94,8 +117,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("486")
     public void getTradesGroupByWithEntryTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("entry", trade2.entry);
         Response response = getTradesGroupBy(queryParams);
 
@@ -114,9 +137,9 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("487")
     public void getTradesGroupByWithDateFromTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
-        queryParams.put("dateFrom", trade2.time.replace(" ", "T"));
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
+        queryParams.put("dateFrom", "2029-01-02T00:00:00");
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -134,9 +157,9 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("488")
     public void getTradesGroupByWithDateToTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
-        queryParams.put("dateTo", trade1.time.replace(" ", "T"));
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
+        queryParams.put("dateTo", "2024-01-02T00:00:00");
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -144,8 +167,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(trade1.symbol, trade1.profit, trade1.profit, trade1.volumeLots);
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(trade3.symbol, trade3.profit, trade3.profit, trade3.volumeLots);
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(trade1.symbol, trade1.profit, trade1.profitUsd, trade1.volumeLots);
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(trade3.symbol, trade3.profit, trade3.profitUsd, trade3.volumeLots);
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
@@ -154,8 +177,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("489")
     public void getTradesGroupByOrderBySymbolAscTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("orderBy", "symbol");
         queryParams.put("sortOrder", "asc");
         Response response = getTradesGroupBy(queryParams);
@@ -175,8 +198,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("490")
     public void getTradesGroupByOrderByProfitDescTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("orderBy", "profit");
         queryParams.put("sortOrder", "desc");
         Response response = getTradesGroupBy(queryParams);
@@ -188,7 +211,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
         GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(trade1.symbol, trade1.profit + trade2.profit, trade1.profit + trade2.profit, trade1.volumeLots + trade2.volumeLots);
         GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(trade3.symbol, trade3.profit + trade4.profit, trade3.profit + trade4.profit, trade3.volumeLots + trade4.volumeLots);
-        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup2, responseGroup1));
+        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test
@@ -196,8 +219,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("491")
     public void getTradesGroupByOrderBySymbolDefaultTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("orderBy", "symbol");
         Response response = getTradesGroupBy(queryParams);
 
@@ -216,8 +239,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("492")
     public void getTradesGroupByOrderByProfitDefaultTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("orderBy", "profit");
         Response response = getTradesGroupBy(queryParams);
 
@@ -236,8 +259,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("493")
     public void getTradesGroupByWithLimitTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("limit", 1);
         Response response = getTradesGroupBy(queryParams);
 
@@ -256,7 +279,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("494")
     public void getTradesGroupByNoTradingAccountTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -272,7 +295,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("495")
     public void getTradesGroupByNoServerIdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -289,7 +312,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     public void getTradesGroupByTradingAccountNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "test");
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
         assert response.body() != null;
@@ -305,7 +328,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("497")
     public void getTradesGroupByServerIdNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -322,8 +345,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("498")
     public void getTradesGroupByActionNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("action", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -342,8 +365,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("499")
     public void getTradesGroupByEntryNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("entry", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -362,8 +385,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("500")
     public void getTradesGroupByIncorrectDateFromTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("dateFrom", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -382,8 +405,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("501")
     public void getTradesGroupByIncorrectDateToTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("dateTo", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -402,8 +425,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("502")
     public void getTradesGroupByIncorrectOrderByTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("orderBy", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -420,8 +443,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("503")
     public void getTradesGroupByIncorrectSortOrderTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("sortOrder", "test");
         Response response = getTradesGroupBy(queryParams);
 
@@ -438,8 +461,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @AllureId("504")
     public void getTradesGroupByLimitNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", ACCOUNT_ID);
-        queryParams.put("serverId", SERVER_ID);
+        queryParams.put("tradingAccount", client.getTradingAccount());
+        queryParams.put("serverId", client.getServerId());
         queryParams.put("limit", "test");
         Response response = getTradesGroupBy(queryParams);
 

@@ -13,8 +13,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,13 +41,13 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 
     @BeforeAll
-    public static void setupData() throws ReflectiveOperationException, SQLException {
+    public static void setupData() {
         data1 = generateAggrCreditRiskFreeRevenueRatioObject(client1);
         insertObjectToDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, data1);
     }
 
     @AfterAll
-    public static void teardownData() throws SQLException {
+    public static void teardownData() {
         deleteEntryFromDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
@@ -58,7 +56,6 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @AllureId("566")
     public void getCreditRiskFreeRevenueRatioTest1() throws IOException {
         //Send request
-        System.out.println(Instant.now().toString());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required

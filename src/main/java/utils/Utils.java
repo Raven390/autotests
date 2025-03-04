@@ -281,6 +281,11 @@ public class Utils {
         return timestampDb.replace(" ", "T") + "Z";
     }
 
+    public static String timestampFromIsoToDb(String timestampIso) {
+        return timestampIso.replace("T", " ").replace("Z", "");
+    }
+
+
     public static long getDifferenceTimeMinutes(String dateTimeString, String dateTimeString2) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

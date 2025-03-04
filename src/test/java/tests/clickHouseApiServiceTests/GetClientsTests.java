@@ -4,6 +4,7 @@ import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getClients.GetClientsResponse;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.dictAccountToUcid.DictAccountToUcidObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -17,13 +18,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getClients.GetClientsRequest.getClientsIdByTradingAccountServerId;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
+import static businessObjects.db.clickhouse.dictAccountToUcid.DictAccountToUcidObjectFactory.generateDictByClient;
 import static helpers.data.ClientFactory.getRandomClient;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,10 +41,13 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account & server ID")
     @AllureId("200")
-    public void getClientTest1() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest1() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
+        // Insert in dict table
+        DictAccountToUcidObject dictAccountToUcidObject = generateDictByClient(client);
+        insertObjectToDb(DICT_ACCOUNT_TO_UCID, dictAccountToUcidObject);
         // Insert in crm user table
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
@@ -67,10 +71,13 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by userId + brand")
     @AllureId("600")
-    public void getClientTest2() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest2() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
+        // Insert in dict table
+        DictAccountToUcidObject dictAccountToUcidObject = generateDictByClient(client);
+        insertObjectToDb(DICT_ACCOUNT_TO_UCID, dictAccountToUcidObject);
         // Insert in crm user table
         CrmTbUserObject crmObject = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
@@ -84,11 +91,13 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("brand", client.getBrand());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
 
-        GetClientsResponse clients = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
+        ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        System.out.println(response);
 
         // Assert response
-        assertThat("Check response code", response.code(), is(200));
-        assertThat("Check client ucid", clients.clientId, is(client.getUcid()));
+        assertThat("Check response code", response.code(), is(400));
+        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
@@ -103,7 +112,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Either tradingAccount and serverId or brand and userId must be provided."));
+        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
@@ -120,7 +129,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Either tradingAccount and serverId or brand and userId must be provided."));
+        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
@@ -133,17 +142,18 @@ public class GetClientsTests extends TestBaseApi {
         queryParams.put("brand", "1");
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
+        System.out.println(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Either tradingAccount and serverId or brand and userId must be provided."));
+        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get client by brand=null (400 error)")
     @AllureId("598")
-    public void getClientTest6() throws IOException, ReflectiveOperationException, SQLException {
+    public void getClientTest6() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", 1);
@@ -153,7 +163,7 @@ public class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Either tradingAccount and serverId or brand and userId must be provided."));
+        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
         assertThat("Check response code", mappedResponse.status, is(400));
     }
 

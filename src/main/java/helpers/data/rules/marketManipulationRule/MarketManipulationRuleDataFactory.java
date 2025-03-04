@@ -31,7 +31,6 @@ import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFac
 import static businessObjects.db.clickhouse.mtMt5Positions.MtMt5PositionsObjectFactory.generatePositionByOrder;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static utils.Utils.*;
 
@@ -42,7 +41,6 @@ public class MarketManipulationRuleDataFactory {
     private static final ClientHelper marketManipulationExit1Client = getRandomVantageClientAllFields();
     private static final ClientHelper marketManipulationExit2v1Client = getRandomVantageClientAllFields();
     private static final ClientHelper marketManipulationExit2v2Client = getRandomVantageClientAllFields();
-    private static final ClientHelper marketManipulationExit2v3Client = getRandomVantageClientAllFields();
     private static final ClientHelper marketManipulationExit3Client = getRandomVantageClientAllFields();
     private static final ClientHelper marketManipulationExit4v1Client = getRandomVantageClientAllFields();
     private static final ClientHelper marketManipulationExit4v2Client = getRandomVantageClientAllFields();
@@ -58,7 +56,7 @@ public class MarketManipulationRuleDataFactory {
         data.crmTbAccountObject = generateCrmTbAccountData(client);
         data.dictAccountToUcidObject = generateDictByClient(client);
         data.aggrCreditEquityRate = creditEquityRate;
-        Integer tradeId = getRandomIntPositive();
+        Long tradeId = getRandomLongPositive();
         Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", tradeId, getRandomIntPositive().longValue(), 0, 0, 1, 1d, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 2502.0, 1, 1d, 2502.0, 1, 1d, 1L, tradeId.longValue(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
         data.mtMt5PositionsObjects.add(generatePositionByOrder(order));
         data.mt5DealsCoercedObjects.add(order);
@@ -134,7 +132,7 @@ public class MarketManipulationRuleDataFactory {
         data.mt5DealsCoercedObjects.getFirst().timeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
         data.mt5DealsCoercedObjects.getFirst().lastUpdated = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
         data.aggrCreditEquityRate.currentEquity = 2501.0;
-        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURGBP", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
+        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURGBP", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
         data.mt5DealsCoercedObjects.add(order);
         return data;
     }
@@ -148,7 +146,7 @@ public class MarketManipulationRuleDataFactory {
         data.mt5DealsCoercedObjects.getFirst().timeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
         data.mt5DealsCoercedObjects.getFirst().lastUpdated = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60);
         data.aggrCreditEquityRate.currentEquity = 2501.0;
-        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURGBP", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
+        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURGBP", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), "Automation tests");
         data.mt5DealsCoercedObjects.add(order);
 
         data.floatingTrades.add(new AggrFloatingTradesGroupBy(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId(), getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 20, 0), 0, 0, "USDEUR", 123.45, 2499.0, 123.45));
@@ -321,19 +319,19 @@ public class MarketManipulationRuleDataFactory {
             throws ReflectiveOperationException, SQLException {
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getMarketManipulationRuleExit1Data());
-        map.put("2v1", getMarketManipulationRuleExit2v1Data());
-        map.put("2v2", getMarketManipulationRuleExit2v2Data());
+//        map.put("1", getMarketManipulationRuleExit1Data());
+//        map.put("2v1", getMarketManipulationRuleExit2v1Data());
+//        map.put("2v2", getMarketManipulationRuleExit2v2Data());
         map.put("3", getMarketManipulationRuleExit3Data());
-        map.put("4v1", getMarketManipulationRuleExit4v1Data());
-        map.put("4v2", getMarketManipulationRuleExit4v2Data());
-        map.put("4v3", getMarketManipulationRuleExit4v3Data());
-        map.put("5", getMarketManipulationRuleExit5Data());
+//        map.put("4v1", getMarketManipulationRuleExit4v1Data());
+//        map.put("4v2", getMarketManipulationRuleExit4v2Data());
+//        map.put("4v3", getMarketManipulationRuleExit4v3Data());
+//        map.put("5", getMarketManipulationRuleExit5Data());
         setupRuleData(map);
         return map;
     }
 
     public static void deleteMarketManipulationRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+        //deleteRuleData(map);
     }
 }
