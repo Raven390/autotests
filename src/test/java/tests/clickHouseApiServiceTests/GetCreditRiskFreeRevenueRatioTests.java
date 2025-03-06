@@ -35,8 +35,8 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
     private static final String date = formatTimeToUtc("2024-12-31 00:00:00");
 
-    private static AggrCreditRiskFreeRevenueRatioObject data1;
-    private static final ClientHelper client1 = getRandomVantageClient();
+    public static AggrCreditRiskFreeRevenueRatioObject data1;
+    public static final ClientHelper client1 = getRandomVantageClient();
     public static final String dateTo = getCurrentTimestampDbFormat();
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 

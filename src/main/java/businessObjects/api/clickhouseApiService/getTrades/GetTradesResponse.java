@@ -10,7 +10,7 @@ public class GetTradesResponse {
     public String tradeDate;
 
     @JsonProperty("tradeId")
-    public Integer tradeId;
+    public Long tradeId;
 
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
@@ -36,7 +36,7 @@ public class GetTradesResponse {
     public GetTradesResponse() {
     }
 
-    public GetTradesResponse(String tradeDate, Integer tradeId, Integer tradingAccount, Integer action, Integer entry,
+    public GetTradesResponse(String tradeDate, Long tradeId, Integer tradingAccount, Integer action, Integer entry,
             String symbol, Double profit, Double profitUsd, String comment) {
         this.tradeDate = tradeDate;
         this.tradeId = tradeId;
