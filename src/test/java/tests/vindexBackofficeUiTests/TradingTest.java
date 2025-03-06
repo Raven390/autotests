@@ -1,25 +1,57 @@
 package tests.vindexBackofficeUiTests;
 
+import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
+import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
-import static utils.Constants.LAYER_WEB;
-import static utils.Constants.TEAM_BACKOFFICE;
+import java.sql.SQLException;
+import java.util.List;
+
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
+import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static utils.Constants.*;
 
 public class TradingTest extends TestBaseWeb {
+
+    private static ClientHelper client = new ClientHelper(151_501, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 151_501_001, 151_501_002, 42);
+    private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
+    private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
+    private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
+    private static MtAccountObject mtAccount1 = generateMtAccountByCrmTbAccount(account1);
+    private static MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
+
+    @BeforeAll
+    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+        crmTbUser.firstName = "Trading";
+        crmTbUser.lastName = "Trademan";
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("241")
     @DisplayName("Test that operations subtab renders all basic elements")
-    public void resolveWithWithdrawalsApproveAll() {
+    public void rendersAllBasicElementsTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.operationsRendersTest();
     }
 
@@ -31,7 +63,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterList() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.checkTypeFilterList();
     }
@@ -44,7 +76,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterSell() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell");
         tradingPage.clickApplyButton();
@@ -59,7 +91,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterBalance() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Balance");
         tradingPage.clickApplyButton();
@@ -74,7 +106,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterBuy() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy");
         tradingPage.clickApplyButton();
@@ -89,7 +121,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterBuyLimit() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy Limit");
         tradingPage.clickApplyButton();
@@ -104,7 +136,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterBuyStop() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Buy Stop");
         tradingPage.clickApplyButton();
@@ -119,7 +151,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterCredit() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Credit");
         tradingPage.clickApplyButton();
@@ -134,7 +166,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterSellLimit() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell Limit");
         tradingPage.clickApplyButton();
@@ -149,7 +181,7 @@ public class TradingTest extends TestBaseWeb {
     public void testTypeFilterSellStop() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Sell Stop");
         tradingPage.clickApplyButton();
@@ -166,7 +198,7 @@ public class TradingTest extends TestBaseWeb {
         int to = 8;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.fillVolumeValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
@@ -183,7 +215,7 @@ public class TradingTest extends TestBaseWeb {
         int to = 8;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.fillDurationValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
@@ -198,7 +230,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterAPI() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("API");
         tradingPage.clickApplyButton();
@@ -213,7 +245,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterClient() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Client");
         tradingPage.clickApplyButton();
@@ -228,7 +260,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterDealer() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Dealer");
         tradingPage.clickApplyButton();
@@ -243,7 +275,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterExpert() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Expert");
         tradingPage.clickApplyButton();
@@ -258,7 +290,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterGateway() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Gateway");
         tradingPage.clickApplyButton();
@@ -273,7 +305,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterMobile() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Mobile");
         tradingPage.clickApplyButton();
@@ -288,7 +320,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterSignal() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Signal");
         tradingPage.clickApplyButton();
@@ -303,7 +335,7 @@ public class TradingTest extends TestBaseWeb {
     public void testMethodFilterWeb() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.clickFilterCheckbox("Web");
         tradingPage.clickApplyButton();
@@ -320,7 +352,7 @@ public class TradingTest extends TestBaseWeb {
         int to = 80;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.fillProfitValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
@@ -337,7 +369,7 @@ public class TradingTest extends TestBaseWeb {
         int to = 38;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        tradingPage.navigateOperations("infinox-151501");
+        tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
         tradingPage.fillProfitValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();

@@ -1,5 +1,6 @@
 package pageObjects.backofficePages;
 
+import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -181,7 +182,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Open the autotest login page main page")
     public void navigateEnterPage() {
-        page.navigate(ENTER_PAGE_E2E);
+        page.navigate(ENTER_PAGE_E2E, new Page.NavigateOptions().setWaitUntil(DOMCONTENTLOADED));
         super.waitForPageToLoad();
     }
 
