@@ -12,13 +12,13 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRequest.getCreditEquity;
 import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -33,21 +33,21 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 public class GetCreditEquityRatioTests extends TestBaseApi {
 
-    private static final String date = "2024-12-31 00:00:00".replace(" ", "T");
+    public static final String date = "2024-12-31 00:00:00".replace(" ", "T");
 
-    private static AggrCreditEquityRateObject data1;
-    private static final ClientHelper client1 = getRandomVantageClient();
+    public static AggrCreditEquityRateObject data1;
+    public static final ClientHelper client1 = getRandomVantageClient();
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 
     @BeforeAll
-    public static void setupData() throws ReflectiveOperationException, SQLException {
+    public static void setupData() {
         data1 = generateCreditEquityRatioAccount(client1);
         insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data1);
     }
 
     @AfterAll
-    public static void teardownData() throws SQLException {
-        //deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
+    public static void teardownData() {
+        deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
     @Test

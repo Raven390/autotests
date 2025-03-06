@@ -9,7 +9,7 @@ public class GetUnclosedTradesResponse {
     public String tradeDate;
 
     @JsonProperty("tradeId")
-    public Integer tradeId;
+    public Long tradeId;
 
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
