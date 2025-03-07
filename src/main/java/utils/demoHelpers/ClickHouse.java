@@ -15,7 +15,7 @@ public class ClickHouse {
             throws ReflectiveOperationException, SQLException {
         String lovercaseBrand = ucid.split("-")[0];
         String brand = lovercaseBrand.substring(0, 1).toUpperCase() + lovercaseBrand.substring(1);
-        CrmTbUserObject testUser = new CrmTbUserObject(Integer.parseInt(ucid.split("-")[1]), ucid, brand, "FCA", "2024-10-23", firstName, lastName, "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId", getCurrentTimestampDbFormat());
+        CrmTbUserObject testUser = new CrmTbUserObject(Integer.parseInt(ucid.split("-")[1]), ucid, brand, "FCA", "2024-10-23", "2024-10-23", firstName, lastName, "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId", getCurrentTimestampDbFormat());
         System.out.println(testUser.toString());
         insertObjectToDb("vindex_test.crm___tb_user", testUser);
     }

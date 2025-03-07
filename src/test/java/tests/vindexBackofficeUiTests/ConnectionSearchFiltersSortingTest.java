@@ -10,6 +10,7 @@ import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
@@ -35,7 +36,7 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class ConnectionSearchFiltersTest extends TestBaseWeb {
+public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -75,10 +76,10 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoercedForConnectionSearch(client, 123.45, getCurrentTimestampDbFormat());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedForConnectionSearch(connectedClient1, 12.45, getCurrentTimestampDbFormat());
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedForConnectionSearch(connectedClient2, 25.46, getPreviousWeekTimestampDbFormat());
-        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedForConnectionSearch(connectedClient3, 568.95, getCurrentTimestampDbFormat());
-        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedForConnectionSearch(connectedClient4, 78.42, getPreviousYearTimestampDbFormat());
-        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedForConnectionSearch(connectedClient5, 1111.24, getPreviousYearTimestampDbFormat());
-        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedForConnectionSearch(connectedClient6, 89.34, getPreviousWeekTimestampDbFormat());
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedForConnectionSearch(connectedClient3, 568.95, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 1, 0));
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedForConnectionSearch(connectedClient4, 78.42, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 0, 0));
+        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedForConnectionSearch(connectedClient5, 1111.24, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 1, 0));
+        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedForConnectionSearch(connectedClient6, 89.34, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 1, 0));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade, trade1, trade2, trade3, trade4, trade5, trade6));
         Response response1 = postRestriction(new PostRestrictionRequestBody(
                 connectedClient2.getUcid(), "03", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
@@ -350,6 +351,52 @@ public class ConnectionSearchFiltersTest extends TestBaseWeb {
         connectionPage.clickApplyFiltersButton();
         assertThat("Verify applied filters list", connectionPage.getAppliedFiltersList(), containsInAnyOrder("Connection type", "Behavior", "PNL", "Attribute"));
         assertThat("Verify applied filters counter is correct", connectionPage.getAppliedFiltersCount(), equalTo("4"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1071")
+    @DisplayName("Verify connection table default sorting")
+    public void verifyConnectionSearchTableDefaultSortingTest() {
+        connectionPage.openConnectionTable();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1072")
+    @DisplayName("Verify connection table total pnl sorting")
+    public void verifyConnectionSearchTableTotalPnlSortingTest() {
+        connectionPage.openConnectionTable();
+        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Sort by PNL:Descending"));
+        connectionPage.clickTotalPnlHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient5.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient1.getUserId().toString()));
+        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Change sorting to:Ascending"));
+        connectionPage.clickTotalPnlHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat("Verify tooltip", connectionPage.getTotalPnlSortingTooltip(), is("Remove sorting"));
+        connectionPage.clickTotalPnlHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1073")
+    @DisplayName("Verify connection table last login sorting")
+    public void verifyConnectionSearchTableLastLoginSortingTest() {
+        connectionPage.openConnectionTable();
+        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Sort by last login date:Newest → Oldest"));
+        connectionPage.clickLastLoginHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Change sorting to:Oldest → Newest"));
+        connectionPage.clickLastLoginHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient5.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient1.getUserId().toString()));
+        assertThat("Verify tooltip", connectionPage.getLastLoginSortingTooltip(), is("Remove sorting"));
+        connectionPage.clickLastLoginHeader();
+        assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
     }
 
     @AfterAll

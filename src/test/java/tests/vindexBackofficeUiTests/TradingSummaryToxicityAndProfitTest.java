@@ -84,6 +84,7 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
         trade9.toxicityUsd = 24_573.0;
         trade9.timeUtc = getCurrentTimestampDbFormat();
         crmTbUser.registrationDate = transformDate(trade1.timeUtc, DATE_AND_TIME, DATE);
+        crmTbUser.registrationDateUtc = transformDate(trade1.timeUtc, DATE_AND_TIME, DATE);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account, account2));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));

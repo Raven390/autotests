@@ -1,10 +1,12 @@
 package tests.vindexBackofficeUiTests;
 
+import businessObjects.db.backofficeDb.clientsFraudTypes.ClientsFraudTypes;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
+import helpers.database.DbName;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +15,18 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.database.AuditHelper.cleanUserAudit;
-import static helpers.database.BoHelper.checkUserFraudDb;
-import static helpers.database.BoHelper.deleteUserBO;
+import static helpers.database.BoHelper.*;
+import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectToDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
 public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
@@ -361,6 +369,111 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.checkPreviousConfirmedFraudDisplayed(fraud1.getDisplayName());
         resolvePage.reportAddFraud("test2" + timestamp, fraud2.getDisplayName());
         checkUserFraudDb(innocentClient.getUcid(), fraud2.getFraudTypeId());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Verify date label for fraud type set today")
+    @AllureId("1062")
+    public void previousFraudTestToday() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        assertThat("Verify time label for the fraud type", resolvePage.getFraudTimeByName(fraudType.getDisplayName()), is("Today"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Verify date label for fraud type set yesterday")
+    @AllureId("1063")
+    public void previousFraudTestYesterday() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusDays(1))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        assertThat("Verify time label for the fraud type", resolvePage.getFraudTimeByName(fraudType.getDisplayName()), is("Yesterday"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Verify date label for fraud type set by days")
+    @AllureId("1064")
+    public void previousFraudTestByDays() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusDays(2))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        assertThat("Verify time label for the fraud type", resolvePage.getFraudTimeByName(fraudType.getDisplayName()), is("2 days ago"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Verify date label for fraud type set by months")
+    @AllureId("1065")
+    public void previousFraudTestByMonths() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusMonths(1))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        assertThat("Verify time label for the fraud type", resolvePage.getFraudTimeByName(fraudType.getDisplayName()), is("1 month ago"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Verify date label for fraud type set by years")
+    @AllureId("1066")
+    public void previousFraudTestByYears() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusMonths(12))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        assertThat("Verify time label for the fraud type", resolvePage.getFraudTimeByName(fraudType.getDisplayName()), is("1 year ago"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Delete previously confirmed fraud")
+    @AllureId("1067")
+    public void previousFraudTestDeleteFraud() throws Exception {
+        deleteUserBO(innocentClient.getUcid());
+        cleanUserAudit(innocentClient.getUcid());
+        FraudType fraudType = FraudType.HEDGING;
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC))));
+        resolvePage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(innocentClient.getUcid());
+        resolvePage.openReportFraudForm();
+        resolvePage.deleteFraudByName(fraudType.getDisplayName());
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, String.format("client_ucid = '%s'", innocentClient.getUcid()), ClientsFraudTypes.class);
+        assertThat("Verify there is only 1 fraud type", clientsFraudTypes.size(), is(1));
+        assertThat("Verify the fraud type is deleted", clientsFraudTypes.getFirst().isDeleted, is(true));
     }
 
 }

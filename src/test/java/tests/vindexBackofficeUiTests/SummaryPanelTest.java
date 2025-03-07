@@ -34,7 +34,7 @@ import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactor
 import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsFactory.generates3FactLoginMetricsClient;
+import static businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.data.enums.FraudType.getRandomFraudType;
 import static helpers.database.BoHelper.cleanUserFraudsDb;
 import static helpers.database.BoHelper.createUserFraudsDb;
@@ -77,10 +77,10 @@ public class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount());
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount2());
         Allure.step("Generate historical data what not include current date");
-        S3FactLoginMetricsObject historyMetrics1 = generates3FactLoginMetricsClient(client);
+        S3FactLoginMetricsObject historyMetrics1 = generateS3FactLoginMetricsClient(client);
         historyMetrics1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
         historyMetrics1.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
-        S3FactLoginMetricsObject historyMetrics2 = generates3FactLoginMetricsClient(client);
+        S3FactLoginMetricsObject historyMetrics2 = generateS3FactLoginMetricsClient(client);
         historyMetrics2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
         historyMetrics2.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
         insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(historyMetrics1, historyMetrics2));
@@ -222,7 +222,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     public void clientSummaryRevenueTest() {
         deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         Allure.step("Prepare DB data for test user");
-        S3FactLoginMetricsObject revenue = generates3FactLoginMetricsClient(client);
+        S3FactLoginMetricsObject revenue = generateS3FactLoginMetricsClient(client);
         revenue.setDailyCoreSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyTakerSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyLpSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));

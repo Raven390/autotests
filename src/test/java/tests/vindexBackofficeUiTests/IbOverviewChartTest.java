@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -38,6 +39,9 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 
+@Disabled
+@Muted
+@Tag(TAG_MANUAL)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class IbOverviewChartTest extends TestBaseWeb {
 

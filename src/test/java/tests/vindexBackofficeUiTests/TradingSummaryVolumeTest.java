@@ -93,6 +93,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         trade1.notionalValueUsd = 3670.415;
         trade1.closeTime = getCurrentTimestampDbFormat();
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
@@ -137,6 +138,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume2Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 62, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 62, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade9, trade10));
         investigationPage.navigateEnterPage();
@@ -168,6 +170,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume3Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 254, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 254, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade11, trade12));
         investigationPage.navigateEnterPage();
@@ -199,6 +202,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume4Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade13, trade14));
         investigationPage.navigateEnterPage();

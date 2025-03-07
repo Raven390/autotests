@@ -87,6 +87,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         trade1.commissionUsd = 0d;
         trade1.closeTime = getCurrentTimestampDbFormat();
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
@@ -134,6 +135,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     public void verifyTradingSummaryTotalPnl1Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 61, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 61, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -167,6 +169,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
     public void verifyTradingSummaryTotalPnl2Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 37, 0, 0, 0);
+        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 37, 0, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

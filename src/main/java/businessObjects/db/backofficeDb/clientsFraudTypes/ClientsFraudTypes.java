@@ -1,12 +1,13 @@
 package businessObjects.db.backofficeDb.clientsFraudTypes;
 
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class ClientsFraudTypes {
     public String clientUcid;
     public Long fraudTypeId;
     public Boolean isDeleted;
-    public String updatedAt;
+    public Timestamp updatedAt;
 
     public ClientsFraudTypes() {
     }
@@ -16,7 +17,7 @@ public class ClientsFraudTypes {
         this.clientUcid = clientUcid;
     }
 
-    public ClientsFraudTypes(String clientUcid, Long fraudTypeId, Boolean isDeleted, String updatedAt) {
+    public ClientsFraudTypes(String clientUcid, Long fraudTypeId, Boolean isDeleted, Timestamp updatedAt) {
         this.clientUcid = clientUcid;
         this.fraudTypeId = fraudTypeId;
         this.isDeleted = isDeleted;
@@ -47,11 +48,11 @@ public class ClientsFraudTypes {
         isDeleted = deleted;
     }
 
-    public String getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 

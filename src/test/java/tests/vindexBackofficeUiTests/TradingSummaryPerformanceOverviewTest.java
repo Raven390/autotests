@@ -110,6 +110,7 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         trade12.storageUsd = -85_256d;
         trade12.commissionUsd = -111.33d;
         crmTbUser.registrationDate = transformDate(trade9.openTimeUtc, DATE_AND_TIME, DATE);
+        crmTbUser.registrationDateUtc = transformDate(trade9.openTimeUtc, DATE_AND_TIME, DATE);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);

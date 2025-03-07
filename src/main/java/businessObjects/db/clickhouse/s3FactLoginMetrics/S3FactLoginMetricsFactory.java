@@ -8,7 +8,7 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class S3FactLoginMetricsFactory {
     @Step("Generate data for given account")
-    public static S3FactLoginMetricsObject generates3FactLoginMetricsClient(ClientHelper client) {
+    public static S3FactLoginMetricsObject generateS3FactLoginMetricsClient(ClientHelper client) {
         S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
         metric.setDate(getCurrentDate());
         metric.setBrand(client.getBrand());
@@ -23,7 +23,7 @@ public class S3FactLoginMetricsFactory {
     }
 
     @Step("Generate data for given account")
-    public static S3FactLoginMetricsObject generates3FactLoginMetricsClientAdditionalAccount(ClientHelper client) {
+    public static S3FactLoginMetricsObject generateS3FactLoginMetricsClientAdditionalAccount(ClientHelper client) {
         S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
         metric.setDate(getCurrentDate());
         metric.setBrand(client.getBrand());

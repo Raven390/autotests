@@ -14,6 +14,7 @@ import io.qameta.allure.Step;
 
 import java.util.List;
 
+import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResolvePage extends AbstractPage {
@@ -41,8 +42,13 @@ public class ResolvePage extends AbstractPage {
     private final Locator reportForm;
     private final Locator submitFraudButton;
     private final Locator selectedFraudLabel;
+    private final Locator fraudDeletionPopup;
+    private final Locator confirmFraudDeletionButton;
 
     private final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
+    private final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-fraud-type']";
+    private final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
+    private final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
 
     public ResolvePage(Page page) {
         super(page);
@@ -70,6 +76,8 @@ public class ResolvePage extends AbstractPage {
         this.submitCommentButton = page.locator("[data-qa='investigation_tools__add_comment_textarea_container']");
         this.submitFraudButton = page.locator("button[data-qa='report_fraud_drawer__submit_button']");
         this.selectedFraudLabel = page.locator(SELECTED_FRAUD_LOCATOR);
+        this.fraudDeletionPopup = page.locator("//div[@class='v-fraud-type__action-content']");
+        this.confirmFraudDeletionButton = page.locator("//span[@class='g-button__text' and text()='Yes']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -292,5 +300,17 @@ public class ResolvePage extends AbstractPage {
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
     }
 
+    @Step("Get time label for the provided fraud")
+    public String getFraudTimeByName(String fraudName) {
+        return page.locator(String.format(FRAUD_TIME_BY_NAME_PATTERN, fraudName)).textContent();
+    }
 
+    @Step("Click delete fraud and confirm the popup")
+    public void deleteFraudByName(String fraudName) {
+        page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
+        assertThat(fraudDeletionPopup).containsText("Are you sure that the client should not be identified with this fraud anymore?");
+        confirmFraudDeletionButton.click();
+        commentInput.fill(String.format("confirm %s", fraudName));
+        submitFraudButton.click();
+    }
 }
