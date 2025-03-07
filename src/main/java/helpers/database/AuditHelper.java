@@ -10,6 +10,5 @@ public class AuditHelper {
     public static void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
         Thread.sleep(100);
-
     }
 }

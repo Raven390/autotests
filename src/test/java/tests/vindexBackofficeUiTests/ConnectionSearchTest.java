@@ -344,7 +344,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     @AllureId("316")
     @DisplayName("Connection Search Name of clients must be taken from the DB")
     void csPageConnectionNodeHasNameFromDbTest() throws ReflectiveOperationException, SQLException {
-        CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId", getCurrentTimestampDbFormat());
+        CrmTbUserObject testUser = new CrmTbUserObject(424_204, "infinox-424204", "Infinox", "FCA", "2024-10-23", "2024-10-23", "Connect", "Fourthman", "male", "1975-05-11", "Cyprus", "CY", "CY", "en", "RUS", "DUrksdLPlqZB6byC9vfKk6qm9BpUmsOS", "BjrbbdAHkwhBFLnPclfvbg==", "996", "1", "2FA", "2", "1", "1", 1, 2, 3, "APPROVED", getCurrentTimestampDbFormat(), "2024-10-23 14:56:59", "2024-10-23 14:56:59", getRandomUuidString(), "nationalityId", getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.crm___tb_user", testUser);
         connectionPage.navigateMain();
         keycloackPage.loginAsAutotestUser();

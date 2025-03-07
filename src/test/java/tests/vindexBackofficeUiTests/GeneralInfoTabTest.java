@@ -93,7 +93,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         String registrationDateAgoPattern = "^(?:(?:\\d+ year(?:s)? )?(?:\\d+ month(?:s)? )?)?\\d+ day(?:s)?$";
         assertThat("Assert that registration date ago is correct", generalTab.getRegistrationDateAgo(), matchesPattern(registrationDateAgoPattern));
         assertThat("Assert that client id is correct", generalTab.getClientId(), equalTo(String.valueOf(crmTbUser.userId)));
-        assertThat("Assert that registration date is correct", generalTab.getRegistrationDate(), equalTo(crmTbUser.registrationDate.split(" ")[0]));
+        assertThat("Assert that registration date is correct", generalTab.getRegistrationDate(), equalTo(crmTbUser.registrationDateUtc.split(" ")[0]));
         assertThat("Assert that regulator is correct", generalTab.getRegulator(), equalTo(crmTbUser.regulator));
         assertThat("Assert that gender is correct", generalTab.getGender(), equalTo(crmTbUser.gender));
         assertThat("Assert that date of birth is correct", generalTab.getDateOfBirth(), equalTo(crmTbUser.birthday));

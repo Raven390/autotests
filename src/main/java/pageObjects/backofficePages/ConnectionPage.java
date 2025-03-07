@@ -89,6 +89,7 @@ public class ConnectionPage extends AbstractPage {
     private final Locator connectionTableScoreValue;
     private final Locator zoomInButton;
     private final Locator zoomValue;
+    private final Locator tooltip;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -118,8 +119,9 @@ public class ConnectionPage extends AbstractPage {
     private static final String ATTRIBUTE_FILTER_NAME_PATTERN = "//div[@class='v-drop-down-menu__menu']/descendant::div[text()='%s']";
     private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
     private static final String GRAPH_NODES_GROUP = "//div[@class='v-connection-search-graph-view__group']";
-    private static final String CONNECTION_TABLE_ROW = "//tbody/tr";
+    private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
     private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls__zoom-controls']";
+    private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -129,16 +131,16 @@ public class ConnectionPage extends AbstractPage {
         this.graphViewButton = page.locator("input[value='GRAPH']");
         this.connectionTable = page.locator(CONNECTION_TABLE_SELECTOR);
         this.connectionGraph = page.locator(CONNECTION_GRAPH_SELECTOR);
-        this.levelHeader = page.locator("th.v-connection-search-table-view__column_type_level");
-        this.clientHeader = page.locator("th.v-connection-search-table-view__column_type_client");
-        this.connectionHeader = page.locator("th.v-connection-search-table-view__column_type_connection");
-        this.attributeHeader = page.locator("th.v-connection-search-table-view__column_type_attribute");
-        this.behaviorHeader = page.locator("th.v-connection-search-table-view__column_type_behavior");
-        this.pnlHeader = page.locator("th.v-connection-search-table-view__column_type_pnl");
-        this.operationHeader = page.locator("th.v-connection-search-table-view__column_type_operations");
-        this.ibHeader = page.locator("th.v-connection-search-table-view__column_type_ib");
-        this.registeredHeader = page.locator("th.v-connection-search-table-view__column_type_registered");
-        this.lastLoginHeader = page.locator("th.v-connection-search-table-view__column_type_last-login");
+        this.levelHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LVL"));
+        this.clientHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CLIENT"));
+        this.connectionHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CONNECTION"));
+        this.attributeHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "ATTRIBUTE"));
+        this.behaviorHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "BEHAVIOR"));
+        this.pnlHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "TOTAL PNL"));
+        this.operationHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "PAYMENTS"));
+        this.ibHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CPA/IB"));
+        this.registeredHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "REGISTERED"));
+        this.lastLoginHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LAST LOGIN"));
         this.graphLinkHeader = page.locator("th.v-connection-search-table-view__column_type_graph-link");
         this.levelCell = page.locator(LEVEL_CELL_SELECTOR);
         this.clientCell = page.locator("td.v-connection-search-table-view__column_type_client");
@@ -193,6 +195,7 @@ public class ConnectionPage extends AbstractPage {
         this.connectionTableScoreValue = page.locator("//td[contains(@class,'v-connection-search-table-view__column_type_connection')]/descendant::div[contains(@class,'g-color-text_color_secondary')]");
         this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
         this.zoomValue = page.locator(String.format("%s/div/descendant::span", ZOOM_CONTROLS));
+        this.tooltip = page.locator("//div[@class='v-tooltip-content']");
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -928,5 +931,27 @@ public class ConnectionPage extends AbstractPage {
     @Step("Get zoom value")
     public String getZoomValue() {
         return zoomValue.textContent();
+    }
+
+    @Step("Get pnl sorting tooltip")
+    public String getTotalPnlSortingTooltip() {
+        pnlHeader.hover();
+        return tooltip.textContent();
+    }
+
+    @Step("Get last login sorting tooltip")
+    public String getLastLoginSortingTooltip() {
+        lastLoginHeader.hover();
+        return tooltip.textContent();
+    }
+
+    @Step("Click total pnl header")
+    public void clickTotalPnlHeader() {
+        pnlHeader.click();
+    }
+
+    @Step("Click last login header")
+    public void clickLastLoginHeader() {
+        lastLoginHeader.click();
     }
 }
