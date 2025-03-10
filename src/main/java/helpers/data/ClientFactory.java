@@ -27,56 +27,14 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString()
+                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), faker.name().firstName(), faker.name().lastName()
         );
     }
 
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, null
+                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), new Random().nextInt(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, null, faker.name().firstName(), faker.name().lastName()
         );
-    }
-
-    public static ClientHelper getRandomVjpClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.VJP);
-        return client;
-    }
-
-    public static ClientHelper getRandomVtClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.VT);
-        return client;
-    }
-
-    public static ClientHelper getRandomPuPrimeClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.PU_PRIME);
-        return client;
-    }
-
-    public static ClientHelper getRandomStarTraderClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.STAR_TRADER);
-        return client;
-    }
-
-    public static ClientHelper getRandomMonetaClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.MONETA);
-        return client;
-    }
-
-    public static ClientHelper getRandomUltimaMarketsClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.ULTIMA_MARKETS);
-        return client;
-    }
-
-    public static ClientHelper getRandomInfinoxClientAllFields() {
-        ClientHelper client = getRandomVantageClientAllFields();
-        client.setBrand(Brand.INFINOX);
-        return client;
     }
 }

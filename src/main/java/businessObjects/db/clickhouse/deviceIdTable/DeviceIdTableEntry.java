@@ -4,35 +4,31 @@ import java.util.Objects;
 
 public class DeviceIdTableEntry {
 
-    public Integer userId;
-    public String brand;
+    public String ucid;
     public String deviceId;
 
     public DeviceIdTableEntry() {
     }
 
-    public DeviceIdTableEntry(Integer userId, String brand, String deviceId) {
-        this.userId = userId;
-        this.brand = brand;
+    public DeviceIdTableEntry(String ucid, String deviceId) {
+        this.ucid = ucid;
         this.deviceId = deviceId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeviceIdTableEntry that = (DeviceIdTableEntry) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(
-                deviceId, that.deviceId);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(deviceId, that.deviceId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, deviceId);
+        return Objects.hash(ucid, deviceId);
     }
 
     @Override
     public String toString() {
-        return "DeviceIdTableEntry{" + "userId=" + userId + ", brand='" + brand + '\'' + ", deviceId='" + deviceId + '\'' + '}';
+        return "DeviceIdTableEntry{" + "ucid='" + ucid + '\'' + ", deviceId='" + deviceId + '\'' + '}';
     }
 }

@@ -29,6 +29,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
@@ -69,14 +70,15 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     public static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
+    public static void setupConnectionTableEntry() throws Exception {
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntryForFiltration2, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
+        waitForConnectionSearchToUpdate(userFrom1);
     }
 
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId success(200)")
     @AllureId("145")
-    public void getConnectionsByClientSuccessTest() throws IOException {
+    public void getConnectionsByClientSuccessTest() throws Exception {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
 

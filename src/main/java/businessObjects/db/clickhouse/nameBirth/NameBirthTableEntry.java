@@ -4,35 +4,36 @@ import java.util.Objects;
 
 public class NameBirthTableEntry {
 
-    public Integer userId;
-    public String brand;
-    public String nameDateofbirth;
+    public String ucid;
+    public String firstName;
+    public String lastName;
+    public String dateOfBirth;
 
     public NameBirthTableEntry() {
     }
 
-    public NameBirthTableEntry(Integer userId, String brand, String namedateofbirth) {
-        this.userId = userId;
-        this.brand = brand;
-        this.nameDateofbirth = namedateofbirth;
+    public NameBirthTableEntry(String ucid, String firstName, String lastName, String dateOfBirth) {
+        this.ucid = ucid;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NameBirthTableEntry that = (NameBirthTableEntry) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(
-                nameDateofbirth, that.nameDateofbirth);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(firstName, that.firstName) && Objects.equals(
+                lastName, that.lastName) && Objects.equals(dateOfBirth, that.dateOfBirth);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, nameDateofbirth);
+        return Objects.hash(ucid, firstName, lastName, dateOfBirth);
     }
 
     @Override
     public String toString() {
-        return "NameBirthTableEntry{" + "userId=" + userId + ", brand='" + brand + '\'' + ", nameDateofbirth='" + nameDateofbirth + '\'' + '}';
+        return "NameBirthTableEntry{" + "ucid='" + ucid + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + ", dateOfBirth='" + dateOfBirth + '\'' + '}';
     }
 }

@@ -48,7 +48,7 @@ public class CleanTableHelper {
 
     @Step("Clean nameBirth id table by client")
     public static void cleanNameTableByClient(String... values) throws Exception {
-        deleteObjectsFromDb(CLICKHOUSE, NAME_BIRTH_TABLE_NAME, "name_dateofbirth", List.of(Arrays.toString(values)));
+        deleteObjectsFromDb(CLICKHOUSE, NAME_BIRTH_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
     }
 
     @Step("Clean phone table by client")
