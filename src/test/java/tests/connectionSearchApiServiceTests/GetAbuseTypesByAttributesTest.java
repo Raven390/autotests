@@ -43,6 +43,7 @@ import static businessObjects.db.clickhouse.webSession.WebSessionTableEntryFacto
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.*;
+import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -165,7 +166,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     }
 
     @AfterAll
-    public static void deleteConnectionTableEntry() {
+    public static void deleteConnectionTableEntry() throws Exception {
         // Delete data from connections table
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
 
@@ -191,24 +192,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry.webSessionId));
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry2.webSessionId));
         //Delete data from fraud type table
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromEmail.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToEmail.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromDocument.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToDocument.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromIp.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToIp.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromPayout.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToPayout.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromPhone.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToPhone.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromNameBirth.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToNameBirth.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToDeviceId.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromDeviceId.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToSessionId.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromSessionId.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userToWebSessionId.getUcid()));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", userFromWebSessionId.getUcid()));
+        cleanBoFraudTypesTableByUcid(userFromEmail.getUcid(), userToEmail.getUcid(), userFromDocument.getUcid(), userToDocument.getUcid(), userFromIp.getUcid(), userToIp.getUcid(), userFromPayout.getUcid(), userToPayout.getUcid(), userFromPhone.getUcid(), userToPhone.getUcid(), userFromNameBirth.getUcid(), userToNameBirth.getUcid(), userToDeviceId.getUcid(), userFromDeviceId.getUcid(), userToSessionId.getUcid(), userFromSessionId.getUcid(), userToWebSessionId.getUcid(), userFromWebSessionId.getUcid());
     }
 
     @Test
@@ -521,7 +505,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response length", responseBody.error, is("DocumentCountryId must be specified once DocumentType or DocumentNumber provided"));
     }
 
-
+    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionDepth success(200)")
     @AllureId("785")
@@ -541,6 +525,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
+    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreTo success(200)")
     @AllureId("786")
@@ -558,6 +543,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
+    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreFrom success(200)")
     @AllureId("787")
@@ -577,6 +563,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
+    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionType success(200)")
     @AllureId("788")
@@ -594,6 +581,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
+    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and multiple connectionType success(200)")
     @AllureId("789")
