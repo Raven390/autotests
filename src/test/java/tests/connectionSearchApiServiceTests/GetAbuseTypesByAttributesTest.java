@@ -165,7 +165,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         insertObjectsToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo));
     }
 
-    //@AfterAll
+    @AfterAll
     public static void deleteConnectionTableEntry() throws SQLException {
         // Delete data from connections table
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
