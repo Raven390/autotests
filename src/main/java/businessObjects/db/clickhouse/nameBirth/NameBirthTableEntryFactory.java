@@ -6,13 +6,13 @@ public class NameBirthTableEntryFactory {
 
     public static NameBirthTableEntry nameBirthTableEntryForConnectionSearch(ClientHelper client) {
         return new NameBirthTableEntry(
-                client.getUserId(), client.getBrand().toLowerCase(), client.getNamedateofbirth()
+                client.getUcid(), client.getFirstName(), client.getLastName(), client.getNamedateofbirth()
         );
     }
 
     public static NameBirthTableEntry nameBirthTableEntryForConnectionSearch(ClientHelper client, String nameBirth) {
         return new NameBirthTableEntry(
-                client.getUserId(), client.getBrand().toLowerCase(), nameBirth
+                client.getUcid(), client.getFirstName(), client.getLastName(), nameBirth
         );
     }
 }

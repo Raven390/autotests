@@ -6,13 +6,13 @@ import helpers.data.ClientHelper;
 public class SessionIdTableEntryFactory {
     public static SessionIdTableEntry sessionIdTableEntryForConnectionSearch(ClientHelper client) {
         return new SessionIdTableEntry(
-                client.getUserId(), client.getBrand().toLowerCase(), client.getSessionId()
+                client.getUcid(), client.getSessionId()
         );
     }
 
     public static SessionIdTableEntry sessionIdTableEntryForConnectionSearch(ClientHelper client, String sessionId) {
         return new SessionIdTableEntry(
-                client.getUserId(), client.getBrand().toLowerCase(), sessionId
+                client.getUcid(), sessionId
         );
     }
 }

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CHECK_CONNECTED_IB)
@@ -141,7 +141,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     public static final EmailTableEntry emailTableEntry3_2 = getEmailTableEntryByClient(userTo3);
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
+    public static void setupConnectionTableEntry() throws Exception {
         userTo1.setCpaId(userFrom1.getCpaId());
         userTo1.setIbId(userFrom1.getIbId());
         userTo1.setReferrerId(userFrom1.getReferrerId());
@@ -175,6 +175,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry1_1, phoneTableEntry1_2));
         insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry1_1, ipTableEntry1_2));
         insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameTableEntry1_1, nameTableEntry1_2));
+        waitForConnectionSearchToUpdate(userFrom1);
     }
 
     @AfterAll
@@ -187,7 +188,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
         cleanWebSessionIdTableByClient(webSessionTableEntry1_1.webSessionId, webSessionTableEntry1_2.webSessionId);
         cleanPhoneTableByClient(phoneTableEntry1_1.phoneNum, phoneTableEntry1_2.phoneNum);
         cleanIpTableByClient(ipTableEntry1_1.ip, ipTableEntry1_2.ip);
-        cleanNameTableByClient(nameTableEntry1_1.nameDateofbirth, nameTableEntry1_2.nameDateofbirth);
+        cleanNameTableByClient(nameTableEntry1_1.ucid, nameTableEntry1_2.ucid);
         cleanCrmUserTableByClient(user1.ucid, user2.ucid, user3.ucid, user4.ucid, user5.ucid, user6.ucid, user7.ucid, user8.ucid);
     }
 

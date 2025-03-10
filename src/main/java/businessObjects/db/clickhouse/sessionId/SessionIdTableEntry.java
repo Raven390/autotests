@@ -4,35 +4,31 @@ import java.util.Objects;
 
 public class SessionIdTableEntry {
 
-    public Integer userId;
-    public String brand;
+    public String ucid;
     public String sessionId;
 
     public SessionIdTableEntry() {
     }
 
-    public SessionIdTableEntry(Integer userId, String brand, String sessionId) {
-        this.userId = userId;
-        this.brand = brand;
+    public SessionIdTableEntry(String ucid, String sessionId) {
+        this.ucid = ucid;
         this.sessionId = sessionId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SessionIdTableEntry that = (SessionIdTableEntry) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(
-                sessionId, that.sessionId);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(sessionId, that.sessionId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, sessionId);
+        return Objects.hash(ucid, sessionId);
     }
 
     @Override
     public String toString() {
-        return "SessionIdTableEntry{" + "userId=" + userId + ", brand='" + brand + '\'' + ", sessionId='" + sessionId + '\'' + '}';
+        return "SessionIdTableEntry{" + "ucid='" + ucid + '\'' + ", sessionId='" + sessionId + '\'' + '}';
     }
 }

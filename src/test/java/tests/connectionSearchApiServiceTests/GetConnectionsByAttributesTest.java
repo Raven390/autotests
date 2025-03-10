@@ -45,6 +45,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
@@ -130,7 +131,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
+    public static void setupConnectionTableEntry() throws Exception {
         // Insert data to connections table
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDocument);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail);
@@ -158,6 +159,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
         insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntry);
+        waitForConnectionSearchToUpdate(userFromDepth);
     }
 
     @Test
@@ -536,7 +538,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @AllureId("697")
     public void getConnectionsTest20() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("nameBirth", nameBirthTableEntry.nameDateofbirth);
+        queryParams.put("nameBirth", nameBirthTableEntry.dateOfBirth);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -614,7 +616,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
         deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
         deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("name_dateofbirth = '%s'", nameBirthTableEntry.nameDateofbirth));
+        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry.webSessionId));
     }

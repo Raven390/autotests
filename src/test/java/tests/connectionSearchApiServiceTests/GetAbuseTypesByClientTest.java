@@ -28,6 +28,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
@@ -63,7 +64,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
     private static BoClientFraudTypesObject fraud2_2;
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
+    public static void setupConnectionTableEntry() throws Exception {
         connectionTableEntry1_1.connectionInfo = "[{\"connectionAttributeName\": \"digital\", \"connectionAttributeValue\": \"535456**** **0344\", \"sourceAttributeValue\": \"535456**** **0344\", \"relationType\": \"exact\"}]";
         fraud1_1 = new BoClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
         fraud1_2 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
@@ -77,6 +78,7 @@ public class GetAbuseTypesByClientTest extends TestBaseApi {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry2_1);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry2_2);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry2_3);
+        waitForConnectionSearchToUpdate(userFrom1);
     }
 
     @AfterAll

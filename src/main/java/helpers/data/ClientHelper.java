@@ -29,6 +29,8 @@ public class ClientHelper {
     private String sessionId;
     private String digitalId;
     private String namedateofbirth;
+    private String firstName;
+    private String lastName;
 
     public ClientHelper() {
     }
@@ -101,7 +103,8 @@ public class ClientHelper {
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
             Integer ibId, Integer referrerId,
-            String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth) {
+            String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth,
+            String firstName, String lastName) {
         this.userId = userId;
         this.uid = uid;
         this.regulator = regulator;
@@ -121,6 +124,8 @@ public class ClientHelper {
         this.sessionId = sessionId;
         this.digitalId = digitalId;
         this.namedateofbirth = namedateofbirth;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     @JsonIgnore
@@ -278,6 +283,22 @@ public class ClientHelper {
 
     public void setNamedateofbirth(String namedateofbirth) {
         this.namedateofbirth = namedateofbirth;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override

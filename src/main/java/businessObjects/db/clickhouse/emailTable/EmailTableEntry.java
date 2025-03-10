@@ -4,34 +4,31 @@ import java.util.Objects;
 
 public class EmailTableEntry {
 
-    public Integer userId;
-    public String brand;
+    public String ucid;
     public String email;
 
     public EmailTableEntry() {
     }
 
-    public EmailTableEntry(Integer userId, String brand, String email) {
-        this.userId = userId;
-        this.brand = brand;
+    public EmailTableEntry(String ucid, String email) {
+        this.ucid = ucid;
         this.email = email;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EmailTableEntry that = (EmailTableEntry) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(email, that.email);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, brand, email);
+        return Objects.hash(ucid, email);
     }
 
     @Override
     public String toString() {
-        return "EmailTableEntry{" + "userId=" + userId + ", brand='" + brand + '\'' + ", email='" + email + '\'' + '}';
+        return "EmailTableEntry{" + "ucid='" + ucid + '\'' + ", email='" + email + '\'' + '}';
     }
 }

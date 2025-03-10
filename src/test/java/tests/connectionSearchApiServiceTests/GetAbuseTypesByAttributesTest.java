@@ -24,7 +24,6 @@ import tests.TestBaseApi;
 
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,7 +146,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final BoClientFraudTypesObject fraudWebSessionIdTo = new BoClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws ReflectiveOperationException, SQLException {
+    public static void setupConnectionTableEntry() {
         // Insert data to connections table
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3));
         // Insert data to attributes tables
@@ -166,7 +165,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     }
 
     @AfterAll
-    public static void deleteConnectionTableEntry() throws SQLException {
+    public static void deleteConnectionTableEntry() {
         // Delete data from connections table
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
 
@@ -185,8 +184,8 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry2.deviceId));
         deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
         deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry2.digitalId));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("name_dateofbirth = '%s'", nameBirthTableEntry.nameDateofbirth));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("name_dateofbirth = '%s'", nameBirthTableEntry2.nameDateofbirth));
+        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
+        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry2.ucid));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry2.sessionId));
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry.webSessionId));
@@ -314,7 +313,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @AllureId("774")
     public void getAbuseTypesByAttributesTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("nameBirth", nameBirthTableEntry.nameDateofbirth);
+        queryParams.put("nameBirth", nameBirthTableEntry.dateOfBirth);
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
@@ -523,7 +522,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     }
 
 
-    @Disabled //TODO fix after CSV-707
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionDepth success(200)")
     @AllureId("785")
@@ -543,7 +541,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled //TODO fix after CSV-707
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreTo success(200)")
     @AllureId("786")
@@ -561,7 +558,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled //TODO fix after CSV-707
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreFrom success(200)")
     @AllureId("787")
@@ -581,7 +577,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled //TODO fix after CSV-707
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionType success(200)")
     @AllureId("788")
@@ -599,7 +594,6 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled //TODO fix after CSV-707
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and multiple connectionType success(200)")
     @AllureId("789")
