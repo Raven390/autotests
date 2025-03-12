@@ -25,7 +25,7 @@ public class CrmTbDepositObjectFactory {
         depositObject.amountUsd = getRandomRoundedDouble(0.1, 500_000);
         depositObject.currency = "EUR";
         depositObject.statusId = 5;
-        depositObject.status = "other";
+        depositObject.status = "Success";
         depositObject.paymentTypeId = 1;
         depositObject.paymentType = "Other";
         depositObject.paymentChannel = "Other";

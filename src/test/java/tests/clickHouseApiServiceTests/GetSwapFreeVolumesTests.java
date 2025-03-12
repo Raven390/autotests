@@ -13,7 +13,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +57,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     public static final String dateTo = getCurrentTimestampDbFormat();
 
     @BeforeAll
-    public static void setupData() throws ReflectiveOperationException, SQLException {
+    public static void setupData() {
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class GetDepositsTests extends TestBaseApi {
     private static CrmTbDepositObject deposit2;
 
     @BeforeAll
-    public static void setupDeposits() throws ReflectiveOperationException, SQLException {
+    public static void setupDeposits() {
         ClientHelper client = getRandomVantageClient();
         deposit1 = generateDepositByClient(client);
         deposit2 = generateDepositByClient(client);

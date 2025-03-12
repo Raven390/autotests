@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class GetWithdrawalsTests extends TestBaseApi {
     private static CrmTbWithdrawalObject withdrawal2;
 
     @BeforeAll
-    public static void setupWithdrawals() throws ReflectiveOperationException, SQLException {
+    public static void setupWithdrawals() {
         ClientHelper client = getRandomVantageClient();
         withdrawal1 = generateWithdrawalByClient(client);
         withdrawal2 = generateWithdrawalByClient(client);

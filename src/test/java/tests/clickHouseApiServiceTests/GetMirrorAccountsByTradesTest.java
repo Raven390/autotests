@@ -42,7 +42,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
 
 
     @BeforeAll
-    public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
+    public static void setupMirrorTrades() {
         data1 = generateMirrorTradesByAccount(client1);
         insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data1);
     }

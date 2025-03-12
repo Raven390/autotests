@@ -141,7 +141,7 @@ task createConsumerGroupsFile {
 tasks.withType(Test) {
     dependsOn(createConsumerGroupsFile)
     // Enable parallel test execution
-    maxParallelForks = 2// Set to the number of available processors
+    maxParallelForks = 10// Set to the number of available processors
 
     // Optional: Configure parallel execution for classes and methods
     forkEvery = 0 // 0 means it forks once per class. Increase for larger suites.

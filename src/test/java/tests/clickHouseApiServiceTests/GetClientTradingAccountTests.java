@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
     private static final ClientHelper client = getRandomVantageClientAllFields();
 
     @BeforeAll
-    public static void setupMirrorTrades() throws ReflectiveOperationException, SQLException {
+    public static void setupMirrorTrades() {
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
     }
 

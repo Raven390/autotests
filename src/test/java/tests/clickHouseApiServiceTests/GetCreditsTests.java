@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class GetCreditsTests extends TestBaseApi {
     private static MtTbCreditsObject credit2;
 
     @BeforeAll
-    public static void setupCredits() throws ReflectiveOperationException, SQLException {
+    public static void setupCredits() {
         ClientHelper client = getRandomVantageClient();
         credit1 = generateCreditsByClient(client);
         credit2 = generateCreditsByClient(client);
