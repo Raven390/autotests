@@ -61,6 +61,7 @@ public class GeneralTab extends AbstractPage {
     private final Locator fileViewerImagePresentation;
     private final Locator attemptItem;
     private final Locator ibOverviewButton;
+    private final Locator cpaOverviewButton;
 
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
@@ -130,6 +131,7 @@ public class GeneralTab extends AbstractPage {
         this.fileViewerImagePresentation = page.locator("[data-qa='gallery__slide']");
         this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
         this.ibOverviewButton = page.locator("//div[text()='IB overview']");
+        this.cpaOverviewButton = page.locator("//div[text()='CPA overview']");
     }
 
     @Step("Open users general tab")
@@ -511,6 +513,10 @@ public class GeneralTab extends AbstractPage {
 
     public Double calculateRevenue(S3FactLoginMetricsObject revenue) {
         return revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyCommissionRevenue() + revenue.getDailySwapsRevenue();
+    }
+
+    public void clickCpaOverviewButton() {
+        cpaOverviewButton.first().click();
     }
 }
 

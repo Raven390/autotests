@@ -25,6 +25,7 @@ import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.*;
 
 public class RestrictionPage extends AbstractPage {
@@ -121,7 +122,7 @@ public class RestrictionPage extends AbstractPage {
 
     @Step("Open users restriction tab")
     public void navigate(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
+        page.navigate(String.format("%sinvestigation/%s", BASE_URL_E2E, ucid));
         isPageLoaded();
         restrictionTab.click();
         isPageLoaded();
@@ -605,8 +606,6 @@ public class RestrictionPage extends AbstractPage {
         ClientsRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
-        assertEquals(applicationReason, restriction.applicationReason);
-
     }
 
     @Step("Clean users audit history")

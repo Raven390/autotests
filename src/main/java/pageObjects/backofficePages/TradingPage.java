@@ -22,6 +22,7 @@ import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
 import static utils.Utils.*;
 
@@ -425,7 +426,7 @@ public class TradingPage extends AbstractPage {
     @Step("Navigate to users trading tab")
     public void navigate(String ucid) {
         Allure.step("Navigate to users trading tab");
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid + "/trading");
+        page.navigate(String.format("%sinvestigation/%s/trading", BASE_URL_E2E, ucid));
         super.waitForPageToLoad();
     }
 
