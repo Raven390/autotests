@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static businessObjects.api.clickhouseApiService.getAbuseTypes.GetAbuseTypesRequest.getAbuseTypes;
@@ -35,7 +34,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
     private static BoClientFraudTypesObject fraud3;
 
     @BeforeAll
-    public static void setupAbuseTypes() throws ReflectiveOperationException, SQLException {
+    public static void setupAbuseTypes() {
         ClientHelper client = getRandomVantageClient();
         fraud1 = new BoClientFraudTypesObject(client.getUcid(), 1, "HEDGING");
         fraud2 = new BoClientFraudTypesObject(client.getUcid(), 2, "CPA");

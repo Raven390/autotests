@@ -11,7 +11,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class GetBonusesTests extends TestBaseApi {
     private static CrmTbBonusObject bonus2;
 
     @BeforeAll
-    public static void setupBonuses() throws ReflectiveOperationException, SQLException {
+    public static void setupBonuses() {
         bonus1 = generateBonusByClient(getRandomVantageClient());
         bonus2 = generateBonusByClient(getRandomVantageClient());
         bonus2.createTime = getTomorrowTimestampDbFormat();

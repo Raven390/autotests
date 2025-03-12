@@ -40,7 +40,7 @@ public class GetTradesTests extends TestBaseApi {
     private static Integer account;
 
     @BeforeAll
-    public static void setupTrades() throws ReflectiveOperationException, SQLException {
+    public static void setupTrades() {
         account = getRandomIntPositive();
         trade1 = generateTradeByClient(client1);
         trade2 = generateTradeByClient(client1);

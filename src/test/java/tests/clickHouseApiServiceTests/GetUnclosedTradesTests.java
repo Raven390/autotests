@@ -13,7 +13,6 @@ import tests.TestBaseApi;
 import utils.Utils;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +51,7 @@ public class GetUnclosedTradesTests extends TestBaseApi {
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
 
     @BeforeAll
-    public static void setupTests() throws ReflectiveOperationException, SQLException {
+    public static void setupTests() {
         trade1 = generateTradeByClient(client1, 0, 0, 0, Utils.getRandomLongPositive());
         trade2 = generateTradeByClient(client2, 0, 0, 0, Utils.getRandomLongPositive());
         trade3 = generateTradeByClient(client3, 0, 0, 0, Utils.getRandomLongPositive());
@@ -464,6 +463,6 @@ public class GetUnclosedTradesTests extends TestBaseApi {
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
-        assertThat("Assert response length", mappedResponse.getFirst().tradeId, is(3));
+        assertThat("Assert response length", mappedResponse.getFirst().tradeId, is(3L));
     }
 }

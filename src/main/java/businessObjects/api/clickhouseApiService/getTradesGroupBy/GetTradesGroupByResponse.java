@@ -6,6 +6,9 @@ import java.util.Objects;
 
 public class GetTradesGroupByResponse {
 
+    @JsonProperty("clientId")
+    public String clientId;
+
     @JsonProperty("symbol")
     public String symbol;
 
@@ -21,7 +24,9 @@ public class GetTradesGroupByResponse {
     public GetTradesGroupByResponse() {
     }
 
-    public GetTradesGroupByResponse(String symbol, Double profit, Double profitUsd, Double volumeLots) {
+    public GetTradesGroupByResponse(String clientId, String symbol, Double profit, Double profitUsd,
+            Double volumeLots) {
+        this.clientId = clientId;
         this.symbol = symbol;
         this.profit = profit;
         this.profitUsd = profitUsd;
@@ -30,19 +35,20 @@ public class GetTradesGroupByResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GetTradesGroupByResponse that = (GetTradesGroupByResponse) o;
-        return Objects.equals(symbol, that.symbol) && Objects.equals(profit, that.profit) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(volumeLots, that.volumeLots);
+        return Objects.equals(clientId, that.clientId) && Objects.equals(symbol, that.symbol) && Objects.equals(
+                profit, that.profit) && Objects.equals(profitUsd, that.profitUsd) && Objects.equals(
+                        volumeLots, that.volumeLots);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(symbol, profit, profitUsd);
+        return Objects.hash(clientId, symbol, profit, profitUsd, volumeLots);
     }
 
     @Override
     public String toString() {
-        return "GetTradesGroupByResponse{" + "symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeLots=" + volumeLots + '}';
+        return "GetTradesGroupByResponse{" + "clientId='" + clientId + '\'' + ", symbol='" + symbol + '\'' + ", profit=" + profit + ", profitUsd=" + profitUsd + ", volumeLots=" + volumeLots + '}';
     }
 }

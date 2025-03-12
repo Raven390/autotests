@@ -147,7 +147,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final BoClientFraudTypesObject fraudWebSessionIdTo = new BoClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
 
     @BeforeAll
-    public static void setupConnectionTableEntry() {
+    public static void setupConnectionTableEntry() throws InterruptedException {
         // Insert data to connections table
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3));
         // Insert data to attributes tables

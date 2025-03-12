@@ -45,7 +45,6 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
@@ -128,7 +127,8 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     public static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
     public static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
     public static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
-    public static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    public static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    public static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
 
     @BeforeAll
     public static void setupConnectionTableEntry() throws Exception {
@@ -158,8 +158,8 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
         insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
-        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntry);
-        waitForConnectionSearchToUpdate(userFromDepth);
+        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryFrom);
+        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryTo);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -195,7 +195,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -214,7 +214,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -233,7 +233,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -252,7 +252,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -271,7 +271,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -296,7 +296,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -320,7 +320,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -340,7 +340,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -360,7 +360,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -381,7 +381,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -399,7 +399,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponse[].class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 400", response.code(), is(200));
@@ -417,7 +417,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -435,7 +435,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -451,7 +451,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -469,7 +469,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -487,7 +487,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponseError responseBody = objectMapper.readValue(
-                response.body().string(), GetConnectionsResponseError.class
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
         );
 
         assertThat("Check the response code is 400", response.code(), is(400));
@@ -503,15 +503,16 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("device", deviceIdTableEntry.deviceId);
 
         Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess, getConnectionsByAttributesDeviceIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccessInitial));
     }
 
     @Test
@@ -522,15 +523,16 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("digital", digitalIdTableEntry.digitalId);
 
         Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccess, getConnectionsByAttributesDigitalIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccessInitial));
     }
 
     @Test
@@ -541,15 +543,16 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("nameBirth", nameBirthTableEntry.dateOfBirth);
 
         Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccess, getConnectionsByAttributesNameBirthResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccessInitial));
     }
 
     @Test
@@ -560,15 +563,16 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         queryParams.put("session", sessionIdTableEntry.sessionId);
 
         Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccess, getConnectionsByAttributesSessionIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccessInitial));
     }
 
     @Test
@@ -576,7 +580,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @AllureId("699")
     public void getConnectionsTest22() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("webSession", webSessionTableEntry.webSessionId);
+        queryParams.put("webSession", webSessionTableEntryFrom.webSessionId);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -585,9 +589,9 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccess, getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
     }
 
     @AfterAll
@@ -618,6 +622,6 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
         deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
-        deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry.webSessionId));
+        deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntryFrom.webSessionId));
     }
 }

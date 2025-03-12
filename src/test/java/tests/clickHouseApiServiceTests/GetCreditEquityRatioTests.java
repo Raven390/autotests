@@ -2,7 +2,7 @@ package tests.clickHouseApiServiceTests;
 
 import businessObjects.api.clickhouseApiService.ClickhouseApiErrorResponse;
 import businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityResponse;
-import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
+import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static businessObjects.api.clickhouseApiService.getCreditEquityRatio.GetCreditEquityRequest.getCreditEquity;
-import static businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObjectFactory.generateCreditEquityRatioAccount;
+import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -35,19 +35,21 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
 
     public static final String date = "2024-12-31 00:00:00".replace(" ", "T");
 
-    public static AggrCreditEquityRateObject data1;
+    public static MtAccountObject data1;
     public static final ClientHelper client1 = getRandomVantageClient();
     public static final String dateFrom = getTomorrowTimestampDbFormat();
 
     @BeforeAll
     public static void setupData() {
-        data1 = generateCreditEquityRatioAccount(client1);
-        insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data1);
+        data1 = generateMtAccountByClient(client1);
+        data1.equityUsd = 1d;//currentEquity
+        data1.creditUsd = 2d;//sumCreditOrder
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, data1);
     }
 
     @AfterAll
     public static void teardownData() {
-        deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = '%s'", data1.tradingAccount));
+        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", data1.account));
     }
 
     @Test
@@ -74,7 +76,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2"));
 
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(formatTimeToUtc(date)));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("3"));
+        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("-2"));
     }
 
     @Test
@@ -120,7 +122,8 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
-        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 200", response.body().string(), containsString("Required request parameter 'dateTo' for method parameter type LocalDateTime is not present"));
     }
 
     @Test
@@ -131,7 +134,7 @@ public class GetCreditEquityRatioTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateTo", "2024-12-30 00:00:01".replace(" ", "T"));
+        queryParams.put("dateTo", "2020-12-30 00:00:01".replace(" ", "T"));
         Response response = getCreditEquity(queryParams);
 
         assert response.body() != null;
