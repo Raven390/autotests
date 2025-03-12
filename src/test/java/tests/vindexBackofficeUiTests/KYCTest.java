@@ -237,11 +237,11 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.fileTypeId = 27;
-        idProofObject.status = "SUBMITTED";
+        idProofObject.setFileTypeId(27);
+        idProofObject.setStatus("SUBMITTED");
 
         KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.id;
+        file.proofId = idProofObject.getId();
         file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
@@ -266,11 +266,11 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.fileTypeId = 27;
-        idProofObject.status = "REJECTED";
+        idProofObject.setFileTypeId(27);
+        idProofObject.setStatus("REJECTED");
 
         KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.id;
+        file.proofId = idProofObject.getId();
         file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
@@ -295,11 +295,11 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.fileTypeId = 27;
-        idProofObject.status = "COMPLETED";
+        idProofObject.setFileTypeId(27);
+        idProofObject.setStatus("COMPLETED");
 
         KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.id;
+        file.proofId = idProofObject.getId();
         file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
@@ -322,11 +322,11 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.fileTypeId = 27;
-        idProofObject.status = "PENDING";
+        idProofObject.setFileTypeId(27);
+        idProofObject.setStatus("PENDING");
 
         KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.id;
+        file.proofId = idProofObject.getId();
         file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
@@ -349,11 +349,11 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject = generateIdProofObject(pofClient);
-        idProofObject.fileTypeId = 27;
-        idProofObject.status = "PENDING";
+        idProofObject.setFileTypeId(27);
+        idProofObject.setStatus("PENDING");
 
         KycFilesTableEntry file = getKycFile(pofClient);
-        file.proofId = idProofObject.id;
+        file.proofId = idProofObject.getId();
         file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
@@ -377,22 +377,22 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject1 = generateIdProofObject(pofClient);
-        idProofObject1.fileTypeId = 27;
-        idProofObject1.status = "REJECTED";
+        idProofObject1.setFileTypeId(27);
+        idProofObject1.setStatus("REJECTED");
 
         CrmTbIdProofObject idProofObject2 = generateIdProofObject(pofClient);
-        idProofObject2.fileTypeId = 27;
-        idProofObject2.status = "PENDING";
-        idProofObject2.createTime = "2024-12-21 11:17:50.030000000";
+        idProofObject2.setFileTypeId(27);
+        idProofObject2.setStatus("PENDING");
+        idProofObject2.setCreateTime("2024-12-21 11:17:50.030000000");
 
         KycFilesTableEntry file1 = getKycFile(pofClient);
-        file1.proofId = idProofObject1.id;
+        file1.proofId = idProofObject1.getId();
         file1.fileName = FILE_KYC_POF_1_NAME;
         file1.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
 
         KycFilesTableEntry file2 = getKycFile(pofClient);
-        file2.proofId = idProofObject2.id;
+        file2.proofId = idProofObject2.getId();
         file2.fileName = FILE_KYC_POF_2_NAME;
         file2.fileTypeId = 27;
 
@@ -419,41 +419,45 @@ public class KYCTest extends TestBaseWeb {
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
 
         CrmTbIdProofObject idProofObject1 = generateIdProofObject(pofClient);
-        idProofObject1.fileTypeId = 27;
-        idProofObject1.status = "REJECTED";
-        idProofObject1.dateOfBirth = null;
+        idProofObject1.setFileTypeId(27);
+        idProofObject1.setStatus("REJECTED");
+        idProofObject1.setUpdateTime("2024-11-29 11:17:50.030000000");
+        idProofObject1.setCreateTime("2024-11-29 11:17:50.030000000");
+        idProofObject1.setDateOfBirth(null);
 
         CrmTbIdProofObject idProofObject2 = generateIdProofObject(pofClient);
-        idProofObject2.fileTypeId = 27;
-        idProofObject2.status = "PENDING";
-        idProofObject2.updateTime = "2024-12-29 11:17:50.030000000";
-        idProofObject2.dateOfBirth = null;
-        idProofObject2.documentType = faker.animal().name();
-        idProofObject2.documentNumber = String.valueOf(getCurrentTimestamp());
+        idProofObject2.setFileTypeId(27);
+        idProofObject2.setStatus("PENDING");
+        idProofObject2.setUpdateTime("2024-12-29 11:17:50.030000000");
+        idProofObject2.setCreateTime("2024-12-29 11:17:50.030000000");
+        idProofObject2.setDateOfBirth(null);
+        idProofObject2.setDocumentType(faker.animal().name());
+        idProofObject2.setDocumentNumber(String.valueOf(getCurrentTimestamp()));
 
         KycFilesTableEntry file1 = getKycFile(pofClient);
-        file1.proofId = idProofObject1.id;
+        file1.proofId = idProofObject1.getId();
         file1.fileName = FILE_KYC_POF_1_NAME;
         file1.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
 
         KycFilesTableEntry file2 = getKycFile(pofClient);
-        file2.proofId = idProofObject2.id;
+        file2.proofId = idProofObject2.getId();
         file2.fileName = FILE_KYC_POF_2_NAME;
         file2.fileTypeId = 27;
 
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
         insertObjectToDb(KYC_FILES_TABLE_NAME, file2);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject1);
+        page.waitForTimeout(100);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject2);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkValueKycPofTitle("Proof of face");
-        generalTab.checkValueKycPofStatus(idProofObject2.status);
-        generalTab.checkValueKycPofDate(idProofObject2.updateTime.split(" ")[0]);
-        generalTab.checkValueKycPofParameters(idProofObject2.documentType + " " + idProofObject2.documentNumber);
+        generalTab.checkValueKycPofStatus(idProofObject2.getStatus());
+        generalTab.checkValueKycPofDate(idProofObject2.getUpdateTime().split(" ")[0]);
+        generalTab.checkValueKycPofParameters(idProofObject2.getDocumentType() + " " + idProofObject2.getDocumentNumber());
         generalTab.checkValueKycPofAttempts("2 attempts");
     }
 }

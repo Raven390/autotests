@@ -409,7 +409,9 @@ public class GeneralTab extends AbstractPage {
     }
 
     public void checkValueKycPofDate(String expectedValue) {
-        assertEquals(expectedValue.toLowerCase(), page.locator(POF_ROW_SELECTOR + KYC_ROW_DATE + NOT_SECONDARY_TEXT_SELECTOR).textContent().toLowerCase());
+        String locator = POF_ROW_SELECTOR + KYC_ROW_DATE + NOT_SECONDARY_TEXT_SELECTOR;
+        page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
+        assertEquals(expectedValue.toLowerCase(), page.locator(locator).textContent().toLowerCase());
     }
 
     public void checkValueKycPofParameters(String expectedValue) {
