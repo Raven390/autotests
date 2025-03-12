@@ -1,6 +1,6 @@
 package businessObjects.db.clickhouse.s3FactCpaCommissions;
 
-public class s3FactCpaCommissionsObject {
+public class S3FactCpaCommissionsObject {
     protected Long id;
     protected String date;
     protected Integer brandUid;

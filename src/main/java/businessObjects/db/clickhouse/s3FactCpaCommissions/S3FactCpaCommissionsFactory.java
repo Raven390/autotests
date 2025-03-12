@@ -5,9 +5,9 @@ import helpers.data.ClientHelper;
 
 import static utils.Utils.*;
 
-public class s3FactCpaCommissionsFactory {
-    public static s3FactCpaCommissionsObject generates3FactCpaCommissionsObject(ClientHelper client) {
-        s3FactCpaCommissionsObject commission = new s3FactCpaCommissionsObject();
+public class S3FactCpaCommissionsFactory {
+    public static S3FactCpaCommissionsObject generates3FactCpaCommissionsObject(ClientHelper client) {
+        S3FactCpaCommissionsObject commission = new S3FactCpaCommissionsObject();
         commission.id = ((long) getRandomIntPositive());
         commission.date = getCurrentDate();
         commission.brandUid = 1;

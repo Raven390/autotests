@@ -4,7 +4,7 @@ import businessObjects.db.clickhouse.accountIbRelation.AccountIbRelationObject;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
-import businessObjects.db.clickhouse.s3FactCpaCommissions.s3FactCpaCommissionsObject;
+import businessObjects.db.clickhouse.s3FactCpaCommissions.S3FactCpaCommissionsObject;
 import businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsObject;
 import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,7 +30,7 @@ import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFacto
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static businessObjects.db.clickhouse.s3FactCpaCommissions.s3FactCpaCommissionsFactory.generates3FactCpaCommissionsObject;
+import static businessObjects.db.clickhouse.s3FactCpaCommissions.S3FactCpaCommissionsFactory.generates3FactCpaCommissionsObject;
 import static businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -305,9 +305,9 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @DisplayName("General Tab. User can see CPA commissions values in clients general info")
     public void CpaAmountTest() {
         deleteObjectFromDb(S3_FACT_CPA_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
-        s3FactCpaCommissionsObject commission = generates3FactCpaCommissionsObject(client);
+        S3FactCpaCommissionsObject commission = generates3FactCpaCommissionsObject(client);
         insertObjectToDb(S3_FACT_CPA_COMMISSIONS, commission);
-        s3FactCpaCommissionsObject commission2 = generates3FactCpaCommissionsObject(client);
+        S3FactCpaCommissionsObject commission2 = generates3FactCpaCommissionsObject(client);
         commission2.setDate("2023-02-24");
         insertObjectToDb(S3_FACT_CPA_COMMISSIONS, commission2);
 

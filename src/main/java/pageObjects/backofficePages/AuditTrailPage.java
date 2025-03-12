@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class AuditTrailPage extends AbstractPage {
 
@@ -40,7 +41,7 @@ public class AuditTrailPage extends AbstractPage {
 
     @Step("Open users general tab")
     public void navigateAuditTrailTab(String ucid) {
-        page.navigate("http://k8s-test-nginxrev-55e209d446-410128713.us-east-1.elb.amazonaws.com/investigation/" + ucid);
+        page.navigate(String.format("%sinvestigation/%s", BASE_URL_E2E, ucid));
         waitForPageToLoad();
         auditTrailTab.click();
         waitForPageToLoad();

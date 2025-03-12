@@ -3,12 +3,14 @@ package tests.mitigationServiceApiTests;
 import businessObjects.api.mitigationService.*;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
+import businessObjects.kafka.restrictionEvents.ClientRestrictionApply;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
 import helpers.database.AuditHelper;
 import helpers.database.MitigationHelper;
+import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
@@ -17,11 +19,16 @@ import tests.TestBaseApi;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 
 import static businessObjects.api.mitigationService.MitigationServiceRequest.*;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestamp;
@@ -435,93 +442,32 @@ public class MitigationServiceApiTest extends TestBaseApi {
         RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1075")
+    @DisplayName("Verify logic for internalReason field")
+    public void internalReasonTest() throws IOException, InterruptedException {
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalProperty[]{new PostRestrictionRequestBody.AdditionalProperty("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalProperty("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalProperty("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
+        Response response = postRestriction(postRestriction);
+        assertThat("Verify 200 response code", response.code(), is(200));
+        assertThat(response.body(), notNullValue());
+        KafkaHelper kafka = new KafkaHelper();
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY, restrictionClient.getUserId().toString());
+        boolean internalReasonFound = false;
+        String expectedInternalReason = """
+                Potential Fraud Type: Hedging (mirror trading) - Description: Client are engaging in Hedging (Mirror trading) fraud in order to abuse our deposit bonus scheme and gain guaranteed profit through their trades.
+                Confirmed Fraud Type: Pricing errors - Description: Client is taking advantage of errors in our quotes/pricing in order to make guaranteed profits.
+                Restriction: Login CRM - Description: Considering the severity of certain clients' actions, their accounts need to be blocked completely. This can be relevant for more serious cases of Market manipulation, thin liquidity scalping, gap trading and more.
+                Connection Score is 0.75""";
+        for (String message : consumedMessages) {
+            ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
+            System.out.println((kafkaMessage.restrictions[0].internalReason));
+            if ((kafkaMessage.restrictions.length == 1) && Objects.equals(kafkaMessage.restrictions[0].internalReason, expectedInternalReason)) {
+                internalReasonFound = true;
+            }
+        }
+        assertThat("Verify internalReason was found in one of the kafka messages ", internalReasonFound, is(true));
+    }
 
-//    @Test
-//    @DisplayName("Mitigation service tests")
-//    @AllureId("")
-//    public void getRestrictionsByUcidTest() throws IOException {
-//
-//        Response response = getRestrictionsByUcid("vantage-1370903308");
-//        GetRestrictionResponseBody[] restrictionBody = objectMapper.readValue(
-//                response.body().string(),
-//                GetRestrictionResponseBody[].class
-//        );
-//        System.out.println(Arrays.toString(restrictionBody));
-//        System.out.println(response.code());
-//    }
-//
-//    @Test
-//    @DisplayName("Mitigation service tests")
-//    @AllureId("")
-//    public void postRestrictionsTest() throws IOException {
-//
-//        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-//                "vantage-10079867",
-//                "05",
-//                "GENERAL",
-//                null,
-//                null,
-//                "Integration test",
-//                new PostRestrictionRequestBody.UpdatedBy("string", "string")
-//        );
-//
-//        Response response = postRestriction(postRestrictionRequestBody);
-//        PostRestrictionResponse restrictionBody = objectMapper.readValue(
-//                response.body().string(),
-//                PostRestrictionResponse.class
-//        );
-//        System.out.println(restrictionBody);
-//        System.out.println(response.code());
-//    }
-//
-//    @Test
-//    @DisplayName("Mitigation service tests")
-//    @AllureId("")
-//    public void cancelRestrictionTest() throws IOException {
-//
-//        KafkaHelper kafka = new KafkaHelper();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//
-////         // confirm apply
-////         ApplyConfirmedKafkaMessage applyConfirmedKafkaMessage = new ApplyConfirmedKafkaMessage(
-////                 "2024-09-11T12:00:00Z",
-////                 new ApplyConfirmedKafkaMessage.Restriction[]{
-////                         new ApplyConfirmedKafkaMessage.Restriction(183, "Applied", "")
-////                 });
-////
-////         kafka.produceMessage("13", objectMapper.writeValueAsString(applyConfirmedKafkaMessage), "client.restrictions.applyConfirmed");
-//
-//        // cancel
-//        CancelRestrictionRequestBody cancelRestrictionRequestBody = new CancelRestrictionRequestBody(
-//                "string",
-//                new CancelRestrictionRequestBody.UpdatedBy("string", "string")
-//        );
-//
-//        Response response = cancelRestrictionById(184, cancelRestrictionRequestBody);
-//        System.out.println(response.body().string());
-//        System.out.println(response.code());
-//
-//        // confirm cancel
-//        CancelConfirmedKafkaMessage cancelConfirmedKafkaMessage = new CancelConfirmedKafkaMessage(
-//                "2024-09-11T12:00:00Z",
-//                new CancelConfirmedKafkaMessage.Restriction[]{
-//                        new CancelConfirmedKafkaMessage.Restriction(184, "Canceled")
-//                });
-//
-//        kafka.produceMessage("13", objectMapper.writeValueAsString(cancelConfirmedKafkaMessage), "client.restrictions.cancelConfirmed");
-//    }
-//
-//    @Test
-//    @DisplayName("Mitigation service tests")
-//    @AllureId("")
-//    public void getRestrictionCatalogTest() throws IOException {
-//
-//        Response response = getRestrictionCatalog();
-//        RestrictionCatalogEntry[] restrictionCatalog = objectMapper.readValue(
-//                response.body().string(),
-//                RestrictionCatalogEntry[].class
-//        );
-//        System.out.println(Arrays.toString(restrictionCatalog));
-//        System.out.println(response.code());
-//    }
 }
