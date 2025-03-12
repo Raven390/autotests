@@ -210,6 +210,31 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     public void IbNotDisplayedTest() {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
+        commission = generateS3FactIbSalesCommissionsClient(client);
+        commission.setIbRebateAccount(242_424_241);
+        commission.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
+        commission2.setIbRebateAccount(232_323_231);
+        commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setDlInsertTs("2025-02-23 09:06:22");
+        commission2.setDlUpdateTs("2025-02-23 09:06:21");
+        insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(commission, commission2));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalTab.navigate(client.getUcid());
+        generalTab.IbSectionNotDisplayed();
+    }
+
+    @Test
+    @AllureId("1074")
+    @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
+    @DisplayName("General Tab. User can't see IB account in clients general info if there only rebate data exist without connection record")
+    public void IbNotDisplayedOnlyRebateExistTest() {
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
