@@ -59,8 +59,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         trade2.serverId = account2.serverIdSt.longValue();
         trade2.platform = "MT5";
         trade2.ticketType = "Sell";
-        trade2.openTime = getPreviousWeekTimestampDbFormat();
-        trade2.closeTime = getYesterdayTimestampDbFormat();
+        trade2.openTimeUtc = getPreviousWeekTimestampDbFormat();
+        trade2.closeTimeUtc = getYesterdayTimestampDbFormat();
         trade2.symbol = "GBPJPY";
         trade2.profitUsd = 101.22;
         trade2.notionalValueUsd = 123.44;
@@ -87,13 +87,13 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @AllureId("575")
     @DisplayName("Verify sorting by open column in trading - operations tab")
     public void verifyTradingInfoDealsOpenSortingTest() {
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
-        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Oldest → Newest"));
-        tradingPage.sortByOpen();
         assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
         assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Newest → Oldest"));
+        tradingPage.sortByOpen();
+        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
+        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert sort by open popup text", tradingPage.getSortByOpenPopupText(), equalTo("Change sorting to:Oldest → Newest"));
     }
 
     @Test
@@ -112,8 +112,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
         assertThat("Assert sort by profit popup text", tradingPage.getSortByProfitPopupText(), equalTo("Remove sorting"));
         tradingPage.sortByProfit();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
     }
 
     @Test
@@ -132,8 +132,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
         assertThat("Assert sort by close popup text", tradingPage.getSortByClosePopupText(), equalTo("Remove sorting"));
         tradingPage.sortByClose();
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by open date in trading - operations tab")
     public void verifyTradingInfoDealsOpenDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
+        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTimeUtc));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -182,7 +182,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by close date in trading - operations tab")
     public void verifyTradingInfoDealsCloseDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTime));
+        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTimeUtc));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -283,10 +283,10 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.reasonName);
         tradingPage.resetMethodFilterAndVerify();
         // Open date
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
+        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTimeUtc));
         tradingPage.resetOpenDateFilterAndVerify();
         // Close date
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTime));
+        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTimeUtc));
         tradingPage.resetCloseDateFilterAndVerify();
         // Duration
         tradingPage.fillDurationValues("1", "");
@@ -302,8 +302,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.clickFilterCheckbox(trade2.account.toString());
         tradingPage.clickFilterCheckbox(trade2.symbol);
         tradingPage.clickFilterCheckbox(trade2.reasonName);
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTime));
+        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTimeUtc));
+        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTimeUtc));
         tradingPage.fillDurationValues("1", "");
         tradingPage.fillProfitValues(trade2.profitUsd.toString(), "200");
         tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
