@@ -83,32 +83,32 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         // Verify table headers
         tradingPage.operationsRendersTest();
         // Verify 1st row data
-        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
-        assertThat("Assert value in type column for the 1st operation is as expected", tradingPage.getOperationTypeByIndex(0), equalTo(String.format("%s%s", trade1.symbol, trade1.ticketType)));
-        assertThat("Assert value in volume column for the 1st operation is as expected", tradingPage.getOperationVolumeByIndex(0), equalTo(String.format("%s lots%s USD", trade1.volumeLots, trade1.notionalValueUsd)));
-        assertThat("Assert value in profit column for the 1st operation is as expected", tradingPage.getOperationProfitByIndex(0), equalTo(String.format("%s USD", trade1.profitUsd.toString())));
+        assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
+        assertThat("Assert value in type column for the 1st operation is as expected", tradingPage.getOperationTypeByIndex(0), equalTo(String.format("%s%s", trade2.symbol, trade2.ticketType)));
+        assertThat("Assert value in volume column for the 1st operation is as expected", tradingPage.getOperationVolumeByIndex(0), equalTo(String.format("%s lots%s USD", trade2.volumeLots, trade2.notionalValueUsd)));
+        assertThat("Assert value in profit column for the 1st operation is as expected", tradingPage.getOperationProfitByIndex(0), equalTo(String.format("%s USD", trade2.profitUsd.toString())));
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
-        assertThat("Assert value in open column for the 1st operation is as expected", tradingPage.getOperationOpenByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade1.openPrice), trade1.openTime)));
-        assertThat("Assert value in close column for the 1st operation is as expected", tradingPage.getOperationCloseByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade1.closePrice), trade1.closeTime)));
-        assertThat("Assert value in tp/sl column for the 1st operation is as expected", tradingPage.getOperationTpSlByIndex(0), equalTo(String.format("%s USD%s USD", trade1.takeProfit, trade1.stopLoss)));
-        assertThat("Assert value in swap column for the 1st operation is as expected", tradingPage.getOperationSwapByIndex(0), equalTo(String.format("%s USD", trade1.storageUsd.toString())));
-        assertThat("Assert value in sr column for the 1st operation is as expected", tradingPage.getOperationSrByIndex(0), equalTo(String.format("%s USD", trade1.spreadRevenueUsd.toString())));
-        assertThat("Assert value in commission column for the 1st operation is as expected", tradingPage.getOperationCommissionByIndex(0), equalTo(String.format("%s USD", trade1.commissionUsd.toString())));
-        assertThat("Assert value in method column for the 1st operation is as expected", tradingPage.getOperationMethodByIndex(0), equalTo(trade1.reasonName));
-        assertThat("Assert value in comment column for the 1st operation is as expected", tradingPage.getOperationCommentByIndex(0), equalTo(trade1.comment));
+        assertThat("Assert value in open column for the 1st operation is as expected", tradingPage.getOperationOpenByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade2.openPrice), trade2.openTimeUtc)));
+        assertThat("Assert value in close column for the 1st operation is as expected", tradingPage.getOperationCloseByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade2.closePrice), trade2.closeTimeUtc)));
+        assertThat("Assert value in tp/sl column for the 1st operation is as expected", tradingPage.getOperationTpSlByIndex(0), equalTo(String.format("TP %s USDSL %s USD", trade2.takeProfit, trade2.stopLoss)));
+        assertThat("Assert value in swap column for the 1st operation is as expected", tradingPage.getOperationSwapByIndex(0), equalTo(String.format("%s USD", trade2.storageUsd.toString())));
+        assertThat("Assert value in sr column for the 1st operation is as expected", tradingPage.getOperationSrByIndex(0), equalTo(String.format("%s USD", trade2.spreadRevenueUsd.toString())));
+        assertThat("Assert value in commission column for the 1st operation is as expected", tradingPage.getOperationCommissionByIndex(0), equalTo(String.format("%s USD", trade2.commissionUsd.toString())));
+        assertThat("Assert value in method column for the 1st operation is as expected", tradingPage.getOperationMethodByIndex(0), equalTo(trade2.reasonName));
+        assertThat("Assert value in comment column for the 1st operation is as expected", tradingPage.getOperationCommentByIndex(0), equalTo(trade2.comment));
         // Verify 2nd row data
-        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
-        assertThat("Assert value in type column for the 2nd operation is as expected", tradingPage.getOperationTypeByIndex(1), equalTo(String.format("%s%s", trade2.symbol, trade2.ticketType)));
-        assertThat("Assert value in volume column for the 2nd operation is as expected", tradingPage.getOperationVolumeByIndex(1), equalTo(String.format("%s lots%s USD", trade2.volumeLots, trade2.notionalValueUsd)));
-        assertThat("Assert value in profit column for the 2nd operation is as expected", tradingPage.getOperationProfitByIndex(1), equalTo(String.format("%s USD", trade2.profitUsd.toString())));
-        assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade2.openPrice), trade2.openTime)));
-        assertThat("Assert value in close column for the 2nd operation is as expected", tradingPage.getOperationCloseByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade2.closePrice), trade2.closeTime)));
-        assertThat("Assert value in tp/sl column for the 2nd operation is as expected", tradingPage.getOperationTpSlByIndex(1), equalTo(String.format("%s USD%s USD", trade2.takeProfit, trade2.stopLoss)));
-        assertThat("Assert value in swap column for the 2nd operation is as expected", tradingPage.getOperationSwapByIndex(1), equalTo(String.format("%s USD", trade2.storageUsd.toString())));
-        assertThat("Assert value in sr column for the 2nd operation is as expected", tradingPage.getOperationSrByIndex(1), equalTo(String.format("%s USD", trade2.spreadRevenueUsd.toString())));
-        assertThat("Assert value in commission column for the 2nd operation is as expected", tradingPage.getOperationCommissionByIndex(1), equalTo(String.format("%s USD", trade2.commissionUsd.toString())));
-        assertThat("Assert value in method column for the 2nd operation is as expected", tradingPage.getOperationMethodByIndex(1), equalTo(trade2.reasonName));
-        assertThat("Assert value in comment column for the 2nd operation is as expected", tradingPage.getOperationCommentByIndex(1), equalTo(trade2.comment));
+        assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
+        assertThat("Assert value in type column for the 2nd operation is as expected", tradingPage.getOperationTypeByIndex(1), equalTo(String.format("%s%s", trade1.symbol, trade1.ticketType)));
+        assertThat("Assert value in volume column for the 2nd operation is as expected", tradingPage.getOperationVolumeByIndex(1), equalTo(String.format("%s lots%s USD", trade1.volumeLots, trade1.notionalValueUsd)));
+        assertThat("Assert value in profit column for the 2nd operation is as expected", tradingPage.getOperationProfitByIndex(1), equalTo(String.format("%s USD", trade1.profitUsd.toString())));
+        assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade1.openPrice), trade1.openTimeUtc)));
+        assertThat("Assert value in close column for the 2nd operation is as expected", tradingPage.getOperationCloseByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade1.closePrice), trade1.closeTimeUtc)));
+        assertThat("Assert value in tp/sl column for the 2nd operation is as expected", tradingPage.getOperationTpSlByIndex(1), equalTo(String.format("TP %s USDSL %s USD", trade1.takeProfit, trade1.stopLoss)));
+        assertThat("Assert value in swap column for the 2nd operation is as expected", tradingPage.getOperationSwapByIndex(1), equalTo(String.format("%s USD", trade1.storageUsd.toString())));
+        assertThat("Assert value in sr column for the 2nd operation is as expected", tradingPage.getOperationSrByIndex(1), equalTo(String.format("%s USD", trade1.spreadRevenueUsd.toString())));
+        assertThat("Assert value in commission column for the 2nd operation is as expected", tradingPage.getOperationCommissionByIndex(1), equalTo(String.format("%s USD", trade1.commissionUsd.toString())));
+        assertThat("Assert value in method column for the 2nd operation is as expected", tradingPage.getOperationMethodByIndex(1), equalTo(trade1.reasonName));
+        assertThat("Assert value in comment column for the 2nd operation is as expected", tradingPage.getOperationCommentByIndex(1), equalTo(trade1.comment));
     }
 
     @AfterAll
