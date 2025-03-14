@@ -49,6 +49,8 @@ public class GetTradesGroupByTests extends TestBaseApi {
         trade1.entry = 1;
         trade1.time = "2024-01-01 00:00:00";
         trade1.timeUtc = "2024-01-01 00:00:00";
+        trade1.profitUsd = 2d;
+        trade1.profit = 2d;
         trade2 = generateTradeByClient(client);
         trade2.action = 0;
         trade2.time = "2030-01-01 00:00:00";
@@ -260,7 +262,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
 
         GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.symbol, trade1.profit + trade2.profit, trade1.profit + trade2.profit, trade1.volumeLots + trade2.volumeLots);
         GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.symbol, trade3.profit + trade4.profit, trade3.profit + trade4.profit, trade3.volumeLots + trade4.volumeLots);
-        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
+        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup2, responseGroup1));
     }
 
     @Test
