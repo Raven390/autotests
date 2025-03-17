@@ -3,6 +3,7 @@ package businessObjects.db.clickhouse.mtMt4TradesCoerced;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Reason;
+import helpers.data.enums.Symbol;
 import helpers.data.enums.TicketType;
 import io.qameta.allure.Step;
 
@@ -35,6 +36,7 @@ public class MtMt4TradesCoercedObjectFactory {
         String reason = (randomEnum(Reason.class).getDisplayName());
         String type = (randomEnum(TicketType.class).getDisplayName());
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
+        trade.symbol = Symbol.getRandomSymbol().getSymbolCode();
         trade.reasonName = reason;
         trade.ticketType = type;
         trade.openPrice = getRandomRoundedDouble(0.00, 5000);

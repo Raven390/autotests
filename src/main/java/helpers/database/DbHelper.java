@@ -140,12 +140,31 @@ public class DbHelper {
         });
     }
 
+    @Step("Insert objects: {objects}")
+    public static <T> void insertObjectsToDbSlow(String tableName, List<T> objects) {
+        executeWithRetry(() -> {
+            insertObjectsToDbSlow(DbName.CLICKHOUSE, tableName, objects);
+            return null;
+        });
+    }
+
     @Step("Insert objects: {objects} to {dbName}")
     public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws Exception {
         if (objects == null || objects.isEmpty()) return;
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
                 insertObjects(connection, tableName, objects);
+            }
+            return null;
+        });
+    }
+
+    @Step("Insert objects: {objects} to {dbName}")
+    public static <T> void insertObjectsToDbSlow(DbName dbName, String tableName, List<T> objects) throws Exception {
+        if (objects == null || objects.isEmpty()) return;
+        executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                insertObjectsSlow(connection, tableName, objects);
             }
             return null;
         });
@@ -336,6 +355,16 @@ public class DbHelper {
         Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
         for (T obj : objects) {
             insertSingleObject(connection, tableName, obj, fieldMappings);
+        }
+    }
+
+    private static <T> void insertObjectsSlow(Connection connection, String tableName, List<T> objects)
+            throws SQLException,
+            ReflectiveOperationException, InterruptedException {
+        Map<String, String> fieldMappings = retrieveColumnMappings(connection, tableName, objects.get(0).getClass());
+        for (T obj : objects) {
+            insertSingleObject(connection, tableName, obj, fieldMappings);
+            Thread.sleep(500);
         }
     }
 
