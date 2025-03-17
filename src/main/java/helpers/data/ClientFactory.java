@@ -31,6 +31,12 @@ public class ClientFactory {
         );
     }
 
+    public static ClientHelper getRandomStarTraderClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.STAR_TRADER);
+        return client;
+    }
+
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
