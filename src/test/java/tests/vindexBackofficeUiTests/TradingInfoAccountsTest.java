@@ -89,8 +89,6 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     public void verifyAccountsCardViewTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsCoreUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();

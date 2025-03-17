@@ -37,6 +37,12 @@ public class ClientFactory {
         return client;
     }
 
+    public static ClientHelper getRandomUltimaMarketsClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.ULTIMA_MARKETS);
+        return client;
+    }
+
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
