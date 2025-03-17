@@ -73,6 +73,7 @@ public class RestrictionPage extends AbstractPage {
     private final Locator activitySection;
     private final Locator tooltip;
 
+    private static final String RESTRICTION_ITEM_BY_NAME_PATTERN = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -298,6 +299,11 @@ public class RestrictionPage extends AbstractPage {
     @Step("Click checked Close Only Mode tumbler")
     public void clickCheckedCloseOnly() {
         checkedCloseOnlyMode.click();
+    }
+
+    @Step("Check if restriction with name {restrictionName} is visible")
+    public boolean isRestrictionPresent(String restrictionName) {
+        return page.locator(String.format(RESTRICTION_ITEM_BY_NAME_PATTERN, restrictionName)).isVisible();
     }
 
     @Step("Click checked OffQuotes tumbler")
@@ -821,5 +827,10 @@ public class RestrictionPage extends AbstractPage {
             }
         }
     }
+
+    public void waitForPageToLoad() {
+        page.waitForSelector("//div[@class='v-restrictions-tab-list']", new Page.WaitForSelectorOptions().setState(VISIBLE));
+    }
+
 }
 

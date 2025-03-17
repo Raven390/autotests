@@ -12,28 +12,32 @@ public class PostRestrictionResponse {
     @JsonProperty("ucid")
     public String ucid;
 
+    @JsonProperty("code")
+    public String code;
+
     public PostRestrictionResponse() {
     }
 
-    public PostRestrictionResponse(Integer id, String ucid) {
+    public PostRestrictionResponse(Integer id, String ucid, String code) {
         this.id = id;
         this.ucid = ucid;
+        this.code = code;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostRestrictionResponse that = (PostRestrictionResponse) o;
-        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid);
+        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(code, that.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ucid);
+        return Objects.hash(id, ucid, code);
     }
 
     @Override
     public String toString() {
-        return "PostRestrictionResponse{" + "id=" + id + ", ucid='" + ucid + '\'' + '}';
+        return "PostRestrictionResponse{" + "id=" + id + ", ucid='" + ucid + '\'' + ", code='" + code + '\'' + '}';
     }
 }
