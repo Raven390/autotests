@@ -45,6 +45,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     public void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText(crmTbUser1.brand);

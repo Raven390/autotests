@@ -33,7 +33,7 @@ import static businessObjects.db.clickhouse.s3FactCpaCommissions.S3FactCpaCommis
 import static businessObjects.db.clickhouse.s3FactIbSalesCommissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static businessObjects.db.clickhouse.s3FactLoginMetrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.ClientFactory.getRandomUltimaMarketsClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
@@ -48,8 +48,8 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final ClientHelper client = getRandomVantageClientAllFields();
-    private static final ClientHelper ibClient = getRandomVantageClientAllFields();
+    private static final ClientHelper client = getRandomUltimaMarketsClientAllFields();
+    private static final ClientHelper ibClient = getRandomUltimaMarketsClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbUserObject ibCrmTbUser = generateUserByClient(ibClient);
     private static final CrmTbUserExtendsObject crmTbUserExtends = generateCrmTbUserExtendsByClient(client);
@@ -133,7 +133,7 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         assertThat("Verify CPA overview summary clients totals items", ibCpaOverviewPage.getClientsTotalsItems(), contains(String.format("%sVolume", formatter.format((factLoginMetrics.getDailyTradingVolIn() + factLoginMetrics.getDailyTradingVolOut()) / 1_000_000)), String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())), String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())), String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())), String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw())), String.format("%sIB rebates", formatter.format(commission.getIbCommission()))));
         ibCpaOverviewPage.clickOverviewSubheaderIcon();
         page.waitForTimeout(2000);
-        PlaywrightAssertions.assertThat(page.context().pages().getLast()).hasURL(String.format("https://risktool.risk-vantagefx.com//cpa?brand=%s&cpa=%s", client.getBrand(), client.getCpaId()));
+        PlaywrightAssertions.assertThat(page.context().pages().getLast()).hasURL(String.format("https://risktool.risk-vantagefx.com//cpa?brand=Ultimas&cpa=%s", client.getCpaId()));
     }
 
 

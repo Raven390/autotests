@@ -183,7 +183,7 @@ public class TradingPage extends AbstractPage {
     private final Locator ibRebatesWidgetText;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
-    private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'v-tooltip-content')]";
+    private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
     private static final String ACCOUNT_TABLE_COLUMN = "//td[contains(@class,'v-trading-tab-accounts-table__column_type_account')]%s";
     private static final String ACCOUNT_DATES_ELEMENT = "//div[@class='v-trading-tab-accounts-card__dates']%s";
     private static final String ACCOUNT_TABLE_HEADER_PATTERN = "//th[contains(@class,'v-trading-tab-accounts-table__column_type_%s')]";
@@ -721,49 +721,49 @@ public class TradingPage extends AbstractPage {
     @Step("Verify account id popup in card view is as expected")
     public void verifyAccountIdPopup() {
         accountCard.first().locator(accountId).last().hover();
-        assertThat(popupElement).containsText("Login");
+        assertThat(popupElement.last()).containsText("Login");
     }
 
     @Step("Verify account balance popup in card view is as expected")
     public void verifyBalancePopup(int accountId) {
         accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_header-2')]").hover();
-        assertThat(popupElement).containsText("Balance");
+        assertThat(popupElement.last()).containsText("Balance");
     }
 
     @Step("Verify account balance usd popup in card view is as expected")
     public void verifyBalanceUsdPopup(int accountId) {
         accountCard.nth(getAccountIndex(accountId)).locator(balanceElement).locator("//span[contains(@class,'g-text_variant_subheader-2')]").hover();
-        assertThat(popupElement).containsText("Balance in USD");
+        assertThat(popupElement.last()).containsText("Balance in USD");
     }
 
     @Step("Verify account status popup in card view is as expected")
     public void verifyStatusPopup() {
         accountCard.first().locator(statusElement).hover();
-        assertThat(popupElement).containsText("Status");
+        assertThat(popupElement.last()).containsText("Status");
     }
 
     @Step("Verify account platform popup in card view is as expected")
     public void verifyPlatformPopup() {
         accountCard.first().locator(platformElement).hover();
-        assertThat(popupElement).containsText("Platform");
+        assertThat(popupElement.last()).containsText("Platform");
     }
 
     @Step("Verify account type popup in card view is as expected")
     public void verifyAccountTypePopup() {
         accountCard.first().locator(accountTypeElement).hover();
-        assertThat(popupElement).containsText("Account type");
+        assertThat(popupElement.last()).containsText("Account type");
     }
 
     @Step("Verify account created time popup in card view is as expected")
     public void verifyCreatedTimePopup() {
         accountCard.first().locator(createdTimeElement).hover();
-        assertThat(popupElement).containsText("Created time");
+        assertThat(popupElement.last()).containsText("Created time");
     }
 
     @Step("Verify account updated time popup in card view is as expected")
     public void verifyUpdatedTimePopup() {
         accountCard.first().locator(updatedTimeElement).hover();
-        assertThat(popupElement).containsText("Updated time");
+        assertThat(popupElement.last()).containsText("Updated time");
     }
 
     @Step("Click table view button")

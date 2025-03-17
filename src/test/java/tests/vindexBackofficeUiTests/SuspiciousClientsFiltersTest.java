@@ -54,6 +54,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     public void verifyBrandFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectBrandFilterByText("Vantage");
@@ -75,6 +76,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     public void verifyRuleFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         String ruleName = "Registration";
@@ -94,6 +96,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     public void verifyCountryFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         investigationPage.selectCountryFilter("Cyprus");
@@ -115,6 +118,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     public void verifyAssigneeFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.navigateToClient(crmTbUser1.ucid);
         investigationPage.investigateClientCard();
@@ -137,6 +141,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     public void verifyResetFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
         // Brand

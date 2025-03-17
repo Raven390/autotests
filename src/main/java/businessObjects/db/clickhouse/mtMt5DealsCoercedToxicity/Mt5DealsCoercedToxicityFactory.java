@@ -10,11 +10,11 @@ public class Mt5DealsCoercedToxicityFactory {
 
     @Step("Generate mt5 deals coerced toxicity by client")
     public static Mt5DealsCoercedToxicityObject generateMt5DealsCoercedToxicityByClient(ClientHelper client) {
-        return new Mt5DealsCoercedToxicityObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1, 1d, 1d, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 1234.56, 25.6, 0, getCurrentTimestampDbFormat(), "Automation tests");
+        return new Mt5DealsCoercedToxicityObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1, 1d, 1d, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 1234.56, 0, getCurrentTimestampDbFormat(), "Automation tests");
     }
 
     @Step("Generate mt5 deals coerced toxicity by client")
     public static Mt5DealsCoercedToxicityObject generateMt5DealsCoercedToxicityAdditionalByClient(ClientHelper client) {
-        return new Mt5DealsCoercedToxicityObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount2(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1, 1d, 1d, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 1234.56, 25.6, 0, getCurrentTimestampDbFormat(), "Automation tests");
+        return new Mt5DealsCoercedToxicityObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount2(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomIntPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), "EURUSD", "EURUSD", "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1, 1d, 1d, 1, 1d, 1L, getRandomLongPositive(), "comment", 1d, 2d, 1d, 1d, 1d, 1d, 1234.56, 0, getCurrentTimestampDbFormat(), "Automation tests");
     }
 }
