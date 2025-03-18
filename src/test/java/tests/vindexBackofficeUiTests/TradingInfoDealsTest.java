@@ -7,7 +7,6 @@ import businessObjects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.data.enums.DateTimeFormat;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
@@ -23,6 +22,7 @@ import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.gen
 import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -30,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.transformDateMinusOffset;
 
 public class TradingInfoDealsTest extends TestBaseWeb {
 
@@ -61,8 +62,8 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         trade2.account = client.getTradingAccount2().longValue();
         trade2.serverId = account2.serverIdSt.longValue();
         trade2.platform = "MT5";
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
-        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
+        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        trade2.openTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
@@ -88,9 +89,9 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         assertThat("Assert value in volume column for the 1st operation is as expected", tradingPage.getOperationVolumeByIndex(0), equalTo(String.format("%s lots%s USD", trade2.volumeLots, trade2.notionalValueUsd)));
         assertThat("Assert value in profit column for the 1st operation is as expected", tradingPage.getOperationProfitByIndex(0), equalTo(String.format("%s USD", trade2.profitUsd.toString())));
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
-        assertThat("Assert value in open column for the 1st operation is as expected", tradingPage.getOperationOpenByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade2.openPrice), trade2.openTimeUtc)));
-        assertThat("Assert value in close column for the 1st operation is as expected", tradingPage.getOperationCloseByIndex(0), equalTo(String.format("%s USD%s", formatter.format(trade2.closePrice), trade2.closeTimeUtc)));
-        assertThat("Assert value in tp/sl column for the 1st operation is as expected", tradingPage.getOperationTpSlByIndex(0), equalTo(String.format("TP %s USDSL %s USD", trade2.takeProfit, trade2.stopLoss)));
+        assertThat("Assert value in open column for the 1st operation is as expected", tradingPage.getOperationOpenByIndex(0), equalTo(String.format("%s%s", formatter.format(trade2.openPrice), transformDateMinusOffset(trade2.openTimeUtc, DATE_AND_TIME, DATE_AND_TIME, 0, 0, 0, 3, 0))));
+        assertThat("Assert value in close column for the 1st operation is as expected", tradingPage.getOperationCloseByIndex(0), equalTo(String.format("%s%s", formatter.format(trade2.closePrice), transformDateMinusOffset(trade2.closeTimeUtc, DATE_AND_TIME, DATE_AND_TIME, 0, 0, 0, 3, 0))));
+        assertThat("Assert value in tp/sl column for the 1st operation is as expected", tradingPage.getOperationTpSlByIndex(0), equalTo(String.format("TP %sSL %s", trade2.takeProfit, trade2.stopLoss)));
         assertThat("Assert value in swap column for the 1st operation is as expected", tradingPage.getOperationSwapByIndex(0), equalTo(String.format("%s USD", trade2.storageUsd.toString())));
         assertThat("Assert value in sr column for the 1st operation is as expected", tradingPage.getOperationSrByIndex(0), equalTo(String.format("%s USD", trade2.spreadRevenueUsd.toString())));
         assertThat("Assert value in commission column for the 1st operation is as expected", tradingPage.getOperationCommissionByIndex(0), equalTo(String.format("%s USD", trade2.commissionUsd.toString())));
@@ -101,9 +102,9 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         assertThat("Assert value in type column for the 2nd operation is as expected", tradingPage.getOperationTypeByIndex(1), equalTo(String.format("%s%s", trade1.symbol, trade1.ticketType)));
         assertThat("Assert value in volume column for the 2nd operation is as expected", tradingPage.getOperationVolumeByIndex(1), equalTo(String.format("%s lots%s USD", trade1.volumeLots, trade1.notionalValueUsd)));
         assertThat("Assert value in profit column for the 2nd operation is as expected", tradingPage.getOperationProfitByIndex(1), equalTo(String.format("%s USD", trade1.profitUsd.toString())));
-        assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade1.openPrice), trade1.openTimeUtc)));
-        assertThat("Assert value in close column for the 2nd operation is as expected", tradingPage.getOperationCloseByIndex(1), equalTo(String.format("%s USD%s", formatter.format(trade1.closePrice), trade1.closeTimeUtc)));
-        assertThat("Assert value in tp/sl column for the 2nd operation is as expected", tradingPage.getOperationTpSlByIndex(1), equalTo(String.format("TP %s USDSL %s USD", trade1.takeProfit, trade1.stopLoss)));
+        assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s%s", formatter.format(trade1.openPrice), transformDateMinusOffset(trade1.openTimeUtc, DATE_AND_TIME, DATE_AND_TIME, 0, 0, 0, 3, 0))));
+        assertThat("Assert value in close column for the 2nd operation is as expected", tradingPage.getOperationCloseByIndex(1), equalTo(String.format("%s%s", formatter.format(trade1.closePrice), transformDateMinusOffset(trade1.closeTimeUtc, DATE_AND_TIME, DATE_AND_TIME, 0, 0, 0, 3, 0))));
+        assertThat("Assert value in tp/sl column for the 2nd operation is as expected", tradingPage.getOperationTpSlByIndex(1), equalTo(String.format("TP %sSL %s", trade1.takeProfit, trade1.stopLoss)));
         assertThat("Assert value in swap column for the 2nd operation is as expected", tradingPage.getOperationSwapByIndex(1), equalTo(String.format("%s USD", trade1.storageUsd.toString())));
         assertThat("Assert value in sr column for the 2nd operation is as expected", tradingPage.getOperationSrByIndex(1), equalTo(String.format("%s USD", trade1.spreadRevenueUsd.toString())));
         assertThat("Assert value in commission column for the 2nd operation is as expected", tradingPage.getOperationCommissionByIndex(1), equalTo(String.format("%s USD", trade1.commissionUsd.toString())));

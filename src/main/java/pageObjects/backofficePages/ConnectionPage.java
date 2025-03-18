@@ -158,7 +158,7 @@ public class ConnectionPage extends AbstractPage {
         this.connectionCardLink = page.locator(CONNECTION_CARD_LINK_SELECTOR);
         this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header__buttons']/button");
         this.connectionTableAttribute = page.locator("//div[@class='v-connection-search-table-view__attributes-list']/div");
-        this.unmaskConnectionTableDataButton = page.locator("//div[@class='v-connection-search-table-view__attribute-column-name']/button");
+        this.unmaskConnectionTableDataButton = page.locator("//div[contains(@class,'v-connection-search-table-view__custom-header-cell')]");
         this.unmaskAttributeCardDataButton = page.locator("//div[@class = 'v-graph-attribute-details']/div/div/button[1]");
         this.filterButton = page.locator("//div[@class='v-connection-search-filter-button__filters']/button");
         this.filterOptionButton = page.locator("//span[@class='g-button__text']");

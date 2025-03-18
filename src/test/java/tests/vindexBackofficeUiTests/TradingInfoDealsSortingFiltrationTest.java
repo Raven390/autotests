@@ -59,8 +59,8 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         trade2.serverId = account2.serverIdSt.longValue();
         trade2.platform = "MT5";
         trade2.ticketType = "Sell";
-        trade2.openTimeUtc = getPreviousWeekTimestampDbFormat();
-        trade2.closeTimeUtc = getYesterdayTimestampDbFormat();
+        trade2.openTime = getPreviousWeekTimestampDbFormat();
+        trade2.closeTime = getYesterdayTimestampDbFormat();
         trade2.symbol = "GBPJPY";
         trade2.profitUsd = 101.22;
         trade2.notionalValueUsd = 123.44;
@@ -169,7 +169,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by open date in trading - operations tab")
     public void verifyTradingInfoDealsOpenDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTimeUtc));
+        tradingPage.selectOpenDate(convertDateTimeDbToDate(trade2.openTime));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -182,7 +182,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by close date in trading - operations tab")
     public void verifyTradingInfoDealsCloseDateFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTimeUtc));
+        tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTime));
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));

@@ -357,6 +357,27 @@ public class Utils {
         }
     }
 
+    public static String transformDateMinusOffset(String dateTimeString, DateTimeFormat formatFrom,
+            DateTimeFormat formatTo, int years, int months, int days,
+            int hours, int minutes) {
+        try {
+            DateTimeFormatter sourceFormatter = DateTimeFormatter.ofPattern(formatFrom.getDisplayName(), Locale.US);
+            DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern(formatTo.getDisplayName(), Locale.US);
+            // Determine if the input format is for a date or date-time
+            if (DateTimeFormat.DATE.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_DAY.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_YEAR.equals(formatFrom) || DateTimeFormat.YEAR.equals(formatFrom)) {
+                // Parse as LocalDate if only a date is present
+                LocalDate date = LocalDate.parse(dateTimeString, sourceFormatter).minusYears(years).minusMonths(months).minusDays(days);
+                return date.format(targetFormatter);
+            } else {
+                // Parse as LocalDateTime if time is present
+                LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, sourceFormatter).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes);
+                return dateTime.format(targetFormatter);
+            }
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Date string, formatFrom or formatTo is incorrect!");
+        }
+    }
+
     public static String calculatePercentageFromList(List<Long> numerators, List<Long> denominators) {
         if (numerators.size() != denominators.size()) {
             throw new IllegalArgumentException("Lists must have the same size"); // Handle mismatch in list sizes
