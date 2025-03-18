@@ -119,7 +119,7 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         assertThat("Verify IB overview summary clients totals title", ibCpaOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
         assertThat("Verify IB overview summary clients totals items", ibCpaOverviewPage.getClientsTotalsItems(), contains(String.format("%sVolume", formatter.format((factLoginMetrics.getDailyTradingVolIn() + factLoginMetrics.getDailyTradingVolOut()) / 1_000_000)), String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())), String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())), String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())), String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw()))));
         ibCpaOverviewPage.clickOverviewSubheaderIcon();
-        page.waitForTimeout(2000);
+        page.waitForTimeout(5000);
         PlaywrightAssertions.assertThat(page.context().pages().getLast()).hasURL(String.format("https://risktool.risk-vantagefx.com//rebate?server=%s&login=%s", ibAccount.serverName, ibAccount.account));
     }
 

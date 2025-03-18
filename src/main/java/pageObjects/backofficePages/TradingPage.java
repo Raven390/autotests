@@ -184,6 +184,7 @@ public class TradingPage extends AbstractPage {
     private final Locator ibRebatesWidgetInfo;
     private final Locator ibRebatesWidgetTitle;
     private final Locator ibRebatesWidgetText;
+    private final Locator operationsTableTooltip;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
@@ -361,7 +362,7 @@ public class TradingPage extends AbstractPage {
         this.symbolCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Symbol"));
         this.methodCheckboxes = page.locator(String.format(CHECKBOXES_BY_LABEL_PATTERN, "Method"));
         this.resetTypeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Type"));
-        this.resetAccountsButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Accounts"));
+        this.resetAccountsButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Account"));
         this.resetSymbolButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Symbol"));
         this.resetMethodButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Method"));
         this.resetOpenDateButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Open date"));
@@ -424,6 +425,7 @@ public class TradingPage extends AbstractPage {
         this.ibRebatesWidgetValue = ibRebatesWidget.locator(".v-number-widget__value");
         this.ibRebatesWidgetInfo = ibRebatesWidget.locator(".v-number-widget__info");
         this.ibRebatesWidgetText = ibRebatesWidget.locator(".v-number-widget__empty");
+        this.operationsTableTooltip = page.locator("//div[@class='v-tooltip-content']");
     }
 
     @Step("Navigate to users trading tab")
@@ -962,19 +964,19 @@ public class TradingPage extends AbstractPage {
     @Step("Get text of popup when hovering over sorting by open element")
     public String getSortByOpenPopupText() {
         openColumnHeader.hover();
-        return popupElement.textContent();
+        return operationsTableTooltip.textContent();
     }
 
     @Step("Get text of popup when hovering over sorting by profit element")
     public String getSortByProfitPopupText() {
         profitColumnHeader.hover();
-        return popupElement.textContent();
+        return operationsTableTooltip.textContent();
     }
 
     @Step("Get text of popup when hovering over sorting by close element")
     public String getSortByClosePopupText() {
         closeColumnHeader.hover();
-        return popupElement.textContent();
+        return operationsTableTooltip.textContent();
     }
 
     @Step("Select open date from date picker")

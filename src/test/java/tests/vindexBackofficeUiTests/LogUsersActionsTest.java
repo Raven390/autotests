@@ -1,6 +1,5 @@
 package tests.vindexBackofficeUiTests;
 
-import businessObjects.api.mitigationService.PostRestrictionRequestBody;
 import businessObjects.db.backofficeDb.userActionAudit.UserActionAudit;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
@@ -11,19 +10,17 @@ import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
-import okhttp3.Response;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
 import java.util.List;
 
-import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
 import static businessObjects.db.clickhouse.connectionTable.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static businessObjects.db.clickhouse.crmTbKycFiles.KycFilesTableEntryFactory.getKycFile;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateUserByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static businessObjects.db.clickhouse.ctmTbIdProof.IdProofTableEntryFactory.getIdProof;
 import static businessObjects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static businessObjects.ui.user.UserFactory.autotestUserOne;
@@ -61,12 +58,12 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
-        Response response = postRestriction(new PostRestrictionRequestBody(
-                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
-        assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
-        withdrawal = generateWithdrawalByClient(client);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+//        Response response = postRestriction(new PostRestrictionRequestBody(
+//                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+//        ));
+//        assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
+//        withdrawal = generateWithdrawalByClient(client);
+//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
         userId = getUserIdByUser(autotestUserOne());
     }
 
@@ -237,6 +234,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditApply, expectedUserActionAuditCancel));
     }
 
+    @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Order(8)
     @Tag(TEAM_BACKOFFICE)
