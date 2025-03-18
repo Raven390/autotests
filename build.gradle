@@ -3,11 +3,12 @@ plugins {
     id 'com.diffplug.spotless' version '6.25.0'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'org.gradle.test-retry' version '1.6.0'
+    id 'org.sonarqube' version '6.0.1.5171'
 }
 
-def properties = new Properties()
+def appProperties = new Properties()
 file("src/main/resources/config/config.properties").withInputStream { stream ->
-    properties.load(stream)
+    appProperties.load(stream)
 }
 
 group = 'antifraud'
@@ -124,9 +125,17 @@ spotless {
     }
 }
 
+sonar {
+    properties {
+        property 'sonar.projectKey', 'antifraud-test-automation'
+        property 'sonar.sources', 'src/main'
+        property 'sonar.tests', 'src/test'
+    }
+}
+
 task createConsumerGroupsFile {
-    def group1 = properties.getProperty("testClusterKafkaConsumerGroup1")
-    def group2 = properties.getProperty("testClusterKafkaConsumerGroup2")
+    def group1 = appProperties.getProperty("testClusterKafkaConsumerGroup1")
+    def group2 = appProperties.getProperty("testClusterKafkaConsumerGroup2")
     doFirst {
         def filePath = "src/main/resources/config/consumer-groups"
         def file = new File(filePath)
