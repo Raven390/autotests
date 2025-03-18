@@ -3,6 +3,7 @@ package tests.vindexBackofficeUiTests;
 import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
 import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
 import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
+import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -21,8 +22,8 @@ import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFacto
 import static businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static businessObjects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
+import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
+import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 
 public class TradingTest extends TestBaseWeb {
@@ -61,6 +62,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("505")
     @DisplayName("Test that type filter list contains all necessary types")
     public void testTypeFilterList() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -74,6 +77,9 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("455")
     @DisplayName("Test that type filter works Sell")
     public void testTypeFilterSell() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
+
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -89,6 +95,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("435")
     @DisplayName("Test that type filter works Balance")
     public void testTypeFilterBalance() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -104,6 +112,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("451")
     @DisplayName("Test that type filter works Buy")
     public void testTypeFilterBuy() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -119,6 +129,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("452")
     @DisplayName("Test that type filter works Buy Limit")
     public void testTypeFilterBuyLimit() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -134,6 +146,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("453")
     @DisplayName("Test that type filter works Buy Stop")
     public void testTypeFilterBuyStop() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -149,6 +163,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("454")
     @DisplayName("Test that type filter works Credit")
     public void testTypeFilterCredit() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -164,6 +180,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("456")
     @DisplayName("Test that type filter works Sell Limit")
     public void testTypeFilterSellLimit() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -179,6 +197,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("457")
     @DisplayName("Test that type filter works Sell Stop")
     public void testTypeFilterSellStop() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentTicketTypes(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -194,6 +214,24 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("475")
     @DisplayName("Test that Volume filter ")
     public void testVolumeFilter() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.notionalValueUsd = 3.9;
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.notionalValueUsd = 4.0;
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.notionalValueUsd = 4.1;
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.notionalValueUsd = 8.0;
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.notionalValueUsd = 8.1;
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
+
         int from = 4;
         int to = 8;
         investigationPage.navigateEnterPage();
@@ -211,6 +249,28 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("474")
     @DisplayName("Test that Duration filter works")
     public void testDurationFilter() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.openTimeUtc = "2025-03-17 11:00:00";
+        trade0.closeTimeUtc = "2025-03-17 11:03:59";
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.openTimeUtc = "2025-03-17 11:00:00";
+        trade1.closeTimeUtc = "2025-03-17 11:04:00";
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.openTimeUtc = "2025-03-17 11:00:00";
+        trade2.closeTimeUtc = "2025-03-17 11:07:59";
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.openTimeUtc = "2025-03-17 11:00:00";
+        trade3.closeTimeUtc = "2025-03-17 11:08:00";
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.openTimeUtc = "2025-03-17 11:00:00";
+        trade4.closeTimeUtc = "2025-03-17 11:08:01";
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
         int from = 4;
         int to = 8;
         investigationPage.navigateEnterPage();
@@ -228,6 +288,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("476")
     @DisplayName("Test that method filter works API")
     public void testMethodFilterAPI() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -243,6 +305,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("477")
     @DisplayName("Test that method filter works Client")
     public void testMethodFilterClient() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -258,6 +322,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("478")
     @DisplayName("Test that method filter works Dealer")
     public void testMethodFilterDealer() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -273,6 +339,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("479")
     @DisplayName("Test that method filter works Expert")
     public void testMethodFilterExpert() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -288,6 +356,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("480")
     @DisplayName("Test that method filter works Gateway")
     public void testMethodFilterGateway() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -303,6 +373,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("481")
     @DisplayName("Test that method filter works Mobile")
     public void testMethodFilterMobile() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -318,6 +390,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("482")
     @DisplayName("Test that method filter works Signal")
     public void testMethodFilterSignal() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -333,6 +407,8 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("483")
     @DisplayName("Test that method filter works Web")
     public void testMethodFilterWeb() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        tradingPage.generateDifferentReason(client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
@@ -348,6 +424,25 @@ public class TradingTest extends TestBaseWeb {
     @AllureId("472")
     @DisplayName("Test that Profit filter works")
     public void testProfitFilter() {
+
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.profitUsd = 3.99;
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.profitUsd = 4.00;
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.profitUsd = 79.99;
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.profitUsd = 80.00;
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.profitUsd = 80.01;
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
+
         int from = 4;
         int to = 80;
         investigationPage.navigateEnterPage();
@@ -364,9 +459,15 @@ public class TradingTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("472")
     @DisplayName("Test that profit filter works with negative")
+
     public void testProfitFilterNegativeValuesTest() {
-        int from = 36;
-        int to = 38;
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.profitUsd = -37.99;
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade0);
+        int from = -40;
+        int to = -35;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());

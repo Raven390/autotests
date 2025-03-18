@@ -1,7 +1,7 @@
 package pageObjects.backofficePages;
 
 import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
-import static helpers.database.DbHelper.getObjectsFromDB;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -183,7 +183,7 @@ public class InvestigationPage extends AbstractPage {
     @Step("Open the autotest login page main page")
     public void navigateEnterPage() {
         page.navigate(ENTER_PAGE_E2E, new Page.NavigateOptions().setWaitUntil(DOMCONTENTLOADED));
-        super.waitForPageToLoad();
+        page.waitForTimeout(200);
     }
 
     @Step("Open the BackOffice main page")
