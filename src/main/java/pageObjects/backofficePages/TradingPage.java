@@ -8,6 +8,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Route;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import org.hamcrest.MatcherAssert;
@@ -17,8 +18,10 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.*;
 
+import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -435,7 +438,7 @@ public class TradingPage extends AbstractPage {
         Allure.step("Navigate to users trading tab/operations");
         navigate(ucid);
         operationsTab.click();
-        waitForPageToLoad();
+        super.waitForPageToLoad();
     }
 
     @Step("Open users trading tab")
@@ -579,8 +582,8 @@ public class TradingPage extends AbstractPage {
     @Step("Check text content of first and last Volume cells on page is in interval")
     public void checkVolumeCellsContentUSD(int from, int to) {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
-        String firstCell = volumeColumnCellUSD.first().textContent();
-        String lastCell = volumeColumnCellUSD.last().textContent();
+        String firstCell = volumeColumnCellUSD.first().textContent().replace(" USD", "");
+        String lastCell = volumeColumnCellUSD.last().textContent().replace(" USD", "");
         System.out.println(Integer.parseInt(firstCell));
         System.out.println(Integer.parseInt(lastCell));
         assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
@@ -590,8 +593,8 @@ public class TradingPage extends AbstractPage {
     @Step("Check text content of first and last profit cells on page is in interval")
     public void checkProfitCellsContent(int from, int to) {
         Allure.step("Check text content of first and last profit cells on page is in interval");
-        String firstCell = profitColumnCell.first().textContent();
-        String lastCell = profitColumnCell.last().textContent();
+        String firstCell = (profitColumnCell.first().textContent()).replace(" USD", "");
+        String lastCell = profitColumnCell.last().textContent().replace(" USD", "");
         System.out.println(Double.parseDouble(firstCell));
         System.out.println(Double.parseDouble(lastCell));
 
@@ -613,7 +616,7 @@ public class TradingPage extends AbstractPage {
     @Step("Check text content of first profit cell")
     public void checkProfitCellsContentFirst(double expected) {
         Allure.step("Check text content of first profit cell");
-        String firstCell = profitColumnCell.first().textContent();
+        String firstCell = profitColumnCell.first().textContent().replace(" USD", "");
 
         System.out.println(Double.parseDouble(firstCell));
 
@@ -1910,6 +1913,64 @@ public class TradingPage extends AbstractPage {
     @Step("Get IB rebates widget info")
     public String getIbRebatesWidgetInfo() {
         return ibRebatesWidgetInfo.textContent();
+    }
+
+
+    public void generateDifferentTicketTypes(ClientHelper client) {
+        Allure.step("Prepare client test data");
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell Limit";
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Buy";
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Balance";
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
+        trade5.ticketType = "Sell Stop";
+        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedRandomized(client);
+        trade6.ticketType = "Buy Limit";
+        MtMt4TradesCoercedObject trade7 = generateMt4TradesCoercedRandomized(client);
+        trade7.ticketType = "Credit";
+        MtMt4TradesCoercedObject trade8 = generateMt4TradesCoercedRandomized(client);
+        trade8.ticketType = "Buy Stop";
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
+        page.waitForTimeout(1000);
+    }
+
+
+    public void generateDifferentReason(ClientHelper client) {
+        Allure.step("Prepare client test data");
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.reasonName = "Expert";
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.reasonName = "Client";
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.reasonName = "Dealer";
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.reasonName = "API";
+        MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
+        trade5.reasonName = "Mobile";
+        MtMt4TradesCoercedObject trade6 = generateMt4TradesCoercedRandomized(client);
+        trade6.reasonName = "Web";
+        MtMt4TradesCoercedObject trade7 = generateMt4TradesCoercedRandomized(client);
+        trade7.reasonName = "Signal";
+        MtMt4TradesCoercedObject trade8 = generateMt4TradesCoercedRandomized(client);
+        trade8.reasonName = "Stop Loss";
+        MtMt4TradesCoercedObject trade9 = generateMt4TradesCoercedRandomized(client);
+        trade9.reasonName = "Take Profit";
+        MtMt4TradesCoercedObject trade10 = generateMt4TradesCoercedRandomized(client);
+        trade10.reasonName = "Stop-Out";
+        MtMt4TradesCoercedObject trade11 = generateMt4TradesCoercedRandomized(client);
+        trade11.reasonName = "External client";
+        MtMt4TradesCoercedObject trade12 = generateMt4TradesCoercedRandomized(client);
+        trade12.reasonName = "Symbol split";
+        MtMt4TradesCoercedObject trade13 = generateMt4TradesCoercedRandomized(client);
+        trade13.reasonName = "Gateway";
+        MtMt4TradesCoercedObject trade14 = generateMt4TradesCoercedRandomized(client);
+        trade14.reasonName = "Migration";
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14));
+        page.waitForTimeout(1000);
     }
 }
 
