@@ -1,10 +1,10 @@
 package helpers.database;
 
-import businessObjects.db.backofficeDb.alert.Alert;
-import businessObjects.db.backofficeDb.backofficeUser.BackofficeUser;
-import businessObjects.db.backofficeDb.client.Client;
-import businessObjects.db.backofficeDb.clientsFraudTypes.ClientsFraudTypes;
-import businessObjects.ui.user.User;
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.backoffice_db.backoffice_user.BackofficeUser;
+import business_objects.db.backoffice_db.client.Client;
+import business_objects.db.backoffice_db.clients_fraud_types.ClientsFraudTypes;
+import business_objects.ui.user.User;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 

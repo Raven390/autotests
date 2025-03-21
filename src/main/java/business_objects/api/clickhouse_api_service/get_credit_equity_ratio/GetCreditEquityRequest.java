@@ -1,0 +1,19 @@
+package business_objects.api.clickhouse_api_service.get_credit_equity_ratio;
+
+import helpers.http_helper.HttpHelper;
+import io.qameta.allure.Step;
+import okhttp3.Response;
+
+import java.io.IOException;
+import java.util.Map;
+
+import static utils.ConfigFactory.*;
+
+public class GetCreditEquityRequest {
+
+    @Step("Get credit equity by trading account")
+    public static Response getCreditEquity(Map<String, Object> paramsMap) throws IOException {
+        return new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CREDIT_EQUITY, null, paramsMap);
+    }
+
+}

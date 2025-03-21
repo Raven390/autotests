@@ -1,0 +1,628 @@
+package tests.connection_search_api_service_tests;
+
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponseError;
+import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
+import business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntry;
+import business_objects.db.clickhouse.document_table.DocumentTableEntry;
+import business_objects.db.clickhouse.email_table.EmailTableEntry;
+import business_objects.db.clickhouse.ip_table.IpTableEntry;
+import business_objects.db.clickhouse.name_birth.NameBirthTableEntry;
+import business_objects.db.clickhouse.payout.PayoutTableEntry;
+import business_objects.db.clickhouse.phone.PhoneTableEntry;
+import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
+import business_objects.db.clickhouse.web_session.WebSessionTableEntry;
+import helpers.data.ClientHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
+
+import java.io.IOException;
+import java.util.*;
+
+import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByAttributes;
+import static business_objects.api.connection_search_api.get_connections.GetConnectionsResponseFactory.*;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
+import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
+import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.name_birth.NameBirthTableEntryFactory.nameBirthTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.payout.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
+
+@Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
+@Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
+@Tag(SUITE_CONNECTION_SEARCH_SERVICE)
+public class GetConnectionsByAttributesTest extends TestBaseApi {
+    public static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDocument = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
+    public static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromIp = getRandomVantageClientAllFields();
+    public static final ClientHelper userToIp = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    public static final ClientHelper userToPhone = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
+    public static final ClientHelper userToPayout = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDepth1 = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDepth2 = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromFiltration = getRandomVantageClientAllFields();
+    public static final ClientHelper userToFiltration1 = getRandomVantageClientAllFields();
+    public static final ClientHelper userToFiltration2 = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
+    public static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
+    public static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
+    public static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
+    public static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
+    public static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
+    // Expected responses
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDocumentInitial(userFromDocument);
+    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesResponseSuccessDocumentLvl2(userFromDocument, userToDocument);
+    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccessInitial = getConnectionsByAttributesResponseSuccessEmailInitial(userFromEmail);
+    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsByAttributesResponseSuccessEmailLvl2(userFromEmail, userToEmail);
+    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccessInitial = getConnectionsByAttributesResponseSuccessIpInitial(userFromIp);
+    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesResponseSuccessIpLvl2(userFromIp, userToIp);
+    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPhoneInitial(userFromPhone);
+    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesResponseSuccessPhoneLvl2(userFromPhone, userToPhone);
+    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPayoutInitial(userFromPayout);
+    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesResponseSuccessPayoutLvl2(userFromPayout, userToPayout);
+    public final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
+    public final GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDeviceIdInitial(userFromDeviceId);
+    public static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsByAttributesResponseSuccessDeviceIdLvl2(userFromDeviceId, userToDeviceId);
+    public final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
+    public static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsByAttributesResponseSuccessDigitalIdLvl2(userFromDigitalId, userToDigitalId);
+    public final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
+    public static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsByAttributesResponseSuccessNameBirthLvl2(userFromNameBirth, userToNameBirth);
+    public final GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessSessionIdInitial(userFromSessionId);
+    public static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessSessionIdLvl2(userFromSessionId, userToSessionId);
+    public final GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessWebSessionIdInitial(userFromWebSessionId);
+    public static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(userFromWebSessionId, userToWebSessionId);
+
+    // Objects to insert to connections table
+    public static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
+    public static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
+    public static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
+    public static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
+    public static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
+    public static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
+    public static final ConnectionTableEntry connectionTableEntryForDepth2 = getConnectionTableEntryLvl2(userToDepth1, userToDepth2);
+    public static final ConnectionTableEntry connectionTableEntryFiltration1 = getConnectionTableEntry(userFromFiltration, userToFiltration1);
+    public static final ConnectionTableEntry connectionTableEntryFiltration2 = getConnectionTableEntryForFiltration(userToFiltration1, userToFiltration2);
+    public static final ConnectionTableEntry connectionTableEntryByDeviceId = getConnectionTableEntry(userFromDeviceId, userToDeviceId);
+    public static final ConnectionTableEntry connectionTableEntryByDigitalId = getConnectionTableEntry(userFromDigitalId, userToDigitalId);
+    public static final ConnectionTableEntry connectionTableEntryByNameBirth = getConnectionTableEntry(userFromNameBirth, userToNameBirth);
+    public static final ConnectionTableEntry connectionTableEntryBySessionId = getConnectionTableEntry(userFromSessionId, userToSessionId);
+    public static final ConnectionTableEntry connectionTableEntryByWebSessionId = getConnectionTableEntry(userFromWebSessionId, userToWebSessionId);
+    // Objects to insert to attributes tables
+    public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    public static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
+    public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
+    public static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
+    public static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
+    public static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
+    public static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
+    public static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
+    public static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    public static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
+
+    @BeforeAll
+    static void setupConnectionTableEntry() throws Exception {
+        // Insert data to connections table
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDocument);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByIp);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPhone);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPayout);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth2);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration2);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDeviceId);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDigitalId);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByNameBirth);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryBySessionId);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByWebSessionId);
+        // Insert data to attributes tables
+        insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
+        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
+        insertObjectToDb(IP_TABLE_NAME, ipTableEntry);
+        insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry);
+        insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
+        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryFiltration);
+        insertObjectToDb(DIGITAL_ID_TABLE_NAME, digitalIdTableEntry);
+        insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
+        insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
+        insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
+        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryFrom);
+        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryTo);
+        waitForConnectionSearchToUpdate(userFromWebSessionId);
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by document success(200)")
+    @AllureId("188")
+    public void getConnectionsTest1() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDocumentResponseSuccessInitial, getConnectionsByAttributesDocumentResponseSuccess));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by document with connection depth success(200)")
+    @AllureId("189")
+    public void getConnectionsTest2() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+        queryParams.put("connectionDepth", 1);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesDocumentResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by email success(200)")
+    @AllureId("190")
+    public void getConnectionsTest3() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntry.email);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesEmailResponseSuccessInitial, getConnectionsByAttributesEmailResponseSuccess));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by ip success(200)")
+    @AllureId("191")
+    public void getConnectionsTest4() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("ipAddress", ipTableEntry.ip);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesIpResponseSuccess, getConnectionsByAttributesIpResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by phone success(200)")
+    @AllureId("192")
+    public void getConnectionsTest5() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPhoneResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by payout success(200)")
+    @AllureId("193")
+    public void getConnectionsTest6() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("payoutId", payoutTableEntry.payout);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by all params success(200)")
+    @AllureId("194")
+    public void getConnectionsTest7() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+        queryParams.put("emailAddress", emailTableEntry.email);
+        queryParams.put("ipAddress", ipTableEntry.ip);
+        queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
+        queryParams.put("payoutId", payoutTableEntry.payout);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(10));
+
+        assertThat("Check that response body has object found by document", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesDocumentResponseSuccess, getConnectionsByAttributesDocumentResponseSuccessInitial));
+        assertThat("Check that response body has object found by emailAddress", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesEmailResponseSuccess, getConnectionsByAttributesEmailResponseSuccessInitial));
+        assertThat("Check that response body has object found by ipAddress", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesIpResponseSuccess, getConnectionsByAttributesIpResponseSuccessInitial));
+        assertThat("Check that response body has object found by phoneNumber", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPhoneResponseSuccessInitial));
+        assertThat("Check that response body has object found by payoutId", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom success(200)")
+    @AllureId("467")
+    public void getConnectionsTest8() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntryFiltration.email);
+        queryParams.put("connectionScoreFrom", 0.4);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesFiltrationResponseSuccess[0], getConnectionsByAttributesFiltrationResponseSuccess[1]));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo success(200)")
+    @AllureId("468")
+    public void getConnectionsTest9() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntryFiltration.email);
+        queryParams.put("connectionScoreTo", 0.4);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[2]));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection with connectionType success(200)")
+    @AllureId("469")
+    public void getConnectionsTest10() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntryFiltration.email);
+        queryParams.put("connectionType", List.of(CONNECTION_TYPE_SAME_NETWORK));
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[2]));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. documentCountryId not int bad request (400)")
+    @AllureId("195")
+    public void getConnectionsTest11() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", "test");
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponseError responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(400));
+
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorDocumentCountryIdNotInt()));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. documentType missing bad request (Empty response)")
+    @AllureId("196")
+    public void getConnectionsTest12() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(200));
+
+        assertThat("Check the response body", responseBody.length, equalTo(0));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. documentNumber missing bad request (Empty response)")
+    @AllureId("197")
+    public void getConnectionsTest13() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentCountryId", documentTableEntry.nationalityId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(200));
+
+        assertThat("Check the response body", responseBody.length, equalTo(0));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. documentCountryId missing bad request (Empty response)")
+    @AllureId("198")
+    public void getConnectionsTest14() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("documentType", documentTableEntry.accIdType);
+        queryParams.put("documentNumber", documentTableEntry.accIdNum);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(200));
+
+        assertThat("Check the response body", responseBody.length, equalTo(0));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. No params bad request (400)")
+    @AllureId("199")
+    public void getConnectionsTest15() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponseError responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(400));
+
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorNoSearchParameters()));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom not int Bad Request(400)")
+    @AllureId("470")
+    public void getConnectionsTest16() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntryFiltration.email);
+        queryParams.put("connectionScoreFrom", "test");
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponseError responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(400));
+
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsByAttributesResponseErrorConnectionScoreFromBadRequest()));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo not int Bad Request(400)")
+    @AllureId("471")
+    public void getConnectionsTest17() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", emailTableEntryFiltration.email);
+        queryParams.put("connectionScoreTo", "test");
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponseError responseBody = objectMapper.readValue(
+                Objects.requireNonNull(response.body()).string(), GetConnectionsResponseError.class
+        );
+
+        assertThat("Check the response code is 400", response.code(), is(400));
+
+        assertThat("Check the response body", responseBody, equalTo(getConnectionsByAttributesResponseErrorConnectionScoreToBadRequest()));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by device id success(200)")
+    @AllureId("695")
+    public void getConnectionsTest18() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("device", deviceIdTableEntry.deviceId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess, getConnectionsByAttributesDeviceIdResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by digital id success(200)")
+    @AllureId("696")
+    public void getConnectionsTest19() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("digital", digitalIdTableEntry.digitalId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccess, getConnectionsByAttributesDigitalIdResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by name birth success(200)")
+    @AllureId("697")
+    public void getConnectionsTest20() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("nameBirth", userFromNameBirth.getNameDateOfBirth());
+
+        Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccess, getConnectionsByAttributesNameBirthResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by session id success(200)")
+    @AllureId("698")
+    public void getConnectionsTest21() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("session", sessionIdTableEntry.sessionId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        assert response.body() != null;
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccess, getConnectionsByAttributesSessionIdResponseSuccessInitial));
+    }
+
+    @Test
+    @DisplayName("Connection search by attributes Api. Get connection by web session id success(200)")
+    @AllureId("699")
+    public void getConnectionsTest22() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("webSession", webSessionTableEntryFrom.webSessionId);
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccess, getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
+    }
+
+    @AfterAll
+    static void deleteConnectionTableEntry() {
+        // Delete data from connections table
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByEmail.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByIp.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPhone.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPayout.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth1.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration1.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration2.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDeviceId.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDigitalId.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByNameBirth.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryBySessionId.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByWebSessionId.userFrom));
+        // Delete data from attributes tables
+        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
+        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
+        deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip));
+        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
+        deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
+        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
+        deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
+        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
+        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
+        deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
+        deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntryFrom.webSessionId));
+    }
+}

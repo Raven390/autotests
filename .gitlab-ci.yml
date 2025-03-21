@@ -1,6 +1,6 @@
 stages:
   - build
-  - sonarqube-check
+  - check
   - test
 
 variables:
@@ -85,7 +85,7 @@ job_build:
 #Jobe for checking code format with spotless
 job_code_check:
   timeout: 20 minutes
-  stage: build
+  stage: check
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
@@ -96,7 +96,7 @@ job_code_check:
     - echo "CODE CHECK SUCCESS"
 
 sonarqube-check:
-  stage: sonarqube-check
+  stage: check
   image: public.ecr.aws/docker/library/gradle:8.9-jdk21-jammy
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED"

@@ -1,26 +1,26 @@
 package helpers.data.rules;
 
-import businessObjects.db.clickhouse.aggrCreditEquityRate.AggrCreditEquityRateObject;
-import businessObjects.db.clickhouse.aggrFloatingTradesGroupBy.AggrFloatingTradesGroupBy;
-import businessObjects.db.clickhouse.aggrMirrorAccountsByTrades.MirrorLoginObject;
-import businessObjects.db.clickhouse.boClientFraudTypes.BoClientFraudTypesObject;
-import businessObjects.db.clickhouse.connectionTable.ConnectionTableEntry;
-import businessObjects.db.clickhouse.crmTbAccount.CrmTbAccountObject;
-import businessObjects.db.clickhouse.crmTbBonusTable.CrmTbBonusObject;
-import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
-import businessObjects.db.clickhouse.crmTbUserTable.CrmTbUserObject;
-import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
-import businessObjects.db.clickhouse.dictAccountToUcid.DictAccountToUcidObject;
-import businessObjects.db.clickhouse.lnSessionParsed.LnSessionParsedObject;
-import businessObjects.db.clickhouse.loyaltiesRedemption.LoyaltiesRedemptionObject;
-import businessObjects.db.clickhouse.mirrorUcidTable.MirrorUcidObject;
-import businessObjects.db.clickhouse.mtAccount.MtAccountObject;
-import businessObjects.db.clickhouse.mtBalanceOrdersTable.MtBalanceOrdersObject;
-import businessObjects.db.clickhouse.mtMt5DealsCoerced.Mt5DealsCoercedObject;
-import businessObjects.db.clickhouse.mtMt5Positions.MtMt5PositionsObject;
-import businessObjects.db.clickhouse.mtTbCredits.MtTbCreditsObject;
-import businessObjects.kafka.crmEvents.WithdrawalEvent;
-import businessObjects.kafka.mtEvents.CloseTradeMtEvent;
+import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
+import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
+import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
+import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
+import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
+import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
+import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
+import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import business_objects.kafka.crm_events.WithdrawalEvent;
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
 
 import java.util.ArrayList;
@@ -139,45 +139,21 @@ public class RuleDataHelper {
             if (data.dictAccountToUcidObject != null) {
                 insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
             }
-            data.connections.forEach(connection -> {
-                insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
-            });
-            data.connectedUsers.forEach(user -> {
-                insertObjectToDb(CRM_USER_TABLE_NAME, user);
-            });
-            data.clientFraudTypes.forEach(fraud -> {
-                insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
-            });
+            data.connections.forEach(connection -> insertObjectToDb(CONNECTIONS_TABLE_NAME, connection));
+            data.connectedUsers.forEach(user -> insertObjectToDb(CRM_USER_TABLE_NAME, user));
+            data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
-            data.crmTbAccountObjectConnections.forEach(credit -> {
-                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
-            });
-            data.mtTbCreditsObjects.forEach(credit -> {
-                insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);
-            });
-            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-            });
-            data.crmTbDepositObjects.forEach(deposit -> {
-                insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-            });
-            data.crmTbBonusObjects.forEach(bonus -> {
-                insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus);
-            });
-            data.mt5DealsCoercedObjects.forEach(deal -> {
-                insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
-            });
-            data.mtMt5PositionsObjects.forEach(position -> {
-                insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
-            });
-            data.mtBalanceOrdersObjects.forEach(deal -> {
-                insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal);
-            });
-            data.mirrorLoginObjects.forEach(deal -> {
-                insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal);
-            });
+            data.crmTbAccountObjectConnections.forEach(credit -> insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit));
+            data.mtTbCreditsObjects.forEach(credit -> insertObjectToDb(MT_CREDITS_TABLE_NAME, credit));
+            data.crmTbWithdrawalObjects.forEach(withdrawal -> insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal));
+            data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
+            data.crmTbBonusObjects.forEach(bonus -> insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus));
+            data.mt5DealsCoercedObjects.forEach(deal -> insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal));
+            data.mtMt5PositionsObjects.forEach(position -> insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position));
+            data.mtBalanceOrdersObjects.forEach(deal -> insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal));
+            data.mirrorLoginObjects.forEach(deal -> insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal));
             if (data.aggrCreditEquityRate != null) {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
@@ -190,12 +166,8 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 insertObjectToDb(AGGR_CREDIT_EQUITY_RATE, data.aggrCreditEquityRate);
             }
-            data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
-                insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject);
-            });
-            data.loyaltyObjects.forEach(loyaltyObjects -> {
-                insertObjectToDb(CRM_TB_LOYALTY_REDEMPTION, loyaltyObjects);
-            });
+            data.mirrorUcidObjects.forEach(mirrorUcidObject -> insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject));
+            data.loyaltyObjects.forEach(loyaltyObjects -> insertObjectToDb(CRM_TB_LOYALTY_REDEMPTION, loyaltyObjects));
         }
     }
 
@@ -207,51 +179,26 @@ public class RuleDataHelper {
             if (data.dictAccountToUcidObject != null) {
                 deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = '%s'", data.dictAccountToUcidObject.ucid));
             }
-            data.connections.forEach(connection -> {
-                deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom));
-            });
+            data.connections.forEach(connection -> deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom)));
             if (data.lnSessionParsedObjectRegistration != null) {
-                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.userId));
+                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.getUserId()));
             }
             if (data.lnSessionParsedObjectLogin != null) {
-                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.userId));
+                deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.getUserId()));
             }
-            data.clientFraudTypes.forEach(fraud -> {
-                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
-            });
-            data.mtTbCreditsObjects.forEach(credit -> {
-                deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
-            });
-            data.crmTbWithdrawalObjects.forEach(withdrawal -> {
-                deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid));
-            });
-            data.crmTbDepositObjects.forEach(deposit -> {
-                deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid));
-            });
-            data.crmTbBonusObjects.forEach(bonus -> {
-                deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-            });
-            data.mtBalanceOrdersObjects.forEach(bonus -> {
-                deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid));
-            });
-            data.mt5DealsCoercedObjects.forEach(deal -> {
-                deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.serverId, deal.account));
-            });
-            data.mtMt5PositionsObjects.forEach(position -> {
-                deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("server_id = %s and account = %s", position.serverId, position.account));
-            });
-            data.mirrorLoginObjects.forEach(mirrorLoginObject -> {
-                deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));
-            });
-            data.mirrorUcidObjects.forEach(mirrorUcidObject -> {
-                deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1));
-            });
-            if (data.aggrCreditEquityRate != null) {
+            data.clientFraudTypes.forEach(fraud -> deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid)));
+            data.mtTbCreditsObjects.forEach(credit -> deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid)));
+            data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid)));
+            data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid)));
+            data.crmTbBonusObjects.forEach(bonus -> deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid)));
+            data.mtBalanceOrdersObjects.forEach(bonus -> deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid)));
+            data.mt5DealsCoercedObjects.forEach(deal -> deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("server_id = %s and account = %s", deal.getServerId(), deal.getAccount())));
+            data.mtMt5PositionsObjects.forEach(position -> deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("server_id = %s and account = %s", position.serverId, position.account)));
+            data.mirrorLoginObjects.forEach(mirrorLoginObject -> deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1)));
+            data.mirrorUcidObjects.forEach(mirrorUcidObject -> deleteEntryFromDb(MIRROR_UCID_TABLE_NAME, String.format("ucid_1 = '%s'", mirrorUcidObject.ucid_1)));
+            if (data.aggrCreditEquityRate != null)
                 deleteEntryFromDb(AGGR_CREDIT_EQUITY_RATE, String.format("trading_account = %s", data.clientHelper.getTradingAccount()));
-            }
-            data.loyaltyObjects.forEach(loyaltyObjects -> {
-                deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid));
-            });
+            data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
