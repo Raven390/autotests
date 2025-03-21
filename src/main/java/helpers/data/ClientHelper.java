@@ -28,7 +28,7 @@ public class ClientHelper {
     private String webSessionId;
     private String sessionId;
     private String digitalId;
-    private String namedateofbirth;
+    private String dateOfBirth;
     private String firstName;
     private String lastName;
 
@@ -103,7 +103,7 @@ public class ClientHelper {
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
             Integer ibId, Integer referrerId,
-            String deviceId, String webSessionId, String sessionId, String digitalId, String namedateofbirth,
+            String deviceId, String webSessionId, String sessionId, String digitalId, String dateOfBirth,
             String firstName, String lastName) {
         this.userId = userId;
         this.uid = uid;
@@ -123,7 +123,7 @@ public class ClientHelper {
         this.webSessionId = webSessionId;
         this.sessionId = sessionId;
         this.digitalId = digitalId;
-        this.namedateofbirth = namedateofbirth;
+        this.dateOfBirth = dateOfBirth;
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -277,12 +277,16 @@ public class ClientHelper {
         this.digitalId = digitalId;
     }
 
-    public String getNamedateofbirth() {
-        return namedateofbirth;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setNamedateofbirth(String namedateofbirth) {
-        this.namedateofbirth = namedateofbirth;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getNameDateOfBirth() {
+        return firstName + " " + lastName + " " + dateOfBirth;
     }
 
     public String getFirstName() {
@@ -303,19 +307,27 @@ public class ClientHelper {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientHelper that = (ClientHelper) o;
-        return Objects.equals(userId, that.userId) && Objects.equals(uid, that.uid) && regulator == that.regulator && brand == that.brand && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(countryCode, that.countryCode) && Objects.equals(deviceId, that.deviceId) && Objects.equals(cpaId, that.cpaId);
+        return Objects.equals(userId, that.userId) && Objects.equals(uid, that.uid) && brand == that.brand && regulator == that.regulator && Objects.equals(
+                tradingAccount, that.tradingAccount) && Objects.equals(tradingAccount2, that.tradingAccount2) && Objects.equals(
+                        serverId, that.serverId) && Objects.equals(email, that.email) && Objects.equals(
+                                phoneNumber, that.phoneNumber) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(
+                                        countryCode, that.countryCode) && Objects.equals(cpaId, that.cpaId) && Objects.equals(
+                                                ibId, that.ibId) && Objects.equals(referrerId, that.referrerId) && Objects.equals(
+                                                        deviceId, that.deviceId) && Objects.equals(webSessionId, that.webSessionId) && Objects.equals(
+                                                                sessionId, that.sessionId) && Objects.equals(digitalId, that.digitalId) && Objects.equals(
+                                                                        dateOfBirth, that.dateOfBirth) && Objects.equals(firstName, that.firstName) && Objects.equals(
+                                                                                lastName, that.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, uid, regulator, brand, tradingAccount, serverId, email, phoneNumber, ipAddress, countryCode, cpaId, deviceId);
+        return Objects.hash(userId, uid, brand, regulator, tradingAccount, tradingAccount2, serverId, email, phoneNumber, ipAddress, countryCode, cpaId, ibId, referrerId, deviceId, webSessionId, sessionId, digitalId, dateOfBirth, firstName, lastName);
     }
 
     @Override
     public String toString() {
-        return "ClientHelper{" + "userId=" + userId + ", uid='" + uid + '\'' + ", brand=" + brand + ", regulator=" + regulator + ", tradingAccount=" + tradingAccount + ", tradingAccount2=" + tradingAccount2 + ", serverId=" + serverId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", ipAddress='" + ipAddress + '\'' + ", countryCode='" + countryCode + '\'' + ", cpaId=" + cpaId + ", deviceId='" + deviceId + '\'' + '}';
+        return "ClientHelper{" + "userId=" + userId + ", uid='" + uid + '\'' + ", brand=" + brand + ", regulator=" + regulator + ", tradingAccount=" + tradingAccount + ", tradingAccount2=" + tradingAccount2 + ", serverId=" + serverId + ", email='" + email + '\'' + ", phoneNumber='" + phoneNumber + '\'' + ", ipAddress='" + ipAddress + '\'' + ", countryCode='" + countryCode + '\'' + ", cpaId=" + cpaId + ", ibId=" + ibId + ", referrerId=" + referrerId + ", deviceId='" + deviceId + '\'' + ", webSessionId='" + webSessionId + '\'' + ", sessionId='" + sessionId + '\'' + ", digitalId='" + digitalId + '\'' + ", dateOfBirth='" + dateOfBirth + '\'' + ", firstName='" + firstName + '\'' + ", lastName='" + lastName + '\'' + '}';
     }
 }

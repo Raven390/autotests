@@ -1,6 +1,6 @@
 package helpers.database;
 
-import businessObjects.db.mitigationServiceDb.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestriction;
 import io.qameta.allure.Step;
 
 import java.util.List;

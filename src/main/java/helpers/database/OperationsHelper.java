@@ -1,15 +1,15 @@
 package helpers.database;
 
-import businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObject;
-import businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 
 
-import static businessObjects.db.clickhouse.crmTbDepositTable.CrmTbDepositObjectFactory.generateDepositByClient;
-import static businessObjects.db.clickhouse.crmTbWithdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.CRM_DEPOSIT_TABLE_NAME;
 import static utils.Constants.CRM_WITHDRAWAL_TABLE_NAME;

@@ -11,7 +11,7 @@ file("src/main/resources/config/config.properties").withInputStream { stream ->
     appProperties.load(stream)
 }
 
-group = 'antifraud'
+group = 'antifraud-test-automation'
 version = '1.0'
 
 // Configure the task to build the Generator REST API executable fatjar
@@ -133,7 +133,7 @@ sonar {
     }
 }
 
-task createConsumerGroupsFile {
+tasks.register('createConsumerGroupsFile') {
     def group1 = appProperties.getProperty("testClusterKafkaConsumerGroup1")
     def group2 = appProperties.getProperty("testClusterKafkaConsumerGroup2")
     doFirst {
@@ -150,7 +150,7 @@ task createConsumerGroupsFile {
 tasks.withType(Test) {
     dependsOn(createConsumerGroupsFile)
     // Enable parallel test execution
-    maxParallelForks = 10// Set to the number of available processors
+    maxParallelForks = 2// Set to the number of available processors
 
     // Optional: Configure parallel execution for classes and methods
     forkEvery = 0 // 0 means it forks once per class. Increase for larger suites.
@@ -162,13 +162,13 @@ tasks.withType(Test) {
     }
 }
 
-task installChromium(type: JavaExec) {
+tasks.register('installChromium', JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
     args = ['install', 'chromium']
     classpath = sourceSets.main.runtimeClasspath
 }
 
-task installDeps(type: JavaExec) {
+tasks.register('installDeps', JavaExec) {
     mainClass = 'com.microsoft.playwright.CLI'
     args = ['install-deps']
     classpath = sourceSets.main.runtimeClasspath
@@ -190,50 +190,50 @@ test {
     useJUnitPlatform()
 }
 
-task testSuiteSmoke(type: Test) {
+tasks.register('testSuiteSmoke', Test) {
     useJUnitPlatform() {
         includeTags 'suite_smoke'
     }
 }
 
-task testSuiteSmokeProduction(type: Test) {
+tasks.register('testSuiteSmokeProduction', Test) {
     useJUnitPlatform() {
         includeTags 'suite_smoke_production'
     }
 }
 
-task testSmokeBackoffice(type: Test) {
+tasks.register('testSmokeBackoffice', Test) {
     useJUnitPlatform() {
         includeTags 'team_backoffice'
     }
 }
 
-task testSmokeCore(type: Test) {
-    useJUnitPlatform(){
+tasks.register('testSmokeCore', Test) {
+    useJUnitPlatform() {
         includeTags "team_core"
     }
 }
 
-task testClickhouseApiService(type: Test) {
-    useJUnitPlatform(){
+tasks.register('testClickhouseApiService', Test) {
+    useJUnitPlatform() {
         includeTags "suite_clickhouse_api_service"
     }
 }
 
-task testConnectionSearchApiService(type: Test) {
-    useJUnitPlatform(){
+tasks.register('testConnectionSearchApiService', Test) {
+    useJUnitPlatform() {
         includeTags "suite_connection_search_service"
     }
 }
 
-task testEventGeneratorService(type: Test) {
-    useJUnitPlatform(){
+tasks.register('testEventGeneratorService', Test) {
+    useJUnitPlatform() {
         includeTags "suite_event_generator_service"
     }
 }
 
-task testRuleEngineService(type: Test) {
-    useJUnitPlatform(){
+tasks.register('testRuleEngineService', Test) {
+    useJUnitPlatform() {
         includeTags "suite_rule_engine_service"
     }
 }

@@ -82,7 +82,6 @@ public class KafkaHelper {
             return null;
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
             return null;
         } finally {
             // Release the lock before closing the channel

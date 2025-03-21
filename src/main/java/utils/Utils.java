@@ -2,6 +2,7 @@ package utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
-import businessObjects.api.connectionSearchApi.getConnections.GetConnectionsResponse;
+import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -23,13 +24,15 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static businessObjects.api.connectionSearchApi.getConnections.GetConnectionsRequest.getConnectionsByClientId;
+import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static helpers.data.enums.Brand.*;
 
 public class Utils {
 
+    static SecureRandom random = new SecureRandom();
+
     public static Integer getRandomInt() {
-        return new Random().nextInt();
+        return random.nextInt();
     }
 
     public static String startFromUpper(String lowerCase) {
@@ -37,11 +40,15 @@ public class Utils {
     }
 
     public static Integer getRandomIntPositive() {
-        return new Random().nextInt(Integer.MAX_VALUE) + 1;
+        return random.nextInt(Integer.MAX_VALUE) + 1;
+    }
+
+    public static Integer getRandomIntPositiveWithBounds(Integer boundLow, Integer boundHigh) {
+        return random.nextInt(boundLow, boundHigh);
     }
 
     public static Long getRandomLongPositive() {
-        return new Random().nextLong(Long.MAX_VALUE) + 1;
+        return random.nextLong(Long.MAX_VALUE) + 1;
     }
 
     public static String getRandomUuidString() {
@@ -202,7 +209,7 @@ public class Utils {
     }
 
     public static Double getRandomDouble(double min, double max) {
-        return ThreadLocalRandom.current().nextDouble(min, max);
+        return random.nextDouble(min, max);
     }
 
     public static Double getRandomRoundedDouble(double min, double max) {
@@ -215,7 +222,7 @@ public class Utils {
         if (lowerBound < upperBound) {
             int randomInt;
             do {
-                randomInt = new Random().nextInt();
+                randomInt = random.nextInt();
             } while (randomInt > lowerBound && randomInt < upperBound);
             return randomInt;
         } else {
@@ -264,7 +271,7 @@ public class Utils {
     }
 
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int x = new Random().nextInt(clazz.getEnumConstants().length);
+        int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
 
@@ -411,7 +418,7 @@ public class Utils {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client.getUcid());
         boolean updated = false;
-        for (int i = 0; i < 55; i++) {
+        for (int i = 0; i < 60; i++) {
             Response response = getConnectionsByClientId(queryParams);
             GetConnectionsResponse[] responseBody = objectMapper.readValue(
                     response.body().string(), GetConnectionsResponse[].class

@@ -1,11 +1,11 @@
 package helpers.database;
 
-import businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import helpers.data.ClientHelper;
 
 import java.util.ArrayList;
 
-import static businessObjects.db.clickhouse.mtMt4TradesCoerced.MtMt4TradesCoercedObjectFactory.generateBunchMt4TradesCoerced;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateBunchMt4TradesCoerced;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;

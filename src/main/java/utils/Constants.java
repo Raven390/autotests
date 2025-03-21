@@ -160,4 +160,48 @@ public class Constants {
     public static final String FILE_KYC_POF_1_NAME = "/testFaceFile1.jpg";
     public static final String FILE_KYC_POF_2_NAME = "/testFaceFile2.jpg";
     public static final String FILE_KYC_POF_3_NAME = "/testFaceFile3.jpg";
+    // Connection search values
+    public static final String CONNECTION_ATTRIBUTE_NAME_EMAIL = "email";
+    public static final String CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID = "payout";
+    public static final String CONNECTION_ATTRIBUTE_NAME_SESSION = "session";
+    public static final String CONNECTION_ATTRIBUTE_NAME_WEB_SESSION = "webSession";
+    public static final String CONNECTION_ATTRIBUTE_NAME_NAME_BIRTH = "nameBirth";
+    public static final String CONNECTION_ATTRIBUTE_NAME_NAME_AND_BIRTH = "name+dateofbirth";
+    public static final String CONNECTION_ATTRIBUTE_NAME_DIGITAL = "digital";
+    public static final String CONNECTION_ATTRIBUTE_NAME_DEVICE = "device";
+    public static final String CONNECTION_ATTRIBUTE_NAME_PHONE = "phoneNumber";
+    public static final String CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS = "ipAddress";
+    public static final String CONNECTION_ATTRIBUTE_NAME_IP = "ip";
+    public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_TYPE = "documentType";
+    public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT = "document";
+    public static final String CONNECTION_TYPE_SAME_PERSON = "Same Person";
+    public static final String CONNECTION_TYPE_NOT_SAME_PERSON = "Not Same Person";
+    public static final String CONNECTION_TYPE_SAME_NETWORK = "Same Network";
+    public static final String CONNECTION_TYPE_SAME_IDENTITY = "Same Identity";
+    public static final String CONNECTION_TYPE_RELATION_TYPE_EXACT = "exact";
+    public static final String CONNECTION_TYPE_RELATION_TYPE_SIMILAR = "similar";
+    public static final String CONNECTION_SEARCH_DATA_CARD_NUMBER = "535456**** **0344";
+    public static final String CONNECTION_SEARCH_DATA_EMAIL1 = "matisse@gmx.net";
+    public static final String CONNECTION_SEARCH_DATA_EMAIL2 = "matisse@gmx.net";
+    public static final String CONNECTION_SEARCH_DATA_IP1 = "92.14.100.34";
+    public static final String CONNECTION_SEARCH_DATA_IP2 = "92.14.100.35";
+    public static final String CONNECTION_SEARCH_DATA_IP3 = "111.111.111.111";
+    public static final String CONNECTION_SEARCH_DATA_IP4 = "124.12.12.42";
+    public static final String CONNECTION_SEARCH_DATA_IP5 = "124.12.12.46";
+    public static final String CONNECTION_SEARCH_DATA_DEVICE = "4a25971ab724427eb8fc24a257c5b2df";
+    public static final String CONNECTION_SEARCH_DATA_DOCUMENT = "3110200460092";
+    //
+    public static final String COMMENT_AUTOMATION_TESTS = "Automation tests";
+    public static final String TIME_2024_12_31_00_00_00 = "2024-12-31 00:00:00";
+    public static final String TIME_2024_2024_12_29_14_59_30_084000000 = "2024-12-29 14:59:30.084000000";
+    public static final String ACCOUNT_TYPE_STANDARD = "Standard";
+    public static final String ACCOUNT_TYPE_SWAP_FREE = "Swap free";
+    public static final String ACCOUNT_GROUP_S_VFX_EUR = "S_VFX_EUR";
+    public static final String ACCOUNT_STATUS_ACTIVE = "Active";
+    public static final String ACCOUNT_STATUS_INACTIVE = "Inactive";
+    public static final String PLATFORM_MT_4 = "MT4";
+    public static final String PLATFORM_MT_5 = "MT5";
+    public static final String EURUSD = "EURUSD";
+    public static final String EURGBP = "EURGBP";
+    //
 }

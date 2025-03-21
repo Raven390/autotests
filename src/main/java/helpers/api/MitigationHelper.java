@@ -1,10 +1,10 @@
 package helpers.api;
 
-import businessObjects.api.mitigationService.PostRestrictionRequestBody;
+import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import io.qameta.allure.Allure;
 import okhttp3.Response;
 
-import static businessObjects.api.mitigationService.MitigationServiceRequest.postRestriction;
+import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MitigationHelper {
