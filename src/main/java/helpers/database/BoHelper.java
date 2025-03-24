@@ -100,7 +100,7 @@ public class BoHelper {
     }
 
     @Step("Check confirmation status of alert in DB")
-    public static void checkUserAlertConfirmation(String ucid, boolean expectedConfirmation) throws Exception {
+    public static void checkUserAlertConfirmation(String ucid, String expectedConfirmation) throws Exception {
         Allure.step("Check confirmation status of alert in DB");
         Thread.sleep(2000);
 
@@ -110,7 +110,7 @@ public class BoHelper {
         List<Alert> alert = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'", Alert.class);
         Thread.sleep(100);
 
-        assertEquals(alert.getFirst().confirmed, expectedConfirmation);
+        assertEquals(expectedConfirmation, alert.getFirst().getAlertResolution());
     }
 
     @Step("Get user_id from bo db by user")

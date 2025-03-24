@@ -38,8 +38,8 @@ public class PaymentsPage extends AbstractPage {
     private final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
     private final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
-    private final String TIMELINE_BAR_CONTAINER = "//*[contains(@class, 'v-range-timeline__section-container')]";
-    private final String TIMELINE_BAR = "//*[contains(@class, 'v-range-timeline__bar')]";
+    private final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
+    private final String TIMELINE_BAR = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
     private final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
     private final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
     private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
@@ -62,11 +62,11 @@ public class PaymentsPage extends AbstractPage {
         this.financialDateGraphContainerTooltip = page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
         this.clearSelectedAccountsButton = page.locator(".g-select-clear");
         this.accountSelectionWindow = page.locator(".v-payments-summary-filters__accounts button.g-select-control__button");
-        this.timelineSection = page.locator(TIMELINE_BAR_CONTAINER);
+        this.timelineSection = page.locator(TIMELINE_BAR);
         this.dateFilterSelectionButton = page.locator(".v-date-picker__select  button");
         this.calendarSelectionButton = page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='Custom dates']");
-        this.timelineThumb = page.locator(".v-range-timeline__thumb");
-        this.inactiveTimelineSection = page.locator(".v-range-timeline__section-container_isTransparent");
+        this.timelineThumb = page.locator(".v-range-timeline-thumb");
+        this.inactiveTimelineSection = page.locator(".v-range-timeline-section_isTransparent");
         this.activeTimelineSection = page.locator(ACTIVE_TIMELINE_SECTION_SELECTOR);
     }
 
@@ -334,7 +334,7 @@ public class PaymentsPage extends AbstractPage {
 
     public void checkTimelineSectionInactive(int sectionIndex) {
         Allure.step("check that timeline section number " + (sectionIndex + 1) + " is inactive");
-        assertTrue(timelineSection.nth(sectionIndex).and(inactiveTimelineSection).isVisible());
+        assertTrue(page.locator(TIMELINE_BAR).nth(sectionIndex).and(inactiveTimelineSection).isVisible());
     }
 
     public void checkLastTimelineSectionInactive() {

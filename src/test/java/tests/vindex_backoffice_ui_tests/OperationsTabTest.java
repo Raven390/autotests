@@ -14,10 +14,7 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 import utils.Utils;
 
@@ -571,100 +568,6 @@ public class OperationsTabTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("636")
-    @DisplayName("Operations tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
-    public void filterLegend1And7DaysTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter one day");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
-        page.reload();
-        Allure.step("filter seven days");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("637")
-    @DisplayName("Operations tab. When user filters 8-30 days one division on timeline is 1 day with date for every two days")
-    public void filterLegend8And31DaysTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 8 day");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        page.reload();
-        Allure.step("filter 30 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("638")
-    @DisplayName("Operations tab. When user filters 31-98 days one division on timeline is 1 week with legend for every section")
-    public void filterLegend31And98DaysTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 31 day");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
-        page.reload();
-        Allure.step("filter 98 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("639")
-    @DisplayName("Operations tab. When user filters 99 days - 3 years one division on timeline is month with legend for every two months")
-    public void filterLegend98DaysAnd3YearTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 99 days");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
-        page.reload();
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("640")
-    @DisplayName("Operations tab. When user filters 3+ years division on timeline is 1 year with legend for every year")
-    public void filterLegend3YearsTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("635")
     @DisplayName("Operations tab. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
     public void timelineInactiveDaysFilter6DaysTest() {
@@ -903,6 +806,116 @@ public class OperationsTabTest extends TestBaseWeb {
         paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("636")
+    @DisplayName("Operations tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
+    public void filterLegend1And7DaysTest() throws Exception {
+        cleanUserCashflowDb(client.getUcid());
+        CrmTbDepositObject deposit = generateDepositByClient(client);
+        deposit.createTimeUtc = (getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 0, 0));
+        deposit.createTime = (getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 0, 0));
+        deposit.statusId = 5;
+        Allure.step("add record about deposit");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter one day");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        page.reload();
+        Allure.step("filter seven days");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+    }
+
+    @Deprecated
+    @Disabled("requirements for timeline changed")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("637")
+    @DisplayName("Operations tab. When user filters 8-30 days one division on timeline is 1 day with date for every two days")
+    public void filterLegend8And31DaysTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter 8 day");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        page.reload();
+        Allure.step("filter 30 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
+    }
+
+
+    @Deprecated
+    @Disabled("requirements for timeline changed")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("638")
+    @DisplayName("Operations tab. When user filters 31-98 days one division on timeline is 1 week with legend for every section")
+    public void filterLegend31And98DaysTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter 31 day");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        page.reload();
+        Allure.step("filter 98 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+    }
+
+    @Deprecated
+    @Disabled("requirements for timeline changed")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("639")
+    @DisplayName("Operations tab. When user filters 99 days - 3 years one division on timeline is month with legend for every two months")
+    public void filterLegend98DaysAnd3YearTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter 99 days");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        page.reload();
+        Allure.step("filter 3 years");
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
+    }
+
+    @Deprecated
+    @Disabled("requirements for timeline changed")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("640")
+    @DisplayName("Operations tab. When user filters 3+ years division on timeline is 1 year with legend for every year")
+    public void filterLegend3YearsTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter 3 years");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
+        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
     }
 
 }

@@ -608,7 +608,17 @@ public class RestrictionPage extends AbstractPage {
             String expectedStatus) throws Exception {
         Thread.sleep(7000);
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestriction.class);
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
+        ClientsRestriction restriction = restrictionList.getLast();
+        assertEquals(ucid, restriction.ucid);
+        assertEquals(expectedStatus, restriction.status);
+    }
+
+    public static void checkUserHaveRestriction(String ucid, int restrictionId, String expectedStatus)
+            throws Exception {
+        Thread.sleep(7000);
+        Allure.step("check user have restriction in Mitigation DataBase");
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
         ClientsRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
