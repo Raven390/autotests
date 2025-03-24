@@ -61,7 +61,7 @@ public class MarketManipulationRuleDataFactory {
         data.dictAccountToUcidObject = generateDictByClient(client);
         data.aggrCreditEquityRate = creditEquityRate;
         Long tradeId = getRandomLongPositive();
-        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", tradeId, getRandomIntPositive().longValue(), 0, 0, 1, 1d, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 2502.0, 1, 1d, 2502.0, 1, 1d, 1L, tradeId.longValue(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", tradeId, getRandomIntPositive().longValue(), 0, 0, 1, 1d, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 2502.0, 1d, 1d, 2502.0, 1d, 1d, 1L, tradeId.longValue(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
         data.mtMt5PositionsObjects.add(generatePositionByOrder(order));
         data.mt5DealsCoercedObjects.add(order);
         data.closeTradeEvent = new CloseTradeMtEvent(
@@ -124,7 +124,7 @@ public class MarketManipulationRuleDataFactory {
         data.mt5DealsCoercedObjects.getFirst().setTimeUtc(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60));
         data.mt5DealsCoercedObjects.getFirst().setLastUpdated(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60));
         data.aggrCreditEquityRate.currentEquity = 2501.0;
-        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), EURGBP, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), EURGBP, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1d, 1d, -1.0, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
         data.mt5DealsCoercedObjects.add(order);
         return data;
     }
@@ -137,7 +137,7 @@ public class MarketManipulationRuleDataFactory {
         data.mt5DealsCoercedObjects.getFirst().setTimeUtc(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60));
         data.mt5DealsCoercedObjects.getFirst().setLastUpdated(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 60));
         data.aggrCreditEquityRate.currentEquity = 2501.0;
-        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), EURGBP, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1, 1d, -1.0, 1, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+        Mt5DealsCoercedObject order = new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), "MT5", client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampDbFormatMinusDays(1), getCurrentTimestampDbFormat(), EURGBP, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, -1.0, 1d, 1d, -1.0, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
         data.mt5DealsCoercedObjects.add(order);
 
         data.floatingTrades.add(new AggrFloatingTradesGroupBy(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId(), getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 20, 0), 0, 0, "USDEUR", 123.45, 2499.0, 123.45));
@@ -223,7 +223,7 @@ public class MarketManipulationRuleDataFactory {
         consecutiveTrade2.setNotionalValueUsd(1_000_000d);
 
         MtMt5PositionsObject positionsObject1 = generatePositionByOrder(consecutiveTrade1);
-        positionsObject1.notionalValueUsd = 1_000_000d;
+        positionsObject1.setNotionalValueUsd(1_000_000d);
 
         data.mt5DealsCoercedObjects.add(consecutiveTrade1);
         data.mt5DealsCoercedObjects.add(consecutiveTrade2);
@@ -311,7 +311,7 @@ public class MarketManipulationRuleDataFactory {
         consecutiveTrade2.setNotionalValueUsd(1_000_000d);
 
         MtMt5PositionsObject positionsObject1 = generatePositionByOrder(consecutiveTrade1);
-        positionsObject1.notionalValueUsd = 1_000_000d;
+        positionsObject1.setNotionalValueUsd(1_000_000d);
 
         data.mt5DealsCoercedObjects.add(consecutiveTrade1);
         data.mt5DealsCoercedObjects.add(consecutiveTrade2);
@@ -403,7 +403,7 @@ public class MarketManipulationRuleDataFactory {
         consecutiveTrade2.setNotionalValueUsd(1_000_000d);
 
         MtMt5PositionsObject positionsObject1 = generatePositionByOrder(consecutiveTrade1);
-        positionsObject1.notionalValueUsd = 1_000_000d;
+        positionsObject1.setNotionalValueUsd(1_000_000d);
 
         data.mt5DealsCoercedObjects.add(consecutiveTrade1);
         data.mt5DealsCoercedObjects.add(consecutiveTrade2);

@@ -152,13 +152,13 @@ public class DemoClientCreator {
         deal1.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
         deal1.setProfitUsd(getRandomRoundedDouble(0, 555_555));
         deal1.setCommissionUsd(getRandomRoundedDouble(0, 555_555));
-        deal1.setStorageUsd(getRandomInt());
+        deal1.setStorageUsd(getRandomDouble());
         Allure.step("Generate MT5 deals outside of current date");
         Mt5DealsCoercedObject deal2 = generateTradeByClient(client1);
         deal2.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
         deal2.setProfitUsd(getRandomRoundedDouble(0, 555_555));
         deal2.setCommissionUsd(getRandomRoundedDouble(0, 555_555));
-        deal2.setStorageUsd(getRandomInt());
+        deal2.setStorageUsd(getRandomDouble());
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2));
         System.out.println("Client " + client1.getUcid() + " created");
     }

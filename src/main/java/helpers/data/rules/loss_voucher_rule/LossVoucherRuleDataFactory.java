@@ -70,9 +70,9 @@ public class LossVoucherRuleDataFactory {
         deal.setServerId(data.clientHelper.getServerId());
         deal.setAccount(data.clientHelper.getTradingAccount());
         deal.setProfit(201d);
-        deal.setStorage(1);
+        deal.setStorage(1d);
         deal.setProfitUsd(201d);
-        deal.setStorageUsd(1);
+        deal.setStorageUsd(1d);
         deal.setCommission(1d);
         deal.setCommissionUsd(1d);
         data.mt5DealsCoercedObjects.add(deal);
@@ -103,9 +103,9 @@ public class LossVoucherRuleDataFactory {
         deal.setServerId(data.clientHelper.getServerId());
         deal.setAccount(data.clientHelper.getTradingAccount());
         deal.setProfit(-100d);
-        deal.setStorage(1);
+        deal.setStorage(1d);
         deal.setProfitUsd(-100d);
-        deal.setStorageUsd(1);
+        deal.setStorageUsd(1d);
         deal.setCommission(1d);
         deal.setCommissionUsd(1d);
         data.mt5DealsCoercedObjects.add(deal);
@@ -134,9 +134,9 @@ public class LossVoucherRuleDataFactory {
         deal.setServerId(data.clientHelper.getServerId());
         deal.setAccount(data.clientHelper.getTradingAccount());
         deal.setProfit(110d);
-        deal.setStorage(1);
+        deal.setStorage(1d);
         deal.setProfitUsd(110d);
-        deal.setStorageUsd(1);
+        deal.setStorageUsd(1d);
         deal.setCommission(1d);
         deal.setCommissionUsd(1d);
         data.mt5DealsCoercedObjects.add(deal);

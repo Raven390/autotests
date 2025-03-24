@@ -35,6 +35,10 @@ public class Utils {
         return random.nextInt();
     }
 
+    public static Double getRandomDouble() {
+        return random.nextDouble();
+    }
+
     public static String startFromUpper(String lowerCase) {
         return lowerCase.substring(0, 1).toUpperCase() + lowerCase.substring(1);
     }

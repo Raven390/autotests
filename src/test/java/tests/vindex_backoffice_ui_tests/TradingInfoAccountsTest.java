@@ -53,13 +53,13 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         account2.accountStatus = "Inactive";
         Mt5DealsCoercedObject trade1 = generateTradeByClient(client);
         trade1.setProfitUsd(22.2);
-        trade1.setStorageUsd(0);
+        trade1.setStorageUsd(0d);
         trade1.setCommissionUsd(0.0);
         Mt5DealsCoercedObject trade2 = generateTradeByClient(client);
         trade2.setAccount(account2.account);
         trade2.setServerId(account2.serverIdSt);
         trade2.setProfitUsd(22.2);
-        trade2.setStorageUsd(0);
+        trade2.setStorageUsd(0d);
         trade2.setCommissionUsd(0.0);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
 

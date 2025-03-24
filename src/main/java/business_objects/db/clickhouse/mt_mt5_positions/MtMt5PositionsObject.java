@@ -3,53 +3,53 @@ package business_objects.db.clickhouse.mt_mt5_positions;
 import java.util.Objects;
 
 public class MtMt5PositionsObject {
-    public String brand;
-    public String regulator;
-    public Integer userId;
-    public String ucid;
-    public Integer account;
-    public String platform;
-    public Integer serverId;
-    public String serverName;
-    public String accountType;
-    public String accountGroup;
-    public String accountCurrency;
-    public Long positionId;
-    public Integer action;
-    public Integer reason;
-    public Double contractSize;
-    public String timeCreate;
-    public String timeCreateUtc;
-    public String timeUpdate;
-    public String timeUpdateUtc;
-    public String symbol;
-    public String symbolUnderlying;
-    public String baseCurrency;
-    public String quoteCurrency;
-    public Double rateUsdBase;
-    public Double rateUsdQuote;
-    public Double rateUsdAcc;
-    public Double priceOpen;
-    public Double priceCurrent;
-    public Double volume;
-    public Double volumeLots;
-    public Double notionalValueUsd;
-    public Double profit;
-    public Integer storage;
-    public Double profitUsd;
-    public Integer storageUsd;
-    public String comment;
-    public Double sl;
-    public Double tp;
-    public Double expertId;
-    public Double expertPositionId;
-    public Integer dealer;
-    public Integer rateProfit;
-    public Integer rateMargin;
-    public String op;
-    public Integer isDeleted;
-    public String lastUpdated;
-    public String internalComment;
+    private String brand;
+    private String regulator;
+    private Integer userId;
+    private String ucid;
+    private Integer account;
+    private String platform;
+    private Integer serverId;
+    private String serverName;
+    private String accountType;
+    private String accountGroup;
+    private String accountCurrency;
+    private Long positionId;
+    private Integer action;
+    private Integer reason;
+    private Double contractSize;
+    private String timeCreate;
+    private String timeCreateUtc;
+    private String timeUpdate;
+    private String timeUpdateUtc;
+    private String symbol;
+    private String symbolUnderlying;
+    private String baseCurrency;
+    private String quoteCurrency;
+    private Double rateUsdBase;
+    private Double rateUsdQuote;
+    private Double rateUsdAcc;
+    private Double priceOpen;
+    private Double priceCurrent;
+    private Double volume;
+    private Double volumeLots;
+    private Double notionalValueUsd;
+    private Double profit;
+    private Double storage;
+    private Double profitUsd;
+    private Double storageUsd;
+    private String comment;
+    private Double sl;
+    private Double tp;
+    private Double expertId;
+    private Double expertPositionId;
+    private Integer dealer;
+    private Integer rateProfit;
+    private Integer rateMargin;
+    private String op;
+    private Integer isDeleted;
+    private String lastUpdated;
+    private String internalComment;
 
     public MtMt5PositionsObject() {
     }
@@ -62,8 +62,8 @@ public class MtMt5PositionsObject {
             String timeUpdate,
             String timeUpdateUtc, String symbol, String symbolUnderlying, String baseCurrency, String quoteCurrency,
             Double rateUsdBase, Double rateUsdQuote, Double rateUsdAcc, Double priceOpen, Double priceCurrent,
-            Double volume, Double volumeLots, Double notionalValueUsd, Double profit, Integer storage, Double profitUsd,
-            Integer storageUsd, String comment, Double sl, Double tp, Double expertId, Double expertPositionId,
+            Double volume, Double volumeLots, Double notionalValueUsd, Double profit, Double storage, Double profitUsd,
+            Double storageUsd, String comment, Double sl, Double tp, Double expertId, Double expertPositionId,
             Integer dealer, Integer rateProfit, Integer rateMargin, String op, Integer isDeleted, String lastUpdated,
             String internalComment) {
         this.brand = brand;
@@ -151,5 +151,381 @@ public class MtMt5PositionsObject {
     @Override
     public String toString() {
         return "MtMt5PositionsObject{" + "brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", platform='" + platform + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", accountType='" + accountType + '\'' + ", accountGroup='" + accountGroup + '\'' + ", accountCurrency='" + accountCurrency + '\'' + ", positionId=" + positionId + ", action=" + action + ", reason=" + reason + ", contractSize=" + contractSize + ", timeCreate='" + timeCreate + '\'' + ", timeCreateUtc='" + timeCreateUtc + '\'' + ", timeUpdate='" + timeUpdate + '\'' + ", timeUpdateUtc='" + timeUpdateUtc + '\'' + ", symbol='" + symbol + '\'' + ", symbolUnderlying='" + symbolUnderlying + '\'' + ", baseCurrency='" + baseCurrency + '\'' + ", quoteCurrency='" + quoteCurrency + '\'' + ", rateUsdBase=" + rateUsdBase + ", rateUsdQuote=" + rateUsdQuote + ", rateUsdAcc=" + rateUsdAcc + ", priceOpen=" + priceOpen + ", priceCurrent=" + priceCurrent + ", volume=" + volume + ", volumeLots=" + volumeLots + ", notionalValueUsd=" + notionalValueUsd + ", profit=" + profit + ", storage=" + storage + ", profitUsd=" + profitUsd + ", storageUsd=" + storageUsd + ", comment='" + comment + '\'' + ", sl=" + sl + ", tp=" + tp + ", expertId=" + expertId + ", expertPositionId=" + expertPositionId + ", dealer=" + dealer + ", rateProfit=" + rateProfit + ", rateMargin=" + rateMargin + ", op='" + op + '\'' + ", isDeleted=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getRegulator() {
+        return regulator;
+    }
+
+    public void setRegulator(String regulator) {
+        this.regulator = regulator;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUcid() {
+        return ucid;
+    }
+
+    public void setUcid(String ucid) {
+        this.ucid = ucid;
+    }
+
+    public Integer getAccount() {
+        return account;
+    }
+
+    public void setAccount(Integer account) {
+        this.account = account;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getAccountGroup() {
+        return accountGroup;
+    }
+
+    public void setAccountGroup(String accountGroup) {
+        this.accountGroup = accountGroup;
+    }
+
+    public String getAccountCurrency() {
+        return accountCurrency;
+    }
+
+    public void setAccountCurrency(String accountCurrency) {
+        this.accountCurrency = accountCurrency;
+    }
+
+    public Long getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
+    }
+
+    public Integer getAction() {
+        return action;
+    }
+
+    public void setAction(Integer action) {
+        this.action = action;
+    }
+
+    public Integer getReason() {
+        return reason;
+    }
+
+    public void setReason(Integer reason) {
+        this.reason = reason;
+    }
+
+    public Double getContractSize() {
+        return contractSize;
+    }
+
+    public void setContractSize(Double contractSize) {
+        this.contractSize = contractSize;
+    }
+
+    public String getTimeCreate() {
+        return timeCreate;
+    }
+
+    public void setTimeCreate(String timeCreate) {
+        this.timeCreate = timeCreate;
+    }
+
+    public String getTimeCreateUtc() {
+        return timeCreateUtc;
+    }
+
+    public void setTimeCreateUtc(String timeCreateUtc) {
+        this.timeCreateUtc = timeCreateUtc;
+    }
+
+    public String getTimeUpdate() {
+        return timeUpdate;
+    }
+
+    public void setTimeUpdate(String timeUpdate) {
+        this.timeUpdate = timeUpdate;
+    }
+
+    public String getTimeUpdateUtc() {
+        return timeUpdateUtc;
+    }
+
+    public void setTimeUpdateUtc(String timeUpdateUtc) {
+        this.timeUpdateUtc = timeUpdateUtc;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getSymbolUnderlying() {
+        return symbolUnderlying;
+    }
+
+    public void setSymbolUnderlying(String symbolUnderlying) {
+        this.symbolUnderlying = symbolUnderlying;
+    }
+
+    public String getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public void setBaseCurrency(String baseCurrency) {
+        this.baseCurrency = baseCurrency;
+    }
+
+    public String getQuoteCurrency() {
+        return quoteCurrency;
+    }
+
+    public void setQuoteCurrency(String quoteCurrency) {
+        this.quoteCurrency = quoteCurrency;
+    }
+
+    public Double getRateUsdBase() {
+        return rateUsdBase;
+    }
+
+    public void setRateUsdBase(Double rateUsdBase) {
+        this.rateUsdBase = rateUsdBase;
+    }
+
+    public Double getRateUsdQuote() {
+        return rateUsdQuote;
+    }
+
+    public void setRateUsdQuote(Double rateUsdQuote) {
+        this.rateUsdQuote = rateUsdQuote;
+    }
+
+    public Double getRateUsdAcc() {
+        return rateUsdAcc;
+    }
+
+    public void setRateUsdAcc(Double rateUsdAcc) {
+        this.rateUsdAcc = rateUsdAcc;
+    }
+
+    public Double getPriceOpen() {
+        return priceOpen;
+    }
+
+    public void setPriceOpen(Double priceOpen) {
+        this.priceOpen = priceOpen;
+    }
+
+    public Double getPriceCurrent() {
+        return priceCurrent;
+    }
+
+    public void setPriceCurrent(Double priceCurrent) {
+        this.priceCurrent = priceCurrent;
+    }
+
+    public Double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(Double volume) {
+        this.volume = volume;
+    }
+
+    public Double getVolumeLots() {
+        return volumeLots;
+    }
+
+    public void setVolumeLots(Double volumeLots) {
+        this.volumeLots = volumeLots;
+    }
+
+    public Double getNotionalValueUsd() {
+        return notionalValueUsd;
+    }
+
+    public void setNotionalValueUsd(Double notionalValueUsd) {
+        this.notionalValueUsd = notionalValueUsd;
+    }
+
+    public Double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(Double profit) {
+        this.profit = profit;
+    }
+
+    public Double getStorage() {
+        return storage;
+    }
+
+    public void setStorage(Double storage) {
+        this.storage = storage;
+    }
+
+    public Double getProfitUsd() {
+        return profitUsd;
+    }
+
+    public void setProfitUsd(Double profitUsd) {
+        this.profitUsd = profitUsd;
+    }
+
+    public Double getStorageUsd() {
+        return storageUsd;
+    }
+
+    public void setStorageUsd(Double storageUsd) {
+        this.storageUsd = storageUsd;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Double getSl() {
+        return sl;
+    }
+
+    public void setSl(Double sl) {
+        this.sl = sl;
+    }
+
+    public Double getTp() {
+        return tp;
+    }
+
+    public void setTp(Double tp) {
+        this.tp = tp;
+    }
+
+    public Double getExpertId() {
+        return expertId;
+    }
+
+    public void setExpertId(Double expertId) {
+        this.expertId = expertId;
+    }
+
+    public Double getExpertPositionId() {
+        return expertPositionId;
+    }
+
+    public void setExpertPositionId(Double expertPositionId) {
+        this.expertPositionId = expertPositionId;
+    }
+
+    public Integer getDealer() {
+        return dealer;
+    }
+
+    public void setDealer(Integer dealer) {
+        this.dealer = dealer;
+    }
+
+    public Integer getRateProfit() {
+        return rateProfit;
+    }
+
+    public void setRateProfit(Integer rateProfit) {
+        this.rateProfit = rateProfit;
+    }
+
+    public Integer getRateMargin() {
+        return rateMargin;
+    }
+
+    public void setRateMargin(Integer rateMargin) {
+        this.rateMargin = rateMargin;
+    }
+
+    public String getOp() {
+        return op;
+    }
+
+    public void setOp(String op) {
+        this.op = op;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getInternalComment() {
+        return internalComment;
+    }
+
+    public void setInternalComment(String internalComment) {
+        this.internalComment = internalComment;
     }
 }

@@ -34,7 +34,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
     private static BoClientFraudTypesObject fraud3;
 
     @BeforeAll
-    public static void setupAbuseTypes() {
+    static void setupData() {
         ClientHelper client = getRandomVantageClient();
         fraud1 = new BoClientFraudTypesObject(client.getUcid(), 1, "HEDGING");
         fraud2 = new BoClientFraudTypesObject(client.getUcid(), 2, "CPA");
@@ -43,14 +43,14 @@ public class GetAbuseTypesTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownAbuseTypes() throws Exception {
+    static void deleteData() throws Exception {
         cleanFraudTypeTableByClient(fraud1.ucid, fraud2.ucid, fraud3.ucid);
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get abuse types single client success (200)")
     @AllureId("429")
-    public void getAbuseTypesSingleClientTest() throws IOException {
+    void getAbuseTypesSingleClientTest() throws IOException {
 
         Response response = getAbuseTypes(List.of(fraud1.ucid));
 
@@ -67,7 +67,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get abuse types multiple clients success (200)")
     @AllureId("430")
-    public void getAbuseTypesMultipleClientsTest() throws IOException {
+    void getAbuseTypesMultipleClientsTest() throws IOException {
 
         GetAbuseTypesResponse abuseTypesResponse1 = new GetAbuseTypesResponse(fraud1.ucid, new String[]{fraud2.fraudTypeCode, fraud1.fraudTypeCode});
         GetAbuseTypesResponse abuseTypesResponse2 = new GetAbuseTypesResponse(fraud3.ucid, new String[]{fraud3.fraudTypeCode});
@@ -85,7 +85,7 @@ public class GetAbuseTypesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get abuse types incorrect clientIds (400)")
     @AllureId("431")
-    public void getAbuseTypesIncorrectClientIdsTest() throws IOException {
+    void getAbuseTypesIncorrectClientIdsTest() throws IOException {
 
         Response response = getAbuseTypes(List.of("test"));
 
