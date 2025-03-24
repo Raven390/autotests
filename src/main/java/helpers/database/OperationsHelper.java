@@ -24,6 +24,8 @@ public class OperationsHelper {
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid = '" + ucid + "'");
         System.out.println("deposits deleted");
         ClientHelper dummy = new ClientHelper(1, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 1001, 1002, 1);
+        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid = '" + dummy.getUcid() + "'");
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid = '" + dummy.getUcid() + "'");
         CrmTbWithdrawalObject dummyW = generateWithdrawalByClient(dummy);
         CrmTbDepositObject dummyD = generateDepositByClient(dummy);
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, dummyW);
