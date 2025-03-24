@@ -5,6 +5,7 @@ import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.crm_events.WithdrawalEvent;
 import generator.annotations.RuleTestData;
@@ -24,6 +25,7 @@ import java.util.Map;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
@@ -204,14 +206,16 @@ public class NdbRuleDataFactory {
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd6Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd6Client);
-        credit.comment = "credit in-JP NDB2406";
-
+        //credit.comment = "credit in-JP NDB2406"; is not recognized as a proper comment
+        credit.comment = "Promo-NDB-Credit In";
         Allure.step("Get connections and abuse types");
         ClientHelper connectedClient = getRandomVantageClientNoCpaIbRef();
         MtTbCreditsObject credit2 = generateCreditsByClient(connectedClient);
         credit2.internalComment = "Credit In - VN $30 NDB IBs";
         credit2.comment = "Credit In - VN $30 NDB IBs";
         CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
+
+        Mt5DealsCoercedObject trade = generateTradeByClient(data.clientHelper);
 
         Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
         Allure.step("Any under the same IB? - false");
@@ -223,6 +227,7 @@ public class NdbRuleDataFactory {
         data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         data.connectedUsers.add(connectedUser);
+        data.mt5DealsCoercedObjects.add(trade);
         return data;
     }
 

@@ -35,10 +35,10 @@ public class Mt5DealsCoercedObject {
     private Double volumeLots;
     private Double notionalValueUsd;
     private Double profit;
-    private Integer storage;
+    private Double storage;
     private Double commission;
     private Double profitUsd;
-    private Integer storageUsd;
+    private Double storageUsd;
     private Double commissionUsd;
     private Long expertId;
     private Long positionId;
@@ -59,14 +59,12 @@ public class Mt5DealsCoercedObject {
     public Mt5DealsCoercedObject(
             String brand, String regulator, Integer userId, String ucid, Integer account, String platform,
             Integer serverId,
-            String serverName, String accountType, String accountGroup, String accountCurrency, Long deal,
-            Long order,
+            String serverName, String accountType, String accountGroup, String accountCurrency, Long deal, Long order,
             Integer action, Integer entry, Integer reason, Double contractSize, String time, String timeUtc,
             String symbol,
             String symbolUnderlying, String baseCurrency, String quoteCurrency, Double rateUsdBase, Double rateUsdQuote,
             Double rateUsdAcc, Double price, Double volume, Double volumeLots, Double notionalValueUsd, Double profit,
-            Integer storage, Double commission, Double profitUsd, Integer storageUsd, Double commissionUsd,
-            Long expertId,
+            Double storage, Double commission, Double profitUsd, Double storageUsd, Double commissionUsd, Long expertId,
             Long positionId, String comment, Double sl, Double tp, Double priceGateway, Double marketBid,
             Double marketAsk,
             Double rateProfit, Integer isDeleted, String lastUpdated, String internalComment) {
@@ -402,11 +400,11 @@ public class Mt5DealsCoercedObject {
         this.profit = profit;
     }
 
-    public Integer getStorage() {
+    public Double getStorage() {
         return storage;
     }
 
-    public void setStorage(Integer storage) {
+    public void setStorage(Double storage) {
         this.storage = storage;
     }
 
@@ -426,11 +424,11 @@ public class Mt5DealsCoercedObject {
         this.profitUsd = profitUsd;
     }
 
-    public Integer getStorageUsd() {
+    public Double getStorageUsd() {
         return storageUsd;
     }
 
-    public void setStorageUsd(Integer storageUsd) {
+    public void setStorageUsd(Double storageUsd) {
         this.storageUsd = storageUsd;
     }
 
