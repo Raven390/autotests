@@ -46,6 +46,7 @@ public class TestBaseWeb {
     public PaymentsPage paymentsPage;
     public ActivityTab activityTab;
     public IbCpaOverviewPage ibCpaOverviewPage;
+    public GeneralSearchElements generalSearch;
 
     DecimalFormat df = new DecimalFormat("#,###");
     DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -91,6 +92,7 @@ public class TestBaseWeb {
         paymentsPage = new PaymentsPage(page);
         activityTab = new ActivityTab(page);
         ibCpaOverviewPage = new IbCpaOverviewPage(page);
+        generalSearch = new GeneralSearchElements(page);
     }
 
     @AfterEach

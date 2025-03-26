@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.ConfigFactory.ENTER_PAGE_E2E;
 
@@ -33,6 +34,15 @@ public abstract class AbstractPage {
     protected static final String CALENDAR_XPATH = "//div[contains(@class,'v-date-picker__calendar')]";
     protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN = "//div[contains(@class,'g-date-calendar__button') and not(contains(@class,'g-date-calendar__button_out-of-boundary')) and text()='%s']";
     protected static final String LOADING_SKELETON = "//div[contains(@class, '_skeleton-container')]";
+    static final String DANGER_HEAVY_TEXT = "*[contains(@class,'g-color-text_color_danger-heavy')]";
+    static final String PRIMARY_TEXT = "*[contains(@class,'g-color-text_color_primary')]";
+    static final String SECONDARY_TEXT = "*[contains(@class,'g-color-text_color_secondary')]";
+    static final String SUBHEADER_2_TEXT = "*[contains(@class,'g-text_variant_subheader-2')]";
+    static final String CAPTION_2_TEXT = "*[contains(@class,'g-text_variant_caption-2')]";
+    static final String SUBHEADER_3_LOCATOR = "*[contains(@class, 'g-text_variant_subheader-3')]";
+    static final String HEADER_2_LOCATOR = "*[contains(@class, 'g-text_variant_header-2')]";
+    static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
+    static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
 
     public AbstractPage(Page page) {
         this.page = page;
@@ -51,6 +61,19 @@ public abstract class AbstractPage {
         }
     }
 
+    public void checkPageUrl(String expectedUrl) {
+        Allure.step("Check pages url contains: " + expectedUrl);
+        int i = 0;
+        do {
+            waitForPageToLoad();
+            page.waitForTimeout(200);
+            i++;
+        } while (i < 60 && !(page.url().contains(expectedUrl)));
+        String currentUrl = page.url();
+        assertTrue(currentUrl.contains(expectedUrl));
+    }
+
+
     @Step("Open the autotest login page main page")
     public void navigateEnterPage() {
         page.navigate(ENTER_PAGE_E2E);
@@ -58,6 +81,7 @@ public abstract class AbstractPage {
     }
 
     public void navigateToMain() {
+        Allure.step("Navigate to main page");
         page.navigate(BASE_URL_E2E);
         waitForPageToLoad();
     }
