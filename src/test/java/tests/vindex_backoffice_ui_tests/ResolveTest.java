@@ -149,15 +149,14 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("286")
     @DisplayName("BO user can assign suspicious client with the active alert to himself to perform investigation from the alert list")
     public void assignAlertListTest() throws Exception {
-        String clientId = "161601";
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateEnterPage();
+        investigationPage.navigateToMain();
         investigationPage.filterUnassigned();
-        investigationPage.investigateUserAlertList(clientId);
+        investigationPage.investigateUserAlertList(resolveClient.getUserId());
         investigationPage.checkInvestigationAssigmentAudit(resolveClient.getUcid());
     }
 
@@ -635,32 +634,34 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("238")
     @DisplayName("Resolve tab have info about currently applied restrictions")
     public void resolveRestrictionsListTest() throws Exception {
+        Restriction restriction = Restriction.ACCOUNT_CREATION_REVIEW;
         //run 1
         restrictionPage.cleanUserRestriction(resolveClient.getUcid());
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), "01");
+        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
         createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.checkRestrictionIsDisplayed("Open new account");
+        resolvePage.checkRestrictionIsDisplayed(restriction.getDescription());
         //run 2
+        Restriction restriction1 = Restriction.LOGIN_CRM;
         restrictionPage.cleanUserRestriction(resolveClient.getUcid());
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
         Response response2 = enableCRMEmulator();
         assertNotNull(response2);
-        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), "05");
+        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
         createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getKey());
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.checkRestrictionIsDisplayed("Login CRM");
+        resolvePage.checkRestrictionIsDisplayed(restriction1.getDescription());
     }
 
     @Test

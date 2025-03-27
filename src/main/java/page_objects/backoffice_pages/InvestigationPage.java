@@ -369,7 +369,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Mock comment api to return error")
     public void mockCommentError(String ucid) {
-        page.route("**/api/clients/" + ucid + "/comments", route -> {
+        page.route("**/clients/" + ucid + "/comments", route -> {
             APIResponse response = route.fetch();
             Map<String, String> headers = response.headers();
             route.fulfill(new Route.FulfillOptions().setResponse(response).setBody("500").setHeaders(headers).setStatus(500));
@@ -417,9 +417,13 @@ public class InvestigationPage extends AbstractPage {
             attempts++;
         }
         page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").hover();
-        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa='investigation_page__suspicious_client_card']/descendant::button[@data-qa='investigation_tools__client_card_assign_button']").click();
+        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa='investigation_page__suspicious_client_card']/descendant::button[@data-qa='investigation_tools__client_card_assign_button']").nth(0).click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
+    }
+
+    public void investigateUserAlertList(Integer userId) {
+        investigateUserAlertList(String.valueOf(userId));
     }
 
     @Step("take client to investigation from the client card")
@@ -438,7 +442,7 @@ public class InvestigationPage extends AbstractPage {
 
     public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
         Allure.step("check assigment event in Audit DB");
-        page.waitForTimeout(1000);
+        page.waitForTimeout(5000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type = event.get(1).getType();
         assertEquals("CLIENT_ASSIGNED", type);

@@ -559,6 +559,8 @@ public class OperationsTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter 6 days");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
         paymentsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);

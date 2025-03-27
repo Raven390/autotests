@@ -105,7 +105,7 @@ public class ConnectionSearch {
         stopSshTunnel();
     }
 
-    public static void cleanDemoDataConnectionSearch() {
+    public static void cleanDemoDataConnectionSearch() throws Exception {
         cleanUserFraudsDb(ucid2);
         cleanUserFraudsDb(ucid5);
         cleanUserFraudsDb(ucid7);
