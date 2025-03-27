@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -33,8 +33,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_NDB_ABUSE_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class NdbRuleTests extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class NdbRuleTests extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_1. User don't have any ndb")
     @AllureId("945")
-    public void ndbRuleExitEventEnd1Test() throws Exception {
+    void ndbRuleExitEventEnd1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
@@ -72,7 +72,7 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_2. Linked fraud - other")
     @AllureId("947")
-    public void ndbRuleExitEventEnd2Test() throws Exception {
+    void ndbRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
@@ -108,7 +108,7 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_3. Linked active accounts not with same email AND NDB from the last 1 week? = false")
     @AllureId("945")
-    public void ndbRuleExitEventEnd3Test() throws Exception {
+    void ndbRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
@@ -126,8 +126,8 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_4_1. Linked fraud - LVA")
     @AllureId("948")
-    public void ndbRuleExitEventEnd4_1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_1");
+    void ndbRuleExitEventEnd4_1Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("41");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -169,8 +169,8 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_4_2. Linked fraud - Hedging")
     @AllureId("949")
-    public void ndbRuleExitEventEnd4_2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_2");
+    void ndbRuleExitEventEnd4_2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("42");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -212,8 +212,8 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_4_3. Any under the same IB? = true")
     @AllureId("951")
-    public void ndbRuleExitEventEnd4_3Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_3");
+    void ndbRuleExitEventEnd4_3Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("43");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -254,7 +254,7 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_5. Lexis registration score high? = false")
     @AllureId("960")
-    public void ndbRuleExitEventEnd5Test() throws Exception {
+    void ndbRuleExitEventEnd5Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("5");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
@@ -272,7 +272,7 @@ public class NdbRuleTests extends TestBaseRule {
     @Test
     @DisplayName("NDB rule exit Event_6. Lexis registration score high? = true")
     @AllureId("961")
-    public void ndbRuleExitEventEnd6Test() throws Exception {
+    void ndbRuleExitEventEnd6Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("6");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 

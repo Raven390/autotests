@@ -270,9 +270,33 @@ public class DbHelper {
             return createPostgresConnectionAudit();
         } else if (dbName == DbName.BO) {
             return createPostgresConnectionBO();
+        } else if (dbName == DbName.RULE_ENGINE) {
+            return createPostgresConnectionRuleEngine();
         } else {
             return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
         }
+    }
+
+    public static Connection createConnectionRuleEngineDb() throws SQLException {
+        return createPostgresConnectionRuleEngine();
+    }
+
+    private static Connection createPostgresConnectionRuleEngine() throws SQLException {
+        String jdbcUrl;
+        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        } else {
+            //jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+
+        }
+        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
+
+        Properties connectionProps = new Properties();
+        connectionProps.setProperty("user", RULE_ENGINE_DB_USER);
+        connectionProps.setProperty("password", RULE_ENGINE_DB_PASSWORD);
+
+        return DriverManager.getConnection(jdbcUrl, connectionProps);
     }
 
     private static Connection createPostgresConnection() throws SQLException {

@@ -12,7 +12,8 @@ public class Constants {
     public static final String SUITE_CONNECTION_SEARCH_SERVICE = "suite_connection_search_service";
     public static final String SUITE_EVENT_GENERATOR_SERVICE = "suite_event_generator_service";
     public static final String SUITE_MITIGATION_SERVICE = "suite_mitigation_service";
-    public static final String SUITE_RULE_ENGINE_SERVICE = "suite_rule_engine_service";
+    public static final String SUITE_RULE_ENGINE_RULES_TESTS = "suite_rule_engine_rules_tests";
+    public static final String SUITE_RULE_ENGINE_API_TESTS = "suite_rule_engine_api_tests";
     // TEST LAYERS
     public static final String LAYER_API = "layer_api";
     public static final String LAYER_WEB = "layer_web";
@@ -154,6 +155,7 @@ public class Constants {
     public static final String IB_SUMMARY_LIFETIME_TABLE_NAME = "datamarts_test.ib_summary_lifetime";
     public static final String IB_SUMMARY_BY_DATE_TABLE_NAME = "datamarts_test.ib_summary_by_date";
     public static final String CRM_TB_USER_EXTENDS_TABLE_NAME = "vindex_test.crm___tb_user_extends";
+    public static final String RULE_ENGINE_RULE_TABLE = "ruleengine.rule";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

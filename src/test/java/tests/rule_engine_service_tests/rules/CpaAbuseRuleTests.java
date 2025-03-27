@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -27,10 +27,10 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_CPA_ABUSE_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class CpaAbuseRuleTests extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class CpaAbuseRuleTests extends TestBaseRule {
 
-    public static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
+    static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
     static void setupData() throws Exception {
@@ -48,7 +48,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event_1. User don't have cpaId")
     @AllureId("916")
-    public void mirrorTradeRuleExitEventEnd1Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
@@ -68,10 +68,10 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event_2_1. User connected to known abuser")
+    @DisplayName("CPA abuse rule exit Event_21. User connected to known abuser")
     @AllureId("917")
-    public void mirrorTradeRuleExitEventEnd2_1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("2_1");
+    void mirrorTradeRuleExitEventEnd2_1Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("21");
         Allure.step("Produce withdrawal event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
@@ -109,10 +109,10 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event_2_2. Among connected clients for the same brand, if there are more than 3 clients, do at least 65% of them have the same CPA value as the initial client?")
+    @DisplayName("CPA abuse rule exit Event_22. Among connected clients for the same brand, if there are more than 3 clients, do at least 65% of them have the same CPA value as the initial client?")
     @AllureId("921")
-    public void mirrorTradeRuleExitEventEnd2_2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("2_2");
+    void mirrorTradeRuleExitEventEnd2_2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("22");
         Allure.step("Produce withdrawal event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
@@ -151,7 +151,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event 3. Allow withdrawal")
     @AllureId("929")
-    public void mirrorTradeRuleExitEventEnd3Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
         Allure.step("Produce withdrawal event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -164,7 +164,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event 4_1. Score > 3. Connected to other account with same CPA - false")
     @AllureId("929")
-    public void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_1");
         Allure.step("Produce withdrawal event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -190,7 +190,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event 4_2. Score > 3. Connected to other account with same CPA - true")
     @AllureId("929")
-    public void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_2");
         Allure.step("Produce withdrawal event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -229,7 +229,7 @@ public class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event 4_3. Score < 3. Connected to other account with same CPA - true")
     @AllureId("929")
-    public void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_3");
         Allure.step("Produce registration event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);

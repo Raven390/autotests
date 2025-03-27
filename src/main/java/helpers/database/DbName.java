@@ -1,5 +1,5 @@
 package helpers.database;
 
 public enum DbName {
-    CLICKHOUSE, MITIGATION_POSTGRES, AUDIT, BO
+    CLICKHOUSE, MITIGATION_POSTGRES, AUDIT, BO, RULE_ENGINE
 }

@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
@@ -27,13 +26,13 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class MarketManipulationRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class MarketManipulationRuleTest extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, ReflectiveOperationException, SQLException {
+    static void setupData() throws IOException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMarketManipulationRuleData();
@@ -47,7 +46,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 5. Profit < 2500")
     @AllureId("1032")
-    public void marketManipulationRuleExitEventEnd5Test() throws Exception {
+    void marketManipulationRuleExitEventEnd5Test() throws Exception {
         Allure.step("Profit <= 2500");
         RuleDataHelper data = dbDataMap.get("5");
         System.out.println(data.clientHelper.getUcid());
@@ -71,7 +70,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 1. Equity <= 2500")
     @AllureId("952")
-    public void marketManipulationRuleExitEventEnd1Test() throws Exception {
+    void marketManipulationRuleExitEventEnd1Test() throws Exception {
         Allure.step("Equity <= 2500");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
@@ -92,7 +91,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 2v1")
     @AllureId("953")
-    public void marketManipulationRuleExitEventEnd2v1Test() throws Exception {
+    void marketManipulationRuleExitEventEnd2v1Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("Low toxicity");
         Allure.step("No PNL data");
@@ -116,7 +115,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 2v2")
     @AllureId("954")
-    public void marketManipulationRuleExitEventEnd2v2Test() throws Exception {
+    void marketManipulationRuleExitEventEnd2v2Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("Low toxicity");
         Allure.step("PnL <= 2500 for all symbols for last 30 min");
@@ -140,7 +139,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 3")
     @AllureId("956")
-    public void marketManipulationRuleExitEventEnd3Test() throws Exception {
+    void marketManipulationRuleExitEventEnd3Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("Low toxicity");
         Allure.step("PnL > 2500 for any symbol for last 30 min");
@@ -194,7 +193,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 4v1")
     @AllureId("957")
-    public void marketManipulationRuleExitEventEnd4v1Test() throws Exception {
+    void marketManipulationRuleExitEventEnd4v1Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("Low toxicity");
         Allure.step("PnL <= 2500 for any symbol for last 30 min");
@@ -263,7 +262,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 4v2")
     @AllureId("958")
-    public void marketManipulationRuleExitEventEnd4v2Test() throws Exception {
+    void marketManipulationRuleExitEventEnd4v2Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("Low toxicity");
         Allure.step("PnL > 2500 for any symbol for last 30 min");
@@ -332,7 +331,7 @@ public class MarketManipulationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Market manipulation rule exit 4v3")
     @AllureId("959")
-    public void marketManipulationRuleExitEventEnd4v3Test() throws Exception {
+    void marketManipulationRuleExitEventEnd4v3Test() throws Exception {
         Allure.step("Equity > 2500");
         Allure.step("High toxicity");
         Allure.step("Trade opened or closed at 20-21, 23, or 0-8");

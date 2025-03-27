@@ -109,6 +109,24 @@ public class HttpHelper {
         return response;
     }
 
+    @Step("Send delete request: {url}, {headersMap}, {queryParamsMap}")
+    public Response sendDeleteRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
+            Object requestBody) throws IOException {
+        HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
+        String jsonBody = convertObjectToJson(requestBody);
+        System.out.println("Body: " + jsonBody);
+        RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
+
+        Request request = buildRequestWithHeaders(httpUrl, headersMap).delete(body).build();
+
+        System.out.println("Request to execute: " + request);
+        Response response = client.newCall(request).execute();
+        System.out.println("Response : " + response);
+        System.out.println("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+
+        return response;
+    }
+
     private HttpUrl buildUrlWithQueryParams(String url, Map<String, Object> queryParamsMap) {
         HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
         if (queryParamsMap != null) {

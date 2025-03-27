@@ -103,7 +103,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd3_1Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd31Data() {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd3_1Client);
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has mirror trading abuse connected account");
@@ -118,7 +118,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd3_2Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd32Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client doesn't has mirror trading abuse connected account");
         Allure.step("Client has connected account with bonuses");
@@ -134,7 +134,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_1Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd41Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit is False");
@@ -142,7 +142,7 @@ public class MirrorTradingRuleDataFactory {
         return getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd4_1Client);
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_2Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd42Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -156,7 +156,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_3Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd43Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has connected account, not a mirror abuser");
         Allure.step("Clone has a credit");
@@ -173,7 +173,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd4_4Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd44Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has connected account, not a mirror abuser");
         Allure.step("Clone has no credits");
@@ -185,7 +185,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd5_1Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd51Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -202,7 +202,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd5_2Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd52Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -244,7 +244,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd1_1Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd11Data() {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd1_1Client);
         MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd1_1Client);
         CrmTbDepositObject deposit = generateDepositByClient(mirrorTradingRuleExitEventEnd1_1Client);
@@ -304,7 +304,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd1_2Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd12Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has connected account and connected account has no bonuses");
         Allure.step("Account has a credit");
@@ -336,7 +336,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_1Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd71Data() {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_1Client);
         MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd7_1Client);
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
@@ -365,7 +365,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_2Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd72Data() {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_2Client);
         MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd7_2Client);
         CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(data.clientHelper);
@@ -414,7 +414,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_3Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd73Data() {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd7_3Client);
         MtTbCreditsObject credit = generateCreditsByClient(mirrorTradingRuleExitEventEnd7_3Client);
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
@@ -449,7 +449,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_4Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd74Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -481,7 +481,7 @@ public class MirrorTradingRuleDataFactory {
         return data;
     }
 
-    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd7_5Data() {
+    public static MirrorTradingRuleData getMirrorTradingRuleExitEventEnd75Data() {
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -516,7 +516,7 @@ public class MirrorTradingRuleDataFactory {
         // Put all the db data for setup in a list
         //map.put("2", getMirrorTradingRuleExitEventEnd2Data());
 
-        map.put("1_1", getMirrorTradingRuleExitEventEnd1_1Data());
+        map.put("11", getMirrorTradingRuleExitEventEnd11Data());
 
 
         // Loop through the list with data and insert all the data into the according tables
