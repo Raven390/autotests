@@ -394,7 +394,6 @@ public class GeneralTab extends AbstractPage {
     public void checkRightImage(String sourceLinkLastPart) {
         String source = fileViewerImage.getAttribute("src");
         String[] splitedSource1 = source.split("/");
-        System.out.println("searched text is " + splitedSource1[splitedSource1.length - 1]);
         assertTrue(splitedSource1[splitedSource1.length - 1].contains(sourceLinkLastPart));
     }
 
@@ -411,9 +410,11 @@ public class GeneralTab extends AbstractPage {
     }
 
     public void checkValueKycPofDate(String expectedValue) {
-        String locator = POF_ROW_SELECTOR + KYC_ROW_DATE + NOT_SECONDARY_TEXT_SELECTOR;
+        String[] values = expectedValue.split(":");
+        String testValue = values[0] + ":" + values[1];
+        String locator = POF_ROW_SELECTOR + KYC_ROW_DATE + "//" + VARIANT_BODY_1_SELECTOR;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(expectedValue.toLowerCase(), page.locator(locator).textContent().toLowerCase());
+        assertEquals(testValue.toLowerCase(), page.locator(locator).nth(0).textContent().toLowerCase());
     }
 
     public void checkValueKycPofParameters(String expectedValue) {

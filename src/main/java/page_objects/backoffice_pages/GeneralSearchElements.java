@@ -37,8 +37,8 @@ public class GeneralSearchElements extends AbstractPage {
         searchButton = page.locator("//" + SEARCH_BUTTON_SELECTOR_LOCATOR);
         searchInput = page.locator("//" + SEARCH_OVERLAY_LOCATOR + "//input");
         errorScreen = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR);
-        errorText1 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + SUBHEADER_2_TEXT);
-        errorText2 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + CAPTION_2_TEXT);
+        errorText1 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + "//" + SUBHEADER_2_TEXT);
+        errorText2 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + "//" + CAPTION_2_TEXT);
     }
 
     public void openSearch() {

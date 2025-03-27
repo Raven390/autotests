@@ -127,6 +127,7 @@ public class InvestigationPageTest extends TestBaseWeb {
     void quickFiltersTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser(); // call the method for log in thought UI login form
+        investigationPage.navigateToMain();
         investigationPage.unfoldSusClientSectionIfFolded();
         investigationPage.filterAssignedMe();
         investigationPage.filterUnassigned();
