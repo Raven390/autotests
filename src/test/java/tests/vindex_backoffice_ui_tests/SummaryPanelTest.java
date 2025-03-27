@@ -181,7 +181,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @AllureId("1025")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud, no frauds")
-    public void clientSummaryFraudEmptyTest() {
+    public void clientSummaryFraudEmptyTest() throws Exception {
         cleanUserFraudsDb(client.getUcid());
         Allure.step("Prepare DB data for test user");
 

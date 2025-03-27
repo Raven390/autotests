@@ -366,7 +366,7 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Resolve with adding fraud")
     public void checkPreviousConfirmedFraudDisplayed(String addedFraud) {
-        String locator = "//div[@data-qa='selected_fraud_type_item']//div[text()='Previously confirmed']/preceding-sibling::div[text()='" + addedFraud + "']";
+        String locator = "//div[@data-qa='selected_fraud_type_item']//*[text()='" + addedFraud + "']";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
     }
 
