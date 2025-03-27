@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -24,8 +24,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_REGISTRATION_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class RegistrationRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class RegistrationRuleTest extends TestBaseRule {
 
     static Map<String, RegistrationRuleData> dbDataMap = new HashMap<>();
 
@@ -70,7 +70,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_2")
     @AllureId("156")
-    public void registrationRuleExitEventEnd2Test() throws Exception {
+    void registrationRuleExitEventEnd2Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("2");
 
         Allure.step("No toxic accounts linked");
@@ -128,7 +128,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_4")
     @AllureId("158")
-    public void registrationRuleExitEventEnd4Test() throws Exception {
+    void registrationRuleExitEventEnd4Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("4");
         Allure.step("No toxic accounts linked");
         Allure.step("Different identity connections");
@@ -186,7 +186,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_5")
     @AllureId("159")
-    public void registrationRuleExitEventEnd5Test() throws Exception {
+    void registrationRuleExitEventEnd5Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("5");
 
         Allure.step("No toxic accounts linked");
@@ -212,7 +212,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_6")
     @AllureId("160")
-    public void registrationRuleExitEventEnd6Test() throws Exception {
+    void registrationRuleExitEventEnd6Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("6");
 
         Allure.step("No toxic accounts linked");
@@ -266,7 +266,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v1 all available alerts/restrictions")
     @AllureId("161")
-    public void registrationRuleExitEventEnd7Version1Test() throws Exception {
+    void registrationRuleExitEventEnd7Version1Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v1");
 
         Allure.step("Toxic accounts linked");
@@ -524,7 +524,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v2 CPA + low Lexis score")
     @AllureId("162")
-    public void registrationRuleExitEventEnd7Version2Test() throws Exception {
+    void registrationRuleExitEventEnd7Version2Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v2");
 
         Allure.step("Toxic accounts linked");
@@ -588,7 +588,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v4 Bonus abuser, Vjp")
     @AllureId("164")
-    public void registrationRuleExitEventEnd7Version4Test() throws Exception {
+    void registrationRuleExitEventEnd7Version4Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v4");
 
         Allure.step("Toxic accounts linked");
@@ -636,7 +636,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v5 Bonus abuser, not Vjp, low Lexis score")
     @AllureId("165")
-    public void registrationRuleExitEventEnd7Version5Test() throws Exception {
+    void registrationRuleExitEventEnd7Version5Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v5");
 
         Allure.step("Toxic accounts linked");
@@ -701,7 +701,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v7 Voucher abuser, low Lexis score")
     @AllureId("167")
-    public void registrationRuleExitEventEnd7Version7Test() throws Exception {
+    void registrationRuleExitEventEnd7Version7Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v7");
 
         Allure.step("Toxic accounts linked");
@@ -762,7 +762,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v9 News trader, Vjp")
     @AllureId("169")
-    public void registrationRuleExitEventEnd7Version9Test() throws Exception {
+    void registrationRuleExitEventEnd7Version9Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v9");
 
         Allure.step("Toxic accounts linked");
@@ -824,7 +824,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v10 News trader, not Vjp")
     @AllureId("170")
-    public void registrationRuleExitEventEnd7Version10Test() throws Exception {
+    void registrationRuleExitEventEnd7Version10Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v10");
 
         Allure.step("Toxic accounts linked");
@@ -886,7 +886,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v11 TLS abuser")
     @AllureId("171")
-    public void registrationRuleExitEventEnd7Version11Test() throws Exception {
+    void registrationRuleExitEventEnd7Version11Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v11");
 
         Allure.step("Toxic accounts linked");
@@ -947,7 +947,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v12 Swap abuser")
     @AllureId("209")
-    public void registrationRuleExitEventEnd7Version12Test() throws Exception {
+    void registrationRuleExitEventEnd7Version12Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v12");
 
         Allure.step("Toxic accounts linked");
@@ -1008,7 +1008,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v13 Market manipulator")
     @AllureId("172")
-    public void registrationRuleExitEventEnd7Version13Test() throws Exception {
+    void registrationRuleExitEventEnd7Version13Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v13");
 
         Allure.step("Toxic accounts linked");
@@ -1067,7 +1067,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v14 unknown fraud type")
     @AllureId("484")
-    public void registrationRuleExitEventEnd7Version14Test() throws Exception {
+    void registrationRuleExitEventEnd7Version14Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v14");
 
         Allure.step("Toxic accounts linked");
@@ -1122,7 +1122,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v15 GAP abuser")
     @AllureId("689")
-    public void registrationRuleExitEventEnd7Version15Test() throws Exception {
+    void registrationRuleExitEventEnd7Version15Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v15");
 
         Allure.step("Toxic accounts linked");
@@ -1181,7 +1181,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v16 Latency abuser")
     @AllureId("690")
-    public void registrationRuleExitEventEnd7Version16Test() throws Exception {
+    void registrationRuleExitEventEnd7Version16Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v16");
 
         Allure.step("Toxic accounts linked");
@@ -1241,7 +1241,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v17 Pricing error abuser")
     @AllureId("691")
-    public void registrationRuleExitEventEnd7Version17Test() throws Exception {
+    void registrationRuleExitEventEnd7Version17Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v17");
 
         Allure.step("Toxic accounts linked");
@@ -1302,7 +1302,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v18 NBP abuser")
     @AllureId("692")
-    public void registrationRuleExitEventEnd7Version18Test() throws Exception {
+    void registrationRuleExitEventEnd7Version18Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v18");
 
         Allure.step("Toxic accounts linked");
@@ -1364,7 +1364,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v19 HFT abuser")
     @AllureId("693")
-    public void registrationRuleExitEventEnd7Version19Test() throws Exception {
+    void registrationRuleExitEventEnd7Version19Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v19");
 
         Allure.step("Toxic accounts linked");
@@ -1427,7 +1427,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v20 Loophole abuser")
     @AllureId("694")
-    public void registrationRuleExitEventEnd7Version20Test() throws Exception {
+    void registrationRuleExitEventEnd7Version20Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v20");
 
         Allure.step("Toxic accounts linked");
@@ -1491,7 +1491,7 @@ public class RegistrationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Registration rule exit Event_End_7v23 all available alerts/restrictions with scores < 0.75")
     @AllureId("946")
-    public void registrationRuleExitEventEnd7Version23Test() throws Exception {
+    void registrationRuleExitEventEnd7Version23Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v23");
 
         Allure.step("Toxic accounts linked");

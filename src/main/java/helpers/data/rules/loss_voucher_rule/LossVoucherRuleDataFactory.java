@@ -46,14 +46,14 @@ public class LossVoucherRuleDataFactory {
         return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), account, new ArrayList<>(), new ArrayList<>());
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd1_1Data() {
+    public static RuleDataHelper getLossVoucherRuleExitEventEnd11Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_1Client);
 
         return data;
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd1_2Data() {
+    public static RuleDataHelper getLossVoucherRuleExitEventEnd12Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd1_2Client);
@@ -152,8 +152,8 @@ public class LossVoucherRuleDataFactory {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1_1", getLossVoucherRuleExitEventEnd1_1Data());
-        map.put("1_2", getLossVoucherRuleExitEventEnd1_2Data());
+        map.put("11", getLossVoucherRuleExitEventEnd11Data());
+        map.put("12", getLossVoucherRuleExitEventEnd12Data());
         map.put("2", getLossVoucherRuleExitEventEnd2Data());
         map.put("3", getLossVoucherRuleExitEventEnd3Data());
 

@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -25,8 +25,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_NPB_LOSING_LEG_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class NbpLosingLegRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class NbpLosingLegRuleTest extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
@@ -45,7 +45,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 1")
     @AllureId("974")
-    public void nbpLosingLegEnd1Test() throws Exception {
+    void nbpLosingLegEnd1Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
@@ -66,7 +66,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 2")
     @AllureId("975")
-    public void nbpLosingLegEnd2Test() throws Exception {
+    void nbpLosingLegEnd2Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit < 80%");
         RuleDataHelper data = dbDataMap.get("2");
@@ -88,7 +88,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 3v1")
     @AllureId("976")
-    public void nbpLosingLegEnd3v1Test() throws Exception {
+    void nbpLosingLegEnd3v1Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("No mirror clients");
@@ -143,7 +143,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 3v2")
     @AllureId("977")
-    public void nbpLosingLegEnd3v2Test() throws Exception {
+    void nbpLosingLegEnd3v2Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("Mirror client without abnormal profit");
@@ -198,7 +198,7 @@ public class NbpLosingLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP losing leg rule exit 4")
     @AllureId("978")
-    public void nbpLosingLegEnd4Test() throws Exception {
+    void nbpLosingLegEnd4Test() throws Exception {
         Allure.step("Deals with stopouts < 50%");
         Allure.step("Credit/Deposit >= 80%");
         Allure.step("Mirror client with abnormal profit");

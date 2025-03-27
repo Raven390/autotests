@@ -234,7 +234,7 @@ tasks.register('testEventGeneratorService', Test) {
 
 tasks.register('testRuleEngineService', Test) {
     useJUnitPlatform() {
-        includeTags "suite_rule_engine_service"
+        includeTags "suite_rule_engine_rules_tests"
     }
 }
 

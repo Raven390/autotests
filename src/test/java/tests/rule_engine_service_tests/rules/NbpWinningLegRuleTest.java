@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -28,8 +28,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_NPB_WINNING_LEG_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class NbpWinningLegRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class NbpWinningLegRuleTest extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
@@ -48,7 +48,7 @@ public class NbpWinningLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP winning leg rule exit 1")
     @AllureId("983")
-    public void nbpWinningLegEnd1Test() throws Exception {
+    void nbpWinningLegEnd1Test() throws Exception {
         Allure.step("Deposits amount < 200 USD");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
@@ -70,7 +70,7 @@ public class NbpWinningLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP winning leg rule exit 2")
     @AllureId("984")
-    public void nbpWinningLegEnd2Test() throws Exception {
+    void nbpWinningLegEnd2Test() throws Exception {
         Allure.step("Deposits amount >= 200 USD");
         Allure.step("No abnormal profit");
         RuleDataHelper data = dbDataMap.get("2");
@@ -93,7 +93,7 @@ public class NbpWinningLegRuleTest extends TestBaseRule {
     @Test
     @DisplayName("NBP winning leg rule exit 3")
     @AllureId("985")
-    public void nbpWinningLegEnd3Test() throws Exception {
+    void nbpWinningLegEnd3Test() throws Exception {
         Allure.step("Deposits amount >= 200 USD");
         Allure.step("Abnormal profit");
         RuleDataHelper data = dbDataMap.get("3");

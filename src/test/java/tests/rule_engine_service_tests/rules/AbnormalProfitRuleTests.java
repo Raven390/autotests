@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 
 import business_objects.db.backoffice_db.alert.Alert;
@@ -33,8 +33,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_ABNORMAL_PROFIT_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class AbnormalProfitRuleTests extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class AbnormalProfitRuleTests extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
@@ -54,7 +54,7 @@ public class AbnormalProfitRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 1. Post alert")
     @AllureId("968")
-    public void mirrorTradeRuleExitEventEnd1Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -97,7 +97,7 @@ public class AbnormalProfitRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 2. No alert")
     @AllureId("969")
-    public void mirrorTradeRuleExitEventEnd2Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);

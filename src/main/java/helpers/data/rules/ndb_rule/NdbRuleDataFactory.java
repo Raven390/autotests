@@ -106,7 +106,7 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd4_1Data() {
+    public static RuleDataHelper getNdbRuleExitEventEnd41Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_1Client);
         Allure.step("Get credits with ndb comment");
@@ -125,7 +125,7 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd4_2Data() {
+    public static RuleDataHelper getNdbRuleExitEventEnd42Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_2Client);
         Allure.step("Get credits with ndb comment");
@@ -144,7 +144,7 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd4_3Data() {
+    public static RuleDataHelper getNdbRuleExitEventEnd43Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_3Client);
 
@@ -239,9 +239,9 @@ public class NdbRuleDataFactory {
         map.put("1", getNdbRuleExitEventEnd1Data());
         map.put("2", getNdbRuleExitEventEnd2Data());
         map.put("3", getNdbRuleExitEventEnd3Data());
-        map.put("4_1", getNdbRuleExitEventEnd4_1Data());
-        map.put("4_2", getNdbRuleExitEventEnd4_2Data());
-        map.put("4_3", getNdbRuleExitEventEnd4_3Data());
+        map.put("41", getNdbRuleExitEventEnd41Data());
+        map.put("42", getNdbRuleExitEventEnd42Data());
+        map.put("43", getNdbRuleExitEventEnd43Data());
         map.put("5", getNdbRuleExitEventEnd5Data());
         map.put("6", getNdbRuleExitEventEnd6Data());
 

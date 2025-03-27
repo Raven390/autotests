@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
@@ -32,8 +32,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_LOSS_VOUCHER_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class LossVoucherRuleTests extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class LossVoucherRuleTests extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
@@ -52,8 +52,8 @@ public class LossVoucherRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 1. Has user used loss vouchers before? = false")
     @AllureId("979")
-    public void lossVoucherRuleExitEventEnd1_1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("1_1");
+    void lossVoucherRuleExitEventEnd11Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("11");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -64,8 +64,8 @@ public class LossVoucherRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 1. -200 < Lifetime PnL < 200 USD = false")
     @AllureId("980")
-    public void lossVoucherRuleExitEventEnd1_2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("1_2");
+    void lossVoucherRuleExitEventEnd12Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("12");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -76,7 +76,7 @@ public class LossVoucherRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 2. Sum LV amount = +/-20% |PnL| = false")
     @AllureId("981")
-    public void lossVoucherRuleExitEventEnd2Test() throws Exception {
+    void lossVoucherRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -88,7 +88,7 @@ public class LossVoucherRuleTests extends TestBaseRule {
     @Test
     @DisplayName("Abnormal profit rule exit 3. Alert + restriction")
     @AllureId("982")
-    public void lossVoucherRuleExitEventEnd3Test() throws Exception {
+    void lossVoucherRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);

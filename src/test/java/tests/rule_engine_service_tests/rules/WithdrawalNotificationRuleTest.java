@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.backoffice_db.alert.Alert;
@@ -35,13 +35,12 @@ import static utils.Utils.getRandomUuidString;
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class WithdrawalNotificationRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class WithdrawalNotificationRuleTest extends TestBaseRule {
 
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
-
 
     @BeforeAll
     static void setupData() throws IOException {
@@ -73,7 +72,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Withdrawal notification rule manual withdrawal review restriction")
     @AllureId("962")
-    public void withdrawalNotificationRule1Test() throws Exception {
+    void withdrawalNotificationRule1Test() throws Exception {
         ClientHelper client = client1;
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -107,7 +106,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Withdrawal notification rule other restriction")
     @AllureId("963")
-    public void withdrawalNotificationRule2Test() throws Exception {
+    void withdrawalNotificationRule2Test() throws Exception {
         ClientHelper client = client2;
 
         Allure.step("Produce withdrawal event to crm-events topic");
@@ -132,7 +131,7 @@ public class WithdrawalNotificationRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Withdrawal notification rule no restrictions")
     @AllureId("964")
-    public void withdrawalNotificationRule3Test() throws Exception {
+    void withdrawalNotificationRule3Test() throws Exception {
         ClientHelper client = client3;
 
         Allure.step("Produce withdrawal event to crm-events topic");

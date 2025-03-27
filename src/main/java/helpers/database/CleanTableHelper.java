@@ -2,11 +2,13 @@ package helpers.database;
 
 import io.qameta.allure.Step;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.CLICKHOUSE;
+import static helpers.database.DbName.RULE_ENGINE;
 import static utils.Constants.*;
 
 public class CleanTableHelper {
@@ -124,5 +126,12 @@ public class CleanTableHelper {
     @Step("Clean bo fraud types table by ucid")
     public static void cleanBoFraudTypesTableByUcid(String... values) throws Exception {
         deleteObjectsFromDb(CLICKHOUSE, BO_CLIENT_FRAUD_TYPES_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+    }
+
+    // Rule engine db
+
+    @Step("Clean rule table by rule id")
+    public static void cleanRuleTableByRuleId(String... values) throws SQLException {
+        deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, "id", List.of(Arrays.toString(values)));
     }
 }

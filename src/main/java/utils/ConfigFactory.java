@@ -21,9 +21,6 @@ public class ConfigFactory {
     public static final String PATH_TRACE = CONFIG.pathTrace();
     public static final String PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot();
     // Databases
-    public static final String POSTGRE_HOST = CONFIG.postgreHost();
-    public static final String POSTGRE_PASSWORD = CONFIG.postgrePassword();
-    public static final String POSTGRE_LOGIN = CONFIG.postgreLogin();
     public static final String MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost();
     public static final String MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin();
     public static final String MYSQL_STAGING_CRM_PASSWORD = CONFIG.mysqlStagingCrmPassword();
@@ -62,6 +59,15 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_DUMMY_TRADE_DATA = CONFIG.clickhouseGetDummyTradeData();
     public static final String CLICKHOUSE_API_GET_ACCOUNT_BALANCE = CONFIG.clickhouseGetAccountBalance();
     public static final String CLICKHOUSE_API_GET_ABNORMAL_PROFIT = CONFIG.clickhouseGetAbnormalProfit();
+    // Rule engine
+    public static final String RULE_ENGINE_PATH_TEST_ENV = CONFIG.ruleEngineBasePathTest();
+    public static final String RULE_ENGINE_GET_BRANDS = CONFIG.ruleEngineGetBrands();
+    public static final String RULE_ENGINE_GET_EVENTS = CONFIG.ruleEngineGetEvents();
+    public static final String RULE_ENGINE_RULES = CONFIG.ruleEngineRules();
+    // Rule engine database
+    public static final String RULE_ENGINE_DB_NAME = CONFIG.ruleEngineDbName();
+    public static final String RULE_ENGINE_DB_USER = CONFIG.ruleEngineDbUser();
+    public static final String RULE_ENGINE_DB_PASSWORD = CONFIG.ruleEngineDbPassword();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
@@ -86,7 +92,7 @@ public class ConfigFactory {
     public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
     public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
     public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
-    // data science db
+    // Data science db
     public static final String DATA_SCIENCE_MIRROR_LOGIN = CONFIG.mitigationDbName();
     // Audit service db
     public static final String AUDIT_DB_USER = CONFIG.auditDbUser();
@@ -104,7 +110,6 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword();
     // Backoffice test user
     public static final String CRM_INEGRATION_USER_UCID = CONFIG.crmIntegrationUserUcid();
-    public static final String CRM_INEGRATION_USER_ID = CONFIG.crmIntegrationUserUcid();
     // Other
     public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
     public static final Double TIMEOUT = CONFIG.waitTimeout();
@@ -181,15 +186,6 @@ public class ConfigFactory {
 
         // Databases
 
-        @Key("postgreHost")
-        String postgreHost();
-
-        @Key("postgreLogin")
-        String postgreLogin();
-
-        @Key("postgrePassword")
-        String postgrePassword();
-
         @Key("mysqlStagingCrmHost")
         String mysqlStagingCrmHost();
 
@@ -222,7 +218,6 @@ public class ConfigFactory {
 
         @Key("clickhouseBasePathTest")
         String clickhouseBasePathTest();
-
 
         @Key("clickhouseGetClientPath")
         String clickhouseGetClientPath();
@@ -313,6 +308,31 @@ public class ConfigFactory {
 
         @Key("clickhouseGetAbnormalProfit")
         String clickhouseGetAbnormalProfit();
+
+        // Rule engine
+
+        @Key("ruleEngineBasePathTest")
+        String ruleEngineBasePathTest();
+
+        @Key("ruleEngineGetBrands")
+        String ruleEngineGetBrands();
+
+        @Key("ruleEngineGetEvents")
+        String ruleEngineGetEvents();
+
+        @Key("ruleEngineRules")
+        String ruleEngineRules();
+
+        // Rule engine database
+
+        @Key("ruleEngineDbName")
+        String ruleEngineDbName();
+
+        @Key("ruleEngineDbUser")
+        String ruleEngineDbUser();
+
+        @Key("ruleEngineDbPassword")
+        String ruleEngineDbPassword();
 
         // Connection search
 

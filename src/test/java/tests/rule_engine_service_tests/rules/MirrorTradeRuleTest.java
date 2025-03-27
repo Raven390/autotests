@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests;
+package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
@@ -27,8 +27,8 @@ import static utils.Constants.*;
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
-@Tag(SUITE_RULE_ENGINE_SERVICE)
-public class MirrorTradeRuleTest extends TestBaseRule {
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class MirrorTradeRuleTest extends TestBaseRule {
 
     static Map<String, MirrorTradingRuleData> dbDataMap = new HashMap<>();
 
@@ -48,7 +48,7 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_2")
     @AllureId("187")
-    public void mirrorTradeRuleExitEventEnd2Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -66,9 +66,9 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_3_1. Clone is a mirror abuser")
+    @DisplayName("Mirror trading rule exit Event_End_31. Clone is a mirror abuser")
     @AllureId("185")
-    public void mirrorTradeRuleExitEventEnd3_1Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd31Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("3_1");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -120,10 +120,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
 
     @Disabled("Disabled on production")
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_3_2. Clone is not a mirror abuser and has credits")
+    @DisplayName("Mirror trading rule exit Event_End_32. Clone is not a mirror abuser and has credits")
     @AllureId("186")
-    public void mirrorTradeRuleExitEventEnd3_2Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("3_2");
+    void mirrorTradeRuleExitEventEnd3_2Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("32");
         System.out.println(data.clientHelper.getUcid());
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -172,8 +172,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_4_1. Client has no connections and no credits")
     @AllureId("183")
-    public void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("4_1");
+    void mirrorTradeRuleExitEventEnd41Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("41");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -191,10 +191,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
 
     @Disabled("Disabled on production")
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_4_2. CreditEquityRatio > 0.7 is False")
+    @DisplayName("Mirror trading rule exit Event_End_42. CreditEquityRatio > 0.7 is False")
     @AllureId("184")
-    public void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("4_2");
+    void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("42");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -211,10 +211,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_4_3. Νοn abuser connection. User and connections have no credits")
+    @DisplayName("Mirror trading rule exit Event_End_43. Νοn abuser connection. User and connections have no credits")
     @AllureId("895")
-    public void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("4_3");
+    void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("43");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -231,10 +231,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_4_4. Νοn abuser connection. User has no credits and connections have credits")
+    @DisplayName("Mirror trading rule exit Event_End_44. Νοn abuser connection. User has no credits and connections have credits")
     @AllureId("896")
-    public void mirrorTradeRuleExitEventEnd4_4Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("4_4");
+    void mirrorTradeRuleExitEventEnd4_4Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("44");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -251,10 +251,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_5_1. No Alert if abuse points < 4")
+    @DisplayName("Mirror trading rule exit Event_End_51. No Alert if abuse points < 4")
     @AllureId("181")
-    public void mirrorTradeRuleExitEventEnd5_1Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("5_1");
+    void mirrorTradeRuleExitEventEnd5_1Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("51");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -272,10 +272,10 @@ public class MirrorTradeRuleTest extends TestBaseRule {
 
     @Disabled("Disabled on production")
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_5_2")
+    @DisplayName("Mirror trading rule exit Event_End_52")
     @AllureId("182")
-    public void mirrorTradeRuleExitEventEnd5_2Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("5_2");
+    void mirrorTradeRuleExitEventEnd5_2Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("52");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -295,7 +295,7 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_6")
     @AllureId("173")
-    public void mirrorTradeRuleExitEventEnd6Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd6Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("6");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -315,8 +315,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_1_1")
     @AllureId("179")
-    public void mirrorTradeRuleExitEventEnd1_1Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("1_1");
+    void mirrorTradeRuleExitEventEnd1_1Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("11");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -367,8 +367,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_1_2")
     @AllureId("220")
-    public void mirrorTradeRuleExitEventEnd1_2Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("1_2");
+    void mirrorTradeRuleExitEventEnd1_2Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("12");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -419,8 +419,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_7_1")
     @AllureId("178")
-    public void mirrorTradeRuleExitEventEnd7_1Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("7_1");
+    void mirrorTradeRuleExitEventEnd7_1Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("71");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -470,8 +470,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_7_2")
     @AllureId("177")
-    public void mirrorTradeRuleExitEventEnd7_2Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("7_2");
+    void mirrorTradeRuleExitEventEnd7_2Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("72");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -521,8 +521,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_7_3")
     @AllureId("176")
-    public void mirrorTradeRuleExitEventEnd7_3Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("7_3");
+    void mirrorTradeRuleExitEventEnd7_3Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("73");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
@@ -569,9 +569,9 @@ public class MirrorTradeRuleTest extends TestBaseRule {
 
     @Disabled("Disabled on production")
     @Test
-    @DisplayName("Mirror trading rule exit Event_End_7_4")
+    @DisplayName("Mirror trading rule exit Event_End_74")
     @AllureId("175")
-    public void mirrorTradeRuleExitEventEnd7_4Test() throws Exception {
+    void mirrorTradeRuleExitEventEnd7_4Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_4");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -622,8 +622,8 @@ public class MirrorTradeRuleTest extends TestBaseRule {
     @Test
     @DisplayName("Mirror trading rule exit Event_End_7_5")
     @AllureId("174")
-    public void mirrorTradeRuleExitEventEnd7_5Test() throws Exception {
-        MirrorTradingRuleData data = dbDataMap.get("7_5");
+    void mirrorTradeRuleExitEventEnd7_5Test() throws Exception {
+        MirrorTradingRuleData data = dbDataMap.get("75");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 

@@ -11,12 +11,12 @@ public class TestBaseApi {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeAll
-    public static void setup() {
+    static void setup() {
         startSshTunnel();
     }
 
     @AfterAll
-    public static void teardown() {
+    static void teardown() {
         stopSshTunnel();
     }
 }
