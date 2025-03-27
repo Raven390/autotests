@@ -85,7 +85,7 @@ public class ActivityTab extends AbstractPage {
     private static final String SECONDARY_TEXT_LOCATOR = "//*[contains(@class, 'g-color-text_color_secondary')]";
     private static final String DANGER_TEXT_LOCATOR = "//*[contains(@class, 'g-color-text_color_danger')]";
     private static final String POSITIVE_TEXT_LOCATOR = "//*[contains(@class, 'g-color-text_color_positive')]";
-    private static final String SORTABLE_CELL_LOCATOR = "//*[contains(@class, 'v-sortable-cell')]";
+    private static final String SORTABLE_CELL_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__sortable-cell')]";
     private static final String SCORE_METER_SECTION_LOCATOR = "//*[@class = 'v-activity-tab-risk-score-meter']";
     private static final String APPLIED_POLICIES_SECTION_LOCATOR = "//*[@class = 'v-applied-policies-labels']";
     private static final String TMX_REASON_SECTION_LOCATOR = "//*[@class = 'v-tmx-reasons-labels']";
@@ -160,7 +160,7 @@ public class ActivityTab extends AbstractPage {
         this.applyedPoliciesPolicyName = page.locator(APPLIED_POLICIES_SECTION_LOCATOR + "//span[not(contains(@class, 'v-applied-policies-labels__score'))]");
         this.applyedPoliciesPolicyScore = page.locator(APPLIED_POLICIES_SECTION_LOCATOR + "//span[contains(@class, 'v-applied-policies-labels__score')]");
         this.tmxReasonHeader = page.locator(TMX_REASON_SECTION_LOCATOR + SUBHEADER_3_LOCATOR);
-        this.tmxReasonLabel = page.locator(TMX_REASON_SECTION_LOCATOR + LABEL_LOCATOR + LABEL_CONTENT_LOCATOR);
+        this.tmxReasonLabel = page.locator(TMX_REASON_SECTION_LOCATOR + LABEL_CONTENT_LOCATOR);
         this.ipScoreLevel = page.locator(IP_SCORE_TEXTS_LOCATOR + HEADER_2_LOCATOR);
         this.ipScoreText = page.locator(IP_SCORE_TEXTS_LOCATOR + BODY_SHORT_LOCATOR);
         this.emailAdvice = page.locator(EMAIL_SCORE_TEXTS_LOCATOR + BODY_SHORT_LOCATOR);
@@ -593,8 +593,7 @@ public class ActivityTab extends AbstractPage {
         Allure.step("Check that label with expected TMX reason code is displayed");
         String[] titles = expectedTitle.split(", ");
         for (String i : titles) {
-            String cleaned = i.replace("[^a-zA-Z_1-9]", "");
-            System.out.println("searched code is " + cleaned);
+            String cleaned = i.replaceAll("[^a-zA-Z_0-9]", "");
             tmxReasonLabel.getByText(cleaned).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         }
     }

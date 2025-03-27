@@ -456,7 +456,7 @@ public class KYCTest extends TestBaseWeb {
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.checkValueKycPofTitle("Proof of face");
         generalTab.checkValueKycPofStatus(idProofObject2.getStatus());
-        generalTab.checkValueKycPofDate(idProofObject2.getUpdateTime().split(" ")[0]);
+        generalTab.checkValueKycPofDate(idProofObject2.getUpdateTime());
         generalTab.checkValueKycPofParameters(idProofObject2.getDocumentType() + " " + idProofObject2.getDocumentNumber());
         generalTab.checkValueKycPofAttempts("2 attempts");
     }
