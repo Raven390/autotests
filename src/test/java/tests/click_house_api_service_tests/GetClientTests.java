@@ -29,12 +29,12 @@ import tests.TestBaseApi;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetClientTests extends TestBaseApi {
+class GetClientTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client success(200)")
     @AllureId("59")
-    public void getClientSuccessTest() throws IOException {
+    void getClientSuccessTest() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomVantageClient();
         CrmTbUserObject userObject = generateStaticUserByClient(client);
@@ -81,7 +81,7 @@ public class GetClientTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client not found (404)")
     @AllureId("61")
-    public void getClientNotFoundTest() throws IOException {
+    void getClientNotFoundTest() throws IOException {
         Response response = getClient("AlphaTick-999");
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -93,7 +93,7 @@ public class GetClientTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client bad request (400)")
     @AllureId("62")
-    public void getClientBadRequestTest() throws IOException {
+    void getClientBadRequestTest() throws IOException {
         Response response = getClient(1);
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
@@ -107,7 +107,7 @@ public class GetClientTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get client internal error (500)")
     @AllureId("63")
     @Tag(TAG_MANUAL)
-    public void getClientServerErrorTest() {
+    void getClientServerErrorTest() {
         Allure.step("Shut down service");
         Allure.step("Send getClient request");
         Allure.step("Check that there are 500 error in response");

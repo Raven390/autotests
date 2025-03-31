@@ -22,14 +22,15 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsCloseTradeFiltrationTest {
+class MtDbEventsCloseTradeFiltrationTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate close event with event generator service that should be filtered out by the Event Generator")
     @AllureId("115")
-    public void closeTradeEventFiltrationTest1() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void closeTradeEventFiltrationTest1() throws JsonProcessingException {
 
         //Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventTestAccount1 = generateCloseTradeMtDbEventMt4();

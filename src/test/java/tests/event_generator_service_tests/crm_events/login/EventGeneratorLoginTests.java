@@ -21,12 +21,12 @@ import org.junit.jupiter.api.Test;
 @Tag(LAYER_API)
 @Tag(TEAM_CORE)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class EventGeneratorLoginTests {
+class EventGeneratorLoginTests {
 
     @Test
     @DisplayName("Generate login event with event generator service")
     @AllureId("65")
-    public void generateLoginEventTest() throws JsonProcessingException, InterruptedException {
+    void generateLoginEventTest() throws JsonProcessingException, InterruptedException {
 
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Objects;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
@@ -31,7 +30,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MitigationServiceInsightApiTest extends TestBaseWeb {
+class MitigationServiceInsightApiTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
@@ -41,7 +40,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     private static Integer restrictionId;
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+    static void setup() {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
     }
@@ -51,7 +50,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @DisplayName("Get access token for Insight mitigation service API")
-    public void getAccessTokenInsightTest() throws JsonProcessingException {
+    void getAccessTokenInsightTest() throws JsonProcessingException {
         investigationPage.navigateEnterPage();
         com.microsoft.playwright.Response response = page.waitForResponse(
                 responseObj -> responseObj.url().contains("openid-connect/token") && responseObj.status() == 200, () -> keycloackPage.loginAsAutotestUser()
@@ -76,7 +75,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1035")
     @DisplayName("Verify response of get restriction catalog insight endpoint")
-    public void mitigationServiceInsight1Test() throws IOException {
+    void mitigationServiceInsight1Test() throws IOException {
         Response response = getRestrictionCatalogInsight(token);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
@@ -90,7 +89,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1036")
     @DisplayName("Verify response of get restriction insight endpoint (200 empty)")
-    public void mitigationServiceInsight3Test() throws IOException {
+    void mitigationServiceInsight3Test() throws IOException {
         Response response = getRestrictionsByAccountServerIdInsight(token, client.getTradingAccount(), client.getServerId());
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
@@ -103,7 +102,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1037")
     @DisplayName("Verify response of post GENERAL restriction insight endpoint (200)")
-    public void mitigationServiceInsight4Test() throws IOException {
+    void mitigationServiceInsight4Test() throws IOException {
         PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(null, "05", "GENERAL", client.getTradingAccount(), client.getServerId(), "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"));
         Response response = postRestrictionInsight(token, postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
@@ -120,7 +119,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1038")
     @DisplayName("Verify response of cancel restriction insight endpoint (200)")
-    public void mitigationServiceInsight5Test() throws IOException {
+    void mitigationServiceInsight5Test() throws IOException {
         CancelRestrictionRequestBody cancelRestriction = new CancelRestrictionRequestBody("test", new CancelRestrictionRequestBody.UpdatedBy("autotest", "autotest"));
         Response response = cancelRestrictionInsight(token, restrictionId, cancelRestriction);
         assertThat("Verify 204 response code", response.code(), is(204));
@@ -132,7 +131,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1039")
     @DisplayName("Verify response of get GENERAL restriction insight endpoint (200)")
-    public void mitigationServiceInsight6Test() throws IOException {
+    void mitigationServiceInsight6Test() throws IOException {
         Response response = getRestrictionsByAccountServerIdInsight(token, client.getTradingAccount(), client.getServerId());
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
@@ -159,7 +158,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1053")
     @DisplayName("Verify response of post TRADING restriction insight endpoint (200)")
-    public void mitigationServiceInsight7Test() throws IOException {
+    void mitigationServiceInsight7Test() throws IOException {
         PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(null, "08", "TRADING", client.getTradingAccount(), client.getServerId(), "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"));
         Response response = postRestrictionInsight(token, postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
@@ -176,7 +175,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1054")
     @DisplayName("Verify response of get TRADING restriction insight endpoint (200)")
-    public void mitigationServiceInsight8Test() throws IOException {
+    void mitigationServiceInsight8Test() throws IOException {
         Response response = getRestrictionsByAccountServerIdInsight(token, client.getTradingAccount(), client.getServerId());
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());
@@ -204,7 +203,7 @@ public class MitigationServiceInsightApiTest extends TestBaseWeb {
     }
 
     @AfterAll
-    public static void teardown() throws Exception {
+    static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         closeAlert(crmTbUser.ucid);
     }

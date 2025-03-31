@@ -591,14 +591,14 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("Clean user restriction history of client " + ucid);
         List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
         for (ClientsRestriction i : restrictionList) {
-            String Id = i.id.toString();
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "action", "clients_restriction_id = " + Id);
+            String idString = i.id.toString();
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "action", "clients_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_request", "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_request", "clients_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_response", "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_response", "clients_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "clients_restriction", "id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "clients_restriction", "id = " + idString);
             Thread.sleep(200);
         }
     }

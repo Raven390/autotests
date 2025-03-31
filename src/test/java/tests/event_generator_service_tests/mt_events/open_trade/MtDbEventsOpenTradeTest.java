@@ -24,14 +24,15 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsOpenTradeTest {
+class MtDbEventsOpenTradeTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate open event with event generator service from MT4 source with all fields populated")
     @AllureId("118")
-    public void generateMt4OpenTradeEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateMt4OpenTradeEventTest() throws JsonProcessingException, InterruptedException {
         OpenTradeMtDbEventMt4 openTradeMtDbEventMt4 = generateOpenTradeMtDbEventMt4();
 
         Allure.step("Write message to crm-db-events topic");
@@ -52,9 +53,7 @@ public class MtDbEventsOpenTradeTest {
     @Test
     @DisplayName("Generate open event with event generator service from MT5 source with all fields populated")
     @AllureId("119")
-    public void generateMt5OpenTradeEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateMt5OpenTradeEventTest() throws JsonProcessingException, InterruptedException {
         OpenTradeMtDbEventMt5 openTradeMtDbEventMt5 = generateOpenTradeMtDbEventMt5();
 
         Allure.step("Write message to crm-db-events topic");

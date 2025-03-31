@@ -27,7 +27,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_SMOKE_PROD)
 @Story(STORY_PRODUCTION_TESTS)
-public class ClickHouseProductionSmokeTests extends TestBaseApi {
+class ClickHouseProductionSmokeTests extends TestBaseApi {
 
     private final String userId = "3384621";
     private final String brand = "Vantage";
@@ -39,7 +39,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get abuse types (200)")
     @AllureId("741")
-    public void testClickHouseApiProd1() throws IOException {
+    void testClickHouseApiProd1() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", "vantage-3384621");
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABUSE_TYPES, null, queryParamsMap);
@@ -50,7 +50,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get balance orders (200)")
     @AllureId("799")
-    public void testClickHouseApiProd2() throws IOException {
+    void testClickHouseApiProd2() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", "3384621");
         queryParamsMap.put("serverId", 1);
@@ -62,7 +62,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get bonuses (200)")
     @AllureId("800")
-    public void testClickHouseApiProd3() throws IOException {
+    void testClickHouseApiProd3() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", "vantage-123");
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_BONUSES, null, queryParamsMap);
@@ -72,7 +72,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get clients (200)")
     @AllureId("801")
-    public void testClickHouseApiProd4() throws IOException {
+    void testClickHouseApiProd4() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("userId", userId);
         queryParamsMap.put("brand", "Vantage");
@@ -85,7 +85,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get client (200)")
     @AllureId("802")
-    public void testClickHouseApiProd5() throws IOException {
+    void testClickHouseApiProd5() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENT + ucid, null, null);
@@ -126,7 +126,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get client trading account (200)")
     @AllureId("803")
-    public void testClickHouseApiProd6() throws IOException {
+    void testClickHouseApiProd6() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_TEST + CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS.replace("{clientId}", ucid), null, queryParamsMap);
@@ -137,7 +137,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get credit equity ratio (200)")
     @AllureId("804")
-    public void testClickHouseApiProd7() throws IOException {
+    void testClickHouseApiProd7() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -149,7 +149,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get credit risk free revenue ratio (200)")
     @AllureId("805")
-    public void testClickHouseApiProd8() throws IOException {
+    void testClickHouseApiProd8() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -161,7 +161,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get credits (200)")
     @AllureId("806")
-    public void testClickHouseApiProd9() throws IOException {
+    void testClickHouseApiProd9() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -172,7 +172,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get deposits (200)")
     @AllureId("807")
-    public void testClickHouseApiProd10() throws IOException {
+    void testClickHouseApiProd10() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DEPOSITS, null, queryParamsMap);
@@ -190,7 +190,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get floating trades group by (200)")
     @AllureId("808")
-    public void testClickHouseApiProd11() throws IOException {
+    void testClickHouseApiProd11() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -202,7 +202,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get lexis nexis data (200)")
     @AllureId("809")
-    public void testClickHouseApiProd12() throws IOException {
+    void testClickHouseApiProd12() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA, null, queryParamsMap);
@@ -212,7 +212,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get lexis nexis (200)")
     @AllureId("810")
-    public void testClickHouseApiProd13() throws IOException {
+    void testClickHouseApiProd13() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("eventType", "login");
@@ -288,7 +288,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get mirror accounts by trades (200)")
     @AllureId("811")
-    public void testClickHouseApiProd14() throws IOException {
+    void testClickHouseApiProd14() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -301,7 +301,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get swap free fees (200)")
     @AllureId("812")
-    public void testClickHouseApiProd15() throws IOException {
+    void testClickHouseApiProd15() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -313,7 +313,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get swap free volumes (200)")
     @AllureId("813")
-    public void testClickHouseApiProd16() throws IOException {
+    void testClickHouseApiProd16() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -328,7 +328,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get trades group by (200)")
     @AllureId("814")
-    public void testClickHouseApiProd17() throws IOException {
+    void testClickHouseApiProd17() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -340,7 +340,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get trades (200)")
     @AllureId("815")
-    public void testClickHouseApiProd18() throws IOException {
+    void testClickHouseApiProd18() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -352,7 +352,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get unclosed trades (200)")
     @AllureId("816")
-    public void testClickHouseApiProd19() throws IOException {
+    void testClickHouseApiProd19() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
@@ -364,7 +364,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get withdrawals (200)")
     @AllureId("817")
-    public void testClickHouseApiProd20() throws IOException {
+    void testClickHouseApiProd20() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WITHDRAWALS, null, queryParamsMap);
@@ -374,7 +374,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get lexisNexis v2 (200)")
     @AllureId("1011")
-    public void testClickHouseApiProd21() throws IOException {
+    void testClickHouseApiProd21() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("eventType", "login");
@@ -385,7 +385,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get fast trades (200)")
     @AllureId("1012")
-    public void testClickHouseApiProd22() throws IOException {
+    void testClickHouseApiProd22() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("tradingAccount", tradingAccount);
@@ -398,7 +398,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get trades by trade id (200)")
     @AllureId("1013")
-    public void testClickHouseApiProd23() throws IOException {
+    void testClickHouseApiProd23() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", "vt-733549");
         queryParamsMap.put("tradingAccount", 11_115_040);
@@ -410,7 +410,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get total loyalties (200)")
     @AllureId("1014")
-    public void testClickHouseApiProd24() throws IOException {
+    void testClickHouseApiProd24() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TOTAL_LOYALTIES, null, queryParamsMap);
@@ -420,7 +420,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get mirror clients by trades (200)")
     @AllureId("1015")
-    public void testClickHouseApiProd25() throws IOException {
+    void testClickHouseApiProd25() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_CLIENTS_BY_TRADES, null, queryParamsMap);
@@ -430,7 +430,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get Financial Calendar (200)")
     @AllureId("1016")
-    public void testClickHouseApiProd26() throws IOException {
+    void testClickHouseApiProd26() throws IOException {
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FINANCIAL_CALENDAR, null, null);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -438,7 +438,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get Dummy trade data (200)")
     @AllureId("1017")
-    public void testClickHouseApiProd27() throws IOException {
+    void testClickHouseApiProd27() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("tradingAccount", tradingAccount);
@@ -450,7 +450,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get account balance (200)")
     @AllureId("1018")
-    public void testClickHouseApiProd28() throws IOException {
+    void testClickHouseApiProd28() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         queryParamsMap.put("tradingAccount", tradingAccount);
@@ -463,7 +463,7 @@ public class ClickHouseProductionSmokeTests extends TestBaseApi {
     @Test
     @DisplayName("Production smoke test. Get abnormal profit (200)")
     @AllureId("1019")
-    public void testClickHouseApiProd29() throws IOException {
+    void testClickHouseApiProd29() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABNORMAL_PROFIT, null, queryParamsMap);

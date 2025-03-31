@@ -26,14 +26,14 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class WithdrawalTests {
+class WithdrawalTests {
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw table")
     @AllureId("67")
-    public void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateWithdrawalEventTest() throws JsonProcessingException, InterruptedException {
         WithdrawalDbEvent withdrawalDbEvent = generateWithdrawalDbEvent();
 
         Allure.step("Write message to crm-db-events topic");
@@ -55,7 +55,7 @@ public class WithdrawalTests {
     @Test
     @DisplayName("Generate withdrawal event with event generator service for tb_payment_withdraw_cps table")
     @AllureId("66")
-    public void generateWithdrawalEventCpsTest() throws JsonProcessingException, InterruptedException {
+    void generateWithdrawalEventCpsTest() throws JsonProcessingException, InterruptedException {
 
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();

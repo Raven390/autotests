@@ -50,95 +50,95 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-public class GetCheckConnectedIbTests extends TestBaseApi {
+class GetCheckConnectedIbTests extends TestBaseApi {
 
-    public static final ClientHelper userFrom1 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo1 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom2 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo2 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom3 = getRandomVantageClientNoCpaIbRef();
-    public static final ClientHelper userTo3 = getRandomVantageClientNoCpaIbRef();
-    public static final ClientHelper userFrom4 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo4 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo5 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom6 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo6 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom7 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo71 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo72 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFrom8 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo81 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo82 = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo83 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom1 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo1 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom2 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo2 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom3 = getRandomVantageClientNoCpaIbRef();
+    static final ClientHelper userTo3 = getRandomVantageClientNoCpaIbRef();
+    static final ClientHelper userFrom4 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo4 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo5 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom6 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo6 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom7 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo71 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo72 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom8 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo81 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo82 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo83 = getRandomVantageClientAllFields();
 
-    public static CrmTbUserObject user1;
-    public static CrmTbUserObject user2;
-    public static CrmTbUserObject user3;
-    public static CrmTbUserObject user4;
-    public static CrmTbUserObject user5;
-    public static CrmTbUserObject user6;
-    public static CrmTbUserObject user7;
-    public static CrmTbUserObject user8;
-    public static CrmTbUserObject user9;
-    public static CrmTbUserObject user91;
-    public static CrmTbUserObject user92;
-    public static CrmTbUserObject user10;
-    public static CrmTbUserObject user101;
-    public static CrmTbUserObject user102;
-    public static CrmTbUserObject user103;
+    static CrmTbUserObject user1;
+    static CrmTbUserObject user2;
+    static CrmTbUserObject user3;
+    static CrmTbUserObject user4;
+    static CrmTbUserObject user5;
+    static CrmTbUserObject user6;
+    static CrmTbUserObject user7;
+    static CrmTbUserObject user8;
+    static CrmTbUserObject user9;
+    static CrmTbUserObject user91;
+    static CrmTbUserObject user92;
+    static CrmTbUserObject user10;
+    static CrmTbUserObject user101;
+    static CrmTbUserObject user102;
+    static CrmTbUserObject user103;
 
-    public static ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntry(userFrom1, userTo1);
-    public static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom2, userTo2);
-    public static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3);
-    public static ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(userFrom7, userTo71);
-    public static ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntry(userTo71, userTo72);
-    public static ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntry(userFrom8, userTo81);
-    public static ConnectionTableEntry connectionTableEntry7 = getConnectionTableEntry(userTo81, userTo82);
-    public static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
+    static ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntry(userFrom1, userTo1);
+    static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom2, userTo2);
+    static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3);
+    static ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(userFrom7, userTo71);
+    static ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntry(userTo71, userTo72);
+    static ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntry(userFrom8, userTo81);
+    static ConnectionTableEntry connectionTableEntry7 = getConnectionTableEntry(userTo81, userTo82);
+    static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
 
-    public static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
-    public static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
-    public static final EmailTableEntry emailTableEntry41 = emailTableEntryForConnectionSearch(userFrom4);
-    public static final EmailTableEntry emailTableEntry42 = emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
-    public static final EmailTableEntry emailTableEntry51 = emailTableEntryForConnectionSearch(userFrom5);
-    public static final EmailTableEntry emailTableEntry52 = emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
-    public static final EmailTableEntry emailTableEntry61 = emailTableEntryForConnectionSearch(userFrom6);
-    public static final EmailTableEntry emailTableEntry62 = emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
-    public static final EmailTableEntry emailTableEntry71 = emailTableEntryForConnectionSearch(userFrom7);
-    public static final EmailTableEntry emailTableEntry72 = emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
-    public static final EmailTableEntry emailTableEntry73 = emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
-    public static final EmailTableEntry emailTableEntry8 = emailTableEntryForConnectionSearch(userFrom8);
-    public static final EmailTableEntry emailTableEntry81 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    public static final EmailTableEntry emailTableEntry82 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    public static final EmailTableEntry emailTableEntry83 = emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
+    static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
+    static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
+    static final EmailTableEntry emailTableEntry41 = emailTableEntryForConnectionSearch(userFrom4);
+    static final EmailTableEntry emailTableEntry42 = emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
+    static final EmailTableEntry emailTableEntry51 = emailTableEntryForConnectionSearch(userFrom5);
+    static final EmailTableEntry emailTableEntry52 = emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
+    static final EmailTableEntry emailTableEntry61 = emailTableEntryForConnectionSearch(userFrom6);
+    static final EmailTableEntry emailTableEntry62 = emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
+    static final EmailTableEntry emailTableEntry71 = emailTableEntryForConnectionSearch(userFrom7);
+    static final EmailTableEntry emailTableEntry72 = emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
+    static final EmailTableEntry emailTableEntry73 = emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
+    static final EmailTableEntry emailTableEntry8 = emailTableEntryForConnectionSearch(userFrom8);
+    static final EmailTableEntry emailTableEntry81 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    static final EmailTableEntry emailTableEntry82 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    static final EmailTableEntry emailTableEntry83 = emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
 
-    public static final DigitalIdTableEntry digitalTableEntry11 = digitalIdTableEntryForConnectionSearch(userFrom1);
-    public static final DigitalIdTableEntry digitalTableEntry12 = digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
+    static final DigitalIdTableEntry digitalTableEntry11 = digitalIdTableEntryForConnectionSearch(userFrom1);
+    static final DigitalIdTableEntry digitalTableEntry12 = digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
 
-    public static final DeviceIdTableEntry deviceTableEntry11 = deviceIdTableEntryForConnectionSearch(userFrom1);
-    public static final DeviceIdTableEntry deviceTableEntry12 = deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
+    static final DeviceIdTableEntry deviceTableEntry11 = deviceIdTableEntryForConnectionSearch(userFrom1);
+    static final DeviceIdTableEntry deviceTableEntry12 = deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
 
-    public static final SessionIdTableEntry sessionTableEntry11 = sessionIdTableEntryForConnectionSearch(userFrom1);
-    public static final SessionIdTableEntry sessionTableEntry12 = sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
+    static final SessionIdTableEntry sessionTableEntry11 = sessionIdTableEntryForConnectionSearch(userFrom1);
+    static final SessionIdTableEntry sessionTableEntry12 = sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
 
-    public static NameBirthTableEntry nameTableEntry11 = nameBirthTableEntryForConnectionSearch(userFrom1);
-    public static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
+    static NameBirthTableEntry nameTableEntry11 = nameBirthTableEntryForConnectionSearch(userFrom1);
+    static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
 
-    public static final WebSessionTableEntry webSessionTableEntry11 = webSessionTableEntryForConnectionSearch(userFrom1);
-    public static final WebSessionTableEntry webSessionTableEntry12 = webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
+    static final WebSessionTableEntry webSessionTableEntry11 = webSessionTableEntryForConnectionSearch(userFrom1);
+    static final WebSessionTableEntry webSessionTableEntry12 = webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
 
-    public static final PhoneTableEntry phoneTableEntry11 = phoneTableEntryForConnectionSearch(userFrom1);
-    public static final PhoneTableEntry phoneTableEntry12 = phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
+    static final PhoneTableEntry phoneTableEntry11 = phoneTableEntryForConnectionSearch(userFrom1);
+    static final PhoneTableEntry phoneTableEntry12 = phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
 
-    public static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
-    public static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
+    static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
+    static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
 
-    public static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
-    public static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
+    static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
+    static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
 
-    public static final EmailTableEntry emailTableEntry31 = getEmailTableEntryByClient(userFrom3);
-    public static final EmailTableEntry emailTableEntry32 = getEmailTableEntryByClient(userTo3);
+    static final EmailTableEntry emailTableEntry31 = getEmailTableEntryByClient(userFrom3);
+    static final EmailTableEntry emailTableEntry32 = getEmailTableEntryByClient(userTo3);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
@@ -195,7 +195,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id, not enough parameters (400)")
     @AllureId("823")
-    public void getCheckConnectedIbTest1() throws IOException {
+    void getCheckConnectedIbTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
 
@@ -213,7 +213,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true by all params (200)")
     @AllureId("824")
-    public void getCheckConnectedIbTest2() throws IOException {
+    void getCheckConnectedIbTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("emailAddress", userFrom1.getEmail());
@@ -227,7 +227,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true by cpaId match (200)")
     @AllureId("837")
-    public void getCheckConnectedIbTest3() throws IOException {
+    void getCheckConnectedIbTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom4.getUcid());
         queryParams.put("emailAddress", userFrom4.getEmail());
@@ -241,7 +241,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true by refId match (200)")
     @AllureId("838")
-    public void getCheckConnectedIbTest4() throws IOException {
+    void getCheckConnectedIbTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom5.getUcid());
         queryParams.put("emailAddress", userFrom5.getEmail());
@@ -255,7 +255,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true by ibId match (200)")
     @AllureId("839")
-    public void getCheckConnectedIbTest5() throws IOException {
+    void getCheckConnectedIbTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom6.getUcid());
         queryParams.put("emailAddress", userFrom6.getEmail());
@@ -269,7 +269,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response false - cpa/ib/ref empty (200)")
     @AllureId("835")
-    public void getCheckConnectedIbTest6() throws IOException {
+    void getCheckConnectedIbTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom3.getUcid());
         queryParams.put("emailAddress", userFrom3.getEmail());
@@ -283,7 +283,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response false (200)")
     @AllureId("824")
-    public void getCheckConnectedIbTest7() throws IOException {
+    void getCheckConnectedIbTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom2.getUcid());
         queryParams.put("emailAddress", userFrom2.getEmail());
@@ -297,7 +297,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + digital (200)")
     @AllureId("825")
-    public void getCheckConnectedIbTest8() throws IOException {
+    void getCheckConnectedIbTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("digital", userFrom1.getDigitalId());
@@ -311,7 +311,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + device (200)")
     @AllureId("826")
-    public void getCheckConnectedIbTest9() throws IOException {
+    void getCheckConnectedIbTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("device", userFrom1.getDeviceId());
@@ -325,7 +325,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + session (200)")
     @AllureId("827")
-    public void getCheckConnectedIbTest10() throws IOException {
+    void getCheckConnectedIbTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("session", userFrom1.getSessionId());
@@ -339,7 +339,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + nameBirth (200)")
     @AllureId("828")
-    public void getCheckConnectedIbTest11() throws IOException {
+    void getCheckConnectedIbTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("nameBirth", userFrom1.getNameDateOfBirth());
@@ -353,7 +353,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + webSession (200)")
     @AllureId("829")
-    public void getCheckConnectedIbTest12() throws IOException {
+    void getCheckConnectedIbTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("webSession", userFrom1.getWebSessionId());
@@ -367,7 +367,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + phoneNumber (200)")
     @AllureId("830")
-    public void getCheckConnectedIbTest13() throws IOException {
+    void getCheckConnectedIbTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("phoneNumber", userFrom1.getPhoneNumber());
@@ -381,7 +381,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + ipAddress (200)")
     @AllureId("831")
-    public void getCheckConnectedIbTest14() throws IOException {
+    void getCheckConnectedIbTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
         queryParams.put("ipAddress", userFrom1.getIpAddress());
@@ -395,7 +395,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id, no parameters (400)")
     @AllureId("832")
-    public void getCheckConnectedIbTest15() throws IOException {
+    void getCheckConnectedIbTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
 
         Response response = getCheckConnectedIb(queryParams);
@@ -415,7 +415,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true for connection level 2 (200)")
     @AllureId("840")
-    public void getCheckConnectedIbTest16() throws IOException {
+    void getCheckConnectedIbTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom7.getUcid());
         queryParams.put("emailAddress", userFrom7.getEmail());
@@ -429,7 +429,7 @@ public class GetCheckConnectedIbTests extends TestBaseApi {
     @Test
     @DisplayName("Connection search. Get check connected id + emailAddress, response true for connection level 3 (200)")
     @AllureId("831")
-    public void getCheckConnectedIbTest17() throws IOException {
+    void getCheckConnectedIbTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom8.getUcid());
         queryParams.put("emailAddress", userFrom8.getEmail());

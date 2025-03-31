@@ -26,14 +26,15 @@ import java.util.Map;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsRafBalanceOrderTest {
+class MtDbEventsRafBalanceOrderTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate RAF balance order with event generator service from MT4 source with all fields populated")
     @AllureId("123")
-    public void generateMt4RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateMt4RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt4();
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderMtDbEvent2.data.comment = "Referral";
@@ -69,9 +70,7 @@ public class MtDbEventsRafBalanceOrderTest {
     @Test
     @DisplayName("Generate RAF balance order with event generator service from MT5 source with all fields populated")
     @AllureId("124")
-    public void generateMt5RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateMt5RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt5();
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt5();
         rafBalanceOrderMtDbEvent2.data.comment = "Referral";

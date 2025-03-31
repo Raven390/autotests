@@ -23,15 +23,16 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsRafBalanceOrderRequiredParamsTest {
+class MtDbEventsRafBalanceOrderRequiredParamsTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName(
         "Generate RAF balance order event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("126")
-    public void generateRafBalanceOrderEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRafBalanceOrderEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
         //        Creation of Raf balance order events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventOpenTime = generateRafBalanceOrderMtDbEventMt4();
@@ -71,9 +72,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
     @DisplayName(
         "Generate RAF balance order event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("127")
-    public void generateRafBalanceOrderEventsWithoutOptionalParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRafBalanceOrderEventsWithoutOptionalParamsTest() throws JsonProcessingException {
 
         //        Creation of Raf balance order events that should be filtered out by the filtration rules
 
@@ -107,9 +106,7 @@ public class MtDbEventsRafBalanceOrderRequiredParamsTest {
     @DisplayName(
         "Generate RAF balance order event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
     @AllureId("131")
-    public void generateRafBalanceOrderEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRafBalanceOrderEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
 
         //        Creation of close trade events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventOpenTimeObject = generateRafBalanceOrderMtDbEventMt4();

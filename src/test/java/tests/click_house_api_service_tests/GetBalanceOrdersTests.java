@@ -32,17 +32,16 @@ import static utils.Utils.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetBalanceOrdersTests extends TestBaseApi {
+class GetBalanceOrdersTests extends TestBaseApi {
 
     private static MtBalanceOrdersObject data1;
     private static MtBalanceOrdersObject data2;
     private static final ClientHelper client1 = getRandomVantageClient();
-    public static final String dateTo = formatTimeToUtc(getNextYearTimestampDbFormat());
-    public static final String dateFrom = formatTimeToUtc(getPreviousYearTimestampDbFormat());
-    public static String tradeDate1 = "2024-12-10 17:59:14";
-    public static String tradeDate2 = "2024-12-10 17:59:15";
-    public static Integer tradeId = 123;
-    public static String comment = "Administration Fee Automation test";
+    static final String dateTo = formatTimeToUtc(getNextYearTimestampDbFormat());
+    static final String dateFrom = formatTimeToUtc(getPreviousYearTimestampDbFormat());
+    static String tradeDate1 = "2024-12-10 17:59:14";
+    static String tradeDate2 = "2024-12-10 17:59:15";
+    static String comment = "Administration Fee Automation test";
 
     @BeforeAll
     static void setupData() {

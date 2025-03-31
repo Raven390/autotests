@@ -21,16 +21,15 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class EventGeneratorLoginRequiredParametersTests {
+class EventGeneratorLoginRequiredParametersTests {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate login event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("111")
-    public void generateLoginEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
-
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    void generateLoginEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
         LoginDbEvent loginDbEventLoginTime = generateLoginDbEvent();
         loginDbEventLoginTime.data.loginDatetime = null;
 
@@ -64,10 +63,7 @@ public class EventGeneratorLoginRequiredParametersTests {
     @Test
     @DisplayName("Generate login event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("112")
-    public void generateLoginEventsWithoutOptionalParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
-
+    void generateLoginEventsWithoutOptionalParamsTest() throws JsonProcessingException {
         LoginDbEvent loginDbEventIpAddress = generateLoginDbEvent();
         loginDbEventIpAddress.data.ipAddress = null;
 

@@ -26,11 +26,10 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
-import static helpers.database.AuditHelper.cleanUserAudit;
+import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.MitigationHelper.cleanUserRestriction;
 import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;

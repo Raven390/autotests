@@ -23,17 +23,19 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsCloseTradeRequiredParamsTest {
+class MtDbEventsCloseTradeRequiredParamsTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @DisplayName(
-        "Generate close event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
+    @DisplayName("Generate close event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("116")
-    public void generateCloseTradeEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
+    void generateCloseTradeEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
         KafkaHelper kafka = new KafkaHelper();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        //        Creation of close trade events that should be filtered out by the filtration rules
+        //Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventCloseTime = generateCloseTradeMtDbEventMt4();
         closeTradeEventCloseTime.data.closeTime = null;
 
@@ -71,15 +73,10 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
     }
 
     @Test
-    @DisplayName(
-        "Generate close event with any of the optional parameters = null and verify that the Event Generator produced the event")
+    @DisplayName("Generate close event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("117")
-    public void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException,
-            InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-//                Creation of close trade events that should be filtered out by the filtration rules
+    void generateCloseTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException {
+        //Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventVolume = generateCloseTradeMtDbEventMt4();
         closeTradeEventVolume.data.volume = null;
 
@@ -113,14 +110,10 @@ public class MtDbEventsCloseTradeRequiredParamsTest {
     }
 
     @Test
-    @DisplayName(
-        "Generate close event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
+    @DisplayName("Generate close event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
     @AllureId("129")
-    public void generateCloseTradeEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        //        Creation of close trade events that should be filtered out by the filtration rules
+    void generateCloseTradeEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
+        //Creation of close trade events that should be filtered out by the filtration rules
         CloseTradeMtDbEventMt4 closeTradeEventCloseTimeObject = generateCloseTradeMtDbEventMt4();
         String closeTradeEventCloseTime = removeKeyFromJson(objectMapper.writeValueAsString(closeTradeEventCloseTimeObject), "CLOSE_TIME");
 

@@ -8,8 +8,7 @@ import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
-import helpers.database.AuditHelper;
-import helpers.database.MitigationHelper;
+import helpers.database.CleanTableHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
@@ -37,13 +36,12 @@ import static utils.Utils.getCurrentTimestamp;
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
-public class MitigationServiceApiTest extends TestBaseApi {
+class MitigationServiceApiTest extends TestBaseApi {
 
     static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.INFINOX, Regulator.VFSC2, 14_140_101, 42);
 
-
     @BeforeAll
-    public static void initialSetup() throws IOException, ReflectiveOperationException, SQLException {
+    static void initialSetup() throws IOException, ReflectiveOperationException, SQLException {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
@@ -53,9 +51,9 @@ public class MitigationServiceApiTest extends TestBaseApi {
     }
 
     @BeforeEach
-    public void before() throws Exception {
-        MitigationHelper.cleanUserRestriction(restrictionClient.getUcid());
-        AuditHelper.cleanUserAudit(restrictionClient.getUcid());
+    void before() throws Exception {
+        CleanTableHelper.cleanUserRestriction(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
     }
 
     @Test
@@ -64,7 +62,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @Owner("DMITRI KALACHEV")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void successIfRestrictionAlreadyApplied() throws Exception {
+    void successIfRestrictionAlreadyApplied() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 "vantage-10081449", "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
@@ -88,7 +86,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("922")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiOpenNewAccountTest() throws Exception {
+    void setRestrictionApiOpenNewAccountTest() throws Exception {
         Restriction restriction = Restriction.ACCOUNT_CREATION_REVIEW;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -107,7 +105,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("923")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiInternalTransferTest() throws Exception {
+    void setRestrictionApiInternalTransferTest() throws Exception {
         Restriction restriction = Restriction.INTERNAL_TRANSFER;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -126,7 +124,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("924")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiDepositsTest() throws Exception {
+    void setRestrictionApiDepositsTest() throws Exception {
         Restriction restriction = Restriction.DEPOSITS;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -145,7 +143,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("925")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiWithdrawalsTest() throws Exception {
+    void setRestrictionApiWithdrawalsTest() throws Exception {
         Restriction restriction = Restriction.WITHDRAWALS;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -164,7 +162,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("925")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiLoginCrmTest() throws Exception {
+    void setRestrictionApiLoginCrmTest() throws Exception {
         Restriction restriction = Restriction.LOGIN_CRM;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -183,7 +181,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("926")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiCloseOnlyModeTest() throws Exception {
+    void setRestrictionApiCloseOnlyModeTest() throws Exception {
         Restriction restriction = Restriction.CLOSE_ONLY_MODE;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -202,7 +200,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("926")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiBaBookTest() throws Exception {
+    void setRestrictionApiBaBookTest() throws Exception {
         Restriction restriction = Restriction.B_BOOK_TO_A_BOOK;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -221,7 +219,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("927")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiManualWithdrawalReviewTest() throws Exception {
+    void setRestrictionApiManualWithdrawalReviewTest() throws Exception {
         Restriction restriction = Restriction.MANUAL_WITHDRAWAL_REVIEW;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -240,7 +238,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("928")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiCreditAndBonusTest() throws Exception {
+    void setRestrictionApiCreditAndBonusTest() throws Exception {
         Restriction restriction = Restriction.CREDIT_AND_BONUS;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -259,7 +257,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("930")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiReadOnlyModeTest() throws Exception {
+    void setRestrictionApiReadOnlyModeTest() throws Exception {
         Restriction restriction = Restriction.READ_ONLY_MODE;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -278,7 +276,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("931")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiOffQuotesTest() throws Exception {
+    void setRestrictionApiOffQuotesTest() throws Exception {
         Restriction restriction = Restriction.OFF_QUOTES;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -297,7 +295,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("931")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiTradingHoursTest() throws Exception {
+    void setRestrictionApiTradingHoursTest() throws Exception {
         Restriction restriction = Restriction.TRADING_HOURS;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -316,7 +314,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("932")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiLoginMTTest() throws Exception {
+    void setRestrictionApiLoginMTTest() throws Exception {
         Restriction restriction = Restriction.LOGIN_MT;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -335,7 +333,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("933")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiNoteForWithdrawalsTest() throws Exception {
+    void setRestrictionApiNoteForWithdrawalsTest() throws Exception {
         Restriction restriction = Restriction.NOTE_FOR_WITHDRAWALS;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -354,7 +352,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("934")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiGroupChangeTest() throws Exception {
+    void setRestrictionApiGroupChangeTest() throws Exception {
         Restriction restriction = Restriction.GROUP_CHANGE;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -373,7 +371,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("935")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiKYCTest() throws Exception {
+    void setRestrictionApiKYCTest() throws Exception {
         Restriction restriction = Restriction.KYC;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -392,7 +390,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("936")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiLeverageTest() throws Exception {
+    void setRestrictionApiLeverageTest() throws Exception {
         Restriction restriction = Restriction.LEVERAGE;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -411,7 +409,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("937")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiWarningLetterTest() throws Exception {
+    void setRestrictionApiWarningLetterTest() throws Exception {
         Restriction restriction = Restriction.WARNING_LETTER;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -430,7 +428,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("938")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
-    public void setRestrictionApiRemoveSwapFreeOptionTest() throws Exception {
+    void setRestrictionApiRemoveSwapFreeOptionTest() throws Exception {
         Restriction restriction = Restriction.GROUP_CHANGE;
         String applyReason = "reason" + getCurrentTimestamp();
         String updatedBySystem = "system" + getCurrentTimestamp();
@@ -447,7 +445,7 @@ public class MitigationServiceApiTest extends TestBaseApi {
     @Tag(LAYER_WEB)
     @AllureId("1075")
     @DisplayName("Verify logic for internalReason field")
-    public void internalReasonTest() throws IOException, InterruptedException {
+    void internalReasonTest() throws IOException, InterruptedException {
         PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalProperty[]{new PostRestrictionRequestBody.AdditionalProperty("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalProperty("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalProperty("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));

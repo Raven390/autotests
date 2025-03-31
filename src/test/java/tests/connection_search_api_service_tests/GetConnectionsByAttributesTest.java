@@ -51,84 +51,84 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-public class GetConnectionsByAttributesTest extends TestBaseApi {
-    public static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDocument = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
-    public static final ClientHelper userToEmail = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromIp = getRandomVantageClientAllFields();
-    public static final ClientHelper userToIp = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
-    public static final ClientHelper userToPhone = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
-    public static final ClientHelper userToPayout = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDepth1 = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDepth2 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromFiltration = getRandomVantageClientAllFields();
-    public static final ClientHelper userToFiltration1 = getRandomVantageClientAllFields();
-    public static final ClientHelper userToFiltration2 = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
-    public static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
-    public static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
+class GetConnectionsByAttributesTest extends TestBaseApi {
+    static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
+    static final ClientHelper userToDocument = getRandomVantageClientAllFields();
+    static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
+    static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    static final ClientHelper userFromIp = getRandomVantageClientAllFields();
+    static final ClientHelper userToIp = getRandomVantageClientAllFields();
+    static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    static final ClientHelper userToPhone = getRandomVantageClientAllFields();
+    static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
+    static final ClientHelper userToPayout = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
+    static final ClientHelper userToDepth1 = getRandomVantageClientAllFields();
+    static final ClientHelper userToDepth2 = getRandomVantageClientAllFields();
+    static final ClientHelper userFromFiltration = getRandomVantageClientAllFields();
+    static final ClientHelper userToFiltration1 = getRandomVantageClientAllFields();
+    static final ClientHelper userToFiltration2 = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
+    static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
+    static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
+    static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
+    static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
     // Expected responses
-    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDocumentInitial(userFromDocument);
-    public static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesResponseSuccessDocumentLvl2(userFromDocument, userToDocument);
-    public static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccessInitial = getConnectionsByAttributesResponseSuccessEmailInitial(userFromEmail);
-    public final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsByAttributesResponseSuccessEmailLvl2(userFromEmail, userToEmail);
-    public static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccessInitial = getConnectionsByAttributesResponseSuccessIpInitial(userFromIp);
-    public final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesResponseSuccessIpLvl2(userFromIp, userToIp);
-    public static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPhoneInitial(userFromPhone);
-    public final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesResponseSuccessPhoneLvl2(userFromPhone, userToPhone);
-    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPayoutInitial(userFromPayout);
-    public final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesResponseSuccessPayoutLvl2(userFromPayout, userToPayout);
-    public final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
-    public final GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDeviceIdInitial(userFromDeviceId);
-    public static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsByAttributesResponseSuccessDeviceIdLvl2(userFromDeviceId, userToDeviceId);
-    public final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
-    public static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsByAttributesResponseSuccessDigitalIdLvl2(userFromDigitalId, userToDigitalId);
-    public final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
-    public static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsByAttributesResponseSuccessNameBirthLvl2(userFromNameBirth, userToNameBirth);
-    public final GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessSessionIdInitial(userFromSessionId);
-    public static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessSessionIdLvl2(userFromSessionId, userToSessionId);
-    public final GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessWebSessionIdInitial(userFromWebSessionId);
-    public static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(userFromWebSessionId, userToWebSessionId);
+    static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDocumentInitial(userFromDocument);
+    static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesResponseSuccessDocumentLvl2(userFromDocument, userToDocument);
+    static GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccessInitial = getConnectionsByAttributesResponseSuccessEmailInitial(userFromEmail);
+    final GetConnectionsResponse getConnectionsByAttributesEmailResponseSuccess = getConnectionsByAttributesResponseSuccessEmailLvl2(userFromEmail, userToEmail);
+    static GetConnectionsResponse getConnectionsByAttributesIpResponseSuccessInitial = getConnectionsByAttributesResponseSuccessIpInitial(userFromIp);
+    final GetConnectionsResponse getConnectionsByAttributesIpResponseSuccess = getConnectionsByAttributesResponseSuccessIpLvl2(userFromIp, userToIp);
+    static GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPhoneInitial(userFromPhone);
+    final GetConnectionsResponse getConnectionsByAttributesPhoneResponseSuccess = getConnectionsByAttributesResponseSuccessPhoneLvl2(userFromPhone, userToPhone);
+    final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccessInitial = getConnectionsByAttributesResponseSuccessPayoutInitial(userFromPayout);
+    final GetConnectionsResponse getConnectionsByAttributesPayoutResponseSuccess = getConnectionsByAttributesResponseSuccessPayoutLvl2(userFromPayout, userToPayout);
+    final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
+    final GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDeviceIdInitial(userFromDeviceId);
+    static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsByAttributesResponseSuccessDeviceIdLvl2(userFromDeviceId, userToDeviceId);
+    final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
+    static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsByAttributesResponseSuccessDigitalIdLvl2(userFromDigitalId, userToDigitalId);
+    final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
+    static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsByAttributesResponseSuccessNameBirthLvl2(userFromNameBirth, userToNameBirth);
+    final GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessSessionIdInitial(userFromSessionId);
+    static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessSessionIdLvl2(userFromSessionId, userToSessionId);
+    final GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessWebSessionIdInitial(userFromWebSessionId);
+    static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(userFromWebSessionId, userToWebSessionId);
 
     // Objects to insert to connections table
-    public static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
-    public static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
-    public static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
-    public static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
-    public static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
-    public static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
-    public static final ConnectionTableEntry connectionTableEntryForDepth2 = getConnectionTableEntryLvl2(userToDepth1, userToDepth2);
-    public static final ConnectionTableEntry connectionTableEntryFiltration1 = getConnectionTableEntry(userFromFiltration, userToFiltration1);
-    public static final ConnectionTableEntry connectionTableEntryFiltration2 = getConnectionTableEntryForFiltration(userToFiltration1, userToFiltration2);
-    public static final ConnectionTableEntry connectionTableEntryByDeviceId = getConnectionTableEntry(userFromDeviceId, userToDeviceId);
-    public static final ConnectionTableEntry connectionTableEntryByDigitalId = getConnectionTableEntry(userFromDigitalId, userToDigitalId);
-    public static final ConnectionTableEntry connectionTableEntryByNameBirth = getConnectionTableEntry(userFromNameBirth, userToNameBirth);
-    public static final ConnectionTableEntry connectionTableEntryBySessionId = getConnectionTableEntry(userFromSessionId, userToSessionId);
-    public static final ConnectionTableEntry connectionTableEntryByWebSessionId = getConnectionTableEntry(userFromWebSessionId, userToWebSessionId);
+    static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
+    static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
+    static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
+    static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
+    static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
+    static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
+    static final ConnectionTableEntry connectionTableEntryForDepth2 = getConnectionTableEntryLvl2(userToDepth1, userToDepth2);
+    static final ConnectionTableEntry connectionTableEntryFiltration1 = getConnectionTableEntry(userFromFiltration, userToFiltration1);
+    static final ConnectionTableEntry connectionTableEntryFiltration2 = getConnectionTableEntryForFiltration(userToFiltration1, userToFiltration2);
+    static final ConnectionTableEntry connectionTableEntryByDeviceId = getConnectionTableEntry(userFromDeviceId, userToDeviceId);
+    static final ConnectionTableEntry connectionTableEntryByDigitalId = getConnectionTableEntry(userFromDigitalId, userToDigitalId);
+    static final ConnectionTableEntry connectionTableEntryByNameBirth = getConnectionTableEntry(userFromNameBirth, userToNameBirth);
+    static final ConnectionTableEntry connectionTableEntryBySessionId = getConnectionTableEntry(userFromSessionId, userToSessionId);
+    static final ConnectionTableEntry connectionTableEntryByWebSessionId = getConnectionTableEntry(userFromWebSessionId, userToWebSessionId);
     // Objects to insert to attributes tables
-    public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
-    public static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
-    public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
-    public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
-    public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
-    public static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
-    public static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
-    public static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
-    public static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
-    public static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
-    public static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
-    public static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
+    static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
+    static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
+    static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
+    static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
+    static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
+    static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
+    static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
+    static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
@@ -166,7 +166,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by document success(200)")
     @AllureId("188")
-    public void getConnectionsTest1() throws IOException {
+    void getConnectionsTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -187,7 +187,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by document with connection depth success(200)")
     @AllureId("189")
-    public void getConnectionsTest2() throws IOException {
+    void getConnectionsTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -209,7 +209,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by email success(200)")
     @AllureId("190")
-    public void getConnectionsTest3() throws IOException {
+    void getConnectionsTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntry.email);
 
@@ -228,7 +228,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by ip success(200)")
     @AllureId("191")
-    public void getConnectionsTest4() throws IOException {
+    void getConnectionsTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("ipAddress", ipTableEntry.ip);
 
@@ -247,7 +247,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by phone success(200)")
     @AllureId("192")
-    public void getConnectionsTest5() throws IOException {
+    void getConnectionsTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
 
@@ -266,7 +266,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by payout success(200)")
     @AllureId("193")
-    public void getConnectionsTest6() throws IOException {
+    void getConnectionsTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("payoutId", payoutTableEntry.payout);
 
@@ -285,7 +285,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by all params success(200)")
     @AllureId("194")
-    public void getConnectionsTest7() throws IOException {
+    void getConnectionsTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -314,7 +314,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom success(200)")
     @AllureId("467")
-    public void getConnectionsTest8() throws IOException {
+    void getConnectionsTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
         queryParams.put("connectionScoreFrom", 0.4);
@@ -334,7 +334,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo success(200)")
     @AllureId("468")
-    public void getConnectionsTest9() throws IOException {
+    void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
         queryParams.put("connectionScoreTo", 0.4);
@@ -354,7 +354,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionType success(200)")
     @AllureId("469")
-    public void getConnectionsTest10() throws IOException {
+    void getConnectionsTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
         queryParams.put("connectionType", List.of(CONNECTION_TYPE_SAME_NETWORK));
@@ -374,7 +374,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. documentCountryId not int bad request (400)")
     @AllureId("195")
-    public void getConnectionsTest11() throws IOException {
+    void getConnectionsTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -393,7 +393,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. documentType missing bad request (Empty response)")
     @AllureId("196")
-    public void getConnectionsTest12() throws IOException {
+    void getConnectionsTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
@@ -411,7 +411,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. documentNumber missing bad request (Empty response)")
     @AllureId("197")
-    public void getConnectionsTest13() throws IOException {
+    void getConnectionsTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
@@ -429,7 +429,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. documentCountryId missing bad request (Empty response)")
     @AllureId("198")
-    public void getConnectionsTest14() throws IOException {
+    void getConnectionsTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -447,7 +447,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. No params bad request (400)")
     @AllureId("199")
-    public void getConnectionsTest15() throws IOException {
+    void getConnectionsTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
 
         Response response = getConnectionsByAttributes(queryParams);
@@ -463,7 +463,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreFrom not int Bad Request(400)")
     @AllureId("470")
-    public void getConnectionsTest16() throws IOException {
+    void getConnectionsTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
         queryParams.put("connectionScoreFrom", "test");
@@ -481,7 +481,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection with connectionScoreTo not int Bad Request(400)")
     @AllureId("471")
-    public void getConnectionsTest17() throws IOException {
+    void getConnectionsTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
         queryParams.put("connectionScoreTo", "test");
@@ -499,7 +499,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by device id success(200)")
     @AllureId("695")
-    public void getConnectionsTest18() throws IOException {
+    void getConnectionsTest18() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("device", deviceIdTableEntry.deviceId);
 
@@ -519,7 +519,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by digital id success(200)")
     @AllureId("696")
-    public void getConnectionsTest19() throws IOException {
+    void getConnectionsTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("digital", digitalIdTableEntry.digitalId);
 
@@ -539,7 +539,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by name birth success(200)")
     @AllureId("697")
-    public void getConnectionsTest20() throws IOException {
+    void getConnectionsTest20() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("nameBirth", userFromNameBirth.getNameDateOfBirth());
 
@@ -559,7 +559,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by session id success(200)")
     @AllureId("698")
-    public void getConnectionsTest21() throws IOException {
+    void getConnectionsTest21() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("session", sessionIdTableEntry.sessionId);
 
@@ -579,7 +579,7 @@ public class GetConnectionsByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by attributes Api. Get connection by web session id success(200)")
     @AllureId("699")
-    public void getConnectionsTest22() throws IOException {
+    void getConnectionsTest22() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("webSession", webSessionTableEntryFrom.webSessionId);
 

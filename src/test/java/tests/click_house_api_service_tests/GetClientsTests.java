@@ -36,12 +36,12 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetClientsTests extends TestBaseApi {
+class GetClientsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account & server ID")
     @AllureId("200")
-    public void getClientTest1() throws IOException {
+    void getClientTest1() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
@@ -71,7 +71,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by userId + brand")
     @AllureId("600")
-    public void getClientTest2() throws IOException {
+    void getClientTest2() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomClient();
 
@@ -103,7 +103,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by server ID=null (400 error)")
     @AllureId("201")
-    public void getClientTest3() throws IOException {
+    void getClientTest3() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1);
@@ -119,7 +119,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account=null (400 error)")
     @AllureId("202")
-    public void getClientTest4() throws IOException {
+    void getClientTest4() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1);
@@ -136,7 +136,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by userID=null (400 error)")
     @AllureId("599")
-    public void getClientTest5() throws IOException {
+    void getClientTest5() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", "1");
@@ -153,7 +153,7 @@ public class GetClientsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client by brand=null (400 error)")
     @AllureId("598")
-    public void getClientTest6() throws IOException {
+    void getClientTest6() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", 1);
@@ -171,7 +171,7 @@ public class GetClientsTests extends TestBaseApi {
     @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("204")
-    public void getClientTest7() throws IOException {
+    void getClientTest7() throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "");
@@ -189,7 +189,7 @@ public class GetClientsTests extends TestBaseApi {
     @ValueSource(strings = {"", "qwerty"})
     @DisplayName("Clickhouse Api. Get client by trading account='' & server ID")
     @AllureId("205")
-    public void getClientTest8(String serverId) throws IOException {
+    void getClientTest8(String serverId) throws IOException {
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1);

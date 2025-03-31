@@ -14,7 +14,7 @@ import tests.TestBaseWeb;
 
 @Feature(FEATURE_LEXIS_NEXIS)
 @Tag(TEAM_CORE)
-public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
+class LexisNexisVantageIntegrationTest extends TestBaseWeb {
 
     @Disabled
     @Test
@@ -22,7 +22,7 @@ public class LexisNexisVantageIntegrationTest extends TestBaseWeb {
     @Tag(LAYER_API)
     @DisplayName("Vantage. Registration Lexis Nexis event")
     @AllureId("57")
-    public void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
+    void LexisNexisRegistrationEventTest() throws InterruptedException, SQLException, ClassNotFoundException {
         // Test data
         String email = getRandomEmail();
         String country = COUNTRY_MALAYSIA;

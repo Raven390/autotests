@@ -25,7 +25,7 @@ import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFacto
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
-import static helpers.database.MitigationHelper.cleanUserRestriction;
+import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 

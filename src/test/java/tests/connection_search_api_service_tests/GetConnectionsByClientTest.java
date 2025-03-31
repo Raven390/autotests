@@ -35,38 +35,38 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-public class GetConnectionsByClientTest extends TestBaseApi {
+class GetConnectionsByClientTest extends TestBaseApi {
 
-    public static final ClientHelper userFrom1 = getRandomVantageClient();
-    public static final ClientHelper userTo1_1 = getRandomVantageClient();
-    public static final ClientHelper userTo1_2 = getRandomVantageClient();
-    public static final ClientHelper userFrom2 = getRandomVantageClient();
-    public static final ClientHelper userTo2_1 = getRandomVantageClient();
-    public static final ClientHelper userTo2_2 = getRandomVantageClient();
-    public static final ClientHelper userFrom3 = getRandomVantageClient();
-    public static final ClientHelper userTo3_1 = getRandomVantageClient();
-    public static final ClientHelper userTo3_2 = getRandomVantageClient();
-    public static final ClientHelper userFrom4 = getRandomVantageClient();
-    public static final ClientHelper userTo4_1 = getRandomVantageClient();
-    public static final ClientHelper userTo4_2 = getRandomVantageClient();
-    public static final ClientHelper userTo4_3 = getRandomVantageClient();
+    static final ClientHelper userFrom1 = getRandomVantageClient();
+    static final ClientHelper userTo1_1 = getRandomVantageClient();
+    static final ClientHelper userTo1_2 = getRandomVantageClient();
+    static final ClientHelper userFrom2 = getRandomVantageClient();
+    static final ClientHelper userTo2_1 = getRandomVantageClient();
+    static final ClientHelper userTo2_2 = getRandomVantageClient();
+    static final ClientHelper userFrom3 = getRandomVantageClient();
+    static final ClientHelper userTo3_1 = getRandomVantageClient();
+    static final ClientHelper userTo3_2 = getRandomVantageClient();
+    static final ClientHelper userFrom4 = getRandomVantageClient();
+    static final ClientHelper userTo4_1 = getRandomVantageClient();
+    static final ClientHelper userTo4_2 = getRandomVantageClient();
+    static final ClientHelper userTo4_3 = getRandomVantageClient();
 
-    public final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
-    public final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
-    public final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
-    public final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
+    final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
+    final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
+    final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
+    final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
 
-    public static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
-    public static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
-    public static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
-    public static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
-    public static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
-    public static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
-    public static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
-    public static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
-    public static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
-    public static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
-    public static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
+    static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
+    static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
+    static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
+    static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
+    static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
+    static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
+    static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
+    static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
+    static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
+    static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
+    static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
@@ -77,7 +77,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId success(200)")
     @AllureId("145")
-    public void getConnectionsByClientSuccessTest() throws Exception {
+    void getConnectionsByClientSuccessTest() throws Exception {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
 
@@ -96,7 +96,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId with 1 and 2 level connections to the same client success(200)")
     @AllureId("939")
-    public void getConnectionsByClient1And2LevelSuccessTest() throws IOException {
+    void getConnectionsByClient1And2LevelSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom3.getUcid());
 
@@ -115,7 +115,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId with same level connections different score to the same client success(200)")
     @AllureId("940")
-    public void getConnectionsByClientSameLevelScoreSuccessTest() throws IOException {
+    void getConnectionsByClientSameLevelScoreSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom4.getUcid());
 
@@ -134,7 +134,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId and connectionDepth success(200)")
     @AllureId("146")
-    public void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
+    void getConnectionsByClientAndConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", 1);
@@ -155,7 +155,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by not existing clientId success(200)")
     @AllureId("147")
-    public void getConnectionsNoSuchClientIdSuccessTest() throws IOException {
+    void getConnectionsNoSuchClientIdSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "test-12345");
 
@@ -172,7 +172,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by not existing connectionDepth for the client success(200)")
     @AllureId("148")
-    public void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
+    void getConnectionsNoSuchConnectionDepthSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", -99);
@@ -190,7 +190,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreFrom filtration success(200)")
     @AllureId("460")
-    public void getConnectionsConnectionScoreFromFiltrationSuccessTest() throws IOException {
+    void getConnectionsConnectionScoreFromFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionScoreFrom", 1);
@@ -210,7 +210,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreTo filtration success(200)")
     @AllureId("461")
-    public void getConnectionsConnectionScoreToFiltrationSuccessTest() throws IOException {
+    void getConnectionsConnectionScoreToFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionScoreTo", 0.9);
@@ -231,7 +231,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionType filtration success(200)")
     @AllureId("462")
-    public void getConnectionsConnectionTypeFiltrationSuccessTest() throws IOException {
+    void getConnectionsConnectionTypeFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionType", List.of("Same Network"));
@@ -252,7 +252,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionAttributes filtration success(200)")
     @AllureId("463")
-    public void getConnectionsConnectionAttributesFiltrationSuccessTest() throws IOException {
+    void getConnectionsConnectionAttributesFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
         queryParams.put("connectionAttributes", List.of("emailAddress"));
@@ -273,7 +273,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection without clientId Bad Request(400)")
     @AllureId("149")
-    public void getConnectionsNoClientIdBadRequestTest() throws IOException {
+    void getConnectionsNoClientIdBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
 
         Response response = getConnectionsByClientId(queryParams);
@@ -289,7 +289,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection by clientId with incorrect format success(400)")
     @AllureId("180")
-    public void getConnectionsIncorrectClientIdFormatBadRequestTest() throws IOException {
+    void getConnectionsIncorrectClientIdFormatBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "incorrect_client_format");
         queryParams.put("connectionDepth", 1);
@@ -307,7 +307,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionDepth not int Bad Request(400)")
     @AllureId("150")
-    public void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
+    void getConnectionsConnectionDepthNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionDepth", "test");
@@ -325,7 +325,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreFrom not int Bad Request(400)")
     @AllureId("464")
-    public void getConnectionsConnectionScoreFromNotIntBadRequestTest() throws IOException {
+    void getConnectionsConnectionScoreFromNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionScoreFrom", "test");
@@ -343,7 +343,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with connectionScoreTo not int Bad Request(400)")
     @AllureId("465")
-    public void getConnectionsConnectionScoreToNotIntBadRequestTest() throws IOException {
+    void getConnectionsConnectionScoreToNotIntBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionScoreTo", "test");
@@ -361,7 +361,7 @@ public class GetConnectionsByClientTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search by client Api. Get connection with incorrect connectionAttributes Bad Request(400)")
     @AllureId("466")
-    public void getConnectionsConnectionAttributesIncorrectBadRequestTest() throws IOException {
+    void getConnectionsConnectionAttributesIncorrectBadRequestTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntry.userFrom);
         queryParams.put("connectionAttributes", List.of("test"));

@@ -31,7 +31,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetTradesGroupByTests extends TestBaseApi {
+class GetTradesGroupByTests extends TestBaseApi {
 
     private static ClientHelper client;
 
@@ -42,7 +42,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     private static Mt5DealsCoercedObject trade5;
 
     @BeforeAll
-    public static void setupTradesGroupBy() {
+    static void setupTradesGroupBy() {
         client = getRandomVantageClient();
         trade1 = generateTradeByClient(client);
         trade1.setAction(1);
@@ -79,14 +79,14 @@ public class GetTradesGroupByTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownTradesGroupBy() {
+    static void teardownTradesGroupBy() {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with mandatory params (200)")
     @AllureId("213")
-    public void getTradesGroupByWithMandatoryParamsTest() throws IOException {
+    void getTradesGroupByWithMandatoryParamsTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -106,7 +106,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with action (200)")
     @AllureId("485")
-    public void getTradesGroupByWithActionTest() throws IOException {
+    void getTradesGroupByWithActionTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -126,7 +126,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with entry (200)")
     @AllureId("486")
-    public void getTradesGroupByWithEntryTest() throws IOException {
+    void getTradesGroupByWithEntryTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -146,7 +146,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with dateFrom (200)")
     @AllureId("487")
-    public void getTradesGroupByWithDateFromTest() throws IOException {
+    void getTradesGroupByWithDateFromTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -166,7 +166,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with dateTo (200)")
     @AllureId("488")
-    public void getTradesGroupByWithDateToTest() throws IOException {
+    void getTradesGroupByWithDateToTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -186,7 +186,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy symbol asc (200)")
     @AllureId("489")
-    public void getTradesGroupByOrderBySymbolAscTest() throws IOException {
+    void getTradesGroupByOrderBySymbolAscTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -207,7 +207,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy profit desc (200)")
     @AllureId("490")
-    public void getTradesGroupByOrderByProfitDescTest() throws IOException {
+    void getTradesGroupByOrderByProfitDescTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -228,7 +228,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy symbol default (200)")
     @AllureId("491")
-    public void getTradesGroupByOrderBySymbolDefaultTest() throws IOException {
+    void getTradesGroupByOrderBySymbolDefaultTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -248,7 +248,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy profit default (200)")
     @AllureId("492")
-    public void getTradesGroupByOrderByProfitDefaultTest() throws IOException {
+    void getTradesGroupByOrderByProfitDefaultTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -268,7 +268,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with limit (200)")
     @AllureId("493")
-    public void getTradesGroupByWithLimitTest() throws IOException {
+    void getTradesGroupByWithLimitTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -288,7 +288,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request without tradingAccount (400)")
     @AllureId("494")
-    public void getTradesGroupByNoTradingAccountTest() throws IOException {
+    void getTradesGroupByNoTradingAccountTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
@@ -298,13 +298,13 @@ public class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Either clientIds or tradingAccount and serverId must be provided."));
+        assertThat("Assert error", mappedResponse.error, equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request without serverId (400)")
     @AllureId("495")
-    public void getTradesGroupByNoServerIdTest() throws IOException {
+    void getTradesGroupByNoServerIdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getTradesGroupBy(queryParams);
@@ -314,13 +314,13 @@ public class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Either clientIds or tradingAccount and serverId must be provided."));
+        assertThat("Assert error", mappedResponse.error, equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request tradingAccount not int (400)")
     @AllureId("496")
-    public void getTradesGroupByTradingAccountNotIntTest() throws IOException {
+    void getTradesGroupByTradingAccountNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "test");
         queryParams.put("serverId", client.getServerId());
@@ -337,7 +337,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request serverId not int (400)")
     @AllureId("497")
-    public void getTradesGroupByServerIdNotIntTest() throws IOException {
+    void getTradesGroupByServerIdNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", "test");
@@ -354,7 +354,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request action not int (400)")
     @AllureId("498")
-    public void getTradesGroupByActionNotIntTest() throws IOException {
+    void getTradesGroupByActionNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -374,7 +374,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request entry not int (400)")
     @AllureId("499")
-    public void getTradesGroupByEntryNotIntTest() throws IOException {
+    void getTradesGroupByEntryNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -394,7 +394,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect dateFrom (400)")
     @AllureId("500")
-    public void getTradesGroupByIncorrectDateFromTest() throws IOException {
+    void getTradesGroupByIncorrectDateFromTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -414,7 +414,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect dateTo (400)")
     @AllureId("501")
-    public void getTradesGroupByIncorrectDateToTest() throws IOException {
+    void getTradesGroupByIncorrectDateToTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -434,7 +434,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect orderBy (400)")
     @AllureId("502")
-    public void getTradesGroupByIncorrectOrderByTest() throws IOException {
+    void getTradesGroupByIncorrectOrderByTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -452,7 +452,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect sortOrder (400)")
     @AllureId("503")
-    public void getTradesGroupByIncorrectSortOrderTest() throws IOException {
+    void getTradesGroupByIncorrectSortOrderTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -470,7 +470,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request limit not int (400)")
     @AllureId("504")
-    public void getTradesGroupByLimitNotIntTest() throws IOException {
+    void getTradesGroupByLimitNotIntTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -490,7 +490,7 @@ public class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with ucid (200)")
     @AllureId("1076")
-    public void getTradesGroupByWithUcidTest() throws IOException {
+    void getTradesGroupByWithUcidTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(client.getUcid()));
         Response response = getTradesGroupBy(queryParams);

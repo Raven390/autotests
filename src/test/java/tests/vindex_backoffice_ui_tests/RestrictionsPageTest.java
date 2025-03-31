@@ -26,7 +26,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.MitigationHelper.cleanUserRestriction;
+import static helpers.database.CleanTableHelper.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static page_objects.backoffice_pages.RestrictionPage.checkKafkaRequestApplyUserId;
 import static page_objects.backoffice_pages.RestrictionPage.checkRestrictionApplymentAuditGeneral;

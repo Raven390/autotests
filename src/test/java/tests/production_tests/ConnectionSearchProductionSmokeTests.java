@@ -22,12 +22,12 @@ import static utils.Constants.*;
 @Tag(SUITE_SMOKE_PROD)
 @Story(STORY_PRODUCTION_TESTS)
 
-public class ConnectionSearchProductionSmokeTests {
+class ConnectionSearchProductionSmokeTests {
 
     @Test
     @DisplayName("Connections smoke test. getAbuseTypes by attributes success (200)")
     @AllureId("795")
-    public void testConnectionSearchProd1() throws IOException {
+    void testConnectionSearchProd1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", "test@test.com");
         Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES, null, queryParams);
@@ -37,7 +37,7 @@ public class ConnectionSearchProductionSmokeTests {
     @Test
     @DisplayName("Connections smoke test. getAbuseTypes by client id success (200)")
     @AllureId("796")
-    public void testConnectionSearchProd2() throws IOException {
+    void testConnectionSearchProd2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "vantage-123");
         Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT, null, queryParams);
@@ -47,7 +47,7 @@ public class ConnectionSearchProductionSmokeTests {
     @Test
     @DisplayName("Connections smoke test. getConnections by client id success (200)")
     @AllureId("797")
-    public void testConnectionSearchProd3() throws IOException {
+    void testConnectionSearchProd3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "vantage-123");
         Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT, null, queryParams);
@@ -57,7 +57,7 @@ public class ConnectionSearchProductionSmokeTests {
     @Test
     @DisplayName("Connections smoke test. getConnections by attributes success (200)")
     @AllureId("798")
-    public void testConnectionSearchProd4() throws IOException {
+    void testConnectionSearchProd4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", "test@test.com");
         Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES, null, queryParams);
@@ -67,7 +67,7 @@ public class ConnectionSearchProductionSmokeTests {
     @Test
     @DisplayName("Connections smoke test. Check connected ib (200)")
     @AllureId("898")
-    public void testConnectionSearchProd5() throws IOException {
+    void testConnectionSearchProd5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "vantage-123");
         queryParams.put("emailAddress", "mail@mail.com");

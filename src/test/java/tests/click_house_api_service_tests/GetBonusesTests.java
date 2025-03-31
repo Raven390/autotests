@@ -31,13 +31,13 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetBonusesTests extends TestBaseApi {
+class GetBonusesTests extends TestBaseApi {
 
     private static CrmTbBonusObject bonus1;
     private static CrmTbBonusObject bonus2;
 
     @BeforeAll
-    public static void setupBonuses() {
+    static void setupBonuses() {
         bonus1 = generateBonusByClient(getRandomVantageClient());
         bonus2 = generateBonusByClient(getRandomVantageClient());
         bonus2.createTime = getTomorrowTimestampDbFormat();
@@ -46,14 +46,14 @@ public class GetBonusesTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownBonuses() throws Exception {
+    static void teardownBonuses() throws Exception {
         cleanBonusesTableByClient(bonus1.ucid, bonus2.ucid);
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by all params")
     @AllureId("415")
-    public void getBonusesAllParamsTest() throws IOException {
+    void getBonusesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -81,7 +81,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by empty params")
     @AllureId("416")
-    public void getBonusesEmptyParamsTest() throws IOException {
+    void getBonusesEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -102,7 +102,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses only by clientId(200)")
     @AllureId("417")
-    public void getBonusesClientIdTest() throws IOException {
+    void getBonusesClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -117,7 +117,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses by clientId and limit")
     @AllureId("418")
-    public void getBonusesLimitTest() throws IOException {
+    void getBonusesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -142,7 +142,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses order by create time default order")
     @AllureId("419")
-    public void getBonusesDefaultSortOrderTest() throws IOException {
+    void getBonusesDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -165,7 +165,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses order by actualAmountUSD")
     @AllureId("420")
-    public void getBonusesOrderByAmountUsdTest() throws IOException {
+    void getBonusesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -183,7 +183,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses no params")
     @AllureId("421")
-    public void getBonusesNoParamsTest() throws IOException {
+    void getBonusesNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getBonuses(queryParams);
@@ -198,7 +198,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses no clientId")
     @AllureId("422")
-    public void getBonusesNoClientIdTest() throws IOException {
+    void getBonusesNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("dateFrom", bonus1.createTime.replace(" ", "T"));
@@ -219,7 +219,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect dateFrom")
     @AllureId("423")
-    public void getBonusesIncorrectDateFromTest() throws IOException {
+    void getBonusesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -238,7 +238,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect dateTo")
     @AllureId("424")
-    public void getBonusesIncorrectDateToTest() throws IOException {
+    void getBonusesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -257,7 +257,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect orderBy")
     @AllureId("425")
-    public void getBonusesIncorrectOrderByTest() throws IOException {
+    void getBonusesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -274,7 +274,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect sortOrder")
     @AllureId("426")
-    public void getBonusesIncorrectSortOrderTest() throws IOException {
+    void getBonusesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
@@ -291,7 +291,7 @@ public class GetBonusesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get bonuses incorrect limit")
     @AllureId("427")
-    public void getBonusesIncorrectLimitTest() throws IOException {
+    void getBonusesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));

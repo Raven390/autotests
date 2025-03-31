@@ -35,20 +35,18 @@ import static utils.Utils.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
+class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
     private static final String date = formatTimeToUtc("2026-12-31 00:00:00");
 
-    public static AggrCreditRiskFreeRevenueRatioObject data1;
-    public static S3FactLoginMetricsObject s3Metrics;
-    public static MtTbCreditsObject credit;
+    static AggrCreditRiskFreeRevenueRatioObject data1;
+    static S3FactLoginMetricsObject s3Metrics;
+    static MtTbCreditsObject credit;
 
-    public static final ClientHelper client1 = getRandomVantageClient();
-    public static final String dateTo = getCurrentTimestampDbFormat();
-    public static final String dateFrom = getTomorrowTimestampDbFormat();
+    static final ClientHelper client1 = getRandomVantageClient();
 
     @BeforeAll
-    public static void setupData() {
+    static void setupData() {
         data1 = generateAggrCreditRiskFreeRevenueRatioObject(client1);
         s3Metrics = generateS3FactLoginMetricsClient(client1);
         s3Metrics.setDailyCoreSpreadRevenuePe(6d);
@@ -61,14 +59,14 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownData() {
+    static void teardownData() {
         deleteEntryFromDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio required params (200)")
     @AllureId("566")
-    public void getCreditRiskFreeRevenueRatioTest1() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -96,7 +94,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio with only tradingAccount parameter(400)")
     @AllureId("568")
-    public void getCreditRiskFreeRevenueRatioTest3() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -112,7 +110,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio with only serverId parameter(400)")
     @AllureId("569")
-    public void getCreditRiskFreeRevenueRatioTest4() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client1.getServerId()); // Required
@@ -128,7 +126,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio wrong date format(200)")
     @AllureId("570")
-    public void getCreditRiskFreeRevenueRatioTest5() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -148,7 +146,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio empty response for non existing data(200)")
     @AllureId("571")
-    public void getCreditRiskFreeRevenueRatioTest6() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -164,7 +162,7 @@ public class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credit risk free equity ratio empty response ,filtered by date(200)")
     @AllureId("572")
-    public void getCreditRiskFreeRevenueRatioTest8() throws IOException {
+    void getCreditRiskFreeRevenueRatioTest8() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required

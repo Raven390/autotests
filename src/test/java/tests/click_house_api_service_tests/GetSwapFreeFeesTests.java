@@ -32,34 +32,32 @@ import static utils.Utils.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetSwapFreeFeesTests extends TestBaseApi {
+class GetSwapFreeFeesTests extends TestBaseApi {
 
     private static MtBalanceOrdersObject data1;
     private static MtBalanceOrdersObject data2;
     private static final ClientHelper client1 = getRandomVantageClient();
-    public static final String dateTo = getNextYearTimestampDbFormat();
-    public static final String dateFrom = getPreviousYearTimestampDbFormat();
-    public static String tradeDate1 = "2024-12-10 17:59:14";
-    public static String tradeDate2 = "2024-12-10 17:59:15";
-    public static String comment = "Administration Fee Automation test";
+    static String tradeDate1 = "2024-12-10 17:59:14";
+    static String tradeDate2 = "2024-12-10 17:59:15";
+    static String comment = "Administration Fee Automation test";
 
 
     @BeforeAll
-    public static void setupData() {
+    static void setupData() {
         data1 = generateBalanceOrders(client1, 1d, 2d, tradeDate1);
         data2 = generateBalanceOrders(client1, 3d, 4d, tradeDate2);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
     }
 
     @AfterAll
-    public static void teardownData() throws Exception {
+    static void teardownData() throws Exception {
         cleanMtBalanceOrdersTableByClient(data1.ucid, data2.ucid);
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with required params")
     @AllureId("528")
-    public void getSwapFreeFeesTest1() throws IOException {
+    void getSwapFreeFeesTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -79,7 +77,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with all params")
     @AllureId("529")
-    public void getSwapFreeFeesTest2() throws IOException {
+    void getSwapFreeFeesTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -106,7 +104,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with dateFrom")
     @AllureId("530")
-    public void getSwapFreeFeesTest3() throws IOException {
+    void getSwapFreeFeesTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -123,7 +121,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with dateTo")
     @AllureId("531")
-    public void getSwapFreeFeesTest4() throws IOException {
+    void getSwapFreeFeesTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -140,7 +138,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=tradeDate and sortOrder=asc")
     @AllureId("532")
-    public void getSwapFreeFeesTest5() throws IOException {
+    void getSwapFreeFeesTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -161,7 +159,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=tradeDate and sortOrder=desc")
     @AllureId("533")
-    public void getSwapFreeFeesTest6() throws IOException {
+    void getSwapFreeFeesTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -182,7 +180,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=asc")
     @AllureId("534")
-    public void getSwapFreeFeesTest7() throws IOException {
+    void getSwapFreeFeesTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -203,7 +201,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=desc")
     @AllureId("535")
-    public void getSwapFreeFeesTest8() throws IOException {
+    void getSwapFreeFeesTest8() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -224,7 +222,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profitUsd and sortOrder=asc")
     @AllureId("536")
-    public void getSwapFreeFeesTest9() throws IOException {
+    void getSwapFreeFeesTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -245,7 +243,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with orderBy=profit and sortOrder=desc")
     @AllureId("537")
-    public void getSwapFreeFeesTest10() throws IOException {
+    void getSwapFreeFeesTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -266,7 +264,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with only tradingAccount")
     @AllureId("538")
-    public void getSwapFreeFeesTest11() throws IOException {
+    void getSwapFreeFeesTest11() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -283,7 +281,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with only serverId")
     @AllureId("539")
-    public void getSwapFreeFeesTest12() throws IOException {
+    void getSwapFreeFeesTest12() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1); // Required
@@ -300,7 +298,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with wrong dateFrom")
     @AllureId("540")
-    public void getSwapFreeFeesTest13() throws IOException {
+    void getSwapFreeFeesTest13() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -322,7 +320,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with wrong dateTo")
     @AllureId("541")
-    public void getSwapFreeFeesTest14() throws IOException {
+    void getSwapFreeFeesTest14() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -344,7 +342,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with wrong orderBy")
     @AllureId("542")
-    public void getSwapFreeFeesTest15() throws IOException {
+    void getSwapFreeFeesTest15() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -363,7 +361,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with wrong sortOrder")
     @AllureId("543")
-    public void getSwapFreeFeesTest16() throws IOException {
+    void getSwapFreeFeesTest16() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -383,7 +381,7 @@ public class GetSwapFreeFeesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free fees with wrong limit")
     @AllureId("544")
-    public void getSwapFreeFeesTest17() throws IOException {
+    void getSwapFreeFeesTest17() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
