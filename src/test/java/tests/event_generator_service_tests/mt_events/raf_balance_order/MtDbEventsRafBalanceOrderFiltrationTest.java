@@ -22,15 +22,16 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsRafBalanceOrderFiltrationTest {
+class MtDbEventsRafBalanceOrderFiltrationTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName(
         "Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
     @AllureId("125")
-    public void generateRafBalanceOrderEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRafBalanceOrderEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException {
 
         //        Creation of Raf balance order events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTestAccount1 = generateRafBalanceOrderMtDbEventMt4();

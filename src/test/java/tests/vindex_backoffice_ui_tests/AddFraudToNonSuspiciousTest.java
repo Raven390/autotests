@@ -21,7 +21,7 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static helpers.database.AuditHelper.cleanUserAudit;
+import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectToDb;

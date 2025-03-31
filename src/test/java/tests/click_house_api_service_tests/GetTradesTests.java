@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ import static utils.Utils.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetTradesTests extends TestBaseApi {
+class GetTradesTests extends TestBaseApi {
 
     private static ClientHelper client1 = getRandomVantageClient();
     private static Mt5DealsCoercedObject trade1;
@@ -40,7 +39,7 @@ public class GetTradesTests extends TestBaseApi {
     private static Integer account;
 
     @BeforeAll
-    public static void setupTrades() {
+    static void setupTrades() {
         account = getRandomIntPositive();
         trade1 = generateTradeByClient(client1);
         trade2 = generateTradeByClient(client1);
@@ -55,14 +54,14 @@ public class GetTradesTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownTrades() throws SQLException {
+    static void teardownTrades() {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
     @AllureId("214")
-    public void getTradesAllParamsTest() throws IOException {
+    void getTradesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -94,7 +93,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades by empty params")
     @AllureId("428")
-    public void getTradesEmptyParamsTest() throws IOException {
+    void getTradesEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -117,7 +116,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades only by clientId(200)")
     @AllureId("210")
-    public void getTradesClientIdTest() throws IOException {
+    void getTradesClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -133,7 +132,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades by clientId and limit")
     @AllureId("367")
-    public void getTradesLimitTest() throws IOException {
+    void getTradesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade2.getAccount());
@@ -161,7 +160,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades order by create time default order")
     @AllureId("368")
-    public void getTradesDefaultSortOrderTest() throws IOException {
+    void getTradesDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -187,7 +186,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades order by actualAmountUSD")
     @AllureId("369")
-    public void getTradesOrderByAmountUsdTest() throws IOException {
+    void getTradesOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade2.getAccount());
@@ -206,7 +205,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades no params")
     @AllureId("370")
-    public void getTradesNoParamsTest() throws IOException {
+    void getTradesNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getTrades(queryParams);
@@ -221,7 +220,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades no tradingAccount")
     @AllureId("371")
-    public void getTradesNoTradingAccountTest() throws IOException {
+    void getTradesNoTradingAccountTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", trade1.getServerId());
@@ -244,7 +243,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades no serverId")
     @AllureId("372")
-    public void getTradesNoServerIdTest() throws IOException {
+    void getTradesNoServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -267,7 +266,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect dateFrom")
     @AllureId("373")
-    public void getTradesIncorrectDateFromTest() throws IOException {
+    void getTradesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -287,7 +286,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect dateTo")
     @AllureId("374")
-    public void getTradesIncorrectDateToTest() throws IOException {
+    void getTradesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -307,7 +306,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect orderBy")
     @AllureId("375")
-    public void getTradesIncorrectOrderByTest() throws IOException {
+    void getTradesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -325,7 +324,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect sortOrder")
     @AllureId("376")
-    public void getTradesIncorrectSortOrderTest() throws IOException {
+    void getTradesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());
@@ -343,7 +342,7 @@ public class GetTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Trades incorrect limit")
     @AllureId("377")
-    public void getTradesIncorrectLimitTest() throws IOException {
+    void getTradesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", trade1.getAccount());

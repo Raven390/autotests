@@ -20,15 +20,15 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class WithdrawalRequiredParametersTests {
+class WithdrawalRequiredParametersTests {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate withdrawal event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("68")
-    public void generateWithdrawalEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
-
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateWithdrawalEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
         WithdrawalDbEvent withdrawalDbEventCreateTime = generateWithdrawalDbEvent();
         withdrawalDbEventCreateTime.data.createTime = null;

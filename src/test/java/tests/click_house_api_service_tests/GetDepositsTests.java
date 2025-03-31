@@ -32,13 +32,13 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetDepositsTests extends TestBaseApi {
+class GetDepositsTests extends TestBaseApi {
 
     private static CrmTbDepositObject deposit1;
     private static CrmTbDepositObject deposit2;
 
     @BeforeAll
-    public static void setupDeposits() {
+    static void setupDeposits() {
         ClientHelper client = getRandomVantageClient();
         deposit1 = generateDepositByClient(client);
         deposit2 = generateDepositByClient(client);
@@ -48,14 +48,14 @@ public class GetDepositsTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownDeposits() throws Exception {
+    static void teardownDeposits() throws Exception {
         cleanDepositsTableByUcid(deposit1.ucid, deposit2.ucid);
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get Deposits by all params")
     @AllureId("390")
-    public void getDepositsAllParamsTest() throws IOException {
+    void getDepositsAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -80,7 +80,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits by empty params")
     @AllureId("391")
-    public void getDepositsEmptyParamsTest() throws IOException {
+    void getDepositsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -101,7 +101,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits only by clientId(200)")
     @AllureId("212")
-    public void getDepositsClientIdTest() throws IOException {
+    void getDepositsClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -116,7 +116,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits by clientId and limit")
     @AllureId("392")
-    public void getDepositsLimitTest() throws IOException {
+    void getDepositsLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -139,7 +139,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits order by create time default order")
     @AllureId("393")
-    public void getDepositsDefaultSortOrderTest() throws IOException {
+    void getDepositsDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -160,7 +160,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits order by actualAmountUSD")
     @AllureId("394")
-    public void getDepositsOrderByAmountUsdTest() throws IOException {
+    void getDepositsOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -178,7 +178,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits no params")
     @AllureId("395")
-    public void getDepositsNoParamsTest() throws IOException {
+    void getDepositsNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getDeposits(queryParams);
@@ -193,7 +193,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits no clientId")
     @AllureId("396")
-    public void getDepositsNoClientIdTest() throws IOException {
+    void getDepositsNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("dateFrom", deposit1.createTime.replace(" ", "T"));
@@ -213,7 +213,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits incorrect dateFrom")
     @AllureId("397")
-    public void getDepositsIncorrectDateFromTest() throws IOException {
+    void getDepositsIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -232,7 +232,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits incorrect dateTo")
     @AllureId("398")
-    public void getDepositsIncorrectDateToTest() throws IOException {
+    void getDepositsIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -251,7 +251,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits incorrect orderBy")
     @AllureId("399")
-    public void getDepositsIncorrectOrderByTest() throws IOException {
+    void getDepositsIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -268,7 +268,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits incorrect sortOrder")
     @AllureId("400")
-    public void getDepositsIncorrectSortOrderTest() throws IOException {
+    void getDepositsIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);
@@ -285,7 +285,7 @@ public class GetDepositsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Deposits incorrect limit")
     @AllureId("401")
-    public void getDepositsIncorrectLimitTest() throws IOException {
+    void getDepositsIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", deposit1.ucid);

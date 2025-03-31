@@ -27,7 +27,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetAbuseTypesTests extends TestBaseApi {
+class GetAbuseTypesTests extends TestBaseApi {
 
     private static BoClientFraudTypesObject fraud1;
     private static BoClientFraudTypesObject fraud2;

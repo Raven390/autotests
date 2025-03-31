@@ -18,9 +18,6 @@ public class HttpHelper {
     private final ObjectMapper objectMapper;
 
     public HttpHelper() {
-        // Regular client
-        // this.client = new OkHttpClient();
-        // Client with ssl errors ignore
         this.client = getUnsafeOkHttpClient();
         this.objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

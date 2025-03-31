@@ -54,81 +54,81 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-public class GetAbuseTypesByAttributesTest extends TestBaseApi {
+class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
     // Users
-    public static final ClientHelper userFromDocument = getRandomVantageClient();
-    public static final ClientHelper userToDocument = getRandomVantageClient();
+    static final ClientHelper userFromDocument = getRandomVantageClient();
+    static final ClientHelper userToDocument = getRandomVantageClient();
 
-    public static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
-    public static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
+    static final ClientHelper userToEmail = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromIp = getRandomVantageClient();
-    public static final ClientHelper userToIp = getRandomVantageClient();
+    static final ClientHelper userFromIp = getRandomVantageClient();
+    static final ClientHelper userToIp = getRandomVantageClient();
 
-    public static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
-    public static final ClientHelper userToPhone = getRandomVantageClientAllFields();
+    static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    static final ClientHelper userToPhone = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromPayout = getRandomVantageClient();
-    public static final ClientHelper userToPayout = getRandomVantageClient();
+    static final ClientHelper userFromPayout = getRandomVantageClient();
+    static final ClientHelper userToPayout = getRandomVantageClient();
 
-    public static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
+    static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
+    static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
-    public static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
+    static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
+    static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
-    public static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
 
-    public static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
-    public static final ClientHelper userToDepth = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo2Depth = getRandomVantageClientAllFields();
-    public static final ClientHelper userTo3Depth = getRandomVantageClientAllFields();
+    static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
+    static final ClientHelper userToDepth = getRandomVantageClientAllFields();
+    static final ClientHelper userTo2Depth = getRandomVantageClientAllFields();
+    static final ClientHelper userTo3Depth = getRandomVantageClientAllFields();
 
     // Objects to insert to attributes tables
-    public static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
-    public static final DocumentTableEntry documentTableEntry2 = documentTableEntryForConnectionSearch(userToDocument);
+    static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    static final DocumentTableEntry documentTableEntry2 = documentTableEntryForConnectionSearch(userToDocument);
 
-    public static final EmailTableEntry emailTableEntry = getEmailTableEntryByClient(userFromEmail);
-    public static final EmailTableEntry emailTableEntry2 = emailTableEntryForConnectionSearch(userToEmail, userFromEmail.getEmail());
+    static final EmailTableEntry emailTableEntry = getEmailTableEntryByClient(userFromEmail);
+    static final EmailTableEntry emailTableEntry2 = emailTableEntryForConnectionSearch(userToEmail, userFromEmail.getEmail());
 
-    public static final EmailTableEntry emailTableEntryForDepth1 = emailTableEntryForConnectionSearch(userFromDepth);
+    static final EmailTableEntry emailTableEntryForDepth1 = emailTableEntryForConnectionSearch(userFromDepth);
 
-    public static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
-    public static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userToIp);
+    static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userToIp);
 
-    public static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
-    public static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
+    static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
 
-    public static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
-    public static final PayoutTableEntry payoutTableEntry2 = payoutTableEntryForConnectionSearch(userToPayout);
+    static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
+    static final PayoutTableEntry payoutTableEntry2 = payoutTableEntryForConnectionSearch(userToPayout);
 
-    public static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
-    public static final DeviceIdTableEntry deviceIdTableEntry2 = deviceIdTableEntryForConnectionSearch(userToDeviceId, userFromDeviceId.getDeviceId());
+    static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
+    static final DeviceIdTableEntry deviceIdTableEntry2 = deviceIdTableEntryForConnectionSearch(userToDeviceId, userFromDeviceId.getDeviceId());
 
-    public static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
-    public static final DigitalIdTableEntry digitalIdTableEntry2 = digitalIdTableEntryForConnectionSearch(userToDigitalId, userFromDigitalId.getDigitalId());
+    static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
+    static final DigitalIdTableEntry digitalIdTableEntry2 = digitalIdTableEntryForConnectionSearch(userToDigitalId, userFromDigitalId.getDigitalId());
 
-    public static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
-    public static final NameBirthTableEntry nameBirthTableEntry2 = nameBirthTableEntryForConnectionSearch(userToNameBirth, userFromNameBirth.getFirstName(), userFromNameBirth.getLastName(), userFromNameBirth.getDateOfBirth());
+    static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
+    static final NameBirthTableEntry nameBirthTableEntry2 = nameBirthTableEntryForConnectionSearch(userToNameBirth, userFromNameBirth.getFirstName(), userFromNameBirth.getLastName(), userFromNameBirth.getDateOfBirth());
 
-    public static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
-    public static final SessionIdTableEntry sessionIdTableEntry2 = sessionIdTableEntryForConnectionSearch(userToSessionId, userFromSessionId.getSessionId());
+    static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
+    static final SessionIdTableEntry sessionIdTableEntry2 = sessionIdTableEntryForConnectionSearch(userToSessionId, userFromSessionId.getSessionId());
 
-    public static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
-    public static final WebSessionTableEntry webSessionTableEntry2 = webSessionTableEntryForConnectionSearch(userToWebSessionId, userFromWebSessionId.getWebSessionId());
+    static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    static final WebSessionTableEntry webSessionTableEntry2 = webSessionTableEntryForConnectionSearch(userToWebSessionId, userFromWebSessionId.getWebSessionId());
 
     // Objects to insert to connections table
-    public static final ConnectionTableEntry connectionTableEntryByEmail1 = getConnectionTableEntry(userFromDepth, userToDepth);
-    public static final ConnectionTableEntry connectionTableEntryByEmail2 = getConnectionTableEntry(userToDepth, userTo2Depth);
-    public static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
+    static final ConnectionTableEntry connectionTableEntryByEmail1 = getConnectionTableEntry(userFromDepth, userToDepth);
+    static final ConnectionTableEntry connectionTableEntryByEmail2 = getConnectionTableEntry(userToDepth, userTo2Depth);
+    static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
 
     // Frauds
     private static final BoClientFraudTypesObject fraudEmailTo = new BoClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
@@ -147,7 +147,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final BoClientFraudTypesObject fraudWebSessionIdTo = new BoClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
 
     @BeforeAll
-    public static void setupConnectionTableEntry() throws InterruptedException {
+    static void setupConnectionTableEntry() throws InterruptedException {
         // Insert data to connections table
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3));
         // Insert data to attributes tables
@@ -166,7 +166,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     }
 
     @AfterAll
-    public static void deleteConnectionTableEntry() throws Exception {
+    static void deleteConnectionTableEntry() throws Exception {
         // Delete data from connections table
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
 
@@ -198,7 +198,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress success(200)")
     @AllureId("769")
-    public void getAbuseTypesByAttributesTest1() throws IOException {
+    void getAbuseTypesByAttributesTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", userFromEmail.getEmail());
 
@@ -217,7 +217,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by payoutId success(200)")
     @AllureId("770")
-    public void getAbuseTypesByAttributesTest2() throws IOException {
+    void getAbuseTypesByAttributesTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("payoutId", payoutTableEntry.payout);
 
@@ -236,7 +236,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by digital success(200)")
     @AllureId("771")
-    public void getAbuseTypesByAttributesTest3() throws IOException {
+    void getAbuseTypesByAttributesTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("digital", digitalIdTableEntry.digitalId);
 
@@ -256,7 +256,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by device success(200)")
     @AllureId("772")
-    public void getAbuseTypesByAttributesTest4() throws IOException {
+    void getAbuseTypesByAttributesTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("device", deviceIdTableEntry.deviceId);
 
@@ -275,7 +275,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by session success(200)")
     @AllureId("773")
-    public void getAbuseTypesByAttributesTest5() throws IOException {
+    void getAbuseTypesByAttributesTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("session", sessionIdTableEntry.sessionId);
 
@@ -294,7 +294,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by nameBirth success(200)")
     @AllureId("774")
-    public void getAbuseTypesByAttributesTest6() throws IOException {
+    void getAbuseTypesByAttributesTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("nameBirth", userFromNameBirth.getNameDateOfBirth());
 
@@ -313,7 +313,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by webSession success(200)")
     @AllureId("775")
-    public void getAbuseTypesByAttributesTest7() throws IOException {
+    void getAbuseTypesByAttributesTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("webSession", webSessionTableEntry.webSessionId);
 
@@ -335,7 +335,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by phoneNumber success(200)")
     @AllureId("776")
-    public void getAbuseTypesByAttributesTest8() throws IOException {
+    void getAbuseTypesByAttributesTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
 
@@ -353,7 +353,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by ipAddress success(200)")
     @AllureId("777")
-    public void getAbuseTypesByAttributesTest9() throws IOException {
+    void getAbuseTypesByAttributesTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("ipAddress", ipTableEntry.ip);
 
@@ -373,7 +373,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentType/documentNumber/documentCountryId success(200)")
     @AllureId("778")
-    public void getAbuseTypesByAttributesTest10() throws IOException {
+    void getAbuseTypesByAttributesTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -395,7 +395,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentCountryId success(200)")
     @AllureId("779")
-    public void getAbuseTypesByAttributesTest11() throws IOException {
+    void getAbuseTypesByAttributesTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
 
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
@@ -414,7 +414,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentNumber success(200)")
     @AllureId("780")
-    public void getAbuseTypesByAttributesTest12() throws IOException {
+    void getAbuseTypesByAttributesTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
 
@@ -432,7 +432,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentNumber and documentCountryId success(200)")
     @AllureId("781")
-    public void getAbuseTypesByAttributesTest13() throws IOException {
+    void getAbuseTypesByAttributesTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
@@ -451,7 +451,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentType success(200)")
     @AllureId("782")
-    public void getAbuseTypesByAttributesTest14() throws IOException {
+    void getAbuseTypesByAttributesTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
 
@@ -469,7 +469,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentType and documentCountryId success(200)")
     @AllureId("783")
-    public void getAbuseTypesByAttributesTest15() throws IOException {
+    void getAbuseTypesByAttributesTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
@@ -488,7 +488,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by documentType and documentNumber success(200)")
     @AllureId("784")
-    public void getAbuseTypesByAttributesTest16() throws IOException {
+    void getAbuseTypesByAttributesTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("documentType", documentTableEntry.accIdType);
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
@@ -508,7 +508,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionDepth success(200)")
     @AllureId("785")
-    public void getAbuseTypesByAttributesTest17() throws IOException {
+    void getAbuseTypesByAttributesTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         System.out.println(userFromDepth.getUcid());
 
@@ -528,7 +528,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreTo success(200)")
     @AllureId("786")
-    public void getAbuseTypesByAttributesTest18() throws IOException {
+    void getAbuseTypesByAttributesTest18() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", userFromDepth.getEmail());
         queryParams.put("connectionScoreTo", 1);
@@ -546,7 +546,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreFrom success(200)")
     @AllureId("787")
-    public void getAbuseTypesByAttributesTest19() throws IOException {
+    void getAbuseTypesByAttributesTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         System.out.println(userFromDepth.getUcid());
 
@@ -566,7 +566,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionType success(200)")
     @AllureId("788")
-    public void getAbuseTypesByAttributesTest20() throws IOException {
+    void getAbuseTypesByAttributesTest20() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", userFromDepth.getEmail());
         queryParams.put("connectionType", List.of("Same Network"));
@@ -584,7 +584,7 @@ public class GetAbuseTypesByAttributesTest extends TestBaseApi {
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and multiple connectionType success(200)")
     @AllureId("789")
-    public void getAbuseTypesByAttributesTest21() throws IOException {
+    void getAbuseTypesByAttributesTest21() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", userFromDepth.getEmail());
         queryParams.put("connectionType", List.of("", ""));

@@ -29,7 +29,7 @@ import java.util.Map;
 
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
-import static helpers.database.MitigationHelper.cleanUserRestriction;
+import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
 
 public class RuleDataHelper {

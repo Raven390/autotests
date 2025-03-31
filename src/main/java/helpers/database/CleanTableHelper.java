@@ -1,5 +1,6 @@
 package helpers.database;
 
+import business_objects.db.mitigation_service_db.ClientsRestriction;
 import io.qameta.allure.Step;
 
 import java.sql.SQLException;
@@ -133,5 +134,31 @@ public class CleanTableHelper {
     @Step("Clean rule table by rule id")
     public static void cleanRuleTableByRuleId(String... values) throws SQLException {
         deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, "id", List.of(Arrays.toString(values)));
+    }
+
+    // Mitigation db
+
+    @Step("Clean users restriction history for ucid '{ucid}'")
+    public static void cleanUserRestriction(String ucid) throws Exception {
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "'", ClientsRestriction.class);
+        for (ClientsRestriction i : restrictionList) {
+            String Id = i.id.toString();
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_ACTION, "clients_restriction_id = " + Id);
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST, "clients_restriction_id = " + Id);
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE, "clients_restriction_id = " + Id);
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "id = " + Id);
+            Thread.sleep(100);
+        }
+    }
+
+    // Audit db
+
+    @Step("Clean users audit history")
+    public static void cleanUserAudit(String ucid) throws Exception {
+        deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
+        Thread.sleep(100);
     }
 }

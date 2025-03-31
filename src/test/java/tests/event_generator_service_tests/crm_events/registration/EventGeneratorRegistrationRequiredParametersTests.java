@@ -20,14 +20,14 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class EventGeneratorRegistrationRequiredParametersTests {
+class EventGeneratorRegistrationRequiredParametersTests {
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate registration event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("101")
-    public void generateRegistrationEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRegistrationEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
         RegistrationDbEvent registrationDbEventCreateTime = generateRegistrationDbEvent();
         registrationDbEventCreateTime.data.createTime = null;
@@ -68,10 +68,7 @@ public class EventGeneratorRegistrationRequiredParametersTests {
     @Test
     @DisplayName("Generate Registration event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("102")
-    public void generateRegistrationEventsWithoutOptionalParamsTest() throws JsonProcessingException {
-
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRegistrationEventsWithoutOptionalParamsTest() throws JsonProcessingException {
 
         RegistrationDbEvent registrationDbEventTimestamp = generateRegistrationDbEvent();
         registrationDbEventTimestamp.metadata.timestamp = null;

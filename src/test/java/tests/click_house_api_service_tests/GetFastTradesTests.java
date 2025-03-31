@@ -31,7 +31,7 @@ import static utils.Utils.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetFastTradesTests extends TestBaseApi {
+class GetFastTradesTests extends TestBaseApi {
 
     private static final ClientHelper client = getRandomVantageClient();
     private static Mt5DealsCoercedObject tradeOpen1;
@@ -42,7 +42,7 @@ public class GetFastTradesTests extends TestBaseApi {
     private static GetFastTradesResponse responseTrade2;
 
     @BeforeAll
-    public static void setupTrades() {
+    static void setupTrades() {
         tradeOpen1 = generateTradeByClient(client);
         tradeOpen1.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2));
         tradeOpen1.setTimeUtc(tradeOpen1.getTime());
@@ -81,14 +81,14 @@ public class GetFastTradesTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownTrades() {
+    static void teardownTrades() {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades by all params")
     @AllureId("844")
-    public void getFastTradesAllParamsTest() throws IOException {
+    void getFastTradesAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -110,7 +110,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades by empty optional params")
     @AllureId("845")
-    public void getFastTradesEmptyOptionalParamsTest() throws IOException {
+    void getFastTradesEmptyOptionalParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -132,7 +132,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades only by mandatory params")
     @AllureId("846")
-    public void getFastTradesMandatoryParamsTest() throws IOException {
+    void getFastTradesMandatoryParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -149,7 +149,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades by dateFrom")
     @AllureId("847")
-    public void getFastTradesDateFromTest() throws IOException {
+    void getFastTradesDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -167,7 +167,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades by dateTo")
     @AllureId("848")
-    public void getFastTradesDateToTest() throws IOException {
+    void getFastTradesDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -185,7 +185,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades by duration")
     @AllureId("849")
-    public void getFastTradesDurationTest() throws IOException {
+    void getFastTradesDurationTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -202,7 +202,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades orderBy profit")
     @AllureId("850")
-    public void getFastTradesOrderByTest() throws IOException {
+    void getFastTradesOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -221,7 +221,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades limit")
     @AllureId("851")
-    public void getFastTradesLimitTest() throws IOException {
+    void getFastTradesLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -241,7 +241,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades no params")
     @AllureId("852")
-    public void getFastTradesNoParamsTest() throws IOException {
+    void getFastTradesNoParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getFastTrades(queryParams);
@@ -256,7 +256,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades no tradingAccount")
     @AllureId("853")
-    public void getFastTradesNoTradingAccountTest() throws IOException {
+    void getFastTradesNoTradingAccountTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client.getServerId());
@@ -273,7 +273,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades no serverId")
     @AllureId("854")
-    public void getFastTradesNoServerIdTest() throws IOException {
+    void getFastTradesNoServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -290,7 +290,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades no tradeDurationSeconds")
     @AllureId("855")
-    public void getFastTradesNoDurationTest() throws IOException {
+    void getFastTradesNoDurationTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -307,7 +307,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect tradingAccount")
     @AllureId("856")
-    public void getFastTradesIncorrectAccountTest() throws IOException {
+    void getFastTradesIncorrectAccountTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "test");
@@ -325,7 +325,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect serverId")
     @AllureId("857")
-    public void getFastTradesIncorrectServerIdTest() throws IOException {
+    void getFastTradesIncorrectServerIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -343,7 +343,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect dateFrom")
     @AllureId("858")
-    public void getFastTradesIncorrectDateFromTest() throws IOException {
+    void getFastTradesIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -364,7 +364,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect dateTo")
     @AllureId("859")
-    public void getFastTradesIncorrectDateToTest() throws IOException {
+    void getFastTradesIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -385,7 +385,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect orderBy")
     @AllureId("860")
-    public void getFastTradesIncorrectOrderByTest() throws IOException {
+    void getFastTradesIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -404,7 +404,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect sortOrder")
     @AllureId("861")
-    public void getFastTradesIncorrectSortOrderTest() throws IOException {
+    void getFastTradesIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
@@ -423,7 +423,7 @@ public class GetFastTradesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get Fast Trades incorrect limit")
     @AllureId("862")
-    public void getFastTradesIncorrectLimitTest() throws IOException {
+    void getFastTradesIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());

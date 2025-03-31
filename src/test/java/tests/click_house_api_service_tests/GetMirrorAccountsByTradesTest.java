@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,30 +31,30 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetMirrorAccountsByTradesTest extends TestBaseApi {
+class GetMirrorAccountsByTradesTest extends TestBaseApi {
 
     private static MirrorLoginObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
     private static final String symbol = "EURUSD";
-    public static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
-    public static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
+    static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
+    static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
 
 
     @BeforeAll
-    public static void setupMirrorTrades() {
+    static void setupMirrorTrades() {
         data1 = generateMirrorTradesByAccount(client1);
         insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data1);
     }
 
     @AfterAll
-    public static void teardownMirrorTrades() throws SQLException {
+    static void teardownMirrorTrades() {
         deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = '%s'", data1.login_1));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades (200)")
     @AllureId("217")
-    public void getMirrorTradeAccountsByTradesTest1() throws IOException {
+    void getMirrorTradeAccountsByTradesTest1() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -80,7 +79,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with required params (200)")
     @AllureId("436")
-    public void getMirrorTradeAccountsByTradesTest2() throws IOException {
+    void getMirrorTradeAccountsByTradesTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -95,7 +94,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with account and serverId (400)")
     @AllureId("437")
-    public void getMirrorTradeAccountsByTradesTest3() throws IOException {
+    void getMirrorTradeAccountsByTradesTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
@@ -112,7 +111,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with serverId and symbol(400)")
     @AllureId("438")
-    public void getMirrorTradeAccountsByTradesTest4() throws IOException {
+    void getMirrorTradeAccountsByTradesTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", "1"); // Required
@@ -129,7 +128,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades with tradingAccount and symbol (400)")
     @AllureId("439")
-    public void getMirrorTradeAccountsByTradesTest5() throws IOException {
+    void getMirrorTradeAccountsByTradesTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
@@ -146,7 +145,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades dateFrom (200)")
     @AllureId("440")
-    public void getMirrorTradeAccountsByTradesTest6() throws IOException {
+    void getMirrorTradeAccountsByTradesTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -162,7 +161,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades dateTo (200)")
     @AllureId("441")
-    public void getMirrorTradeAccountsByTradesTest7() throws IOException {
+    void getMirrorTradeAccountsByTradesTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -178,7 +177,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by account (200)")
     @AllureId("442")
-    public void getMirrorTradeAccountsByTradesTest9() throws IOException {
+    void getMirrorTradeAccountsByTradesTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "1"); // Required
@@ -195,7 +194,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by serverId (200)")
     @AllureId("443")
-    public void getMirrorTradeAccountsByTradesTest10() throws IOException {
+    void getMirrorTradeAccountsByTradesTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -212,7 +211,7 @@ public class GetMirrorAccountsByTradesTest extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get mirror trade account by trades not found by symbol (200)")
     @AllureId("444")
-    public void getMirrorTradeAccountsByTradesTest11() throws IOException {
+    void getMirrorTradeAccountsByTradesTest11() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required

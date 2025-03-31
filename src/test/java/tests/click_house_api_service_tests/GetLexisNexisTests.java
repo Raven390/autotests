@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +30,9 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetLexisNexisTests extends TestBaseApi {
+class GetLexisNexisTests extends TestBaseApi {
 
     static String eventTypeRegistration = "registration";
-    static String eventTypeLogin = "login";
     static ClientHelper client = getRandomVantageClientAllFields();
     static ClientHelper client2 = getRandomVantageClient();
     static ClientHelper client3 = getRandomVantageClient();
@@ -45,14 +43,14 @@ public class GetLexisNexisTests extends TestBaseApi {
     static LnSessionParsedObject event4 = generateLexisNexisDataByClient(client4);
 
     @BeforeAll
-    public static void setupData() throws ReflectiveOperationException, SQLException {
+    static void setupData() {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis success response(200)")
     @AllureId("141")
-    public void getLexisNexisTest1() throws IOException {
+    void getLexisNexisTest1() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client.getUcid());
@@ -127,7 +125,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without brand parameter")
     @AllureId("151")
-    public void getLexisNexisTest2() throws IOException {
+    void getLexisNexisTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", client.getUserId());
         queryParams.put("eventType", eventTypeRegistration);
@@ -140,7 +138,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without userId parameter")
     @AllureId("152")
-    public void getLexisNexisTest3() throws IOException {
+    void getLexisNexisTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("eventType", eventTypeRegistration);
@@ -153,7 +151,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 400 error without eventType and eventId parameters")
     @AllureId("154")
-    public void getLexisNexisTest4() throws IOException {
+    void getLexisNexisTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", client.getUserId());
         queryParams.put("brand", client.getBrand());
@@ -165,7 +163,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis 200 when eventType registration and eventId=null")
     @AllureId("153")
-    public void getLexisNexisTest6() throws IOException {
+    void getLexisNexisTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", client.getBrand());
         queryParams.put("userId", client.getUserId());
@@ -178,7 +176,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis client not found response (200)")
     @AllureId("142")
-    public void getLexisNexisTest7() throws IOException {
+    void getLexisNexisTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("brand", 1);
         queryParams.put("userId", 1);
@@ -195,14 +193,14 @@ public class GetLexisNexisTests extends TestBaseApi {
     @DisplayName("Clickhouse Api. Get lexisNexis internal server error response(500)")
     @AllureId("144")
     @Tag(TAG_MANUAL)
-    public void getLexisNexisTest8() {
+    void getLexisNexisTest8() {
         //Can't check it with automation tests
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis event if eventId filled search is made for exact id")
     @AllureId("283")
-    public void getLexisNexisTest9() throws IOException {
+    void getLexisNexisTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client2.getUcid());
         queryParams.put("eventType", eventTypeRegistration);
@@ -218,7 +216,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis event If not filled - last event of selected type")
     @AllureId("284")
-    public void getLexisNexisTest10() throws IOException {
+    void getLexisNexisTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", client3.getUcid());
         queryParams.put("eventType", eventTypeRegistration);
@@ -235,7 +233,7 @@ public class GetLexisNexisTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis event If event_dateTime= null - sort by createTime")
     @AllureId("285")
-    public void getLexisNexisTest11() throws IOException {
+    void getLexisNexisTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("userId", client4.getUserId());
         queryParams.put("brand", client4.getBrand());

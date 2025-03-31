@@ -29,19 +29,19 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetClientTradingAccountTests extends TestBaseApi {
+class GetClientTradingAccountTests extends TestBaseApi {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
 
     @BeforeAll
-    public static void setupMirrorTrades() {
+    static void setupMirrorTrades() {
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get client trading accounts success (200)")
     @AllureId("450")
-    public void getClientTradingAccountsTest1() throws IOException {
+    void getClientTradingAccountsTest1() throws IOException {
         // Execute request
         Response response = getClientTradingAccounts(client.getUcid());
 
@@ -62,7 +62,7 @@ public class GetClientTradingAccountTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client trading accounts wrong ucid (400)")
     @AllureId("459")
-    public void getClientTradingAccountsTest2() throws IOException {
+    void getClientTradingAccountsTest2() throws IOException {
         // Execute request
         Response response = getClientTradingAccounts("1");
 

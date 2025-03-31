@@ -103,7 +103,11 @@ dependencies {
     //Visual testing
     implementation "com.github.romankh3:image-comparison:$imageComparisonVersion"
 
+    //Faker
     implementation "net.datafaker:datafaker:$fakerVersion"
+
+    //Logger
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
 
 }
 

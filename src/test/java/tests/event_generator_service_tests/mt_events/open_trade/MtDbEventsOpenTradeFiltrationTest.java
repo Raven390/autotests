@@ -25,15 +25,16 @@ import java.time.Instant;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsOpenTradeFiltrationTest {
+class MtDbEventsOpenTradeFiltrationTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate open event with event generator service that should be filtered out by the Event Generator")
     @AllureId("120")
-    public void generateOpenTradeEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException,
+    void generateOpenTradeEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException,
             InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         //Creation of open trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventTestAccount1 = generateOpenTradeMtDbEventMt4();

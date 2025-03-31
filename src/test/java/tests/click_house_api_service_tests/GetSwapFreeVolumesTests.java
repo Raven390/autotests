@@ -35,7 +35,7 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetSwapFreeVolumesTests extends TestBaseApi {
+class GetSwapFreeVolumesTests extends TestBaseApi {
 
     //Client 1 data
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
@@ -54,17 +54,17 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     //Client 3 data
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
 
-    public static final String dateTo = getCurrentTimestampDbFormat();
+    static final String dateTo = getCurrentTimestampDbFormat();
 
     @BeforeAll
-    public static void setupData() {
+    static void setupData() {
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 
     //TODO uncomment after solving error with delete statement
     @AfterAll
-    public static void teardownData() throws Exception {
+    static void teardownData() throws Exception {
         cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
         cleanMt5CoercedTableByComment(deal1.getComment(), deal2.getComment());
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
@@ -74,7 +74,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with all params")
     @AllureId("590")
-    public void getSwapFreeVolumeTest1() throws IOException {
+    void getSwapFreeVolumeTest1() throws IOException {
         //Send request
         System.out.println(client1.getTradingAccount());
         Map<String, Object> queryParams = new HashMap<>();
@@ -98,7 +98,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with required params only")
     @AllureId("591")
-    public void getSwapFreeVolumeTest2() throws IOException {
+    void getSwapFreeVolumeTest2() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -120,7 +120,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong dateTo")
     @AllureId("592")
-    public void getSwapFreeVolumeTest3() throws IOException {
+    void getSwapFreeVolumeTest3() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -142,7 +142,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with tradingAccount only")
     @AllureId("593")
-    public void getSwapFreeVolumeTest4() throws IOException {
+    void getSwapFreeVolumeTest4() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", 1); // Required
@@ -159,7 +159,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes for not swap free account -  empty response")
     @AllureId("594")
-    public void getSwapFreeVolumeTest5() throws IOException {
+    void getSwapFreeVolumeTest5() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client2.getTradingAccount()); // Required
@@ -181,7 +181,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with serverId only")
     @AllureId("595")
-    public void getSwapFreeVolumeTest6() throws IOException {
+    void getSwapFreeVolumeTest6() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", 1); // Required
@@ -198,7 +198,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes dateTo < order date")
     @AllureId("596")
-    public void getSwapFreeVolumeTest7() throws IOException {
+    void getSwapFreeVolumeTest7() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -221,7 +221,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong tradingAccount format")
     @AllureId("643")
-    public void getSwapFreeVolumeTest8() throws IOException {
+    void getSwapFreeVolumeTest8() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "abc"); // Required
@@ -239,7 +239,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get swap free volumes with wrong serverId format")
     @AllureId("644")
-    public void getSwapFreeVolumeTest9() throws IOException {
+    void getSwapFreeVolumeTest9() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
@@ -257,7 +257,7 @@ public class GetSwapFreeVolumesTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Response for user without orders")
     @AllureId("645")
-    public void getSwapFreeVolumeTest10() throws IOException {
+    void getSwapFreeVolumeTest10() throws IOException {
         //Send request
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client3.getTradingAccount()); // Required

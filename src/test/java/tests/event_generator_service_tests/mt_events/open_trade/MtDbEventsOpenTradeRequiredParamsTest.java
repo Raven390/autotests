@@ -23,15 +23,16 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class MtDbEventsOpenTradeRequiredParamsTest {
+class MtDbEventsOpenTradeRequiredParamsTest {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName(
         "Generate open event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("121")
-    public void generateOpenTradeEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateOpenTradeEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
         //        Creation of open trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventOpenTime = generateOpenTradeMtDbEventMt4();
@@ -74,9 +75,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
     @DisplayName(
         "Generate open event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("122")
-    public void generateOpenTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateOpenTradeEventsWithoutOptionalParamsTest() throws JsonProcessingException {
 
         //        Creation of Open trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventVolume = generateOpenTradeMtDbEventMt4();
@@ -118,9 +117,7 @@ public class MtDbEventsOpenTradeRequiredParamsTest {
     @DisplayName(
         "Generate open event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
     @AllureId("130")
-    public void generateOpenTradeEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateOpenTradeEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
 
         //        Creation of close trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventOpenTimeObject = generateOpenTradeMtDbEventMt4();

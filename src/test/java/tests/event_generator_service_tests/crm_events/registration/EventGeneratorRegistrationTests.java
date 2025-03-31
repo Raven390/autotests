@@ -24,14 +24,15 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class EventGeneratorRegistrationTests {
+class EventGeneratorRegistrationTests {
+
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate registration event with event generator service")
     @AllureId("64")
-    public void generateRegistrationEventTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void generateRegistrationEventTest() throws JsonProcessingException, InterruptedException {
 
         RegistrationDbEvent registrationDbEvent = generateRegistrationDbEvent();
 
@@ -54,9 +55,7 @@ public class EventGeneratorRegistrationTests {
     @Test
     @DisplayName("Generate registration event two times for the same user")
     @AllureId("128")
-    public void verifyRegistrationEventIsFilteredOutTest() throws JsonProcessingException, InterruptedException {
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
+    void verifyRegistrationEventIsFilteredOutTest() throws JsonProcessingException {
 
         RegistrationDbEvent registrationDbEvent1 = generateRegistrationDbEvent();
         RegistrationDbEvent registrationDbEvent2 = generateRegistrationDbEvent();

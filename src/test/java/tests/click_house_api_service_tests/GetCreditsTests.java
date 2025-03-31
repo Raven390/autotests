@@ -32,13 +32,13 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
-public class GetCreditsTests extends TestBaseApi {
+class GetCreditsTests extends TestBaseApi {
 
     private static MtTbCreditsObject credit1;
     private static MtTbCreditsObject credit2;
 
     @BeforeAll
-    public static void setupCredits() {
+    static void setupCredits() {
         ClientHelper client = getRandomVantageClient();
         credit1 = generateCreditsByClient(client);
         credit2 = generateCreditsByClient(client);
@@ -51,14 +51,14 @@ public class GetCreditsTests extends TestBaseApi {
     }
 
     @AfterAll
-    public static void teardownCredits() throws Exception {
+    static void teardownCredits() throws Exception {
         cleanMtCreditsTableByUcid(credit1.ucid, credit2.ucid);
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get client credits by all params")
     @AllureId("402")
-    public void getCreditsAllParamsTest() throws IOException {
+    void getCreditsAllParamsTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -86,7 +86,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client credits by all params with clientId")
     @AllureId("894")
-    public void getCreditsAllParamsClientIdTest() throws IOException {
+    void getCreditsAllParamsClientIdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", credit1.ucid);
         queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
@@ -113,7 +113,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client credits by empty params")
     @AllureId("403")
-    public void getCreditsEmptyParamsTest() throws IOException {
+    void getCreditsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
@@ -134,7 +134,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client credits mandatory parameters(200)")
     @AllureId("211")
-    public void getCreditsClientIdTest() throws IOException {
+    void getCreditsClientIdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -149,7 +149,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client credits by mandatory params and limit")
     @AllureId("404")
-    public void getCreditsLimitTest() throws IOException {
+    void getCreditsLimitTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -174,7 +174,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client credits order by create time default order")
     @AllureId("405")
-    public void getCreditsDefaultSortOrderTest() throws IOException {
+    void getCreditsDefaultSortOrderTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -197,7 +197,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get client bonuses order by profitUSD")
     @AllureId("406")
-    public void getCreditsOrderByAmountUsdTest() throws IOException {
+    void getCreditsOrderByAmountUsdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -215,7 +215,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits no params")
     @AllureId("407")
-    public void getCreditsNoParamsTest() throws IOException {
+    void getCreditsNoParamsTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getCredits(queryParams);
 
@@ -229,7 +229,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits no tradingAccount")
     @AllureId("408")
-    public void getCreditsNoTradingAccountTest() throws IOException {
+    void getCreditsNoTradingAccountTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", credit1.serverId);
         queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
@@ -249,7 +249,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits no serverId")
     @AllureId("409")
-    public void getCreditsNoServerIdTest() throws IOException {
+    void getCreditsNoServerIdTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("dateFrom", credit1.createTime.replace(" ", "T"));
@@ -269,7 +269,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect dateFrom")
     @AllureId("410")
-    public void getCreditsIncorrectDateFromTest() throws IOException {
+    void getCreditsIncorrectDateFromTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -288,7 +288,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect dateTo")
     @AllureId("411")
-    public void getCreditsIncorrectDateToTest() throws IOException {
+    void getCreditsIncorrectDateToTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -307,7 +307,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect orderBy")
     @AllureId("412")
-    public void getCreditsIncorrectOrderByTest() throws IOException {
+    void getCreditsIncorrectOrderByTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -324,7 +324,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect sortOrder")
     @AllureId("413")
-    public void getCreditsIncorrectSortOrderTest() throws IOException {
+    void getCreditsIncorrectSortOrderTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
@@ -341,7 +341,7 @@ public class GetCreditsTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get credits incorrect limit")
     @AllureId("414")
-    public void getCreditsIncorrectLimitTest() throws IOException {
+    void getCreditsIncorrectLimitTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", credit1.account);
         queryParams.put("serverId", credit1.serverId);
