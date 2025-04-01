@@ -41,8 +41,8 @@ public class MtMt5PositionsObject {
     private String comment;
     private Double sl;
     private Double tp;
-    private Double expertId;
-    private Double expertPositionId;
+    private Long expertId;
+    private Long expertPositionId;
     private Integer dealer;
     private Integer rateProfit;
     private Integer rateMargin;
@@ -63,7 +63,7 @@ public class MtMt5PositionsObject {
             String timeUpdateUtc, String symbol, String symbolUnderlying, String baseCurrency, String quoteCurrency,
             Double rateUsdBase, Double rateUsdQuote, Double rateUsdAcc, Double priceOpen, Double priceCurrent,
             Double volume, Double volumeLots, Double notionalValueUsd, Double profit, Double storage, Double profitUsd,
-            Double storageUsd, String comment, Double sl, Double tp, Double expertId, Double expertPositionId,
+            Double storageUsd, String comment, Double sl, Double tp, Long expertId, Long expertPositionId,
             Integer dealer, Integer rateProfit, Integer rateMargin, String op, Integer isDeleted, String lastUpdated,
             String internalComment) {
         this.brand = brand;
@@ -177,6 +177,10 @@ public class MtMt5PositionsObject {
         this.userId = userId;
     }
 
+    public void setUserId(Long userId) {
+        this.userId = Integer.valueOf(userId.toString());
+    }
+
     public String getUcid() {
         return ucid;
     }
@@ -193,6 +197,10 @@ public class MtMt5PositionsObject {
         this.account = account;
     }
 
+    public void setAccount(Long account) {
+        this.account = Integer.valueOf(account.toString());
+    }
+
     public String getPlatform() {
         return platform;
     }
@@ -207,6 +215,10 @@ public class MtMt5PositionsObject {
 
     public void setServerId(Integer serverId) {
         this.serverId = serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = Integer.valueOf(serverId.toString());
     }
 
     public String getServerName() {
@@ -249,6 +261,10 @@ public class MtMt5PositionsObject {
         this.positionId = positionId;
     }
 
+    public void setPositionId(Integer positionId) {
+        this.positionId = Long.valueOf(String.valueOf(positionId));
+    }
+
     public Integer getAction() {
         return action;
     }
@@ -263,6 +279,10 @@ public class MtMt5PositionsObject {
 
     public void setReason(Integer reason) {
         this.reason = reason;
+    }
+
+    public void setReason(Long reason) {
+        this.reason = Integer.valueOf(String.valueOf(reason));
     }
 
     public Double getContractSize() {
@@ -385,6 +405,10 @@ public class MtMt5PositionsObject {
         this.volume = volume;
     }
 
+    public void setVolume(Long volume) {
+        this.volume = Double.valueOf(volume);
+    }
+
     public Double getVolumeLots() {
         return volumeLots;
     }
@@ -457,20 +481,24 @@ public class MtMt5PositionsObject {
         this.tp = tp;
     }
 
-    public Double getExpertId() {
+    public Long getExpertId() {
         return expertId;
     }
 
-    public void setExpertId(Double expertId) {
-        this.expertId = expertId;
+    public void setExpertId(Integer expertId) {
+        this.expertId = Long.valueOf(expertId);
     }
 
-    public Double getExpertPositionId() {
+    public Long getExpertPositionId() {
         return expertPositionId;
     }
 
-    public void setExpertPositionId(Double expertPositionId) {
+    public void setExpertPositionId(Long expertPositionId) {
         this.expertPositionId = expertPositionId;
+    }
+
+    public void setExpertPositionId(Integer expertPositionId) {
+        this.expertPositionId = Long.valueOf(expertPositionId);
     }
 
     public Integer getDealer() {
