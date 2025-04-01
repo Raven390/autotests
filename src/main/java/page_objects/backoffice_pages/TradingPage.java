@@ -1974,5 +1974,85 @@ public class TradingPage extends AbstractPage {
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14));
         page.waitForTimeout(1000);
     }
+
+    public static String translateActionMT5(Integer action) {
+        return switch (action) {
+            case 0 -> "Buy";
+            case 1 -> "Sell";
+            case 2 -> "Balance";
+            case 3 -> "Credit";
+            case 4 -> "Charge";
+            case 5 -> "Correction";
+            case 6 -> "Bonus";
+            case 7 -> "Commission";
+            case 8 -> "Commission Daily";
+            case 9 -> "Commission Monthly";
+            case 10 -> "Agent Daily";
+            case 11 -> "Agent Monthly";
+            case 12 -> "Interestrate";
+            case 13 -> "Buy Cancelled";
+            case 14 -> "Sell Cancelled";
+            case 15 -> "Dividend";
+            case 16 -> "Dividend Franked";
+            case 17 -> "Tax";
+            case 18 -> "Agent";
+            case 19 -> "SO Compensation";
+
+            default -> "Error. Case integer is unknown";
+        };
+    }
+
+    public static String translateActionMT4(Integer cmd) {
+        return switch (cmd) {
+            case 0 -> "Buy";
+            case 1 -> "Sell";
+            case 6 -> "Balance";
+            case 7 -> "Credit";
+
+            default -> "Error. Case integer is unknown";
+        };
+    }
+
+    public static String translateReasonMT5(Integer action) {
+        return switch (action) {
+            case 0 -> "Client";
+            case 1 -> "Expert";
+            case 2 -> "Dealer";
+            case 3 -> "Sl";
+            case 4 -> "Tp";
+            case 5 -> "So";
+            case 6 -> "Rollover";
+            case 7 -> "External Client";
+            case 8 -> "VMargin";
+            case 9 -> "Getaway";
+            case 10 -> "Signal";
+            case 11 -> "Settlement";
+            case 12 -> "Transfer";
+            case 13 -> "Sync";
+            case 14 -> "External Service";
+            case 15 -> "Migration";
+            case 16 -> "Mobile";
+            case 17 -> "Web";
+            case 18 -> "Split";
+
+            default -> "Error. Reason integer is unknown";
+        };
+    }
+
+    public static String translateReasonMT4(Integer cmd) {
+        return switch (cmd) {
+            case 0 -> "Client";
+            case 1 -> "Expert";
+            case 2 -> "Dealer";
+            case 3 -> "Signal";
+            case 4 -> "Gateway";
+            case 5 -> "Mobile";
+            case 6 -> "Web";
+            case 7 -> "API";
+
+            default -> "Error. Case integer is unknown";
+        };
+    }
+
 }
 

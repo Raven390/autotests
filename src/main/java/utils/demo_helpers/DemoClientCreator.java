@@ -18,7 +18,6 @@ import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import net.datafaker.Faker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
@@ -75,7 +74,7 @@ public class DemoClientCreator {
         clientCrm3.firstName = faker.name().firstName();
         clientCrm3.lastName = faker.name().lastName();
 
-        ArrayList<MtMt4TradesCoercedObject> trades = generateBunchMt4TradesCoerced(client1, 20);
+        List<MtMt4TradesCoercedObject> trades = generateBunchMt4TradesCoerced(client1, 20);
 
         insertObjectsToDbSlow(MT4_TRADES_COERCED_TABLE_NAME, trades);
 

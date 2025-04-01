@@ -8,6 +8,7 @@ import helpers.data.enums.TicketType;
 import io.qameta.allure.Step;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static utils.Utils.*;
 
@@ -67,10 +68,9 @@ public class MtMt4TradesCoercedObjectFactory {
     }
 
     @Step("Generate mt___mt4_trades_coerced objects by client object")
-    public static ArrayList<MtMt4TradesCoercedObject> generateBunchMt4TradesCoerced(ClientHelper client, int size) {
+    public static List<MtMt4TradesCoercedObject> generateBunchMt4TradesCoerced(ClientHelper client, int size) {
         if (size <= 0) {
-            System.out.println("int size CANT BE NEGATIVE. CURRENT VALUE IS " + size);
-            return null;
+            throw new IllegalArgumentException("size CANT BE NEGATIVE. CURRENT VALUE IS " + size);
         }
         ArrayList<MtMt4TradesCoercedObject> tradesCoercedObjects = new ArrayList<>();
         for (int i = 0; i < size; i++) {

@@ -448,6 +448,10 @@ public class Mt5DealsCoercedObject {
         this.expertId = expertId;
     }
 
+    public void setExpertId(Double expertId) {
+        this.expertId = Long.valueOf(expertId.toString());
+    }
+
     public Long getPositionId() {
         return positionId;
     }
