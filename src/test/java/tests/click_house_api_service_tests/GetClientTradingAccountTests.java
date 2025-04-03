@@ -70,7 +70,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response code", mappedResponse.status, is(400));
-        assertThat("Check response code", mappedResponse.error, is("Invalid clientId format: clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
+        assertThat("Check response code", mappedResponse.getError(), is("Invalid clientId format: clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
     }
 }

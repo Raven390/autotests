@@ -103,8 +103,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("No such column: ucid123"));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("No such column: ucid123"));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -120,8 +120,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -136,8 +136,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -153,8 +153,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -170,8 +170,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -185,8 +185,8 @@ class GetLexisNexisDataTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(responseBody, ClickhouseApiErrorResponse.class);
 
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error", mappedResponse.error, is("Either clientId or deviceId or userId and brand must be provided."));
-        assertThat("Check response status", mappedResponse.status, is(400));
+        assertThat("Check response error", mappedResponse.getError(), is("Either clientId or deviceId or userId and brand must be provided."));
+        assertThat("Check response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test

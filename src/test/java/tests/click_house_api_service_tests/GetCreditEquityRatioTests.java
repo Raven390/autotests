@@ -92,8 +92,8 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test
@@ -108,8 +108,8 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
@@ -156,10 +156,10 @@ class GetCreditEquityRatioTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/creditEquityRatio"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/creditEquityRatio"));
     }
 }

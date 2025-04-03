@@ -64,6 +64,8 @@ public class ConfigFactory {
     public static final String RULE_ENGINE_GET_BRANDS = CONFIG.ruleEngineGetBrands();
     public static final String RULE_ENGINE_GET_EVENTS = CONFIG.ruleEngineGetEvents();
     public static final String RULE_ENGINE_RULES = CONFIG.ruleEngineRules();
+    public static final String RULE_ENGINE_RULE_DEPLOYMENTS = CONFIG.ruleEngineRuleDeployments();
+    public static final String RULE_ENGINE_RULE_DEPLOYMENT_BY_UUID = CONFIG.ruleEngineRuleDeploymentsByUuid();
     // Rule engine database
     public static final String RULE_ENGINE_DB_NAME = CONFIG.ruleEngineDbName();
     public static final String RULE_ENGINE_DB_USER = CONFIG.ruleEngineDbUser();
@@ -322,6 +324,12 @@ public class ConfigFactory {
 
         @Key("ruleEngineRules")
         String ruleEngineRules();
+
+        @Key("ruleEngineRuleDeployment")
+        String ruleEngineRuleDeployments();
+
+        @Key("ruleEngineRuleDeploymentByUuid")
+        String ruleEngineRuleDeploymentsByUuid();
 
         // Rule engine database
 

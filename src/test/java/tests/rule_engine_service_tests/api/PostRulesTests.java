@@ -1,7 +1,7 @@
 package tests.rule_engine_service_tests.api;
 
 import business_objects.api.rule_engine_api.post_rules.RuleObject;
-import business_objects.db.rule_engine_db.RuleDbObjectPgArray;
+import business_objects.db.rule_engine_db.rule.RuleDbObjectPgArray;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;

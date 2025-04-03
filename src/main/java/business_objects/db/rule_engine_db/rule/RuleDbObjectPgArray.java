@@ -1,18 +1,19 @@
-package business_objects.db.rule_engine_db;
+package business_objects.db.rule_engine_db.rule;
 
+import org.postgresql.jdbc.PgArray;
 
 import java.util.Objects;
 
-public class RuleDbObjectString {
+public class RuleDbObjectPgArray {
     private String id;
     private String eventType;
     private String ruleName;
-    private String brands;
+    private PgArray brands;
 
-    public RuleDbObjectString() {
+    public RuleDbObjectPgArray() {
     }
 
-    public RuleDbObjectString(String id, String eventType, String ruleName, String brands) {
+    public RuleDbObjectPgArray(String id, String eventType, String ruleName, PgArray brands) {
         this.id = id;
         this.eventType = eventType;
         this.ruleName = ruleName;
@@ -22,7 +23,7 @@ public class RuleDbObjectString {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RuleDbObjectString that = (RuleDbObjectString) o;
+        RuleDbObjectPgArray that = (RuleDbObjectPgArray) o;
         return Objects.equals(id, that.id) && Objects.equals(eventType, that.eventType) && Objects.equals(
                 ruleName, that.ruleName) && Objects.equals(brands, that.brands);
     }
@@ -61,11 +62,11 @@ public class RuleDbObjectString {
         this.ruleName = ruleName;
     }
 
-    public String getBrands() {
+    public PgArray getBrands() {
         return brands;
     }
 
-    public void setBrands(String brands) {
+    public void setBrands(PgArray brands) {
         this.brands = brands;
     }
 }

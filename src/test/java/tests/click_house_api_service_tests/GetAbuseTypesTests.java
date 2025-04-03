@@ -58,10 +58,10 @@ class GetAbuseTypesTests extends TestBaseApi {
         GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetAbuseTypesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert array size", mappedResponse.length, is(1));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(fraud1.ucid));
-        assertThat("Assert fraudType length", mappedResponse[0].fraudType.length, is(2));
-        assertThat("Assert fraudType", mappedResponse[0].fraudType, hasItemInArray(fraud1.fraudTypeCode));
-        assertThat("Assert fraudType", mappedResponse[0].fraudType, hasItemInArray(fraud2.fraudTypeCode));
+        assertThat("Assert clientId", mappedResponse[0].getClientId(), is(fraud1.ucid));
+        assertThat("Assert fraudType length", mappedResponse[0].getFraudType().length, is(2));
+        assertThat("Assert fraudType", mappedResponse[0].getFraudType(), hasItemInArray(fraud1.fraudTypeCode));
+        assertThat("Assert fraudType", mappedResponse[0].getFraudType(), hasItemInArray(fraud2.fraudTypeCode));
     }
 
     @Test
@@ -92,7 +92,7 @@ class GetAbuseTypesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error", mappedResponse.error, is("Invalid \"clientId\" property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
-        assertThat("Assert status", mappedResponse.status, is(400));
+        assertThat("Assert error", mappedResponse.getError(), is("Invalid \"clientId\" property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
     }
 }

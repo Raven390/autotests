@@ -186,8 +186,8 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientId' for method parameter type String is not present"));
-        assertThat("Assert error status", mappedResponse.status, is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
+        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -206,8 +206,8 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'clientId' for method parameter type String is not present"));
-        assertThat("Assert error status", mappedResponse.status, is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
+        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -223,10 +223,10 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.status, is(400));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateFrom' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -242,10 +242,10 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.status, is(400));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -261,8 +261,8 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error", mappedResponse.error, is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
-        assertThat("Assert status", mappedResponse.status, is(400));
+        assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -278,8 +278,8 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error", mappedResponse.error, is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
-        assertThat("Assert status", mappedResponse.status, is(400));
+        assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -295,9 +295,9 @@ class GetDepositsTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/deposits"));
-        assertThat("Assert error status", mappedResponse.status, is(400));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'limit' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/deposits"));
+        assertThat("Assert error status", mappedResponse.getStatus(), is(400));
     }
 }

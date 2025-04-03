@@ -96,11 +96,11 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(1));
 
-        assertThat("Assert tradeId", mappedResponse[0].tradeId, is(data1.ticket));
-        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client1.getTradingAccount()));
-        assertThat("Assert profit", mappedResponse[0].profit, is(1.0));
-        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(2.0));
-        assertThat("Assert comment", mappedResponse[0].comment, is(comment));
+        assertThat("Assert tradeId", mappedResponse[0].getTradeId(), is(data1.ticket));
+        assertThat("Assert tradingAccount", mappedResponse[0].getTradingAccount(), is(client1.getTradingAccount()));
+        assertThat("Assert profit", mappedResponse[0].getProfit(), is(1.0));
+        assertThat("Assert profitUSD", mappedResponse[0].getProfitUsd(), is(2.0));
+        assertThat("Assert comment", mappedResponse[0].getComment(), is(comment));
     }
 
     @Test
@@ -154,8 +154,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(tradeDate1)));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is(formatTimeToUtc(tradeDate2)));
+        assertThat("Assert tradeDate", mappedResponse[0].getTradeDate(), is(formatTimeToUtc(tradeDate1)));
+        assertThat("Assert tradeDate", mappedResponse[1].getTradeDate(), is(formatTimeToUtc(tradeDate2)));
     }
 
     @Test
@@ -175,8 +175,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(tradeDate2)));
-        assertThat("Assert tradeDate", mappedResponse[1].tradeDate, is(formatTimeToUtc(tradeDate1)));
+        assertThat("Assert tradeDate", mappedResponse[0].getTradeDate(), is(formatTimeToUtc(tradeDate2)));
+        assertThat("Assert tradeDate", mappedResponse[1].getTradeDate(), is(formatTimeToUtc(tradeDate1)));
     }
 
     @Test
@@ -196,8 +196,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert profit", mappedResponse[0].profit, is(1d));
-        assertThat("Assert profit", mappedResponse[1].profit, is(3d));
+        assertThat("Assert profit", mappedResponse[0].getProfit(), is(1d));
+        assertThat("Assert profit", mappedResponse[1].getProfit(), is(3d));
     }
 
     @Test
@@ -217,8 +217,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert profit", mappedResponse[0].profit, is(3d));
-        assertThat("Assert profit", mappedResponse[1].profit, is(1d));
+        assertThat("Assert profit", mappedResponse[0].getProfit(), is(3d));
+        assertThat("Assert profit", mappedResponse[1].getProfit(), is(1d));
     }
 
     @Test
@@ -238,8 +238,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(2d));
-        assertThat("Assert profitUSD", mappedResponse[1].profitUsd, is(4d));
+        assertThat("Assert profitUSD", mappedResponse[0].getProfitUsd(), is(2d));
+        assertThat("Assert profitUSD", mappedResponse[1].getProfitUsd(), is(4d));
     }
 
     @Test
@@ -259,8 +259,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
 
-        assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(4d));
-        assertThat("Assert profitUSD", mappedResponse[1].profitUsd, is(2d));
+        assertThat("Assert profitUSD", mappedResponse[0].getProfitUsd(), is(4d));
+        assertThat("Assert profitUSD", mappedResponse[1].getProfitUsd(), is(2d));
     }
 
     @Test
@@ -276,8 +276,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert error", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test
@@ -293,8 +293,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert error", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
@@ -312,11 +312,11 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateFrom' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/balanceOrders"));
     }
 
     @Test
@@ -334,11 +334,11 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/balanceOrders"));
     }
 
     @Test
@@ -356,8 +356,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.error, containsString("The property may include only: tradeDate, profit, profitUSD"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getError(), containsString("The property may include only: tradeDate, profit, profitUSD"));
     }
 
     @Test
@@ -376,8 +376,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.error, containsString("The property may include only: asc, desc"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getError(), containsString("The property may include only: asc, desc"));
     }
 
     @Test
@@ -395,10 +395,10 @@ class GetBalanceOrdersTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'limit' with value: 'a'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/balanceOrders"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'limit' with value: 'a'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/balanceOrders"));
     }
 }

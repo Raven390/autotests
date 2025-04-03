@@ -149,7 +149,7 @@ public class DbHelper {
     }
 
     @Step("Insert objects: {objects} to {dbName}")
-    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) throws Exception {
+    public static <T> void insertObjectsToDb(DbName dbName, String tableName, List<T> objects) {
         if (objects == null || objects.isEmpty()) return;
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
@@ -160,7 +160,7 @@ public class DbHelper {
     }
 
     @Step("Insert objects: {objects} to {dbName}")
-    public static <T> void insertObjectsToDbSlow(DbName dbName, String tableName, List<T> objects) throws Exception {
+    public static <T> void insertObjectsToDbSlow(DbName dbName, String tableName, List<T> objects) {
         if (objects == null || objects.isEmpty()) return;
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
@@ -179,7 +179,7 @@ public class DbHelper {
     }
 
     @Step("Insert single object: {object} to {dbName}")
-    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) throws Exception {
+    public static <T> void insertObjectToDb(DbName dbName, String tableName, T object) {
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
                 insertSingleObject(connection, tableName, object);

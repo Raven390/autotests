@@ -2,7 +2,7 @@ package tests.rule_engine_service_tests.api;
 
 import business_objects.api.rule_engine_api.get_rules.GetRulesResponse;
 import business_objects.api.rule_engine_api.post_rules.RuleObject;
-import business_objects.db.rule_engine_db.RuleDbObjectPgArray;
+import business_objects.db.rule_engine_db.rule.RuleDbObjectPgArray;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import static business_objects.api.rule_engine_api.get_rules.GetRulesRequest.getRules;
 import static business_objects.api.rule_engine_api.post_rules.RuleObjectFactory.generateRule;
-import static business_objects.db.rule_engine_db.RuleDbObjectFactory.generateRuleDbObjectByRulePgArray;
+import static business_objects.db.rule_engine_db.rule.RuleDbObjectFactory.generateRuleDbObjectByRulePgArray;
 import static helpers.database.CleanTableHelper.cleanRuleTableByRuleId;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.DbName.RULE_ENGINE;

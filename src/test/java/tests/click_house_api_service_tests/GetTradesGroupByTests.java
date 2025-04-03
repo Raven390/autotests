@@ -297,8 +297,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
@@ -313,8 +313,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Either clientId or tradingAccount and serverId must be provided."));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Either clientId or tradingAccount and serverId must be provided."));
     }
 
     @Test
@@ -330,8 +330,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
     }
 
     @Test
@@ -347,8 +347,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
     }
 
     @Test
@@ -365,10 +365,10 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'action' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'action' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
     @Test
@@ -385,10 +385,10 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'entry' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'entry' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
     @Test
@@ -405,10 +405,10 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'dateFrom' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'dateFrom' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
     @Test
@@ -425,10 +425,10 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'dateTo' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'dateTo' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
     @Test
@@ -445,8 +445,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Invalid &quot;orderBy&quot; property format. The property may include only: symbol, profit, profitUSD"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid &quot;orderBy&quot; property format. The property may include only: symbol, profit, profitUSD"));
     }
 
     @Test
@@ -463,8 +463,8 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert error", mappedResponse.error, equalTo("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
     }
 
     @Test
@@ -481,10 +481,10 @@ class GetTradesGroupByTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
-        assertThat("Assert status", mappedResponse.status, equalTo(400));
-        assertThat("Assert title", mappedResponse.title, equalTo("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, equalTo("Failed to convert 'limit' with value: 'test'"));
-        assertThat("Assert instance", mappedResponse.instance, equalTo("/v1/tradesGroupBy"));
+        assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
+        assertThat("Assert title", mappedResponse.getTitle(), equalTo("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), equalTo("Failed to convert 'limit' with value: 'test'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), equalTo("/v1/tradesGroupBy"));
     }
 
     @Test

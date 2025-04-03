@@ -79,7 +79,7 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         GetClientsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
-        assertThat("Assert clientId not null", mappedResponse.clientId, is(notNullValue()));
+        assertThat("Assert clientId not null", mappedResponse.getClientId(), is(notNullValue()));
     }
 
     @Test
@@ -92,34 +92,33 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
 
         assertThat("Assert that code is 200", response.code(), is(200));
         GetClientResponse mappedResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
-        assertThat("Assert clientId not null", mappedResponse.clientId, is(notNullValue()));
-        assertThat("Assert userId not null", mappedResponse.userId, is(notNullValue()));
-        assertThat("Assert brand not null", mappedResponse.brand, is(notNullValue()));
-        assertThat("Assert regulator not null", mappedResponse.regulator, is(notNullValue()));
-        assertThat("Assert registrationDate not null", mappedResponse.registrationDate, is(notNullValue()));
-        assertThat("Assert registrationDate not null", mappedResponse.registrationDate, is(notNullValue()));
-        assertThat("Assert firstName not null", mappedResponse.firstName, is(notNullValue()));
-        assertThat("Assert lastName not null", mappedResponse.lastName, is(notNullValue()));
-        assertThat("Assert gender not null", mappedResponse.gender, is(notNullValue()));
-        assertThat("Assert birthday not null", mappedResponse.birthday, is(notNullValue()));
-        assertThat("Assert country not null", mappedResponse.country, is(notNullValue()));
-        assertThat("Assert countryCode not null", mappedResponse.countryCode, is(notNullValue()));
-        assertThat("Assert isoCountryCode not null", mappedResponse.isoCountryCode, is(notNullValue()));
-        assertThat("Assert language not null", mappedResponse.language, is(notNullValue()));
-        assertThat("Assert nationality not null", mappedResponse.nationality, is(notNullValue()));
-        assertThat("Assert email not null", mappedResponse.email, is(notNullValue()));
-        assertThat("Assert phoneNum not null", mappedResponse.phoneNum, is(notNullValue()));
-        assertThat("Assert phoneCountryCode not null", mappedResponse.phoneCountryCode, is(notNullValue()));
-        assertThat("Assert twoFaUser not null", mappedResponse.twoFaUser, is(notNullValue()));
-        assertThat("Assert authentication not null", mappedResponse.authentication, is(notNullValue()));
-        assertThat("Assert websiteUserType not null", mappedResponse.websiteUserType, is(notNullValue()));
-        assertThat("Assert emailVerificationMark is null", mappedResponse.emailVerificationMark, is("0"));
-        assertThat("Assert phoneVerificationMark is null", mappedResponse.phoneVerificationMark, is("0"));
-        assertThat("Assert ibId is null", mappedResponse.ibId, is("0"));
-        assertThat("Assert cpaId is null", mappedResponse.cpaId, is(nullValue()));
-        assertThat("Assert kycStatus not null", mappedResponse.kycStatus, is(notNullValue()));
-        assertThat("Assert lastUpdated not null", mappedResponse.lastUpdated, is(notNullValue()));
-
+        assertThat("Assert clientId not null", mappedResponse.getClientId(), is(notNullValue()));
+        assertThat("Assert userId not null", mappedResponse.getUserId(), is(notNullValue()));
+        assertThat("Assert brand not null", mappedResponse.getBrand(), is(notNullValue()));
+        assertThat("Assert regulator not null", mappedResponse.getRegulator(), is(notNullValue()));
+        assertThat("Assert registrationDate not null", mappedResponse.getRegistrationDate(), is(notNullValue()));
+        assertThat("Assert registrationDate not null", mappedResponse.getRegistrationDate(), is(notNullValue()));
+        assertThat("Assert firstName not null", mappedResponse.getFirstName(), is(notNullValue()));
+        assertThat("Assert lastName not null", mappedResponse.getLastName(), is(notNullValue()));
+        assertThat("Assert gender not null", mappedResponse.getGender(), is(notNullValue()));
+        assertThat("Assert birthday not null", mappedResponse.getBirthday(), is(notNullValue()));
+        assertThat("Assert country not null", mappedResponse.getCountry(), is(notNullValue()));
+        assertThat("Assert countryCode not null", mappedResponse.getCountryCode(), is(notNullValue()));
+        assertThat("Assert isoCountryCode not null", mappedResponse.getIsoCountryCode(), is(notNullValue()));
+        assertThat("Assert language not null", mappedResponse.getLanguage(), is(notNullValue()));
+        assertThat("Assert nationality not null", mappedResponse.getNationality(), is(notNullValue()));
+        assertThat("Assert email not null", mappedResponse.getEmail(), is(notNullValue()));
+        assertThat("Assert phoneNum not null", mappedResponse.getPhoneNum(), is(notNullValue()));
+        assertThat("Assert phoneCountryCode not null", mappedResponse.getPhoneCountryCode(), is(notNullValue()));
+        assertThat("Assert twoFaUser not null", mappedResponse.getTwoFaUser(), is(notNullValue()));
+        assertThat("Assert authentication not null", mappedResponse.getAuthentication(), is(notNullValue()));
+        assertThat("Assert websiteUserType not null", mappedResponse.getWebsiteUserType(), is(notNullValue()));
+        assertThat("Assert emailVerificationMark is null", mappedResponse.getEmailVerificationMark(), is("0"));
+        assertThat("Assert phoneVerificationMark is null", mappedResponse.getPhoneVerificationMark(), is("0"));
+        assertThat("Assert ibId is null", mappedResponse.getIbId(), is("0"));
+        assertThat("Assert cpaId is null", mappedResponse.getCpaId(), is(nullValue()));
+        assertThat("Assert kycStatus not null", mappedResponse.getKycStatus(), is(notNullValue()));
+        assertThat("Assert lastUpdated not null", mappedResponse.getLastUpdated(), is(notNullValue()));
     }
 
     // TODO ADD REAL DATA

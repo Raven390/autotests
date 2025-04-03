@@ -7,10 +7,10 @@ import java.util.Objects;
 public class GetClientTradingAccountsResponse {
 
     @JsonProperty("tradingAccount")
-    public String tradingAccount;
+    String tradingAccount;
 
     @JsonProperty("serverId")
-    public String serverId;
+    String serverId;
 
     public GetClientTradingAccountsResponse() {
     }
@@ -31,5 +31,13 @@ public class GetClientTradingAccountsResponse {
     @Override
     public int hashCode() {
         return Objects.hash(tradingAccount, serverId);
+    }
+
+    public String getTradingAccount() {
+        return tradingAccount;
+    }
+
+    public void setTradingAccount(String tradingAccount) {
+        this.tradingAccount = tradingAccount;
     }
 }
