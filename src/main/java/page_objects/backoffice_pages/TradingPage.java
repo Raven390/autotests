@@ -185,6 +185,10 @@ public class TradingPage extends AbstractPage {
     private final Locator ibRebatesWidgetTitle;
     private final Locator ibRebatesWidgetText;
     private final Locator operationsTableTooltip;
+    private final Locator highlightedRow;
+    private final Locator notHighlightedRow;
+    private final Locator enabledHftButton;
+    private final Locator disabledHftButton;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
@@ -426,6 +430,10 @@ public class TradingPage extends AbstractPage {
         this.ibRebatesWidgetInfo = ibRebatesWidget.locator(".v-number-widget__info");
         this.ibRebatesWidgetText = ibRebatesWidget.locator(".v-number-widget__empty");
         this.operationsTableTooltip = page.locator("//div[@class='v-tooltip-content']");
+        this.enabledHftButton = page.locator("//*[text()=' HFT']/ancestor::button[contains(@class, 'g-button_view_toned-action')]");
+        this.disabledHftButton = page.locator("//*[text()=' HFT']/ancestor::button[not (contains(@class, 'g-button_view_toned-action'))]");
+        this.highlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row_highlighted')]");
+        this.notHighlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
     }
 
     @Step("Navigate to users trading tab")
@@ -2052,6 +2060,30 @@ public class TradingPage extends AbstractPage {
 
             default -> "Error. Case integer is unknown";
         };
+    }
+
+    public void enabledHftButton() {
+        Allure.step("enable HFT highlight by clicking HFT button");
+        enabledHftButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        disabledHftButton.click();
+        enabledHftButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void disableHftButton() {
+        Allure.step("disable HFT highlight by clicking HFT button");
+        disabledHftButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        enabledHftButton.click();
+        disabledHftButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void checkCountHighlightedRows(Integer expectedRowCount) {
+        super.waitForPageToLoad();
+        assertEquals(expectedRowCount, highlightedRow.count());
+    }
+
+    public void checkCountNotHighlightedRows(Integer expectedRowCount) {
+        super.waitForPageToLoad();
+        assertEquals(expectedRowCount, notHighlightedRow.count());
     }
 
 }

@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests;
+package tests.vindex_backoffice_ui_tests.trading;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -7,8 +7,11 @@ import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedOb
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
+import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -25,6 +28,7 @@ import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.ge
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 
 public class TradingTest extends TestBaseWeb {
 
@@ -475,5 +479,66 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.fillProfitValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
         tradingPage.checkProfitCellsContentFirst(-37.99);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("474")
+    @Feature("BMS-1080 Highlight HFT deals")
+    @DisplayName("Test that Highlight HFT works")
+    public void testHighlightHftDeals() {
+        //case1 trade duration 0
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
+        trade0.openTime = trade0.closeTime;
+        Allure.step("prepare trade with duration 0");
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade0);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        tradingPage.enabledHftButton();
+        tradingPage.checkCountNotHighlightedRows(0);
+        tradingPage.checkCountHighlightedRows(1);
+        tradingPage.disableHftButton();
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        //case2 trade duration 9minutes 59 seconds
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
+        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
+        Allure.step("prepare trade with duration 9minutes 59 seconds");
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade1);
+        Allure.step("reload Operations page");
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        tradingPage.enabledHftButton();
+        tradingPage.checkCountNotHighlightedRows(0);
+        tradingPage.checkCountHighlightedRows(1);
+        tradingPage.disableHftButton();
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        //case3 trade duration 10 minutes
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
+        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 10, 0);
+        Allure.step("prepare trade with duration 10 minutes");
+        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
+        Allure.step("reload Operations page");
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        tradingPage.enabledHftButton();
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
+        tradingPage.disableHftButton();
+        tradingPage.checkCountNotHighlightedRows(1);
+        tradingPage.checkCountHighlightedRows(0);
     }
 }
