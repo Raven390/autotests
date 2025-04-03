@@ -48,34 +48,34 @@ class GetClientTests extends TestBaseApi {
         assert response.body() != null;
         GetClientResponse getClientResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check clientId", getClientResponse.clientId, is(client.getUcid()));
-        assertThat("Check userId", getClientResponse.userId, is(client.getUserId().toString()));
-        assertThat("Check brand", getClientResponse.brand, is("Vantage"));
-        assertThat("Check regulator", getClientResponse.regulator, is("VFSC"));
-        assertThat("Check registrationDate", getClientResponse.registrationDate, is("2024-10-23T14:56:59Z"));
-        assertThat("Check firstName", getClientResponse.firstName, is("Test"));
-        assertThat("Check lastName", getClientResponse.lastName, is("User"));
-        assertThat("Check gender", getClientResponse.gender, is("1"));
-        assertThat("Check birthday", getClientResponse.birthday, is("1961-02-01"));
-        assertThat("Check country", getClientResponse.country, is("Cyprus"));
-        assertThat("Check countryCode", getClientResponse.countryCode, is("CY"));
-        assertThat("Check isoCountryCode", getClientResponse.isoCountryCode, is("CY"));
-        assertThat("Check language", getClientResponse.language, is("en"));
-        assertThat("Check nationality", getClientResponse.nationality, is("RUS"));
-        assertThat("Check email", getClientResponse.email, is("VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL"));
-        assertThat("Check phoneNum", getClientResponse.phoneNum, is("cTsGbMYzhsD5SxSOhmgpmQ=="));
-        assertThat("Check phoneCountryCode", getClientResponse.phoneCountryCode, is("357"));
-        assertThat("Check twoFaUser", getClientResponse.twoFaUser, is("true"));
-        assertThat("Check authentication", getClientResponse.authentication, is("2FA"));
-        assertThat("Check websiteUserType", getClientResponse.websiteUserType, is("2"));
-        assertThat("Check emailVerificationMark", getClientResponse.emailVerificationMark, is("1"));
-        assertThat("Check phoneVerificationMark", getClientResponse.phoneVerificationMark, is("2"));
-        assertThat("Check ibId", getClientResponse.ibId, is("1"));
-        assertThat("Check cpaId", getClientResponse.cpaId, is("2"));
-        assertThat("Check rafReferrerId", getClientResponse.rafReferrerId, is("3"));
-        assertThat("Check kycStatus", getClientResponse.kycStatus, is("PARTIAL_KYC_ID_PASS"));
-        assertThat("Check lastUpdated", timestampFromIsoToDb(getClientResponse.lastUpdated), is(userObject.lastUpdated));
-        assertThat("Check poi completion time", timestampFromIsoToDb(getClientResponse.poiCompletionTime), is(userObject.poiCompleteTs));
+        assertThat("Check clientId", getClientResponse.getClientId(), is(client.getUcid()));
+        assertThat("Check userId", getClientResponse.getUserId(), is(client.getUserId().toString()));
+        assertThat("Check brand", getClientResponse.getBrand(), is("Vantage"));
+        assertThat("Check regulator", getClientResponse.getRegulator(), is("VFSC"));
+        assertThat("Check registrationDate", getClientResponse.getRegistrationDate(), is("2024-10-23T14:56:59Z"));
+        assertThat("Check firstName", getClientResponse.getFirstName(), is("Test"));
+        assertThat("Check lastName", getClientResponse.getLastName(), is("User"));
+        assertThat("Check gender", getClientResponse.getGender(), is("1"));
+        assertThat("Check birthday", getClientResponse.getBirthday(), is("1961-02-01"));
+        assertThat("Check country", getClientResponse.getCountry(), is("Cyprus"));
+        assertThat("Check countryCode", getClientResponse.getCountryCode(), is("CY"));
+        assertThat("Check isoCountryCode", getClientResponse.getIsoCountryCode(), is("CY"));
+        assertThat("Check language", getClientResponse.getLanguage(), is("en"));
+        assertThat("Check nationality", getClientResponse.getNationality(), is("RUS"));
+        assertThat("Check email", getClientResponse.getEmail(), is("VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL"));
+        assertThat("Check phoneNum", getClientResponse.getPhoneNum(), is("cTsGbMYzhsD5SxSOhmgpmQ=="));
+        assertThat("Check phoneCountryCode", getClientResponse.getPhoneCountryCode(), is("357"));
+        assertThat("Check twoFaUser", getClientResponse.getTwoFaUser(), is("true"));
+        assertThat("Check authentication", getClientResponse.getAuthentication(), is("2FA"));
+        assertThat("Check websiteUserType", getClientResponse.getWebsiteUserType(), is("2"));
+        assertThat("Check emailVerificationMark", getClientResponse.getEmailVerificationMark(), is("1"));
+        assertThat("Check phoneVerificationMark", getClientResponse.getPhoneVerificationMark(), is("2"));
+        assertThat("Check ibId", getClientResponse.getIbId(), is("1"));
+        assertThat("Check cpaId", getClientResponse.getCpaId(), is("2"));
+        assertThat("Check rafReferrerId", getClientResponse.getRafReferrerId(), is("3"));
+        assertThat("Check kycStatus", getClientResponse.getKycStatus(), is("PARTIAL_KYC_ID_PASS"));
+        assertThat("Check lastUpdated", timestampFromIsoToDb(getClientResponse.getLastUpdated()), is(userObject.lastUpdated));
+        assertThat("Check poi completion time", timestampFromIsoToDb(getClientResponse.getPoiCompletionTime()), is(userObject.poiCompleteTs));
     }
 
     @Test
@@ -86,8 +86,8 @@ class GetClientTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 404", response.code(), is(404));
-        assertThat("Assert that code is 404", mappedResponse.status, is(404));
-        assertThat("Assert error text", mappedResponse.error, is("Client data is not found for the request with parameters: {clientId=AlphaTick-999}."));
+        assertThat("Assert that code is 404", mappedResponse.getStatus(), is(404));
+        assertThat("Assert error text", mappedResponse.getError(), is("Client data is not found for the request with parameters: {clientId=AlphaTick-999}."));
     }
 
     @Test
@@ -99,8 +99,8 @@ class GetClientTests extends TestBaseApi {
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
-        assertThat("Assert error text", mappedResponse.error, containsString("Invalid clientId format"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error text", mappedResponse.getError(), containsString("Invalid clientId format"));
     }
 
     @Test

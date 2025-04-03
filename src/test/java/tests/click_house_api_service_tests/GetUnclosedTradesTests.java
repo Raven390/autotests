@@ -148,11 +148,11 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert response title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
-        assertThat("Assert response details", mappedResponse.detail, is("Failed to convert 'limit' with value: 'a'"));
-        assertThat("Assert response instance", mappedResponse.instance, is("/v1/unclosedTrades"));
+        assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert response title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert response details", mappedResponse.getDetail(), is("Failed to convert 'limit' with value: 'a'"));
+        assertThat("Assert response instance", mappedResponse.getInstance(), is("/v1/unclosedTrades"));
     }
 
     @Test
@@ -166,8 +166,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -181,8 +181,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -198,11 +198,11 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert response title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
-        assertThat("Assert response details", mappedResponse.detail, is("Failed to convert 'dateFrom' with value: 'a'"));
-        assertThat("Assert response instance", mappedResponse.instance, is("/v1/unclosedTrades"));
+        assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert response title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert response details", mappedResponse.getDetail(), is("Failed to convert 'dateFrom' with value: 'a'"));
+        assertThat("Assert response instance", mappedResponse.getInstance(), is("/v1/unclosedTrades"));
     }
 
     @Test
@@ -218,11 +218,11 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert response title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
-        assertThat("Assert response details", mappedResponse.detail, is("Failed to convert 'dateTo' with value: 'a'"));
-        assertThat("Assert response instance", mappedResponse.instance, is("/v1/unclosedTrades"));
+        assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert response title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert response details", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: 'a'"));
+        assertThat("Assert response instance", mappedResponse.getInstance(), is("/v1/unclosedTrades"));
     }
 
     @Test
@@ -238,8 +238,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -255,8 +255,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -395,8 +395,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -411,8 +411,8 @@ class GetUnclosedTradesTests extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert response error", mappedResponse.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
-        assertThat("Assert response status", mappedResponse.status, is(400));
+        assertThat("Assert response error", mappedResponse.getError(), is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat("Assert response status", mappedResponse.getStatus(), is(400));
     }
 
     @Test

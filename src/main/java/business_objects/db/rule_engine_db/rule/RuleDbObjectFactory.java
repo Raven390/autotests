@@ -1,4 +1,4 @@
-package business_objects.db.rule_engine_db;
+package business_objects.db.rule_engine_db.rule;
 
 import business_objects.api.rule_engine_api.post_rules.RuleObject;
 import org.postgresql.jdbc.PgArray;

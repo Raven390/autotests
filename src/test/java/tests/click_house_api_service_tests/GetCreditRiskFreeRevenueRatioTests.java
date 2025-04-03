@@ -136,11 +136,11 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert status", mappedResponse.status, is(400));
-        assertThat("Assert type", mappedResponse.type, is("about:blank"));
-        assertThat("Assert title", mappedResponse.title, is("Bad Request"));
-        assertThat("Assert detail", mappedResponse.detail, is("Failed to convert 'dateTo' with value: '1'"));
-        assertThat("Assert instance", mappedResponse.instance, is("/v1/creditRiskFreeRevenueRatio"));
+        assertThat("Assert status", mappedResponse.getStatus(), is(400));
+        assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
+        assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
+        assertThat("Assert detail", mappedResponse.getDetail(), is("Failed to convert 'dateTo' with value: '1'"));
+        assertThat("Assert instance", mappedResponse.getInstance(), is("/v1/creditRiskFreeRevenueRatio"));
     }
 
     @Test

@@ -136,6 +136,11 @@ public class CleanTableHelper {
         deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, "id", List.of(Arrays.toString(values)));
     }
 
+    @Step("Clean rule_deployment table by uuid")
+    public static void cleanRuleDeploymentTableByUuId(String... values) throws SQLException {
+        deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_DEPLOYMENT_TABLE, "process_id", List.of(Arrays.toString(values)));
+    }
+
     // Mitigation db
 
     @Step("Clean users restriction history for ucid '{ucid}'")

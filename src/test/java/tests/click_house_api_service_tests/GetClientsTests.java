@@ -65,7 +65,7 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check client ucid", clients.clientId, is(client.getUcid()));
+        assertThat("Check client ucid", clients.getClientId(), is(client.getUcid()));
     }
 
     @Test
@@ -96,8 +96,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -112,8 +112,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -129,8 +129,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -146,8 +146,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -163,8 +163,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @ParameterizedTest
@@ -181,8 +181,8 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 
     @ParameterizedTest
@@ -199,7 +199,7 @@ class GetClientsTests extends TestBaseApi {
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
-        assertThat("Check response error text", mappedResponse.error, is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
-        assertThat("Check response code", mappedResponse.status, is(400));
+        assertThat("Check response error text", mappedResponse.getError(), is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
+        assertThat("Check response code", mappedResponse.getStatus(), is(400));
     }
 }

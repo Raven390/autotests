@@ -157,6 +157,7 @@ public class Constants {
     public static final String IB_SUMMARY_BY_DATE_TABLE_NAME = "datamarts_test.ib_summary_by_date";
     public static final String CRM_TB_USER_EXTENDS_TABLE_NAME = "vindex_test.crm___tb_user_extends";
     public static final String RULE_ENGINE_RULE_TABLE = "ruleengine.rule";
+    public static final String RULE_ENGINE_RULE_DEPLOYMENT_TABLE = "ruleengine.rule_deployment";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
@@ -207,4 +208,28 @@ public class Constants {
     public static final String EURUSD = "EURUSD";
     public static final String EURGBP = "EURGBP";
     //
+    public static final String EMPTY_RULE_XML = """
+            <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ctfxpu" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+              <bpmn:process id="process_id" isExecutable="true">
+                <bpmn:startEvent id="test_event" name="test_name">
+                  <bpmn:extensionElements>
+                    <zeebe:ioMapping>
+                      <zeebe:output source="=&#34;0.1.1&#34;" target="version" />
+                      <zeebe:output source="=&#34;Withdrawal&#34;" target="eventType" />
+                    </zeebe:ioMapping>
+                  </bpmn:extensionElements>
+                </bpmn:startEvent>
+              </bpmn:process>
+              <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+                <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0qr2f1y">
+                  <bpmndi:BPMNShape id="BPMNShape_0gbdl80" bpmnElement="StartEventCPA">
+                    <dc:Bounds x="162" y="82" width="36" height="36" />
+                    <bpmndi:BPMNLabel>
+                      <dc:Bounds x="154" y="128" width="52" height="14" />
+                    </bpmndi:BPMNLabel>
+                  </bpmndi:BPMNShape>
+                </bpmndi:BPMNPlane>
+              </bpmndi:BPMNDiagram>
+            </bpmn:definitions>
+            """;
 }

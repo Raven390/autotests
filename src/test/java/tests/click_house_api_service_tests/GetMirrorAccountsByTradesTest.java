@@ -104,8 +104,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'symbol' for method parameter type String is not present"));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'symbol' for method parameter type String is not present"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
     }
 
     @Test
@@ -121,8 +121,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
     }
 
     @Test
@@ -138,8 +138,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
-        assertThat("Assert that code is 400", mappedResponse.status, is(400));
-        assertThat("Assert error message", mappedResponse.error, is("Required request parameter 'serverId' for method parameter type String is not present"));
+        assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
+        assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
     }
 
     @Test

@@ -73,7 +73,10 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd2_1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("21");
         Allure.step("Produce withdrawal event to crm-events topic");
+        data.withdrawalEvent.type = "egWithdrawal";
+        System.out.println(data.withdrawalEvent.type);
         kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());

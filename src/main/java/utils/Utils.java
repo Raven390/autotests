@@ -59,6 +59,10 @@ public class Utils {
         return UUID.randomUUID().toString();
     }
 
+    public static UUID getRandomUuid() {
+        return UUID.randomUUID();
+    }
+
     public static String getRandomEmail() {
         String email = "testmail" + getRandomInt() + "@mail.com";
         System.out.println("Generated email: " + email);

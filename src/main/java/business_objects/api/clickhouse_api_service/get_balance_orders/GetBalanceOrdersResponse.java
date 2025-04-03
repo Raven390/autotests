@@ -8,22 +8,22 @@ import java.util.Objects;
 public class GetBalanceOrdersResponse {
 
     @JsonProperty("tradeDate")
-    public String tradeDate;
+    String tradeDate;
 
     @JsonProperty("tradeId")
-    public Integer tradeId;
+    Integer tradeId;
 
     @JsonProperty("tradingAccount")
-    public Integer tradingAccount;
+    Integer tradingAccount;
 
     @JsonProperty("profit")
-    public Double profit;
+    Double profit;
 
     @JsonProperty("profitUSD")
-    public Double profitUsd;
+    Double profitUsd;
 
     @JsonProperty("comment")
-    public String comment;
+    String comment;
 
     public GetBalanceOrdersResponse() {
     }
@@ -56,5 +56,53 @@ public class GetBalanceOrdersResponse {
     @Override
     public String toString() {
         return "GetBalanceOrdersResponse{" + "tradeDate='" + tradeDate + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", profit=" + profit + ", profitUSD=" + profitUsd + ", comment='" + comment + '\'' + '}';
+    }
+
+    public String getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(String tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+
+    public Integer getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(Integer tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public Integer getTradingAccount() {
+        return tradingAccount;
+    }
+
+    public void setTradingAccount(Integer tradingAccount) {
+        this.tradingAccount = tradingAccount;
+    }
+
+    public Double getProfit() {
+        return profit;
+    }
+
+    public void setProfit(Double profit) {
+        this.profit = profit;
+    }
+
+    public Double getProfitUsd() {
+        return profitUsd;
+    }
+
+    public void setProfitUsd(Double profitUsd) {
+        this.profitUsd = profitUsd;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

@@ -8,10 +8,10 @@ import java.util.Objects;
 public class GetAbuseTypesResponse {
 
     @JsonProperty("clientId")
-    public String clientId;
+    String clientId;
 
     @JsonProperty("fraudType")
-    public String[] fraudType;
+    String[] fraudType;
 
     public GetAbuseTypesResponse() {
     }
@@ -37,5 +37,21 @@ public class GetAbuseTypesResponse {
     @Override
     public String toString() {
         return "GetAbuseTypesResponse{" + "clientId='" + clientId + '\'' + ", fraudType=" + Arrays.toString(fraudType) + '}';
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String[] getFraudType() {
+        return fraudType;
+    }
+
+    public void setFraudType(String[] fraudType) {
+        this.fraudType = fraudType;
     }
 }
