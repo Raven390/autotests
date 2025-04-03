@@ -491,6 +491,7 @@ public class TradingTest extends TestBaseWeb {
         //case1 trade duration 0
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Buy";
         trade0.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
         trade0.openTime = trade0.closeTime;
         Allure.step("prepare trade with duration 0");
@@ -506,12 +507,13 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.disableHftButton();
         tradingPage.checkCountNotHighlightedRows(1);
         tradingPage.checkCountHighlightedRows(0);
-        //case2 trade duration 9minutes 59 seconds
+        //case2 trade duration 10 minutes
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Buy";
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 9, 59);
-        Allure.step("prepare trade with duration 9minutes 59 seconds");
+        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 10, 0);
+        Allure.step("prepare trade with duration 10 minutes");
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade1);
         Allure.step("reload Operations page");
         tradingPage.navigateOperations(client.getUcid());
@@ -523,12 +525,13 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.disableHftButton();
         tradingPage.checkCountNotHighlightedRows(1);
         tradingPage.checkCountHighlightedRows(0);
-        //case3 trade duration 10 minutes
+        //case3 trade duration 10 minutes 1 second
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Buy";
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 0);
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 10, 0);
-        Allure.step("prepare trade with duration 10 minutes");
+        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 10, 1);
+        Allure.step("prepare trade with duration 10 minutes 1 second");
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
         Allure.step("reload Operations page");
         tradingPage.navigateOperations(client.getUcid());
