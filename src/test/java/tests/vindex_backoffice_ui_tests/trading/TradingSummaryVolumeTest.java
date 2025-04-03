@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests;
+package tests.vindex_backoffice_ui_tests.trading;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
