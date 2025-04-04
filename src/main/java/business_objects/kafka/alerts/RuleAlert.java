@@ -100,6 +100,12 @@ public class RuleAlert {
 
             @JsonProperty("Loss vouchers amount in USD")
             public String lossVoucherAmount;
+
+            @JsonProperty("Payment type")
+            public String paymentType;
+
+            @JsonProperty("Check")
+            public String check;
         }
     }
 }

@@ -90,6 +90,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL = "account.restrictions.cancel";
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL = "client.restrictions.cancel";
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_APPLY = "client.restrictions.apply";
+    public static final String KAFKA_TOPIC_WITHDRAWAL_APPROVALS = "withdrawal.approvals";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_SECOND_NAME = "User";

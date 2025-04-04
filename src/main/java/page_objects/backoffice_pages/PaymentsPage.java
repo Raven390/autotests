@@ -7,7 +7,9 @@ import io.qameta.allure.Step;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
@@ -31,28 +33,48 @@ public class PaymentsPage extends AbstractPage {
     private final Locator inactiveTimelineSection;
     private final Locator activeTimelineSection;
     private final Locator financialTransactionGraphSection;
+    private final Locator withdrawalsTab;
+    private final Locator withdrawalTabButtonContent;
+    private final Locator filterOptions;
+    private final Locator createTimeFilter;
+    private final Locator typeFilter;
+    private final Locator amountFilter;
+    private final Locator tableRow;
+    private final Locator tableCell;
+    private final Locator tableHeader;
+    private final Locator tooltip;
+    private final Locator amountColumnHeader;
+    private final Locator dateColumnHeader;
+    private final Locator checkbox;
+    private final Locator submitPanelCounter;
+    private final Locator submitPanelInput;
+    private final Locator submitPanelButtons;
+    private final Locator approveButton;
+    private final Locator approveAllButton;
+    private final Locator rejectButton;
+    private final Locator rejectAllButton;
 
-    private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
-    private final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
-    private final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
-    private final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
-    private final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
-    private final String TIMELINE_BAR = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
-    private final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
-    private final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
-    private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
-    private final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
-    private final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]";
-    private final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
-    private final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
-
+    private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
+    private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
+    private static final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
+    private static final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
+    private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
+    private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
+    private static final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
+    private static final String TIMELINE_BAR = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
+    private static final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
+    private static final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
+    private static final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
+    private static final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
+    private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]";
+    private static final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
+    private static final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
+    private static final String FILTER_BY_PLACEHOLDER_PATTERN = "//span[text()='%s']/..";
 
     public PaymentsPage(Page page) {
         super(page);
         this.loaderAnimation = page.locator(".v-loader");
-        this.paymentsTab = page.locator("[role=\"tab\"][title=\"Payments\"]");
+        this.paymentsTab = page.locator("//div[@class='g-tabs__item-title' and text()='Payments']/../..");
         this.financialTransactionsChart = page.locator(FINANCIAL_TRANSACTIONS_SELECTOR);
         this.cashflowDepositEmptyState = page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR);
         this.transactionTooltipTitleDate = page.locator(".v-payments-summary-transcations-tooltip__title");
@@ -68,6 +90,26 @@ public class PaymentsPage extends AbstractPage {
         this.timelineThumb = page.locator(".v-range-timeline-thumb");
         this.inactiveTimelineSection = page.locator(".v-range-timeline-section_isTransparent");
         this.activeTimelineSection = page.locator(ACTIVE_TIMELINE_SECTION_SELECTOR);
+        this.withdrawalsTab = page.locator("//input[@value='WITHDRAWALS']");
+        this.filterOptions = page.locator("//div[@role='option']");
+        this.createTimeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "Lifetime"));
+        this.typeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "All types"));
+        this.amountFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "Any amount"));
+        this.withdrawalTabButtonContent = page.locator("//div[@class='v-payments__option-content']");
+        this.tableRow = page.locator("//div[contains(@class,'v-body-row')]");
+        this.tableCell = tableRow.locator("//div[contains(@class,'g-text')]");
+        this.tableHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon'))]");
+        this.tooltip = page.locator("//div[@class='v-tooltip-content']");
+        this.amountColumnHeader = tableHeader.getByText("AMOUNT");
+        this.dateColumnHeader = tableHeader.getByText("DATE");
+        this.checkbox = page.locator("//input[@type='checkbox']");
+        this.submitPanelCounter = page.locator("//div[@class='v-submit-panel__counter']");
+        this.submitPanelInput = page.locator("//div[@class='v-submit-panel__input']/descendant::input");
+        this.submitPanelButtons = page.locator("//div[@class='v-submit-panel__buttons']");
+        this.approveButton = submitPanelButtons.getByText("Approve");
+        this.approveAllButton = submitPanelButtons.getByText("Approve all");
+        this.rejectButton = submitPanelButtons.getByText("Reject");
+        this.rejectAllButton = submitPanelButtons.getByText("Reject all");
     }
 
     @Step("Open users operations tab")
@@ -404,4 +446,103 @@ public class PaymentsPage extends AbstractPage {
         assertEquals(expectedStyle, actualStyle);
     }
 
+    public void clickWithdrawalsTabButton() {
+        withdrawalsTab.click();
+        page.waitForTimeout(500);
+    }
+
+    public String getWithdrawalsTabButtonText() {
+        return withdrawalTabButtonContent.textContent();
+    }
+
+    private List<String> getFilterOptions(Locator filter) {
+        filter.click();
+        page.waitForTimeout(500);
+        List<String> filterOptionsList = new ArrayList<>();
+        for (int i = 0; i < filterOptions.count(); i++) {
+            filterOptionsList.add(filterOptions.nth(i).textContent());
+        }
+        return filterOptionsList;
+    }
+
+    public List<String> getCreateTimeFilterOptions() {
+        return getFilterOptions(createTimeFilter);
+    }
+
+    public List<String> getTypeFilterOptions() {
+        return getFilterOptions(typeFilter);
+    }
+
+    public List<String> getAmountFilterOptions() {
+        return getFilterOptions(amountFilter);
+    }
+
+    public int getRowsCount() {
+        return tableRow.count();
+    }
+
+    public List<String> getAllRowsData() {
+        List<String> tableCells = new ArrayList<>();
+        for (int i = 0; i < tableCell.count(); i++) {
+            tableCells.add(tableCell.nth(i).textContent());
+        }
+        return tableCells;
+    }
+
+    public List<String> getTableHeaders() {
+        List<String> tableHeaders = new ArrayList<>();
+        for (int i = 0; i < tableHeader.count(); i++) {
+            tableHeaders.add(tableHeader.nth(i).textContent());
+        }
+        return tableHeaders;
+    }
+
+    public void clickAmountColumn() {
+        amountColumnHeader.click();
+    }
+
+    public String getAmountColumnTooltip() {
+        amountColumnHeader.hover();
+        return tooltip.textContent();
+    }
+
+    public void clickDateColumn() {
+        dateColumnHeader.click();
+    }
+
+    public String getDateColumnTooltip() {
+        dateColumnHeader.hover();
+        return tooltip.textContent();
+    }
+
+    public void selectCreateTimeFilterOption(String option) {
+        createTimeFilter.click();
+        filterOptions.getByText(option).click();
+    }
+
+    public void selectTypeFilterOption(String option) {
+        typeFilter.click();
+        filterOptions.getByText(option).click();
+    }
+
+    public void selectAmountFilterOption(String option) {
+        amountFilter.click();
+        filterOptions.getByText(option).click();
+    }
+
+    public void selectAllWithdrawals() {
+        checkbox.first().click();
+    }
+
+    public String getSubmitPanelCounterText() {
+        return submitPanelCounter.textContent();
+    }
+
+    public void fillSubmitPanelInput(String text) {
+        submitPanelInput.fill(text);
+    }
+
+    public void clickRejectAllButton() {
+        rejectAllButton.click();
+    }
 }
