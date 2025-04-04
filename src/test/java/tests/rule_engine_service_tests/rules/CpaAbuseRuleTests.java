@@ -68,6 +68,28 @@ class CpaAbuseRuleTests extends TestBaseRule {
     }
 
     @Test
+    @DisplayName("CPA abuse rule exit Event_2. User have cpaId first deal  less than 60 d ago")
+    @AllureId("916")
+    void mirrorTradeRuleExitEvent2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("2");
+        System.out.println("User cpaId: " + data.clientHelper.getCpaId());
+
+        Allure.step("User do not have cpaId number");
+
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Get client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
     @DisplayName("CPA abuse rule exit Event_21. User connected to known abuser")
     @AllureId("917")
     void mirrorTradeRuleExitEventEnd2_1Test() throws Exception {
