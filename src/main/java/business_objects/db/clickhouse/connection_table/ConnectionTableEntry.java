@@ -9,7 +9,7 @@ public class ConnectionTableEntry {
     public String userTo;
     public String degreeConnection;
     public Double connectionScore;
-    public List<ConnectionInfo> connectionInfo;
+    public String connectionInfo;
     public String datetime;
 
     public ConnectionTableEntry(String userFrom, String userTo, String degreeConnection, Double connectionScore,
@@ -18,7 +18,7 @@ public class ConnectionTableEntry {
         this.userTo = userTo;
         this.degreeConnection = degreeConnection;
         this.connectionScore = connectionScore;
-        this.connectionInfo = connectionInfo;
+        this.connectionInfo = connectionInfoToString(connectionInfo);
         this.datetime = datetime;
     }
 
@@ -55,5 +55,27 @@ public class ConnectionTableEntry {
             this.sourceAttributeValue = sourceAttributeValue;
             this.relationType = relationType;
         }
+
+        @Override
+        public String toString() {
+            return "{" + "\"connectionAttributeName\":\"" + connectionAttributeName + '\"' + ", \"connectionAttributeValue\":\"" + connectionAttributeValue + '\"' + ", \"sourceAttributeValue\":\"" + sourceAttributeValue + '\"' + ", \"relationType\":\"" + relationType + '\"' + '}';
+        }
+    }
+
+    public static String connectionInfoToString(List<ConnectionInfo> connectionInfos) {
+//
+        StringBuilder bld = new StringBuilder();
+        bld.append("[");
+        int counter = connectionInfos.size();
+        for (ConnectionInfo i : connectionInfos) {
+            String infoString = i.toString();
+            bld.append(infoString);
+            if (counter > 1) {
+                bld.append(",");
+                counter -= 1;
+            }
+        }
+        bld.append("]");
+        return bld.toString();
     }
 }

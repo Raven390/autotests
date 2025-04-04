@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByClientId;
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponseFactory.*;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudType.*;
@@ -64,8 +65,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
-        connectionTableEntry11.connectionInfo = List.of(
-                new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT));
+        connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(
+                new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
         fraud11 = new BoClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
         fraud12 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
         fraud2_2 = new BoClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());

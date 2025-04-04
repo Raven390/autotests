@@ -71,6 +71,26 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
+    public static RuleDataHelper getCpaAbuseRuleExitEventEnd2Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd1Client);
+        Allure.step("Create user object with no CPA");
+        data.clientHelper.setCpaId(8888);
+
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd1Client);
+        trade1Close.setComment("trade 1 close");
+        trade1Close.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60, 0, 1));
+        trade1Close.setTimeUtc(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60, 0, 1));
+        trade1Close.setEntry(1);
+        trade1Close.setSymbol("USDEUR");
+        trade1Close.setProfit(111.11);
+        trade1Close.setProfitUsd(123.12);
+        trade1Close.setVolumeLots(0.1);
+        data.mt5DealsCoercedObjects.add(trade1Close);
+
+        return data;
+    }
+
     public static RuleDataHelper getCpaAbuseRuleExitEventEnd21Data() {
         Allure.step("Get client data");
         RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2_1Client);
@@ -83,6 +103,17 @@ public class CpaAbuseRuleDataFactory {
         data.clientFraudTypes.add(boClientFraudTypesObject);
         Allure.step("Set restriction");
         Allure.step("Send alert");
+
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd2_1Client);
+        trade1Close.setComment("trade 1 close");
+        trade1Close.setTime(getCurrentTimestampDbFormat());
+        trade1Close.setTimeUtc(trade1Close.getTime());
+        trade1Close.setEntry(1);
+        trade1Close.setSymbol("USDEUR");
+        trade1Close.setProfit(111.11);
+        trade1Close.setProfitUsd(123.12);
+        trade1Close.setVolumeLots(0.1);
+        data.mt5DealsCoercedObjects.add(trade1Close);
         return data;
     }
 
@@ -324,6 +355,7 @@ public class CpaAbuseRuleDataFactory {
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
+        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
         map.put("21", getCpaAbuseRuleExitEventEnd21Data());
         map.put("22", getCpaAbuseRuleExitEventEnd22Data());
         map.put("3", getCpaAbuseRuleExitEventEnd3Data());
