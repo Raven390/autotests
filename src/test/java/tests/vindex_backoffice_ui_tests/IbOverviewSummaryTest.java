@@ -113,7 +113,7 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         assertThat("Verify IB overview summary title", ibCpaOverviewPage.getOverviewTitle(), is("IB overview"));
         assertThat("Verify IB overview summary subheader", ibCpaOverviewPage.getOverviewSubheaderText(), is(String.format("IB %s, %s, %s level", ibAccount.account, ibAccount.brand, relation.getDirectIbLevel())));
         assertThat("Verify IB overview summary under this ib title", ibCpaOverviewPage.getUnderThisTitle(), is("Under this IB"));
-        assertThat("Verify IB overview summary under this ib items", ibCpaOverviewPage.getUnderThisItems(), contains(String.format("%sclient", 1), String.format("%sfraudster", 1)));
+        assertThat("Verify IB overview summary under this ib items", ibCpaOverviewPage.getUnderThisItems(), contains(String.format("%sclient", 1), String.format("%sfraudster", 1), String.format("%slower-level IB", 2)));
         assertThat("Verify IB overview summary clients performance title", ibCpaOverviewPage.getClientsPerformanceTitle(), is("Clients performance USD"));
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(commission.getIbCommission())), String.format("%sNet PNL", formatter.format(factLoginMetrics.getDailyNetClosedPnl())), String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
         assertThat("Verify IB overview summary clients totals title", ibCpaOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
