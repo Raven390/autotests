@@ -27,7 +27,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.database.BoHelper.closeAlert;
@@ -50,9 +50,6 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
     private static final CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
     private static final CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
     private static final CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
-    private static final RuleAlert withdrawalAlert1 = generateRuleAlertByUcid(client.getUcid());
-    private static final RuleAlert withdrawalAlert2 = generateRuleAlertByUcid(client.getUcid());
-    private static final RuleAlert withdrawalAlert3 = generateRuleAlertByUcid(client.getUcid());
     private static final List<String> withdrawalData1 = new ArrayList<>();
     private static final List<String> withdrawalData2 = new ArrayList<>();
     private static final List<String> withdrawalData3 = new ArrayList<>();
@@ -77,18 +74,9 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         withdrawal3.amount = 60_783.76;
         withdrawal3.currency = "GBP";
         withdrawal3.amountUsd = 55_678.98;
-        withdrawalAlert1.rule.attributes.withdrawalId = withdrawal1.transferId.toString();
-        withdrawalAlert2.rule.attributes.withdrawalId = withdrawal2.transferId.toString();
-        withdrawalAlert3.rule.attributes.withdrawalId = withdrawal3.transferId.toString();
-        withdrawalAlert1.rule.attributes.amount = withdrawal1.amount.toString();
-        withdrawalAlert2.rule.attributes.amount = withdrawal2.amount.toString();
-        withdrawalAlert3.rule.attributes.amount = withdrawal3.amount.toString();
-        withdrawalAlert1.rule.attributes.currency = withdrawal1.currency;
-        withdrawalAlert2.rule.attributes.currency = withdrawal2.currency;
-        withdrawalAlert3.rule.attributes.currency = withdrawal3.currency;
-        withdrawalAlert1.rule.attributes.paymentType = withdrawal1.paymentType;
-        withdrawalAlert2.rule.attributes.paymentType = withdrawal2.paymentType;
-        withdrawalAlert3.rule.attributes.paymentType = withdrawal3.paymentType;
+        RuleAlert withdrawalAlert1 = generateWithdrawalNotificationAlert(withdrawal1);
+        RuleAlert withdrawalAlert2 = generateWithdrawalNotificationAlert(withdrawal2);
+        RuleAlert withdrawalAlert3 = generateWithdrawalNotificationAlert(withdrawal3);
         withdrawalAlert1.rule.attributes.check = "Big_Amount";
         withdrawalAlert2.rule.attributes.check = "WR_Blacklist";
         withdrawalAlert3.rule.attributes.check = "High_Risk";
@@ -124,12 +112,6 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         withdrawalData3.add(withdrawal3.status);
         List<RuleAlert> withdrawalAlertList = List.of(withdrawalAlert1, withdrawalAlert2, withdrawalAlert3);
         for (RuleAlert withdrawalAlert : withdrawalAlertList) {
-            withdrawalAlert.rule.code = null;
-            withdrawalAlert.rule.ver = "0.1";
-            withdrawalAlert.rule.name = "Withdrawal Review";
-            withdrawalAlert.rule.trigger = "Withdrawal";
-            withdrawalAlert.rule.fraudType = "POTENTIAL_ABUSE";
-            withdrawalAlert.rule.attributes.stepName = null;
             kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         }
         formatter.setMinimumFractionDigits(0);
@@ -151,7 +133,7 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         paymentsPage.clickPaymentsTabButton();
         paymentsPage.clickWithdrawalsTabButton();
-        assertThat("Verify amount of withdrawals", paymentsPage.getWithdrawalsTabButtonText(), is("Withdrawals 3"));
+        assertThat("Verify amount of withdrawals", paymentsPage.getWithdrawalsTabButtonText(), is("Withdrawal requests 3"));
     }
 
     @Test

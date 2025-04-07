@@ -58,7 +58,7 @@ public class ConnectionTableEntryFactory {
     public static ConnectionTableEntry getConnectionTableEntryForUiFiltration3(ClientHelper userFrom,
             ClientHelper userTo) {
         return new ConnectionTableEntry(
-                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 1d, List.of(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 0.2d, List.of(
                         new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_IP, CONNECTION_SEARCH_DATA_IP1, CONNECTION_SEARCH_DATA_IP1, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
@@ -66,15 +66,15 @@ public class ConnectionTableEntryFactory {
     public static ConnectionTableEntry getConnectionTableEntryForUiFiltration4(ClientHelper userFrom,
             ClientHelper userTo) {
         return new ConnectionTableEntry(
-                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 1d, List.of(
-                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 0.7d, List.of(
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE2, CONNECTION_SEARCH_DATA_DEVICE2, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
 
     public static ConnectionTableEntry getConnectionTableEntryForUiFiltration5(ClientHelper userFrom,
             ClientHelper userTo) {
         return new ConnectionTableEntry(
-                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_NETWORK, 1d, List.of(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_NETWORK, 0.2d, List.of(
                         new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_IP, CONNECTION_SEARCH_DATA_IP2, CONNECTION_SEARCH_DATA_IP2, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
@@ -82,7 +82,7 @@ public class ConnectionTableEntryFactory {
     public static ConnectionTableEntry getConnectionTableEntryForUiFiltration6(ClientHelper userFrom,
             ClientHelper userTo) {
         return new ConnectionTableEntry(
-                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 1d, List.of(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 0.5d, List.of(
                         new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DOCUMENT, CONNECTION_SEARCH_DATA_DOCUMENT, CONNECTION_SEARCH_DATA_DOCUMENT, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }

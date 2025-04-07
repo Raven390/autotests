@@ -187,7 +187,7 @@ public class ConnectionPage extends AbstractPage {
         this.graphNodesHiddenTitles = page.locator(String.format("%s%s", GRAPH_NODES_GROUP, "/descendant::div[@class='v-graph-hidden-node']/div[contains(@class,'g-text')]"));
         this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
-        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::div[@class='v-connection-search-table-view__client']/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
+        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'v-connection-search-table-view__client')]/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
         this.appliedFiltersHidden = page.locator("//div[contains(@class,'v-collapsible-horizontal-list__item_hidden')]/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button__filters']/div");

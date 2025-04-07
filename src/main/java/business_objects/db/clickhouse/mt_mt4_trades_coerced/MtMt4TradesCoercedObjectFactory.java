@@ -27,7 +27,7 @@ public class MtMt4TradesCoercedObjectFactory {
         trade.storageUsd = 0d;
         trade.commissionUsd = 0d;
         trade.profitUsd = profit;
-        trade.closeTimeUtc = closeTime;
+        trade.closeTime = closeTime;
         return trade;
     }
 
