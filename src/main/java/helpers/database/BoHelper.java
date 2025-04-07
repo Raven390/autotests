@@ -10,6 +10,7 @@ import io.qameta.allure.Step;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -29,15 +30,19 @@ public class BoHelper {
 
     @Step("Delete user from BO")
     public static void deleteUserBO(String ucid) throws Exception {
-        Allure.step("delete user from BO");
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
-        int boId = client.getFirst().id;
-        deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
-        Thread.sleep(100);
-        deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'");
-        Thread.sleep(100);
-        deleteEntryFromDb(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
-        Thread.sleep(100);
+        try {
+            Allure.step("delete user from BO");
+            List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
+            int boId = client.getFirst().id;
+            deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
+            Thread.sleep(100);
+        } catch (NoSuchElementException e) {
+            System.out.println("no such client in BO");
+        }
     }
 
     @Step("Delete user's frauds from BO")

@@ -41,8 +41,8 @@ public class OpenPositions extends AbstractPage {
     private static final String COMMISSION_ROW_HEADER = "*[contains(@class, 'v-header-cell') and text()= 'COMMISSION']";
     private static final String METHOD_ROW_HEADER = "*[contains(@class, 'v-header-cell') and text()= 'METHOD']";
     private static final String COMMENT_ROW_HEADER = "*[contains(@class, 'v-header-cell') and text()= 'COMMENT']";
-    private static final String TABLE_CELL_LOCATOR = "*[@class='v-body-cell']";
-    private static final String TABLE_ROW_LOCATOR = "*[contains(@class, 'v-body-row')]";
+    static final String TABLE_CELL_LOCATOR = "*[@class='v-body-cell']";
+    static final String TABLE_ROW_LOCATOR = "*[contains(@class, 'v-body-row')]";
     private static final String DEAL_TYPE_TEXT_LOCATOR = "*[contains(@class, 'v-trading-tab-open-positions__deal-type ')]";
 
 
