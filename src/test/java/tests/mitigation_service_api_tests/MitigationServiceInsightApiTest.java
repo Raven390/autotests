@@ -52,8 +52,9 @@ class MitigationServiceInsightApiTest extends TestBaseWeb {
     @DisplayName("Get access token for Insight mitigation service API")
     void getAccessTokenInsightTest() throws JsonProcessingException {
         investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         com.microsoft.playwright.Response response = page.waitForResponse(
-                responseObj -> responseObj.url().contains("openid-connect/token") && responseObj.status() == 200, () -> keycloackPage.loginAsAutotestUser()
+                responseObj -> responseObj.url().contains("openid-connect/token") && responseObj.status() == 200, () -> investigationPage.navigateToClient(client.getUcid())
         );
         if (response != null) {
             String responseBody = response.text();
@@ -143,7 +144,7 @@ class MitigationServiceInsightApiTest extends TestBaseWeb {
         assertThat(restriction.code, is("05"));
         assertThat(restriction.type, is("GENERAL"));
         assertThat(restriction.status, is("CANCELLED"));
-        assertThat(restriction.applyReason, is("test"));
+        assertThat(restriction.comment, is("test"));
         assertThat(restriction.cancelReason, is("test"));
         assertThat(restriction.updatedAt, notNullValue());
         assertThat(restriction.createdAt, notNullValue());
@@ -193,7 +194,7 @@ class MitigationServiceInsightApiTest extends TestBaseWeb {
         assertThat(restriction.code, is("08"));
         assertThat(restriction.type, is("TRADING"));
         assertThat(restriction.status, is("APPLIED"));
-        assertThat(restriction.applyReason, is("test"));
+        assertThat(restriction.comment, is("test"));
         assertThat(restriction.cancelReason, nullValue());
         assertThat(restriction.updatedAt, notNullValue());
         assertThat(restriction.createdAt, notNullValue());
