@@ -38,7 +38,7 @@ import static utils.Utils.getCurrentTimestamp;
 @Tag(SUITE_MITIGATION_SERVICE)
 class MitigationServiceApiTest extends TestBaseApi {
 
-    static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.INFINOX, Regulator.VFSC2, 14_140_101, 42);
+    static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
 
     @BeforeAll
     static void initialSetup() throws IOException, ReflectiveOperationException, SQLException {
@@ -65,7 +65,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     void successIfRestrictionAlreadyApplied() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                "vantage-10081449", "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
+                restrictionClient.getUcid(), "05", "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
         );
 
         Allure.step("Send and check first request");

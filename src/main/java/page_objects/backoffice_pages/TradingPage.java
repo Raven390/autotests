@@ -240,7 +240,7 @@ public class TradingPage extends AbstractPage {
     private static final String SYMBOL_TRADED_EMPTY = "//div[@class='v-symbol-traded-bar__no-data']";
     private static final String PNL_SYMBOL_BAR = "//div[@class='v-pnl-symbol-bar__bar']";
     private static final String DANGER_HEAVY_TEXT = "//*[contains(@class,'g-color-text_color_danger-heavy')]";
-    private static final String PRIMARY_TEXT = "//*[contains(@class,'g-color-text_color_primary')]";
+    private static final String PRIMARY_TEXT = "*[contains(@class,'g-color-text_color_primary')]";
     private static final String SECONDARY_TEXT = "//*[contains(@class,'g-color-text_color_secondary')]";
     private static final String SUBHEADER_2_TEXT = "//*[contains(@class,'g-text_variant_subheader-2')]";
     private static final String PNL_SYMBOL_BAR_NEGATIVE = "//*[contains(@class,'v-pnl-symbol-bar__bar_negative')]";
@@ -266,12 +266,13 @@ public class TradingPage extends AbstractPage {
     private static final String TOXICITY_AND_PROFIT_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String TOXICITY_AND_PROFIT_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-number-widget__title')]";
-    private final String ACCOUNT_CARD = "//div[@class='v-trading-tab-accounts-card']";
-    private final String ACCOUNT_CARD_IB_ACCOUNT = "//div[@class='v-ib-accounts__ib-accounts']";
-    private final String IB_ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_ib')]";
-    private final String IB_ACCOUNT_REBATES_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_rebates')]";
-    private final String ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column')]";
-    private final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
+    private static final String ACCOUNT_CARD = "//div[@class='v-trading-tab-accounts-card']";
+    private static final String ACCOUNT_CARD_IB_ACCOUNT = "//div[@class='v-ib-accounts__ib-accounts']";
+    private static final String IB_ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_ib')]";
+    private static final String IB_ACCOUNT_REBATES_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column_type_rebates')]";
+    private static final String ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column')]";
+    private static final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
+    private static final String TABLE_HEADER = "*[contains(@class,'v-header-cell')";
 
 
     public TradingPage(Page page) {
@@ -281,34 +282,34 @@ public class TradingPage extends AbstractPage {
         this.operationsTab = page.locator(".g-radio-button__option-control[value=\"Deals\"]");
         this.accountsTabContent = page.locator(".v-trading-tab-accounts");
         this.dealsTabContent = page.locator(".v-trading-tab-deals");
-        this.accountColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_account");
-        this.typeColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_type");
-        this.volumeColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_volume");
-        this.profitColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_profit");
-        this.openColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_open");
-        this.closeColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_close");
-        this.tpslColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_tp");
-        this.swapColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_swap");
-        this.srColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_sr");
-        this.commissionColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_commission");
-        this.methodColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_method");
-        this.commentColumnHeader = page.locator(".g-table__head .v-trading-tab-deals__column_type_comment");
-        this.accountColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_account");
-        this.typeColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_type");
-        this.profitColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_profit");
-        this.volumeColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_volume");
-        this.volumeColumnCellUSD = page.locator(".g-table__body .v-trading-tab-deals__column_type_volume .g-color-text_color_secondary");
-        this.openColumnCellDate = page.locator(".g-table__body .v-trading-tab-deals__column_type_open .g-color-text_color_secondary");
-        this.closeColumnCellDate = page.locator(".g-table__body .v-trading-tab-deals__column_type_close .g-color-text_color_secondary");
+        this.accountColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='ACCOUNT')]");
+        this.typeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='TYPE')]");
+        this.volumeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='VOLUME')]");
+        this.profitColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='PROFIT')]");
+        this.openColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='OPEN')]");
+        this.closeColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='CLOSE')]");
+        this.tpslColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='TP/SL')]");
+        this.swapColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='SWAP')]");
+        this.srColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='SR')]");
+        this.commissionColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='COMISSION')]");
+        this.methodColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='METHOD')]");
+        this.commentColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='COMMENT')]");
+        this.accountColumnCell = page.locator("//*[@class='v-body-cell'][1]");
+        this.typeColumnCell = page.locator("//*[@class='v-body-cell'][2]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
+        this.profitColumnCell = page.locator("//*[@class='v-body-cell'][7]");
+        this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][3]//" + PRIMARY_TEXT);
+        this.volumeColumnCellUSD = page.locator("//*[@class='v-body-cell'][3]" + SECONDARY_TEXT);
+        this.openColumnCellDate = page.locator("//*[@class='v-body-cell'][4]" + SECONDARY_TEXT);
+        this.closeColumnCellDate = page.locator("//*[@class='v-body-cell'][5]" + SECONDARY_TEXT);
         this.openColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_open");
         this.closeColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_close");
         this.tpslColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_tp");
         this.swapColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_swap");
         this.srColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_sr");
         this.commissionColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_commission");
-        this.methodColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_method");
+        this.methodColumnCell = page.locator("//*[@class='v-body-cell'][11]");
         this.commentColumnCell = page.locator(".g-table__body .v-trading-tab-deals__column_type_comment");
-        this.filterButton = page.locator(".v-trading-tab-deals__filters button");
+        this.filterButton = page.locator("//button//*[text()=' Filter']");
         this.filterMenu = page.locator("[data-qa=\"drawer_body\"] .v-trading-tab-deals-filter__content");
         this.checkboxItem = page.locator(".v-trading-tab-deals-filter__filter-container  .g-checkbox");
         this.typeShowMoreButton = page.locator(".v-trading-tab-deals-filter__filter-container button").getByText("Show more");
@@ -474,45 +475,45 @@ public class TradingPage extends AbstractPage {
     @Step("Check if the trading/operations tab renders all basic elements")
     public void operationsRendersTest() {
         Allure.step("Check if the trading/operations tab renders all basic elements");
-        assertTrue(operationsTab.isVisible());
-        assertTrue(accountColumnHeader.isVisible());
-        assertTrue(accountColumnCell.first().isVisible());
-        assertTrue(typeColumnHeader.isVisible());
-        assertTrue(typeColumnCell.first().isVisible());
-        assertTrue(volumeColumnHeader.isVisible());
-        assertTrue(volumeColumnHeader.isVisible());
-        assertTrue(profitColumnHeader.isVisible());
-        assertTrue(profitColumnCell.first().isVisible());
-        assertTrue(openColumnHeader.isVisible());
-        assertTrue(openColumnCell.first().isVisible());
-        assertTrue(closeColumnHeader.isVisible());
-        assertTrue(closeColumnCell.first().isVisible());
-        assertTrue(tpslColumnHeader.isVisible());
-        assertTrue(tpslColumnCell.first().isVisible());
-        assertTrue(tpslColumnCell.first().isVisible());
-        assertTrue(swapColumnHeader.isVisible());
-        assertTrue(swapColumnCell.first().isVisible());
-        assertTrue(srColumnHeader.isVisible());
-        assertTrue(srColumnCell.first().isVisible());
-        assertTrue(commissionColumnHeader.isVisible());
-        assertTrue(commissionColumnCell.first().isVisible());
-        assertTrue(methodColumnHeader.isVisible());
-        assertTrue(methodColumnCell.first().isVisible());
-        assertTrue(commentColumnHeader.isVisible());
-        assertTrue(commissionColumnCell.first().isVisible());
-        assertTrue(filterButton.isVisible());
-        assertTrue(accountColumnHeader.getByText("ACCOUNT").isVisible());
-        assertTrue(typeColumnHeader.getByText("TYPE").isVisible());
-        assertTrue(volumeColumnHeader.getByText("VOLUME").isVisible());
-        assertTrue(profitColumnHeader.getByText("PROFIT").isVisible());
-        assertTrue(openColumnHeader.getByText("OPEN").isVisible());
-        assertTrue(closeColumnHeader.getByText("CLOSE").isVisible());
-        assertTrue(tpslColumnHeader.getByText("TP/SL").isVisible());
-        assertTrue(swapColumnHeader.getByText("SWAP").isVisible());
-        assertTrue(srColumnHeader.getByText("SR").isVisible());
-        assertTrue(commissionColumnHeader.getByText("COMMISSION").isVisible());
-        assertTrue(methodColumnHeader.getByText("METHOD").isVisible());
-        assertTrue(commentColumnHeader.getByText("COMMENT").isVisible());
+        operationsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        accountColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        accountColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        typeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        typeColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        volumeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        volumeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        profitColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        profitColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closeColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closeColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        tpslColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        swapColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        swapColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        srColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        srColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commissionColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commissionColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        methodColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        methodColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commentColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commissionColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        filterButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        accountColumnHeader.getByText("ACCOUNT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        typeColumnHeader.getByText("TYPE").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        volumeColumnHeader.getByText("VOLUME").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        profitColumnHeader.getByText("PROFIT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        openColumnHeader.getByText("OPEN").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        closeColumnHeader.getByText("CLOSE").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        tpslColumnHeader.getByText("TP/SL").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        swapColumnHeader.getByText("SWAP").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        srColumnHeader.getByText("SR").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commissionColumnHeader.getByText("COMMISSION").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        methodColumnHeader.getByText("METHOD").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        commentColumnHeader.getByText("COMMENT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Check list of Type filter options")
@@ -553,6 +554,7 @@ public class TradingPage extends AbstractPage {
         assertTrue(methodColumnCell.first().textContent().matches("(.)*" + methodName + "*"));
         assertTrue(methodColumnCell.last().textContent().matches("(.)*" + methodName + "*"));
     }
+
 
     @Step("Check text content of first and last method cells on page")
     public void checkTypeCellsContent(String typeName) {
@@ -1533,8 +1535,8 @@ public class TradingPage extends AbstractPage {
     public void checkPnlBySymbolTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(PNL_SYMBOL_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(PNL_SYMBOL_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
         assertEquals(expectedSymbol, actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
@@ -1638,7 +1640,7 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check the count inside the tooltip including header and footer");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE).waitForElementState(ElementState.VISIBLE);
         assertEquals(expectedCount, page.locator(SYMBOL_TRADED_TOOLTIP_LINE).count());
-        assertEquals("Others", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + PRIMARY_TEXT).textContent());
+        assertEquals("Others", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "//" + PRIMARY_TEXT).textContent());
         assertEquals(decimalFormat.format(expectedCount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + SECONDARY_TEXT).textContent());
         assertEquals(decimalFormat.format(expectedAmount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div").textContent());
     }
@@ -1655,10 +1657,10 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check the most traded symbol info above the graph");
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
         if (position == 2) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + PRIMARY_TEXT).nth(0).textContent());
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + PRIMARY_TEXT).nth(0).textContent());
             assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(1).textContent());
         } else if (position == 3) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + PRIMARY_TEXT).nth(1).textContent());
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + PRIMARY_TEXT).nth(1).textContent());
             assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(2).textContent());
         } else {
             System.out.println("unexpected position " + position);
@@ -1677,8 +1679,8 @@ public class TradingPage extends AbstractPage {
     public void checkSymbolTradedTooltipValue(int numberOfLine, String expectedSymbol, String expectedAmount) {
         Allure.step("Check the symbol and PNL amount in the tooltip");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
-        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(0).textContent();
-        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + PRIMARY_TEXT).nth(1).textContent();
+        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
         assertEquals(expectedSymbol, actualSymbol);
         assertEquals(expectedAmount + " USD", actualAmount);
     }
@@ -1716,11 +1718,11 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check that tooltip show data from DB");
         assertThat(holdingTimeTooltip).isVisible();
         if (numberOfDeals == 1) {
-            assertEquals(String.valueOf(numberOfDeals) + " deal", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[1]").textContent());
+            assertEquals(String.valueOf(numberOfDeals) + " deal", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]").textContent());
         } else {
-            assertEquals(String.valueOf(numberOfDeals) + " deals", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[1]").textContent());
+            assertEquals(String.valueOf(numberOfDeals) + " deals", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[1]").textContent());
         }
-        assertEquals(String.valueOf(percentageOfDeals) + "% of all deals", page.locator(HOLDING_TIME_TOOLTIP + PRIMARY_TEXT + "[2]").textContent());
+        assertEquals(String.valueOf(percentageOfDeals) + "% of all deals", page.locator(HOLDING_TIME_TOOLTIP + "//" + PRIMARY_TEXT + "[2]").textContent());
     }
 
     public void checkHoldingTimeEmpty() {
@@ -1728,7 +1730,7 @@ public class TradingPage extends AbstractPage {
         assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
         assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
 
-        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + PRIMARY_TEXT).textContent());
+        assertEquals("-", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT).textContent());
         assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
     }
 
@@ -1737,7 +1739,7 @@ public class TradingPage extends AbstractPage {
         assertEquals(expectedInterval, page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + GREEN_TEXT).textContent());
         assertEquals("Most often", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[1]" + SECONDARY_TEXT).textContent());
 
-        assertEquals(percentageOfDeals + "%", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + PRIMARY_TEXT).textContent());
+        assertEquals(percentageOfDeals + "%", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + "//" + PRIMARY_TEXT).textContent());
         assertEquals("Of all deals", page.locator(HOLDING_TIME_SECTION + TRADING_CHART_FEATURE + "[2]" + SECONDARY_TEXT).textContent());
     }
 
@@ -1872,7 +1874,7 @@ public class TradingPage extends AbstractPage {
 
     public void checkIbAccountValueTable(int account, int expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected in table view");
-        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL + PRIMARY_TEXT + "[" + number + "]";
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_ROW_CELL + "//" + PRIMARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertEquals(String.valueOf(expectedValue), page.locator(locator).textContent());
     }
@@ -1886,7 +1888,7 @@ public class TradingPage extends AbstractPage {
 
     public void checkIbRebatesValueTable(int account, double expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected in table view");
-        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL + PRIMARY_TEXT + "[" + number + "]";
+        String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL + "//" + PRIMARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
         assertEquals(String.valueOf(decimalFormat1.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
