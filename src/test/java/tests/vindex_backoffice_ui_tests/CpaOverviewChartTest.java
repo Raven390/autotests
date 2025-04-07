@@ -150,7 +150,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1078")
     @DisplayName("Verify CPA overview Chart by days")
-    public void verifyIbOverviewChart1Test() {
+    public void verifyCpaOverviewChart1Test() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -164,7 +164,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2.5K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
@@ -174,7 +174,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1079")
     @DisplayName("Verify CPA overview Chart by days with empty data")
-    public void verifyIbOverviewChart2Test() {
+    public void verifyCpaOverviewChart2Test() {
         cpaCommission6 = generates3FactCpaCommissionsObject(client);
         cpaCommission6.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 119, 0, 0));
         cpaCommission6.setCommission(2444.87);
@@ -198,7 +198,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
@@ -208,7 +208,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1080")
     @DisplayName("Verify CPA overview Chart by months")
-    public void verifyIbOverviewChart3Test() {
+    public void verifyCpaOverviewChart3Test() {
         cpaCommission7 = generates3FactCpaCommissionsObject(client);
         cpaCommission7.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 121, 0, 0));
         cpaCommission7.setCommission(5448.56);
@@ -232,7 +232,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 
