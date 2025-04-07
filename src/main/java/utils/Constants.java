@@ -194,6 +194,7 @@ public class Constants {
     public static final String CONNECTION_SEARCH_DATA_IP4 = "124.12.12.42";
     public static final String CONNECTION_SEARCH_DATA_IP5 = "124.12.12.46";
     public static final String CONNECTION_SEARCH_DATA_DEVICE = "4a25971ab724427eb8fc24a257c5b2df";
+    public static final String CONNECTION_SEARCH_DATA_DEVICE2 = "5a25971ab724427eb8fc24a257c5b2df";
     public static final String CONNECTION_SEARCH_DATA_DOCUMENT = "3110200460092";
     //
     public static final String COMMENT_AUTOMATION_TESTS = "Automation tests";

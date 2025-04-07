@@ -3,6 +3,7 @@ package tests.vindex_backoffice_ui_tests;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.audit_trail.AuditTrailItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Muted;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -22,7 +22,9 @@ import java.util.List;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -46,14 +48,14 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account = generateCrmTbAccountDataForUi(client);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
+        CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        RuleAlert alert = generateWithdrawalNotificationAlert(withdrawal);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         Response response = postRestriction(new PostRestrictionRequestBody(
                 crmTbUser.ucid, "05", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
-//        CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
-//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
     }
 
     @Test
@@ -76,7 +78,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         restrictionPage.clickCheckedLogin();
         restrictionPage.fillCancelReason("Test cancel restriction for audit trail");
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("Test investigation completed action type");
+        resolvePage.resolveWithdrawalsAllApprove("Test investigation completed action type");
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
@@ -265,9 +267,6 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         }
     }
 
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Order(10)
     @Tag(TEAM_BACKOFFICE)
