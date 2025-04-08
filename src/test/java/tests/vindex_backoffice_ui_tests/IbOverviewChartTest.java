@@ -157,7 +157,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
@@ -192,7 +192,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_DAY_LABEL_PATTERN)));
     }
 
@@ -227,7 +227,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         Double totalPnl = calculateTotalPnl(loginMetricsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
-        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45k"));
+        assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45K"));
         assertThat("Verify X axis labels", ibCpaOverviewPage.getChartXAxisLabels(), everyItem(matchesPattern(MONTH_YEAR_LABEL_PATTERN)));
     }
 

@@ -1,18 +1,19 @@
 package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -20,22 +21,22 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
+import static business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotFactory.generateAccountIbRelationSnapshotObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -45,6 +46,9 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper ibClient = getRandomVantageClientAllFields();
+    private static final ClientHelper ibClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper ibClient2 = getRandomVantageClientAllFields();
+    private static final ClientHelper ibClient3 = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbUserObject ibCrmTbUser = generateUserByClient(ibClient);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
@@ -52,9 +56,16 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
     private static final MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
     private static final MtAccountObject ibMtAccount = generateMtAccountByCrmTbAccount(ibAccount);
     private static AccountIbRelationObject relation;
+    private static AccountIbRelationSnapshotObject relationSnapshot1;
+    private static AccountIbRelationSnapshotObject relationSnapshot2;
+    private static AccountIbRelationSnapshotObject relationSnapshot3;
+    private static AccountIbRelationSnapshotObject relationSnapshot4;
     private static S3FactIbSalesCommissionsObject commission;
+    private static S3FactIbSalesCommissionsObject commission3;
     private static S3FactLoginMetricsObject factLoginMetrics;
+    private static S3FactLoginMetricsObject factLoginMetrics3;
     private static final DecimalFormat formatter = new DecimalFormat("#,###.#");
+    private static final DecimalFormat formatterTable = new DecimalFormat("#,###");
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -73,7 +84,11 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         commission.setIbRebateAccount(ibAccount.account);
         commission.setIbCommission(561.78);
         commission.setDate(getCurrentDate());
-        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission);
+        commission3 = generateS3FactIbSalesCommissionsClient(ibClient3);
+        commission3.setIbRebateAccount(ibClient3.getTradingAccount());
+        commission3.setIbCommission(6464.33);
+        commission3.setDate(getCurrentDate());
+        insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(commission, commission3));
         // Metrics
         factLoginMetrics = generateS3FactLoginMetricsClient(client);
         factLoginMetrics.setDate(getCurrentDate());
@@ -85,13 +100,35 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         factLoginMetrics.setEquity(698_467.0);
         factLoginMetrics.setDailyDeposit(432.1);
         factLoginMetrics.setDailyWithdraw(5646.999);
-        insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, factLoginMetrics);
+        factLoginMetrics3 = generateS3FactLoginMetricsClient(ibClient3);
+        factLoginMetrics3.setDate(getCurrentDate());
+        factLoginMetrics3.setDailyNetDeposit(3434.86);
+        factLoginMetrics3.setDailyGrossClientPnl(10_553.87);
+        insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(factLoginMetrics, factLoginMetrics3));
         // Frauds
         ClientFraudTypes fraud = new ClientFraudTypes(client.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat());
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
+        // Relation snapshots
+        relationSnapshot1 = generateAccountIbRelationSnapshotObjectByClient(client);
+        relationSnapshot1.setDirectIb(ibClient.getUserId());
+        relationSnapshot1.setDirectIbRebateAccount(ibAccount.account);
+        relationSnapshot1.setDirectIbLevel(1);
+        relationSnapshot2 = generateAccountIbRelationSnapshotObjectByClient(ibClient);
+        relationSnapshot2.setDirectIb(ibClient1.getUserId());
+        relationSnapshot2.setDirectIbRebateAccount(ibClient1.getTradingAccount());
+        relationSnapshot2.setDirectIbLevel(1);
+        relationSnapshot3 = generateAccountIbRelationSnapshotObjectByClient(ibClient2);
+        relationSnapshot3.setDirectIb(client.getUserId());
+        relationSnapshot3.setDirectIbRebateAccount(account.account);
+        relationSnapshot3.setDirectIbLevel(2);
+        relationSnapshot3.setIsRebateAccount(0);
+        relationSnapshot4 = generateAccountIbRelationSnapshotObjectByClient(ibClient3);
+        relationSnapshot4.setDirectIb(client.getUserId());
+        relationSnapshot4.setDirectIbRebateAccount(account.account);
+        relationSnapshot4.setDirectIbLevel(2);
+        relationSnapshot4.setIsRebateAccount(0);
+        insertObjectsToDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, List.of(relationSnapshot1, relationSnapshot2, relationSnapshot3, relationSnapshot4));
 
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
         formatter.setRoundingMode(RoundingMode.DOWN);
@@ -123,6 +160,27 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         PlaywrightAssertions.assertThat(page.context().pages().getLast()).hasURL(String.format("https://risktool.risk-vantagefx.com//rebate?server=%s&login=%s", ibAccount.serverName, ibAccount.account));
     }
 
+    @Feature("BMS-830 Lower-level IB")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1129")
+    @DisplayName("Verify IB overview Lower-level IB")
+    public void verifyIbOverviewLowerLevelIbTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        generalTab.clickGeneralTabButton();
+        generalTab.clickIbOverviewButton();
+        ibCpaOverviewPage.waitForPageToLoad();
+        ibCpaOverviewPage.clickLowerLevelIbTab();
+        ibCpaOverviewPage.waitForPageToLoad();
+        assertThat("Verify table headers", ibCpaOverviewPage.getLowerLevelIbTableHeaders(), containsInAnyOrder("LVL", "IB", "REBATES", "CLIENTS", "NET PNL", "NET DEPOSIT"));
+        List<String> row1Data = List.of("1", ibAccount.account.toString(), formatterTable.format(commission.getIbCommission()), "1", formatterTable.format(factLoginMetrics.getDailyGrossClientPnl() + commission.getIbCommission()), formatterTable.format(factLoginMetrics.getDailyNetDeposit()));
+        List<String> row2Data = List.of("2", account.account.toString(), formatterTable.format(commission3.getIbCommission()), "2", formatterTable.format(factLoginMetrics3.getDailyGrossClientPnl() + commission3.getIbCommission()), formatterTable.format(factLoginMetrics3.getDailyNetDeposit()));
+        assertThat("Verify table 1st row", ibCpaOverviewPage.getLowerLevelIbAllRowsData(), containsInAnyOrder(Stream.of(row1Data, row2Data).flatMap(List::stream).toList().toArray()));
+    }
 
     @AfterAll
     public static void teardown() throws Exception {
@@ -131,6 +189,7 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s')", relationSnapshot1.getUcid(), relationSnapshot2.getUcid(), relationSnapshot3.getUcid(), relationSnapshot4.getUcid()));
         closeAlert(crmTbUser.ucid);
     }
 }

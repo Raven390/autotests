@@ -20,6 +20,10 @@ public class IbCpaOverviewPage extends AbstractPage {
     private final Locator clientsTotalsItems;
     private final Locator chartYAxisLabel;
     private final Locator chartXAxisLabels;
+    private final Locator lowerLevelIbTab;
+    private final Locator tableHeader;
+    private final Locator tableRow;
+    private final Locator tableCell;
 
     private static final String OVERVIEW_SUBHEADER = "//div[contains(@class,'v-drawer-header__sub-header')]";
     private static final String UNDER_THIS_SECTION = "//div[contains(@class,'v-registration-source-drawer-referrals')]";
@@ -40,6 +44,10 @@ public class IbCpaOverviewPage extends AbstractPage {
         clientsTotalsItems = page.locator(String.format("%s/descendant::div[@class='v-registration-source-drawer-totals__items']/div", CLIENTS_TOTALS_SECTION));
         chartYAxisLabel = page.locator(String.format("%s/descendant::div[@class='v-line-chart__padded-value']/div", OVERVIEW_CHART));
         chartXAxisLabels = page.locator(String.format("%s/descendant::div[@class='v-line-chart__ticks-container']/div", OVERVIEW_CHART));
+        lowerLevelIbTab = page.locator("//div[@title='Lower-level IB']");
+        tableHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon'))]");
+        tableRow = page.locator("//div[contains(@class,'v-body-row')]");
+        tableCell = tableRow.locator("//div[contains(@class,'g-text')]");
     }
 
     @Step("Get overview title")
@@ -111,5 +119,26 @@ public class IbCpaOverviewPage extends AbstractPage {
             labels.add(chartXAxisLabels.nth(i).textContent());
         }
         return labels;
+    }
+
+    @Step("Click Lower-level IB tab")
+    public void clickLowerLevelIbTab() {
+        lowerLevelIbTab.click();
+    }
+
+    public List<String> getLowerLevelIbTableHeaders() {
+        List<String> tableHeaders = new ArrayList<>();
+        for (int i = 0; i < tableHeader.count(); i++) {
+            tableHeaders.add(tableHeader.nth(i).textContent());
+        }
+        return tableHeaders;
+    }
+
+    public List<String> getLowerLevelIbAllRowsData() {
+        List<String> tableCells = new ArrayList<>();
+        for (int i = 0; i < tableCell.count(); i++) {
+            tableCells.add(tableCell.nth(i).textContent());
+        }
+        return tableCells;
     }
 }
