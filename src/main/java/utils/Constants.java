@@ -235,4 +235,21 @@ public class Constants {
               </bpmndi:BPMNDiagram>
             </bpmn:definitions>
             """;
+    // Event generator event names
+    public static final String EG_LOGIN_EVENT = "egLoginToWeb";
+    public static final String CRM_LOGIN_EVENT = "login";
+    public static final String EG_REGISTRATION_EVENT = "egRegistration";
+    public static final String CRM_REGISTRATION_EVENT = "registration";
+    public static final String EG_WITHDRAWAL_EVENT = "egWithdrawal";
+    public static final String CRM_WITHDRAWAL_EVENT = "withdrawal";
+    public static final String EG_DEPOSIT_EVENT = "egDeposit";
+    public static final String CRM_DEPOSIT_EVENT = "deposit";
+    public static final String EG_CLOSE_TRADE_EVENT = "egCloseTrade";
+    public static final String MT_CLOSE_TRADE_EVENT = "closeTrade";
+    public static final String EG_OPEN_TRADE_EVENT = "egOpenTrade";
+    public static final String MT_OPEN_TRADE_EVENT = "openTrade";
+    public static final String EG_RAF_BALANCE_EVENT = "egRaf";
+    public static final String MT_RAF_BALANCE_EVENT = "raf";
+    public static final String KAFKA_MESSAGE_KEY = "QA";
+
 }

@@ -646,8 +646,7 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    System.out.printf(
-                            "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
+                    System.out.printf("Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d%n", topic, record.key(), record.value(), record.partition(), record.offset());
                     // Check if each textToSearch is present in the message value
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {

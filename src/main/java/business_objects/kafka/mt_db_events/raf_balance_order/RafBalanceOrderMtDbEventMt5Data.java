@@ -8,22 +8,22 @@ import java.util.Objects;
  */
 public class RafBalanceOrderMtDbEventMt5Data {
     @JsonProperty("Time")
-    public String openTime;
+    String openTime;
 
     @JsonProperty("Deal")
-    public Integer tradeId;
+    Integer tradeId;
 
     @JsonProperty("Login")
-    public Integer mtAccount;
+    Integer mtAccount;
 
     @JsonProperty("Comment")
-    public String comment;
+    String comment;
 
     @JsonProperty("Action")
-    public Integer action;
+    Integer action;
 
     @JsonProperty("ServerID")
-    public Integer serverId;
+    Integer serverId;
 
     public RafBalanceOrderMtDbEventMt5Data(
             String openTime, Integer tradeId, Integer mtAccount, String comment, Integer action, Integer serverId) {
@@ -51,5 +51,53 @@ public class RafBalanceOrderMtDbEventMt5Data {
     @Override
     public String toString() {
         return "RafBalanceOrderMtDbEventMt5Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", comment='" + comment + '\'' + ", action=" + action + ", serverId=" + serverId + '}';
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    public Integer getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(Integer tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public Integer getMtAccount() {
+        return mtAccount;
+    }
+
+    public void setMtAccount(Integer mtAccount) {
+        this.mtAccount = mtAccount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getAction() {
+        return action;
+    }
+
+    public void setAction(Integer action) {
+        this.action = action;
+    }
+
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
     }
 }

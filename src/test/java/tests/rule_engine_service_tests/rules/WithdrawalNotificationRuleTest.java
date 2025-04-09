@@ -51,7 +51,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         insertObjectToDb(CRM_USER_TABLE_NAME, generateUserByClient(client2));
         insertObjectToDb(CRM_USER_TABLE_NAME, generateUserByClient(client3));
         Response response1 = postRestriction(new PostRestrictionRequestBody(
-                client1.getUcid(), "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
+                client1.getUcid(), KAFKA_MESSAGE_KEY, "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert that restriction has been set successfully", response1.code(), equalTo(200));
         Response response2 = postRestriction(new PostRestrictionRequestBody(
@@ -77,7 +77,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
         Allure.step("Produce withdrawal event to crm-events topic");
         WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
@@ -111,7 +111,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
         Allure.step("Produce withdrawal event to crm-events topic");
         WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
@@ -136,7 +136,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
         Allure.step("Produce withdrawal event to crm-events topic");
         WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();

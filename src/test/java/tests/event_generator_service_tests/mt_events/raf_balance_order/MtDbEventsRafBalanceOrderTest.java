@@ -37,34 +37,30 @@ class MtDbEventsRafBalanceOrderTest {
     void generateMt4RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt4();
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderMtDbEvent2.data.comment = "Referral";
+        rafBalanceOrderMtDbEvent2.getData().setComment("Referral");
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent1), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        Map<String, List<String>> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent2.data.openTime);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent1.data.openTime).getFirst(), RafBalanceOrderMtEvent.class);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent2.data.openTime).getFirst(), RafBalanceOrderMtEvent.class);
+        Map<String, List<String>> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.getData().getOpenTime(), rafBalanceOrderMtDbEvent2.getData().getOpenTime());
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent1.getData().getOpenTime()).getFirst(), RafBalanceOrderMtEvent.class);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent2.getData().getOpenTime()).getFirst(), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
-                rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");
+                rafBalanceOrderMtDbEvent1.getData().getOpenTime(), rafBalanceOrderMtDbEvent1.getData().getTradeId(), rafBalanceOrderMtDbEvent1.getData().getMtAccount(), rafBalanceOrderMtDbEvent1.getData().getComment(), rafBalanceOrderMtDbEvent1.getData().getServerId(), EG_RAF_BALANCE_EVENT);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent2 = new RafBalanceOrderMtEvent(
-                rafBalanceOrderMtDbEvent2.data.openTime, rafBalanceOrderMtDbEvent2.data.tradeId, rafBalanceOrderMtDbEvent2.data.mtAccount, rafBalanceOrderMtDbEvent2.data.comment, rafBalanceOrderMtDbEvent2.data.serverId, "raf");
+                rafBalanceOrderMtDbEvent2.getData().getOpenTime(), rafBalanceOrderMtDbEvent2.getData().getTradeId(), rafBalanceOrderMtDbEvent2.getData().getMtAccount(), rafBalanceOrderMtDbEvent2.getData().getComment(), rafBalanceOrderMtDbEvent2.getData().getServerId(), EG_RAF_BALANCE_EVENT);
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.id, notNullValue());
-        assertThat(
-                "Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.getId(), notNullValue());
+        assertThat("Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.id, notNullValue());
-        assertThat(
-                "Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.getId(), notNullValue());
+        assertThat("Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
     }
 
     @Test
@@ -73,33 +69,31 @@ class MtDbEventsRafBalanceOrderTest {
     void generateMt5RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt5();
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt5();
-        rafBalanceOrderMtDbEvent2.data.comment = "Referral";
+        rafBalanceOrderMtDbEvent2.getData().setComment("Referral");
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent1), KAFKA_TOPIC_MT_DB_EVENTS);
-        kafka.produceMessage(
-                "13", objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent1), KAFKA_TOPIC_MT_DB_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(rafBalanceOrderMtDbEvent2), KAFKA_TOPIC_MT_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        Map<String, List<String>> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent2.data.openTime);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent1.data.openTime).getFirst(), RafBalanceOrderMtEvent.class);
-        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(rafBalanceOrderMtDbEvent2.data.openTime).getFirst(), RafBalanceOrderMtEvent.class);
+        Map<String, List<String>> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderMtDbEvent1.getData().getOpenTime(), rafBalanceOrderMtDbEvent2.getData().getOpenTime());
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent1 = objectMapper.readValue(consumedMessages.get(
+                rafBalanceOrderMtDbEvent1.getData().getOpenTime()).getFirst(), RafBalanceOrderMtEvent.class);
+        RafBalanceOrderMtEvent retrievedRafBalanceOrderMtEvent2 = objectMapper.readValue(consumedMessages.get(
+                rafBalanceOrderMtDbEvent2.getData().getOpenTime()).getFirst(), RafBalanceOrderMtEvent.class);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent1 = new RafBalanceOrderMtEvent(
-                rafBalanceOrderMtDbEvent1.data.openTime, rafBalanceOrderMtDbEvent1.data.tradeId, rafBalanceOrderMtDbEvent1.data.mtAccount, rafBalanceOrderMtDbEvent1.data.comment, rafBalanceOrderMtDbEvent1.data.serverId, "raf");
+                rafBalanceOrderMtDbEvent1.getData().getOpenTime(), rafBalanceOrderMtDbEvent1.getData().getTradeId(), rafBalanceOrderMtDbEvent1.getData().getMtAccount(), rafBalanceOrderMtDbEvent1.getData().getComment(), rafBalanceOrderMtDbEvent1.getData().getServerId(), EG_RAF_BALANCE_EVENT);
 
         RafBalanceOrderMtEvent expectedRafBalanceOrderMtEvent2 = new RafBalanceOrderMtEvent(
-                rafBalanceOrderMtDbEvent2.data.openTime, rafBalanceOrderMtDbEvent2.data.tradeId, rafBalanceOrderMtDbEvent2.data.mtAccount, rafBalanceOrderMtDbEvent2.data.comment, rafBalanceOrderMtDbEvent2.data.serverId, "raf");
+                rafBalanceOrderMtDbEvent2.getData().getOpenTime(), rafBalanceOrderMtDbEvent2.getData().getTradeId(), rafBalanceOrderMtDbEvent2.getData().getMtAccount(), rafBalanceOrderMtDbEvent2.getData().getComment(), rafBalanceOrderMtDbEvent2.getData().getServerId(), EG_RAF_BALANCE_EVENT);
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.id, notNullValue());
-        assertThat(
-                "Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent1.getId(), notNullValue());
+        assertThat("Check all fields except id", retrievedRafBalanceOrderMtEvent1, equalTo(expectedRafBalanceOrderMtEvent1));
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.id, notNullValue());
-        assertThat(
-                "Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
+        assertThat("Check id", retrievedRafBalanceOrderMtEvent2.getId(), notNullValue());
+        assertThat("Check all fields except id", retrievedRafBalanceOrderMtEvent2, equalTo(expectedRafBalanceOrderMtEvent2));
     }
 }

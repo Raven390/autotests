@@ -1,14 +1,12 @@
 package tests.rule_engine_service_tests.api;
 
 import business_objects.api.rule_engine_api.rule_deployments.PostRuleDeploymentResponse;
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 import utils.Utils;
 
@@ -43,6 +41,8 @@ class PostRuleDeploymentsTests extends TestBaseApi {
     }
 
     @Test
+    @DisplayName("Rule engine api. Post deploy rule request success")
+    @AllureId("1113")
     void postRuleDeploymentTest() throws IOException {
         RequestBody requestBody = RequestBody.create(xmlData, MediaType.parse("text/xml"));
         Response response = postRuleDeployment(requestBody, "author_name", "rule_name");

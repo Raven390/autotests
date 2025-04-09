@@ -99,7 +99,7 @@ class MtDbEventsCloseTradeRequiredParamsTest {
         closeTradeEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(closeTradeEventVolume), objectMapper.writeValueAsString(closeTradeEventSymbol), objectMapper.writeValueAsString(closeTradeEventTimestamp), objectMapper.writeValueAsString(closeTradeEventRecordType), objectMapper.writeValueAsString(closeTradeEventOperation), objectMapper.writeValueAsString(closeTradeEventPartitionKeyType), objectMapper.writeValueAsString(closeTradeEventSchemaName));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(closeTradeEventVolume), objectMapper.writeValueAsString(closeTradeEventSymbol), objectMapper.writeValueAsString(closeTradeEventTimestamp), objectMapper.writeValueAsString(closeTradeEventRecordType), objectMapper.writeValueAsString(closeTradeEventOperation), objectMapper.writeValueAsString(closeTradeEventPartitionKeyType), objectMapper.writeValueAsString(closeTradeEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
@@ -139,7 +139,7 @@ class MtDbEventsCloseTradeRequiredParamsTest {
         String closeTradeEventTableName = removeKeyFromJson(objectMapper.writeValueAsString(closeTradeEventTableNameObject), "table-name");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_MT_DB_EVENTS, closeTradeEventCloseTime, closeTradeEventTradeId, closeTradeEventMtAccount, closeTradeEventServerId, closeTradeEventMt4Cmd, closeTradeEventMt5Entry, closeTradeEventMt5Action, closeTradeEventTableName);
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, closeTradeEventCloseTime, closeTradeEventTradeId, closeTradeEventMtAccount, closeTradeEventServerId, closeTradeEventMt4Cmd, closeTradeEventMt5Entry, closeTradeEventMt5Action, closeTradeEventTableName);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

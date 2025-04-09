@@ -54,7 +54,7 @@ class EventGeneratorRegistrationRequiredParametersTests {
         registrationDbEventMetadata.metadata = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEventCreateTime), objectMapper.writeValueAsString(registrationDbEventUserId), objectMapper.writeValueAsString(registrationDbEventBrand), objectMapper.writeValueAsString(registrationDbEventRegulator), objectMapper.writeValueAsString(registrationDbEventMtAccount), objectMapper.writeValueAsString(registrationDbEventTableName), objectMapper.writeValueAsString(registrationDbEventData), objectMapper.writeValueAsString(registrationDbEventMetadata));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEventCreateTime), objectMapper.writeValueAsString(registrationDbEventUserId), objectMapper.writeValueAsString(registrationDbEventBrand), objectMapper.writeValueAsString(registrationDbEventRegulator), objectMapper.writeValueAsString(registrationDbEventMtAccount), objectMapper.writeValueAsString(registrationDbEventTableName), objectMapper.writeValueAsString(registrationDbEventData), objectMapper.writeValueAsString(registrationDbEventMetadata));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -86,7 +86,7 @@ class EventGeneratorRegistrationRequiredParametersTests {
         registrationDbEventSchemaName.metadata.schemaName = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEventTimestamp), objectMapper.writeValueAsString(registrationDbEventRecordType), objectMapper.writeValueAsString(registrationDbEventOperation), objectMapper.writeValueAsString(registrationDbEventPartitionType), objectMapper.writeValueAsString(registrationDbEventSchemaName));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEventTimestamp), objectMapper.writeValueAsString(registrationDbEventRecordType), objectMapper.writeValueAsString(registrationDbEventOperation), objectMapper.writeValueAsString(registrationDbEventPartitionType), objectMapper.writeValueAsString(registrationDbEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(

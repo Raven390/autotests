@@ -57,7 +57,7 @@ class AbnormalProfitRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 130);
@@ -100,7 +100,7 @@ class AbnormalProfitRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 130);
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));

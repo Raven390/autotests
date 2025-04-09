@@ -55,7 +55,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -77,7 +77,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -97,7 +97,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         Allure.step("Produce withdrawal event to crm-events topic");
         data.withdrawalEvent.type = "egWithdrawal";
         System.out.println(data.withdrawalEvent.type);
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
 
         Allure.step("Get alerts");
@@ -139,7 +139,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd2_2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("22");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -179,7 +179,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -192,7 +192,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_1");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -218,7 +218,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_2");
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -257,7 +257,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("4_3");
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());

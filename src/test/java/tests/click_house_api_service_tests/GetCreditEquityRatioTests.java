@@ -127,6 +127,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.body().string(), containsString("Required request parameter 'dateTo' for method parameter type LocalDateTime is not present"));
     }
 
+    @Disabled("Enable after fix of https://vantagefx-hytechs.atlassian.net/browse/CSV-1065")
     @Test
     @DisplayName("Clickhouse Api. Get credit equity ratio by dateTo, empty response (200)")
     @AllureId("564")

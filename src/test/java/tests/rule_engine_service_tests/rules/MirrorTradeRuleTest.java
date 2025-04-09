@@ -51,7 +51,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -71,7 +71,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd31Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("3_1");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -126,7 +126,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         MirrorTradingRuleData data = dbDataMap.get("32");
         System.out.println(data.clientHelper.getUcid());
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -175,7 +175,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd41Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("41");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -196,7 +196,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("42");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -216,7 +216,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("43");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -236,7 +236,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd4_4Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("44");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -256,7 +256,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd5_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("51");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -277,7 +277,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd5_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("52");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -298,7 +298,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd6Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("6");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -318,7 +318,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd1_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("11");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -370,7 +370,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd1_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("12");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -422,7 +422,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd7_1Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("71");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -473,7 +473,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd7_2Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("72");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -524,7 +524,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd7_3Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("73");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -574,7 +574,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd7_4Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("7_4");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -625,7 +625,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleExitEventEnd7_5Test() throws Exception {
         MirrorTradingRuleData data = dbDataMap.get("75");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeMtEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());

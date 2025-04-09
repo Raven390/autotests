@@ -55,7 +55,7 @@ class WithdrawalRequiredParametersTests {
         withdrawalDbEventMetadata.metadata = null;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(withdrawalDbEventCreateTime), objectMapper.writeValueAsString(withdrawalDbEventId), objectMapper.writeValueAsString(withdrawalDbEventUserId), objectMapper.writeValueAsString(withdrawalDbEventBrand), objectMapper.writeValueAsString(withdrawalDbEventRegulator), objectMapper.writeValueAsString(withdrawalDbEventTableName), objectMapper.writeValueAsString(withdrawalDbEventData), objectMapper.writeValueAsString(withdrawalDbEventMetadata));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(withdrawalDbEventCreateTime), objectMapper.writeValueAsString(withdrawalDbEventId), objectMapper.writeValueAsString(withdrawalDbEventUserId), objectMapper.writeValueAsString(withdrawalDbEventBrand), objectMapper.writeValueAsString(withdrawalDbEventRegulator), objectMapper.writeValueAsString(withdrawalDbEventTableName), objectMapper.writeValueAsString(withdrawalDbEventData), objectMapper.writeValueAsString(withdrawalDbEventMetadata));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

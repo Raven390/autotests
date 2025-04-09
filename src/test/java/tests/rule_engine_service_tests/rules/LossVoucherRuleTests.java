@@ -55,7 +55,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     void lossVoucherRuleExitEventEnd11Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("11");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));
@@ -67,7 +67,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     void lossVoucherRuleExitEventEnd12Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("12");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));
@@ -79,7 +79,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     void lossVoucherRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));
@@ -91,7 +91,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     void lossVoucherRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 130);

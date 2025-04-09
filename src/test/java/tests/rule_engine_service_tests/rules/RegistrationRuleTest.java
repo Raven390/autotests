@@ -10,12 +10,13 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.*;
 import static helpers.database.DbHelper.*;
+import static helpers.kafka.KafkaHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -42,18 +43,17 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_1")
+    @DisplayName("Registration rule exit Event1")
     @AllureId("155")
     void registrationRuleExitEventEnd1Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("1");
 
         Allure.step("No toxic accounts linked");
-        Allure.step("No different identity connections");
-        Allure.step("IP country == address country");
+        Allure.step("Connections in the same brand with different identity?");
         Allure.step("LN score != high");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -68,10 +68,11 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_2")
+    @DisplayName("Registration rule exit Event2")
     @AllureId("156")
     void registrationRuleExitEventEnd2Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("2");
+        System.out.println(data.clientHelper.getUcid());
 
         Allure.step("No toxic accounts linked");
         Allure.step("No different identity connections");
@@ -81,34 +82,30 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
 
-        // Verify alert
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(
-                data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("High Lexis score"));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.reason, equalTo("High Lexis score"));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo("high"));
         assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-50"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
-
-        // Verify alert in BO db
-
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         // Verify restriction
@@ -116,31 +113,28 @@ class RegistrationRuleTest extends TestBaseRule {
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
-
         assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-
         ClientsRestriction restriction = clientsRestrictions.getFirst();
         ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
-
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_4")
+    @DisplayName("Registration rule exit Event3p1")
     @AllureId("158")
-    void registrationRuleExitEventEnd4Test() throws Exception {
-        RegistrationRuleData data = dbDataMap.get("4");
+    void registrationRuleExitEventEnd3p1Test() throws Exception {
+        RegistrationRuleData data = dbDataMap.get("3p1");
         Allure.step("No toxic accounts linked");
-        Allure.step("Different identity connections");
-        Allure.step("Linked to IB account OR Same referrer");
+        Allure.step("Different identity and same brand connections");
+        Allure.step("Linked to same raf");
         Allure.step("Set manual withdrawal restriction");
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
 
@@ -151,22 +145,17 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(
-                data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("IB or referrer connection"));
-        assertThat("Verify rule attributes refferalId is correct", alert.rule.attributes.refferalId, equalTo(data.crmTbUserObject.rafReferrerId));
-        assertThat("Verify rule attributes cpaId is correct", alert.rule.attributes.cpaId, equalTo(data.crmTbUserObject.cpaId.toString()));
-        assertThat("Verify rule attributes ibId is correct", alert.rule.attributes.ibId, equalTo(data.crmTbUserObject.ibId));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("IB or referrer connection"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
-
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
@@ -184,18 +173,151 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
+    @DisplayName("Registration rule exit Event3p2")
+    @AllureId("1135")
+    void registrationRuleExitEventEnd3p2Test() throws Exception {
+        RegistrationRuleData data = dbDataMap.get("3p2");
+        Allure.step("No toxic accounts linked");
+        Allure.step("Different identity and same brand connections");
+        Allure.step("Linked to same IB account");
+        Allure.step("Set manual withdrawal restriction");
+        Allure.step("Generate alert");
+
+        Allure.step("Produce registration event to crm-events topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+
+        // Verify alert
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.reason, equalTo("IB or referrer connection"));
+        List<Alert> dbAlerts = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class);
+
+        // Verify alert in BO db
+
+        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+
+        Allure.step("Get client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+
+        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+
+        ClientsRestriction restriction = clientsRestrictions.getFirst();
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
+
+        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+    }
+
+    @Test
+    @DisplayName("Registration rule exit Event4p1")
+    @AllureId("1136")
+    void registrationRuleExitEventEnd4p1Test() throws Exception {
+        RegistrationRuleData data = dbDataMap.get("4p1");
+
+        Allure.step("No toxic accounts linked");
+        Allure.step("Different identity and same brand connections");
+        Allure.step("Not linked to IB account OR Same referrer");
+        Allure.step("LN score == medium");
+
+        Allure.step("Produce registration event to crm-events topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("High or medium Lexis score with connected clients"));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo("medium"));
+        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-49"));
+
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        );
+        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+        Allure.step("Get client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        );
+
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("Registration rule exit Event4p2")
+    @AllureId("1137")
+    void registrationRuleExitEventEnd4p2Test() throws Exception {
+        RegistrationRuleData data = dbDataMap.get("4p2");
+
+        Allure.step("No toxic accounts linked");
+        Allure.step("Different identity and same brand connections");
+        Allure.step("Not linked to IB account OR Same referrer");
+        Allure.step("LN score == high");
+
+        Allure.step("Produce registration event to crm-events topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("High Lexis score"));
+        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo("high"));
+        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-49"));
+
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        );
+        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+    }
+
+    @Test
     @DisplayName("Registration rule exit Event_End_5")
     @AllureId("159")
     void registrationRuleExitEventEnd5Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("5");
 
         Allure.step("No toxic accounts linked");
-        Allure.step("Different identity connections");
+        Allure.step("Different identity and same brand connections");
         Allure.step("Not linked to IB account OR Same referrer");
-        Allure.step("LN score == Low");
+        Allure.step("LN score != Medium or High");
+        Allure.step("Empty exit");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -219,11 +341,10 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Different identity connections");
         Allure.step("Not linked to IB account OR Same referrer");
         Allure.step("LN score != Medium or High");
-        Allure.step("Set no bonus restriction");
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -302,7 +423,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Set<String> expectedSteps = new HashSet<>();
         expectedSteps.add("Linked CPA_ABUSE abuser");
@@ -542,7 +663,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -586,26 +707,21 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_7v4 Bonus abuser, Vjp")
+    @DisplayName("Registration rule exit Event_End_7v4 mirror trader abuser, Startrader")
     @AllureId("164")
     void registrationRuleExitEventEnd7Version4Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v4");
 
         Allure.step("Toxic accounts linked");
-        Allure.step("All of the connected users are NOT CPA abusers");
-        Allure.step("Connected user is a bonus abuser");
-        Allure.step("Set no bonuses, promotions");
-        Allure.step("Is Vjp");
-        Allure.step("NOT a voucher abuser");
-        Allure.step("NOT a News trader");
-        Allure.step("NOT TLS");
-        Allure.step("NOT Swap abuse");
-        Allure.step("NOT Market manipulation");
+        Allure.step("Connected user is a mirror trading abuser");
+        Allure.step("Connection score > 0.75");
+        Allure.step("Set Deposits restriction");
+        Allure.step("Set Open new account restriction"); // Disabled for now
         Allure.step("Generate alert");
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -634,29 +750,21 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_7v5 Bonus abuser, not Vjp, low Lexis score")
+    @DisplayName("Registration rule exit Event_End_7v5 Bonus abuser, not Vjp")
     @AllureId("165")
     void registrationRuleExitEventEnd7Version5Test() throws Exception {
         RegistrationRuleData data = dbDataMap.get("7v5");
 
         Allure.step("Toxic accounts linked");
-        Allure.step("All of the connected users are NOT CPA abusers");
         Allure.step("Connected user is a bonus abuser");
-        Allure.step("Set no bonuses, promotions");
-        Allure.step("NOT Vjp");
-        Allure.step("Low LN score");
-        Allure.step("Set bad trading environment");
-        Allure.step("Generate alert");
-        Allure.step("NOT a voucher abuser");
-        Allure.step("NOT a News trader");
-        Allure.step("NOT TLS");
-        Allure.step("NOT Swap abuse");
-        Allure.step("NOT Market manipulation");
+        Allure.step("Connection score > 0.75");
+        Allure.step("Set Deposits restriction");
+        Allure.step("Set Open new account restriction"); // Disabled for now
         Allure.step("Generate alert");
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -671,31 +779,17 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("clientRegistration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("BONUS_ABUSE"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked bonus abuser"));
-
-        List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
-        );
-
-        // Verify alert in BO db
-
-        assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_6", "APPLIED");
-
-        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
-        // TODO add check for one more restriction when it's implemented
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        // TODO add check for a restriction when it's implemented
     }
 
     @Test
@@ -719,7 +813,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -780,7 +874,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -842,7 +936,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -902,7 +996,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -964,7 +1058,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1024,7 +1118,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1082,7 +1176,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1138,7 +1232,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1198,7 +1292,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1259,7 +1353,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1321,7 +1415,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1384,7 +1478,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1448,7 +1542,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -1527,7 +1621,7 @@ class RegistrationRuleTest extends TestBaseRule {
         Allure.step("Fraud");
 
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage("13", objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Set<String> expectedSteps = new HashSet<>();
         expectedSteps.add("Linked CPA_ABUSE abuser");

@@ -52,7 +52,7 @@ class NbpWinningLegRuleTest extends TestBaseRule {
         Allure.step("Deposits amount < 200 USD");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -75,7 +75,7 @@ class NbpWinningLegRuleTest extends TestBaseRule {
         Allure.step("No abnormal profit");
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -98,7 +98,7 @@ class NbpWinningLegRuleTest extends TestBaseRule {
         Allure.step("Abnormal profit");
         RuleDataHelper data = dbDataMap.get("3");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid()).toString(), RuleAlert[].class)).toList();

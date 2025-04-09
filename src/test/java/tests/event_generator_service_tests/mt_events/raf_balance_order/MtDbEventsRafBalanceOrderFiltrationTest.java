@@ -28,47 +28,52 @@ class MtDbEventsRafBalanceOrderFiltrationTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @DisplayName(
-        "Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
+    @DisplayName("Generate RAF balance order event with event generator service that should be filtered out by the Event Generator")
     @AllureId("125")
     void generateRafBalanceOrderEventsAndVerifyTheyWereFilteredOutTest() throws JsonProcessingException {
-
-        //        Creation of Raf balance order events that should be filtered out by the filtration rules
+        // Creation of Raf balance order events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTestAccount1 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTestAccount1.data.mtAccount = 741_000;
+        rafBalanceOrderEventTestAccount1.getData().setMtAccount(741_000);
+        rafBalanceOrderEventTestAccount1.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTestAccount2 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTestAccount2.data.mtAccount = 749_999;
+        rafBalanceOrderEventTestAccount2.getData().setMtAccount(749_999);
+        rafBalanceOrderEventTestAccount2.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId1 = generateRafBalanceOrderMtDbEventMt4();
+        rafBalanceOrderEventTradeIdAccountServerId1.getData().setComment("test_comment");
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId2 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTradeIdAccountServerId2.data.tradeId = rafBalanceOrderEventTradeIdAccountServerId1.data.tradeId;
-        rafBalanceOrderEventTradeIdAccountServerId2.data.mtAccount = rafBalanceOrderEventTradeIdAccountServerId1.data.mtAccount;
+        rafBalanceOrderEventTradeIdAccountServerId2.getData().setComment("test_comment");
+
+        rafBalanceOrderEventTradeIdAccountServerId2.getData().setTradeId(rafBalanceOrderEventTradeIdAccountServerId1.getData().getTradeId());
+        rafBalanceOrderEventTradeIdAccountServerId2.getData().setMtAccount(rafBalanceOrderEventTradeIdAccountServerId1.getData().getMtAccount());
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd1 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventMt4Cmd1.data.cmd = -1;
+        rafBalanceOrderEventMt4Cmd1.getData().setCmd(-1);
+        rafBalanceOrderEventMt4Cmd1.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd2 = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventMt4Cmd2.data.cmd = 2;
+        rafBalanceOrderEventMt4Cmd2.getData().setCmd(2);
+        rafBalanceOrderEventMt4Cmd2.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Comment = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventMt4Comment.data.comment = "test_comment";
+        rafBalanceOrderEventMt4Comment.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderEventMt5Action1 = generateRafBalanceOrderMtDbEventMt5();
-        rafBalanceOrderEventMt5Action1.data.action = -1;
+        rafBalanceOrderEventMt5Action1.getData().setAction(-1);
+        rafBalanceOrderEventMt5Action1.getData().setComment("test_comment");
 
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderEventMt5Action2 = generateRafBalanceOrderMtDbEventMt5();
-        rafBalanceOrderEventMt5Action2.data.action = 99;
+        rafBalanceOrderEventMt5Action2.getData().setAction(99);
+        rafBalanceOrderEventMt5Action1.getData().setComment("test_comment");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount1), objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Comment), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action1), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action2));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount1), objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Comment), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action1), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventTestAccount1.data.openTime, rafBalanceOrderEventTestAccount2.data.openTime, rafBalanceOrderEventTradeIdAccountServerId2.data.openTime, rafBalanceOrderEventMt4Cmd1.data.openTime, rafBalanceOrderEventMt4Cmd2.data.openTime, rafBalanceOrderEventMt4Comment.data.openTime, rafBalanceOrderEventMt5Action1.data.openTime, rafBalanceOrderEventMt5Action2.data.openTime);
+        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventTestAccount1.getData().getOpenTime(), rafBalanceOrderEventTestAccount2.getData().getOpenTime(), rafBalanceOrderEventTradeIdAccountServerId2.getData().getOpenTime(), rafBalanceOrderEventMt4Cmd1.getData().getOpenTime(), rafBalanceOrderEventMt4Cmd2.getData().getOpenTime(), rafBalanceOrderEventMt4Comment.getData().getOpenTime(), rafBalanceOrderEventMt5Action1.getData().getOpenTime(), rafBalanceOrderEventMt5Action2.getData().getOpenTime());
 
         Allure.step("Verify that no matched results were found");
-        assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+        assertThat("Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }

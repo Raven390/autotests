@@ -4,6 +4,7 @@ import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesOb
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.email_table.EmailTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
@@ -11,6 +12,7 @@ import business_objects.kafka.crm_events.RegistrationEvent;
 import helpers.data.ClientHelper;
 
 import java.util.List;
+import java.util.Objects;
 
 public class RegistrationRuleData {
     public ClientHelper clientHelper;
@@ -24,6 +26,7 @@ public class RegistrationRuleData {
     public CrmTbAccountObject crmTbAccountObject;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
+    public List<DeviceIdTableEntry> deviceIdTableEntries;
 
     public RegistrationRuleData() {
     }
@@ -33,7 +36,7 @@ public class RegistrationRuleData {
             List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
             RegistrationEvent registrationEvent, List<BoClientFraudTypesObject> clientFraudTypes,
             CrmTbAccountObject crmTbAccountObject, List<SessionIdTableEntry> sessionIdTableEntries,
-            List<EmailTableEntry> emailTableEntries) {
+            List<EmailTableEntry> emailTableEntries, List<DeviceIdTableEntry> deviceIdTableEntries) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.lnSessionParsedObject = lnSessionParsedObject;
@@ -45,10 +48,28 @@ public class RegistrationRuleData {
         this.crmTbAccountObject = crmTbAccountObject;
         this.sessionIdTableEntries = sessionIdTableEntries;
         this.emailTableEntries = emailTableEntries;
+        this.deviceIdTableEntries = deviceIdTableEntries;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        RegistrationRuleData that = (RegistrationRuleData) o;
+        return Objects.equals(clientHelper, that.clientHelper) && Objects.equals(crmTbUserObject, that.crmTbUserObject) && Objects.equals(
+                lnSessionParsedObject, that.lnSessionParsedObject) && Objects.equals(connections, that.connections) && Objects.equals(
+                        connectedUsers, that.connectedUsers) && Objects.equals(connectedClientHelpers, that.connectedClientHelpers) && Objects.equals(
+                                registrationEvent, that.registrationEvent) && Objects.equals(clientFraudTypes, that.clientFraudTypes) && Objects.equals(
+                                        crmTbAccountObject, that.crmTbAccountObject) && Objects.equals(sessionIdTableEntries, that.sessionIdTableEntries) && Objects.equals(
+                                                emailTableEntries, that.emailTableEntries) && Objects.equals(deviceIdTableEntries, that.deviceIdTableEntries);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(clientHelper, crmTbUserObject, lnSessionParsedObject, connections, connectedUsers, connectedClientHelpers, registrationEvent, clientFraudTypes, crmTbAccountObject, sessionIdTableEntries, emailTableEntries, deviceIdTableEntries);
     }
 
     @Override
     public String toString() {
-        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", connectedClientHelpers=" + connectedClientHelpers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + '}';
+        return "RegistrationRuleData{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObject=" + lnSessionParsedObject + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", connectedClientHelpers=" + connectedClientHelpers + ", registrationEvent=" + registrationEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + '}';
     }
 }

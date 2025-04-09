@@ -8,22 +8,22 @@ import java.util.Objects;
  */
 public class RafBalanceOrderMtDbEventMetadata {
     @JsonProperty("timestamp")
-    public String timestamp;
+    String timestamp;
 
     @JsonProperty("record-type")
-    public String recordType;
+    String recordType;
 
     @JsonProperty("operation")
-    public String operation;
+    String operation;
 
     @JsonProperty("partition-key-type")
-    public String partitionKeyType;
+    String partitionKeyType;
 
     @JsonProperty("schema-name")
-    public String schemaName;
+    String schemaName;
 
     @JsonProperty("table-name")
-    public String tableName;
+    String tableName;
 
     public RafBalanceOrderMtDbEventMetadata(
             String timestamp, String recordType, String operation, String partitionKeyType, String schemaName,
@@ -52,5 +52,53 @@ public class RafBalanceOrderMtDbEventMetadata {
     @Override
     public String toString() {
         return "OpenTradeMtDbEventMetadata{" + "timestamp='" + timestamp + '\'' + ", recordType='" + recordType + '\'' + ", operation='" + operation + '\'' + ", partitionKeyType='" + partitionKeyType + '\'' + ", schemaName='" + schemaName + '\'' + ", tableName='" + tableName + '\'' + '}';
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getRecordType() {
+        return recordType;
+    }
+
+    public void setRecordType(String recordType) {
+        this.recordType = recordType;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getPartitionKeyType() {
+        return partitionKeyType;
+    }
+
+    public void setPartitionKeyType(String partitionKeyType) {
+        this.partitionKeyType = partitionKeyType;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 }

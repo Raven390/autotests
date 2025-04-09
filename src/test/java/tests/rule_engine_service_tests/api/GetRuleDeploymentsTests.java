@@ -50,7 +50,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Rule engine api. Get rule deployment without parameter success")
-    @AllureId("")
+    @AllureId("1123")
     void getRuleDeploymentTest1() throws IOException {
         Response response = getRuleDeploymentsNoParams();
         assert response.body() != null;
@@ -61,7 +61,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
 
     @Test
     @DisplayName("Rule engine api. Get rule deployment with parameter success")
-    @AllureId("")
+    @AllureId("1124")
     void getRuleDeploymentTest2() throws IOException {
         Response response = getRuleDeploymentsByProcessId(rule.getProcessId());
         assert response.body() != null;

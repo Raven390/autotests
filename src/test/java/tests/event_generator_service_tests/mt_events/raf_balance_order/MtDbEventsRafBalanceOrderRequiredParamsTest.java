@@ -29,39 +29,46 @@ class MtDbEventsRafBalanceOrderRequiredParamsTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    @DisplayName(
-        "Generate RAF balance order event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
+    @DisplayName("Generate RAF balance order event with any of the required parameters = null and verify that the Event Generator didn't produce the event")
     @AllureId("126")
     void generateRafBalanceOrderEventsWithoutMandatoryParamsTest() throws JsonProcessingException {
 
-        //        Creation of Raf balance order events that should be filtered out by the filtration rules
+        //Creation of Raf balance order events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventOpenTime = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventOpenTime.data.openTime = null;
+        rafBalanceOrderEventOpenTime.getData().setComment("test_comment");
+        rafBalanceOrderEventOpenTime.getData().setOpenTime(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeId = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTradeId.data.tradeId = null;
+        rafBalanceOrderEventTradeId.getData().setComment("test_comment");
+        rafBalanceOrderEventTradeId.getData().setTradeId(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMtAccount = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventMtAccount.data.mtAccount = null;
+        rafBalanceOrderEventMtAccount.getData().setComment("test_comment");
+        rafBalanceOrderEventMtAccount.getData().setMtAccount(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventComment = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventComment.data.comment = null;
+        rafBalanceOrderEventComment.getData().setComment("test_comment");
+        rafBalanceOrderEventComment.getData().setComment(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventMt4Cmd.data.cmd = null;
+        rafBalanceOrderEventMt4Cmd.getData().setComment("test_comment");
+        rafBalanceOrderEventMt4Cmd.getData().setCmd(null);
 
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderEventMt5Action = generateRafBalanceOrderMtDbEventMt5();
-        rafBalanceOrderEventMt5Action.data.action = null;
+        rafBalanceOrderEventMt5Action.getData().setComment("test_comment");
+        rafBalanceOrderEventMt5Action.getData().setAction(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTableName = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTableName.metadata.tableName = null;
+        rafBalanceOrderEventTableName.getData().setComment("test_comment");
+        rafBalanceOrderEventTableName.getMetadata().setTableName(null);
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventOpenTime), objectMapper.writeValueAsString(rafBalanceOrderEventTradeId), objectMapper.writeValueAsString(rafBalanceOrderEventMtAccount), objectMapper.writeValueAsString(rafBalanceOrderEventComment), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action), objectMapper.writeValueAsString(rafBalanceOrderEventTableName));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventOpenTime), objectMapper.writeValueAsString(rafBalanceOrderEventTradeId), objectMapper.writeValueAsString(rafBalanceOrderEventMtAccount), objectMapper.writeValueAsString(rafBalanceOrderEventComment), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action), objectMapper.writeValueAsString(rafBalanceOrderEventTableName)
+        );
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventOpenTime.metadata.timestamp, rafBalanceOrderEventTradeId.data.openTime, rafBalanceOrderEventMtAccount.data.openTime, rafBalanceOrderEventComment.data.openTime, rafBalanceOrderEventMt4Cmd.data.openTime, rafBalanceOrderEventMt5Action.data.openTime, rafBalanceOrderEventTableName.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventOpenTime.getMetadata().getTimestamp(), rafBalanceOrderEventTradeId.getData().getOpenTime(), rafBalanceOrderEventMtAccount.getData().getOpenTime(), rafBalanceOrderEventComment.getData().getOpenTime(), rafBalanceOrderEventMt4Cmd.getData().getOpenTime(), rafBalanceOrderEventMt5Action.getData().getOpenTime(), rafBalanceOrderEventTableName.getData().getOpenTime());
 
         Allure.step("Verify that no matched results for events without mandatory params were found");
         assertThat(
@@ -69,42 +76,43 @@ class MtDbEventsRafBalanceOrderRequiredParamsTest {
     }
 
     @Test
-    @DisplayName(
-        "Generate RAF balance order event with any of the optional parameters = null and verify that the Event Generator produced the event")
+    @DisplayName("Generate RAF balance order event with any of the optional parameters = null and verify that the Event Generator produced the event")
     @AllureId("127")
     void generateRafBalanceOrderEventsWithoutOptionalParamsTest() throws JsonProcessingException {
 
-        //        Creation of Raf balance order events that should be filtered out by the filtration rules
-
+        // Creation of Raf balance order events that should be filtered out by the filtration rules
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTimestamp = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventTimestamp.metadata.timestamp = null;
+        rafBalanceOrderEventTimestamp.getData().setComment("test_comment");
+        rafBalanceOrderEventTimestamp.getMetadata().setTimestamp(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventRecordType = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventRecordType.metadata.recordType = null;
+        rafBalanceOrderEventRecordType.getData().setComment("test_comment");
+        rafBalanceOrderEventRecordType.getMetadata().setRecordType(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventOperation = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventOperation.metadata.operation = null;
+        rafBalanceOrderEventOperation.getData().setComment("test_comment");
+        rafBalanceOrderEventOperation.getMetadata().setOperation(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventPartitionKeyType = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventPartitionKeyType.metadata.partitionKeyType = null;
+        rafBalanceOrderEventPartitionKeyType.getData().setComment("test_comment");
+        rafBalanceOrderEventPartitionKeyType.getMetadata().setPartitionKeyType(null);
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventSchemaName = generateRafBalanceOrderMtDbEventMt4();
-        rafBalanceOrderEventSchemaName.metadata.schemaName = null;
+        rafBalanceOrderEventSchemaName.getData().setComment("test_comment");
+        rafBalanceOrderEventSchemaName.getMetadata().setSchemaName(null);
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTimestamp), objectMapper.writeValueAsString(rafBalanceOrderEventRecordType), objectMapper.writeValueAsString(rafBalanceOrderEventOperation), objectMapper.writeValueAsString(rafBalanceOrderEventPartitionKeyType), objectMapper.writeValueAsString(rafBalanceOrderEventSchemaName));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTimestamp), objectMapper.writeValueAsString(rafBalanceOrderEventRecordType), objectMapper.writeValueAsString(rafBalanceOrderEventOperation), objectMapper.writeValueAsString(rafBalanceOrderEventPartitionKeyType), objectMapper.writeValueAsString(rafBalanceOrderEventSchemaName));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventTimestamp.data.openTime, rafBalanceOrderEventRecordType.data.openTime, rafBalanceOrderEventOperation.data.openTime, rafBalanceOrderEventPartitionKeyType.data.openTime, rafBalanceOrderEventSchemaName.data.openTime);
+        MatchResultWithMessage areAllParamsPresentInMessages = kafka.areAllParamsPresentInMessages(KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventTimestamp.getData().getOpenTime(), rafBalanceOrderEventRecordType.getData().getOpenTime(), rafBalanceOrderEventOperation.getData().getOpenTime(), rafBalanceOrderEventPartitionKeyType.getData().getOpenTime(), rafBalanceOrderEventSchemaName.getData().getOpenTime());
 
         Allure.step("Verify that all events without optional params were found in the messages");
         assertThat("Check if all matching events found", areAllParamsPresentInMessages.matchResult(), equalTo(true));
     }
 
     @Test
-    @DisplayName(
-        "Generate RAF balance order event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
+    @DisplayName("Generate RAF balance order event with any of the required parameters missing from Json and verify that the Event Generator didn't produce the event")
     @AllureId("131")
     void generateRafBalanceOrderEventsWithMandatoryParamsMissingFromJsonTest() throws JsonProcessingException {
 
@@ -134,14 +142,14 @@ class MtDbEventsRafBalanceOrderRequiredParamsTest {
         String rafBalanceOrderEventComment = removeKeyFromJson(objectMapper.writeValueAsString(rafBalanceOrderEventCommentObject), "COMMENT");
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("13", KAFKA_TOPIC_MT_DB_EVENTS, rafBalanceOrderEventOpenTime, rafBalanceOrderEventTradeId, rafBalanceOrderEventMtAccount, rafBalanceOrderEventServerId, rafBalanceOrderEventMt4Cmd, rafBalanceOrderEventMt5Action, rafBalanceOrderEventTableName, rafBalanceOrderEventComment);
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, rafBalanceOrderEventOpenTime, rafBalanceOrderEventTradeId, rafBalanceOrderEventMtAccount, rafBalanceOrderEventServerId, rafBalanceOrderEventMt4Cmd, rafBalanceOrderEventMt5Action, rafBalanceOrderEventTableName, rafBalanceOrderEventComment);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventOpenTimeObject.metadata.timestamp, rafBalanceOrderEventTradeIdObject.data.openTime, rafBalanceOrderEventMtAccountObject.data.openTime, rafBalanceOrderEventServerIdObject.data.openTime, rafBalanceOrderEventMt4CmdObject.data.openTime, rafBalanceOrderEventMt5ActionObject.data.openTime, rafBalanceOrderEventTableNameObject.data.openTime, rafBalanceOrderEventCommentObject.data.openTime);
+                KAFKA_TOPIC_MT_EVENTS, rafBalanceOrderEventOpenTimeObject.getMetadata().getTimestamp(), rafBalanceOrderEventTradeIdObject.getData().getOpenTime(), rafBalanceOrderEventMtAccountObject.getData().getOpenTime(), rafBalanceOrderEventServerIdObject.getData().getOpenTime(), rafBalanceOrderEventMt4CmdObject.getData().getOpenTime(), rafBalanceOrderEventMt5ActionObject.getData().getOpenTime(), rafBalanceOrderEventTableNameObject.getData().getOpenTime(), rafBalanceOrderEventCommentObject.getData().getOpenTime()
+        );
 
         Allure.step("Verify that no matched results for events without mandatory params were found");
-        assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+        assertThat("Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }
