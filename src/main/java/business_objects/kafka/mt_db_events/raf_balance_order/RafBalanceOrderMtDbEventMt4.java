@@ -8,10 +8,10 @@ import java.util.Objects;
  */
 public class RafBalanceOrderMtDbEventMt4 {
     @JsonProperty("data")
-    public RafBalanceOrderMtDbEventMt4Data data;
+    RafBalanceOrderMtDbEventMt4Data data;
 
     @JsonProperty("metadata")
-    public RafBalanceOrderMtDbEventMetadata metadata;
+    RafBalanceOrderMtDbEventMetadata metadata;
 
     public RafBalanceOrderMtDbEventMt4(
             RafBalanceOrderMtDbEventMt4Data data, RafBalanceOrderMtDbEventMetadata metadata) {
@@ -35,5 +35,21 @@ public class RafBalanceOrderMtDbEventMt4 {
     @Override
     public String toString() {
         return "RafBalanceOrderMtDbEvent{" + "data=" + data + ", metadata=" + metadata + '}';
+    }
+
+    public RafBalanceOrderMtDbEventMt4Data getData() {
+        return data;
+    }
+
+    public void setData(RafBalanceOrderMtDbEventMt4Data data) {
+        this.data = data;
+    }
+
+    public RafBalanceOrderMtDbEventMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(RafBalanceOrderMtDbEventMetadata metadata) {
+        this.metadata = metadata;
     }
 }

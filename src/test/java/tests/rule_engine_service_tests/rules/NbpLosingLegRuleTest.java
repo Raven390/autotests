@@ -49,7 +49,7 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         Allure.step("Deals with stopouts < 50%");
         RuleDataHelper data = dbDataMap.get("1");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -71,7 +71,7 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         Allure.step("Credit/Deposit < 80%");
         RuleDataHelper data = dbDataMap.get("2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
@@ -94,7 +94,7 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         Allure.step("No mirror clients");
         RuleDataHelper data = dbDataMap.get("3v1");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid()).toString(), RuleAlert[].class)).toList();
@@ -149,7 +149,7 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         Allure.step("Mirror client without abnormal profit");
         RuleDataHelper data = dbDataMap.get("3v2");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid()).toString(), RuleAlert[].class)).toList();
@@ -204,7 +204,7 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         Allure.step("Mirror client with abnormal profit");
         RuleDataHelper data = dbDataMap.get("4");
         Allure.step("Produce close trade event to crm-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.closeTradeEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
         ClientHelper mirrorClient = data.connectedClientHelpers.getFirst();

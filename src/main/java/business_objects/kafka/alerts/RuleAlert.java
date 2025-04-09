@@ -41,7 +41,7 @@ public class RuleAlert {
             @JsonProperty("Reason")
             public String reason;
 
-            @JsonProperty("riskRating")
+            @JsonProperty("Risk rating")
             public String riskRating;
 
             @JsonProperty("stepName")
@@ -71,7 +71,7 @@ public class RuleAlert {
             @JsonProperty("clones")
             public String clones;
 
-            @JsonProperty("policyScore")
+            @JsonProperty("Policy score")
             public String policyScore;
 
             @JsonProperty("ipCountry")

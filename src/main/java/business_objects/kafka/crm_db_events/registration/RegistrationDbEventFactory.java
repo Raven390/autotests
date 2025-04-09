@@ -1,8 +1,8 @@
 package business_objects.kafka.crm_db_events.registration;
 
 import io.qameta.allure.Step;
+import utils.Utils;
 
-import java.time.Instant;
 
 import static utils.Utils.getRandomIntPositive;
 
@@ -11,7 +11,7 @@ public class RegistrationDbEventFactory {
     @Step("Generate registration db event Metadata")
     private static RegistrationDbEventMetadata generateRegistrationDbEventMetadata() {
         return new RegistrationDbEventMetadata(
-                Instant.now().toString(), "test_record_type", "update", "test_partition_key_type", "test_schema_name", "tb_account_mt4"
+                Utils.getCurrentTimestampDbFormat(), "test_record_type", "update", "test_partition_key_type", "test_schema_name", "tb_account_mt4"
         );
     }
 
@@ -19,7 +19,7 @@ public class RegistrationDbEventFactory {
     @Step("Generate registration db event Data")
     private static RegistrationDbEventData generateRegistrationDbEventData() {
         return new RegistrationDbEventData(
-                Instant.now().toString(), getRandomIntPositive(), "test_brand", "test_regulator", 1
+                Utils.getCurrentTimestampDbFormat(), getRandomIntPositive(), "test_brand", "test_regulator", 1
         );
     }
 

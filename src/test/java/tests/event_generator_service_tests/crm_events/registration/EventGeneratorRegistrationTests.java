@@ -37,7 +37,7 @@ class EventGeneratorRegistrationTests {
         RegistrationDbEvent registrationDbEvent = generateRegistrationDbEvent();
 
         Allure.step("Write message to crm-db-events topic");
-        kafka.produceMessage("QA", objectMapper.writeValueAsString(registrationDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(registrationDbEvent), KAFKA_TOPIC_CRM_DB_EVENTS);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent.data.userId.toString());
@@ -62,7 +62,7 @@ class EventGeneratorRegistrationTests {
         registrationDbEvent2.data.userId = registrationDbEvent1.data.userId;
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages("QA", KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1), objectMapper.writeValueAsString(registrationDbEvent2));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1), objectMapper.writeValueAsString(registrationDbEvent2));
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

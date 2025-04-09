@@ -31,6 +31,12 @@ public class CloseTradeMtEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("eventDate")
+    public String eventDate;
+
+    @JsonProperty("initialEventTime")
+    public String initialEventTime;
+
     public CloseTradeMtEvent() {
     }
 

@@ -8,22 +8,22 @@ import java.util.Objects;
  */
 public class RafBalanceOrderMtDbEventMt4Data {
     @JsonProperty("OPEN_TIME")
-    public String openTime;
+    String openTime;
 
     @JsonProperty("TICKET")
-    public Integer tradeId;
+    Integer tradeId;
 
     @JsonProperty("LOGIN")
-    public Integer mtAccount;
+    Integer mtAccount;
 
     @JsonProperty("COMMENT")
-    public String comment;
+    String comment;
 
     @JsonProperty("CMD")
-    public Integer cmd;
+    Integer cmd;
 
     @JsonProperty("ServerID")
-    public Integer serverId;
+    Integer serverId;
 
     public RafBalanceOrderMtDbEventMt4Data(
             String openTime, Integer tradeId, Integer mtAccount, String comment, Integer cmd, Integer serverId) {
@@ -51,5 +51,53 @@ public class RafBalanceOrderMtDbEventMt4Data {
     @Override
     public String toString() {
         return "RafBalanceOrderMtDbEventMt4Data{" + "openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", mtAccount=" + mtAccount + ", comment='" + comment + '\'' + ", cmd=" + cmd + ", serverId=" + serverId + '}';
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public Integer getTradeId() {
+        return tradeId;
+    }
+
+    public void setTradeId(Integer tradeId) {
+        this.tradeId = tradeId;
+    }
+
+    public Integer getMtAccount() {
+        return mtAccount;
+    }
+
+    public void setMtAccount(Integer mtAccount) {
+        this.mtAccount = mtAccount;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Integer getCmd() {
+        return cmd;
+    }
+
+    public void setCmd(Integer cmd) {
+        this.cmd = cmd;
+    }
+
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
     }
 }
