@@ -2,8 +2,7 @@ package tests.event_generator_service_tests.crm_events.login;
 
 import static business_objects.kafka.crm_db_events.login.LoginDbEventFactory.generateLoginDbEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,14 +21,13 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
 class EventGeneratorLoginTests {
+    KafkaHelper kafka = new KafkaHelper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     @DisplayName("Generate login event with event generator service")
     @AllureId("65")
     void generateLoginEventTest() throws JsonProcessingException, InterruptedException {
-
-        KafkaHelper kafka = new KafkaHelper();
-        ObjectMapper objectMapper = new ObjectMapper();
 
         LoginDbEvent loginDbEvent = generateLoginDbEvent();
 
@@ -41,10 +39,11 @@ class EventGeneratorLoginTests {
         LoginEvent retrievedLoginEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
 
         LoginEvent expectedLoginEvent = new LoginEvent(
-                loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", "loginToWeb"
+                loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", "egLoginToWeb"
         );
 
         Allure.step("Verify that message was written correctly");
+        assertThat("Check type", retrievedLoginEvent.type, is("egLoginToWeb"));
         assertThat("Check id", retrievedLoginEvent.id, notNullValue());
         assertThat("Check all fields except id", retrievedLoginEvent, equalTo(expectedLoginEvent));
     }
