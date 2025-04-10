@@ -18,8 +18,7 @@ import java.time.format.DateTimeFormatter;
 import static business_objects.api.rule_engine_api.rule_deployments.RuleDeploymentsRequests.postRuleDeployment;
 import static helpers.database.CleanTableHelper.cleanRuleDeploymentTableByUuId;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -50,13 +49,13 @@ class PostRuleDeploymentsTests extends TestBaseApi {
         assert response.body() != null;
         PostRuleDeploymentResponse mappedResponse = objectMapper.readValue(response.body().string(), PostRuleDeploymentResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert rule uuid", mappedResponse.getAuthorName(), is("test_automation"));
+        assertThat("Assert rule uuid", mappedResponse.getUuid(), is(notNullValue()));
         assertThat("Assert rule authorName", mappedResponse.getAuthorName(), is("author_name"));
         assertThat("Assert rule processId", mappedResponse.getProcessId(), is(processId));
         assertThat("Assert rule ruleName", mappedResponse.getRuleName(), is("rule_name"));
-        assertThat("Assert rule zeebeRevision", mappedResponse.getZeebeRevision(), is("1"));
+        assertThat("Assert rule zeebeRevision", mappedResponse.getZeebeRevision(), is(1));
         assertThat("Assert rule lastUpdate", mappedResponse.getLastUpdate(), is(equalTo(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))));
         assertThat("Assert rule status", mappedResponse.getStatus(), is("DEPLOYED"));
-        assertThat("Assert rule comment", mappedResponse.getComment(), is(null));
+        assertThat("Assert rule comment", mappedResponse.getComment(), is(nullValue()));
     }
 }
