@@ -4,6 +4,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudType;
+import helpers.data.enums.Restriction;
 import helpers.data.rules.RuleDataHelper;
 import helpers.database.DbName;
 import io.qameta.allure.*;
@@ -32,6 +33,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
+    String ruleEventType = "Withdrawal";
+
     @BeforeAll
     static void setupData() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
@@ -48,245 +51,349 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @Test
     @DisplayName("CPA abuse rule exit Event_1. User don't have cpaId")
     @AllureId("916")
-    void mirrorTradeRuleExitEventEnd1Test() throws Exception {
+    void cpaAbuseRuleExitEventEnd1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
-        Allure.step("Get alerts");
+        Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
-        Allure.step("Get client restrictions");
+        Allure.step("Check that there is no restrictions on client");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
     @Test
     @DisplayName("CPA abuse rule exit Event_2. User have cpaId first deal  less than 60 d ago")
-    @AllureId("916")
-    void mirrorTradeRuleExitEvent2Test() throws Exception {
+    @AllureId("1125")
+    void cpaAbuseRuleExitEvent2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
         System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
         Allure.step("User do not have cpaId number");
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
-        Allure.step("Get alerts");
+        Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
-        Allure.step("Get client restrictions");
+        Allure.step("Check that there is no restrictions on client");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event_21. User connected to known abuser")
+    @DisplayName("CPA abuse rule exit Event_3. first deal more than 60 d ago,500 user same cpa")
+    @AllureId("1126")
+    void cpaAbuseRuleExitEvent3Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3");
+        System.out.println("User cpaId: " + data.clientHelper.getCpaId());
+
+        Allure.step("User do not have cpaId number");
+
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event_4. User connected to known abuser")
     @AllureId("917")
-    void mirrorTradeRuleExitEventEnd2_1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("21");
+    void cpaAbuseRuleExitEventEnd4Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("4");
         Allure.step("Produce withdrawal event to crm-events topic");
         data.withdrawalEvent.type = "egWithdrawal";
         System.out.println(data.withdrawalEvent.type);
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
+        Allure.step("Verify alert in Kafka");
 
         Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 250);
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
+        // Verify alert kafka
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        //assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Linked abuser"));
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.reason, is("One or many connected clients are CPA abusers"));
-//        assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
-//        assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
-//        assertThat("Verify rule attributes clones not null", alert.rule.attributes.hedgingClone, notNullValue());
-
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, is("One or many connected clients are CPA abusers"));
 
         // Verify alert in BO db
+        Allure.step("Verify client alert in BO DB");
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
-//        Allure.step("Get client restrictions");
-//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        //assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
-    }
-
-    @Test
-    @DisplayName("CPA abuse rule exit Event_22. Among connected clients for the same brand, if there are more than 3 clients, do at least 65% of them have the same CPA value as the initial client?")
-    @AllureId("921")
-    void mirrorTradeRuleExitEventEnd2_2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("22");
-        Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
-
-        Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
-        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
-        assertThat("Verify alert id not null", alert.alertId, notNullValue());
-        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
-        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
-        assertThat("Verify rule not null", alert.rule, notNullValue());
-        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
-        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("At least 70% have any CPA value"));
-//        assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
-//        assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
-//        assertThat("Verify rule attributes clones not null", alert.rule.attributes.hedgingClone, notNullValue());
-
-
-        // Verify alert in BO db
-        List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        Allure.step("Verify client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
-        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
-
-//        Allure.step("Get client restrictions");
-//        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        //assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event 3. Allow withdrawal")
-    @AllureId("929")
-    void mirrorTradeRuleExitEventEnd3Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("3");
-        Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+    @DisplayName("CPA abuse rule exit Event_5p1 profit>2.5k")
+    @AllureId("1126")
+    void cpaAbuseRuleExitEvent5p1Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("5");
+        System.out.println("User cpaId: " + data.clientHelper.getCpaId());
 
-        Allure.step("Get alerts");
+        Allure.step("User do not have cpaId number");
+
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Check that there is no alerts on client");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event 4_1. Score > 3. Connected to other account with same CPA - false")
-    @AllureId("929")
-    void mirrorTradeRuleExitEventEnd4_1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_1");
+    @DisplayName("CPA abuse rule exit Event_5p2 profit<-700")
+    @AllureId("1127")
+    void cpaAbuseRuleExitEvent5p2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("6");
+        System.out.println("User cpaId: " + data.clientHelper.getCpaId());
+
+        Allure.step("User do not have cpaId number");
+
         Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event_6. Among connected clients for the same brand there are more than 3 clients, 99% of them have the same CPA value as the initial client")
+    @AllureId("921")
+    void cpaAbuseRuleExitEventEnd6Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("7");
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Verify alert in Kafka");
 
         Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 250);
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
+        // Verify alert kafka
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Confirmed abuser"));
-    }
+        assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("At least 65% of connected clients have CPA Id value"));
 
-    @Test
-    @DisplayName("CPA abuse rule exit Event 4_2. Score > 3. Connected to other account with same CPA - true")
-    @AllureId("929")
-    void mirrorTradeRuleExitEventEnd4_2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_2");
-        Allure.step("Produce withdrawal event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        // Verify alert in BO db
+        Allure.step("Verify client alert in BO DB");
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        );
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
-        Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
-        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
-        assertThat("Verify alert id not null", alert.alertId, notNullValue());
-        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
-        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
-        assertThat("Verify rule not null", alert.rule, notNullValue());
-        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
-        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Confirmed abuser"));
-
-        // Verify restriction
-        Allure.step("Get client restrictions");
+        Allure.step("Verify client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
-
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-
-//        ClientsRestriction restriction = clientsRestrictions.getFirst();
-//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
-//
-//        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
-    @DisplayName("CPA abuse rule exit Event 4_3. Score < 3. Connected to other account with same CPA - true")
+    @DisplayName("CPA abuse rule exit Event_7p1. First deposit are less than 60 days ago. Among connected clients for the same brand there are  3 clients, 100% of them have the same CPA value as the initial client")
+    @AllureId("921")
+    void cpaAbuseRuleExitEventEnd7p1Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("8");
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event_7p2. First deposit are less than 60 days ago. Among connected clients for the same brand there are  4 clients, 50% of them have the same CPA value as the initial client")
+    @AllureId("1128")
+    void cpaAbuseRuleExitEventEnd7p2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("9");
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event 8p1. CPA score 0 not crypto,deposit more than 550, 1 trade, 0.1 lots no mirror, no hft  Allow payout")
     @AllureId("929")
-    void mirrorTradeRuleExitEventEnd4_3Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4_3");
+    void cpaAbuseRuleExitEventEnd8Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("10");
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event 8p2. CPA score 2  crypto,deposit less than 450,  8.1 lots, 1 mirror, 1 hft  Allow payout")
+    @AllureId("1130")
+    void cpaAbuseRuleExitEventEnd8p2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("11");
+        Allure.step("Produce withdrawal event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+
+        Allure.step("Check that there is no alerts on client");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+
+        Allure.step("Check that there is no restrictions on client");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+    }
+
+    @Test
+    @DisplayName("CPA abuse rule exit Event 9p1. Connected to clients with Same CPA, CPA score 3  not crypto,deposit 500,  4 lots, 0 mirror, 0 hft")
+    @AllureId("929")
+    void cpaAbuseRuleExitEventEnd9p1Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("12");
         Allure.step("Produce registration event to crm-events topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Verify alert in Kafka");
 
         Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 250);
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
-
-        // Verify alert
+        // Verify alert kafka
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.stepName, is("Confirmed abuser"));
+        assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("CPA abuse found by rule engine"));
 
-        // Verify restriction
-        Allure.step("Get client restrictions");
+        // Verify alert in BO db
+        Allure.step("Verify client alert in BO DB");
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        );
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
+        Allure.step("Verify client restrictions");
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
         );
+        assertThat("Verify amount of restrictions", clientsRestrictions.size(), equalTo(1));
+        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction));
+    }
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+    @Test
+    @DisplayName("CPA abuse rule exit Event 9p2. No connections with same CPA")
+    @AllureId("1131")
+    void cpaAbuseRuleExitEventEnd9p2Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("13");
+        Allure.step("Produce registration event to crm-events topic");
+        kafka.produceMessage("QA", objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_CRM_EVENTS);
 
-//        ClientsRestriction restriction = clientsRestrictions.getFirst();
-//        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
-//
-//        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+        Allure.step("Verify alert in Kafka");
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 250);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+        // Verify alert kafka
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("CPA abuse found by rule engine"));
+
+        // Verify alert in BO db
+        Allure.step("Verify client alert in BO DB");
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
+        );
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
+        Allure.step("Verify client restrictions");
+        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        );
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
     }
 }
