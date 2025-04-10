@@ -80,7 +80,7 @@ public class RuleAlert {
             @JsonProperty("mirrorTradeScore")
             public String mirrorTradeScore;
 
-            @JsonProperty("mirrorTrades")
+            @JsonProperty("Mirror trades")
             public String mirrorTrades;
 
             @JsonProperty("hedgingClone")
@@ -106,6 +106,21 @@ public class RuleAlert {
 
             @JsonProperty("Check")
             public String check;
+
+            @JsonProperty("Same CPA connections")
+            public String sameCPAConnections;
+
+            @JsonProperty("Days since first deposit")
+            public String daysSinceFirstDeposit;
+
+            @JsonProperty("First deposit in USD")
+            public String firstDepositInUSD;
+
+            @JsonProperty("Crypto as first deposit")
+            public String cryptoAsFirstDeposit;
+
+            @JsonProperty("Same brand connections")
+            public String sameBrandConnections;
         }
     }
 }

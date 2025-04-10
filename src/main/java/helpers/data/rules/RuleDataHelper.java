@@ -26,11 +26,14 @@ import helpers.data.ClientHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class RuleDataHelper {
     public ClientHelper clientHelper;
@@ -122,6 +125,8 @@ public class RuleDataHelper {
         this.mtMt5PositionsObjects = mtMt5PositionsObjects;
     }
 
+    static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
+
     @Override
     public String toString() {
         return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
@@ -130,6 +135,15 @@ public class RuleDataHelper {
     public static void setupRuleData(Map<String, RuleDataHelper> map) {
         startSshTunnel();
         for (RuleDataHelper data : map.values()) {
+            if (data.connections != null && !(data.connections.isEmpty())) try {
+                for (ConnectionTableEntry i : data.connections) {
+                    i.datetime = getCurrentTimestampDbFormat();
+                    insertObjectToDb(CONNECTIONS_TABLE_NAME, i);
+                }
+                waitForConnectionSearchToUpdate(data.connections.getFirst().userFrom);
+            } catch (Exception e) {
+                logger.info("Error while inserting connections into table: " + e.getMessage());
+            }
             if (data.lnSessionParsedObjectRegistration != null) {
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
             }
@@ -139,8 +153,8 @@ public class RuleDataHelper {
             if (data.dictAccountToUcidObject != null) {
                 insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
             }
-            data.connections.forEach(connection -> insertObjectToDb(CONNECTIONS_TABLE_NAME, connection));
-            data.connectedUsers.forEach(user -> insertObjectToDb(CRM_USER_TABLE_NAME, user));
+
+            insertObjectsToDb(CRM_USER_TABLE_NAME, data.connectedUsers);
             data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
@@ -201,6 +215,22 @@ public class RuleDataHelper {
             data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             cleanUserRestriction(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
+            if (!data.connectedUsers.isEmpty()) {
+                int size = data.connectedUsers.size();
+                StringBuilder sb = new StringBuilder();
+                sb.append("(");
+                for (CrmTbUserObject user : data.connectedUsers) {
+                    sb.append("'");
+                    sb.append(user.ucid);
+                    sb.append("'");
+                    if (size > 1) {
+                        sb.append(",");
+                        size -= 1;
+                    }
+                }
+                sb.append(")");
+                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid in %s", sb.toString()));
+            }
         }
         stopSshTunnel();
     }

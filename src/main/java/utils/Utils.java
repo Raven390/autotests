@@ -91,6 +91,24 @@ public class Utils {
     }
 
     public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
+            int hours) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, 0, 0);
+    }
+
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months,
+            int days) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, 0, 0, 0);
+    }
+
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, 0, 0, 0, 0);
+    }
+
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years) {
+        return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, 0, 0, 0, 0, 0);
+    }
+
+    public static String getCurrentTimestampMinusOffsetFormatted(DateTimeFormat format, int years, int months, int days,
             int hours, int minutes, int seconds) {
         return getCurrentTimestampMinusOffsetFormatted(format.getDisplayName(), years, months, days, hours, minutes, seconds);
     }
@@ -421,11 +439,15 @@ public class Utils {
     }
 
     public static void waitForConnectionSearchToUpdate(ClientHelper client) throws Exception {
+        waitForConnectionSearchToUpdate(client.getUcid());
+    }
+
+    public static void waitForConnectionSearchToUpdate(String ucid) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", client.getUcid());
+        queryParams.put("clientId", ucid);
         boolean updated = false;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 100; i++) {
             Response response = getConnectionsByClientId(queryParams);
             GetConnectionsResponse[] responseBody = objectMapper.readValue(
                     response.body().string(), GetConnectionsResponse[].class
