@@ -32,6 +32,9 @@ public class LoginEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("initialEventTime")
+    public String initialEventTime;
+
     public LoginEvent() {
     }
 

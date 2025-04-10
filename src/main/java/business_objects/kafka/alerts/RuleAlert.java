@@ -121,6 +121,9 @@ public class RuleAlert {
 
             @JsonProperty("Same brand connections")
             public String sameBrandConnections;
+
+            @JsonProperty("Max Connection Score")
+            public String maxConnectionScore;
         }
     }
 }
