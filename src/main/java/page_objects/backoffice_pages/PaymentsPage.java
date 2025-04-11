@@ -53,6 +53,10 @@ public class PaymentsPage extends AbstractPage {
     private final Locator approveAllButton;
     private final Locator rejectButton;
     private final Locator rejectAllButton;
+    private final Locator rebatesReceivedWidget;
+    private final Locator rebatesReceivedWidgetTitle;
+    private final Locator rebatesReceivedWidgetValue;
+    private final Locator rebatesReceivedWidgetCounter;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -70,6 +74,10 @@ public class PaymentsPage extends AbstractPage {
     private static final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
     private static final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
     private static final String FILTER_BY_PLACEHOLDER_PATTERN = "//span[text()='%s']/..";
+    private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-payments-summary-card__title') and text()='%s']/ancestor::div[@class='v-payments-summary-card']";
+    private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
+    private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
+    private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
 
     public PaymentsPage(Page page) {
         super(page);
@@ -110,6 +118,10 @@ public class PaymentsPage extends AbstractPage {
         this.approveAllButton = submitPanelButtons.getByText("Approve all");
         this.rejectButton = submitPanelButtons.getByText("Reject");
         this.rejectAllButton = submitPanelButtons.getByText("Reject all");
+        this.rebatesReceivedWidget = page.locator(String.format(WIDGET_BY_TITLE_PATTERN, "Rebates received"));
+        this.rebatesReceivedWidgetTitle = rebatesReceivedWidget.locator(WIDGET_TITLE);
+        this.rebatesReceivedWidgetValue = rebatesReceivedWidget.locator(WIDGET_VALUE);
+        this.rebatesReceivedWidgetCounter = rebatesReceivedWidget.locator(WIDGET_COUNTER);
     }
 
     @Step("Open users operations tab")
@@ -544,5 +556,20 @@ public class PaymentsPage extends AbstractPage {
 
     public void clickRejectAllButton() {
         rejectAllButton.click();
+    }
+
+    @Step("Get Rebates received widget title")
+    public String getRebatesReceivedWidgetTitle() {
+        return rebatesReceivedWidgetTitle.textContent();
+    }
+
+    @Step("Get Rebates received widget value")
+    public String getRebatesReceivedWidgetValue() {
+        return rebatesReceivedWidgetValue.textContent();
+    }
+
+    @Step("Get Rebates received widget counter")
+    public String getRebatesReceivedWidgetCounter() {
+        return rebatesReceivedWidgetCounter.textContent();
     }
 }
