@@ -2,6 +2,8 @@ package tests.click_house_api_service_tests;
 
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_trades.GetTradesResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -17,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_trades.GetTradesRequest.getTrades;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.*;
@@ -32,18 +36,18 @@ import static utils.Utils.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetTradesTests extends TestBaseApi {
 
-    private static ClientHelper client1 = getRandomVantageClient();
+    private static ClientHelper clientHelper = getRandomVantageClient();
+    private static CrmTbUserObject client = generateUserByClient(clientHelper);
+    private static CrmTbAccountObject client1Account = generateAccountByClient(clientHelper, false);
     private static Mt5DealsCoercedObject trade1;
     private static Mt5DealsCoercedObject trade2;
     private static Mt5DealsCoercedObject trade3;
-    private static Integer account;
 
     @BeforeAll
     static void setupTrades() {
-        account = getRandomIntPositive();
-        trade1 = generateTradeByClient(client1);
-        trade2 = generateTradeByClient(client1);
-        trade3 = generateTradeByClient(client1);
+        trade1 = generateTradeByClient(clientHelper);
+        trade2 = generateTradeByClient(clientHelper);
+        trade3 = generateTradeByClient(clientHelper);
         trade2.setTime(getTomorrowTimestampDbFormat());
         trade2.setProfit(2.0);
         trade2.setProfitUsd(3.0);
@@ -51,11 +55,16 @@ class GetTradesTests extends TestBaseApi {
         trade2.setEntry(2);
         trade3.setServerId(1000);
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(client));
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(client1Account));
+
+        System.out.println(clientHelper.getServerId());
+        System.out.println(trade1.getServerId());
     }
 
     @AfterAll
     static void teardownTrades() {
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
+        //deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
     }
 
     @Test
@@ -78,6 +87,7 @@ class GetTradesTests extends TestBaseApi {
         assert response.body() != null;
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(clientHelper.getUcid()));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.getDeal()));
         assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.getTime())));
@@ -146,6 +156,7 @@ class GetTradesTests extends TestBaseApi {
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(clientHelper.getUcid()));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade2.getDeal()));
         assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade2.getTime())));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade2.getAccount()));
@@ -172,6 +183,7 @@ class GetTradesTests extends TestBaseApi {
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(clientHelper.getUcid()));
         assertThat("Assert tradeId", mappedResponse[0].tradeId, is(trade1.getDeal()));
         assertThat("Assert tradeDate", mappedResponse[0].tradeDate, is(formatTimeToUtc(trade1.getTime())));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(trade1.getAccount()));

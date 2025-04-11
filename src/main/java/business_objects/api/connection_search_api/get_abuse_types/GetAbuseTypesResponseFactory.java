@@ -7,13 +7,13 @@ public class GetAbuseTypesResponseFactory {
 
     public static ConnectionSearchResponseError getConnectionsResponseErrorConnectionScoreToBadRequest() {
         return new ConnectionSearchResponseError(
-                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
+                null, 400, "Method parameter 'connectionScoreTo': Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 
     public static ConnectionSearchResponseError getConnectionsResponseErrorConnectionScoreFromBadRequest() {
         return new ConnectionSearchResponseError(
-                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
+                null, 400, "Method parameter 'connectionScoreFrom': Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
         );
     }
 
