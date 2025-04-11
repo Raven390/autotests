@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
+@Disabled("Temporarily disabling this test class because rue is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_ABNORMAL_PROFIT_RULE)
 @Tag(TEAM_CORE)

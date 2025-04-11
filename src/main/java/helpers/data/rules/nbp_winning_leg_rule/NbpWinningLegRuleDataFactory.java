@@ -32,7 +32,7 @@ public class NbpWinningLegRuleDataFactory {
         RuleDataHelper data = new RuleDataHelper();
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
-        data.withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
+        data.withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
         CrmTbDepositObject deposit = generateDepositByClient(client);
         deposit.amountUsd = 199.0;
         data.crmTbDepositObjects.add(deposit);
