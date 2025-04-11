@@ -2,7 +2,7 @@ package tests.connection_search_api_service_tests;
 
 import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -28,6 +28,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
@@ -47,8 +48,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
     static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userTo1_1, userTo1_3);
 
-    private static BoClientFraudTypesObject fraud11;
-    private static BoClientFraudTypesObject fraud12;
+    private static ClientFraudTypesObject fraud11;
+    private static ClientFraudTypesObject fraud12;
 
     //Data 2
     static final ClientHelper userFrom2 = getRandomVantageClient();
@@ -60,19 +61,19 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry22 = getConnectionTableEntry(userFrom2, userTo2_2);
     static ConnectionTableEntry connectionTableEntry23 = getConnectionTableEntryLvl2(userTo2_2, userTo2_3);
 
-    private static BoClientFraudTypesObject fraud2_1;
-    private static BoClientFraudTypesObject fraud2_2;
+    private static ClientFraudTypesObject fraud2_1;
+    private static ClientFraudTypesObject fraud2_2;
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(
                 new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
-        fraud11 = new BoClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-        fraud12 = new BoClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
-        fraud2_2 = new BoClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
-        insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
+        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry12);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry13);
@@ -90,9 +91,9 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry21.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry22.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry23.userFrom));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.ucid));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.ucid));
-        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.ucid));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.getUcid()));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
     }
 
     @Test

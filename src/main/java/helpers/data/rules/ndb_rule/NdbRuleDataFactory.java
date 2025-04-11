@@ -1,6 +1,6 @@
 package helpers.data.rules.ndb_rule;
 
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -85,12 +85,12 @@ public class NdbRuleDataFactory {
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.GAP_TRADING.getFraudTypeId(), FraudType.GAP_TRADING.getKey()
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 
@@ -116,12 +116,12 @@ public class NdbRuleDataFactory {
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getFraudTypeId(), FraudType.LOSS_VOUCHER_ABUSE.getKey()
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 
@@ -135,12 +135,12 @@ public class NdbRuleDataFactory {
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.HEDGING.getFraudTypeId(), FraudType.HEDGING.getKey()
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), FraudType.HEDGING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 

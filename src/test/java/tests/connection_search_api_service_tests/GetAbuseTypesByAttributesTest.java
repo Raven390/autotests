@@ -2,7 +2,7 @@ package tests.connection_search_api_service_tests;
 
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
 import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntry;
@@ -48,6 +48,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.getCurrentTimestampDbFormat;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
@@ -131,20 +132,20 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
 
     // Frauds
-    private static final BoClientFraudTypesObject fraudEmailTo = new BoClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudEmail1 = new BoClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudEmail2 = new BoClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getFraudTypeId(), CPA_ABUSE.getDisplayName());
-    private static final BoClientFraudTypesObject fraudEmail3 = new BoClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getFraudTypeId(), LOSS_VOUCHER_ABUSE.getDisplayName());
-    private static final BoClientFraudTypesObject fraudDocumentTo = new BoClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudIpTo = new BoClientFraudTypesObject(userToIp.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudPhoneTo = new BoClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudPhoneFrom = new BoClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudPayoutTo = new BoClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudDeviceIdTo = new BoClientFraudTypesObject(userToDeviceId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudDigitalIdTo = new BoClientFraudTypesObject(userToDigitalId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudNameBirthTo = new BoClientFraudTypesObject(userToNameBirth.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudSessionIdTo = new BoClientFraudTypesObject(userToSessionId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
-    private static final BoClientFraudTypesObject fraudWebSessionIdTo = new BoClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getFraudTypeId(), HEDGING.getDisplayName());
+    private static final ClientFraudTypesObject fraudEmailTo = new ClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail1 = new ClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail2 = new ClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail3 = new ClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDocumentTo = new ClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudIpTo = new ClientFraudTypesObject(userToIp.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPhoneTo = new ClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPhoneFrom = new ClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPayoutTo = new ClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDeviceIdTo = new ClientFraudTypesObject(userToDeviceId.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDigitalIdTo = new ClientFraudTypesObject(userToDigitalId.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudNameBirthTo = new ClientFraudTypesObject(userToNameBirth.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudSessionIdTo = new ClientFraudTypesObject(userToSessionId.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudWebSessionIdTo = new ClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
 
     @BeforeAll
     static void setupConnectionTableEntry() throws InterruptedException {
@@ -162,7 +163,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameBirthTableEntry, nameBirthTableEntry2));
         insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntry, webSessionTableEntry2));
         //insert data to fraud table
-        insertObjectsToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo));
+        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo));
     }
 
     @AfterAll

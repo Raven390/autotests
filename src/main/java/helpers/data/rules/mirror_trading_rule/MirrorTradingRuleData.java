@@ -2,7 +2,7 @@ package helpers.data.rules.mirror_trading_rule;
 
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
@@ -26,7 +26,7 @@ public class MirrorTradingRuleData {
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
     public CloseTradeMtEvent closeTradeMtEvent;
-    public List<BoClientFraudTypesObject> clientFraudTypes;
+    public List<ClientFraudTypesObject> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
     public List<MtTbCreditsObject> mtTbCreditsObjects;
@@ -45,7 +45,7 @@ public class MirrorTradingRuleData {
     public MirrorTradingRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
-            CloseTradeMtEvent closeTradeMtEvent, List<BoClientFraudTypesObject> clientFraudTypes,
+            CloseTradeMtEvent closeTradeMtEvent, List<ClientFraudTypesObject> clientFraudTypes,
             CrmTbAccountObject crmTbAccountObject, List<CrmTbAccountObject> crmTbAccountObjectConnections,
             List<MtTbCreditsObject> mtTbCreditsObjects,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,

@@ -2,7 +2,7 @@ package helpers.data.rules.mirror_trading_rule;
 
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -96,10 +96,10 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("Create user");
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd2Client);
         Allure.step("Client has previous restrictions");
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                data.clientHelper.getUcid(), 6, "HEDGING"
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                data.clientHelper.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()
         );
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 
@@ -109,12 +109,12 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("Client has mirror trading abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), 1, "HEDGING"
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Set restriction");
         Allure.step("Send alert");
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 
@@ -581,7 +581,7 @@ public class MirrorTradingRuleDataFactory {
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectRegistration.getUserId()));
             deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.getUserId()));
             data.clientFraudTypes.forEach(fraud -> {
-                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid));
+                deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.getUcid()));
             });
             data.mtTbCreditsObjects.forEach(credit -> {
                 deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid));
