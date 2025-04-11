@@ -105,19 +105,19 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionScoreToBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
+                null, 400, "Method parameter 'connectionScoreTo': Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor 'e' notation exponential mark.", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionDepthBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; For input string: \"test\"", null, null, null, null, null
+                null, 400, "Method parameter 'connectionDepth': Failed to convert value of type 'java.lang.String' to required type 'java.lang.Integer'; For input string: 'test'", null, null, null, null, null
         );
     }
 
     public static GetConnectionsResponseError getConnectionsResponseErrorConnectionScoreFromBadRequest() {
         return new GetConnectionsResponseError(
-                null, 400, "Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor \"e\" notation exponential mark.", null, null, null, null, null
+                null, 400, "Method parameter 'connectionScoreFrom': Failed to convert value of type 'java.lang.String' to required type 'java.math.BigDecimal'; Character t is neither a decimal digit number, decimal point, nor 'e' notation exponential mark.", null, null, null, null, null
         );
     }
 

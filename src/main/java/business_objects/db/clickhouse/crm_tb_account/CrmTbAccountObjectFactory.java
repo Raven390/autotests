@@ -30,7 +30,7 @@ public class CrmTbAccountObjectFactory {
                 client.getUcid(),// ucid
                 client.getUid(), // uid
                 client.getTradingAccount(), // account
-                18,// serverIdSt
+                client.getServerId(), // serverIdSt
                 "ST",// server
                 1,// accountTypeId
                 accountType,// accountType

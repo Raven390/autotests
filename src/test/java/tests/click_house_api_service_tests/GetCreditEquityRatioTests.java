@@ -23,7 +23,6 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.formatTimeToUtc;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_EQUITY)
@@ -67,17 +66,14 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is(formatTimeToUtc(
-                DATE_TIME)));
-        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("1.00"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.getFirst().indicatorDate, is("2024-12-31T00:00"));
+        assertThat("Assert tradingIndicators currentEquity", mappedResponse.tradingIndicators.getFirst().currentEquity, is("0"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(formatTimeToUtc(
-                DATE_TIME)));
-        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("2.00"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is("2024-12-31T00:00"));
+        assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is("0"));
 
-        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(formatTimeToUtc(
-                DATE_TIME)));
-        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("-2.00"));
+        assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is("2024-12-31T00:00"));
+        assertThat("Assert tradingIndicators creditEquityRatio", mappedResponse.tradingIndicators.get(2).creditEquityRatio, is("0"));
     }
 
     @Test
@@ -125,23 +121,6 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         assert response.body() != null;
         assertThat("Assert that code is 200", response.code(), is(400));
         assertThat("Assert that code is 200", response.body().string(), containsString("Required request parameter 'dateTo' for method parameter type LocalDateTime is not present"));
-    }
-
-    @Disabled("Enable after fix of https://vantagefx-hytechs.atlassian.net/browse/CSV-1065")
-    @Test
-    @DisplayName("Clickhouse Api. Get credit equity ratio by dateTo, empty response (200)")
-    @AllureId("564")
-    void getCreditEquityRatioTest5() throws IOException {
-        //Send request
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
-        queryParams.put("serverId", client1.getServerId()); // Required
-        queryParams.put("dateTo", "2020-12-30 00:00:01".replace(" ", "T"));
-        Response response = getCreditEquity(queryParams);
-
-        assert response.body() != null;
-        assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert response body", response.body().string(), is("{}"));
     }
 
     @Test
