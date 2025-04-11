@@ -50,9 +50,9 @@ class LossVoucherRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Abnormal profit rule exit 1. Has user used loss vouchers before? = false")
+    @DisplayName("Loss voucher rule exit 1p1. Has user used loss vouchers before? = false")
     @AllureId("979")
-    void lossVoucherRuleExitEventEnd11Test() throws Exception {
+    void lossVoucherRuleExitEventEnd1p1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("11");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -62,9 +62,9 @@ class LossVoucherRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Abnormal profit rule exit 1. -200 < Lifetime PnL < 200 USD = false")
+    @DisplayName("Loss voucher rule exit 1p2. -200 < Lifetime PnL < 200 USD = false")
     @AllureId("980")
-    void lossVoucherRuleExitEventEnd12Test() throws Exception {
+    void lossVoucherRuleExitEventEnd1p2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("12");
         Allure.step("Produce close trade event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
@@ -74,7 +74,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Abnormal profit rule exit 2. Sum LV amount = +/-20% |PnL| = false")
+    @DisplayName("Loss voucher rule exit 2. Sum LV amount = +/-20% |PnL| = false")
     @AllureId("981")
     void lossVoucherRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
@@ -86,7 +86,7 @@ class LossVoucherRuleTests extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Abnormal profit rule exit 3. Alert + restriction")
+    @DisplayName("Loss voucher rule exit 3. Alert")
     @AllureId("982")
     void lossVoucherRuleExitEventEnd3Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
@@ -105,7 +105,7 @@ class LossVoucherRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("withdrawal"));
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Trade Loss Compensation"));
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Loss Voucher Abuse"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.LOSS_VOUCHER_ABUSE.getKey()));
         assertThat("Verify rule attributes step name", alert.rule.attributes.reason, equalTo("Confirmed loss voucher abuser"));
