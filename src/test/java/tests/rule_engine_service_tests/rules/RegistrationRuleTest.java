@@ -1194,7 +1194,7 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked unknown abuser"));
-        assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, allOf(containsString(data.clientFraudTypes.getFirst().fraudTypeCode), containsString(data.clientFraudTypes.getLast().fraudTypeCode))
+        assertThat("Verify rule attributes fraudType is correct", alert.rule.attributes.fraudType, allOf(containsString(data.clientFraudTypes.getFirst().getFraudTypeCode()), containsString(data.clientFraudTypes.getLast().getFraudTypeCode()))
         );
 
         List<Alert> dbAlerts = getObjectsFromDB(

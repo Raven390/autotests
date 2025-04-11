@@ -3,7 +3,7 @@ package helpers.data.rules;
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
@@ -45,7 +45,7 @@ public class RuleDataHelper {
     public List<CrmTbUserObject> connectedUsers;
     public WithdrawalEvent withdrawalEvent;
     public CloseTradeMtEvent closeTradeEvent;
-    public List<BoClientFraudTypesObject> clientFraudTypes;
+    public List<ClientFraudTypesObject> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
     public List<MtTbCreditsObject> mtTbCreditsObjects;
@@ -87,7 +87,7 @@ public class RuleDataHelper {
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
             WithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent,
-            List<BoClientFraudTypesObject> clientFraudTypes,
+            List<ClientFraudTypesObject> clientFraudTypes,
             List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
             CrmTbAccountObject crmTbAccountObject,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
@@ -200,7 +200,7 @@ public class RuleDataHelper {
             if (data.lnSessionParsedObjectLogin != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.getUserId()));
             }
-            data.clientFraudTypes.forEach(fraud -> deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.ucid)));
+            data.clientFraudTypes.forEach(fraud -> deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud.getUcid())));
             data.mtTbCreditsObjects.forEach(credit -> deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid)));
             data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid)));
             data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid)));

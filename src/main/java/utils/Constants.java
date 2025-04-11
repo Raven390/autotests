@@ -122,6 +122,7 @@ public class Constants {
     public static final String PAYOUT_TABLE_NAME = "vindex_test.payout";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo___client_fraud_types";
+    public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "postgres.mi.clients_restriction";
     public static final String MITIGATION_ACTION = "postgres.mi.action";
     public static final String MITIGATION_KAFKA_REQUEST = "postgres.mi.kafka_request";
@@ -149,7 +150,6 @@ public class Constants {
     public static final String PAYMENTS_TOTAL_TABLE_NAME = "vindex_test.payments_total";
     public static final String SEGMENTATION_TABLE_NAME = "data_science_test.segmentation_table";
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced_toxicity";
-    public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String DP_AND_WD_BY_CHANNEL_TABLE_NAME = "vindex_test.dp_and_wd_by_channel";
     public static final String CRM_TB_LOYALTY_REDEMPTION = "vindex_test.crm___tb_loyalty_redemption";
     public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "vindex_test.s3___fact_login_metrics";

@@ -1,6 +1,6 @@
 package helpers.data.rules.cpa_abuse_rule;
 
-import business_objects.db.clickhouse.bo_client_fraud_types.BoClientFraudTypesObject;
+import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
@@ -129,13 +129,13 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Client has cpa abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        BoClientFraudTypesObject boClientFraudTypesObject = new BoClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.CPA_ABUSE.getFraudTypeId(), FraudType.CPA_ABUSE.getKey()
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
         );
         CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
         data.connectedUsers.add(connectedUserCrmTbUserObject);
 
-        data.clientFraudTypes.add(boClientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypesObject);
 
         //MT5 trade with current time
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4Client);
