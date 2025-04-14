@@ -9,12 +9,9 @@ import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
-import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -32,9 +29,7 @@ import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.ge
 import static business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsFactory.generates3FactCpaCommissionsObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomUltimaMarketsClientAllFields;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,8 +41,6 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class CpaOverviewSummaryTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomUltimaMarketsClientAllFields();
     private static final ClientHelper ibClient = getRandomUltimaMarketsClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
@@ -103,8 +96,6 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         cpaCommission.setCommission(23_525.23);
         insertObjectToDb(S3_FACT_CPA_COMMISSIONS, cpaCommission);
 
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         formatter.setMinimumFractionDigits(0);
         formatter.setMaximumFractionDigits(2);
         formatter.setRoundingMode(RoundingMode.DOWN);
@@ -146,6 +137,5 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_CPA_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
-        closeAlert(crmTbUser.ucid);
     }
 }

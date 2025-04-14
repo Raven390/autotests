@@ -5,11 +5,8 @@ import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
-import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -23,10 +20,8 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.DATE;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,8 +32,6 @@ import static utils.Utils.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TradingSummaryIbRebatesTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
@@ -64,8 +57,6 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         relation3.setAccount(Long.valueOf(account2.account));
         relation3.setServerId(account2.serverIdSt);
         relation3.setDirectIbRebateAccount(rebateAccount3);
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @AfterEach
@@ -108,7 +99,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         tradingPage.openSummaryTab();
         assertThat("Verify title", tradingPage.getIbRebatesWidgetTitle(), is("IB rebates USD"));
         assertThat("Verify value", tradingPage.getIbRebatesWidgetValue(), is("0"));
-        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s account", "1")));
+        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s rebate account", "1")));
     }
 
     @Order(3)
@@ -164,7 +155,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         assertThat("Verify title", tradingPage.getIbRebatesWidgetTitle(), is("IB rebates USD"));
         String value = formatter.format(commissionsList.stream().mapToDouble(obj -> obj.getSalesCommission() + obj.getIbCommission()).sum());
         assertThat("Verify value", tradingPage.getIbRebatesWidgetValue(), is(value));
-        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s accounts", "3")));
+        assertThat("Verify info", tradingPage.getIbRebatesWidgetInfo(), is(String.format("on %s rebate accounts", "3")));
     }
 
 
@@ -173,6 +164,5 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
-        closeAlert(crmTbUser.ucid);
     }
 }

@@ -9,9 +9,7 @@ import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
@@ -32,7 +30,6 @@ import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3Fact
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,8 +39,6 @@ import static utils.Utils.*;
 
 public class IbOverviewSummaryTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper ibClient = getRandomVantageClientAllFields();
     private static final ClientHelper ibClient1 = getRandomVantageClientAllFields();
@@ -190,6 +185,5 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s')", relationSnapshot1.getUcid(), relationSnapshot2.getUcid(), relationSnapshot3.getUcid(), relationSnapshot4.getUcid()));
-        closeAlert(crmTbUser.ucid);
     }
 }

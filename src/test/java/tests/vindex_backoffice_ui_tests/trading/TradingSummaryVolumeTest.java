@@ -4,11 +4,8 @@ import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
-import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -22,10 +19,8 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.*;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.CleanTableHelper.cleanMt4CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
@@ -36,8 +31,6 @@ import static utils.Utils.*;
 
 public class TradingSummaryVolumeTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     DecimalFormat formatter = new DecimalFormat("#,###");
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
@@ -65,41 +58,38 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         trade14.notionalValueUsd = 3670.415;
-        trade14.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
+        trade14.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
         trade13.notionalValueUsd = 50_000d;
-        trade13.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
+        trade13.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 38, 0, 0, 0);
         trade12.notionalValueUsd = 3670.415;
-        trade12.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
+        trade12.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
         trade11.notionalValueUsd = 70_000d;
-        trade11.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
+        trade11.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 254, 0, 0);
         trade10.notionalValueUsd = 3670.415;
-        trade10.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
+        trade10.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
         trade9.notionalValueUsd = 30_000d;
-        trade9.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
+        trade9.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 62, 0, 0);
         trade8.notionalValueUsd = 2854.345;
-        trade8.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0);
+        trade8.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 8, 0, 0);
         trade7.notionalValueUsd = 884.243;
-        trade7.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0);
+        trade7.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0);
         trade6.notionalValueUsd = 4224.867;
-        trade6.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0);
+        trade6.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0);
         trade5.notionalValueUsd = 908.795;
-        trade5.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
+        trade5.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0);
         trade4.notionalValueUsd = 1338.32;
-        trade4.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 4, 0, 0);
+        trade4.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 4, 0, 0);
         trade3.notionalValueUsd = 6673.66;
-        trade3.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 3, 0, 0);
+        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 3, 0, 0);
         trade2.notionalValueUsd = 10_212.975;
-        trade2.closeTimeUtc = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
+        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
         trade1.notionalValueUsd = 3670.415;
-        trade1.closeTimeUtc = getCurrentTimestampDbFormat();
+        trade1.closeTime = getCurrentTimestampDbFormat();
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
-        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Order(1)
@@ -116,8 +106,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15k"));
-        String maxVolumeDate = transformDate(trade2.closeTimeUtc, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15K"));
+        String maxVolumeDate = transformDate(trade2.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
         String maxVolume = formatter.format(trade2.notionalValueUsd);
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8).mapToDouble(t -> t.notionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
@@ -138,7 +128,6 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume2Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 62, 0, 0);
-        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 62, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade9, trade10));
         investigationPage.navigateEnterPage();
@@ -148,8 +137,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35k"));
-        String maxVolumeDate = transformDate(trade9.closeTimeUtc, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35K"));
         String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
@@ -170,7 +158,6 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume3Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 254, 0, 0);
-        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 254, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade11, trade12));
         investigationPage.navigateEnterPage();
@@ -180,8 +167,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75k"));
-        String maxVolumeDate = transformDate(trade11.closeTimeUtc, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
+        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
         String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
@@ -202,7 +189,6 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public void verifyTradingSummaryVolume4Test() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
-        crmTbUser.registrationDateUtc = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade13, trade14));
         investigationPage.navigateEnterPage();
@@ -212,8 +198,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75k"));
-        String maxVolumeDate = transformDate(trade11.closeTimeUtc, DATE_AND_TIME, YEAR);
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
+        String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
         String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(t -> t.notionalValueUsd).sum());
         assertThat("Verify Volume max value", tradingPage.getVolumeMaxValue(), is(maxVolume));
@@ -229,6 +215,5 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(crmTbUser.ucid);
         cleanMt4CoercedTableByUcid(client.getUcid());
-        closeAlert(crmTbUser.ucid);
     }
 }
