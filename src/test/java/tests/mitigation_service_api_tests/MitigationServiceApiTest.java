@@ -446,7 +446,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1075")
     @DisplayName("Verify logic for internalReason field")
     void internalReasonTest() throws IOException, InterruptedException {
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalProperty[]{new PostRestrictionRequestBody.AdditionalProperty("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalProperty("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalProperty("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());

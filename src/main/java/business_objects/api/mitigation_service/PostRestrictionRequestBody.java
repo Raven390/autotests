@@ -28,8 +28,8 @@ public class PostRestrictionRequestBody {
     @JsonProperty("updatedBy")
     public UpdatedBy updatedBy;
 
-    @JsonProperty("additionalProperties")
-    public AdditionalProperty[] additionalProperties;
+    @JsonProperty("additionalParams")
+    public AdditionalParam[] additionalParams;
 
     public PostRestrictionRequestBody() {
     }
@@ -46,7 +46,7 @@ public class PostRestrictionRequestBody {
     }
 
     public PostRestrictionRequestBody(String ucid, String code, String type, Integer accountId, Integer serverId,
-            String comment, UpdatedBy updatedBy, AdditionalProperty[] additionalProperties) {
+            String comment, UpdatedBy updatedBy, AdditionalParam[] additionalParams) {
         this.ucid = ucid;
         this.code = code;
         this.type = type;
@@ -54,24 +54,24 @@ public class PostRestrictionRequestBody {
         this.serverId = serverId;
         this.comment = comment;
         this.updatedBy = updatedBy;
-        this.additionalProperties = additionalProperties;
+        this.additionalParams = additionalParams;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PostRestrictionRequestBody that = (PostRestrictionRequestBody) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(accountId, that.accountId) && Objects.equals(serverId, that.serverId) && Objects.equals(comment, that.comment) && Objects.equals(updatedBy, that.updatedBy) && Objects.deepEquals(additionalProperties, that.additionalProperties);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(code, that.code) && Objects.equals(type, that.type) && Objects.equals(accountId, that.accountId) && Objects.equals(serverId, that.serverId) && Objects.equals(comment, that.comment) && Objects.equals(updatedBy, that.updatedBy) && Objects.deepEquals(additionalParams, that.additionalParams);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, code, type, accountId, serverId, comment, updatedBy, Arrays.hashCode(additionalProperties));
+        return Objects.hash(ucid, code, type, accountId, serverId, comment, updatedBy, Arrays.hashCode(additionalParams));
     }
 
     @Override
     public String toString() {
-        return "PostRestrictionRequestBody{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", type='" + type + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", comment='" + comment + '\'' + ", updatedBy=" + updatedBy + ", additionalProperties=" + Arrays.toString(additionalProperties) + '}';
+        return "PostRestrictionRequestBody{" + "ucid='" + ucid + '\'' + ", code='" + code + '\'' + ", type='" + type + '\'' + ", accountId=" + accountId + ", serverId=" + serverId + ", comment='" + comment + '\'' + ", updatedBy=" + updatedBy + ", additionalParams=" + Arrays.toString(additionalParams) + '}';
     }
 
     public static class UpdatedBy {
@@ -109,7 +109,7 @@ public class PostRestrictionRequestBody {
         }
     }
 
-    public static class AdditionalProperty {
+    public static class AdditionalParam {
 
         @JsonProperty("name")
         String name;
@@ -120,10 +120,10 @@ public class PostRestrictionRequestBody {
         @JsonProperty("value")
         Object value;
 
-        public AdditionalProperty() {
+        public AdditionalParam() {
         }
 
-        public AdditionalProperty(String name, String type, Object value) {
+        public AdditionalParam(String name, String type, Object value) {
             this.name = name;
             this.type = type;
             this.value = value;
@@ -132,7 +132,7 @@ public class PostRestrictionRequestBody {
         @Override
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
-            AdditionalProperty that = (AdditionalProperty) o;
+            AdditionalParam that = (AdditionalParam) o;
             return Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(value, that.value);
         }
 
