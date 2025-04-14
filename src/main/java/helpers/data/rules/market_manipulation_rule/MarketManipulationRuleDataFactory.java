@@ -94,7 +94,7 @@ public class MarketManipulationRuleDataFactory {
         ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(
                 fromClient.getUcid(), toClient.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 1d, List.of(
                         new ConnectionTableEntry.ConnectionInfo(
-                                CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT
+                                CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT
                         )), getCurrentTimestampDbFormat()
         );
 
