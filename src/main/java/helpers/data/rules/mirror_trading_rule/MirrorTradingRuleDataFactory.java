@@ -15,6 +15,7 @@ import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
+import helpers.data.enums.FraudType;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -78,7 +79,7 @@ public class MirrorTradingRuleDataFactory {
         lexisNexisObjectLogin.setTrueIpGeo("CY");
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
         CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(
-                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade"
+                getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, EURUSD, crmTbAccountObject.serverIdSt, "closeTrade"
         );
         return new MirrorTradingRuleData(client, userObject, lexisNexisObjectRegistration, lexisNexisObjectLogin, new ArrayList<>(), new ArrayList<>(), closeTradeMtEvent, new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>());
     }
@@ -97,7 +98,7 @@ public class MirrorTradingRuleDataFactory {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd2Client);
         Allure.step("Client has previous restrictions");
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                data.clientHelper.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()
+                data.clientHelper.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
@@ -110,7 +111,7 @@ public class MirrorTradingRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Set restriction");
         Allure.step("Send alert");

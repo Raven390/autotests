@@ -285,20 +285,20 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
         ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), "CPA_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), "LOSS_VOUCHER_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), "NEWS_TRADER", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), "TLS_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), "SWAP_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), "MARKET_MANIPULATION", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), "UNKNOWN", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientGapAbuser.getUcid(), "GAP_TRADING", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLatencyAbuser.getUcid(), "LATENCY_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientPricingErrorAbuser.getUcid(), "PRICING_ERROR", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNbpAbuser.getUcid(), "NBP_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientHftAbuser.getUcid(), "HFT_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLoopholeAbuser.getUcid(), "LOOPHOLE_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), FraudType.UNKNOWN.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientGapAbuser.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLatencyAbuser.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientPricingErrorAbuser.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNbpAbuser.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientHftAbuser.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLoopholeAbuser.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.lnSessionParsedObject.setPolicyScore(-21);
         registrationRuleData.lnSessionParsedObject.setRiskRating("high");
@@ -370,7 +370,7 @@ public class RegistrationRuleDataFactory {
         connectedClientCpa.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), "CPA_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.lnSessionParsedObject.setPolicyScore(-19);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
@@ -393,7 +393,7 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
         connectionAndConnectedUserBonusAbuser.connectionTableEntry.connectionScore = 1d;
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
@@ -419,8 +419,8 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version5Client, connectedClientBonusAbuser);
         connectionAndConnectedUserBonusAbuser.connectionTableEntry.connectionScore = 1d;
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.BONUS_ABUSE.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.BONUS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
         registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
@@ -441,7 +441,7 @@ public class RegistrationRuleDataFactory {
         connectedClientVoucherAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version7Client, connectedClientVoucherAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), "LOSS_VOUCHER_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.lnSessionParsedObject.setPolicyScore(-19);
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
@@ -462,7 +462,7 @@ public class RegistrationRuleDataFactory {
         connectedClientNewsTrader.setBrand(Brand.VJP);
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version9Client, connectedClientNewsTrader);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), "NEWS_TRADER", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
@@ -481,7 +481,7 @@ public class RegistrationRuleDataFactory {
         connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version10Client, connectedClientNewsTrader);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), "NEWS_TRADER", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
@@ -500,7 +500,7 @@ public class RegistrationRuleDataFactory {
         connectedClientTls.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version11Client, connectedClientTls);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), "TLS_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
@@ -520,7 +520,7 @@ public class RegistrationRuleDataFactory {
 
         registrationRuleData.lnSessionParsedObject.setRiskRating("high");
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), "SWAP_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
@@ -538,7 +538,7 @@ public class RegistrationRuleDataFactory {
         connectedClientMarketManipulator.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version13Client, connectedClientMarketManipulator);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), "MARKET_MANIPULATION", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
@@ -558,8 +558,8 @@ public class RegistrationRuleDataFactory {
         connectedClientUnknownAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserUnknownAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version14Client, connectedClientUnknownAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), "UNKNOWN", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), "MOREUNKNOWN", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), FraudType.UNKNOWN.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), FraudType.MOREUNKNOWN.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
@@ -578,7 +578,7 @@ public class RegistrationRuleDataFactory {
         connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version15Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "GAP_TRADING", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
@@ -596,7 +596,7 @@ public class RegistrationRuleDataFactory {
         connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version16Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "LATENCY_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
@@ -614,7 +614,7 @@ public class RegistrationRuleDataFactory {
         connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version17Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "PRICING_ERROR", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
@@ -631,7 +631,7 @@ public class RegistrationRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version18Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "NBP_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
@@ -649,7 +649,7 @@ public class RegistrationRuleDataFactory {
         connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version19Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "HFT_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
@@ -667,7 +667,7 @@ public class RegistrationRuleDataFactory {
         connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
         ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version20Client, connectedClient);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), "LOOPHOLE_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
         registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
@@ -725,20 +725,20 @@ public class RegistrationRuleDataFactory {
         ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
         ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), "CPA_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), "HEDGING", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), "LOSS_VOUCHER_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), "NEWS_TRADER", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), "TLS_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), "SWAP_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), "MARKET_MANIPULATION", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), "UNKNOWN", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientGapAbuser.getUcid(), "GAP_TRADING", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLatencyAbuser.getUcid(), "LATENCY_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientPricingErrorAbuser.getUcid(), "PRICING_ERROR", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNbpAbuser.getUcid(), "NBP_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientHftAbuser.getUcid(), "HFT_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLoopholeAbuser.getUcid(), "LOOPHOLE_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientUnknownAbuser.getUcid(), FraudType.UNKNOWN.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientGapAbuser.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLatencyAbuser.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientPricingErrorAbuser.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientNbpAbuser.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientHftAbuser.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+        registrationRuleData.clientFraudTypes.add(new ClientFraudTypesObject(connectedClientLoopholeAbuser.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
 
         registrationRuleData.lnSessionParsedObject.setPolicyScore(-21);
         registrationRuleData.lnSessionParsedObject.setRiskRating("high");
