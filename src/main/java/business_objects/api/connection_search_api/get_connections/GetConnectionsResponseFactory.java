@@ -8,21 +8,24 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsResponseSuccess(ClientHelper userFrom, ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1d, 1d, 1d
         );
     }
 
     public static GetConnectionsResponse getConnectionsResponseSuccessWithLevel(ClientHelper userFrom,
             ClientHelper userTo, int level) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, level, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, level, null, 1d, 1d, 1d
         );
     }
 
     public static GetConnectionsResponse getConnectionsByClientLvl2ResponseSuccess(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 0.5d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5d, 0.5d, 0.5d
+                userFrom.getUcid(), userTo.getUcid(), 0.5d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5d, 0.5d, 0.5d
         );
     }
 
@@ -77,14 +80,16 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesForDepth(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
         );
     }
 
     public static GetConnectionsResponse[] getConnectionsByClientForFiltrationByParams(ClientHelper userFrom,
             ClientHelper userTo1, ClientHelper userTo2) {
         return new GetConnectionsResponse[]{new GetConnectionsResponse(
-                userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo1.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1d, 1d, 1d
         ), new GetConnectionsResponse(
                 userTo1.getUcid(), userTo2.getUcid(), 0.200_000_002_980_232_24, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_EMAIL, "matisse@gmx.net", "maatiuss@gmail.com", "similar")}, CONNECTION_TYPE_SAME_NETWORK, 3, null, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24, 0.200_000_002_980_232_24
         )
@@ -143,7 +148,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessDocumentLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
         );
     }
 
@@ -156,7 +162,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessEmailLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1d, 0.5
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1d, 0.5
         );
     }
 
@@ -170,7 +177,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessIpLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.200_000_002_980_232_24, 1d, 0.200_000_002_980_232_24
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.200_000_002_980_232_24, 1d, 0.200_000_002_980_232_24
         );
     }
 
@@ -183,20 +191,23 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessPhoneLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1d, 0.5
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1d, 0.5
         );
     }
 
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessPayoutInitial(ClientHelper user) {
         return new GetConnectionsResponse(
-                null, user.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, "testpayout", "testpayout", CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1.0, 1.0, 1.0
+                null, user.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, "testpayout", "testpayout", CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1.0, 1.0, 1.0
         );
     }
 
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessPayoutLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
         );
     }
 
@@ -209,7 +220,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessDeviceIdLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.699_999_988_079_071, 1d, 0.699_999_988_079_071
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.699_999_988_079_071, 1d, 0.699_999_988_079_071
         );
     }
 
@@ -222,7 +234,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessDigitalIdLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.699_999_988_079_071, 1d, 0.699_999_988_079_071
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.699_999_988_079_071, 1d, 0.699_999_988_079_071
         );
     }
 
@@ -235,7 +248,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessNameBirthLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.800_000_011_920_929, 1d, 0.800_000_011_920_929
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.800_000_011_920_929, 1d, 0.800_000_011_920_929
         );
     }
 
@@ -248,7 +262,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessSessionIdLvl2(ClientHelper userFrom,
             ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
         );
     }
 
@@ -262,7 +277,8 @@ public class GetConnectionsResponseFactory {
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(
             ClientHelper userFrom, ClientHelper userTo) {
         return new GetConnectionsResponse(
-                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
+                userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
         );
     }
 }

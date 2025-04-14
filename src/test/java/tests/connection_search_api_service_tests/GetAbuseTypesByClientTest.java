@@ -68,9 +68,9 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(
                 new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
-        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
-        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
-        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getDisplayName(), "VINDEX", 0, getCurrentTimestampDbFormat());
+        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);

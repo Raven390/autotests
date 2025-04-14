@@ -130,7 +130,7 @@ public class CpaAbuseRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
         data.connectedUsers.add(connectedUserCrmTbUserObject);

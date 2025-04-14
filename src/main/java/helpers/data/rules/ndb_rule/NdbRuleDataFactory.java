@@ -86,7 +86,7 @@ public class NdbRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
@@ -117,7 +117,7 @@ public class NdbRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
@@ -136,7 +136,7 @@ public class NdbRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.HEDGING.getKey(), "VINDEX", 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);

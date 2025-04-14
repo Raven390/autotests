@@ -48,7 +48,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_EQUITY = "Clickhouse api. Get credit equity request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_FLOATING_TRADES_GROUP_BY = "Clickhouse api. Get floating trades group by";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
-    public static final String STORY_CLICKHOUSE_API_SERVICE_POST_ABUSE_TYPES = "Clickhouse api. Post abuse types";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Post abuse types";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CREDIT_RISK_FREE_REVENUE_RATIO = "Clickhouse api. Get credit risk free revenue ratio";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME = "Clickhouse api. Get swap free volume";
@@ -251,5 +251,7 @@ public class Constants {
     public static final String EG_RAF_BALANCE_EVENT = "egRaf";
     public static final String MT_RAF_BALANCE_EVENT = "raf";
     public static final String KAFKA_MESSAGE_KEY = "QA";
-
+    //Other
+    public static final String FRAUD_TYPE_SOURCE_VINDEX = "VINDEX";
+    public static final String FRAUD_TYPE_SOURCE_INSIGHT = "INSIGHT";
 }
