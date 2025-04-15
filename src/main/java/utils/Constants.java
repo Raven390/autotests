@@ -14,6 +14,7 @@ public class Constants {
     public static final String SUITE_MITIGATION_SERVICE = "suite_mitigation_service";
     public static final String SUITE_RULE_ENGINE_RULES_TESTS = "suite_rule_engine_rules_tests";
     public static final String SUITE_RULE_ENGINE_API_TESTS = "suite_rule_engine_api_tests";
+    public static final String DEBUG_RUNNER = "debug_runner";
     // TEST LAYERS
     public static final String LAYER_API = "layer_api";
     public static final String LAYER_WEB = "layer_web";

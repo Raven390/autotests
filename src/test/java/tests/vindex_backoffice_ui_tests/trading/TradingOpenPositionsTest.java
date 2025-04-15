@@ -58,10 +58,10 @@ class TradingOpenPositionsTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
+    @AllureId("1112")
     @Feature("BMS-1050 Open positions tab in Trading tab")
-    @DisplayName("1112")
-    void OpenTradesShowDataFromDb() throws Exception {
+    @DisplayName("Test that open positions show data from DB")
+    void OpenTradesShowDataFromDb() {
 
         openPositions.openPositionsClean(client);
         MtMt4TradesObject mt4trade = generateMt4TradesObject(client);

@@ -241,6 +241,36 @@ job_test_backoffice:
       - test-output/videos
     expire_in: 1 day
 
+job_debug_runner:
+  stage: test
+  needs: ["job_build"]
+  image: gradle:8.10.0-jdk22
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'
+  variables:
+    ALLURE_LAUNCH_NAME: "[Debug tests] run at $CI_PIPELINE_CREATED_AT"
+    ALLURE_ENDPOINT: http://allure.vindex-test.risk-vantagefx.com/
+    ALLURE_PROJECT_ID: 4
+    ALLURE_RESULTS: allure-results
+    RUNNER: "GITLAB_CI"
+  before_script:
+    - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
+    - chmod +x allurectl
+  script:
+    - echo "Running tests"
+    - ./gradlew installDeps
+    - ./gradlew installChromium
+    - ./allurectl watch -- gradle clean testRunnerDebug
+    - echo "TEST SUCCESS"
+  artifacts:
+    when: always
+    paths:
+      - playwright-report
+      - build/reports/
+      - allure-results
+      - test-output/videos
+    expire_in: 1 day
+
 #Job to launch tests by connected service
 job_test_downstream_end_to_end:
   timeout: 3 hours
