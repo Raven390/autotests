@@ -242,6 +242,12 @@ tasks.register('testRuleEngineService', Test) {
     }
 }
 
+tasks.register('testRunnerDebug', Test) {
+    useJUnitPlatform() {
+        includeTags 'debug_runner'
+    }
+}
+
 sourceSets {
     main {
         java {
