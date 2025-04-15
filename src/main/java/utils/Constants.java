@@ -168,7 +168,7 @@ public class Constants {
     public static final String FILE_KYC_POF_2_NAME = "/testFaceFile2.jpg";
     public static final String FILE_KYC_POF_3_NAME = "/testFaceFile3.jpg";
     // Connection search values
-    public static final String CONNECTION_ATTRIBUTE_NAME_EMAIL = "emailAddress";
+    public static final String CONNECTION_ATTRIBUTE_NAME_EMAIL = "email";
     public static final String CONNECTION_ATTRIBUTE_NAME_PAYOUT = "payout";
     public static final String CONNECTION_ATTRIBUTE_NAME_SESSION = "session";
     public static final String CONNECTION_ATTRIBUTE_NAME_WEB_SESSION = "webSession";
@@ -176,7 +176,7 @@ public class Constants {
     public static final String CONNECTION_ATTRIBUTE_NAME_NAME_AND_BIRTH = "name+dateofbirth";
     public static final String CONNECTION_ATTRIBUTE_NAME_DIGITAL = "digital";
     public static final String CONNECTION_ATTRIBUTE_NAME_DEVICE = "device";
-    public static final String CONNECTION_ATTRIBUTE_NAME_PHONE = "phoneNumber";
+    public static final String CONNECTION_ATTRIBUTE_NAME_PHONE = "phone";
     public static final String CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS = "ipAddress";
     public static final String CONNECTION_ATTRIBUTE_NAME_IP = "ip";
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_TYPE = "documentType";

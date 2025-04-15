@@ -3,6 +3,7 @@ package tests.vindex_backoffice_ui_tests;
 import static utils.Constants.*;
 
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -50,6 +51,8 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -62,6 +65,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     }
 
     @Disabled("not implemented")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
@@ -77,6 +82,8 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)
@@ -91,6 +98,8 @@ public class InvestigationPageTest extends TestBaseWeb {
 
     @Test
     @Disabled("disabled in UI")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
     @Tag(LAYER_WEB)

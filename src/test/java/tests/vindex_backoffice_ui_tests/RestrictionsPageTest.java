@@ -10,6 +10,7 @@ import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Muted;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.RestrictionPage;
@@ -344,6 +345,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -362,6 +365,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -381,6 +386,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -399,6 +406,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -418,6 +427,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -436,6 +447,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -455,6 +468,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -473,6 +488,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -492,6 +509,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -514,6 +533,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -536,6 +557,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     //restriction hidden from UI
     @Test
     @Tag(TEAM_BACKOFFICE)

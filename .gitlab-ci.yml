@@ -63,6 +63,8 @@ workflow:
      when: always
    - if: '$PROD_TESTS == "true"'
      when: always
+   - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'
+     when: always
    # Default: Disable pipeline for other scenarios
    - when: never
 
@@ -71,7 +73,7 @@ job_build:
   stage: build
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$APP_NAME == null && $PROD_TESTS == null'
+    - if: '$APP_NAME == null && $PROD_TESTS == null && $DEBUG_RUNNER != "true"'
   artifacts:
     when: always
     paths:
@@ -89,7 +91,7 @@ job_code_check:
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
-    - if: '$APP_NAME == null && $PROD_TESTS == null'
+    - if: '$APP_NAME == null && $PROD_TESTS == null && $DEBUG_RUNNER != "true"'
   script:
     - echo "Checking the code"
     - ./gradlew spotlessCheck
@@ -98,6 +100,8 @@ job_code_check:
 sonarqube-check:
   stage: check
   image: public.ecr.aws/docker/library/gradle:8.9-jdk21-jammy
+  rules:
+    - if: '$DEBUG_RUNNER != "true"'
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED"
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
@@ -243,7 +247,6 @@ job_test_backoffice:
 
 job_debug_runner:
   stage: test
-  needs: ["job_build"]
   image: gradle:8.10.0-jdk22
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $DEBUG_RUNNER == "true"'

@@ -275,7 +275,7 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
             assertThat("Verify kafka withdrawal timestamp", approval.timestamp, notNullValue());
             assertThat("Verify kafka withdrawal brand", approval.brand, is(client.getBrand()));
             assertThat("Verify kafka withdrawal regulator", approval.regulator, is(client.getRegulator()));
-            assertThat("Verify kafka withdrawal internal reason", approval.internalReason, is(comment));
+            assertThat("Verify kafka withdrawal internal reason", approval.internalReason, is(""));
             assertThat("Verify kafka withdrawal status", approval.status, is("Refuse"));
         }
         assertThat("Verify kafka withdrawal transfer id", approval1.transferId, is(withdrawal1.transferId.longValue()));

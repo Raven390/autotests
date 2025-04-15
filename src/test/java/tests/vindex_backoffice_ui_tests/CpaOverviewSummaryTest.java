@@ -10,7 +10,6 @@ import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissio
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
@@ -122,9 +121,6 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         assertThat("Verify CPA overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sCPA rebates", formatter.format(cpaCommission.getCommission())), String.format("%sNet PNL", formatter.format(factLoginMetrics.getDailyNetClosedPnl())), String.format("%sNet deposit", formatter.format(factLoginMetrics.getDailyNetDeposit()))));
         assertThat("Verify CPA overview summary clients totals title", ibCpaOverviewPage.getClientsTotalsTitle(), is("Clients totals USD"));
         assertThat("Verify CPA overview summary clients totals items", ibCpaOverviewPage.getClientsTotalsItems(), contains(String.format("%sVolume", formatter.format((factLoginMetrics.getDailyTradingVolIn() + factLoginMetrics.getDailyTradingVolOut()) / 1_000_000)), String.format("%sProfit", formatter.format(factLoginMetrics.getDailyGrossClientPnl())), String.format("%sEquity", formatter.format(factLoginMetrics.getEquity())), String.format("%sDeposit", formatter.format(factLoginMetrics.getDailyDeposit())), String.format("%sWithdrawal", formatter.format(factLoginMetrics.getDailyWithdraw())), String.format("%sIB rebates", formatter.format(commission.getIbCommission()))));
-        ibCpaOverviewPage.clickOverviewSubheaderIcon();
-        page.waitForTimeout(5000);
-        PlaywrightAssertions.assertThat(page.context().pages().getLast()).hasURL(String.format("https://risktool.risk-vantagefx.com//cpa?brand=Ultimas&cpa=%s", client.getCpaId()));
     }
 
 

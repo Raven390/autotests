@@ -107,7 +107,7 @@ public class ConnectionPage extends AbstractPage {
     private final String CONNECTION_CARD_HEADER_NAME_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'v-graph-node-details-header__client-name')]";
     private final String CONNECTION_CARD_HEADER_LEVEL_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[1]//span";
     private final String CONNECTION_CARD_HEADER_POINTS_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[2]//span";
-    private final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::tr";
+    private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
     private final String MASKED_TEXT_LOCATOR = "//div[contains(text(), '***')]";
     private static final String FILTER_CONTAINER_BY_TITLE_PATTERN = "//div[@class='v-text-with-icon__text' and text()='%s']/ancestor::div[@class='v-filter-container']";
     private static final String FILTER_CONTAINER = "//div[@class='v-drawer-content-wrapper__content']";
@@ -141,7 +141,7 @@ public class ConnectionPage extends AbstractPage {
         this.ibHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CPA/IB"));
         this.registeredHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "REGISTERED"));
         this.lastLoginHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LAST LOGIN"));
-        this.graphLinkHeader = page.locator("th.v-connection-search-table-view__column_type_graph-link");
+        this.graphLinkHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon')) and not(text())]");
         this.levelCell = page.locator(LEVEL_CELL_SELECTOR);
         this.clientCell = page.locator("td.v-connection-search-table-view__column_type_client");
         this.connectionCell = page.locator(CONNECTION_CELL_SELECTOR);
@@ -307,9 +307,9 @@ public class ConnectionPage extends AbstractPage {
         String pnlText = pnlHeader.textContent();
         assertEquals("TOTAL PNL", pnlText);
         String operationsText = operationHeader.textContent();
-        assertEquals("OPERATIONS", operationsText);
+        assertEquals("PAYMENTS", operationsText);
         String ibText = ibHeader.textContent();
-        assertEquals("IB/CPA", ibText);
+        assertEquals("CPA/IB", ibText);
         String registeredText = registeredHeader.textContent();
         assertEquals("REGISTERED", registeredText);
         String lastLoginText = lastLoginHeader.textContent();

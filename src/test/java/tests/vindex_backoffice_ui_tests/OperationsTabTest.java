@@ -14,6 +14,7 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 import utils.Utils;
@@ -838,6 +839,8 @@ public class OperationsTabTest extends TestBaseWeb {
 
     @Deprecated
     @Disabled("requirements for timeline changed")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
@@ -861,6 +864,8 @@ public class OperationsTabTest extends TestBaseWeb {
 
     @Deprecated
     @Disabled("requirements for timeline changed")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
@@ -883,6 +888,8 @@ public class OperationsTabTest extends TestBaseWeb {
 
     @Deprecated
     @Disabled("requirements for timeline changed")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
@@ -905,6 +912,8 @@ public class OperationsTabTest extends TestBaseWeb {
 
     @Deprecated
     @Disabled("requirements for timeline changed")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)

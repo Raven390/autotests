@@ -4,6 +4,7 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -13,6 +14,8 @@ import tests.TestBaseWeb;
 public class ProfilePageTest extends TestBaseWeb {
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
@@ -26,6 +29,8 @@ public class ProfilePageTest extends TestBaseWeb {
     }
 
     @Disabled
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(TAG_AUTOMATED)
