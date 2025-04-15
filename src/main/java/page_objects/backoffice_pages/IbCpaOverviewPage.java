@@ -2,6 +2,7 @@ package page_objects.backoffice_pages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Step;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class IbCpaOverviewPage extends AbstractPage {
         super(page);
         overviewTitle = page.locator("//div[@class='v-drawer-header__title-container']").last();
         overviewSubheaderText = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text']", OVERVIEW_SUBHEADER));
-        overviewSubheaderIcon = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__icon']", OVERVIEW_SUBHEADER));
+        overviewSubheaderIcon = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER));
         underThisTitle = page.locator(String.format("%s/descendant::div[contains(@class,'g-text_variant_subheader-2')]", UNDER_THIS_SECTION));
         underThisItems = page.locator(String.format("%s/descendant::div[@class='v-registration-source-drawer-referrals__items']/div", UNDER_THIS_SECTION));
         clientsPerformanceTitle = page.locator(String.format("%s/div", CLIENTS_PERFORMANCE_SECTION)).first();
@@ -62,6 +63,7 @@ public class IbCpaOverviewPage extends AbstractPage {
 
     @Step("Click overview subheader icon")
     public void clickOverviewSubheaderIcon() {
+        page.waitForSelector(String.format("%s/descendant::div[@class='v-text-with-icon__icon']/descendant::button", OVERVIEW_SUBHEADER), new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
         overviewSubheaderIcon.click();
     }
 
