@@ -47,7 +47,7 @@ public class TestBaseWeb {
     public ActivityTab activityTab;
     public IbCpaOverviewPage ibCpaOverviewPage;
     public GeneralSearchElements generalSearch;
-    public OpenPositions openPositions;
+    public static OpenPositions openPositions;
 
     DecimalFormat df = new DecimalFormat("#,###");
     DecimalFormat dfd = new DecimalFormat("#,###.##");
