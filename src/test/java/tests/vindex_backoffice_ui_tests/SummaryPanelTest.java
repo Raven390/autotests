@@ -36,8 +36,8 @@ import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.ge
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.data.enums.FraudType.getRandomFraudType;
-import static helpers.database.BoHelper.cleanUserFraudsDb;
-import static helpers.database.BoHelper.createUserFraudsDb;
+import static helpers.database.BoHelper.cleanUserFraudsBo;
+import static helpers.database.BoHelper.createUserFraudsBo;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -182,7 +182,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud, no frauds")
     public void clientSummaryFraudEmptyTest() throws Exception {
-        cleanUserFraudsDb(client.getUcid());
+        cleanUserFraudsBo(client.getUcid());
         Allure.step("Prepare DB data for test user");
 
         investigationPage.navigateEnterPage();
@@ -198,13 +198,13 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud")
     public void clientSummaryFraudTest() throws Exception {
-        cleanUserFraudsDb(client.getUcid());
+        cleanUserFraudsBo(client.getUcid());
         FraudType fraudType = getRandomFraudType();
         Allure.step("Prepare DB data for test user");
-        createUserFraudsDb(client.getUcid(), fraudType.getFraudTypeId());
+        createUserFraudsBo(client.getUcid(), fraudType.getFraudTypeId());
         FraudType fraudType2 = getRandomFraudType(fraudType);
         Allure.step("Prepare DB data for test user");
-        createUserFraudsDb(client.getUcid(), fraudType2.getFraudTypeId());
+        createUserFraudsBo(client.getUcid(), fraudType2.getFraudTypeId());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

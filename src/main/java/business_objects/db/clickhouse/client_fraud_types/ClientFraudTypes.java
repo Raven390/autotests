@@ -3,11 +3,51 @@ package business_objects.db.clickhouse.client_fraud_types;
 import java.util.Objects;
 
 public class ClientFraudTypes {
-    public String ucid;
-    public String fraudTypeCode;
-    public String source;
-    public Integer isDeleted;
-    public String lastUpdated;
+    protected String ucid;
+    protected String fraudTypeCode;
+    protected String source;
+    protected Integer isDeleted;
+    protected String lastUpdated;
+
+    public String getUcid() {
+        return ucid;
+    }
+
+    public void setUcid(String ucid) {
+        this.ucid = ucid;
+    }
+
+    public String getFraudTypeCode() {
+        return fraudTypeCode;
+    }
+
+    public void setFraudTypeCode(String fraudTypeCode) {
+        this.fraudTypeCode = fraudTypeCode;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 
     public ClientFraudTypes() {
     }
