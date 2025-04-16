@@ -17,17 +17,17 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createUserFraudsCh;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.deleteUserFraudsCh;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
@@ -36,6 +36,9 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 public class ConnectionSearchTest extends TestBaseWeb {
+
+
+    DecimalFormat dfd = new DecimalFormat("#####,###.##");
 
     static ClientHelper client1 = new ClientHelper(42_424_201, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_201_001, 42);
     static ClientHelper client2 = new ClientHelper(42_424_202, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_202_001, 42);
@@ -54,6 +57,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     static ClientHelper client15 = new ClientHelper(42_424_215, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_215_001, 42);
 
     CrmTbUserObject client13DB;
+    CrmTbUserObject client6DB;
 
     @BeforeAll
     static void setup() throws Exception {
@@ -321,8 +325,8 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
-        connectionPage.openConnectionCard(client13.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Brand", client13.getBrand());
+        connectionPage.openConnectionCard(client6.getUcid());
+        connectionPage.ccCheckGeneralInfoRows("Brand", client6.getBrand());
         connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
         connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
         connectionPage.ccCheckGeneralInfoRows("CPA", "2");
@@ -339,7 +343,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid ='" + client13.getUcid() + "'");
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid ='" + client13.getUcid() + "'");
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + client13.getUcid() + "'");
-        CrmTbAccountObject account = generateAdditionalStaticCrmTbAccountActive(client13);
+        CrmTbAccountObject account = generateStaticCrmTbAccountActive(client13);
         CrmTbWithdrawalObject withdrawalObject = generateWithdrawalByClient(client13);
         CrmTbDepositObject depositObject = generateDepositByClient(client13);
         MtMt4TradesCoercedObject trade = generateMt4TradesCoercedRandomized(client13);
@@ -351,10 +355,10 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client13.getUcid());
-        connectionPage.ccCheckSummaryRows("Trading", "1 closed deals");
-        connectionPage.ccCheckSummaryRows("Total PNL", (trade.profitUsd + trade.commissionUsd + trade.storageUsd) + " USD");
-        connectionPage.ccCheckSummaryRows("Deposit", depositObject.amountUsd + " USD");
-        connectionPage.ccCheckSummaryRows("Withdrawal", (withdrawalObject.amountUsd - withdrawalObject.reversedAmountUsd) + " USD");
+        connectionPage.ccCheckSummaryRows("Trading", "1 closed deal");
+        connectionPage.ccCheckSummaryRows("Total PNL", dfd.format(trade.profitUsd + trade.commissionUsd + trade.storageUsd) + " USD");
+        connectionPage.ccCheckSummaryRows("Deposit", dfd.format(depositObject.amountUsd) + " USD");
+        connectionPage.ccCheckSummaryRows("Withdrawal", dfd.format(withdrawalObject.amountUsd - withdrawalObject.reversedAmountUsd) + " USD");
     }
 
     @Test

@@ -111,6 +111,19 @@ class TradingOpenPositionsTest extends TestBaseWeb {
     @Feature("BMS-1050 Open positions tab in Trading tab")
     @DisplayName("Test that open positions subtab renders all basic elements")
     void rendersAllBasicElementsTest() {
+        openPositions.openPositionsClean(client);
+        MtMt4TradesObject mt4trade = generateMt4TradesObject(client);
+        mt4trade.setCloseTime("1970-01-01 00:00:00");
+        mt4trade.setCmd(0);
+        mt4trade.setAccount(client.getTradingAccount());
+        mt4trade.setServerId(client.getServerId());
+        MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
+        position.setAccount(client.getTradingAccount2());
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(position);
+        position.setAccount(client.getTradingAccount2());
+        insertObjectToDb(MT4_TRADES_TABLE_NAME, mt4trade);
+        insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         openPositions.navigateOpenPositions(client.getUcid());

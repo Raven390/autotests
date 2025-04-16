@@ -124,8 +124,8 @@ public class OpenPositions extends AbstractPage {
         super.waitForPageToLoad();
         String locator = "//" + TABLE_CELL_LOCATOR + "//*[text()='" + account + "']/ancestor::" + TABLE_ROW_LOCATOR + "/" + TABLE_CELL_LOCATOR + "[4]";
         page.locator(locator).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertEquals(openPrice, page.locator(locator + "/descendant::" + PRIMARY_TEXT).textContent());
-        assertEquals(openTime, page.locator(locator + "/descendant::" + SECONDARY_TEXT).textContent());
+        assertEquals(openPrice, page.locator(locator + "/descendant::" + SECONDARY_TEXT).textContent());
+        assertEquals(openTime, page.locator(locator + "/descendant::" + PRIMARY_TEXT).textContent());
     }
 
     public void checkOpenCellValue(Integer account, Double openPrice, String openTime) {
@@ -223,6 +223,6 @@ public class OpenPositions extends AbstractPage {
         methodColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commentColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         filterButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertEquals(page.locator("//" + TABLE_ROW_LOCATOR + "//" + TABLE_CELL_LOCATOR).count(), 11);
+        assertEquals(22, page.locator("//" + TABLE_ROW_LOCATOR + "//" + TABLE_CELL_LOCATOR).count());
     }
 }
