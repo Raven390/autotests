@@ -97,8 +97,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Alert received";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -120,8 +119,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Comment added";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -143,8 +141,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Client assigned";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -166,8 +163,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Investigation completed";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -189,8 +185,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Restriction cancelled";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -212,8 +207,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Restriction applied";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -235,8 +229,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Restriction requested";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -258,8 +251,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Cancellation requested";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -281,8 +273,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Withdrawal request decision";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are some audit trail items", auditTrailItems, not(empty()));
         for (AuditTrailItem item : auditTrailItems) {
@@ -305,9 +296,8 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         auditTrailPage.clickAuditTrailFilter();
         String alertText1 = "Alert received";
         String alertText2 = "Comment added";
-        auditTrailPage.selectAuditTrailFilterItem(alertText1);
-        auditTrailPage.selectAuditTrailFilterItem(alertText2);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText1);
+        auditTrailPage.selectAuditTrailFilter(alertText2);
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
         for (AuditTrailItem item : auditTrailItems) {
@@ -330,10 +320,9 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         int initialItemsCount = auditTrailPage.getAuditTrailItems().size();
         auditTrailPage.clickAuditTrailFilter();
         String alertText = "Alert received";
-        auditTrailPage.selectAuditTrailFilterItem(alertText);
-        auditTrailPage.applyAuditTrailFilter();
+        auditTrailPage.selectAuditTrailFilter(alertText);
         assertThat("Assert that filtration is applied", auditTrailPage.getAuditTrailItems().size(), lessThan(initialItemsCount));
-        auditTrailPage.clearAuditTrailFilterItem(alertText);
+        auditTrailPage.clearAuditTrailFilter();
         assertThat("Assert that filtration is cleared", auditTrailPage.getAuditTrailItems().size(), equalTo(initialItemsCount));
     }
 
