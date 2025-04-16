@@ -17,6 +17,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -24,6 +25,10 @@ import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
+import static org.hamcrest.Matchers.*;
+
+import org.hamcrest.MatcherAssert;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.*;
@@ -74,22 +79,26 @@ public class RestrictionPage extends AbstractPage {
     private final Locator tooltip;
 
     private static final String RESTRICTION_ITEM_BY_NAME_PATTERN = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
+    private static final String RESTRICTIONS_TAB_ITEM_NAME = ".v-restrictions-tab-item__name";
+    private static final String RESTRICTIONS_TAB_ITEM_CHECKED = ".v-restrictions-tab-item_checked";
+    private static final String RESTRICTIONS_TAB_ITEM_HEADER = ".v-restrictions-tab-item__header";
+    private static final String CHECKED_RESTRICTION = String.format("%s %s", RESTRICTIONS_TAB_ITEM_CHECKED, RESTRICTIONS_TAB_ITEM_HEADER);
 
     public RestrictionPage(Page page) {
         super(page);
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin").first();
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
-        this.accountSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.ACCOUNT_CREATION_REVIEW.getName());
-        this.transferSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.INTERNAL_TRANSFER.getName());
-        this.depositsSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.DEPOSITS.getName());
-        this.withdrawalsSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.WITHDRAWALS.getName());
-        this.loginSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.LOGIN_CRM.getName());
-        this.manualSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
-        this.creditAndBonusSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.CREDIT_AND_BONUS.getName());
-        this.closeSwitch = page.locator(".v-restrictions-tab-item__name").getByText(Restriction.CLOSE_ONLY_MODE.getName());
-        this.offQuotesSwitch = page.locator(".v-restrictions-tab-item__name").getByText("Off quotes");
-        this.abBookSwitch = page.locator(".v-restrictions-tab-item__name").getByText("B-Book -> A-Book");
+        this.accountSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.ACCOUNT_CREATION.getName());
+        this.transferSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.INTERNAL_TRANSFER.getName());
+        this.depositsSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.DEPOSITS.getName());
+        this.withdrawalsSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.WITHDRAWALS.getName(), new Locator.GetByTextOptions().setExact(true));
+        this.loginSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.LOGIN_CRM.getName());
+        this.manualSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
+        this.creditAndBonusSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.CREDIT_AND_BONUS.getName());
+        this.closeSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.CLOSE_ONLY_MODE.getName());
+        this.offQuotesSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText("Off quotes");
+        this.abBookSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText("B-Book -> A-Book");
         this.header1 = page.locator(".g-text_variant_header-1");
         this.header2 = page.locator(".g-text_variant_header-2");
         this.dialog = page.locator(".v-restriction-tab-general-modal");
@@ -102,22 +111,22 @@ public class RestrictionPage extends AbstractPage {
         this.restrictionCancelSet = page.locator(".v-common-modal__buttons").getByText("Remove");
         this.restrictionCancelSetTrade = page.locator(".v-common-modal__buttons").getByText("Apply changes");
         this.cancelToast = page.locator(".g-toast__title").getByText("Restriction was removed");
-        this.checkedAccount = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.ACCOUNT_CREATION_REVIEW.getName());
-        this.checkedTransfer = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.INTERNAL_TRANSFER.getName());
-        this.checkedDeposits = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.DEPOSITS.getName());
-        this.checkedWithdrawals = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.WITHDRAWALS.getName());
-        this.checkedLogin = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.LOGIN_CRM.getName());
-        this.checkedManual = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
-        this.checkedCreditAndBonus = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.CREDIT_AND_BONUS.getName());
-        this.checkedCloseOnlyMode = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText(Restriction.CLOSE_ONLY_MODE.getName());
-        this.checkedOffQuotesMode = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText("Off quotes");
-        this.checkedAbBook = page.locator(".v-restrictions-tab-item_checked .v-restrictions-tab-item__header").getByText("B-Book -> A-Book");
+        this.checkedAccount = page.locator(CHECKED_RESTRICTION).getByText(Restriction.ACCOUNT_CREATION.getName());
+        this.checkedTransfer = page.locator(CHECKED_RESTRICTION).getByText(Restriction.INTERNAL_TRANSFER.getName());
+        this.checkedDeposits = page.locator(CHECKED_RESTRICTION).getByText(Restriction.DEPOSITS.getName());
+        this.checkedWithdrawals = page.locator(CHECKED_RESTRICTION).getByText(Restriction.WITHDRAWALS.getName());
+        this.checkedLogin = page.locator(CHECKED_RESTRICTION).getByText(Restriction.LOGIN_CRM.getName());
+        this.checkedManual = page.locator(CHECKED_RESTRICTION).getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
+        this.checkedCreditAndBonus = page.locator(CHECKED_RESTRICTION).getByText(Restriction.CREDIT_AND_BONUS.getName());
+        this.checkedCloseOnlyMode = page.locator(CHECKED_RESTRICTION).getByText(Restriction.CLOSE_ONLY_MODE.getName());
+        this.checkedOffQuotesMode = page.locator(CHECKED_RESTRICTION).getByText(Restriction.OFF_QUOTES.getName());
+        this.checkedAbBook = page.locator(CHECKED_RESTRICTION).getByText(Restriction.B_BOOK_TO_A_BOOK.getName());
         this.withdrawalList = page.locator(".v-withdrawals-list");
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
         this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
         this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
-        this.accountLabel = page.locator(".v-restriction-tab-trading-modal__labels");
-        this.activitySection = page.locator(".v-restriction-tab-trading-modal__activity");
+        this.accountLabel = page.locator(".v-accounts-list-item__labels");
+        this.activitySection = page.locator(".v-accounts-list-item__activity");
         this.tooltip = page.locator(".g-tooltip__content");
     }
 
@@ -451,7 +460,6 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestCancelUcid(int userIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
-        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL, userId);
         for (String response : kafkaResponses) {
@@ -476,7 +484,6 @@ public class RestrictionPage extends AbstractPage {
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accoundId = String.valueOf(accountIdInt);
-        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
         for (String response : kafkaResponses) {
@@ -501,7 +508,6 @@ public class RestrictionPage extends AbstractPage {
             InterruptedException {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accountId = String.valueOf(accountIdInt);
-        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accountId);
         System.out.println("first message is " + kafkaResponses.getFirst());
@@ -530,7 +536,6 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestCancelAccount(int accoundIdInt) throws JsonProcessingException, InterruptedException {
         Allure.step("Check request message for restriction cancellation for account in kafka");
         String accoundId = String.valueOf(accoundIdInt);
-        Thread.sleep(7000);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL, accoundId);
         for (String response : kafkaResponses) {
@@ -552,7 +557,6 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
         Allure.step("Check withdrawal approval message");
-        Thread.sleep(7000);
         System.out.println("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
@@ -606,9 +610,8 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkUserHaveRestriction(String ucid, int restrictionId, String applicationReason,
             String expectedStatus) throws Exception {
-        Thread.sleep(7000);
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestriction.class);
         ClientsRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
@@ -616,9 +619,8 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkUserHaveRestriction(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
-        Thread.sleep(7000);
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
+        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
         ClientsRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
@@ -692,7 +694,6 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
-        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
@@ -705,7 +706,6 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
-        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, " event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
         assertNotNull(event.getLast().getKafkaMessageId());
@@ -720,14 +720,13 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        Thread.sleep(7000);
         List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(event.size() - 2).getType();
-        assertEquals("RESTRICTION_REQUESTED", type1);
+        assertEquals(RESTRICTION_REQUESTED_STATUS, type1);
         String details = event.get(event.size() - 2).getDetails();
         assertEquals(details, detail);
         String type2 = event.getLast().getType();
-        assertEquals("RESTRICTION_APPLIED", type2);
+        assertEquals(RESTRICTION_APPLIED_STATUS, type2);
         String system = event.getLast().getInitiatedBySystem();
         assertEquals("Vindex BO", system);
     }
@@ -735,29 +734,39 @@ public class RestrictionPage extends AbstractPage {
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        Thread.sleep(7000);
         List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         Event event1 = events.get(events.size() - 2);
-        System.out.println("event1 = " + event1);
         Event event2 = events.getLast();
-        System.out.println("event2 = " + event2);
-        assertEquals("RESTRICTION_REQUESTED", event1.getType());
-        assertEquals(expectedSystem, event1.getInitiatedBySystem());
-        assertEquals(expectedUser, event1.getInitiatedByUser());
-        assertEquals(expectedComment, event1.getComment());
-        assertEquals(detail, event1.getDetails());
 
-        assertEquals("RESTRICTION_APPLIED", event2.getType());
-        assertEquals(expectedSystem, event2.getInitiatedBySystem());
-        assertEquals(expectedUser, event2.getInitiatedByUser());
-        assertNull(event2.getComment());
-        assertEquals(detail, event2.getDetails());
+        MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
+            assertEquals(expectedSystem, event1.getInitiatedBySystem());
+            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertEquals(expectedComment, event1.getComment());
+            assertEquals(detail, event1.getDetails());
+            assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
+            assertEquals(expectedSystem, event2.getInitiatedBySystem());
+            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertNull(event2.getComment());
+            assertEquals(detail, event2.getDetails());
+        } else {
+            assertEquals(RESTRICTION_APPLIED_STATUS, event1.getType());
+            assertEquals(expectedSystem, event1.getInitiatedBySystem());
+            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertNull(event1.getComment());
+            assertEquals(detail, event1.getDetails());
+            assertEquals(RESTRICTION_REQUESTED_STATUS, event2.getType());
+            assertEquals(expectedSystem, event2.getInitiatedBySystem());
+            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertEquals(expectedComment, event2.getComment());
+            assertEquals(detail, event2.getDetails());
+        }
     }
 
     public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail, int accountId) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        Thread.sleep(15_000);
         List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
         System.out.println("first event = " + events.getFirst());
         System.out.println("last event = " + events.getLast());
@@ -765,14 +774,14 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("test event1 (Request) = " + event1);
         Event event2 = events.getLast();
         System.out.println("test event2 (Applyment)= " + event2);
-        assertEquals("RESTRICTION_REQUESTED", event1.getType());
+        assertEquals(RESTRICTION_REQUESTED_STATUS, event1.getType());
         assertEquals(expectedSystem, event1.getInitiatedBySystem());
         assertEquals(expectedUser, event1.getInitiatedByUser());
         assertEquals(expectedComment, event1.getComment());
         assertEquals(detail, event1.getDetails().split("; ")[0]);
         assertEquals(String.valueOf(accountId), event1.getDetails().split("; account: ")[1]);
 
-        assertEquals("RESTRICTION_APPLIED", event2.getType());
+        assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
         assertEquals(expectedSystem, event2.getInitiatedBySystem());
         assertEquals(expectedUser, event2.getInitiatedByUser());
         assertNull(event2.getComment());

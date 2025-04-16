@@ -255,4 +255,8 @@ public class Constants {
     //Other
     public static final String FRAUD_TYPE_SOURCE_VINDEX = "VINDEX";
     public static final String FRAUD_TYPE_SOURCE_INSIGHT = "INSIGHT";
+    public static final String RESTRICTION_TYPE_GENERAL = "GENERAL";
+    public static final String RESTRICTION_TYPE_TRADING = "TRADING";
+    public static final String RESTRICTION_REQUESTED_STATUS = "RESTRICTION_REQUESTED";
+    public static final String RESTRICTION_APPLIED_STATUS = "RESTRICTION_APPLIED";
 }
