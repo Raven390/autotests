@@ -21,11 +21,11 @@ public class AuditTrailPage extends AbstractPage {
     private final Locator auditTrailItemDetails;
     private final Locator auditTrailItemTime;
     private final Locator auditTrailFilterButton;
-    private final Locator auditTrailFilterApplyButton;
+    private final Locator auditTrailClearFilterButton;
 
     private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
-    private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//span[@class='v-investigation-tools-trail-filters__action' and text()='%s']";
-    private static final String AUDIT_TRAIL_CLEAR_FILTER_BUTTON_PATTERN = "//span[@class='v-investigation-tools-trail-filters__action' and text()='%s']/ancestor::div[@class='v-collapsible-horizontal-list__item']/descendant::button";
+    private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@data-qa='select-popup']/descendant::*[text()='%s']";
+    private static final String AUDIT_TRAIL_FILTER = "//div[contains(@class,'v-investigation-tools-trail-filters__select')]";
 
     public AuditTrailPage(Page page) {
         super(page);
@@ -35,8 +35,8 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailItemComment = page.locator("//div[@class='v-investigation-tools-trail-card__comment']");
         this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
         this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");
-        this.auditTrailFilterButton = page.locator("//div[@class='v-investigation-tools-trail-filters__filter']/descendant::button");
-        this.auditTrailFilterApplyButton = page.locator("//span[text()='Apply']/..");
+        this.auditTrailFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button");
+        this.auditTrailClearFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button[@data-qa='select-clear']");
     }
 
     @Step("Open users general tab")
@@ -87,20 +87,15 @@ public class AuditTrailPage extends AbstractPage {
         auditTrailFilterButton.click();
     }
 
-    @Step("Select audit trail filter item")
-    public void selectAuditTrailFilterItem(String selection) {
+    @Step("Select option in audit trail filter")
+    public void selectAuditTrailFilter(String selection) {
         page.locator(String.format(AUDIT_TRAIL_FILTER_ITEM_PATTERN, selection)).click();
-    }
-
-    @Step("Click apply filter button")
-    public void applyAuditTrailFilter() {
-        auditTrailFilterApplyButton.click();
         waitForPageToLoad();
     }
 
-    @Step("Clear audit trail filter item")
-    public void clearAuditTrailFilterItem(String selection) {
-        page.locator(String.format(AUDIT_TRAIL_CLEAR_FILTER_BUTTON_PATTERN, selection)).click();
+    @Step("Clear audit trail filter")
+    public void clearAuditTrailFilter() {
+        auditTrailClearFilterButton.click();
     }
 }
 
