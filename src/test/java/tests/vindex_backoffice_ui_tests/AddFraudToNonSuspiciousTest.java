@@ -55,7 +55,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.HEDGING;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LATENCY_ARBITRAGE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.MARKET_MANIPULATION;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -106,7 +106,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.PRICING_ERROR;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -123,7 +123,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.GAP_TRADING;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.SWAP_ARBITRAGE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -157,7 +157,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.RAF_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.REBATE_CHURNING;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -191,7 +191,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LOSS_VOUCHER_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -208,7 +208,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.NBP_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -225,7 +225,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.TLS_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -242,7 +242,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.POTENTIAL_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -259,7 +259,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.BONUS_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -276,7 +276,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.LOOPHOLE_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -293,7 +293,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.HFT_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -310,7 +310,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.NEWS_TRADER;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -327,7 +327,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.ANOMALOUS_PROFIT;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -344,7 +344,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         FraudType fraudType = FraudType.CPA_ABUSE;
         resolvePage.reportAddFraud("test" + timestamp, fraudType.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraudType.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraudType.getFraudTypeId());
     }
 
     @Test
@@ -368,7 +368,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         resolvePage.openReportFraudForm();
         resolvePage.checkPreviousConfirmedFraudDisplayed(fraud1.getDisplayName());
         resolvePage.reportAddFraud("test2" + timestamp, fraud2.getDisplayName());
-        checkUserFraudDb(innocentClient.getUcid(), fraud2.getFraudTypeId());
+        checkUserFraudBo(innocentClient.getUcid(), fraud2.getFraudTypeId());
     }
 
     @Test

@@ -46,7 +46,7 @@ public class BoHelper {
     }
 
     @Step("Delete user's frauds from BO")
-    public static void cleanUserFraudsDb(String ucid) throws Exception {
+    public static void cleanUserFraudsBo(String ucid) throws Exception {
 
         List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
@@ -55,7 +55,7 @@ public class BoHelper {
     }
 
     @Step("Check that user have record about fraud in db")
-    public static void checkUserFraudDb(String ucid, long expectedFraud) throws Exception {
+    public static void checkUserFraudBo(String ucid, long expectedFraud) throws Exception {
         Allure.step("Check that user have record about fraud in db");
         Thread.sleep(2000);
         long fraud = 0;
@@ -73,7 +73,7 @@ public class BoHelper {
     }
 
     @Step("Check that user NOT have records about frauds in db")
-    public static void checkUserNoFraudDb(String ucid) throws Exception {
+    public static void checkUserNoFraudBo(String ucid) throws Exception {
         Allure.step("Check that user not have records about frauds in db");
         Thread.sleep(2000);
 
@@ -88,14 +88,15 @@ public class BoHelper {
         assertTrue(clientsFraudTypes.isEmpty());
     }
 
-    @Step("Create fraud for user with ucid '{ucid}' in DB")
-    public static void createUserFraudsDb(String ucid, long... fraudIds) throws Exception {
+    @Step("Create fraud for user with ucid '{ucid}' in BO")
+    public static void createUserFraudsBo(String ucid, long... fraudIds) throws Exception {
         Thread.sleep(2000);
         for (long fraudId : fraudIds) {
             insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(fraudId, ucid));
         }
         Thread.sleep(100);
     }
+
 
     @Step("Check confirmation status of alert in DB")
     public static void checkUserAlertConfirmation(String ucid, String expectedConfirmation) throws Exception {

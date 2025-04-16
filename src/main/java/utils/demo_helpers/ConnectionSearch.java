@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static helpers.database.BoHelper.cleanUserFraudsDb;
-import static helpers.database.BoHelper.createUserFraudsDb;
+import static helpers.database.BoHelper.cleanUserFraudsBo;
+import static helpers.database.BoHelper.createUserFraudsBo;
 import static helpers.database.DbHelper.*;
 import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
 import static utils.Constants.*;
@@ -84,33 +84,33 @@ public class ConnectionSearch {
 
         //first floor
         createSimpleAlert(ucid2, "MARKET_MANIPULATION");
-        createUserFraudsDb(ucid2, 3);
+        createUserFraudsBo(ucid2, 3);
 
         //second floor
         createSimpleAlert(ucid5, "CPA");
-        createUserFraudsDb(ucid5, 7);
+        createUserFraudsBo(ucid5, 7);
 //        setGeneralRestrictionApi(ucid5, "03"); todo implement for trade
 
         createSimpleAlert(ucid7, "HEDGING");
-        createUserFraudsDb(ucid7, 1);
+        createUserFraudsBo(ucid7, 1);
 //        setGeneralRestrictionApi(ucid7, "03"); todo implement for trade
 
         createSimpleAlert(ucid8, "HEDGING");
 
         //third floor
         createSimpleAlert(ucid9, "POTENTIAL_ABUSE");
-        createUserFraudsDb(ucid9, 14);
+        createUserFraudsBo(ucid9, 14);
 //        setGeneralRestrictionApi(ucid5, "03"); todo implement for trade
 
         stopSshTunnel();
     }
 
     public static void cleanDemoDataConnectionSearch() throws Exception {
-        cleanUserFraudsDb(ucid2);
-        cleanUserFraudsDb(ucid5);
-        cleanUserFraudsDb(ucid7);
-        cleanUserFraudsDb(ucid8);
-        cleanUserFraudsDb(ucid9);
+        cleanUserFraudsBo(ucid2);
+        cleanUserFraudsBo(ucid5);
+        cleanUserFraudsBo(ucid7);
+        cleanUserFraudsBo(ucid8);
+        cleanUserFraudsBo(ucid9);
         deleteEntryFromDb("vindex_test.connection_table", "user_to in (" + ucid1 + ", " + ucid2 + ", " + ucid3 + ", " + ucid4 + ", " + ucid5 + ", " + ucid6 + ", " + ucid7 + ", " + ucid8 + ", " + ucid9 + ", " + ucid10 + ")");
     }
 

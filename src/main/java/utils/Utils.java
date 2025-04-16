@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
+import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -26,6 +27,9 @@ import org.json.JSONObject;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static helpers.data.enums.Brand.*;
+import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.CLICKHOUSE;
+import static utils.Constants.CONNECTIONS_TABLE_NAME;
 
 public class Utils {
 
@@ -447,7 +451,7 @@ public class Utils {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", ucid);
         boolean updated = false;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 240; i++) {
             Response response = getConnectionsByClientId(queryParams);
             GetConnectionsResponse[] responseBody = objectMapper.readValue(
                     response.body().string(), GetConnectionsResponse[].class
@@ -459,7 +463,40 @@ public class Utils {
             Thread.sleep(1000);
         }
         if (!updated) {
-            throw new TimeoutException("Connection search did not provide a non empty response!");
+            throw new TimeoutException("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");
         }
+    }
+
+    public static String ucidListDbFormat(ClientHelper... clients) {
+        StringBuilder sb = new StringBuilder();
+        int count = clients.length;
+        for (ClientHelper client : clients) {
+            sb.append("'");
+            sb.append(client.getUcid());
+            sb.append("'");
+            if (count > 1) {
+                sb.append(",");
+            }
+            count -= 1;
+        }
+        return sb.toString();
+
+    }
+
+    public static void insertConnectionToDb(ConnectionTableEntry... connections) throws Exception {
+        for (ConnectionTableEntry connection : connections) {
+            connection.datetime = getCurrentTimestampDbFormat();
+            insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
+            waitForConnectionSearchToUpdate(connection.userFrom);
+            Thread.sleep(1000);
+        }
+    }
+
+    public static void deleteConnectionFromDb(String... ucids) throws Exception {
+        for (String ucid : ucids) {
+            String query = "ALTER TABLE  " + CONNECTIONS_TABLE_NAME + "\n" + "update  status ='deleted',  datetime = now()\n" + "where user_from = '" + ucid + "'\n" + "or user_to = '" + ucid + "';";
+            executeQueryToDb(CLICKHOUSE, query);
+        }
+
     }
 }

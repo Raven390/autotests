@@ -66,7 +66,6 @@ public class CpaAbuseRuleDataFactory {
                         new ConnectionTableEntry.ConnectionInfo(
                                 CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT
                         )), getCurrentTimestampDbFormat()
-//                        )), getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME,0,0,0,0,0,-30)
         );
     }
 

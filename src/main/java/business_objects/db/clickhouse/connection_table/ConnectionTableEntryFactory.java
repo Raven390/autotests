@@ -86,4 +86,12 @@ public class ConnectionTableEntryFactory {
                         new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DOCUMENT, CONNECTION_SEARCH_DATA_DOCUMENT, CONNECTION_SEARCH_DATA_DOCUMENT, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
+
+    public static ConnectionTableEntry getConnectionTableEntry(ClientHelper userFrom, ClientHelper userTo,
+            Double connectionScore) {
+        return new ConnectionTableEntry(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, connectionScore, List.of(
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+        );
+    }
 }

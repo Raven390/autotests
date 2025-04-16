@@ -191,7 +191,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -210,7 +210,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
 
     }
 
@@ -230,7 +230,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -249,7 +249,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -268,7 +268,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -287,7 +287,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -306,7 +306,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -325,7 +325,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -344,7 +344,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -363,7 +363,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -382,7 +382,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -401,7 +401,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -420,7 +420,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -439,7 +439,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -458,7 +458,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -477,7 +477,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -496,7 +496,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -515,7 +515,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
     }
 
     @Test
@@ -535,8 +535,8 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveAddMultipleFraud("test" + timestamp, fraud1.getDisplayName(), fraud2.getDisplayName());
-        checkUserFraudDb(resolveClient.getUcid(), fraud1.getFraudTypeId());
-        checkUserFraudDb(resolveClient.getUcid(), fraud2.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud1.getFraudTypeId());
+        checkUserFraudBo(resolveClient.getUcid(), fraud2.getFraudTypeId());
     }
 
     @Test
@@ -554,7 +554,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveNoFrauds("test" + timestamp);
-        checkUserNoFraudDb(resolveClient.getUcid());
+        checkUserNoFraudBo(resolveClient.getUcid());
     }
 
     @Test
@@ -711,7 +711,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Alert in 'confirmed' state when fraud in alert match fraud in history")
     public void resolveNoFraudAssignedMatchFraudInHistoryTest() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.ANOMALOUS_PROFIT;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -732,7 +732,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Alert in 'Fraud Type Mismatch' state when fraud in alert not match fraud in history")
     public void resolveNoFraudAssignedMismatchFraudInHistoryTest() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.HEDGING.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.HEDGING.getFraudTypeId());
         FraudType fraud = FraudType.ANOMALOUS_PROFIT;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -773,7 +773,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Alert in 'False Positive' state when fraud in alert not match fraud in history")
     public void resolveNoFraudAssignedDeleteFraudInHistoryTest() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.ANOMALOUS_PROFIT;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -794,7 +794,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Fraud types changes can be reset on resolve screen")
     public void resolveAddedFraudsCanBeResetTest() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -819,7 +819,7 @@ public class ResolveTest extends TestBaseWeb {
     public void restrictionCanBeAdded() throws Exception {
         deleteUserBO(resolveClient.getUcid());
         cleanUserRestriction(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -843,7 +843,7 @@ public class ResolveTest extends TestBaseWeb {
     public void restrictionCanBeAddedAndRemoved() throws Exception {
         deleteUserBO(resolveClient.getUcid());
         cleanUserRestriction(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
         createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
@@ -867,7 +867,7 @@ public class ResolveTest extends TestBaseWeb {
     public void previousSetRestrictionCanBeRemoved() throws Exception {
         deleteUserBO(resolveClient.getUcid());
         cleanUserRestriction(resolveClient.getUcid());
-        createUserFraudsDb(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
+        createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
         enableCRMEmulator();

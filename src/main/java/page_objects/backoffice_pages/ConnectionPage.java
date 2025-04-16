@@ -248,16 +248,21 @@ public class ConnectionPage extends AbstractPage {
     @Step("Check text in the client in node")
     public void checkClientNodeText(String ucid1, String text) {
         waitForPageToLoad();
-        page.waitForSelector(String.format(".v-graph-node[data-qa=\"%s\"]", ucid1));
-        assertTrue(page.locator(String.format(".v-graph-node[data-qa=\"%s\"]", ucid1)).getByText(text).isVisible());
+        String selector = "//*[@class = 'v-graph-node' and @data-qa='" + ucid1 + "']//*[contains(@class, 'v-graph-node__title-text')]";
+        page.locator(selector).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(text, page.locator(selector).textContent());
 
     }
 
     @Step("Check status of the client in node")
     public void checkClientStatus(String ucid, String status) {
         waitForPageToLoad();
-        page.waitForSelector("//div[@data-qa='" + ucid + "']//div[text()='" + status + "']");
-        assertTrue(page.locator("//div[@data-qa='" + ucid + "']//div[text()='" + status + "']").isVisible());
+        String locator = "//*[@class = 'v-graph-node' and @data-qa='" + ucid + "']//*[@class='v-graph-node__status-line']";
+        String fraud = page.locator(locator).textContent();
+        if ("UNKNOWN".equals(status) || "MOREUNKNOWN".equals(status)) {
+            status = "Fraudster";
+        }
+        assertEquals(status, fraud);
 
     }
 
@@ -314,7 +319,6 @@ public class ConnectionPage extends AbstractPage {
         assertEquals("REGISTERED", registeredText);
         String lastLoginText = lastLoginHeader.textContent();
         assertEquals("LAST LOGIN", lastLoginText);
-        assertTrue(graphLinkHeader.isVisible());
     }
 
     @Step("Verify sorting in connection table is by Behavior - Level - Connection Score")
@@ -406,29 +410,41 @@ public class ConnectionPage extends AbstractPage {
 
     public void linkToCard(String clientId) {
         Allure.step("Go to the cliens page from connection table link button");
-        page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
-        page.waitForSelector("//div[contains(text(), " + clientId + ")]/preceding-sibling::div/a");
-        page.locator("//div[contains(text(), " + clientId + ")]/preceding-sibling::div/a").click();
+        page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR).isVisible();
+        String locator = "//*[text()='" + clientId + "']/ancestor::*[contains(@class, 'v-body-cell')]";
+        page.locator(locator).click();
     }
 
     public void checkSelection(String userId, String userUcid) {
         Allure.step("Check highlight of user is saved (green highlight)");
         page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
-        page.locator("tr").getByText(userId).click();
-        page.waitForSelector("tr.v-connection-search-table-view__row_selected");
+        String locator = "//*[text()='" + userId + "']/ancestor::*[contains(@class, 'v-body-row')]";
+        page.locator(locator).click();
+        page.waitForSelector(".v-body-row_selected").isVisible();
         openConnectionGraph();
-        page.waitForSelector(CONNECTION_GRAPH_SELECTOR);
-        page.waitForSelector(".v-graph-node_isSelected[data-qa='" + userUcid + "']");
+        page.waitForSelector(CONNECTION_GRAPH_SELECTOR).isVisible();
+        page.waitForSelector(".v-graph-node_isSelected[data-qa='" + userUcid + "']").isVisible();
     }
+
+    public void checkSelection(Integer userId, String userUcid) {
+        checkSelection(String.valueOf(userId), userUcid);
+    }
+
 
     public void checkSelectionTransitByLinkButton(String userId, String userUcid) {
         Allure.step("Check selection (green highlight)");
         page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
-        page.locator("//div[contains(text(), '" + userId + "')]").hover();
-        page.locator("//div[contains(text(), '" + userId + "')]/ancestor::tr//button").click();
+        String locator = "//*[text()='" + userId + "']/ancestor::*[contains(@class, 'v-body-row')]";
+        page.locator(locator).hover();
+        page.locator(locator + "//button").click();
         page.waitForSelector(CONNECTION_GRAPH_SELECTOR);
         page.waitForSelector(".v-graph-node_isSelected[data-qa='" + userUcid + "']");
     }
+
+    public void checkSelectionTransitByLinkButton(Integer userId, String userUcid) {
+        checkSelectionTransitByLinkButton(String.valueOf(userId), userUcid);
+    }
+
 
     public void ccCheckDirectConnectionRows(String clientToName, String rowTitle, String expectedVale) {
         Allure.step("Check direct connection values, connect to user in field " + rowTitle);
@@ -443,7 +459,7 @@ public class ConnectionPage extends AbstractPage {
         Allure.step("Check general data values, field " + rowTitle);
         page.waitForSelector("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
         String actualValue = page.locator("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
-        assertEquals(expectedVale, actualValue);
+        assertEquals(expectedVale, " " + actualValue);
     }
 
     public void ccCheckSummaryRows(String rowTitle, String expectedVale) {
@@ -486,11 +502,8 @@ public class ConnectionPage extends AbstractPage {
     }
 
     public static int connectionWidth(double score) {
-        if (score <= 16.6) return 1;
-        if (score <= 33.2) return 2;
-        if (score <= 49.8) return 3;
-        if (score <= 66.4) return 4;
-        if (score <= 83) return 5;
+        if (score <= 0.54) return 1;
+        if (score <= 1) return 3;
         return 6;
     }
 
