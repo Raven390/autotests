@@ -17,7 +17,6 @@ import page_objects.backoffice_pages.RestrictionPage;
 import tests.TestBaseApi;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestamp;
 
-
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
 @Tag(SUITE_MITIGATION_SERVICE)
@@ -41,7 +39,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
 
     @BeforeAll
-    static void initialSetup() throws IOException, ReflectiveOperationException, SQLException {
+    static void initialSetup() throws IOException {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
@@ -446,7 +444,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     @AllureId("1075")
     @DisplayName("Verify logic for internalReason field")
     void internalReasonTest() throws IOException, InterruptedException {
-        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, "test", new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
+        PostRestrictionRequestBody postRestriction = new PostRestrictionRequestBody(restrictionClient.getUcid(), "05", "GENERAL", null, null, null, new PostRestrictionRequestBody.UpdatedBy("autotest", "autotest"), new PostRestrictionRequestBody.AdditionalParam[]{new PostRestrictionRequestBody.AdditionalParam("connectionScore", "string", "0.75"), new PostRestrictionRequestBody.AdditionalParam("potentialFraudTypes", "array", new String[]{"HEDGING"}), new PostRestrictionRequestBody.AdditionalParam("confirmedFraudTypes", "array", new String[]{"PRICING_ERROR"})});
         Response response = postRestriction(postRestriction);
         assertThat("Verify 200 response code", response.code(), is(200));
         assertThat(response.body(), notNullValue());

@@ -26,15 +26,6 @@ public class AccountRestrictionCancel {
     public String modifier;
 
     @JsonProperty("restrictions")
-    public Restriction[] restrictions;
-
-    public static class Restriction {
-
-        @JsonProperty("restrictionId")
-        public Integer restrictionId;
-
-        @JsonProperty("internalReason")
-        public String internalReason;
-    }
+    public Integer[] restrictions;
 
 }

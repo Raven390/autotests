@@ -111,7 +111,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
     public static final String CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword();
     // Backoffice test user
-    public static final String CRM_INEGRATION_USER_UCID = CONFIG.crmIntegrationUserUcid();
+    public static final String CRM_INTEGRATION_USER_UCID = CONFIG.crmIntegrationUserUcid();
     // Other
     public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
     public static final Double TIMEOUT = CONFIG.waitTimeout();
