@@ -128,6 +128,7 @@ public class Constants {
     public static final String MITIGATION_ACTION = "postgres.mi.action";
     public static final String MITIGATION_KAFKA_REQUEST = "postgres.mi.kafka_request";
     public static final String MITIGATION_KAFKA_RESPONSE = "postgres.mi.kafka_response";
+    public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String MT5_DEALS_COERCED_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced";
     public static final String MT5_POSITIONS_TABLE_NAME = "vindex_test.mt___mt5_positions";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";

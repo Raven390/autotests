@@ -67,7 +67,7 @@ public class ConnectionTableEntryFactory {
             ClientHelper userTo) {
         return new ConnectionTableEntry(
                 userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 0.2d, List.of(
-                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_IP, CONNECTION_SEARCH_DATA_IP1, CONNECTION_SEARCH_DATA_IP1, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
 
@@ -83,7 +83,7 @@ public class ConnectionTableEntryFactory {
             ClientHelper userTo) {
         return new ConnectionTableEntry(
                 userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_NETWORK, 0.2d, List.of(
-                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_IP, CONNECTION_SEARCH_DATA_IP2, CONNECTION_SEARCH_DATA_IP2, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE2, CONNECTION_SEARCH_DATA_DEVICE2, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
 
