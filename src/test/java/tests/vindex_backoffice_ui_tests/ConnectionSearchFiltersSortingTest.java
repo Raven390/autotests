@@ -132,7 +132,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         assertThat("Verify that score to initial slider is visible", connectionPage.isScoreToInitialFilterSliderVisible(), equalTo(true));
         assertThat("Verify placeholder of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownPlaceholder(), equalTo("Attribute name or value"));
         connectionPage.clickAttributeFilterDropdown();
-        assertThat("Verify options of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownOptions(), contains("device2 values", "documentNumber1 value", "ipAddress2 values", "payoutId1 value"));
+        assertThat("Verify options of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownOptions(), contains("device2 values", "documentNumber1 value", "payoutId1 value"));
         List<String> behaviorFilterOptions = connectionPage.getBehaviorFilterOptions();
         assertThat("Verify that all options are present in behavior filter", behaviorFilterOptions, containsInAnyOrder("Normal", "Suspicious", "Gap trading", "Latency arbitrage", "Market manipulation", "Pricing error", "RAF abuse", "Rebate churning", "Swap arbitrage"));
         assertThat("Verify that active restrictions switch is visible", connectionPage.isActiveRestrictionsFilterSwitchVisible(), equalTo(true));
@@ -253,15 +253,15 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     @DisplayName("Verify connection search filtration. Attribute filter")
     public void verifyConnectionSearchFiltration7Test() {
         connectionPage.clickFilterButton();
-        connectionPage.selectAttribute("ipAddress", "All values");
+        connectionPage.selectAttribute("device", "All values");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesUcids = connectionPage.getAllUnhiddenNodesUcids();
-        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesUcids, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient3.getUcid(), connectedClient5.getUcid()));
+        assertThat("Verify all expected unhidden nodes are present", unhiddenNodesUcids, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid()));
         List<String> hiddenNodesText = connectionPage.getAllHiddenNodesText();
-        assertThat("Verify all expected hidden nodes are present", hiddenNodesText, containsInAnyOrder("1 hidden", "1 hidden", "1 hidden"));
+        assertThat("Verify all expected hidden nodes are present", hiddenNodesText, containsInAnyOrder("1 hidden"));
         connectionPage.openConnectionTable();
-        assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(3));
-        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
+        assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(5));
+        assertThat("Verify user ids displayed in the table", connectionPage.getConnectionTableUserIdsList(), containsInAnyOrder(connectedClient1.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient5.getUserId().toString()));
     }
 
     @Test

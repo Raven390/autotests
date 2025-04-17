@@ -16,6 +16,7 @@ import io.qameta.allure.Step;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -628,7 +629,7 @@ public class RestrictionPage extends AbstractPage {
 
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.AUDIT, "event", "ucid = '" + ucid + "'");
+        deleteEntryFromDb(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'");
         Thread.sleep(200);
     }
 
@@ -640,7 +641,7 @@ public class RestrictionPage extends AbstractPage {
         );
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
-        assertEquals(response.code(), 200);
+        assertEquals(200, response.code());
     }
 
     public static String setRestrictionAPIGeneralResponse(String ucid, String code, String applyReason,
@@ -654,8 +655,7 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull(response);
         assertEquals(response.code(), 200);
         assert response.body() != null;
-        String responseVal = response.body().string();
-        return responseVal;
+        return response.body().string();
     }
 
     @Step("Set restriction though API")
@@ -665,7 +665,7 @@ public class RestrictionPage extends AbstractPage {
                 ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("test", "automation")
         );
         Response response = postRestriction(postRestrictionRequestBody);
-        assertNotNull(response);
+        assertEquals(200, response.code());
     }
 
     @Step
@@ -675,7 +675,7 @@ public class RestrictionPage extends AbstractPage {
                 ucid, code, "TRADING", accId, serverId, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
         );
         Response response = postRestriction(postRestrictionRequestBody);
-        assertNotNull(response);
+        assertEquals(200, response.code());
     }
 
     @Step
@@ -688,13 +688,13 @@ public class RestrictionPage extends AbstractPage {
         );
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
+        assertEquals(200, response.code());
         assert response.body() != null;
-        String responseVal = response.body().string();
-        return responseVal;
+        return response.body().string();
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
         String details = event.get(2).getDetails();
@@ -706,7 +706,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, " event", "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
         assertNotNull(event.getLast().getKafkaMessageId());
         assertNotNull(event.getLast().getId());
@@ -720,7 +720,7 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(event.size() - 2).getType();
         assertEquals(RESTRICTION_REQUESTED_STATUS, type1);
         String details = event.get(event.size() - 2).getDetails();
@@ -734,10 +734,18 @@ public class RestrictionPage extends AbstractPage {
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> events = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+            if (events.size() == 2) {
+                break;
+            } else if (events.size() < 2 && i == 9) {
+                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), is(2));
+            }
+            Thread.sleep(1000);
+        }
         Event event1 = events.get(events.size() - 2);
         Event event2 = events.getLast();
-
         MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
@@ -767,7 +775,16 @@ public class RestrictionPage extends AbstractPage {
     public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail, int accountId) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> events = getObjectsFromDB(DbName.AUDIT, "event", "ucid = '" + ucid + "'", Event.class);
+        List<Event> events = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+            if (events.size() == 2) {
+                break;
+            } else if (events.size() < 2 && i == 9) {
+                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), is(2));
+            }
+            Thread.sleep(1000);
+        }
         System.out.println("first event = " + events.getFirst());
         System.out.println("last event = " + events.getLast());
         Event event1 = events.get(events.size() - 2);
