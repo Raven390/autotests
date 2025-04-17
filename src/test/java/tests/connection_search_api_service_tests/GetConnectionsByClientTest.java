@@ -24,6 +24,8 @@ import static business_objects.api.connection_search_api.get_connections.GetConn
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.database.CleanTableHelper.cleanConnectionsTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -50,6 +52,8 @@ class GetConnectionsByClientTest extends TestBaseApi {
     static final ClientHelper userTo4_1 = getRandomVantageClient();
     static final ClientHelper userTo4_2 = getRandomVantageClient();
     static final ClientHelper userTo4_3 = getRandomVantageClient();
+    static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo5 = getRandomVantageClientAllFields();
 
     final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
     final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
@@ -57,9 +61,10 @@ class GetConnectionsByClientTest extends TestBaseApi {
     final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
 
     static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
+    static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom5, userTo5, userTo5.getIpAddress());
     static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
     static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
-    static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
+    //static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
     static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
     static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
     static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
@@ -70,8 +75,10 @@ class GetConnectionsByClientTest extends TestBaseApi {
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntryForFiltration2, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
+        connectionTableEntryForFiltration1.connectionScore = 0.8;
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
         waitForConnectionSearchToUpdate(userFrom1);
+        waitForConnectionSearchToUpdate(userFrom2);
     }
 
     @Test
@@ -91,6 +98,23 @@ class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
         assertThat("Check the response body", Arrays.stream(responseBody).toList(), containsInAnyOrder(getConnectionsResponseSuccess, getConnectionsLvl2ResponseSuccess));
+    }
+
+    @Test
+    @DisplayName("Connection search by client Api. Get no connection for connection only by ip (200)")
+    @AllureId("1140")
+    void getConnectionsByClientTest17() throws Exception {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", connectionTableEntry2.userFrom);
+
+        Response response = getConnectionsByClientId(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(0));
     }
 
     @Test
@@ -193,7 +217,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
     void getConnectionsConnectionScoreFromFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
-        queryParams.put("connectionScoreFrom", 1);
+        queryParams.put("connectionScoreFrom", 0.7);
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -225,7 +249,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
         getConnectionsResponsesForFiltration[1].connectionDepth = 2;
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[0]));
     }
 
     @Test
@@ -234,7 +258,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
     void getConnectionsConnectionTypeFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
-        queryParams.put("connectionType", List.of("Same Network"));
+        queryParams.put("connectionType", List.of("Same Person"));
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -246,7 +270,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
         getConnectionsResponsesForFiltration[1].connectionDepth = 2;
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[0]));
     }
 
     @Test
@@ -255,7 +279,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
     void getConnectionsConnectionAttributesFiltrationSuccessTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", connectionTableEntryForFiltration1.userFrom);
-        queryParams.put("connectionAttributes", List.of("emailAddress"));
+        queryParams.put("connectionAttributes", List.of("payoutId"));
 
         Response response = getConnectionsByClientId(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -267,7 +291,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response body is has 1 element", responseBody.length, equalTo(1));
 
         getConnectionsResponsesForFiltration[1].connectionDepth = 2;
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[1]));
+        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsResponsesForFiltration[0]));
     }
 
     @Test
@@ -377,7 +401,7 @@ class GetConnectionsByClientTest extends TestBaseApi {
     }
 
     @AfterAll
-    static void deleteConnectionTableEntry() {
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntryForFiltration2.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom));
+    static void deleteConnectionTableEntry() throws Exception {
+        cleanConnectionsTableByClient(connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom);
     }
 }

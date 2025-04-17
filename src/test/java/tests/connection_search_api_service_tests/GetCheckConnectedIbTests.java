@@ -71,6 +71,8 @@ class GetCheckConnectedIbTests extends TestBaseApi {
     static final ClientHelper userTo81 = getRandomVantageClientAllFields();
     static final ClientHelper userTo82 = getRandomVantageClientAllFields();
     static final ClientHelper userTo83 = getRandomVantageClientAllFields();
+    static final ClientHelper userFrom9 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo91 = getRandomVantageClientAllFields();
 
     static CrmTbUserObject user1;
     static CrmTbUserObject user2;
@@ -96,6 +98,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntry(userFrom8, userTo81);
     static ConnectionTableEntry connectionTableEntry7 = getConnectionTableEntry(userTo81, userTo82);
     static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
+    static ConnectionTableEntry connectionTableEntry9 = getConnectionTableEntry(userFrom9, userTo91);
 
     static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
     static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
@@ -133,6 +136,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
 
     static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
     static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
+    static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userTo91, userFrom9.getIpAddress());
 
     static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
     static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
@@ -173,7 +177,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         insertObjectsToDb(SESSION_ID_TABLE_NAME, List.of(sessionTableEntry11, sessionTableEntry12));
         insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntry11, webSessionTableEntry12));
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry11, phoneTableEntry12));
-        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry11, ipTableEntry12));
+        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry11, ipTableEntry12, ipTableEntry2));
         insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameTableEntry11, nameTableEntry12));
         waitForConnectionSearchToUpdate(userFrom1);
     }
@@ -187,7 +191,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         cleanSessionIdTableByClient(sessionTableEntry11.sessionId, sessionTableEntry12.sessionId);
         cleanWebSessionIdTableByClient(webSessionTableEntry11.webSessionId, webSessionTableEntry12.webSessionId);
         cleanPhoneTableByClient(phoneTableEntry11.phoneNum, phoneTableEntry12.phoneNum);
-        cleanIpTableByClient(ipTableEntry11.ip, ipTableEntry12.ip);
+        cleanIpTableByClient(ipTableEntry11.ip, ipTableEntry12.ip, ipTableEntry2.ip);
         cleanNameTableByClient(nameTableEntry11.ucid, nameTableEntry12.ucid);
         cleanCrmUserTableByClient(user1.ucid, user2.ucid, user3.ucid, user4.ucid, user5.ucid, user6.ucid, user7.ucid, user8.ucid);
     }
@@ -390,6 +394,20 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         assert response.body() != null;
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
+    }
+
+    @Test
+    @DisplayName("Connection search. Get check connected id + ipAddress. Only ip as attribute - false(200)")
+    @AllureId("1142")
+    void getCheckConnectedIbTest18() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", userFrom9.getUcid());
+        queryParams.put("ipAddress", userFrom9.getIpAddress());
+
+        Response response = getCheckConnectedIb(queryParams);
+        assert response.body() != null;
+        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
 
     @Test

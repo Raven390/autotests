@@ -61,25 +61,36 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry22 = getConnectionTableEntry(userFrom2, userTo2_2);
     static ConnectionTableEntry connectionTableEntry23 = getConnectionTableEntryLvl2(userTo2_2, userTo2_3);
 
-    private static ClientFraudTypesObject fraud2_1;
     private static ClientFraudTypesObject fraud2_2;
+
+    //Data 3
+    static final ClientHelper userFrom3 = getRandomVantageClient();
+    static final ClientHelper userTo3 = getRandomVantageClient();
+    static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
+
+    private static ClientFraudTypesObject fraud3;
+
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
-        connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(
-                new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
+        connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
+
         fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypesObject(userTo3.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
+        insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry12);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry13);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry21);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry22);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry23);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry3);
         waitForConnectionSearchToUpdate(userFrom1);
     }
 
@@ -91,9 +102,11 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry21.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry22.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry23.userFrom));
+        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry3.userFrom));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud11.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
+        deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.getUcid()));
     }
 
     @Test
@@ -400,6 +413,22 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+    }
 
+    @Test
+    @DisplayName("Connection search by clientId. Get abuse types only by ip, empty response(200)")
+    @AllureId("1145")
+    void getAbuseTypesByClientTest18() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("clientId", userFrom3.getUcid());
+
+        Response response = getAbuseTypesByClientId(queryParams);
+        assert response.body() != null;
+        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponse[].class
+        ));
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(0));
     }
 }

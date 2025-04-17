@@ -40,10 +40,9 @@ import static business_objects.db.clickhouse.payout.PayoutTableEntryFactory.payo
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
-import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.*;
-import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
+import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -58,20 +57,28 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
     // Users
-    static final ClientHelper userFromDocument = getRandomVantageClient();
-    static final ClientHelper userToDocument = getRandomVantageClient();
+    static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
+    static final ClientHelper userToDocument = getRandomVantageClientAllFields();
 
     static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
     static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    static final ClientHelper userToEmail2 = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromIp = getRandomVantageClient();
-    static final ClientHelper userToIp = getRandomVantageClient();
+    static final ClientHelper userFromIp = getRandomVantageClientAllFields();
+    static final ClientHelper userToIp = getRandomVantageClientAllFields();
+
+    static final ClientHelper userFromIp2 = getRandomVantageClientAllFields();
+    static final ClientHelper userToIp2 = getRandomVantageClientAllFields();
+
+    static final ClientHelper userFrom3 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo31 = getRandomVantageClientAllFields();
+    static final ClientHelper userTo32 = getRandomVantageClientAllFields();
 
     static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
     static final ClientHelper userToPhone = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromPayout = getRandomVantageClient();
-    static final ClientHelper userToPayout = getRandomVantageClient();
+    static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
+    static final ClientHelper userToPayout = getRandomVantageClientAllFields();
 
     static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
     static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
@@ -105,6 +112,11 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
     static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userToIp);
 
+    static final IpTableEntry ipTableEntry3 = ipTableEntryForConnectionSearch(userFromIp2);
+    static final IpTableEntry ipTableEntry4 = ipTableEntryForConnectionSearch(userToIp2);
+    static final IpTableEntry ipTableEntry5 = ipTableEntryForConnectionSearch(userTo31);
+    static final IpTableEntry ipTableEntry6 = ipTableEntryForConnectionSearch(userToEmail2);
+
     static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
     static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
 
@@ -113,6 +125,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
     static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
     static final DeviceIdTableEntry deviceIdTableEntry2 = deviceIdTableEntryForConnectionSearch(userToDeviceId, userFromDeviceId.getDeviceId());
+    static final DeviceIdTableEntry deviceIdTableEntry3 = deviceIdTableEntryForConnectionSearch(userToEmail);
 
     static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
     static final DigitalIdTableEntry digitalIdTableEntry2 = digitalIdTableEntryForConnectionSearch(userToDigitalId, userFromDigitalId.getDigitalId());
@@ -130,14 +143,20 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final ConnectionTableEntry connectionTableEntryByEmail1 = getConnectionTableEntry(userFromDepth, userToDepth);
     static final ConnectionTableEntry connectionTableEntryByEmail2 = getConnectionTableEntry(userToDepth, userTo2Depth);
     static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
+    static final ConnectionTableEntry connectionTableEntryByEmail4 = getConnectionTableEntry(userFromDepth, userToEmail2);
+    static final ConnectionTableEntry connectionTableEntryByIp1 = getConnectionTableEntry(userFromIp2, userToIp2);
+    static final ConnectionTableEntry connectionTableEntryByIp2 = getConnectionTableEntry(userFrom3, userTo31);
+    static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFrom3, userTo32);
 
     // Frauds
     private static final ClientFraudTypesObject fraudEmailTo = new ClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudEmail1 = new ClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudEmail2 = new ClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudEmail3 = new ClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail4 = new ClientFraudTypesObject(userToEmail2.getUcid(), LOSS_VOUCHER_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudDocumentTo = new ClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudIpTo = new ClientFraudTypesObject(userToIp.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudIp2To = new ClientFraudTypesObject(userToIp2.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudPhoneTo = new ClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudPhoneFrom = new ClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudPayoutTo = new ClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
@@ -146,24 +165,26 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final ClientFraudTypesObject fraudNameBirthTo = new ClientFraudTypesObject(userToNameBirth.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudSessionIdTo = new ClientFraudTypesObject(userToSessionId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypesObject fraudWebSessionIdTo = new ClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraud1 = new ClientFraudTypesObject(userTo31.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraud2 = new ClientFraudTypesObject(userTo32.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
     @BeforeAll
     static void setupConnectionTableEntry() throws InterruptedException {
         // Insert data to connections table
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3));
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3, connectionTableEntryByEmail4, connectionTableEntryByIp1, connectionTableEntryByIp2, connectionTableEntryByIp3));
         // Insert data to attributes tables
         insertObjectsToDb(DOCUMENT_TABLE_NAME, List.of(documentTableEntry, documentTableEntry2));
         insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry, emailTableEntryForDepth1, emailTableEntry2));
-        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry, ipTableEntry2));
+        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry, ipTableEntry2, ipTableEntry3, ipTableEntry4, ipTableEntry5, ipTableEntry6));
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
         insertObjectsToDb(PAYOUT_TABLE_NAME, List.of(payoutTableEntry, payoutTableEntry2));
         insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntry2));
-        insertObjectsToDb(DEVICE_ID_TABLE_NAME, List.of(deviceIdTableEntry, deviceIdTableEntry2));
+        insertObjectsToDb(DEVICE_ID_TABLE_NAME, List.of(deviceIdTableEntry, deviceIdTableEntry2, deviceIdTableEntry3));
         insertObjectsToDb(SESSION_ID_TABLE_NAME, List.of(sessionIdTableEntry, sessionIdTableEntry2));
         insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameBirthTableEntry, nameBirthTableEntry2));
         insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntry, webSessionTableEntry2));
         //insert data to fraud table
-        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo));
+        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2));
     }
 
     @AfterAll
@@ -172,26 +193,18 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         //deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
 
         //Delete data from attributes tables
-        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
-        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
-        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
-        deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry2.email));
-        deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip));
-        deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry2.ip));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
-        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry2.phoneNum));
+        cleanEmailTableByClient(userFromEmail.getUcid(), userToEmail.getUcid());
+        cleanIpTableByClient(userFromIp.getIpAddress(), userToIp.getIpAddress(), userFromIp2.getIpAddress(), userToIp2.getIpAddress());
+        cleanPhoneTableByClient(userToPhone.getPhoneNumber(), userFromPhone.getPhoneNumber());
+        cleanDigitalIdTableByClient(userFromDigitalId.getDigitalId(), userToDigitalId.getDigitalId());
+        cleanNameTableByClient(userFromNameBirth.getUcid(), userToNameBirth.getUcid());
+        cleanSessionIdTableByClient(userFromSessionId.getUcid(), userToSessionId.getUcid());
+        cleanWebSessionIdTableByClient(userFromWebSessionId.getWebSessionId(), userToWebSessionId.getWebSessionId());
+        cleanDepositsTableByUcid(userFromDeviceId.getDeviceId(), userToDeviceId.getDeviceId());
         deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry.payout));
         deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry2.payout));
-        deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
-        deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry2.deviceId));
-        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
-        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry2.digitalId));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
-        deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry2.ucid));
-        deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
-        deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry2.sessionId));
-        deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry.webSessionId));
-        deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntry2.webSessionId));
+        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
+        deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
         //Delete data from fraud type table
         cleanBoFraudTypesTableByUcid(userFromEmail.getUcid(), userToEmail.getUcid(), userFromDocument.getUcid(), userToDocument.getUcid(), userFromIp.getUcid(), userToIp.getUcid(), userFromPayout.getUcid(), userToPayout.getUcid(), userFromPhone.getUcid(), userToPhone.getUcid(), userFromNameBirth.getUcid(), userToNameBirth.getUcid(), userToDeviceId.getUcid(), userFromDeviceId.getUcid(), userToSessionId.getUcid(), userFromSessionId.getUcid(), userToWebSessionId.getUcid(), userFromWebSessionId.getUcid());
     }
@@ -251,7 +264,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response length", responseBody.length, is(1));
         assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.699_999_988_079_071));
-
     }
 
     @Test
@@ -368,7 +380,23 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response length", responseBody.length, is(1));
         assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.200_000_002_980_232_24));
+    }
 
+    @Test
+    @DisplayName("Connection search get abuse types. Get empty response for ip connection")
+    @AllureId("1143")
+    void getAbuseTypesByAttributesTest22() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("ipAddress", userToIp2.getIpAddress());
+
+        Response response = getAbuseTypesByAttributes(queryParams);
+        assert response.body() != null;
+        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponse[].class
+        ));
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response length", responseBody.length, is(0));
     }
 
     @Test
