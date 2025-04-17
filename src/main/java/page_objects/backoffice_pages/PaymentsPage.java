@@ -1,6 +1,8 @@
 package page_objects.backoffice_pages;
 
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.enums.DateTimeFormat;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -10,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
@@ -57,6 +60,7 @@ public class PaymentsPage extends AbstractPage {
     private final Locator rebatesReceivedWidgetTitle;
     private final Locator rebatesReceivedWidgetValue;
     private final Locator rebatesReceivedWidgetCounter;
+    private final Locator timelineAnnotation;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -65,12 +69,13 @@ public class PaymentsPage extends AbstractPage {
     private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
     private static final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
-    private static final String TIMELINE_BAR = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
+    private static final String TIMELINE_SECTION = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
+    private static final String TIMELINE_BAR = TIMELINE_SECTION + "//*[@class = 'v-range-timeline-section__bar']";
     private static final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
     private static final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
     private static final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private static final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
-    private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]";
+    private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]//button";
     private static final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
     private static final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
     private static final String FILTER_BY_PLACEHOLDER_PATTERN = "//span[text()='%s']/..";
@@ -92,7 +97,7 @@ public class PaymentsPage extends AbstractPage {
         this.financialDateGraphContainerTooltip = page.locator("//div[@class='v-payments-summary-transcations-tooltip']");
         this.clearSelectedAccountsButton = page.locator(".g-select-clear");
         this.accountSelectionWindow = page.locator(".v-payments-summary-filters__accounts button.g-select-control__button");
-        this.timelineSection = page.locator(TIMELINE_BAR);
+        this.timelineSection = page.locator(TIMELINE_SECTION);
         this.dateFilterSelectionButton = page.locator(".v-date-picker__select  button");
         this.calendarSelectionButton = page.locator("//div[@data-qa='select-popup']//div[@class='g-select-list__option']//span[text()='Custom dates']");
         this.timelineThumb = page.locator(".v-range-timeline-thumb");
@@ -122,6 +127,7 @@ public class PaymentsPage extends AbstractPage {
         this.rebatesReceivedWidgetTitle = rebatesReceivedWidget.locator(WIDGET_TITLE);
         this.rebatesReceivedWidgetValue = rebatesReceivedWidget.locator(WIDGET_VALUE);
         this.rebatesReceivedWidgetCounter = rebatesReceivedWidget.locator(WIDGET_COUNTER);
+        this.timelineAnnotation = page.locator(".v-range-timeline-section__label");
     }
 
     @Step("Open users operations tab")
@@ -350,7 +356,7 @@ public class PaymentsPage extends AbstractPage {
         }
     }
 
-    public void clickOnAccountSelectionWindow() {
+    public void clickOnAccountSelection() {
         Allure.step("Click on account selection window");
         waitForPageToLoad();
         page.locator(ACCOUNT_SELECTION).click();
@@ -371,52 +377,100 @@ public class PaymentsPage extends AbstractPage {
 
     public void clickOnTimelineSectionByIndex(int sectionIndex) {
         Allure.step("click on timeline section number " + (sectionIndex + 1));
-        timelineSection.nth(sectionIndex).click();
+        timelineSection.nth(sectionIndex).click(new Locator.ClickOptions().setForce(true));
     }
 
     public void clickOnLastTimelineSection() {
         Allure.step("click on last timeline section");
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         int count = timelineSection.count();
-        timelineSection.nth(count - 1).click();
+        timelineSection.nth(count - 1).click(new Locator.ClickOptions().setForce(true));
     }
 
     public void clickOnPreLastTimelineSection() {
         Allure.step("click on last timeline section");
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         int count = timelineSection.count();
-        timelineSection.nth(count - 2).click();
+        timelineSection.nth(count - 2).click(new Locator.ClickOptions().setForce(true));
     }
 
     public void checkTimelineSectionInactive(int sectionIndex) {
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         Allure.step("check that timeline section number " + (sectionIndex + 1) + " is inactive");
-        assertTrue(page.locator(TIMELINE_BAR).nth(sectionIndex).and(inactiveTimelineSection).isVisible());
+        assertTrue(page.locator(TIMELINE_SECTION).nth(sectionIndex).and(inactiveTimelineSection).isVisible());
     }
 
     public void checkLastTimelineSectionInactive() {
         Allure.step("check that last timeline section number is inactive");
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         int count = timelineSection.count();
         page.waitForTimeout(500);
         int filterCount = timelineSection.nth(count - 1).and(inactiveTimelineSection).count();
         System.out.println("count of filters is" + filterCount);
-        assertTrue(timelineSection.nth(count - 1).and(inactiveTimelineSection).isVisible());
+        timelineSection.nth(count - 1).and(inactiveTimelineSection).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     public void shiftLeftTimelineThumbToTimelineSectionIndex(int sectionIndex) {
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         Allure.step("check that last timeline section number is inactive");
-        timelineThumb.nth(0).dragTo(timelineSection.nth(sectionIndex));
+        timelineThumb.nth(0).dragTo(timelineSection.nth(sectionIndex), new Locator.DragToOptions().setForce(true));
     }
 
     public void shiftRightTimelineThumbToTimelineSectionIndex(int sectionIndex) {
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         Allure.step("check that last timeline section number is inactive");
-        timelineThumb.nth(1).dragTo(timelineSection.nth(sectionIndex));
+        timelineThumb.nth(1).dragTo(timelineSection.nth(sectionIndex), new Locator.DragToOptions().setForce(true));
     }
 
     public void shiftRightTimelineThumbToPreLastTimelineSection() {
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         Allure.step("check that last timeline section number is inactive");
         int count = timelineSection.count();
         timelineThumb.nth(1).dragTo(timelineSection.nth(count - 2));
     }
 
     public void checkTimelineSectionInactiveByDate(String date) {
+        waitForPageToLoad();
+        int i = 0;
+        while (timelineSection.count() == 0 && i < 50) {
+            page.waitForTimeout(1000);
+            i++;
+        }
         System.out.println("the searched section is have date text " + date);
         Allure.step("check that timeline section, for exaple with date " + date + " inactive");
         page.waitForTimeout(500);
@@ -428,6 +482,16 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("check that timeline section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(timelineSection.getByText(date).last().isVisible());
+    }
+
+    public void checkTimelineAnnotationInFormat(DateTimeFormat format) throws ParseException {
+        Allure.step("Check that timeline annotations is in right format" + format.toString());
+        SimpleDateFormat formatter = new SimpleDateFormat(format.getDisplayName(), Locale.ENGLISH);
+        String annotation = timelineAnnotation.nth(1).textContent();
+        assertDoesNotThrow(() -> {
+            Date date = formatter.parse(annotation);
+            logger.info("annotation is successfully parsed to: " + date.toString());
+        });
     }
 
     public void checkFinancialTransactionSectionVisibleByDate(String date) {
