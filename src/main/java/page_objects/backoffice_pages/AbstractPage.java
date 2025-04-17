@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -44,6 +45,8 @@ public abstract class AbstractPage {
     static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
     static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
 
+    Logger logger = Logger.getLogger("TestPageLogger");
+
     public AbstractPage(Page page) {
         this.page = page;
         this.calendar = page.locator(CALENDAR_XPATH);
@@ -52,7 +55,6 @@ public abstract class AbstractPage {
 
 
     public void waitForPageToLoad() {
-        Allure.step("Wait for page to load");
         page.waitForTimeout(100);
         while (page.locator(LOADING_ANIMATION_SELECTOR).first().isVisible() || page.locator(LOADER_SPIN_LOCATOR).isVisible() || page.locator(LOADING_SKELETON).isVisible()) {
             page.waitForSelector(LOADING_ANIMATION_SELECTOR, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.HIDDEN));

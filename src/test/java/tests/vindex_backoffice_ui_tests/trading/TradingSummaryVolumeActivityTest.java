@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
@@ -26,7 +27,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
-import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
+import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,6 +62,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        paymentsPage.selectDateFilter("Last 7 days");
         paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
         paymentsPage.shiftLeftTimelineThumbToTimelineSectionIndex(2);
@@ -71,10 +73,11 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @AllureId("987")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
     @DisplayName("Trading/Summary. User can manipulate timeline by click")
-    public void manipulateTimelineByClickTest() {
+    public void manipulateTimelineByClickTest() throws InterruptedException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        paymentsPage.selectDateFilter("Last 7 days");
         paymentsPage.clickOnPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
         paymentsPage.clickOnTimelineSectionByIndex(1);
@@ -106,20 +109,18 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("989")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 8-30 days one division on timeline is 1 day with date for every two days")
-    public void filterLegend8And31DaysTest() {
+    @DisplayName("Trading/Summary. When user filters 8-98 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    public void filterLegend8And31DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter 8 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_DAY);
         page.reload();
-        Allure.step("filter 30 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
+        Allure.step("filter 98 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(DateTimeFormat.MONTH_TEXT_AND_DAY);
     }
 
     @Test
@@ -127,20 +128,18 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("990")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 31-98 days one division on timeline is 1 week with legend for every section")
-    public void filterLegend31And98DaysTest() {
+    @DisplayName("Trading/Summary. When user filters 99-365 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    public void filterLegend31And98DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        Allure.step("filter 31 day");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        Allure.step("filter 99 day");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_DAY);
         page.reload();
-        Allure.step("filter 98 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+        Allure.step("filter 365 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(363), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(DAY_SHORT_MONTH_YEAR);
     }
 
     @Test
@@ -148,20 +147,18 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("991")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 99 days - 3 years one division on timeline is month with legend for every two months")
-    public void filterLegend98DaysAnd3YearTest() {
+    @DisplayName("Trading/Summary. When user filters 1-6 years one Division = 1 week annotation = DD MON YYYY")
+    public void filterLegend98DaysAnd3YearTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        Allure.step("filter 99 days");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        Allure.step("filter 366 days");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(366));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
         page.reload();
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
+        Allure.step("filter 6 years");
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 6, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
     }
 
     @Test
@@ -169,15 +166,14 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("992")
     @Feature("BMS-55 Trading summary - Volume + activity + filters")
-    @DisplayName("Trading/Summary. When user filters 3+ years division on timeline is 1 year with legend for every year")
-    public void filterLegend3YearsTest() {
+    @DisplayName("Trading/Summary. When user filters 6+ years division on timeline is 1 year with eek annotation = YYYY")
+    public void filterLegend3YearsTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
+        Allure.step("filter 7 years");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousYearByIntYearMonthDay(7));
+        paymentsPage.checkTimelineAnnotationInFormat(YEAR);
     }
 
     @Test
@@ -352,6 +348,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, -1, 0, 0, 0, 0);
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 0);
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 1, 0, 0, 0, 0, 1);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -381,6 +380,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29, 0, 0, 0);
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 0);
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30, 0, 0, 1);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -410,6 +412,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0, 0, 0, 0);
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 0);
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 6, 0, 0, 0, 1);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -437,6 +442,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
         trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 1);
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6, 0, 0, 0);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 0);
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7, 0, 0, 1);
 
@@ -468,6 +476,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89, 0, 0, 0);
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 0);
         trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90, 0, 0, 1);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2));
 
@@ -475,7 +486,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test date");
-        paymentsPage.selectDateFilter("Last 7 days");
+        paymentsPage.selectDateFilter("Last 90 days");
         Allure.step("check that only data for the test date is displayed");
         assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
     }
@@ -493,6 +504,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
         trade1.openTime = "2024-02-13 14:09:35";
         trade1.closeTime = "2024-02-13 14:09:36";
         trade2.openTime = "2024-02-13 15:09:33";
@@ -522,6 +536,9 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade1.symbol = "EURUSD";
+        trade2.symbol = "EURUSD";
+        trade0.symbol = "EURUSD";
 
         trade2.account = ((long) account2.account);
 
@@ -532,7 +549,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         tradingPage.navigate(client.getUcid());
         Allure.step("filter test account");
         Allure.step("check that only data for the selected account is displayed");
-        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.clickOnAccountSelection();
         paymentsPage.selectTradingAccount(account1.account);
         assertThat("Verify deals", tradingPage.getPerformanceOverviewTicketsBySymbol("EURUSD"), equalTo("2"));
         paymentsPage.clearSelectedTradingAccount();

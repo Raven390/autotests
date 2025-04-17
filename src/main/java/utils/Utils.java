@@ -234,7 +234,7 @@ public class Utils {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, step, 0, 0);
     }
 
-    public static String getPreviousDateByIntYearMonthDay(int step) {
+    public static String getPreviousYearByIntYearMonthDay(int step) {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, step, 0, 0, 0, 0);
     }
 

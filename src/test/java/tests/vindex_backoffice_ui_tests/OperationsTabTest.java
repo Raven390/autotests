@@ -924,7 +924,7 @@ public class OperationsTabTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
         Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateByIntYearMonthDay(3));
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousYearByIntYearMonthDay(3));
         paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
         paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
     }
