@@ -16,6 +16,14 @@ public class ConnectionTableEntryFactory {
         );
     }
 
+    public static ConnectionTableEntry getConnectionTableEntry(ClientHelper userFrom, ClientHelper userTo,
+            String ipAddress) {
+        return new ConnectionTableEntry(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 1d, List.of(
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_IP, ipAddress, ipAddress, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+        );
+    }
+
     public static ConnectionTableEntry getConnectionTableEntryLvl2(ClientHelper userFrom, ClientHelper userTo) {
         return new ConnectionTableEntry(
                 userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 0.5d, List.of(
@@ -43,7 +51,7 @@ public class ConnectionTableEntryFactory {
             ClientHelper userTo) {
         return new ConnectionTableEntry(
                 userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 1d, List.of(
-                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
+                        new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat()
         );
     }
 
