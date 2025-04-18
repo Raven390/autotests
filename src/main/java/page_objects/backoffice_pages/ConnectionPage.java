@@ -90,6 +90,7 @@ public class ConnectionPage extends AbstractPage {
     private final Locator zoomInButton;
     private final Locator zoomValue;
     private final Locator tooltip;
+    private final Locator connectionScoreFilterPresetsOptions;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -122,6 +123,8 @@ public class ConnectionPage extends AbstractPage {
     private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
     private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls__zoom-controls']";
     private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
+    private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets']";
+    private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN = CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -196,6 +199,7 @@ public class ConnectionPage extends AbstractPage {
         this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
         this.zoomValue = page.locator(String.format("%s/div/descendant::span", ZOOM_CONTROLS));
         this.tooltip = page.locator("//div[@class='v-tooltip-content']");
+        this.connectionScoreFilterPresetsOptions = page.locator(String.format("%s/descendant::span[@class='g-button__text']", CONNECTION_SCORE_FILTER_PRESETS));
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -966,5 +970,20 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click last login header")
     public void clickLastLoginHeader() {
         lastLoginHeader.click();
+    }
+
+    @Step("Get connection score filter presets text")
+    public List<String> getConnectionScoreFilterPresets() {
+        List<String> textList = new ArrayList<>();
+        for (int i = 0; i < connectionScoreFilterPresetsOptions.count(); i++) {
+            Locator preset = connectionScoreFilterPresetsOptions.nth(i);
+            textList.add(preset.textContent());
+        }
+        return textList;
+    }
+
+    @Step("Click connection score filter preset")
+    public void clickConnectionScoreFilterPresetByText(String preset) {
+        page.locator(String.format(CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN, preset)).click();
     }
 }
