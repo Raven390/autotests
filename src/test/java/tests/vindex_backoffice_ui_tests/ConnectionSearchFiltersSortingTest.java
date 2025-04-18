@@ -400,6 +400,22 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1146")
+    @DisplayName("Verify connection score filter presets")
+    public void verifyConnectionSearchFilterScorePresetsTest() {
+        connectionPage.clickFilterButton();
+        assertThat("Verify presets list", connectionPage.getConnectionScoreFilterPresets(), contains("Low", "Medium", "High"));
+        connectionPage.clickConnectionScoreFilterPresetByText("Low");
+        assertThat("Verify Low preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.2 - 0.54"));
+        connectionPage.clickConnectionScoreFilterPresetByText("Medium");
+        assertThat("Verify Medium preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.55 - 0.74"));
+        connectionPage.clickConnectionScoreFilterPresetByText("High");
+        assertThat("Verify High preset", connectionPage.getScoreToInitialFilterCurrentRange(), is("Current range: 0.75 - 1"));
+    }
+
     @AfterAll
     public static void teardown() throws Exception {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid(), connectedClient6.getUcid()));
