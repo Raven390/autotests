@@ -4,11 +4,15 @@ package tests.vindex_backoffice_ui_tests;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.kafka.alerts.RuleAlert;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
+import helpers.database.DbName;
+import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
@@ -26,27 +30,32 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.DbHelper.*;
 import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
 
 public class ResolveTest extends TestBaseWeb {
 
-
+    private static final KafkaHelper kafka = new KafkaHelper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
     static ClientHelper withdrawalClient = new ClientHelper(141_402, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_102, 42);
     static ClientHelper resolveClient = new ClientHelper(161_601, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 161_601_001, 42);
+    private static CrmTbWithdrawalObject withdrawal1;
+    private static CrmTbWithdrawalObject withdrawal2;
+    private static CrmTbWithdrawalObject withdrawal3;
 
     @BeforeAll
     public static void setup() throws Exception {
         CrmTbUserObject withdrawalClientDB = generateStaticUserByClient(withdrawalClient);
         CrmTbUserObject resolveClientDB = generateStaticUserByClient(resolveClient);
-        CrmTbWithdrawalObject withdrawal1 = generateStaticWithdrawalByClient(withdrawalClient, "first withdrawal", 1);
-        CrmTbWithdrawalObject withdrawal2 = generateStaticWithdrawalByClient(withdrawalClient, "second withdrawal", 2);
-        CrmTbWithdrawalObject withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
+        withdrawal1 = generateStaticWithdrawalByClient(withdrawalClient, "first withdrawal", 1);
+        withdrawal2 = generateStaticWithdrawalByClient(withdrawalClient, "second withdrawal", 2);
+        withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(withdrawalClientDB, resolveClientDB));
 
@@ -68,17 +77,21 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("resolve client with withdrawal transactions approve all")
     public void resolveWithWithdrawalsApproveAllTest() throws Exception {
         cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
+        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
+        RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
+        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
+        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
+        kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient("infinox-141402");
+        investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllApprove();
-        String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
+        String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 09:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
 
@@ -91,19 +104,23 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("resolve client with withdrawal transactions reject all")
     public void resolveWithWithdrawalsRejectAllTest() throws Exception {
         cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
+        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
+        RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
+        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
+        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
+        kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient("infinox-141402");
+        investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsAllReject();
-        String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
+        String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 09:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
+        restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
     }
 
     @Test
@@ -112,32 +129,35 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("432")
     @DisplayName("resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOneTest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
         //first run
         cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
+        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
+        RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
+        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
+        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
+        kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
-        String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
+        String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 09:03 first withdrawal; Approve";
         restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
         //second run
         cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
-        Response response1 = enableCRMEmulator();
-        assertNotNull(response1);
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        createSimpleAlert(withdrawalClient.getUcid(), FraudType.HEDGING.getKey());
+        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
+        RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateToClient(withdrawalClient.getUcid());
         resolvePage.openResolveSuspicious();
         resolvePage.resolveWithdrawalsApproveOneByType("first withdrawal");
-        String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
+        String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 09:03 second withdrawal; Refuse";
         restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
         restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
     }
@@ -633,34 +653,32 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("238")
     @DisplayName("Resolve tab have info about currently applied restrictions")
     public void resolveRestrictionsListTest() throws Exception {
-        Restriction restriction = Restriction.ACCOUNT_CREATION_REVIEW;
+        Restriction restriction = Restriction.ACCOUNT_CREATION;
         //run 1
-        restrictionPage.cleanUserRestriction(resolveClient.getUcid());
+        RestrictionPage.cleanUserRestriction(resolveClient.getUcid());
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
-        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
+        RestrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
         createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.checkRestrictionIsDisplayed(restriction.getDescription());
+        resolvePage.checkRestrictionIsDisplayed(restriction.getName());
         //run 2
         Restriction restriction1 = Restriction.LOGIN_CRM;
-        restrictionPage.cleanUserRestriction(resolveClient.getUcid());
+        RestrictionPage.cleanUserRestriction(resolveClient.getUcid());
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
-        Response response2 = enableCRMEmulator();
-        assertNotNull(response2);
-        restrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
+        RestrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction1.getCode());
         createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getKey());
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.checkRestrictionIsDisplayed(restriction1.getDescription());
+        resolvePage.checkRestrictionIsDisplayed(restriction1.getName());
     }
 
     @Test

@@ -162,6 +162,7 @@ public class Constants {
     public static final String RULE_ENGINE_RULE_TABLE = "ruleengine.rule";
     public static final String RULE_ENGINE_RULE_DEPLOYMENT_TABLE = "ruleengine.rule_deployment";
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "vindex_test.account_ib_relation_snapshot";
+    public static final String BO_WD_REQUEST_TABLE_NAME = "postgres.bo.wd_request";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
@@ -258,6 +259,8 @@ public class Constants {
     //Other
     public static final String FRAUD_TYPE_SOURCE_VINDEX = "VINDEX";
     public static final String FRAUD_TYPE_SOURCE_INSIGHT = "INSIGHT";
+    public static final String FRAUD_TYPE_UNKNOWN = "UNKNOWN";
+    public static final String FRAUD_TYPE_MOREUNKNOWN = "MOREUNKNOWN";
     public static final String RESTRICTION_TYPE_GENERAL = "GENERAL";
     public static final String RESTRICTION_TYPE_TRADING = "TRADING";
     public static final String RESTRICTION_REQUESTED_STATUS = "RESTRICTION_REQUESTED";
