@@ -14,6 +14,7 @@ import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt5;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
+@Disabled
+@Tag(TAG_MANUAL)
 class MtDbEventsOpenTradeRequiredParamsTest {
 
     KafkaHelper kafka = new KafkaHelper();

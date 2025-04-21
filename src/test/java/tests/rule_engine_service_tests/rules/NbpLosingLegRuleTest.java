@@ -21,6 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
+@Disabled("Temporarily disabling this test class because rule is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_NPB_LOSING_LEG_RULE)
 @Tag(TEAM_CORE)

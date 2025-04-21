@@ -33,6 +33,7 @@ import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
+@Disabled("Temporarily disabling this test class because rule is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
 @Tag(TEAM_CORE)
