@@ -82,7 +82,7 @@ public class ResolvePage extends AbstractPage {
         this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
-        this.cleanFraudListButton = page.locator("button[data-qa='selected_fraud_type_item__remove_button']");
+        this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
         this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
@@ -289,12 +289,10 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Resolve cleaning fraud list")
     public void resolveClearFrauds(String comment) {
-
         commentInput.fill(comment);
         if (cleanFraudListButton.isVisible()) {
             cleanFraudListButton.click();
             page.locator(FRAUD_TYPE_POPUP_LOCATOR + "//button").getByText("Yes").click();
-
         }
         completeInvestigationButton.click();
         successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
