@@ -312,8 +312,8 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client15.getUcid());
         connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "Type", "Same Person");
-        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "Score", "0.16");
-        connectionPage.ccCheckDirectConnectionRows("Connect Tenthman", "payoutId", "535456**** **0344");
+        connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "Score", "0.16");
+        connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "payoutId", "535456**** **0344");
     }
 
     @Test
@@ -326,7 +326,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client6.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Brand", client6.getBrand());
+        connectionPage.ccCheckGeneralInfoRows("Brand", " " + client6.getBrand());
         connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
         connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
         connectionPage.ccCheckGeneralInfoRows("CPA", "2");

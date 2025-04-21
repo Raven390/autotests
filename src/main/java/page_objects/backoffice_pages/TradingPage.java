@@ -303,8 +303,8 @@ public class TradingPage extends AbstractPage {
         this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][3]");
         this.volumeLotsValue = page.locator("//*[@class='v-body-cell'][3]//" + PRIMARY_TEXT);
         this.volumeUsdValue = page.locator("//*[@class='v-body-cell'][3]" + SECONDARY_TEXT);
-        this.openColumnCellDate = page.locator("//*[@class='v-body-cell'][4]" + SECONDARY_TEXT);
-        this.closeColumnCellDate = page.locator("//*[@class='v-body-cell'][5]" + SECONDARY_TEXT);
+        this.openColumnCellDate = page.locator("//*[@class='v-body-cell'][4]//" + PRIMARY_TEXT);
+        this.closeColumnCellDate = page.locator("//*[@class='v-body-cell'][5]//" + PRIMARY_TEXT);
         this.openColumnCell = page.locator("//*[@class='v-body-cell'][4]");
         this.closeColumnCell = page.locator("//*[@class='v-body-cell'][5]");
         this.tpslColumnCell = page.locator("//*[@class='v-body-cell'][6]");
@@ -1420,7 +1420,7 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check duration percentage in the tooltip");
         assertThat(pnlByDurationTooltip).isVisible();
         String locator = (PNL_BY_DURATION_TOOLTIP + "//*[contains(text(),'" + percentage + "')]");
-        assertThat(page.locator(locator)).hasText(percentage + "% of all deals");
+        assertThat(page.locator(locator)).hasText(percentage + "% of all tickets");
     }
 
     public void checkTextPnlDurationTooltipPercentage(double innerText) {
@@ -1455,12 +1455,12 @@ public class TradingPage extends AbstractPage {
 
     public void checkTopProfitCategory(String expectedValue) {
         Allure.step("Check category in top profit header");
-        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/preceding-sibling::div").textContent());
+        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max profitable']/following-sibling::div").nth(0).textContent());
     }
 
     public void checkTopLossCategory(String expectedValue) {
         Allure.step("Check category in top loss header");
-        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max losing']/preceding-sibling::div").textContent());
+        assertEquals(expectedValue, page.locator(PNL_BY_DURATION + "//div[text() = 'Max losing']/following-sibling::div").nth(0).textContent());
     }
 
     public double calculatePnlByDeal(MtMt4TradesCoercedObject deal) {

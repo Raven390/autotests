@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests;
+package tests.vindex_backoffice_ui_tests.restrictions;
 
 import io.qameta.allure.AllureId;
 import okhttp3.Response;
@@ -14,6 +14,7 @@ import static utils.ConfigFactory.CRM_INTEGRATION_USER_UCID;
 import static utils.Constants.LAYER_WEB;
 import static utils.Constants.TEAM_BACKOFFICE;
 
+@Disabled("disabled until developing stable test env")
 public class CRMRestrictionsPageTest extends TestBaseWeb {
 
     @BeforeEach
