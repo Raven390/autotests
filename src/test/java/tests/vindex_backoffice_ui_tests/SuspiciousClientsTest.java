@@ -16,9 +16,9 @@ import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertBy
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
+import static utils.Utils.closeAllAlertsBo;
 
 public class SuspiciousClientsTest extends TestBaseWeb {
 
@@ -31,6 +31,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
+        closeAllAlertsBo();
         RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid);
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid);
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);

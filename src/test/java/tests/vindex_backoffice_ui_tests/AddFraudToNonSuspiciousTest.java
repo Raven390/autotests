@@ -397,7 +397,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
         FraudType fraudType = FraudType.HEDGING;
-        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusDays(1).minusHours(4))));
+        insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(innocentClient.getUcid(), (long) fraudType.getFraudTypeId(), false, Timestamp.valueOf(LocalDateTime.now(ZoneOffset.UTC).minusDays(1).minusHours(2))));
         resolvePage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(innocentClient.getUcid());
