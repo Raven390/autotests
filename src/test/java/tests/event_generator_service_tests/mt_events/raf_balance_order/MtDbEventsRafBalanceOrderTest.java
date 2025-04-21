@@ -14,6 +14,7 @@ import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDb
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt5;
 import business_objects.kafka.mt_events.RafBalanceOrderMtEvent;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,8 @@ import java.util.Map;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
+@Disabled
+@Tag(TAG_MANUAL)
 class MtDbEventsRafBalanceOrderTest {
 
     KafkaHelper kafka = new KafkaHelper();

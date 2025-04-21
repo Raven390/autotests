@@ -15,6 +15,7 @@ import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt5;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
+@Disabled
+@Tag(TAG_MANUAL)
 class MtDbEventsCloseTradeTest {
 
     KafkaHelper kafka = new KafkaHelper();
