@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests;
+package tests.vindex_backoffice_ui_tests.restrictions;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.api.mitigation_service.PostRestrictionResponse;

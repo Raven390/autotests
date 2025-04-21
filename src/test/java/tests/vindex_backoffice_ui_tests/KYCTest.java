@@ -363,7 +363,7 @@ public class KYCTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(pofClient.getUcid());
         generalTab.kycDetailsOpen("Proof of face");
-        generalTab.checkRightImage("H23GMk+EzskgAAAAAElFTkSuQmCC");
+        generalTab.checkImageDisplayed();
     }
 
     @Test

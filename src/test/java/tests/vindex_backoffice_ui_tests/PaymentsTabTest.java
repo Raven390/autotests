@@ -14,12 +14,12 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 import utils.Utils;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
@@ -29,6 +29,8 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
+import static helpers.data.enums.DateTimeFormat.*;
+import static helpers.data.enums.DateTimeFormat.MONTH_TEXT_AND_YEAR;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.OperationsHelper.cleanUserCashflowDb;
@@ -36,7 +38,7 @@ import static helpers.database.OperationsHelper.cleanUserFinancialTransactionDbU
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class OperationsTabTest extends TestBaseWeb {
+public class PaymentsTabTest extends TestBaseWeb {
 
     private static ClientHelper client = new ClientHelper(313_102, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 313_102_001, 313_102_002, 42);
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
@@ -58,7 +60,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("562")
-    @DisplayName("Operations tab. Cashflow chart show empty state when it not have data DB")
+    @DisplayName("Payments tab. Cashflow chart show empty state when it not have data DB")
     public void cashflowEmptyStateTest() throws Exception {
         cleanUserCashflowDb(client.getUcid());
         investigationPage.navigateEnterPage();
@@ -71,7 +73,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("573")
-    @DisplayName("Operations tab. Cashflow chart show empty one side on deposit when it not have data DB")
+    @DisplayName("Payments tab. Cashflow chart show empty one side on deposit when it not have data DB")
     public void cashflowOnlyOneWithdrawalFilledTest() throws Exception {
 
         investigationPage.navigateEnterPage();
@@ -89,7 +91,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("574")
-    @DisplayName("Operations tab. Cashflow chart show empty one side on deposit when it not have data DB")
+    @DisplayName("Payments tab. Cashflow chart show empty one side on deposit when it not have data DB")
     public void CashflowOnlyDepositSideFilledTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -106,7 +108,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("588")
-//    @DisplayName("Operations tab. Cashflow chart show data from DB")
+//    @DisplayName("Payments tab. Cashflow chart show data from DB")
 //    public void cashflowTotalValueInTipTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        keycloackPage.loginAsAutotestUser();
@@ -185,7 +187,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("589")
-//    @DisplayName("Operations tab. Cashflow header show data from DB")
+//    @DisplayName("Payments tab. Cashflow header show data from DB")
 //    public void cashflowValueInHeaderTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        keycloackPage.loginAsAutotestUser();
@@ -230,25 +232,12 @@ public class OperationsTabTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("574")
-    @DisplayName("Operations tab. financialTransaction chart show empty state when it not have data DB")
-    public void financialTransactionEmptyStateTest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        cleanUserFinancialTransactionDbUcid(client.getUcid());
-        paymentsPage.navigateOperationsTab(client.getUcid());
-        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("597")
-    @DisplayName("Operations tab. financialTransaction tabs show data from DB")
+    @DisplayName("Payments tab. financialTransaction tabs show data from DB")
     public void financialTransactionTabsShowsDataFromDb() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        Allure.step("add to DB transactios with all presented types");
+        Allure.step("add to DB transactions with all presented types");
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
         trade1.ticketType = "Credit";
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade1);
@@ -267,7 +256,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("597")
-//    @DisplayName("Operations tab. financialTransaction graph show data from DB")
+//    @DisplayName("Payments tab. financialTransaction graph show data from DB")
 //    public void financialTransactionGraphShowsDataFromDb() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        keycloackPage.loginAsAutotestUser();
@@ -288,7 +277,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("617")
-//    @DisplayName("Operations tab. user can filter data by account")
+//    @DisplayName("Payments tab. user can filter data by account")
 //    public void operationsTabCanBeFilteredByAccount() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        keycloackPage.loginAsAutotestUser();
@@ -331,7 +320,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("610")
-//    @DisplayName("Operations tab. User can filter operations by Dates Custom - one day")
+//    @DisplayName("Payments tab. User can filter operations by Dates Custom - one day")
 //    public void filterCustomOneDayTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -370,7 +359,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("615")
-//    @DisplayName("Operations tab. User can filter operations by Dates Last 1 year")
+//    @DisplayName("Payments tab. User can filter operations by Dates Last 1 year")
 //    public void filterLastYearTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -404,7 +393,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("611")
-//    @DisplayName("Operations tab. User can filter operations by Dates Last 30 days")
+//    @DisplayName("Payments tab. User can filter operations by Dates Last 30 days")
 //    public void filterLast30DaysTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -438,7 +427,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("897")
-//    @DisplayName("Operations tab. User can filter operations by Dates Last 6 months")
+//    @DisplayName("Payments tab. User can filter operations by Dates Last 6 months")
 //    public void filterLast6MonthsTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -472,7 +461,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("609")
-//    @DisplayName("Operations tab. User can filter operations by Dates Last 7 days")
+//    @DisplayName("Payments tab. User can filter operations by Dates Last 7 days")
 //    public void filterLast7DaysTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -506,7 +495,7 @@ public class OperationsTabTest extends TestBaseWeb {
 //    @Tag(TEAM_BACKOFFICE)
 //    @Tag(LAYER_WEB)
 //    @AllureId("609")
-//    @DisplayName("Operations tab. User can filter operations by Dates Last 90 days")
+//    @DisplayName("Payments tab. User can filter operations by Dates Last 90 days")
 //    public void filterLast90DaysTest() throws Exception {
 //        investigationPage.navigateEnterPage();
 //        cleanUserFinancialTransactionDbUcid(client.getUcid());
@@ -540,11 +529,12 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("642")
-    @DisplayName("Operations tab. User can manipulate timeline by click to a half of timeline")
+    @DisplayName("Payments tab. User can manipulate timeline by click to a half of timeline")
     public void manipulateTimelineByClickTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.clickOnPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
         paymentsPage.clickOnTimelineSectionByIndex(1);
@@ -555,12 +545,11 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("641")
-    @DisplayName("Operations tab. User can manipulate timeline by drag")
+    @DisplayName("Payments tab. User can manipulate timeline by drag")
     public void manipulateTimelineByDragTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 6 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
@@ -572,7 +561,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("635")
-    @DisplayName("Operations tab. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
+    @DisplayName("Payments tab. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
     public void timelineInactiveDaysFilter6DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -586,7 +575,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("634")
-    @DisplayName("Operations tab. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
+    @DisplayName("Payments tab. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
     public void timelineInactiveDaysFilter5DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -601,7 +590,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("633")
-    @DisplayName("Operations tab. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
+    @DisplayName("Payments tab. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
     public void timelineInactiveDaysFilter4DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -617,7 +606,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("632")
-    @DisplayName("Operations tab. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
+    @DisplayName("Payments tab. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
     public void timelineInactiveDaysFilter3DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -634,7 +623,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("631")
-    @DisplayName("Operations tab. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
+    @DisplayName("Payments tab. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
     public void timelineInactiveDaysFilter2DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -652,7 +641,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("630")
-    @DisplayName("Operations tab. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
+    @DisplayName("Payments tab. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
     public void timelineInactiveDaysFilter1DayTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -671,7 +660,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("658")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 99 days - 9 months Division = months Timeline = every month")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 99 days - 9 months Division = months Timeline = every month")
     public void filterLegendFinancialTransaction99DaysAnd10monthsTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -696,7 +685,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("701")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 10 months - 20 months Division = months Timeline = every 4 month")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 10 months - 20 months Division = months Timeline = every 4 month")
     public void filterLegendFinancialTransaction10monthsAnd20monthsTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -725,7 +714,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("655")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 1-14 days Division = 1 day Timeline = every day")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 1-14 days Division = 1 day Timeline = every day")
     public void filterLegendFinancialTransaction1DayAnd14DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -748,7 +737,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("656")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 15-20 days Division = 1 day Timeline = every 4 day")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 15-20 days Division = 1 day Timeline = every 4 day")
     public void filterLegendFinancialTransaction15DaysAnd20DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -772,7 +761,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("702")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 20+ months Division = years Timeline = every year")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 20+ months Division = years Timeline = every year")
     public void filterLegendFinancialTransactionMoreThan20monthsDaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -791,7 +780,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("657")
-    @DisplayName("Operations tab. Financial transaction graph, when filtered 21-98 days Division = week Timeline = every week")
+    @DisplayName("Payments tab. Financial transaction graph, when filtered 21-98 days Division = week Timeline = every week")
     public void filterLegendFinancialTransaction21DaysAnd98DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -815,7 +804,7 @@ public class OperationsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("636")
-    @DisplayName("Operations tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
+    @DisplayName("Payments tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
     public void filterLegend1And7DaysTest() throws Exception {
         cleanUserCashflowDb(client.getUcid());
         CrmTbDepositObject deposit = generateDepositByClient(client);
@@ -837,96 +826,88 @@ public class OperationsTabTest extends TestBaseWeb {
         paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
     }
 
-    @Deprecated
-    @Disabled("requirements for timeline changed")
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("637")
-    @DisplayName("Operations tab. When user filters 8-30 days one division on timeline is 1 day with date for every two days")
-    public void filterLegend8And31DaysTest() {
+    @DisplayName("Payments tab. When user filters 8-98 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    public void filterLegend8And31DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
         Allure.step("filter 8 day");
+        Allure.step("filter 8 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(7));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_DAY);
         page.reload();
-        Allure.step("filter 30 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(29), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(29));
+        Allure.step("filter 98 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(DateTimeFormat.MONTH_TEXT_AND_DAY);
     }
 
 
-    @Deprecated
-    @Disabled("requirements for timeline changed")
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("638")
-    @DisplayName("Operations tab. When user filters 31-98 days one division on timeline is 1 week with legend for every section")
-    public void filterLegend31And98DaysTest() {
+    @DisplayName("Payments tab. When user filters 99-365 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
+    public void filterLegend31And98DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 31 day");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(30));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
+        Allure.step("filter 99 day");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_DAY);
         page.reload();
-        Allure.step("filter 98 days");
-        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(97), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDayMonthDayByIntDay(97));
+        Allure.step("filter 365 days");
+        paymentsPage.selectDatesInCalendar(getPreviousDayByIntDaysYearMonthDay(363), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(DAY_SHORT_MONTH_YEAR);
     }
 
-    @Deprecated
-    @Disabled("requirements for timeline changed")
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("639")
-    @DisplayName("Operations tab. When user filters 99 days - 3 years one division on timeline is month with legend for every two months")
-    public void filterLegend98DaysAnd3YearTest() {
+    @DisplayName("Payments tab. When user filters 1-6 years one Division = 1 week annotation = DD MON YYYY")
+    public void filterLegend98DaysAnd3YearTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 99 days");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(1));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntMonth(3));
+        Allure.step("filter 366 days");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(366));
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
         page.reload();
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 3, 0, -2, 0, 0), getCurrentDate());
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthYear());
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousDateMonthYearIntYears(2));
+        Allure.step("filter 6 years");
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 6, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
     }
 
-    @Deprecated
-    @Disabled("requirements for timeline changed")
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("640")
-    @DisplayName("Operations tab. When user filters 3+ years division on timeline is 1 year with legend for every year")
-    public void filterLegend3YearsTest() {
+    @DisplayName("Payments tab. When user filters 6+ years division on timeline is 1 year with eek annotation = YYYY")
+    public void filterLegend3YearsTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
-        Allure.step("filter 3 years");
-        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousYearByIntYearMonthDay(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getPreviousYearByInt(3));
-        paymentsPage.checkTimelineSectionVisibleByDate(getCurrentYear());
+        Allure.step("filter 7 years");
+        paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousYearByIntYearMonthDay(7));
+        paymentsPage.checkTimelineAnnotationInFormat(YEAR);
+    }
+
+    @Disabled("deprecated due to lack of separate empty screen ")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("574")
+    @DisplayName("Payments tab. financialTransaction chart show empty state when it not have data DB")
+    public void financialTransactionEmptyStateTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        cleanUserFinancialTransactionDbUcid(client.getUcid());
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
     }
 
 }

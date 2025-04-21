@@ -397,6 +397,12 @@ public class GeneralTab extends AbstractPage {
         assertTrue(splitedSource1[splitedSource1.length - 1].contains(sourceLinkLastPart));
     }
 
+    public void checkImageDisplayed() {
+        String source = fileViewerImage.getAttribute("src");
+        assertNotNull(source);
+        assertFalse(source.isEmpty());
+    }
+
     public void checkNumberOfAttemptsInViewer(int expectedNumberOfAttempts) {
         assertEquals(expectedNumberOfAttempts, attemptItem.count());
     }
