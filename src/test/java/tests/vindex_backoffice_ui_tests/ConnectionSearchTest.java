@@ -326,7 +326,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client6.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Brand", " " + client6.getBrand());
+        connectionPage.ccCheckGeneralInfoRows("Brand", client6.getBrand());
         connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
         connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
         connectionPage.ccCheckGeneralInfoRows("CPA", "2");

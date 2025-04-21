@@ -28,7 +28,9 @@ import org.json.JSONObject;
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static helpers.data.enums.Brand.*;
 import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.BO;
 import static helpers.database.DbName.CLICKHOUSE;
+import static utils.Constants.BO_ALERT_TABLE_NAME;
 import static utils.Constants.CONNECTIONS_TABLE_NAME;
 
 public class Utils {
@@ -497,6 +499,9 @@ public class Utils {
             String query = "ALTER TABLE  " + CONNECTIONS_TABLE_NAME + "\n" + "update  status ='deleted',  datetime = now()\n" + "where user_from = '" + ucid + "'\n" + "or user_to = '" + ucid + "';";
             executeQueryToDb(CLICKHOUSE, query);
         }
+    }
 
+    public static void closeAllAlertsBo() {
+        executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
     }
 }

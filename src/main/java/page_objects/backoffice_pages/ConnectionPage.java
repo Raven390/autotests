@@ -463,7 +463,7 @@ public class ConnectionPage extends AbstractPage {
         Allure.step("Check general data values, field " + rowTitle);
         page.waitForSelector("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
         String actualValue = page.locator("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
-        assertEquals(expectedVale, " " + actualValue);
+        assertEquals(expectedVale.trim(), actualValue.trim());
     }
 
     public void ccCheckSummaryRows(String rowTitle, String expectedVale) {
