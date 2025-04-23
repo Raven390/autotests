@@ -22,6 +22,7 @@ import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static utils.Constants.*;
+import static utils.Utils.closeAllAlertsBo;
 
 public class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
@@ -32,6 +33,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+        closeAllAlertsBo();
         crmTbUser2.brand = Brand.INFINOX.getDisplayName();
         crmTbUser2.country = "Malaysia";
         crmTbUser2.countryCode = "MY";
