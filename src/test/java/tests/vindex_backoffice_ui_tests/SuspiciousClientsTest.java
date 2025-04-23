@@ -29,9 +29,9 @@ public class SuspiciousClientsTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+        closeAllAlertsBo();
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
-        closeAllAlertsBo();
         RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid);
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid);
         kafka.produceMessage(alert1.alertId, objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
