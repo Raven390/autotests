@@ -149,24 +149,24 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFrom3, userTo32);
 
     // Frauds
-    private static final ClientFraudTypesObject fraudEmailTo = new ClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudEmail1 = new ClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudEmail2 = new ClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudEmail3 = new ClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudEmail4 = new ClientFraudTypesObject(userToEmail2.getUcid(), LOSS_VOUCHER_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudDocumentTo = new ClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudIpTo = new ClientFraudTypesObject(userToIp.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudIp2To = new ClientFraudTypesObject(userToIp2.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudPhoneTo = new ClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudPhoneFrom = new ClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudPayoutTo = new ClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudDeviceIdTo = new ClientFraudTypesObject(userToDeviceId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudDigitalIdTo = new ClientFraudTypesObject(userToDigitalId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudNameBirthTo = new ClientFraudTypesObject(userToNameBirth.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudSessionIdTo = new ClientFraudTypesObject(userToSessionId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraudWebSessionIdTo = new ClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraud1 = new ClientFraudTypesObject(userTo31.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-    private static final ClientFraudTypesObject fraud2 = new ClientFraudTypesObject(userTo32.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmailTo = new ClientFraudTypesObject(userToEmail.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail1 = new ClientFraudTypesObject(userFromDepth.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail2 = new ClientFraudTypesObject(userTo2Depth.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail3 = new ClientFraudTypesObject(userTo3Depth.getUcid(), LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudEmail4 = new ClientFraudTypesObject(userToEmail2.getUcid(), LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDocumentTo = new ClientFraudTypesObject(userToDocument.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudIpTo = new ClientFraudTypesObject(userToIp.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudIp2To = new ClientFraudTypesObject(userToIp2.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPhoneTo = new ClientFraudTypesObject(userToPhone.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPhoneFrom = new ClientFraudTypesObject(userFromPhone.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudPayoutTo = new ClientFraudTypesObject(userToPayout.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDeviceIdTo = new ClientFraudTypesObject(userToDeviceId.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudDigitalIdTo = new ClientFraudTypesObject(userToDigitalId.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudNameBirthTo = new ClientFraudTypesObject(userToNameBirth.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudSessionIdTo = new ClientFraudTypesObject(userToSessionId.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraudWebSessionIdTo = new ClientFraudTypesObject(userToWebSessionId.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraud1 = new ClientFraudTypesObject(userTo31.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypesObject fraud2 = new ClientFraudTypesObject(userTo32.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
     @BeforeAll
     static void setupConnectionTableEntry() throws InterruptedException {
@@ -224,7 +224,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuse type", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuse type", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.5));
     }
 
@@ -243,7 +243,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
     }
 
@@ -262,7 +262,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.699_999_988_079_071));
     }
 
@@ -281,7 +281,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.699_999_988_079_071));
     }
 
@@ -300,7 +300,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
     }
 
@@ -319,7 +319,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.800_000_011_920_929));
     }
 
@@ -338,7 +338,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseTYpe", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseTYpe", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
 
     }
@@ -360,7 +360,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check the response body element", responseBody[0].abuseType, is(HEDGING.getKey()));
     }
 
     @Test
@@ -378,7 +378,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.200_000_002_980_232_24));
     }
 
@@ -416,7 +416,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
         assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(1.0));
 
     }

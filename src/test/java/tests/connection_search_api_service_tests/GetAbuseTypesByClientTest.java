@@ -75,10 +75,10 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
 
-        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypesObject(userTo3.getUcid(), CPA_ABUSE.getDisplayName(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypesObject(userTo3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
@@ -124,8 +124,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
-        assertThat("Check the response body", responseBody[1].abuseType, is(CPA_ABUSE.getDisplayName()));
-        assertThat("Check the response body", responseBody[0].abuseType, is(HEDGING.getDisplayName()));
+        assertThat("Check the response body", responseBody[1].abuseType, is(CPA_ABUSE.getKey()));
+        assertThat("Check the response body", responseBody[0].abuseType, is(HEDGING.getKey()));
     }
 
     @Test
@@ -175,7 +175,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
-        assertThat("Check the response body", responseBody[0].abuseType, is(CPA_ABUSE.getDisplayName()));
+        assertThat("Check the response body", responseBody[0].abuseType, is(CPA_ABUSE.getKey()));
     }
 
     @Test

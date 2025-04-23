@@ -36,10 +36,11 @@ class GetDepositsTests extends TestBaseApi {
 
     private static CrmTbDepositObject deposit1;
     private static CrmTbDepositObject deposit2;
+    static ClientHelper client;
 
     @BeforeAll
     static void setupDeposits() {
-        ClientHelper client = getRandomVantageClient();
+        client = getRandomVantageClient();
         deposit1 = generateDepositByClient(client);
         deposit2 = generateDepositByClient(client);
         deposit2.createTime = getTomorrowTimestampDbFormat();
@@ -70,7 +71,8 @@ class GetDepositsTests extends TestBaseApi {
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId.toString()));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
@@ -129,7 +131,8 @@ class GetDepositsTests extends TestBaseApi {
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId.toString()));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit2.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
@@ -150,7 +153,8 @@ class GetDepositsTests extends TestBaseApi {
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit1.transferId));
+        assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit1.transferId.toString()));
         assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit1.createTime)));
         assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit1.ucid));
         assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.amountUsd));
