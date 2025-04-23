@@ -49,8 +49,10 @@ public class TestBaseWeb {
     public GeneralSearchElements generalSearch;
     public static OpenPositions openPositions;
 
-    DecimalFormat df = new DecimalFormat("#,###");
-    DecimalFormat dfd = new DecimalFormat("#,###.##");
+    public static DecimalFormat df = new DecimalFormat("#,###");
+    public static DecimalFormat dfd = new DecimalFormat("#,###.##");
+    public static DecimalFormat dfwholed = new DecimalFormat("###,###,###");
+    public static DecimalFormat decimalFormat = new DecimalFormat("###,###,###.##");
 
     public Faker faker = new Faker();
 

@@ -23,8 +23,8 @@ import static utils.ConfigFactory.ENTER_PAGE_E2E;
 
 public abstract class AbstractPage {
 
-    DecimalFormat decimalFormat = new DecimalFormat("#,###");
-    DecimalFormat decimalFormat1 = new DecimalFormat("##,###.##");
+    public static DecimalFormat decimalFormat = new DecimalFormat("###,###,###.##");
+    public static DecimalFormat dfwholed = new DecimalFormat("###,###,###");
 
     protected final Page page;
     protected final Locator calendar;

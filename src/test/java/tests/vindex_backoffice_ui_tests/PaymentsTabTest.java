@@ -2,10 +2,11 @@ package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_transfer.CrmTbTransferObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.payments_total.PaymentsTotalObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
@@ -25,20 +26,21 @@ import java.util.List;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
+import static business_objects.db.clickhouse.crm_tb_transfer.CrmTbTransferFactory.generateCrmTbTransferRandomized;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClientRandomized;
 import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.data.enums.DateTimeFormat.MONTH_TEXT_AND_YEAR;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.OperationsHelper.cleanUserCashflowDb;
+import static helpers.database.OperationsHelper.cleanUserPaymentsDb;
 import static helpers.database.OperationsHelper.cleanUserFinancialTransactionDbUcid;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class PaymentsTabTest extends TestBaseWeb {
+class PaymentsTabTest extends TestBaseWeb {
 
     private static ClientHelper client = new ClientHelper(313_102, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 313_102_001, 313_102_002, 42);
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
@@ -48,7 +50,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     private static MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+    static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         crmTbUser.firstName = "Operator";
         crmTbUser.lastName = "Trademan";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
@@ -61,8 +63,8 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("562")
     @DisplayName("Payments tab. Cashflow chart show empty state when it not have data DB")
-    public void cashflowEmptyStateTest() throws Exception {
-        cleanUserCashflowDb(client.getUcid());
+    void cashflowEmptyStateTest() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -74,11 +76,11 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("573")
     @DisplayName("Payments tab. Cashflow chart show empty one side on deposit when it not have data DB")
-    public void cashflowOnlyOneWithdrawalFilledTest() throws Exception {
+    void cashflowOnlyOneWithdrawalFilledTest() throws Exception {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        cleanUserCashflowDb(client.getUcid());
+        cleanUserPaymentsDb(client.getUcid());
         CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
         withdrawal.statusId = 7;
         Allure.step("add record about withdrawal");
@@ -92,10 +94,10 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("574")
     @DisplayName("Payments tab. Cashflow chart show empty one side on deposit when it not have data DB")
-    public void CashflowOnlyDepositSideFilledTest() throws Exception {
+    void CashflowOnlyDepositSideFilledTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        cleanUserCashflowDb(client.getUcid());
+        cleanUserPaymentsDb(client.getUcid());
         CrmTbDepositObject deposit = generateDepositByClient(client);
         deposit.statusId = 5;
         Allure.step("add record about deposit");
@@ -104,433 +106,713 @@ public class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.checkCashflowEmptyStateWithdrawalIsVisible();
     }
 
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("588")
-//    @DisplayName("Payments tab. Cashflow chart show data from DB")
-//    public void cashflowTotalValueInTipTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        keycloackPage.loginAsAutotestUser();
-//        cleanUserCashflowDb(client.getUcid());
-//        dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 22, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction);
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentChannel, String.valueOf(Math.round(transaction.totalAmountUsd)));
-//        dpAndWdByChannelObject transaction2 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.0, 11, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction2);
-//        page.reload();
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction2.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction2.paymentChannel, String.valueOf(Math.round(transaction2.totalAmountUsd)));
-//        dpAndWdByChannelObject transaction3 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentServiceSecond", "Payment Services", 12.0, 6, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction3);
-//        page.reload();
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction3.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction3.paymentChannel, String.valueOf(Math.round(transaction3.totalAmountUsd)));
-//        dpAndWdByChannelObject transaction4 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestCards", "Cards", 12.0, 6, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction4);
-//        page.reload();
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction4.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction4.paymentChannel, String.valueOf(Math.round(transaction4.totalAmountUsd)));
-//        dpAndWdByChannelObject transaction5 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 12.1, 6, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction6 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestCrypto", "Crypto", 12.2, 6, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction7 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestP2P", "P2P", 12.3, 6, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction8 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "Other", "Other", 12.4, 6, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction9 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestBank Transfers", "Bank Transfers", 12.0, 7, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction10 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestCrypto", "Crypto", 12.5, 7, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction11 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestP2P", "P2P", 12.6, 7, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction12 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestOther", "Other", 12.7, 7, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction13 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestPayment Services", "Payment Services", 12.8, 7, getCurrentTimestampDbFormat());
-//        dpAndWdByChannelObject transaction14 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestCards", "Cards", 12.9, 7, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction5);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction6);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction7);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction8);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction9);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction10);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction11);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction12);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction13);
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction14);
-//        Allure.step("add other transactions ");
-//        page.waitForTimeout(10_000);
-//        page.reload();
-//        page.waitForTimeout(10_000);
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction5.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction5.paymentChannel, String.valueOf(Math.round(transaction5.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction6.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction6.paymentChannel, String.valueOf(Math.round(transaction6.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction7.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction7.paymentChannel, String.valueOf(Math.round(transaction7.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction8.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction8.paymentChannel, String.valueOf(Math.round(transaction8.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction9.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction9.paymentChannel, String.valueOf(Math.round(transaction9.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction10.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction10.paymentChannel, String.valueOf(Math.round(transaction10.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction11.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction11.paymentChannel, String.valueOf(Math.round(transaction11.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction12.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction12.paymentChannel, String.valueOf(Math.round(transaction12.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction13.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction13.paymentChannel, String.valueOf(Math.round(transaction13.totalAmountUsd)));
-//        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction14.channelCategory);
-//        paymentsPage.checkTotalCountByPaymentSystem(transaction14.paymentChannel, String.valueOf(Math.round(transaction14.totalAmountUsd)));
-//    }
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("588")
+    @DisplayName("Payments tab. Cashflow chart show data from DB")
+    void cashflowTotalValueInTipTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject transaction = generateDepositByClient(client);
+        transaction.statusId = 5;
+        transaction.paymentType = "Crypto";
+        transaction.paymentChannel = "CryptoCoino";
+        Allure.step("add record about new deposit with another type");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentChannel, dfwholed.format(Math.round(transaction.amountUsd)));
+        CrmTbDepositObject transaction2 = generateDepositByClient(client);
+        transaction2.paymentType = "P2P";
+        transaction2.paymentChannel = "chanel1";
+        Allure.step("add record about new deposit with another type");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction2);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction2.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction2.paymentChannel, transaction2.amountUsd);
+        CrmTbDepositObject transaction3 = generateDepositByClient(client);
+        transaction3.paymentType = "Bank Transfers";
+        transaction3.paymentChannel = "transferno";
+        Allure.step("add record about new deposit with another type");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction3);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction3.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction3.paymentChannel, transaction3.amountUsd);
+        CrmTbDepositObject transaction4 = generateDepositByClient(client);
+        transaction4.paymentType = "Payment Services";
+        transaction4.paymentChannel = "quiwy";
+        Allure.step("add record about new deposit with another type");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction4);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction4.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction4.paymentChannel, transaction4.amountUsd);
+        CrmTbDepositObject transaction5 = generateDepositByClient(client);
+        transaction5.paymentType = "local depositor";
+        transaction5.paymentChannel = "otherway";
+        Allure.step("add record about new deposit with another type");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction5);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction5.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction5.paymentChannel, transaction5.amountUsd);
+        CrmTbDepositObject transaction6 = generateDepositByClient(client);
+        transaction6.paymentType = "offline payment";
+        transaction6.paymentChannel = "otherwayBig";
+        transaction6.amountUsd = transaction5.amountUsd + 1.1;
+        Allure.step("add record about new deposit with existing type and another channel type with greater amount");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction6);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction6.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction6.paymentChannel, transaction6.amountUsd);
+        CrmTbDepositObject transaction7 = generateDepositByClient(client);
+        transaction7.paymentType = "offline payment";
+        transaction7.paymentChannel = "otherwayBig";
+        Allure.step("add record about new deposit with existing type and channel type to check that too;tip show sum");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction7);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction6.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction6.paymentChannel, transaction6.amountUsd + transaction7.amountUsd);
+        CrmTbWithdrawalObject transaction8 = generateWithdrawalByClient(client);
+        transaction8.paymentType = "Crypto";
+        transaction8.paymentChannel = "CryptoCoino";
+        CrmTbWithdrawalObject transaction9 = generateWithdrawalByClient(client);
+        transaction9.paymentType = "P2P";
+        transaction9.paymentChannel = "chanel1";
+        CrmTbWithdrawalObject transaction10 = generateWithdrawalByClient(client);
+        transaction10.paymentType = "Bank Transfers";
+        transaction10.paymentChannel = "transferno";
+        CrmTbWithdrawalObject transaction11 = generateWithdrawalByClient(client);
+        transaction11.paymentType = "Payment Services";
+        transaction11.paymentChannel = "quiwy";
+        CrmTbWithdrawalObject transaction12 = generateWithdrawalByClient(client);
+        transaction12.paymentType = "local depositor";
+        transaction12.paymentChannel = "otherway";
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(transaction8, transaction9, transaction10, transaction11, transaction12));
+        Allure.step("add withdrawals for every expected payment type to check them displayed ");
+        page.waitForTimeout(5000);
+        page.reload();
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction8.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction8.paymentChannel, transaction8.amountUsd);
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction9.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction9.paymentChannel, transaction9.amountUsd);
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction10.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction10.paymentChannel, transaction10.amountUsd);
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction11.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction11.paymentChannel, transaction11.amountUsd);
+        paymentsPage.hoverOverCashflowLineByTypeWithdrawal(transaction12.paymentType);
+        paymentsPage.checkTotalCountByPaymentSystem(transaction12.paymentChannel, transaction12.amountUsd);
+    }
 
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("589")
-//    @DisplayName("Payments tab. Cashflow header show data from DB")
-//    public void cashflowValueInHeaderTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        keycloackPage.loginAsAutotestUser();
-//        cleanUserCashflowDb(client.getUcid());
-//        dpAndWdByChannelObject transaction = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 12.1, 22, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction);
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.channelCategory, String.valueOf(Math.round(transaction.totalAmountUsd)));
-//
-//        dpAndWdByChannelObject transaction2 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService", "Payment Services", 24.1, 22, getCurrentTimestampDbFormat());
-//        Allure.step("override record about deposit");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction2);
-//        page.reload();
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.channelCategory, String.valueOf(Math.round(transaction2.totalAmountUsd)));
-//
-//        dpAndWdByChannelObject transaction3 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestPaymentService2", "Payment Services", 14.1, 22, getCurrentTimestampDbFormat());
-//        Allure.step("add record about deposit with same cathegory but different name");
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction3);
-//        page.reload();
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.channelCategory, String.valueOf(Math.round(transaction2.totalAmountUsd + transaction3.totalAmountUsd)));
-//
-//        Allure.step("add to DB transaction with another category  and the bigger amount than previous category ");
-//        dpAndWdByChannelObject transaction5 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction5);
-//        page.reload();
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction5.channelCategory, String.valueOf(Math.round(transaction5.totalAmountUsd)));
-//
-//        Allure.step("add to DB withdrawal transaction");
-//        dpAndWdByChannelObject transaction6 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "TestBank Transfers", "Bank Transfers", 42.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction6);
-//        page.reload();
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction6.channelCategory, String.valueOf(Math.round(transaction6.totalAmountUsd)));
-//
-//        Allure.step("add to DB withdrawal transaction with another category  and the bigger amount than previous category ");
-//        dpAndWdByChannelObject transaction7 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Withdrawal", "P2P withdrawal", "P2P", 43.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transaction7);
-//        page.reload();
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction7.channelCategory, String.valueOf(Math.round(transaction7.totalAmountUsd)));
-//    }
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("589")
+    @DisplayName("Payments tab. Cashflow header show data from DB")
+    void cashflowValueInHeaderTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject transaction = generateDepositByClient(client);
+        transaction.statusId = 5;
+        transaction.paymentType = "Crypto";
+        transaction.paymentChannel = "CryptoCoino";
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
+        Allure.step("add record about deposit");
+        page.waitForTimeout(1000);
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.paymentType, transaction.amountUsd);
+
+        CrmTbDepositObject transaction2 = generateDepositByClient(client);
+        transaction2.statusId = 5;
+        transaction2.paymentType = "Bank of Latverya";
+        transaction2.paymentChannel = "Doom Crones";
+        transaction2.amountUsd = transaction.amountUsd + 1.1;
+        Allure.step("add record about new deposit with another type and bigger amount");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction2);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.paymentType, transaction2.amountUsd);
+
+        CrmTbDepositObject transaction3 = generateDepositByClient(client);
+        transaction3.statusId = 5;
+        transaction3.paymentType = transaction2.paymentType;
+        transaction3.paymentChannel = "SomeBank LLC";
+        Allure.step("add record about new deposit with existing in DB and another channel");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction3);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.paymentType, transaction2.amountUsd + transaction3.amountUsd);
+
+        CrmTbWithdrawalObject transaction4 = generateWithdrawalByClient(client);
+        transaction4.paymentType = "P2Pinocchio";
+        transaction4.paymentChannel = "Pinocchio";
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, transaction4);
+        Allure.step("add record about withdrawal with type that was not used in deposits");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction4.paymentType, transaction4.amountUsd);
+
+        CrmTbWithdrawalObject transaction5 = generateWithdrawalByClient(client);
+        transaction5.paymentType = "offline payment";
+        transaction5.paymentChannel = "dullas";
+        transaction5.amountUsd = transaction4.amountUsd + 1.1;
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, transaction5);
+        Allure.step("add record about withdrawal with type that was not used early with bigger amount that previous withdrawal");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction5.paymentType, transaction5.amountUsd);
+
+        CrmTbWithdrawalObject transaction6 = generateWithdrawalByClient(client);
+        transaction6.paymentType = "local depositor";
+        transaction6.paymentChannel = "Bison Bucks";
+        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, transaction6);
+        Allure.step("add record about withdrawal with type that was used for withdrawals and check that them summed");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction6.paymentType, transaction5.amountUsd + transaction6.amountUsd);
+
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("597")
     @DisplayName("Payments tab. financialTransaction tabs show data from DB")
-    public void financialTransactionTabsShowsDataFromDb() throws Exception {
+    void financialTransactionTabsShowsDataFromDb() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
+
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank of Latverya";
+        deposit2.paymentChannel = "Doom Crones";
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Cryptobro";
+        withdrawal3.paymentChannel = "brocoin net";
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit4 = generateCreditsByClientRandomized(client);
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3, credit4));
+
+        CrmTbTransferObject transfer = generateCrmTbTransferRandomized(client);
+        insertObjectToDb(CRM_TRANSFERS_TABLE_NAME, transfer);
+        page.waitForTimeout(3000);
+
+        Allure.step("add to DB transactions with all presented types");
+
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        Allure.step("add to DB transactions with all presented types");
-        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoerced(client);
-        trade1.ticketType = "Credit";
-        insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade1);
-        cleanUserFinancialTransactionDbUcid(client.getUcid());
-        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+
         paymentsPage.navigateOperationsTab(client.getUcid());
-        paymentsPage.checkFinancialTransactionsTilesValues("Net deposits", String.valueOf(Math.round((payments.netDepositsUsd))), String.valueOf(Math.round(payments.totalBalanceopsCount)));
-        paymentsPage.checkFinancialTransactionsTilesValues("Total deposits", String.valueOf(Math.round((payments.totalDepositUsd))), String.valueOf(Math.round(payments.totalDepositCount)));
-        paymentsPage.checkFinancialTransactionsTilesValues("Total withdrawals", String.valueOf(Math.round((payments.totalWithdrawalUsd))), String.valueOf(Math.round(payments.totalWithdrawalCount)));
-        paymentsPage.checkFinancialTransactionsTilesValues("Total Internal transfers", String.valueOf(Math.round((payments.totalTransfersUsd))), String.valueOf(Math.round(payments.totalTransfersCount)));
-        paymentsPage.checkFinancialTransactionsTilesValues("Total credit", String.valueOf(Math.round((payments.totalCreditsUsd))), String.valueOf(Math.round(payments.totalCreditsCount)));
+
+        double totalDeposits = deposit1.amountUsd + deposit2.amountUsd;
+        double totalWithdrawals = withdrawal1.amountUsd + withdrawal2.amountUsd + withdrawal3.amountUsd;
+        double totalCredits = credit1.amountUsd + credit2.amountUsd + credit3.amountUsd + credit4.amountUsd;
+
+        paymentsPage.checkFinancialTransactionsTilesValues("Net deposits", totalDeposits - totalWithdrawals, 5);
+        paymentsPage.checkFinancialTransactionsTilesValues("Total deposits", totalDeposits, 2);
+        paymentsPage.checkFinancialTransactionsTilesValues("Total withdrawals", totalWithdrawals, 3);
+        paymentsPage.checkFinancialTransactionsTilesValues("Total Internal transfers", transfer.getAmountUsd(), 1);
+        paymentsPage.checkFinancialTransactionsTilesValues("Total credit", totalCredits, 4);
     }
 
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("597")
-//    @DisplayName("Payments tab. financialTransaction graph show data from DB")
-//    public void financialTransactionGraphShowsDataFromDb() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction with another category  and the bigger amount than previous category ");
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 7 days");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("617")
-//    @DisplayName("Payments tab. user can filter data by account")
-//    public void operationsTabCanBeFilteredByAccount() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction with financial transaction fot the first trade account");
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction for the first trade account");
-//        cleanUserCashflowDb(client.getUcid());
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
-//        paymentsPage.clickOnAccountSelectionWindow();
-//        paymentsPage.selectTradingAccount("17170102");
-//        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
-//        paymentsPage.clearSelectedTradingAccount();
-//        paymentsPage.selectTradingAccount("17170101");
-//        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
-//        Allure.step("add to DB transaction with financial transaction fot the second trade account");
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        PaymentsTotalObject payments2 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_102, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments2);
-//        Allure.step("add to DB cashflow transaction for the second trade account");
-//        cleanUserCashflowDb(client.getUcid());
-//        dpAndWdByChannelObject transactionCashFlow2 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_102, getCurrentDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow2);
-//        page.reload();
-//        paymentsPage.clearSelectedTradingAccount();
-//        paymentsPage.clickOnAccountSelectionWindow();
-//        paymentsPage.selectTradingAccount("17170101");
-//        paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
-//        paymentsPage.clearSelectedTradingAccount();
-//        paymentsPage.selectTradingAccount("17170102");
-//        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("610")
-//    @DisplayName("Payments tab. User can filter operations by Dates Custom - one day")
-//    public void filterCustomOneDayTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-11", 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-11", "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date next to a test date");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-13", 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date next to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-13", "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        Allure.step("add to DB transaction to a date previous to a test date");
-//        PaymentsTotalObject payments3 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-10", 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments3);
-//        Allure.step("add to DB cashflow transaction to a date previous to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow3 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, "2024-12-10", "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow3);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay("Dec 11");
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("615")
-//    @DisplayName("Payments tab. User can filter operations by Dates Last 1 year")
-//    public void filterLastYearTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date to a date outside of test period");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPreviousYearTimestampYearMonthDay(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date outside of test period");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPreviousYearTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 1 year");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("611")
-//    @DisplayName("Payments tab. User can filter operations by Dates Last 30 days")
-//    public void filterLast30DaysTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date to a date outside of test period");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPreviousMonthTimestampYearMonthDay(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date outside of test period");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPreviousMonthTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 30 days");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("897")
-//    @DisplayName("Payments tab. User can filter operations by Dates Last 6 months")
-//    public void filterLast6MonthsTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date to a date outside of test period");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPrevious6MonthTimestampYearMonthDay(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date outside of test period");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPrevious6MonthTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 6 months");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateMMMyyyy(getPreviousDayMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("609")
-//    @DisplayName("Payments tab. User can filter operations by Dates Last 7 days")
-//    public void filterLast7DaysTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date to a date outside of test period");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 7, 0, 0), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date outside of test period");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 7, 0, 0), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 7 days");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
-//    }
-//
-//    @Test
-//    @Tag(TEAM_BACKOFFICE)
-//    @Tag(LAYER_WEB)
-//    @AllureId("609")
-//    @DisplayName("Payments tab. User can filter operations by Dates Last 90 days")
-//    public void filterLast90DaysTest() throws Exception {
-//        investigationPage.navigateEnterPage();
-//        cleanUserFinancialTransactionDbUcid(client.getUcid());
-//        cleanUserCashflowDb(client.getUcid());
-//        keycloackPage.loginAsAutotestUser();
-//        Allure.step("add to DB transaction to a test date");
-//        PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments);
-//        Allure.step("add to DB cashflow transaction to a test date ");
-//        dpAndWdByChannelObject transactionCashFlow = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow);
-//        Allure.step("add to DB transaction to a date to a date outside of test period");
-//        PaymentsTotalObject payments1 = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPrevious90DaysTimestampYearMonthDay(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-//        insertObjectToDb("vindex_test.payments_total", payments1);
-//        Allure.step("add to DB cashflow transaction to a date outside of test period");
-//        dpAndWdByChannelObject transactionCashFlow1 = new dpAndWdByChannelObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getPrevious90DaysTimestampYearMonthDay(), "Deposit", "TestBank Transfers", "Bank Transfers", 40.1, 6, getCurrentTimestampDbFormat());
-//        insertObjectToDb(DP_AND_WD_BY_CHANNEL_TABLE_NAME, transactionCashFlow1);
-//        page.reload();
-//        paymentsPage.navigateOperationsTab(client.getUcid());
-//        Allure.step("filter test date");
-//        paymentsPage.selectDateFilter("Last 90 days");
-//        Allure.step("check that only data for the test date is displayed");
-//        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getPreviousDayMonthDay());
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", String.valueOf(Math.round(payments.totalDepositUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", String.valueOf(Math.round(payments.totalWithdrawalUsd)));
-//        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", String.valueOf(Math.round(payments.totalCreditsUsd)));
-//        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transactionCashFlow.channelCategory, String.valueOf(Math.round(transactionCashFlow.totalAmountUsd)));
-//    }
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("597")
+    @DisplayName("Payments tab. financialTransaction graph tooltip show data from DB")
+    void financialTransactionGraphTooltipShowsDataFromDb() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank of Latverya";
+        deposit2.paymentChannel = "Doom Crones";
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Cryptobro";
+        withdrawal3.paymentChannel = "brocoin net";
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit4 = generateCreditsByClientRandomized(client);
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3, credit4));
+
+        CrmTbTransferObject transfer = generateCrmTbTransferRandomized(client);
+        insertObjectToDb(CRM_TRANSFERS_TABLE_NAME, transfer);
+        page.waitForTimeout(3000);
+
+
+        double totalDeposits = deposit1.amountUsd + deposit2.amountUsd;
+        double totalWithdrawals = withdrawal1.amountUsd + withdrawal2.amountUsd + withdrawal3.amountUsd;
+        double totalCredits = credit1.amountUsd + credit2.amountUsd + credit3.amountUsd + credit4.amountUsd;
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 7 days");
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(totalDeposits));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(totalWithdrawals));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(totalCredits));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("617")
+    @DisplayName("Payments tab. user can filter data by account")
+    void operationsTabCanBeFilteredByAccount() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank of Latverya";
+        deposit2.paymentChannel = "Doom Crones";
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Cryptobro";
+        withdrawal3.paymentChannel = "brocoin net";
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        Allure.step("filter test date for the first account");
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.checkCashflowEmptyStateIsNotVisible();
+        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.selectTradingAccount(client.getTradingAccount2());
+        paymentsPage.checkCashflowEmptyStateIsVisible();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.selectTradingAccount(client.getTradingAccount());
+        paymentsPage.checkFinancialTransactionEmptyStateIsNotVisible();
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit11 = generateDepositByClient(client);
+        deposit11.statusId = 5;
+        deposit11.paymentType = "Crypto";
+        deposit11.paymentChannel = "CryptoCoino";
+        deposit11.account = client.getTradingAccount2();
+        CrmTbDepositObject deposit12 = generateDepositByClient(client);
+        deposit12.statusId = 5;
+        deposit12.paymentType = "Bank of Latverya";
+        deposit12.paymentChannel = "Doom Crones";
+        deposit12.account = client.getTradingAccount2();
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit11, deposit12));
+        CrmTbWithdrawalObject withdrawal11 = generateWithdrawalByClient(client);
+        withdrawal11.paymentType = "local depositor";
+        withdrawal11.paymentChannel = "Bison Bucks";
+        withdrawal11.account = client.getTradingAccount2();
+        CrmTbWithdrawalObject withdrawal12 = generateWithdrawalByClient(client);
+        withdrawal12.paymentType = "Bank of Latverya";
+        withdrawal12.paymentChannel = "channel";
+        withdrawal12.account = client.getTradingAccount2();
+        CrmTbWithdrawalObject withdrawal13 = generateWithdrawalByClient(client);
+        withdrawal13.paymentType = "Cryptobro";
+        withdrawal13.paymentChannel = "brocoin net";
+        withdrawal13.account = client.getTradingAccount2();
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal11, withdrawal12, withdrawal13));
+        page.reload();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.clickOnAccountSelectionWindow();
+        paymentsPage.selectTradingAccount(client.getTradingAccount());
+        paymentsPage.checkCashflowEmptyStateIsVisible();
+        paymentsPage.clearSelectedTradingAccount();
+        paymentsPage.selectTradingAccount(client.getTradingAccount2());
+        paymentsPage.checkCashflowEmptyStateIsNotVisible();
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("610")
+    @DisplayName("Payments tab. User can filter operations by Dates Custom - one day")
+    void filterCustomOneDayTest() throws Exception {
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String testDate = "2024-12-11 14:27:51";
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = testDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Crypto";
+        deposit2.paymentChannel = "CryptoCoino";
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = testDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = testDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay("Dec 11");
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("615")
+    @DisplayName("Payments tab. User can filter operations by Dates Last 1 year")
+    void filterLastYearTest() throws Exception {
+
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String insideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 11, 0);
+        String outsideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 367);
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = insideTestDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank";
+        deposit2.paymentChannel = "Bankinn";
+        CrmTbDepositObject deposit3 = generateDepositByClient(client);
+        deposit3.statusId = 5;
+        deposit3.paymentType = "Card";
+        deposit3.paymentChannel = "cardon";
+        deposit3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = insideTestDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Card";
+        withdrawal3.paymentChannel = "Bison Card";
+        withdrawal3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = insideTestDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.createTime = outsideTestDate;
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 1 year");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("611")
+    @DisplayName("Payments tab. User can filter operations by Dates Last 30 days")
+    void filterLast30DaysTest() throws Exception {
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String insideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 29);
+        String outsideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 30);
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = insideTestDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank";
+        deposit2.paymentChannel = "Bankinn";
+        CrmTbDepositObject deposit3 = generateDepositByClient(client);
+        deposit3.statusId = 5;
+        deposit3.paymentType = "Card";
+        deposit3.paymentChannel = "cardon";
+        deposit3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = insideTestDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Card";
+        withdrawal3.paymentChannel = "Bison Card";
+        withdrawal3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = insideTestDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.createTime = outsideTestDate;
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 30 days");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("897")
+    @DisplayName("Payments tab. User can filter operations by Dates Last 6 months")
+    void filterLast6MonthsTest() throws Exception {
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String insideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 0);
+        String outsideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 5, 4);
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = insideTestDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank";
+        deposit2.paymentChannel = "Bankinn";
+        CrmTbDepositObject deposit3 = generateDepositByClient(client);
+        deposit3.statusId = 5;
+        deposit3.paymentType = "Card";
+        deposit3.paymentChannel = "cardon";
+        deposit3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = insideTestDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Card";
+        withdrawal3.paymentChannel = "Bison Card";
+        withdrawal3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = insideTestDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.createTime = outsideTestDate;
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 6 months");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("609")
+    @DisplayName("Payments tab. User can filter operations by Dates Last 7 days")
+    void filterLast7DaysTest() throws Exception {
+
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String insideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 6);
+        String outsideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 7);
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = insideTestDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank";
+        deposit2.paymentChannel = "Bankinn";
+        CrmTbDepositObject deposit3 = generateDepositByClient(client);
+        deposit3.statusId = 5;
+        deposit3.paymentType = "Card";
+        deposit3.paymentChannel = "cardon";
+        deposit3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = insideTestDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Card";
+        withdrawal3.paymentChannel = "Bison Card";
+        withdrawal3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = insideTestDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.createTime = outsideTestDate;
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 7 days");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("609")
+    @DisplayName("Payments tab. User can filter operations by Dates Last 90 days")
+    void filterLast90DaysTest() throws Exception {
+
+        Allure.step("generate data inside and outside of tested period");
+
+        String insideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 89);
+        String outsideTestDate = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 90);
+
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.createTime = insideTestDate;
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank";
+        deposit2.paymentChannel = "Bankinn";
+        CrmTbDepositObject deposit3 = generateDepositByClient(client);
+        deposit3.statusId = 5;
+        deposit3.paymentType = "Card";
+        deposit3.paymentChannel = "cardon";
+        deposit3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+        CrmTbWithdrawalObject withdrawal1 = generateWithdrawalByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.createTime = insideTestDate;
+        CrmTbWithdrawalObject withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        CrmTbWithdrawalObject withdrawal3 = generateWithdrawalByClient(client);
+        withdrawal3.paymentType = "Card";
+        withdrawal3.paymentChannel = "Bison Card";
+        withdrawal3.createTime = outsideTestDate;
+        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2, withdrawal3));
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.createTime = insideTestDate;
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.createTime = outsideTestDate;
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigateOperationsTab(client.getUcid());
+        Allure.step("filter test date");
+        paymentsPage.selectDateFilter("Last 90 days");
+        Allure.step("check that only data for the test date is displayed");
+        paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("642")
     @DisplayName("Payments tab. User can manipulate timeline by click to a half of timeline")
-    public void manipulateTimelineByClickTest() throws Exception {
+    void manipulateTimelineByClickTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -546,7 +828,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("641")
     @DisplayName("Payments tab. User can manipulate timeline by drag")
-    public void manipulateTimelineByDragTest() {
+    void manipulateTimelineByDragTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -562,7 +844,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("635")
     @DisplayName("Payments tab. When user uses timeline , when user filters 6 days must have 1 inactive day on the right.")
-    public void timelineInactiveDaysFilter6DaysTest() {
+    void timelineInactiveDaysFilter6DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -576,7 +858,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("634")
     @DisplayName("Payments tab. When user uses timeline , when user filters 5 days must have 1 inactive day on both sides")
-    public void timelineInactiveDaysFilter5DaysTest() {
+    void timelineInactiveDaysFilter5DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -591,7 +873,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("633")
     @DisplayName("Payments tab. When user uses timeline , when user filters 4 days must have 1 inactive day on the left and 2 on the right.")
-    public void timelineInactiveDaysFilter4DaysTest() {
+    void timelineInactiveDaysFilter4DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -607,7 +889,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("632")
     @DisplayName("Payments tab. When user uses timeline , when user filters three days must have 2 inactive days on both sides")
-    public void timelineInactiveDaysFilter3DaysTest() {
+    void timelineInactiveDaysFilter3DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -624,7 +906,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("631")
     @DisplayName("Payments tab. When user uses timeline , when user filters two days must have 2 inactive days on the left and 3 on the right")
-    public void timelineInactiveDaysFilter2DaysTest() {
+    void timelineInactiveDaysFilter2DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -642,7 +924,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("630")
     @DisplayName("Payments tab. When user uses timeline , when user filters one day must have 3 inactive days on both sides")
-    public void timelineInactiveDaysFilter1DayTest() {
+    void timelineInactiveDaysFilter1DayTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -661,7 +943,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("658")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 99 days - 9 months Division = months Timeline = every month")
-    public void filterLegendFinancialTransaction99DaysAnd10monthsTest() throws Exception {
+    void filterLegendFinancialTransaction99DaysAnd10monthsTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -686,7 +968,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("701")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 10 months - 20 months Division = months Timeline = every 4 month")
-    public void filterLegendFinancialTransaction10monthsAnd20monthsTest() throws Exception {
+    void filterLegendFinancialTransaction10monthsAnd20monthsTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -715,7 +997,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("655")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 1-14 days Division = 1 day Timeline = every day")
-    public void filterLegendFinancialTransaction1DayAnd14DaysTest() throws Exception {
+    void filterLegendFinancialTransaction1DayAnd14DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -738,7 +1020,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("656")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 15-20 days Division = 1 day Timeline = every 4 day")
-    public void filterLegendFinancialTransaction15DaysAnd20DaysTest() throws Exception {
+    void filterLegendFinancialTransaction15DaysAnd20DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -762,7 +1044,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("702")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 20+ months Division = years Timeline = every year")
-    public void filterLegendFinancialTransactionMoreThan20monthsDaysTest() throws Exception {
+    void filterLegendFinancialTransactionMoreThan20monthsDaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -781,7 +1063,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("657")
     @DisplayName("Payments tab. Financial transaction graph, when filtered 21-98 days Division = week Timeline = every week")
-    public void filterLegendFinancialTransaction21DaysAnd98DaysTest() throws Exception {
+    void filterLegendFinancialTransaction21DaysAnd98DaysTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
@@ -805,8 +1087,8 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("636")
     @DisplayName("Payments tab. When user filters 1-7 days one division on timeline is 1 day with date under each section")
-    public void filterLegend1And7DaysTest() throws Exception {
-        cleanUserCashflowDb(client.getUcid());
+    void filterLegend1And7DaysTest() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
         CrmTbDepositObject deposit = generateDepositByClient(client);
         deposit.createTimeUtc = (getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 0, 0));
         deposit.createTime = (getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 6, 0, 0));
@@ -831,7 +1113,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("637")
     @DisplayName("Payments tab. When user filters 8-98 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
-    public void filterLegend8And31DaysTest() throws ParseException {
+    void filterLegend8And31DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -851,7 +1133,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("638")
     @DisplayName("Payments tab. When user filters 99-365 days one division on timeline is 1 Division = 1 day annotation = Days MON DD")
-    public void filterLegend31And98DaysTest() throws ParseException {
+    void filterLegend31And98DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -869,7 +1151,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("639")
     @DisplayName("Payments tab. When user filters 1-6 years one Division = 1 week annotation = DD MON YYYY")
-    public void filterLegend98DaysAnd3YearTest() throws ParseException {
+    void filterLegend98DaysAnd3YearTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -887,7 +1169,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("640")
     @DisplayName("Payments tab. When user filters 6+ years division on timeline is 1 year with eek annotation = YYYY")
-    public void filterLegend3YearsTest() throws ParseException {
+    void filterLegend3YearsTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigateOperationsTab(client.getUcid());
@@ -902,7 +1184,7 @@ public class PaymentsTabTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("574")
     @DisplayName("Payments tab. financialTransaction chart show empty state when it not have data DB")
-    public void financialTransactionEmptyStateTest() throws Exception {
+    void financialTransactionEmptyStateTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         cleanUserFinancialTransactionDbUcid(client.getUcid());
