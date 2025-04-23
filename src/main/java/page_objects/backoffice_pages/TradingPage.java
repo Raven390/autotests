@@ -1904,28 +1904,28 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check that Ib account value is shown and match expected in table view");
         String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat1.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueTable(int account, double expectedValue, int number) {
         Allure.step("Check that Ib account value is shown and match expected in table view");
         String locator = ACCOUNT_ROW_CELL + "//*[text()='" + account + "']//ancestor::tr" + IB_ACCOUNT_REBATES_ROW_CELL + "//" + PRIMARY_TEXT + "[" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat1.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueCard(int account, double expectedValue) {
         Allure.step("Check that Ib rebate value is shown and match expected");
         String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat1.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
 
     public void checkIbRebatesValueCard(int account, double expectedValue, int number) {
         Allure.step("Check that Ib rebate value is shown and match expected");
         String locator = "//*[text()='" + account + "']//ancestor::div" + ACCOUNT_CARD + "//div[text()='IB rebates']/following-sibling::div[contains(@class, 'g-text')][" + number + "]";
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(String.valueOf(decimalFormat1.format(expectedValue)) + " USD", page.locator(locator).textContent());
+        assertEquals(String.valueOf(decimalFormat.format(expectedValue)) + " USD", page.locator(locator).textContent());
     }
 
     @Step("Get IB rebates widget title")

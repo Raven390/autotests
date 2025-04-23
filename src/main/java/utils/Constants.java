@@ -106,6 +106,7 @@ public class Constants {
     public static final String CRM_DEPOSIT_TABLE_NAME = "vindex_test.crm___tb_deposit";
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm___tb_withdrawal";
     public static final String MT_CREDITS_TABLE_NAME = "vindex_test.mt___credit_orders";
+    public static final String CRM_TRANSFERS_TABLE_NAME = "vindex_test.crm___tb_transfer";
     public static final String MT_BALANCE_ORDERS_TABLE_NAME = "vindex_test.mt___balance_orders";
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "vindex_test.mt___mt4_trades_coerced";

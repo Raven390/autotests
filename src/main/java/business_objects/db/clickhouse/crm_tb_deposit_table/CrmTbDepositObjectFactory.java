@@ -27,8 +27,8 @@ public class CrmTbDepositObjectFactory {
         depositObject.statusId = 5;
         depositObject.status = "Success";
         depositObject.paymentTypeId = 1;
-        depositObject.paymentType = "Other";
-        depositObject.paymentChannel = "Other";
+        depositObject.paymentType = "Crypto";
+        depositObject.paymentChannel = "somecoin";
         depositObject.paymentSystemAccount = "Other";
         depositObject.paymentSystemCurrency = "EUR";
         depositObject.paymentDetails = "details";

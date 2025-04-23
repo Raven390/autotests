@@ -447,7 +447,7 @@ public class GeneralTab extends AbstractPage {
 
     public void checkSummaryPanelValue(String sectionName, double expectedValue) {
         double rounded = roundDouble(expectedValue, 2);
-        String string = decimalFormat1.format(rounded);
+        String string = decimalFormat.format(rounded);
         checkSummaryPanelValue(sectionName, string);
     }
 
@@ -455,7 +455,7 @@ public class GeneralTab extends AbstractPage {
         Allure.step("check rebates in IB line");
         String locator = IB_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        String testedValue = decimalFormat1.format(expectedValue);
+        String testedValue = decimalFormat.format(expectedValue);
         assertEquals("IB rebates " + testedValue + "  USD", page.locator(locator).textContent());
 
     }
@@ -502,7 +502,7 @@ public class GeneralTab extends AbstractPage {
         Allure.step("check rebates in CPA line");
         String locator = CPA_ROW + "//*[text()='" + login + "']//ancestor::tr" + REFERRAL_REBATES + TEXT_ELEMENT;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        String testedValue = decimalFormat1.format(expectedValue);
+        String testedValue = decimalFormat.format(expectedValue);
         assertEquals("CPA rebates " + testedValue + "  USD", page.locator(locator).textContent());
 
     }

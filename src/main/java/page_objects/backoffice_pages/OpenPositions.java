@@ -116,7 +116,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkVolumeCellValue(Integer account, Double volumeLots, Double volumeUsd) {
-        checkVolumeCellValue(account.toString(), decimalFormat1.format(volumeLots), decimalFormat1.format(volumeUsd));
+        checkVolumeCellValue(account.toString(), decimalFormat.format(volumeLots), decimalFormat.format(volumeUsd));
     }
 
     public void checkOpenCellValue(String account, String openPrice, String openTime) {
@@ -129,7 +129,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkOpenCellValue(Integer account, Double openPrice, String openTime) {
-        checkOpenCellValue(account.toString(), decimalFormat1.format(openPrice), openTime);
+        checkOpenCellValue(account.toString(), decimalFormat.format(openPrice), openTime);
     }
 
     public void checkTpSlCellValue(String account, String tp, String sl) {
@@ -142,7 +142,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkTpSlCellValue(Integer account, Double volumeLots, Double volumeUsd) {
-        checkTpSlCellValue(account.toString(), decimalFormat1.format(volumeLots), decimalFormat1.format(volumeUsd));
+        checkTpSlCellValue(account.toString(), decimalFormat.format(volumeLots), decimalFormat.format(volumeUsd));
     }
 
     public void checkFloatingPnlCellValue(String account, String pnl) {
@@ -154,7 +154,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkFloatingPnlCellValue(Integer account, Double pnl) {
-        checkFloatingPnlCellValue(account.toString(), decimalFormat1.format(pnl));
+        checkFloatingPnlCellValue(account.toString(), decimalFormat.format(pnl));
     }
 
     public void checkSwapCellValue(String account, String swap) {
@@ -166,7 +166,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkSwapCellValue(Integer account, Double swap) {
-        checkSwapCellValue(account.toString(), decimalFormat1.format(swap));
+        checkSwapCellValue(account.toString(), decimalFormat.format(swap));
     }
 
     public void checkCommissionCellValue(String account, String commission) {
@@ -178,7 +178,7 @@ public class OpenPositions extends AbstractPage {
     }
 
     public void checkCommissionCellValue(Integer account, Double commission) {
-        checkCommissionCellValue(account.toString(), decimalFormat1.format(commission));
+        checkCommissionCellValue(account.toString(), decimalFormat.format(commission));
     }
 
     public void checkMethodCellValue(String account, String method) {

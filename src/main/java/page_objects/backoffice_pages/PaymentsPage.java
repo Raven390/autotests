@@ -66,8 +66,8 @@ public class PaymentsPage extends AbstractPage {
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
     private static final String FINANCIAL_TRANSACTIONS_EMPTY_STATE_SELECTOR = "//div[text()='Financial transactions']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
     private static final String CASHFLOW_EMPTY_STATE_SELECTOR = "//div[text()='Cashflow']//ancestor::div[@class='v-payments-summary__chart']//span[contains(text(), 'No operations to display')]";
-    private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
-    private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') and contains(@class, 'v-cash-flow-chart-line_disabled')]/../..//span[text()='No transactions']";
+    private static final String CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR = "//*[contains(@class,'v-cash-flow-chart-line_type_deposit')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
+    private static final String CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR = "//*[contains(@class,'v-cash-flow-chart-line_type_withdrawal')]/..//*[contains(@class,'v-cash-flow-chart-line__label_disabled')]/*[text()='No transactions']";
     private static final String TIMELINE_SECTIONS = "//*[@class = 'v-range-timeline__sections']";
     private static final String TIMELINE_SECTION = TIMELINE_SECTIONS + "/*[contains(@class, 'v-range-timeline-section')]";
     private static final String TIMELINE_BAR = TIMELINE_SECTION + "//*[@class = 'v-range-timeline-section__bar']";
@@ -163,8 +163,17 @@ public class PaymentsPage extends AbstractPage {
     @Step("Open users operations tab")
     public void checkCashflowEmptyStateIsVisible() {
         Allure.step("Check that Cashflow graph empty state is visible");
-        page.waitForSelector(CASHFLOW_EMPTY_STATE_SELECTOR);
-        assertTrue(page.locator(CASHFLOW_EMPTY_STATE_SELECTOR).isVisible());
+        checkCashflowEmptyStateDepositIsVisible();
+        checkCashflowEmptyStateWithdrawalIsVisible();
+
+    }
+
+    @Step("Open users operations tab")
+    public void checkCashflowEmptyStateIsNotVisible() {
+        Allure.step("Check that Cashflow graph empty state is not visible");
+        waitForPageToLoad();
+        checkCashflowEmptyStateDepositIsNotVisible();
+        checkCashflowEmptyStateWithdrawalIsNotVisible();
 
     }
 
@@ -172,7 +181,16 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Check that Cashflow graph empty state on deposit side is visible");
         page.waitForSelector(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR);
         assertTrue(page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR).isVisible());
+    }
 
+    public void checkCashflowEmptyStateDepositIsNotVisible() {
+        Allure.step("Check that Cashflow graph empty state on deposit side is not visible");
+        assertFalse(page.locator(CASHFLOW_DEPOSIT_EMPTY_STATE_SELECTOR).isVisible());
+
+    }
+
+    public void clickOnAccountSelectionWindow() {
+        page.locator(ACCOUNT_SELECTION).click();
     }
 
     public void checkCashflowEmptyStateWithdrawalIsVisible() {
@@ -182,14 +200,22 @@ public class PaymentsPage extends AbstractPage {
 
     }
 
-    public void hoverOverCashflowLineByTypeDeposit(String type) {
-        Allure.step("hover mouse over cashflow deposit line by type " + type);
-        page.waitForSelector("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]");
-        page.locator("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]").hover();
+    public void checkCashflowEmptyStateWithdrawalIsNotVisible() {
+        Allure.step("Check that Cashflow graph empty state on withdrawal side is not visible");
+        assertFalse(page.locator(CASHFLOW_WITHDRAWAL_EMPTY_STATE_SELECTOR).isVisible());
 
     }
 
-    public void hoverOverCashflowLineByTypeWithdrawal(String type) {
+    public void hoverOverCashflowLineByTypeDeposit(String typeSource) {
+        String type = getPaymentType(typeSource);
+        Allure.step("hover mouse over cashflow deposit line by type " + type);
+        page.waitForSelector("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]");
+        page.locator("//*[contains(@class, 'v-cash-flow-chart-line_type_deposit') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]").hover(new Locator.HoverOptions().setForce(true));
+
+    }
+
+    public void hoverOverCashflowLineByTypeWithdrawal(String typeSource) {
+        String type = getPaymentType(typeSource);
         Allure.step("hover mouse over cashflow withdrawal line by type " + type);
         page.waitForSelector("//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]");
         page.locator("//*[contains(@class, 'v-cash-flow-chart-line_type_withdrawal') ]/../*[contains(@class, 'v-cash-flow-chart-line') ]//span[contains(text(), '" + type + "')]").hover();
@@ -203,79 +229,91 @@ public class PaymentsPage extends AbstractPage {
 
     }
 
+    public void checkTotalCountByPaymentSystem(String paymentSystem, Double totalCount) {
+        checkTotalCountByPaymentSystem(paymentSystem, dfwholed.format(Math.round(totalCount)));
+
+    }
+
     public void checkFinancialTransactionsTilesValues(String title, String expectedTotalValue,
             String expectedTotalOperations) {
         Allure.step("Check vales in financial operations tile " + title);
-        page.waitForSelector("//div[contains(text(),'" + title + "')]/following-sibling::div[contains(@class, 'v-payments-summary-cards__total')]");
-        String actualValue = page.locator("//div[contains(text(),'" + title + "')]/following-sibling::div[contains(@class, 'v-payments-summary-cards__total')]").textContent();
-        String actualOperations = page.locator("//div[contains(text(),'" + title + "')]/following-sibling::div[contains(@class, 'v-payments-summary-cards__total')]/../div[text() = '" + expectedTotalOperations + "']").textContent();
+        String baseLocator = "//div[contains(text(),'" + title + "')]/../..//*[contains(@class, 'v-payments-summary-card__total')]";
+        page.waitForSelector(baseLocator);
+        String actualValue = page.locator(baseLocator + "/../div[1]").textContent();
+        String actualOperations = page.locator(baseLocator + "/../div[2]").textContent();
         assertEquals(expectedTotalValue, actualValue);
+        logger.info("actualOperations is " + actualOperations);
         assertTrue(actualOperations.contains(expectedTotalOperations));
-
     }
 
-    public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategory, String expectedAmount) {
+    public void checkFinancialTransactionsTilesValues(String title, Double expectedTotalValue,
+            Integer expectedTotalOperations) {
+        checkFinancialTransactionsTilesValues(title, decimalFormat.format(expectedTotalValue), expectedTotalOperations.toString());
+    }
+
+    public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategorySource, String expectedAmount) {
+        String expectedCategory = getPaymentType(expectedCategorySource);
         Allure.step("Check top payment category and its total amount in usd Deposit");
-        String topCatLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Deposit')]");
+        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'deposit')]");
+        String topCatLocator = topCatTileLocator + "/following-sibling::div[2]";
         page.waitForSelector(topCatLocator);
         String topCategory = page.locator(topCatLocator).textContent();
-        System.out.println("Top category in Deposit: " + topCategory);
+        logger.info("Top category in Deposit: " + topCategory);
         assertTrue(topCategory.contains(expectedCategory));
-        String topSumLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Deposit')]/preceding-sibling::div");
+        String topSumLocator = (topCatTileLocator + "/following-sibling::div[1]");
         page.waitForSelector(topSumLocator);
         String totalAmount = page.locator(topSumLocator).textContent();
-        System.out.println("totalAmount in Deposit: " + totalAmount);
+        logger.info("totalAmount in Deposit: " + totalAmount);
         assertEquals(expectedAmount, totalAmount);
     }
 
-    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, String expectedAmount) {
+    public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategory, Double expectedAmount) {
+        checkCashflowTopPaymentSystemTypesHeaderDeposit(expectedCategory, dfwholed.format(expectedAmount));
+    }
+
+    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategorySource,
+            String expectedAmount) {
         Allure.step("Check top payment category and its total amount in usd Withdrawal");
-        String topCatLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Withdrawal')]");
+        String topCatTileLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div/*[@class ='v-chart-wrapper__feature']/div[contains(text(), 'withdrawal')]");
+        String topCatLocator = topCatTileLocator + "/following-sibling::div[2]";
         page.waitForSelector(topCatLocator);
+        String expectedCategory = getPaymentType(expectedCategorySource);
         String topCategory = page.locator(topCatLocator).textContent();
-        System.out.println("Top category in Withdrawal: " + topCategory);
-        assertTrue(topCategory.contains(expectedCategory));
-        String topSumLocator = (CASHFLOW_SECTION_SELECTOR + "/../following-sibling::div" + VARIANT_BODY_1_SELECTOR + "[contains(text(), 'Withdrawal')]/preceding-sibling::div");
+        logger.info("Top category in Withdrawal: " + topCategory);
+        assertEquals(expectedCategory, topCategory);
+        String topSumLocator = (topCatTileLocator + "/following-sibling::div[1]");
         page.waitForSelector(topSumLocator);
         String totalAmount = page.locator(topSumLocator).textContent();
-        System.out.println("totalAmount in Withdrawal: " + totalAmount);
+        logger.info("totalAmount in Withdrawal: " + totalAmount);
         assertEquals(expectedAmount, totalAmount);
     }
 
-//    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, String expectedAmount) {
-//        Allure.step("Check top payment category and its total amount in usd Withdrawal");
-//        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]");
-//        String totalAmount = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[1]").textContent();
-//        System.out.println("Total amount in usd Withdrawal: " + totalAmount);
-//        assertEquals(expectedAmount, totalAmount);
-//        page.waitForSelector("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]");
-//        String topCategory = page.locator("//div[contains(@class, 'g-text_variant_subheader-2') and contains(text(), 'Cashflow')]/../div[2]/div[2]/div[2]").textContent();
-//        System.out.println("current top category: " + topCategory);
-//        assertTrue(topCategory.contains(expectedCategory));
-//    }
+    public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, Double expectedAmount) {
+        checkCashflowTopPaymentSystemTypesHeaderWithdrawal(expectedCategory, dfwholed.format(expectedAmount));
+    }
 
     public void hoverOverFinancialTransactionsGraphByDateMMMdd(String dateString) throws ParseException {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        System.out.println("number of containers is " + count);
+        logger.info("number of containers is " + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
             page.waitForTimeout(200);
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
-                System.out.println("interval is " + interval);
+                logger.info("interval is " + interval);
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
                 Date date1 = formatter.parse(dateString);
                 String[] dateIntervals = interval.split(" - ");
-                System.out.println("interval 1 is " + dateIntervals[0]);
-                System.out.println("interval 2 is " + dateIntervals[1]);
+                logger.info("interval 1 is " + dateIntervals[0]);
+                logger.info("interval 2 is " + dateIntervals[1]);
                 Date date2 = formatter.parse(dateIntervals[0]);
                 Date date3 = formatter.parse(dateIntervals[1]);
 
                 if ((date1.after(date2) || date1.equals(date2)) && (date1.before(date3) || date1.equals(date3))) {
-                    System.out.println("SUCCESS date " + date1 + " is found");
+                    logger.info("SUCCESS date " + date1 + " is found");
                     found = true;
                 }
             }
@@ -286,24 +324,24 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        System.out.println("number of containers is " + count);
+        logger.info("number of containers is " + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
             page.waitForTimeout(200);
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
-                System.out.println("interval is " + interval);
+                logger.info("interval is " + interval);
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
                 Date date1 = formatter.parse(dateString);
                 String[] dateIntervals = interval.split(" - ");
-                System.out.println("interval 1 is " + dateIntervals[0]);
-                System.out.println("interval 2 is " + dateIntervals[1]);
+                logger.info("interval 1 is " + dateIntervals[0]);
+                logger.info("interval 2 is " + dateIntervals[1]);
                 Date date2 = formatter.parse(dateIntervals[0]);
                 Date date3 = formatter.parse(dateIntervals[1]);
 
                 if ((date1.after(date2) || date1.equals(date2)) && (date1.before(date3) || date1.equals(date3))) {
-                    System.out.println("SUCCESS date " + date1 + " is found");
+                    logger.info("SUCCESS date " + date1 + " is found");
                     found = true;
                 }
             }
@@ -312,10 +350,10 @@ public class PaymentsPage extends AbstractPage {
 
     public void hoverOverFinancialTransactionsGraphByDateSingleDay(String dateString) throws ParseException {
         Allure.step("Hover over financial transactions graph by date");
-        System.out.println("searched date is " + dateString);
+        logger.info("searched date is " + dateString);
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        System.out.println("number of containers is " + count);
+        logger.info("number of containers is " + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
@@ -323,12 +361,29 @@ public class PaymentsPage extends AbstractPage {
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
                 if (interval.contains(dateString)) {
-                    System.out.println("SUCCESS date " + dateString + " is found");
+                    logger.info("SUCCESS date " + dateString + " is found");
                     found = true;
                 }
             }
         }
     }
+
+    public void hoverOverFirstFilledTransactionsGraphByDateSingleDay() throws ParseException {
+        Allure.step("Hover over financial transactions graph by date");
+        page.waitForTimeout(1000);
+        int count = financialDateGraphContainer.count();
+        logger.info("number of containers is " + count);
+        boolean found = false;
+        for (int i = 0; i < count && found == false; i++) {
+            financialDateGraphContainer.nth(i).hover();
+            page.waitForTimeout(200);
+            if (financialDateGraphContainerTooltipTitle.isVisible()) {
+
+                found = true;
+            }
+        }
+    }
+
 
     public void checkFinancialTransactionsRowInTooltip(String rowTitle, String expectedValue) {
         Allure.step("Check value in line " + rowTitle + " in appeared tooltip");
@@ -352,7 +407,7 @@ public class PaymentsPage extends AbstractPage {
         if (clearSelectedAccountsButton.isVisible()) {
             clearSelectedAccountsButton.click();
         } else {
-            System.out.println("There is no selected accounts");
+            logger.info("There is no selected accounts");
         }
     }
 
@@ -426,7 +481,7 @@ public class PaymentsPage extends AbstractPage {
         int count = timelineSection.count();
         page.waitForTimeout(500);
         int filterCount = timelineSection.nth(count - 1).and(inactiveTimelineSection).count();
-        System.out.println("count of filters is" + filterCount);
+        logger.info("count of filters is" + filterCount);
         timelineSection.nth(count - 1).and(inactiveTimelineSection).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
@@ -471,14 +526,14 @@ public class PaymentsPage extends AbstractPage {
             page.waitForTimeout(1000);
             i++;
         }
-        System.out.println("the searched section is have date text " + date);
+        logger.info("the searched section is have date text " + date);
         Allure.step("check that timeline section, for exaple with date " + date + " inactive");
         page.waitForTimeout(500);
         assertTrue(inactiveTimelineSection.getByText(date).isVisible());
     }
 
     public void checkTimelineSectionVisibleByDate(String date) {
-        System.out.println("the searched section is have date text " + date);
+        logger.info("the searched section is have date text " + date);
         Allure.step("check that timeline section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(timelineSection.getByText(date).last().isVisible());
@@ -495,7 +550,7 @@ public class PaymentsPage extends AbstractPage {
     }
 
     public void checkFinancialTransactionSectionVisibleByDate(String date) {
-        System.out.println("the searched section is have date text " + date);
+        logger.info("the searched section is have date text " + date);
         Allure.step("check that financial transaction graph section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(financialTransactionGraphSection.getByText(date).isVisible());
@@ -635,5 +690,26 @@ public class PaymentsPage extends AbstractPage {
     @Step("Get Rebates received widget counter")
     public String getRebatesReceivedWidgetCounter() {
         return rebatesReceivedWidgetCounter.textContent();
+    }
+
+    public static String getPaymentType(String inputType) {
+        String transformedType;
+        if (inputType.toLowerCase().contains("bank")) {
+            transformedType = "Bank Transfers";
+        } else if (inputType.toLowerCase().contains("card")) {
+            transformedType = "Cards";
+        } else if (inputType.toLowerCase().contains("crypto") || inputType.toLowerCase().contains("pix")) {
+            transformedType = "Crypto";
+        } else
+            if (inputType.toLowerCase().contains("union") || inputType.toLowerCase().contains("wise") || inputType.toLowerCase().contains("p2p")) {
+                transformedType = "P2P";
+            } else
+                if (inputType.toLowerCase().contains("local depositor") || inputType.toLowerCase().contains("offline payment")) {
+                    transformedType = "Other";
+                } else {
+                    transformedType = "Payment Services";
+                }
+
+        return transformedType;
     }
 }
