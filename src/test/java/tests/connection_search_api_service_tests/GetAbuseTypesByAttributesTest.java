@@ -616,11 +616,12 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        ConnectionSearchResponseError responseBody = (objectMapper.readValue(
+                response.body().string(), ConnectionSearchResponseError.class
         ));
 
-        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response code is 200", response.code(), is(400));
+        assertThat("Check the response length", responseBody.status, is(400));
+        assertThat("Check the response length", responseBody.error, is("Unknown connection type provided: . Valid values are: [Same Identity, Same Person, Same Network, UNKNOWN]"));
     }
-
 }

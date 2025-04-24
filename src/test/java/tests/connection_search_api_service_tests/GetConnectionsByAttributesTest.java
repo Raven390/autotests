@@ -39,8 +39,8 @@ import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneT
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.CleanTableHelper.cleanConnectionsTableByClient;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -60,6 +60,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final ClientHelper userFromIp2 = getRandomVantageClientAllFields();
     static final ClientHelper userToIp = getRandomVantageClientAllFields();
     static final ClientHelper userToIp2 = getRandomVantageClientAllFields();
+    static final ClientHelper userToIp3 = getRandomVantageClientAllFields();
     static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
     static final ClientHelper userToPhone = getRandomVantageClientAllFields();
     static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
@@ -106,9 +107,10 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     // Objects to insert to attributes tables
     static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
     static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
-    static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp, true);
     static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userFromIp2, true);
     static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToIp3);
     static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
     static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
     static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
@@ -123,6 +125,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
     static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
     static final ConnectionTableEntry connectionTableEntryByIp2 = getConnectionTableEntry(userFromIp2, userToIp2, userFromIp2.getIpAddress());
+    static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFromIp2, userToIp3);
     static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
     static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
     static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
@@ -138,27 +141,13 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         // Insert data to connections table
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDocument);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByEmail);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByIp);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByIp2);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPhone);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByPayout);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth1);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryForDepth2);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration1);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryFiltration2);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDeviceId);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByDigitalId);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByNameBirth);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryBySessionId);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntryByWebSessionId);
+        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByDocument, connectionTableEntryByEmail, connectionTableEntryByIp, connectionTableEntryByIp2, connectionTableEntryByIp3, connectionTableEntryByPhone, connectionTableEntryByPayout, connectionTableEntryForDepth1, connectionTableEntryForDepth2, connectionTableEntryFiltration1, connectionTableEntryFiltration2, connectionTableEntryByDeviceId, connectionTableEntryByDigitalId, connectionTableEntryByNameBirth, connectionTableEntryBySessionId, connectionTableEntryByWebSessionId));
         // Insert data to attributes tables
         insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
         insertObjectToDb(IP_TABLE_NAME, ipTableEntry);
         insertObjectToDb(IP_TABLE_NAME, ipTableEntry2);
-        insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry);
+        insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
         insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryFiltration);
         insertObjectToDb(DIGITAL_ID_TABLE_NAME, digitalIdTableEntry);
@@ -171,22 +160,9 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     }
 
     @AfterAll
-    static void deleteConnectionTableEntry() {
+    static void deleteConnectionTableEntry() throws Exception {
         // Delete data from connections table
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDocument.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByEmail.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByIp.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPhone.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByPayout.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth1.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryForDepth2.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration1.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryFiltration2.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDeviceId.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByDigitalId.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByNameBirth.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryBySessionId.userFrom));
-        deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntryByWebSessionId.userFrom));
+        cleanConnectionsTableByClient(connectionTableEntryByDocument.userFrom, connectionTableEntryByEmail.userFrom, connectionTableEntryByIp.userFrom, connectionTableEntryByPhone.userFrom, connectionTableEntryByPayout.userFrom, connectionTableEntryForDepth1.userFrom, connectionTableEntryForDepth2.userFrom, connectionTableEntryFiltration1.userFrom, connectionTableEntryFiltration2.userFrom, connectionTableEntryByDeviceId.userFrom, connectionTableEntryByDigitalId.userFrom, connectionTableEntryByNameBirth.userFrom, connectionTableEntryBySessionId.userFrom, connectionTableEntryByWebSessionId.userFrom);
         // Delete data from attributes tables
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
@@ -389,7 +365,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreTo", 0.4);
+        queryParams.put("connectionScoreTo", 0.5);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -409,7 +385,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionType", List.of(CONNECTION_TYPE_SAME_NETWORK));
+        queryParams.put("connectionType", List.of(CONNECTION_TYPE_SAME_PERSON));
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -418,7 +394,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
         assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[0]));
     }
