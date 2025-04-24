@@ -393,7 +393,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         Response response = getCheckConnectedIb(queryParams);
         assert response.body() != null;
         assertThat("Check the response code is 200", response.code(), is(200));
-        assertThat("Check the response code is 200", response.body().string(), is("true"));
+        assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
 
     @Test

@@ -323,7 +323,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with with  connection attribute(200)")
+    @DisplayName("Connection search by clientId. Get abuse types by clientId with connection attribute(200)")
     @AllureId("757")
     void getAbuseTypesByClientTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();

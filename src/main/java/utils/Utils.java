@@ -452,6 +452,9 @@ public class Utils {
         ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
         waitForConnectionSearchToUpdate(userFrom1.getUcid());
+        connectionTableEntry11.datetime = getCurrentTimestampDbFormat();
+        connectionTableEntry11.status = "delete";
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
     }
 
     public static void waitForConnectionSearchToUpdate(ClientHelper client) throws Exception {
