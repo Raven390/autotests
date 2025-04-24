@@ -25,7 +25,7 @@ public class GetAbuseTypesResponseFactory {
 
     public static ConnectionSearchResponseError getAbuseTypesResponseErrorUnknownAttributeBadRequest() {
         return new ConnectionSearchResponseError(
-                null, 400, "Unknown attribute provided: payout. Valid arguments are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth]", null, null, null, null, null
+                null, 400, "Unknown attribute provided: payout. Valid values are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth]", null, null, null, null, null
         );
     }
 

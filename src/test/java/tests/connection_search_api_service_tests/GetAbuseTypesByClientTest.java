@@ -91,7 +91,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry22);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry23);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry3);
-        waitForConnectionSearchToUpdate(userFrom1);
+        waitForConnectionSearchToUpdate();
     }
 
     @AfterAll
@@ -165,7 +165,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     void getAbuseTypesByClientTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", userFrom1.getUcid());
-        queryParams.put("abuseTypes", CPA_ABUSE.getDisplayName());
+        queryParams.put("abuseTypes", CPA_ABUSE.getKey());
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
@@ -402,7 +402,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 0);
         queryParams.put("connectionScoreTo", 2);
         queryParams.put("connectionDepth", 1);
-        queryParams.put("abuseTypes", List.of(CPA_ABUSE.getDisplayName(), HEDGING.getDisplayName()));
+        queryParams.put("abuseTypes", List.of(CPA_ABUSE.getKey(), HEDGING.getKey()));
         queryParams.put("connectionAttributes", List.of("digital", "payoutId"));
 
         Response response = getAbuseTypesByClientId(queryParams);

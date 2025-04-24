@@ -26,6 +26,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.Brand.*;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.BO;
@@ -442,6 +444,14 @@ public class Utils {
 
         // Return the formatted result as a percentage string
         return formatter.format(result) + "%";
+    }
+
+    public static void waitForConnectionSearchToUpdate() throws Exception {
+        ClientHelper userFrom1 = getRandomVantageClient();
+        ClientHelper userTo1 = getRandomVantageClient();
+        ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1);
+        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
+        waitForConnectionSearchToUpdate(userFrom1.getUcid());
     }
 
     public static void waitForConnectionSearchToUpdate(ClientHelper client) throws Exception {
