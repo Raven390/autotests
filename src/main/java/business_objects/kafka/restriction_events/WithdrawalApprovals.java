@@ -25,4 +25,9 @@ public class WithdrawalApprovals {
     @JsonProperty("status")
     public String status;
 
+    @JsonProperty("orderNumber")
+    public String orderNumber;
+
+    @JsonProperty("checkName")
+    public String checkName;
 }

@@ -1,11 +1,11 @@
 package business_objects.kafka.alerts;
 
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
 
-import static utils.Utils.getRandomUuidString;
+import static utils.Utils.*;
 
 public class RuleAlertFactory {
     @Step("Generate rule alert for client with ucid '{ucid}'")
@@ -26,22 +26,30 @@ public class RuleAlertFactory {
     }
 
     @Step("Generate withdrawal notification alert")
-    public static RuleAlert generateWithdrawalNotificationAlert(CrmTbWithdrawalObject withdrawal) {
+    public static RuleAlert generateWithdrawalNotificationAlert(ClientHelper client) {
         RuleAlert alert = new RuleAlert();
         alert.alertId = getRandomUuidString();
         alert.timestamp = Instant.now().toString();
-        alert.ucid = withdrawal.ucid;
+        alert.ucid = client.getUcid();
         alert.rule = new RuleAlert.Rule();
         alert.rule.ver = "0.1";
         alert.rule.name = "Withdrawal Review";
         alert.rule.trigger = "Withdrawal";
         alert.rule.fraudType = "POTENTIAL_ABUSE";
         alert.rule.attributes = new RuleAlert.Rule.Attribute();
-        alert.rule.attributes.withdrawalId = withdrawal.transferId.toString();
-        alert.rule.attributes.amount = withdrawal.amount.toString();
-        alert.rule.attributes.currency = withdrawal.currency;
-        alert.rule.attributes.paymentType = withdrawal.paymentType;
+        alert.rule.attributes.withdrawalId = getRandomIntPositive().toString();
+        alert.rule.attributes.amount = "123.45";
+        alert.rule.attributes.currency = "EUR";
+        alert.rule.attributes.paymentType = "CRYPTO";
         alert.rule.attributes.check = "Big_Amount";
+        alert.rule.attributes.orderId = "AU603771220250201005755";
+        alert.rule.attributes.paymentChannel = "Cryptocurrency-ETH";
+        alert.rule.attributes.brand = client.getBrand();
+        alert.rule.attributes.account = client.getTradingAccount().toString();
+        alert.rule.attributes.platform = "MT4";
+        alert.rule.attributes.createTime = getCurrentTimestampDbFormat().replace(" ", "T") + "+03:00";
+        alert.rule.attributes.regulator = client.getRegulator();
+        alert.rule.attributes.date = getCurrentTimestampDbFormat().replace(" ", "T") + "+03:00";
         return alert;
     }
 }
