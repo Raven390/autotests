@@ -48,6 +48,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
@@ -169,7 +170,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final ClientFraudTypesObject fraud2 = new ClientFraudTypesObject(userTo32.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
     @BeforeAll
-    static void setupConnectionTableEntry() throws InterruptedException {
+    static void setupConnectionTableEntry() throws Exception {
         // Insert data to connections table
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3, connectionTableEntryByEmail4, connectionTableEntryByIp1, connectionTableEntryByIp2, connectionTableEntryByIp3));
         // Insert data to attributes tables
@@ -185,6 +186,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntry, webSessionTableEntry2));
         //insert data to fraud table
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2));
+        waitForConnectionSearchToUpdate();
     }
 
     @AfterAll
@@ -343,8 +345,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
     }
 
-    //TODO Fix after https://vantagefx-hytechs.atlassian.net/browse/CSV-788
-    @Disabled
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by phoneNumber success(200)")
     @AllureId("776")
@@ -553,7 +553,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreTo success(200)")
     @AllureId("786")
@@ -571,7 +570,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionScoreFrom success(200)")
     @AllureId("787")
@@ -591,7 +589,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionType success(200)")
     @AllureId("788")
@@ -609,7 +606,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 
-    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and multiple connectionType success(200)")
     @AllureId("789")

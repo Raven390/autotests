@@ -179,7 +179,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry11, phoneTableEntry12));
         insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry11, ipTableEntry12, ipTableEntry2));
         insertObjectsToDb(NAME_BIRTH_TABLE_NAME, List.of(nameTableEntry11, nameTableEntry12));
-        waitForConnectionSearchToUpdate(userFrom1);
+        waitForConnectionSearchToUpdate();
     }
 
     @AfterAll

@@ -323,7 +323,7 @@ public class MarketManipulationRuleDataFactory {
         data.floatingTrades.add(new AggrFloatingTradesGroupBy(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId(), getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 20, 0), 0, 0, "USDEUR", 123.45, 2499.0, 123.45));
 
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(data.clientHelper);
-        connectionAndConnectedUser.connectionTableEntry.degreeConnection = CONNECTION_TYPE_NOT_SAME_PERSON;
+        connectionAndConnectedUser.connectionTableEntry.degreeConnection = CONNECTION_TYPE_SAME_IDENTITY;
         data.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         data.connections.add(connectionAndConnectedUser.connectionTableEntry);
         data.crmTbAccountObjectConnections.add(connectionAndConnectedUser.account);
@@ -415,7 +415,7 @@ public class MarketManipulationRuleDataFactory {
         data.floatingTrades.add(new AggrFloatingTradesGroupBy(data.clientHelper.getTradingAccount(), data.clientHelper.getServerId(), getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 20, 0), 0, 0, "USDEUR", 123.45, 2499.0, 123.45));
 
         ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(data.clientHelper);
-        connectionAndConnectedUser.connectionTableEntry.degreeConnection = "Not Same Person";
+        connectionAndConnectedUser.connectionTableEntry.degreeConnection = CONNECTION_TYPE_SAME_PERSON;
         data.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
         data.connections.add(connectionAndConnectedUser.connectionTableEntry);
         data.crmTbAccountObjectConnections.add(connectionAndConnectedUser.account);

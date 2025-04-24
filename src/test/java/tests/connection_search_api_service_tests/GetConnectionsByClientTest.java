@@ -77,8 +77,12 @@ class GetConnectionsByClientTest extends TestBaseApi {
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntryForFiltration1.connectionScore = 0.8;
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry, connectionTableEntryLvl2, connectionTableEntryForFiltration1, connectionTableEntry1And2Level1, connectionTableEntry1And2Level2, connectionTableEntry1And2Level3, connectionTableEntrySameLevelScore1, connectionTableEntrySameLevelScore2, connectionTableEntrySameLevelScore3, connectionTableEntrySameLevelScore4));
-        waitForConnectionSearchToUpdate(userFrom1);
-        waitForConnectionSearchToUpdate(userFrom2);
+        waitForConnectionSearchToUpdate();
+    }
+
+    @AfterAll
+    static void deleteConnectionTableEntry() throws Exception {
+        cleanConnectionsTableByClient(connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom);
     }
 
     @Test
@@ -398,10 +402,5 @@ class GetConnectionsByClientTest extends TestBaseApi {
         assertThat("Check the response code is 400", response.code(), is(400));
 
         assertThat("Check the response body", responseBody, equalTo(getConnectionsResponseErrorIncorrectConnectionAttributes));
-    }
-
-    @AfterAll
-    static void deleteConnectionTableEntry() throws Exception {
-        cleanConnectionsTableByClient(connectionTableEntry.userFrom, connectionTableEntryLvl2.userFrom, connectionTableEntryForFiltration1.userFrom, connectionTableEntry1And2Level1.userFrom, connectionTableEntry1And2Level2.userFrom, connectionTableEntry1And2Level3.userFrom, connectionTableEntrySameLevelScore1.userFrom, connectionTableEntrySameLevelScore2.userFrom, connectionTableEntrySameLevelScore3.userFrom, connectionTableEntrySameLevelScore4.userFrom);
     }
 }

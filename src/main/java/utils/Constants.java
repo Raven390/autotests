@@ -187,7 +187,6 @@ public class Constants {
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_TYPE = "documentType";
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT = "document";
     public static final String CONNECTION_TYPE_SAME_PERSON = "Same Person";
-    public static final String CONNECTION_TYPE_NOT_SAME_PERSON = "Not Same Person";
     public static final String CONNECTION_TYPE_SAME_NETWORK = "Same Network";
     public static final String CONNECTION_TYPE_SAME_IDENTITY = "Same Identity";
     public static final String CONNECTION_TYPE_RELATION_TYPE_EXACT = "exact";
