@@ -3,7 +3,6 @@ package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -23,13 +22,11 @@ import org.junit.jupiter.api.Test;
 import page_objects.backoffice_pages.RestrictionPage;
 import tests.TestBaseWeb;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.database.CleanTableHelper.*;
@@ -45,26 +42,31 @@ public class ResolveTest extends TestBaseWeb {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     static ClientHelper withdrawalClient = new ClientHelper(141_402, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_102, 42);
     static ClientHelper resolveClient = new ClientHelper(161_601, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 161_601_001, 42);
-    private static CrmTbWithdrawalObject withdrawal1;
-    private static CrmTbWithdrawalObject withdrawal2;
-    private static CrmTbWithdrawalObject withdrawal3;
+    private static final RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawalClient);
+    private static final RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawalClient);
+    private static final RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawalClient);
 
     @BeforeAll
     public static void setup() throws Exception {
         CrmTbUserObject withdrawalClientDB = generateStaticUserByClient(withdrawalClient);
         CrmTbUserObject resolveClientDB = generateStaticUserByClient(resolveClient);
-        withdrawal1 = generateStaticWithdrawalByClient(withdrawalClient, "first withdrawal", 1);
-        withdrawal2 = generateStaticWithdrawalByClient(withdrawalClient, "second withdrawal", 2);
-        withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
+        alert1.rule.attributes.withdrawalId = "14140201";
+        alert1.rule.attributes.amount = "1";
+        alert1.rule.attributes.currency = "USD";
+        alert1.rule.attributes.paymentType = "first withdrawal";
+        alert1.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
+        alert2.rule.attributes.withdrawalId = "14140202";
+        alert2.rule.attributes.amount = "1";
+        alert2.rule.attributes.currency = "USD";
+        alert2.rule.attributes.paymentType = "second withdrawal";
+        alert2.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
+        alert3.rule.attributes.withdrawalId = "14140203";
+        alert3.rule.attributes.amount = "1";
+        alert3.rule.attributes.currency = "USD";
+        alert3.rule.attributes.paymentType = "third withdrawal";
+        alert3.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(withdrawalClientDB, resolveClientDB));
-
-        List<CrmTbWithdrawalObject> withdrawals = new ArrayList<>();
-        withdrawals.add(withdrawal1);
-        withdrawals.add(withdrawal2);
-        withdrawals.add(withdrawal3);
-        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawals);
-
 
         CrmTbAccountObject account = generateStaticCrmTbAccountActive(withdrawalClient);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
@@ -82,9 +84,6 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
-        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
-        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -109,9 +108,7 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
-        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
-        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
+
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -136,9 +133,6 @@ public class ResolveTest extends TestBaseWeb {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawal1);
-        RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawal2);
-        RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawal3);
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

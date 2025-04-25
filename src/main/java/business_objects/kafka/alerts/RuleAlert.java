@@ -124,6 +124,30 @@ public class RuleAlert {
 
             @JsonProperty("Max Connection Score")
             public String maxConnectionScore;
+
+            @JsonProperty("Order Id")
+            public String orderId;
+
+            @JsonProperty("Payment channel")
+            public String paymentChannel;
+
+            @JsonProperty("Brand")
+            public String brand;
+
+            @JsonProperty("Account")
+            public String account;
+
+            @JsonProperty("Platform")
+            public String platform;
+
+            @JsonProperty("Create Time")
+            public String createTime;
+
+            @JsonProperty("Regulator")
+            public String regulator;
+
+            @JsonProperty("Date")
+            public String date;
         }
     }
 }
