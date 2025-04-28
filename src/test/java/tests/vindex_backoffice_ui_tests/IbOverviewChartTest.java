@@ -1,6 +1,7 @@
 package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
+import static business_objects.db.clickhouse.account_ib_relation_snapshot.AccountIbRelationSnapshotFactory.generateAccountIbRelationSnapshotObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -61,6 +63,8 @@ public class IbOverviewChartTest extends TestBaseWeb {
     private static S3FactLoginMetricsObject factLoginMetrics6;
     private static S3FactIbSalesCommissionsObject commission7;
     private static S3FactLoginMetricsObject factLoginMetrics7;
+    private static AccountIbRelationSnapshotObject relationSnapshot;
+    private static AccountIbRelationSnapshotObject relationSnapshot1;
     private static List<S3FactIbSalesCommissionsObject> commissionsList = new ArrayList<>();
     private static List<S3FactLoginMetricsObject> loginMetricsList = new ArrayList<>();
     private static final DecimalFormat formatter = new DecimalFormat("#,###.#");
@@ -79,6 +83,16 @@ public class IbOverviewChartTest extends TestBaseWeb {
         relation.setDirectIbLevel(3);
         relation.setDirectIb(ibClient.getUserId());
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation);
+        relationSnapshot = generateAccountIbRelationSnapshotObjectByClient(client);
+        relationSnapshot.setDirectIb(ibClient.getUserId());
+        relationSnapshot.setDirectIbRebateAccount(ibAccount.account);
+        relationSnapshot.setDirectIbLevel(1);
+        relationSnapshot1 = generateAccountIbRelationSnapshotObjectByClient(ibClient);
+        ClientHelper ibClient1 = getRandomVantageClientAllFields();
+        relationSnapshot1.setDirectIb(ibClient1.getUserId());
+        relationSnapshot1.setDirectIbRebateAccount(ibClient1.getTradingAccount());
+        relationSnapshot1.setDirectIbLevel(1);
+        insertObjectsToDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, List.of(relationSnapshot, relationSnapshot1));
         // Commissions & metrics
         commission1 = generateS3FactIbSalesCommissionsClient(client);
         commission1.setIbRebateAccount(ibAccount.account);
@@ -86,7 +100,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission1.setDate(getCurrentDate());
         factLoginMetrics1 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics1.setDate(getCurrentDate());
-        factLoginMetrics1.setDailyNetClosedPnl(878.23);
+        factLoginMetrics1.setDailyGrossClientPnl(878.23 - 235.0);
         factLoginMetrics1.setDailyNetDeposit(142.342);
         commission2 = generateS3FactIbSalesCommissionsClient(client);
         commission2.setIbRebateAccount(ibAccount.account);
@@ -94,7 +108,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission2.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 1, 0, 0));
         factLoginMetrics2 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics2.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 1, 0, 0));
-        factLoginMetrics2.setDailyNetClosedPnl(-985.45);
+        factLoginMetrics2.setDailyGrossClientPnl(-985.45 - 854.37);
         factLoginMetrics2.setDailyNetDeposit(253.1);
         commission3 = generateS3FactIbSalesCommissionsClient(client);
         commission3.setIbRebateAccount(ibAccount.account);
@@ -102,7 +116,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission3.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 2, 0, 0));
         factLoginMetrics3 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics3.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 2, 0, 0));
-        factLoginMetrics3.setDailyNetClosedPnl(-649.243);
+        factLoginMetrics3.setDailyGrossClientPnl(-649.243 - 352.08);
         factLoginMetrics3.setDailyNetDeposit(495.53);
         commission4 = generateS3FactIbSalesCommissionsClient(client);
         commission4.setIbRebateAccount(ibAccount.account);
@@ -110,7 +124,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission4.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 3, 0, 0));
         factLoginMetrics4 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics4.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 3, 0, 0));
-        factLoginMetrics4.setDailyNetClosedPnl(754.68);
+        factLoginMetrics4.setDailyGrossClientPnl(754.68 - 98.68);
         factLoginMetrics4.setDailyNetDeposit(976.745);
         commission5 = generateS3FactIbSalesCommissionsClient(client);
         commission5.setIbRebateAccount(ibAccount.account);
@@ -118,7 +132,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission5.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 4, 0, 0));
         factLoginMetrics5 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics5.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 4, 0, 0));
-        factLoginMetrics5.setDailyNetClosedPnl(453.2);
+        factLoginMetrics5.setDailyGrossClientPnl(453.2 - 344.22);
         factLoginMetrics5.setDailyNetDeposit(35.45);
         insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(commission1, commission2, commission3, commission4, commission5));
         insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
@@ -145,7 +159,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commissionsList.addAll(List.of(commission1, commission2, commission3, commission4, commission5));
         loginMetricsList.addAll(List.of(factLoginMetrics1, factLoginMetrics2, factLoginMetrics3, factLoginMetrics4, factLoginMetrics5));
         Double totalRebates = calculateTotalRebates(commissionsList);
-        Double totalPnl = calculateTotalPnl(loginMetricsList);
+        Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("2.5K"));
@@ -165,7 +179,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission6.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 119, 0, 0));
         factLoginMetrics6 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics6.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 119, 0, 0));
-        factLoginMetrics6.setDailyNetClosedPnl(-12.123);
+        factLoginMetrics6.setDailyGrossClientPnl(-12.123 - 2444.87);
         factLoginMetrics6.setDailyNetDeposit(4124.498);
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission6);
         insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, factLoginMetrics6);
@@ -180,7 +194,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commissionsList.add(commission6);
         loginMetricsList.add(factLoginMetrics6);
         Double totalRebates = calculateTotalRebates(commissionsList);
-        Double totalPnl = calculateTotalPnl(loginMetricsList);
+        Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("7K"));
@@ -200,7 +214,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commission7.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 121, 0, 0));
         factLoginMetrics7 = generateS3FactLoginMetricsClient(client);
         factLoginMetrics7.setDate(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 121, 0, 0));
-        factLoginMetrics7.setDailyNetClosedPnl(-9877.12);
+        factLoginMetrics7.setDailyGrossClientPnl(-9877.12 - 5448.56);
         factLoginMetrics7.setDailyNetDeposit(32_456.654);
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission7);
         insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, factLoginMetrics7);
@@ -215,7 +229,7 @@ public class IbOverviewChartTest extends TestBaseWeb {
         commissionsList.add(commission7);
         loginMetricsList.add(factLoginMetrics7);
         Double totalRebates = calculateTotalRebates(commissionsList);
-        Double totalPnl = calculateTotalPnl(loginMetricsList);
+        Double totalPnl = calculateTotalPnl(loginMetricsList, commissionsList);
         Double totalDeposit = calculateTotalDeposit(loginMetricsList);
         assertThat("Verify IB overview summary clients performance items", ibCpaOverviewPage.getClientsPerformanceItems(), contains(String.format("%sIB rebates", formatter.format(totalRebates)), String.format("%sNet PNL", formatter.format(totalPnl)), String.format("%sNet deposit", formatter.format(totalDeposit))));
         assertThat("Verify Y axis label", ibCpaOverviewPage.getChartYAxisLabel(), is("45K"));
@@ -226,8 +240,9 @@ public class IbOverviewChartTest extends TestBaseWeb {
         return commissionsList.stream().map(S3FactIbSalesCommissionsObject::getIbCommission).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
     }
 
-    private static Double calculateTotalPnl(List<S3FactLoginMetricsObject> loginMetricsList) {
-        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyNetClosedPnl).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
+    private static Double calculateTotalPnl(List<S3FactLoginMetricsObject> loginMetricsList,
+            List<S3FactIbSalesCommissionsObject> commissionsList) {
+        return loginMetricsList.stream().map(S3FactLoginMetricsObject::getDailyGrossClientPnl).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum() + commissionsList.stream().map(S3FactIbSalesCommissionsObject::getIbCommission).map(value -> BigDecimal.valueOf(value).setScale(2, RoundingMode.DOWN).doubleValue()).mapToDouble(Double::doubleValue).sum();
     }
 
     private static Double calculateTotalDeposit(List<S3FactLoginMetricsObject> loginMetricsList) {
@@ -240,5 +255,6 @@ public class IbOverviewChartTest extends TestBaseWeb {
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME, String.format("ucid IN ('%s', '%s')", relationSnapshot.getUcid(), relationSnapshot1.getUcid()));
     }
 }
