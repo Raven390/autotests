@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 public class RegistrationEvent {
+
     @JsonProperty("id")
     public String id;
 
@@ -26,34 +27,48 @@ public class RegistrationEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("eventDate")
+    public String eventDate;
+
+    @JsonProperty("metadata")
+    public RegistrationEventMetadata metadata;
+
+    @JsonProperty("initialEventTime")
+    public String initialEventTime;
+
     public RegistrationEvent() {
     }
 
-    public RegistrationEvent(String createTime, Integer clientId, String brand, String regulator,
-            Integer metaTraderAccount, String type) {
+    public RegistrationEvent(
+            String createTime, Integer clientId, String brand, String regulator, Integer metaTraderAccount,
+            String initialEventTime, String type, String eventDate) {
         this.createTime = createTime;
         this.clientId = clientId;
         this.brand = brand;
         this.regulator = regulator;
         this.metaTraderAccount = metaTraderAccount;
+        this.initialEventTime = initialEventTime;
         this.type = type;
+        this.eventDate = eventDate;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RegistrationEvent that = (RegistrationEvent) o;
-        return Objects.equals(createTime, that.createTime) && Objects.equals(clientId, that.clientId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(metaTraderAccount, that.metaTraderAccount) && Objects.equals(type, that.type);
+        return Objects.equals(createTime, that.createTime) && Objects.equals(clientId, that.clientId) && Objects.equals(
+                brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(
+                        metaTraderAccount, that.metaTraderAccount) && Objects.equals(type, that.type) && Objects.equals(
+                                eventDate, that.eventDate) && Objects.equals(initialEventTime, that.initialEventTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createTime, clientId, brand, regulator, metaTraderAccount, type);
+        return Objects.hash(createTime, clientId, brand, regulator, metaTraderAccount, type, eventDate, initialEventTime);
     }
 
     @Override
     public String toString() {
-        return "RegistrationEvent{" + "id='" + id + '\'' + ", createTime='" + createTime + '\'' + ", clientId=" + clientId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", metaTraderAccount=" + metaTraderAccount + ", type='" + type + '\'' + '}';
+        return "RegistrationEvent{" + "id='" + id + '\'' + ", createTime='" + createTime + '\'' + ", clientId=" + clientId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", metaTraderAccount=" + metaTraderAccount + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + ", initialEventTime='" + initialEventTime + '\'' + '}';
     }
 }

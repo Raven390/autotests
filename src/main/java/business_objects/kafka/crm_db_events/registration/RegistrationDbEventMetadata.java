@@ -8,6 +8,9 @@ public class RegistrationDbEventMetadata {
     @JsonProperty("timestamp")
     public String timestamp;
 
+    @JsonProperty("commit-timestamp")
+    public String commitTimestamp;
+
     @JsonProperty("record-type")
     public String recordType;
 
@@ -24,6 +27,18 @@ public class RegistrationDbEventMetadata {
     public String tableName;
 
     public RegistrationDbEventMetadata() {
+    }
+
+    public RegistrationDbEventMetadata(
+            String timestamp, String commitTimestamp, String recordType, String operation, String partitionKeyType,
+            String schemaName, String tableName) {
+        this.timestamp = timestamp;
+        this.commitTimestamp = commitTimestamp;
+        this.recordType = recordType;
+        this.operation = operation;
+        this.partitionKeyType = partitionKeyType;
+        this.schemaName = schemaName;
+        this.tableName = tableName;
     }
 
     public RegistrationDbEventMetadata(String timestamp, String recordType, String operation, String partitionKeyType,

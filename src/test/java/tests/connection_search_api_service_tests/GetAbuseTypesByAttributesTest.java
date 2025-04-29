@@ -533,7 +533,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response length", responseBody.error, is("DocumentCountryId must be specified once DocumentType or DocumentNumber provided"));
     }
 
-    @Disabled("Fix after CSV-707")
     @Test
     @DisplayName("Connection search get abuse types. Get abuse types by emailAddress and connectionDepth success(200)")
     @AllureId("785")

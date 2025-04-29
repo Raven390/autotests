@@ -1,7 +1,7 @@
 package tests.click_house_api_service_tests;
 
 import static business_objects.api.clickhouse_api_service.get_client.GetClientRequest.getClient;
-import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,7 +37,10 @@ class GetClientTests extends TestBaseApi {
     void getClientSuccessTest() throws IOException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomVantageClient();
-        CrmTbUserObject userObject = generateStaticUserByClient(client);
+        CrmTbUserObject userObject = generateUserByClient(client);
+        userObject.ibId = 3;
+        userObject.cpaId = 4;
+        userObject.rafReferrerId = 5;
         insertObjectToDb(CRM_USER_TABLE_NAME, userObject);
         // Execute request
         Map<String, Object> queryParams = new HashMap<>();
@@ -47,35 +50,35 @@ class GetClientTests extends TestBaseApi {
         // Assert response
         assert response.body() != null;
         GetClientResponse getClientResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
-        assertThat("Check response code", response.code(), is(200));
-        assertThat("Check clientId", getClientResponse.getClientId(), is(client.getUcid()));
-        assertThat("Check userId", getClientResponse.getUserId(), is(client.getUserId().toString()));
-        assertThat("Check brand", getClientResponse.getBrand(), is("Vantage"));
-        assertThat("Check regulator", getClientResponse.getRegulator(), is("VFSC"));
-        assertThat("Check registrationDate", getClientResponse.getRegistrationDate(), is("2024-10-23T14:56:59Z"));
-        assertThat("Check firstName", getClientResponse.getFirstName(), is("Test"));
-        assertThat("Check lastName", getClientResponse.getLastName(), is("User"));
-        assertThat("Check gender", getClientResponse.getGender(), is("1"));
-        assertThat("Check birthday", getClientResponse.getBirthday(), is("1961-02-01"));
-        assertThat("Check country", getClientResponse.getCountry(), is("Cyprus"));
-        assertThat("Check countryCode", getClientResponse.getCountryCode(), is("CY"));
-        assertThat("Check isoCountryCode", getClientResponse.getIsoCountryCode(), is("CY"));
-        assertThat("Check language", getClientResponse.getLanguage(), is("en"));
-        assertThat("Check nationality", getClientResponse.getNationality(), is("RUS"));
-        assertThat("Check email", getClientResponse.getEmail(), is("VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL"));
-        assertThat("Check phoneNum", getClientResponse.getPhoneNum(), is("cTsGbMYzhsD5SxSOhmgpmQ=="));
-        assertThat("Check phoneCountryCode", getClientResponse.getPhoneCountryCode(), is("357"));
-        assertThat("Check twoFaUser", getClientResponse.getTwoFaUser(), is("true"));
-        assertThat("Check authentication", getClientResponse.getAuthentication(), is("2FA"));
-        assertThat("Check websiteUserType", getClientResponse.getWebsiteUserType(), is("2"));
-        assertThat("Check emailVerificationMark", getClientResponse.getEmailVerificationMark(), is("1"));
-        assertThat("Check phoneVerificationMark", getClientResponse.getPhoneVerificationMark(), is("2"));
-        assertThat("Check ibId", getClientResponse.getIbId(), is("1"));
-        assertThat("Check cpaId", getClientResponse.getCpaId(), is("2"));
-        assertThat("Check rafReferrerId", getClientResponse.getRafReferrerId(), is("3"));
-        assertThat("Check kycStatus", getClientResponse.getKycStatus(), is("PARTIAL_KYC_ID_PASS"));
-        assertThat("Check lastUpdated", timestampFromIsoToDb(getClientResponse.getLastUpdated()), is(userObject.lastUpdated));
-        assertThat("Check poi completion time", timestampFromIsoToDb(getClientResponse.getPoiCompletionTime()), is(userObject.poiCompleteTs));
+        assertThat("Check response code", 200, is(response.code()));
+        assertThat("Check clientId", client.getUcid(), is(getClientResponse.getClientId()));
+        assertThat("Check userId", client.getUserId().toString(), is(getClientResponse.getUserId()));
+        assertThat("Check brand", "Vantage", is(getClientResponse.getBrand()));
+        assertThat("Check regulator", "VFSC", is(getClientResponse.getRegulator()));
+        assertThat("Check registrationDate", "2025-01-30T14:56:59Z", is(getClientResponse.getRegistrationDate()));
+        assertThat("Check firstName", "Test", is(getClientResponse.getFirstName()));
+        assertThat("Check lastName", "User", is(getClientResponse.getLastName()));
+        assertThat("Check gender", "1", is(getClientResponse.getGender()));
+        assertThat("Check birthday", "1961-02-01", is(getClientResponse.getBirthday()));
+        assertThat("Check country", "Cyprus", is(getClientResponse.getCountry()));
+        assertThat("Check countryCode", "CY", is(getClientResponse.getCountryCode()));
+        assertThat("Check isoCountryCode", "CY", is(getClientResponse.getIsoCountryCode()));
+        assertThat("Check language", "en", is(getClientResponse.getLanguage()));
+        assertThat("Check nationality", "RUS", is(getClientResponse.getNationality()));
+        assertThat("Check email", "VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL", is(getClientResponse.getEmail()));
+        assertThat("Check phoneNum", "cTsGbMYzhsD5SxSOhmgpmQ==", is(getClientResponse.getPhoneNum()));
+        assertThat("Check phoneCountryCode", "357", is(getClientResponse.getPhoneCountryCode()));
+        assertThat("Check twoFaUser", "true", is(getClientResponse.getTwoFaUser()));
+        assertThat("Check authentication", "2FA", is(getClientResponse.getAuthentication()));
+        assertThat("Check websiteUserType", "2", is(getClientResponse.getWebsiteUserType()));
+        assertThat("Check emailVerificationMark", "1", is(getClientResponse.getEmailVerificationMark()));
+        assertThat("Check phoneVerificationMark", "2", is(getClientResponse.getPhoneVerificationMark()));
+        assertThat("Check ibId", "3", is(getClientResponse.getIbId()));
+        assertThat("Check cpaId", "4", is(getClientResponse.getCpaId()));
+        assertThat("Check rafReferrerId", "5", is(getClientResponse.getRafReferrerId()));
+        assertThat("Check kycStatus", "PARTIAL_KYC_ID_PASS", is(getClientResponse.getKycStatus()));
+        assertThat("Check lastUpdated", userObject.lastUpdated, is(timestampFromIsoToDb(getClientResponse.getLastUpdated())));
+        assertThat("Check poi completion time", userObject.poiCompleteTs, is(timestampFromIsoToDb(getClientResponse.getPoiCompletionTime())));
     }
 
     @Test

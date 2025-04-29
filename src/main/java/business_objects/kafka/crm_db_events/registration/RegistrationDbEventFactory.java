@@ -1,25 +1,22 @@
 package business_objects.kafka.crm_db_events.registration;
 
 import io.qameta.allure.Step;
-import utils.Utils;
 
-
-import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.*;
 
 public class RegistrationDbEventFactory {
 
     @Step("Generate registration db event Metadata")
     private static RegistrationDbEventMetadata generateRegistrationDbEventMetadata() {
         return new RegistrationDbEventMetadata(
-                Utils.getCurrentTimestampDbFormat(), "test_record_type", "update", "test_partition_key_type", "test_schema_name", "tb_account_mt4"
+                formatTimeToUtc(getCurrentTimestampDbFormat()), formatTimeToUtc(getCurrentTimestampDbFormat()), "test_record_type", "update", "test_partition_key_type", "test_schema_name", "tb_account_mt4"
         );
     }
-
 
     @Step("Generate registration db event Data")
     private static RegistrationDbEventData generateRegistrationDbEventData() {
         return new RegistrationDbEventData(
-                Utils.getCurrentTimestampDbFormat(), getRandomIntPositive(), "test_brand", "test_regulator", 1
+                formatTimeToUtc(getCurrentTimestampDbFormat()), formatTimeToUtc(getCurrentTimestampDbFormat()), getRandomIntPositive(), "test_brand", "test_regulator", 1
         );
     }
 

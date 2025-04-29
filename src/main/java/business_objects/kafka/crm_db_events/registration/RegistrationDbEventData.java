@@ -9,45 +9,51 @@ public class RegistrationDbEventData {
     @JsonProperty("create_time")
     public String createTime;
 
+    @JsonProperty("update_time")
+    public String updateTime;
+
     @JsonProperty("user_id")
     public Integer userId;
 
     @JsonProperty("brand")
     public String brand;
 
+    @JsonProperty("mt4_account")
+    public Integer mtAccount;
+
     @JsonProperty("regulator")
     public String regulator;
 
-    @JsonProperty("mt4_account")
-    public Integer mtAccount;
 
     public RegistrationDbEventData() {
     }
 
-    public RegistrationDbEventData(String createTime, Integer userId, String brand, String regulator,
-            Integer mtAccount) {
+    public RegistrationDbEventData(
+            String updateTime, String createTime, Integer userId, String brand, String regulator, Integer mtAccount) {
+        this.updateTime = updateTime;
         this.createTime = createTime;
         this.userId = userId;
         this.brand = brand;
-        this.regulator = regulator;
         this.mtAccount = mtAccount;
+        this.regulator = regulator;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RegistrationDbEventData that = (RegistrationDbEventData) o;
-        return Objects.equals(createTime, that.createTime) && Objects.equals(userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(mtAccount, that.mtAccount);
+        return Objects.equals(createTime, that.createTime) && Objects.equals(updateTime, that.updateTime) && Objects.equals(
+                userId, that.userId) && Objects.equals(brand, that.brand) && Objects.equals(mtAccount, that.mtAccount) && Objects.equals(
+                        regulator, that.regulator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createTime, userId, brand, regulator, mtAccount);
+        return Objects.hash(createTime, updateTime, userId, brand, mtAccount, regulator);
     }
 
     @Override
     public String toString() {
-        return "RegistrationDbEventData{" + "createTime='" + createTime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", mtAccount=" + mtAccount + '}';
+        return "RegistrationDbEventData{" + "createTime='" + createTime + '\'' + ", updateTime='" + updateTime + '\'' + ", userId=" + userId + ", brand='" + brand + '\'' + ", mtAccount=" + mtAccount + ", regulator='" + regulator + '\'' + '}';
     }
 }
