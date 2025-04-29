@@ -922,6 +922,11 @@ public class TradingPage extends AbstractPage {
         return typeColumnCell.nth(index).textContent();
     }
 
+    @Step("Is operation with alert by index")
+    public boolean isOperationWithAlert(int index) {
+        return typeColumnCell.nth(index).locator("//*[local-name()='svg']").isVisible();
+    }
+
     @Step("Get volume cell value for operation by index")
     public String getOperationVolumeByIndex(int index) {
         return volumeColumnCell.nth(index).textContent();
