@@ -148,6 +148,9 @@ public class RuleAlert {
 
             @JsonProperty("Date")
             public String date;
+
+            @JsonProperty("Ticket id")
+            public String ticketId;
         }
     }
 }

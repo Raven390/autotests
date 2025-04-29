@@ -3,8 +3,11 @@ package tests.vindex_backoffice_ui_tests.trading;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -17,6 +20,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.BoHelper.closeAlert;
@@ -57,6 +61,9 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         trade2.platform = "MT5";
         trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0);
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade2);
+        RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
+        alert.rule.attributes.ticketId = trade1.ticket.toString();
+        new KafkaHelper().produceMessage(alert.alertId, new ObjectMapper().writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -76,6 +83,7 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         // Verify 1st row data
         assertThat("Assert value in account column for the 1st operation is as expected", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
         assertThat("Assert value in type column for the 1st operation is as expected", tradingPage.getOperationTypeByIndex(0), equalTo(String.format("%s%s", trade2.symbol, trade2.ticketType)));
+        assertThat("Assert that the deal is without alert (no lightning icon)", tradingPage.isOperationWithAlert(0), equalTo(false));
         assertThat("Assert value in volume column for the 1st operation is as expected", tradingPage.getOperationVolumeByIndex(0), equalTo(String.format("%s lots%s USD", trade2.volumeLots, trade2.notionalValueUsd)));
         assertThat("Assert value in profit column for the 1st operation is as expected", tradingPage.getOperationProfitByIndex(0), equalTo(String.format("%s USD", trade2.profitUsd.toString())));
         DecimalFormat formatter = new DecimalFormat("#,##0.00");
@@ -90,6 +98,7 @@ public class TradingInfoDealsTest extends TestBaseWeb {
         // Verify 2nd row data
         assertThat("Assert value in account column for the 2nd operation is as expected", tradingPage.getOperationAccountByIndex(1), equalTo(String.format("%s%s", trade1.account, trade1.platform)));
         assertThat("Assert value in type column for the 2nd operation is as expected", tradingPage.getOperationTypeByIndex(1), equalTo(String.format("%s%s", trade1.symbol, trade1.ticketType)));
+        assertThat("Assert that the deal is with alert (lightning icon)", tradingPage.isOperationWithAlert(0), equalTo(false));
         assertThat("Assert value in volume column for the 2nd operation is as expected", tradingPage.getOperationVolumeByIndex(1), equalTo(String.format("%s lots%s USD", trade1.volumeLots, trade1.notionalValueUsd)));
         assertThat("Assert value in profit column for the 2nd operation is as expected", tradingPage.getOperationProfitByIndex(1), equalTo(String.format("%s USD", trade1.profitUsd.toString())));
         assertThat("Assert value in open column for the 2nd operation is as expected", tradingPage.getOperationOpenByIndex(1), equalTo(String.format("%s%s", trade1.openTime, formatter.format(trade1.openPrice))));
