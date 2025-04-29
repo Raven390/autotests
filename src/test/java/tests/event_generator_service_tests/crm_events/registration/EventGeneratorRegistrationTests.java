@@ -15,7 +15,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,8 +24,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class EventGeneratorRegistrationTests {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -47,11 +44,13 @@ class EventGeneratorRegistrationTests {
         RegistrationEvent retrievedRegistrationEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
 
         RegistrationEvent expectedRegistrationEvent = new RegistrationEvent(
-                registrationDbEvent.data.createTime, registrationDbEvent.data.userId, registrationDbEvent.data.brand, registrationDbEvent.data.regulator, registrationDbEvent.data.mtAccount, "clientRegistration"
+                registrationDbEvent.data.createTime, registrationDbEvent.data.userId, registrationDbEvent.data.brand, registrationDbEvent.data.regulator, registrationDbEvent.data.mtAccount, registrationDbEvent.data.createTime, "egRegistration", registrationDbEvent.data.createTime
         );
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedRegistrationEvent.id, notNullValue());
+        System.out.println(retrievedRegistrationEvent);
+        System.out.println(expectedRegistrationEvent);
         assertThat("Check all fields except id", retrievedRegistrationEvent, equalTo(expectedRegistrationEvent));
     }
 
@@ -63,16 +62,16 @@ class EventGeneratorRegistrationTests {
         RegistrationDbEvent registrationDbEvent1 = generateRegistrationDbEvent();
         RegistrationDbEvent registrationDbEvent2 = generateRegistrationDbEvent();
         registrationDbEvent2.data.userId = registrationDbEvent1.data.userId;
+        registrationDbEvent2.metadata.timestamp = "2025-04-28T12:05:56.900Z";
 
         Allure.step("Write messages to crm-db-events topic");
-        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1), objectMapper.writeValueAsString(registrationDbEvent2));
-
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1));
+        kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent2));
+        System.out.println(registrationDbEvent2.metadata.timestamp);
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent2.data.createTime);
+        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent2.metadata.timestamp);
 
         Allure.step("Verify that no matched results were found");
-        assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+        assertThat("Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
     }
 }

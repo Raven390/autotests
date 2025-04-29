@@ -21,7 +21,6 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
-// TODO CHECK WHY ALERTS COME LATE
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE)
 @Tag(TEAM_CORE)
