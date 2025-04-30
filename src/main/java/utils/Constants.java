@@ -123,7 +123,7 @@ public class Constants {
     public static final String PHONE_TABLE_NAME = "vindex_test.phone";
     public static final String PAYOUT_TABLE_NAME = "vindex_test.payout";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
-    public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.bo___client_fraud_types";
+    public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String MITIGATION_CLIENTS_RESTRICTION = "postgres.mi.clients_restriction";
     public static final String MITIGATION_ACTION = "postgres.mi.action";

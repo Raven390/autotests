@@ -186,7 +186,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
-        Allure.step("filter 6 days");
+        Allure.step("filter 60 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.checkTimelineSectionInactive(6);
     }

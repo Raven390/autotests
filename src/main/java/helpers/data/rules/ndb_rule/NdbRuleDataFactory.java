@@ -5,11 +5,11 @@ import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.crm_events.WithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.FraudType;
 import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Allure;
@@ -25,10 +25,11 @@ import java.util.Map;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
+import static helpers.data.enums.NbdComment.getRandomNbdComment;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -41,18 +42,25 @@ public class NdbRuleDataFactory {
     private static final ClientHelper ndbRuleExitEventEnd1Client = getRandomVantageClientNoCpaIbRef();
     private static final ClientHelper ndbRuleExitEventEnd2Client = getRandomVantageClientNoCpaIbRef();
     private static final ClientHelper ndbRuleExitEventEnd3Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper ndbRuleExitEventEnd4_1Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper ndbRuleExitEventEnd4_2Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper ndbRuleExitEventEnd4_3Client = getRandomVantageClientNoCpaIbRef();
     private static final ClientHelper ndbRuleExitEventEnd5Client = getRandomVantageClientNoCpaIbRef();
     private static final ClientHelper ndbRuleExitEventEnd6Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper ndbRuleExitEventEnd4_1Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper ndbRuleExitEventEnd4_2Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper ndbRuleExitEventEnd7Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper ndbRuleExitEventEnd8Client = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper ndbRuleExitEventEnd9Client = getRandomVantageClientNoCpaIbRef();
+
+    private static final String sameEmail = "VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL";
+    private static final int sameIb = 6667;
+    private static final int firstIb = 6668;
+    private static final int secondIb = 6669;
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getNdbRuleData(ClientHelper client) {
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.ibId = 1;
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "withdrawal");
+        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
         LnSessionParsedObject lexisNexisObject = generateLexisNexisDataByClient(client);
         lexisNexisObject.setBrand(client.getBrand());
         lexisNexisObject.setEventType("account_creation");
@@ -81,16 +89,13 @@ public class NdbRuleDataFactory {
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd2Client);
         credit.comment = "Promo-NDB-Credit In";
-        Allure.step("Get connections and abuse types");
-        Allure.step("Linked other fraud cases");
-        ClientHelper connectedClient = getRandomVantageClientAllFields();
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
-                connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
-        );
+
+        Allure.step("Add 50 trades");
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 50, getCurrentTimestampDbFormat()));
+
+
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(clientFraudTypesObject);
         return data;
     }
 
@@ -100,7 +105,10 @@ public class NdbRuleDataFactory {
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd3Client);
         credit.comment = "Promo-NDB-Credit In";
-        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week?");
+        Allure.step("Add 49 trades with time more than 2 weeks");
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 14, 0, 1)));
+
+
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
         return data;
@@ -122,6 +130,8 @@ public class NdbRuleDataFactory {
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
         data.clientFraudTypes.add(clientFraudTypesObject);
+        Allure.step("Add 49 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
         return data;
     }
 
@@ -141,35 +151,8 @@ public class NdbRuleDataFactory {
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
         data.clientFraudTypes.add(clientFraudTypesObject);
-        return data;
-    }
-
-    public static RuleDataHelper getNdbRuleExitEventEnd43Data() {
-        Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_3Client);
-
-        Allure.step("Get credits with ndb comment");
-        MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd4_3Client);
-        credit.comment = "Credit in - APAC No Dep. Bonus";
-
-        Allure.step("Get connections and abuse types");
-        ClientHelper connectedClient = getRandomVantageClientAllFields();
-        MtTbCreditsObject credit2 = generateCreditsByClient(connectedClient);
-        credit2.internalComment = "Credit in - JAP No Dep. Bonus";
-        credit2.comment = "Credit in - JAP No Dep. Bonus";
-        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
-        connectedUser.ibId = 1;
-
-        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
-        Allure.step("Any under the same IB? - true");
-        data.mtTbCreditsObjects.add(credit);
-        data.mtTbCreditsObjects.add(credit2);
-        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connectedUsers.add(connectedUser);
-
-        System.out.println(data.clientHelper.getIbId());
-        System.out.println(connectedClient.getIbId());
+        Allure.step("Add 49 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
         return data;
     }
 
@@ -178,26 +161,24 @@ public class NdbRuleDataFactory {
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd5Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd5Client);
-        credit.comment = "Credit out - APAC No Dep. Bonus";
-
+        credit.comment = "Promo-NDB-Credit In";
         Allure.step("Get connections and abuse types");
+        Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        MtTbCreditsObject credit2 = generateCreditsByClient(connectedClient);
-        credit2.internalComment = "credit in-PMT103 -NDB-JP";
-        credit2.comment = "credit in-PMT103 -NDB-JP";
-        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
-
-        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
-        Allure.step("Any under the same IB? - true");
-        Allure.step("Lexis registration score high? = false");
-        data.lnSessionParsedObjectRegistration.setRiskRating("low");
-
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        connection.connectionInfo = "[{\"connectionAttributeName\": \"email\", \"connectionAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"sourceAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"relationType\": \"exact\"}]";
+        data.connections.add(connection);
+        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+                connectedClient.getUcid(), FraudType.getRandomFraudType(FraudType.LOSS_VOUCHER_ABUSE, FraudType.HEDGING).getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+        );
+        Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.mtTbCreditsObjects.add(credit2);
-        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connections.getFirst().connectionScore = 0.76;
-        data.connectedUsers.add(connectedUser);
+        data.clientFraudTypes.add(clientFraudTypesObject);
+        Allure.step("Add data");
+        data.mtTbCreditsObjects.add(credit);
+        data.clientFraudTypes.add(clientFraudTypesObject);
+        Allure.step("Add 49 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
         return data;
     }
 
@@ -206,28 +187,144 @@ public class NdbRuleDataFactory {
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd6Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd6Client);
-        //credit.comment = "credit in-JP NDB2406"; is not recognized as a proper comment
         credit.comment = "Promo-NDB-Credit In";
-        Allure.step("Get connections and abuse types");
-        ClientHelper connectedClient = getRandomVantageClientNoCpaIbRef();
-        MtTbCreditsObject credit2 = generateCreditsByClient(connectedClient);
-        credit2.internalComment = "Credit In - VN $30 NDB IBs";
-        credit2.comment = "Credit In - VN $30 NDB IBs";
-        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
+        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week?");
+        Allure.step("Add data");
+        data.mtTbCreditsObjects.add(credit);
+        Allure.step("Add 49 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        return data;
+    }
 
-        Mt5DealsCoercedObject trade = generateTradeByClient(data.clientHelper);
+    public static RuleDataHelper getNdbRuleExitEventEnd7Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd7Client);
+
+        Allure.step("Setup client data in DB");
+        Allure.step("set IB id that will be the same for connected user");
+        CrmTbUserObject client = generateUserByClient(data.clientHelper);
+        client.ibId = sameIb;
+        client.email = sameEmail;
+        data.crmTbUserObject = client;
+
+        Allure.step("Get credits with ndb comment");
+        MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd7Client);
+        credit.comment = getRandomNbdComment().getDisplayName();
+
+        Allure.step("Get connections and abuse types");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
+        connectedUser.ibId = sameIb;
+        connectedUser.email = sameEmail;
 
         Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
+        Allure.step("Any under the same IB? - true");
+        data.mtTbCreditsObjects.add(credit);
+        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        connectedUser.email = sameEmail;
+        data.connections.add(connection);
+        data.connectedUsers.add(connectedUser);
+        Allure.step("Add 49 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+
+        Allure.step("Add NDB credits for connected client");
+        data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
+
+        return data;
+    }
+
+    public static RuleDataHelper getNdbRuleExitEventEnd8Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd8Client);
+
+        Allure.step("Client and connected client have same email");
+        Allure.step("Client and connected client have different IB");
+
+        Allure.step("Setup client data in DB");
+        Allure.step("set IB id that will be the same for connected user");
+        CrmTbUserObject client = generateUserByClient(data.clientHelper);
+        client.ibId = firstIb;
+        client.email = sameEmail;
+        data.crmTbUserObject = client;
+
+        Allure.step("Get credits with ndb comment");
+        MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd8Client);
+        credit.comment = getRandomNbdComment().getDisplayName();
+
+        Allure.step("Get connections and abuse types");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
+        connectedUser.ibId = secondIb;
+        connectedUser.email = sameEmail;
+
+        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
+
         Allure.step("Any under the same IB? - false");
+
+        data.mtTbCreditsObjects.add(credit);
+        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        connectedUser.email = sameEmail;
+        data.connections.add(connection);
+        data.connectedUsers.add(connectedUser);
+
+        Allure.step("Add less than 50 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+
+        Allure.step("Add NDB credits for connected client");
+        data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
+
+        Allure.step("Lexis registration score high? = false");
+        data.lnSessionParsedObjectRegistration.setRiskRating("low");
+
+        return data;
+    }
+
+    public static RuleDataHelper getNdbRuleExitEventEnd9Data() {
+        Allure.step("Get client data");
+        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd9Client);
+
+        Allure.step("Client and connected client have same email");
+        Allure.step("Client and connected client have different IB");
+        Allure.step("Setup client data in DB");
+        Allure.step("set IB id that will be the same for connected user");
+        CrmTbUserObject client = generateUserByClient(data.clientHelper);
+        client.ibId = firstIb;
+        client.email = sameEmail;
+        data.crmTbUserObject = client;
+
+        Allure.step("Get credits with ndb comment");
+        MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd9Client);
+        credit.comment = getRandomNbdComment().getDisplayName();
+
+        Allure.step("Get connections and abuse types");
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
+        connectedUser.ibId = secondIb;
+        connectedUser.email = sameEmail;
+
+        Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
+
+        Allure.step("Any under the same IB? - false");
+
+        data.mtTbCreditsObjects.add(credit);
+        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        connectedUser.email = sameEmail;
+        data.connections.add(connection);
+        data.connectedUsers.add(connectedUser);
+
+        Allure.step("Add less than 50 trades with time less than 2 weeks");
+        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+
+        Allure.step("Add NDB credits for connected client");
+        data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
+
+
         Allure.step("Lexis registration score high? = true");
         data.lnSessionParsedObjectRegistration.setRiskRating("high");
 
-        data.mtTbCreditsObjects.add(credit);
-        data.mtTbCreditsObjects.add(credit2);
-        data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(connectedClient));
-        data.connections.add(getConnection(data.clientHelper, connectedClient));
-        data.connectedUsers.add(connectedUser);
-        data.mt5DealsCoercedObjects.add(trade);
         return data;
     }
 
@@ -241,9 +338,11 @@ public class NdbRuleDataFactory {
         map.put("3", getNdbRuleExitEventEnd3Data());
         map.put("41", getNdbRuleExitEventEnd41Data());
         map.put("42", getNdbRuleExitEventEnd42Data());
-        map.put("43", getNdbRuleExitEventEnd43Data());
         map.put("5", getNdbRuleExitEventEnd5Data());
         map.put("6", getNdbRuleExitEventEnd6Data());
+        map.put("7", getNdbRuleExitEventEnd7Data());
+        map.put("8", getNdbRuleExitEventEnd8Data());
+        map.put("9", getNdbRuleExitEventEnd9Data());
 
         // Loop through the list with data and insert all the data into the according tables
         setupRuleData(map);
