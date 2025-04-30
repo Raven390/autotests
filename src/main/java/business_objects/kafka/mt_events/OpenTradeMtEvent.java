@@ -31,6 +31,15 @@ public class OpenTradeMtEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("eventDate")
+    public String eventDate;
+
+    @JsonProperty("metadata")
+    public TradeEventMetadata metadata;
+
+    @JsonProperty("initialEventTime")
+    public String initialEventTime;
+
     public OpenTradeMtEvent() {
     }
 

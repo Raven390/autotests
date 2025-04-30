@@ -14,7 +14,6 @@ import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt5;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class MtDbEventsOpenTradeRequiredParamsTest {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -83,27 +80,35 @@ class MtDbEventsOpenTradeRequiredParamsTest {
         //        Creation of Open trade events that should be filtered out by the filtration rules
         OpenTradeMtDbEventMt4 openTradeEventVolume = generateOpenTradeMtDbEventMt4();
         openTradeEventVolume.data.volume = null;
+        openTradeEventVolume.data.openTime = "2025-04-30 07:59:01";
 
         OpenTradeMtDbEventMt4 openTradeEventSymbol = generateOpenTradeMtDbEventMt4();
         openTradeEventSymbol.data.symbol = null;
+        openTradeEventSymbol.data.openTime = "2025-04-30 07:59:02";
 
         OpenTradeMtDbEventMt4 openTradeEventCloseTime = generateOpenTradeMtDbEventMt4();
         openTradeEventCloseTime.data.closeTime = null;
+        openTradeEventCloseTime.data.openTime = "2025-04-30 07:59:03";
 
         OpenTradeMtDbEventMt4 openTradeEventTimestamp = generateOpenTradeMtDbEventMt4();
         openTradeEventTimestamp.metadata.timestamp = null;
+        openTradeEventTimestamp.data.openTime = "2025-04-30 07:59:04";
 
         OpenTradeMtDbEventMt4 openTradeEventRecordType = generateOpenTradeMtDbEventMt4();
         openTradeEventRecordType.metadata.recordType = null;
+        openTradeEventRecordType.data.openTime = "2025-04-30 07:59:05";
 
         OpenTradeMtDbEventMt4 openTradeEventOperation = generateOpenTradeMtDbEventMt4();
         openTradeEventOperation.metadata.operation = null;
+        openTradeEventOperation.data.openTime = "2025-04-30 07:59:06";
 
         OpenTradeMtDbEventMt4 openTradeEventPartitionKeyType = generateOpenTradeMtDbEventMt4();
         openTradeEventPartitionKeyType.metadata.partitionKeyType = null;
+        openTradeEventPartitionKeyType.data.openTime = "2025-04-30 07:59:07";
 
         OpenTradeMtDbEventMt4 openTradeEventSchemaName = generateOpenTradeMtDbEventMt4();
         openTradeEventSchemaName.metadata.schemaName = null;
+        openTradeEventSchemaName.data.openTime = "2025-04-30 07:59:08";
 
         Allure.step("Write messages to crm-db-events topic");
         kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(openTradeEventVolume), objectMapper.writeValueAsString(openTradeEventSymbol), objectMapper.writeValueAsString(openTradeEventCloseTime), objectMapper.writeValueAsString(openTradeEventTimestamp), objectMapper.writeValueAsString(openTradeEventRecordType), objectMapper.writeValueAsString(openTradeEventOperation), objectMapper.writeValueAsString(openTradeEventPartitionKeyType), objectMapper.writeValueAsString(openTradeEventSchemaName));

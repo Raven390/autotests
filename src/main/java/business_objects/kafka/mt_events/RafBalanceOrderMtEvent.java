@@ -31,20 +31,13 @@ public class RafBalanceOrderMtEvent {
     @JsonProperty("eventDate")
     String eventDate;
 
+    @JsonProperty("metadata")
+    TradeEventMetadata metadata;
+
     @JsonProperty("initialEventTime")
     String initialEventTime;
 
     public RafBalanceOrderMtEvent() {
-    }
-
-    public RafBalanceOrderMtEvent(
-            String id, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId) {
-        this.id = id;
-        this.openTime = openTime;
-        this.tradeId = tradeId;
-        this.tradingAccount = tradingAccount;
-        this.comment = comment;
-        this.serverId = serverId;
     }
 
     public RafBalanceOrderMtEvent(
@@ -57,39 +50,24 @@ public class RafBalanceOrderMtEvent {
         this.type = type;
     }
 
-    public RafBalanceOrderMtEvent(
-            String id, String openTime, Integer tradeId, Integer tradingAccount, String comment, Integer serverId,
-            String type, String eventDate, String initialEventTime) {
-        this.id = id;
-        this.openTime = openTime;
-        this.tradeId = tradeId;
-        this.tradingAccount = tradingAccount;
-        this.comment = comment;
-        this.serverId = serverId;
-        this.type = type;
-        this.eventDate = eventDate;
-        this.initialEventTime = initialEventTime;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        RafBalanceOrderMtEvent that = (RafBalanceOrderMtEvent) o;
-        return Objects.equals(id, that.id) && Objects.equals(openTime, that.openTime) && Objects.equals(
-                tradeId, that.tradeId) && Objects.equals(tradingAccount, that.tradingAccount) && Objects.equals(comment, that.comment) && Objects.equals(
-                        serverId, that.serverId) && Objects.equals(type, that.type) && Objects.equals(eventDate, that.eventDate) && Objects.equals(
-                                initialEventTime, that.initialEventTime);
+        if (!(o instanceof RafBalanceOrderMtEvent that)) return false;
+        return Objects.equals(openTime, that.openTime) && Objects.equals(tradeId, that.tradeId) && Objects.equals(
+                tradingAccount, that.tradingAccount) && Objects.equals(comment, that.comment) && Objects.equals(
+                        serverId, that.serverId) && Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, openTime, tradeId, tradingAccount, comment, serverId, type, eventDate, initialEventTime);
+        return Objects.hash(openTime, tradeId, tradingAccount, comment, serverId, type);
     }
 
     @Override
     public String toString() {
-        return "RafBalanceOrderMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", initialEventTime='" + initialEventTime + '\'' + '}';
+        return "RafBalanceOrderMtEvent{" + "id='" + id + '\'' + ", openTime='" + openTime + '\'' + ", tradeId=" + tradeId + ", tradingAccount=" + tradingAccount + ", comment='" + comment + '\'' + ", serverId=" + serverId + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + ", initialEventTime='" + initialEventTime + '\'' + '}';
     }
+
 
     public String getId() {
         return id;

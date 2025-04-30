@@ -31,7 +31,7 @@ public class RegistrationEvent {
     public String eventDate;
 
     @JsonProperty("metadata")
-    public RegistrationEventMetadata metadata;
+    public CrmEventMetadata metadata;
 
     @JsonProperty("initialEventTime")
     public String initialEventTime;

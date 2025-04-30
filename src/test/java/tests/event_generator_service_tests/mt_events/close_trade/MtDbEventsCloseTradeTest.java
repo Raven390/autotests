@@ -15,7 +15,6 @@ import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt5;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,8 +24,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class MtDbEventsCloseTradeTest {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -47,7 +44,7 @@ class MtDbEventsCloseTradeTest {
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId.longValue(), closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, "closeTrade");
+                closeTradeMtDbEventMt4.data.closeTime, closeTradeMtDbEventMt4.data.tradeId.longValue(), closeTradeMtDbEventMt4.data.mtAccount, closeTradeMtDbEventMt4.data.volume, closeTradeMtDbEventMt4.data.symbol, closeTradeMtDbEventMt4.data.serverId, EG_CLOSE_TRADE_EVENT);
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedCloseTradeMtEvent.id, notNullValue());
@@ -68,7 +65,7 @@ class MtDbEventsCloseTradeTest {
         CloseTradeMtEvent retrievedCloseTradeMtEvent = objectMapper.readValue(consumedMessage.message(), CloseTradeMtEvent.class);
 
         CloseTradeMtEvent expectedCloseTradeMtEvent = new CloseTradeMtEvent(
-                closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId.longValue(), closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, "closeTrade");
+                closeTradeMtDbEventMt5.data.closeTime, closeTradeMtDbEventMt5.data.tradeId.longValue(), closeTradeMtDbEventMt5.data.mtAccount, closeTradeMtDbEventMt5.data.volume, closeTradeMtDbEventMt5.data.symbol, closeTradeMtDbEventMt5.data.serverId, EG_CLOSE_TRADE_EVENT);
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedCloseTradeMtEvent.id, notNullValue());

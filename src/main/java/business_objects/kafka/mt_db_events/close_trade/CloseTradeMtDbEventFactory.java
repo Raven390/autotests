@@ -12,7 +12,7 @@ public class CloseTradeMtDbEventFactory {
     @Step("Generate close trade db event metadata")
     private static CloseTradeMtDbEventMetadata generateCloseTradeMtDbEventMetadata() {
         return new CloseTradeMtDbEventMetadata(
-                Utils.getCurrentTimestampDbFormat(), "event", "INSERT", "HASH", "events", "mt4_trades");
+                formatTimeToUtc(Utils.getCurrentTimestampDbFormat()), "event", "INSERT", "HASH", "events", "mt4_trades");
     }
 
     @Step("Generate close trade db event mt4 metadata")
@@ -32,7 +32,7 @@ public class CloseTradeMtDbEventFactory {
     @Step("Generate close trade db event mt4 data")
     private static CloseTradeMtDbEventMt4Data generateCloseTradeMtDbEventMt4Data() {
         return new CloseTradeMtDbEventMt4Data(
-                Utils.getCurrentTimestampDbFormat(), Instant.now().plusMillis(100_000).toString(), getRandomIntPositive(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "EURUSD", 1, 9);
+                Instant.now().toString(), Instant.now().plusMillis(100_000).toString(), getRandomIntPositive(), getRandomIntNotInRange(741_000, 749_999), 3.45d, "EURUSD", 1, 9);
     }
 
     @Step("Generate close trade db event mt5 data")

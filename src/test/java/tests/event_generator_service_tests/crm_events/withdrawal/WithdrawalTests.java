@@ -17,7 +17,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,8 +26,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class WithdrawalTests {
     KafkaHelper kafka = new KafkaHelper();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -47,7 +44,7 @@ class WithdrawalTests {
         WithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
 
         WithdrawalEvent expectedWithdrawalEvent = new WithdrawalEvent(
-                withdrawalDbEvent.data.createTime, withdrawalDbEvent.data.id, withdrawalDbEvent.data.userId, withdrawalDbEvent.data.mt4Account, withdrawalDbEvent.data.brand, withdrawalDbEvent.data.regulator, withdrawalDbEvent.data.paymentMethodCode, withdrawalDbEvent.data.withdrawType, withdrawalDbEvent.data.withdrawAmount, withdrawalDbEvent.data.fee, withdrawalDbEvent.data.actualAmount, withdrawalDbEvent.data.paymentAmount, withdrawalDbEvent.data.cardNumber, withdrawalDbEvent.data.isDel, withdrawalDbEvent.data.updateTime, withdrawalDbEvent.data.orderNumber, withdrawalDbEvent.data.cpsMandatoryField, withdrawalDbEvent.data.isRememberInfo, withdrawalDbEvent.data.deductCredit, withdrawalDbEvent.data.userSalesId, withdrawalDbEvent.data.accountSalesId, withdrawalDbEvent.data.orderCurrency, withdrawalDbEvent.data.checkingStatus, withdrawalDbEvent.data.isTrade, withdrawalDbEvent.data.rate, withdrawalDbEvent.data.isNonApp, withdrawalDbEvent.data.toUsdRate, "withdrawal"
+                withdrawalDbEvent.data.createTime, withdrawalDbEvent.data.id, withdrawalDbEvent.data.userId, withdrawalDbEvent.data.mt4Account, withdrawalDbEvent.data.brand, withdrawalDbEvent.data.regulator, withdrawalDbEvent.data.paymentMethodCode, withdrawalDbEvent.data.withdrawType, withdrawalDbEvent.data.withdrawAmount, withdrawalDbEvent.data.fee, withdrawalDbEvent.data.actualAmount, withdrawalDbEvent.data.paymentAmount, withdrawalDbEvent.data.cardNumber, withdrawalDbEvent.data.isDel, withdrawalDbEvent.data.updateTime, withdrawalDbEvent.data.orderNumber, withdrawalDbEvent.data.cpsMandatoryField, withdrawalDbEvent.data.isRememberInfo, withdrawalDbEvent.data.deductCredit, withdrawalDbEvent.data.userSalesId, withdrawalDbEvent.data.accountSalesId, withdrawalDbEvent.data.orderCurrency, withdrawalDbEvent.data.checkingStatus, withdrawalDbEvent.data.isTrade, withdrawalDbEvent.data.rate, withdrawalDbEvent.data.isNonApp, withdrawalDbEvent.data.toUsdRate, EG_WITHDRAWAL_EVENT
         );
 
         Allure.step("Verify that message was written correctly");
@@ -72,7 +69,7 @@ class WithdrawalTests {
         WithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
 
         WithdrawalEvent expectedWithdrawalEvent = new WithdrawalEvent(
-                withdrawalDbEventCps.data.createTime, withdrawalDbEventCps.data.id, withdrawalDbEventCps.data.userId, withdrawalDbEventCps.data.mt4Account, withdrawalDbEventCps.data.brand, withdrawalDbEventCps.data.regulator, "UnionPay", withdrawalDbEventCps.data.withdrawType, withdrawalDbEventCps.data.withdrawAmount, withdrawalDbEventCps.data.fee, withdrawalDbEventCps.data.actualAmount, withdrawalDbEventCps.data.paymentAmount, withdrawalDbEventCps.data.cardNumber, withdrawalDbEventCps.data.isDel, withdrawalDbEventCps.data.updateTime, withdrawalDbEventCps.data.orderNumber, null, null, withdrawalDbEventCps.data.deductCredit, withdrawalDbEventCps.data.userSalesId, withdrawalDbEventCps.data.accountSalesId, withdrawalDbEventCps.data.orderCurrency, withdrawalDbEventCps.data.checkingStatus, null, withdrawalDbEventCps.data.rate, null, withdrawalDbEventCps.data.toUsdRate, "withdrawal"
+                withdrawalDbEventCps.data.createTime, withdrawalDbEventCps.data.id, withdrawalDbEventCps.data.userId, withdrawalDbEventCps.data.mt4Account, withdrawalDbEventCps.data.brand, withdrawalDbEventCps.data.regulator, "UnionPay", withdrawalDbEventCps.data.withdrawType, withdrawalDbEventCps.data.withdrawAmount, withdrawalDbEventCps.data.fee, withdrawalDbEventCps.data.actualAmount, withdrawalDbEventCps.data.paymentAmount, withdrawalDbEventCps.data.cardNumber, withdrawalDbEventCps.data.isDel, withdrawalDbEventCps.data.updateTime, withdrawalDbEventCps.data.orderNumber, null, null, withdrawalDbEventCps.data.deductCredit, withdrawalDbEventCps.data.userSalesId, withdrawalDbEventCps.data.accountSalesId, withdrawalDbEventCps.data.orderCurrency, withdrawalDbEventCps.data.checkingStatus, null, withdrawalDbEventCps.data.rate, null, withdrawalDbEventCps.data.toUsdRate, EG_WITHDRAWAL_EVENT
         );
 
         Allure.step("Verify that message was written correctly");
