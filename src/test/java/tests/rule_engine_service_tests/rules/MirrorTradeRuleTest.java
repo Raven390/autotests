@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
+@Disabled("disabled till finalization of the rule")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_MIRROR_TRADING_RULE)
 @Tag(TEAM_CORE)

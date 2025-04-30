@@ -1,5 +1,6 @@
 package business_objects.kafka.alerts;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RuleAlert {
@@ -54,6 +55,7 @@ public class RuleAlert {
             public String country;
 
             @JsonProperty("fraudType")
+            @JsonAlias({"Fraud type", "fraudType"})
             public String fraudType;
 
             @JsonProperty("refferalId")

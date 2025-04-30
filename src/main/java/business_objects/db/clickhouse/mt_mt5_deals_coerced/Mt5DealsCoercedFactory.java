@@ -6,6 +6,8 @@ import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Symbol;
 import io.qameta.allure.Step;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import static utils.Constants.*;
@@ -132,5 +134,16 @@ public class Mt5DealsCoercedFactory {
         deal.setLastUpdated(getCurrentTimestampDbFormat());
         deal.setInternalComment("autotestInternalComment");
         return deal;
+    }
+
+    public static List<Mt5DealsCoercedObject> generateMt5DealsCoercedObject(ClientHelper client, int number,
+            String date) {
+        List<Mt5DealsCoercedObject> deals = new ArrayList<>();
+        for (int i = 1; i <= number; i++) {
+            Mt5DealsCoercedObject trade = generateTradeByClient(client);
+            trade.setTime(date);
+            deals.add(trade);
+        }
+        return deals;
     }
 }
