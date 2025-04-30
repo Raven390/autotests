@@ -98,6 +98,12 @@ public class WithdrawalEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("upiAccountName")
+    public String upiAccountName;
+
+    @JsonProperty("metadata")
+    public CrmEventMetadata metadata;
+
     public WithdrawalEvent() {
     }
 

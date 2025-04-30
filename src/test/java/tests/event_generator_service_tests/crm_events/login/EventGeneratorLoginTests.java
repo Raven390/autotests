@@ -11,7 +11,6 @@ import helpers.kafka.KafkaHelper;
 import business_objects.kafka.crm_db_events.login.LoginDbEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -21,8 +20,6 @@ import org.junit.jupiter.api.Test;
 @Tag(LAYER_API)
 @Tag(TEAM_CORE)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class EventGeneratorLoginTests {
     KafkaHelper kafka = new KafkaHelper();
     ObjectMapper objectMapper = new ObjectMapper();
@@ -42,11 +39,11 @@ class EventGeneratorLoginTests {
         LoginEvent retrievedLoginEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
 
         LoginEvent expectedLoginEvent = new LoginEvent(
-                loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", "egLoginToWeb"
+                loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", EG_LOGIN_EVENT
         );
 
         Allure.step("Verify that message was written correctly");
-        assertThat("Check type", retrievedLoginEvent.type, is("egLoginToWeb"));
+        assertThat("Check type", retrievedLoginEvent.type, is(EG_LOGIN_EVENT));
         assertThat("Check id", retrievedLoginEvent.id, notNullValue());
         assertThat("Check all fields except id", retrievedLoginEvent, equalTo(expectedLoginEvent));
     }

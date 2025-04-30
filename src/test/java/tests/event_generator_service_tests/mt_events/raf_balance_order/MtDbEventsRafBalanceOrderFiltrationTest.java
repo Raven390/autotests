@@ -13,7 +13,6 @@ import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt4;
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt5;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -23,8 +22,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class MtDbEventsRafBalanceOrderFiltrationTest {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -38,15 +35,20 @@ class MtDbEventsRafBalanceOrderFiltrationTest {
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTestAccount1 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventTestAccount1.getData().setMtAccount(741_000);
         rafBalanceOrderEventTestAccount1.getData().setComment("test_comment");
+        rafBalanceOrderEventTestAccount1.getData().setOpenTime("2025-04-30 00:00:01");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTestAccount2 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventTestAccount2.getData().setMtAccount(749_999);
         rafBalanceOrderEventTestAccount2.getData().setComment("test_comment");
+        rafBalanceOrderEventTestAccount2.getData().setOpenTime("2025-04-30 00:00:02");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId1 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventTradeIdAccountServerId1.getData().setComment("test_comment");
+        rafBalanceOrderEventTradeIdAccountServerId1.getData().setOpenTime("2025-04-30 00:00:03");
+
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventTradeIdAccountServerId2 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventTradeIdAccountServerId2.getData().setComment("test_comment");
+        rafBalanceOrderEventTradeIdAccountServerId2.getData().setOpenTime("2025-04-30 00:00:04");
 
         rafBalanceOrderEventTradeIdAccountServerId2.getData().setTradeId(rafBalanceOrderEventTradeIdAccountServerId1.getData().getTradeId());
         rafBalanceOrderEventTradeIdAccountServerId2.getData().setMtAccount(rafBalanceOrderEventTradeIdAccountServerId1.getData().getMtAccount());
@@ -54,21 +56,26 @@ class MtDbEventsRafBalanceOrderFiltrationTest {
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd1 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventMt4Cmd1.getData().setCmd(-1);
         rafBalanceOrderEventMt4Cmd1.getData().setComment("test_comment");
+        rafBalanceOrderEventMt4Cmd1.getData().setOpenTime("2025-04-30 00:00:05");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Cmd2 = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventMt4Cmd2.getData().setCmd(2);
         rafBalanceOrderEventMt4Cmd2.getData().setComment("test_comment");
+        rafBalanceOrderEventMt4Cmd2.getData().setOpenTime("2025-04-30 00:00:06");
 
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderEventMt4Comment = generateRafBalanceOrderMtDbEventMt4();
         rafBalanceOrderEventMt4Comment.getData().setComment("test_comment");
+        rafBalanceOrderEventMt4Comment.getData().setOpenTime("2025-04-30 00:00:07");
 
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderEventMt5Action1 = generateRafBalanceOrderMtDbEventMt5();
         rafBalanceOrderEventMt5Action1.getData().setAction(-1);
         rafBalanceOrderEventMt5Action1.getData().setComment("test_comment");
+        rafBalanceOrderEventMt5Action1.getData().setOpenTime("2025-04-30 00:00:08");
 
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderEventMt5Action2 = generateRafBalanceOrderMtDbEventMt5();
         rafBalanceOrderEventMt5Action2.getData().setAction(99);
-        rafBalanceOrderEventMt5Action1.getData().setComment("test_comment");
+        rafBalanceOrderEventMt5Action2.getData().setComment("test_comment");
+        rafBalanceOrderEventMt5Action2.getData().setOpenTime("2025-04-30 00:00:09");
 
         Allure.step("Write messages to crm-db-events topic");
         kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_MT_DB_EVENTS, objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount1), objectMapper.writeValueAsString(rafBalanceOrderEventTestAccount2), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId1), objectMapper.writeValueAsString(rafBalanceOrderEventTradeIdAccountServerId2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd1), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Cmd2), objectMapper.writeValueAsString(rafBalanceOrderEventMt4Comment), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action1), objectMapper.writeValueAsString(rafBalanceOrderEventMt5Action2));

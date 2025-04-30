@@ -32,6 +32,9 @@ public class LoginEvent {
     @JsonProperty("type")
     public String type;
 
+    @JsonProperty("metadata")
+    public CrmEventMetadata metadata;
+
     @JsonProperty("initialEventTime")
     public String initialEventTime;
 

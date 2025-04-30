@@ -14,7 +14,6 @@ import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDb
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt5;
 import business_objects.kafka.mt_events.RafBalanceOrderMtEvent;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,8 +26,6 @@ import java.util.Map;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class MtDbEventsRafBalanceOrderTest {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -39,7 +36,9 @@ class MtDbEventsRafBalanceOrderTest {
     @AllureId("123")
     void generateMt4RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt4();
+        rafBalanceOrderMtDbEvent1.getData().setOpenTime("2025-04-30 01:00:00");
         RafBalanceOrderMtDbEventMt4 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt4();
+        rafBalanceOrderMtDbEvent1.getData().setOpenTime("2025-04-30 02:00:00");
         rafBalanceOrderMtDbEvent2.getData().setComment("Referral");
 
         Allure.step("Write message to crm-db-events topic");
@@ -71,7 +70,9 @@ class MtDbEventsRafBalanceOrderTest {
     @AllureId("124")
     void generateMt5RafBalanceOrderEventTest() throws JsonProcessingException, InterruptedException {
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent1 = generateRafBalanceOrderMtDbEventMt5();
+        rafBalanceOrderMtDbEvent1.getData().setOpenTime("2025-04-30 03:00:00");
         RafBalanceOrderMtDbEventMt5 rafBalanceOrderMtDbEvent2 = generateRafBalanceOrderMtDbEventMt5();
+        rafBalanceOrderMtDbEvent2.getData().setOpenTime("2025-04-30 04:00:00");
         rafBalanceOrderMtDbEvent2.getData().setComment("Referral");
 
         Allure.step("Write message to crm-db-events topic");

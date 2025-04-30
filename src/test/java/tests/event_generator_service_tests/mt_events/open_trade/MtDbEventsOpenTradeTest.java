@@ -15,7 +15,6 @@ import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt5;
 import business_objects.kafka.mt_events.OpenTradeMtEvent;
 import io.qameta.allure.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -25,8 +24,6 @@ import org.junit.jupiter.api.Test;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-@Disabled
-@Tag(TAG_MANUAL)
 class MtDbEventsOpenTradeTest {
 
     KafkaHelper kafka = new KafkaHelper();
@@ -46,7 +43,7 @@ class MtDbEventsOpenTradeTest {
         OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
-                openTradeMtDbEventMt4.data.openTime, openTradeMtDbEventMt4.data.tradeId, openTradeMtDbEventMt4.data.mtAccount, openTradeMtDbEventMt4.data.volume, openTradeMtDbEventMt4.data.symbol, openTradeMtDbEventMt4.data.serverId, "openTrade");
+                openTradeMtDbEventMt4.data.openTime, openTradeMtDbEventMt4.data.tradeId, openTradeMtDbEventMt4.data.mtAccount, openTradeMtDbEventMt4.data.volume, openTradeMtDbEventMt4.data.symbol, openTradeMtDbEventMt4.data.serverId, EG_OPEN_TRADE_EVENT);
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedOpenTradeMtEvent.id, notNullValue());
@@ -67,7 +64,7 @@ class MtDbEventsOpenTradeTest {
         OpenTradeMtEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), OpenTradeMtEvent.class);
 
         OpenTradeMtEvent expectedOpenTradeMtEvent = new OpenTradeMtEvent(
-                openTradeMtDbEventMt5.data.openTime, openTradeMtDbEventMt5.data.tradeId, openTradeMtDbEventMt5.data.mtAccount, openTradeMtDbEventMt5.data.volume, openTradeMtDbEventMt5.data.symbol, openTradeMtDbEventMt5.data.serverId, "openTrade");
+                openTradeMtDbEventMt5.data.openTime, openTradeMtDbEventMt5.data.tradeId, openTradeMtDbEventMt5.data.mtAccount, openTradeMtDbEventMt5.data.volume, openTradeMtDbEventMt5.data.symbol, openTradeMtDbEventMt5.data.serverId, EG_OPEN_TRADE_EVENT);
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedOpenTradeMtEvent.id, notNullValue());
