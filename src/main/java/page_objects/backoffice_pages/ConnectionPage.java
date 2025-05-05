@@ -91,6 +91,12 @@ public class ConnectionPage extends AbstractPage {
     private final Locator zoomValue;
     private final Locator tooltip;
     private final Locator connectionScoreFilterPresetsOptions;
+    private final Locator multiselectButton;
+    private final Locator multiselectSelectAllCheckbox;
+    private final Locator multiselectCounter;
+    private final Locator multiselectCommentButton;
+    private final Locator multiselectCommentInput;
+    private final Locator multiselectAddCommentButton;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
@@ -200,6 +206,12 @@ public class ConnectionPage extends AbstractPage {
         this.zoomValue = page.locator(String.format("%s/div/descendant::span", ZOOM_CONTROLS));
         this.tooltip = page.locator("//div[@class='v-tooltip-content']");
         this.connectionScoreFilterPresetsOptions = page.locator(String.format("%s/descendant::span[@class='g-button__text']", CONNECTION_SCORE_FILTER_PRESETS));
+        this.multiselectButton = page.locator("//span[contains(text(),'Multiselect')]/ancestor::button");
+        this.multiselectSelectAllCheckbox = page.locator("//input[@type='checkbox']").first();
+        this.multiselectCounter = page.locator("//div[@class='v-multiselect-panel__counter']");
+        this.multiselectCommentButton = page.locator("//div[@class='v-multiselect-panel__body']/button");
+        this.multiselectCommentInput = page.locator("//div[@class='v-connection-search-multiselect-panel__input']/descendant::input");
+        this.multiselectAddCommentButton = page.locator("//div[@class='v-connection-search-multiselect-panel__buttons']/button");
     }
 
     String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
@@ -985,5 +997,35 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click connection score filter preset")
     public void clickConnectionScoreFilterPresetByText(String preset) {
         page.locator(String.format(CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN, preset)).click();
+    }
+
+    @Step("Click multiselect button")
+    public void clickMultiselectButton() {
+        multiselectButton.click();
+    }
+
+    @Step("Click multiselect select all checkbox")
+    public void clickMultiselectSelectAllCheckbox() {
+        multiselectSelectAllCheckbox.click();
+    }
+
+    @Step("Get multiselect counter text")
+    public String getMultiselectCounterText() {
+        return multiselectCounter.textContent();
+    }
+
+    @Step("Click multiselect comment button")
+    public void clickMultiselectCommentButton() {
+        multiselectCommentButton.click();
+    }
+
+    @Step("Fill multiselect comment")
+    public void fillMultiselectComment(String text) {
+        multiselectCommentInput.fill(text);
+    }
+
+    @Step("Click multiselect add comment button")
+    public void clickMultiselectAddCommentButton() {
+        multiselectAddCommentButton.click();
     }
 }
