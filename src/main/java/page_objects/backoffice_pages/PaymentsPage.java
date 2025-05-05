@@ -116,7 +116,7 @@ public class PaymentsPage extends AbstractPage {
         this.amountColumnHeader = tableHeader.getByText("AMOUNT");
         this.dateColumnHeader = tableHeader.getByText("DATE");
         this.checkbox = page.locator("//input[@type='checkbox']");
-        this.submitPanelCounter = page.locator("//div[@class='v-submit-panel__counter']");
+        this.submitPanelCounter = page.locator("//div[@class='v-multiselect-panel__counter']");
         this.submitPanelInput = page.locator("//div[@class='v-submit-panel__input']/descendant::input");
         this.submitPanelButtons = page.locator("//div[@class='v-submit-panel__buttons']");
         this.approveButton = submitPanelButtons.getByText("Approve");
