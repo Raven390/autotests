@@ -54,16 +54,19 @@ public class ResolveTest extends TestBaseWeb {
         alert1.rule.attributes.amount = "1";
         alert1.rule.attributes.currency = "USD";
         alert1.rule.attributes.paymentType = "first withdrawal";
+        alert1.rule.attributes.paymentChannel = "first withdrawal";
         alert1.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
         alert2.rule.attributes.withdrawalId = "14140202";
         alert2.rule.attributes.amount = "1";
         alert2.rule.attributes.currency = "USD";
         alert2.rule.attributes.paymentType = "second withdrawal";
+        alert2.rule.attributes.paymentChannel = "second withdrawal";
         alert2.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
         alert3.rule.attributes.withdrawalId = "14140203";
         alert3.rule.attributes.amount = "1";
         alert3.rule.attributes.currency = "USD";
-        alert3.rule.attributes.paymentType = "third withdrawal";
+        alert2.rule.attributes.paymentType = "second withdrawal";
+        alert3.rule.attributes.paymentChannel = "third withdrawal";
         alert3.rule.attributes.createTime = "2024-10-13T09:03:00+03:00";
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(withdrawalClientDB, resolveClientDB));
