@@ -21,15 +21,14 @@ public class Event {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return Objects.equals(id, event.id) && Objects.equals(kafkaMessageId, event.kafkaMessageId) && Objects.equals(ucid, event.ucid) && Objects.equals(type, event.type) && Objects.equals(createdAt, event.createdAt) && Objects.equals(initiatedBySystem, event.initiatedBySystem) && Objects.equals(initiatedByUser, event.initiatedByUser) && Objects.equals(comment, event.comment) && Objects.equals(details, event.details);
+        return Objects.equals(ucid, event.ucid) && Objects.equals(type, event.type) && Objects.equals(initiatedBySystem, event.initiatedBySystem) && Objects.equals(initiatedByUser, event.initiatedByUser) && Objects.equals(comment, event.comment) && Objects.equals(details, event.details);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, kafkaMessageId, ucid, type, createdAt, initiatedBySystem, initiatedByUser, comment, details);
+        return Objects.hash(ucid, type, initiatedBySystem, initiatedByUser, comment, details);
     }
 
     public Long getId() {
@@ -66,5 +65,41 @@ public class Event {
 
     public String getDetails() {
         return details;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setKafkaMessageId(String kafkaMessageId) {
+        this.kafkaMessageId = kafkaMessageId;
+    }
+
+    public void setUcid(String ucid) {
+        this.ucid = ucid;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setInitiatedBySystem(String initiatedBySystem) {
+        this.initiatedBySystem = initiatedBySystem;
+    }
+
+    public void setInitiatedByUser(String initiatedByUser) {
+        this.initiatedByUser = initiatedByUser;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

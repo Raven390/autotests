@@ -290,7 +290,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     @DisplayName("Set restriction 'Trading hours' API")
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
-    @AllureId("931")
+    @AllureId("1148")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_API)
     void setRestrictionApiTradingHoursTest() throws Exception {
