@@ -330,7 +330,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
         connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
         connectionPage.ccCheckGeneralInfoRows("CPA", "2");
-        connectionPage.ccCheckGeneralInfoRows("Registered", "2024-10-23");
+        connectionPage.ccCheckGeneralInfoRows("Registered", "2014-10-23");
         connectionPage.ccCheckGeneralInfoRows("Last login", "-");
     }
 
