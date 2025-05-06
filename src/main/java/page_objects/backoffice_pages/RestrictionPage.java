@@ -777,7 +777,7 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
             if (events.size() == 2) {
                 break;
             } else if (events.size() < 2 && i == 9) {

@@ -265,4 +265,6 @@ public class Constants {
     public static final String RESTRICTION_TYPE_TRADING = "TRADING";
     public static final String RESTRICTION_REQUESTED_STATUS = "RESTRICTION_REQUESTED";
     public static final String RESTRICTION_APPLIED_STATUS = "RESTRICTION_APPLIED";
+    public static final String COMMENT_ADDED_TYPE = "COMMENT_ADDED";
+    public static final String VINDEX_BO_SYSTEM = "Vindex BO";
 }
