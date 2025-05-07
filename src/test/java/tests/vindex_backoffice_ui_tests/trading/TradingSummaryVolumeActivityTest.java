@@ -157,7 +157,7 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
         page.reload();
         Allure.step("filter 6 years");
-        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 6, 0, -2, 0, 0), getCurrentDate());
+        paymentsPage.selectDatesInCalendar(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 364 * 6, 0, 0), getCurrentDate());
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
     }
 
