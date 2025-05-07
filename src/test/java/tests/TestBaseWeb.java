@@ -1,5 +1,7 @@
 package tests;
 
+import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
+import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
 import static utils.ConfigFactory.*;
@@ -57,19 +59,21 @@ public class TestBaseWeb {
     public Faker faker = new Faker();
 
     @BeforeAll
-    static void setupBrowser() {
+    static void setupBrowser() throws IOException {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().setHeadless(getHeadless()).setTimeout(
                 TIMEOUT));
         startSshTunnel();
+        enableCRMEmulator();
     }
 
     @AfterAll
-    static void closeBrowser() {
+    static void closeBrowser() throws IOException {
         if (playwright != null) {
             playwright.close();
         }
         stopSshTunnel();
+        disableCRMEmulator();
     }
 
     @BeforeEach
