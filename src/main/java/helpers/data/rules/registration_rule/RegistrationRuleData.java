@@ -1,6 +1,6 @@
 package helpers.data.rules.registration_rule;
 
-import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
@@ -22,7 +22,7 @@ public class RegistrationRuleData {
     public List<CrmTbUserObject> connectedUsers;
     public List<ClientHelper> connectedClientHelpers;
     public RegistrationEvent registrationEvent;
-    public List<ClientFraudTypesObject> clientFraudTypes;
+    public List<ClientFraudTypes> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
@@ -34,7 +34,7 @@ public class RegistrationRuleData {
     public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections,
             List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
-            RegistrationEvent registrationEvent, List<ClientFraudTypesObject> clientFraudTypes,
+            RegistrationEvent registrationEvent, List<ClientFraudTypes> clientFraudTypes,
             CrmTbAccountObject crmTbAccountObject, List<SessionIdTableEntry> sessionIdTableEntries,
             List<EmailTableEntry> emailTableEntries, List<DeviceIdTableEntry> deviceIdTableEntries) {
         this.clientHelper = clientHelper;

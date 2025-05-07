@@ -13,8 +13,6 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +38,7 @@ class NdbRuleTests extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws ReflectiveOperationException, SQLException, IOException {
+    static void setupData() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupNdbRuleData();
@@ -127,7 +125,7 @@ class NdbRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonuse Abuse"));
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonus Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(BONUS_ABUSE.getKey()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
@@ -171,7 +169,7 @@ class NdbRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonuse Abuse"));
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonus Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(BONUS_ABUSE.getKey()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
@@ -214,7 +212,7 @@ class NdbRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonuse Abuse"));
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonus Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(BONUS_ABUSE.getKey()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
@@ -268,12 +266,12 @@ class NdbRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonuse Abuse"));
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonus Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(BONUS_ABUSE.getKey()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes clones not null", alert.rule.attributes.reason, is("One or many connected clients are bonus abusers"));
+        assertThat("Verify rule attributes clones not null", alert.rule.attributes.reason, is("Connected client with recent no deposit bonus (NDB) has same IB"));
 
         // Verify alert in BO db
         List<Alert> dbAlerts = getObjectsFromDB(
@@ -301,7 +299,7 @@ class NdbRuleTests extends TestBaseRule {
 
         Allure.step("Check number of alerts and restrictions");
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));
+        assertThat("Verify that there is no alerts", consumedMessages.size(), equalTo(0));
 
         List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
         assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
@@ -328,7 +326,7 @@ class NdbRuleTests extends TestBaseRule {
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
         assertThat("Verify rule not null", alert.rule, notNullValue());
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
-        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonuse Abuse"));
+        assertThat("Verify rule name is correct", alert.rule.name, equalTo("No Deposit Bonus Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Withdrawal"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(BONUS_ABUSE.getKey()));
         assertThat("Verify rule version not null, alert.rule.ver", notNullValue());

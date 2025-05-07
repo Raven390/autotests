@@ -1,6 +1,6 @@
 package helpers.data.rules.ndb_rule;
 
-import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -15,7 +15,6 @@ import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +31,8 @@ import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.enums.NbdComment.getRandomNbdComment;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
+import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -124,14 +125,14 @@ public class NdbRuleDataFactory {
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+        ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         Allure.step("Add 49 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
         return data;
     }
 
@@ -145,14 +146,14 @@ public class NdbRuleDataFactory {
         Allure.step("Linked other fraud cases");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+        ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         Allure.step("Add 49 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
         return data;
     }
 
@@ -168,17 +169,17 @@ public class NdbRuleDataFactory {
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         connection.connectionInfo = "[{\"connectionAttributeName\": \"email\", \"connectionAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"sourceAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"relationType\": \"exact\"}]";
         data.connections.add(connection);
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+        ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(), FraudType.getRandomFraudType(FraudType.LOSS_VOUCHER_ABUSE, FraudType.HEDGING).getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         Allure.step("Add 49 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
         return data;
     }
 
@@ -192,11 +193,11 @@ public class NdbRuleDataFactory {
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
         Allure.step("Add 49 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd7Data() {
+    public static RuleDataHelper getNdbRuleExitEventEnd7Data() throws Exception {
         Allure.step("Get client data");
         RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd7Client);
 
@@ -216,6 +217,8 @@ public class NdbRuleDataFactory {
         CrmTbUserObject connectedUser = generateUserByClient(connectedClient);
         connectedUser.ibId = sameIb;
         connectedUser.email = sameEmail;
+        cleanFraudTypeTableByClient(connectedClient.getUcid());
+        cleanBoFraudTypesTableByUcid(connectedClient.getUcid());
 
         Allure.step("Linked active accounts not with same email AND NDB from the last 1 week? - true");
         Allure.step("Any under the same IB? - true");
@@ -226,7 +229,7 @@ public class NdbRuleDataFactory {
         data.connections.add(connection);
         data.connectedUsers.add(connectedUser);
         Allure.step("Add 49 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
 
         Allure.step("Add NDB credits for connected client");
         data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
@@ -270,7 +273,7 @@ public class NdbRuleDataFactory {
         data.connectedUsers.add(connectedUser);
 
         Allure.step("Add less than 50 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
 
         Allure.step("Add NDB credits for connected client");
         data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
@@ -316,7 +319,7 @@ public class NdbRuleDataFactory {
         data.connectedUsers.add(connectedUser);
 
         Allure.step("Add less than 50 trades with time less than 2 weeks");
-        generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0));
+        data.mt5DealsCoercedObjects.addAll(generateMt5DealsCoercedObject(data.clientHelper, 49, getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 13, 0, 0, 0)));
 
         Allure.step("Add NDB credits for connected client");
         data.mtTbCreditsObjects.addAll(generateNdbCredits(connectedClient, 5));
@@ -328,21 +331,20 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNdbRuleData() throws ReflectiveOperationException,
-            SQLException {
+    public static Map<String, RuleDataHelper> setupNdbRuleData() throws Exception {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getNdbRuleExitEventEnd1Data());
-        map.put("2", getNdbRuleExitEventEnd2Data());
-        map.put("3", getNdbRuleExitEventEnd3Data());
-        map.put("41", getNdbRuleExitEventEnd41Data());
-        map.put("42", getNdbRuleExitEventEnd42Data());
-        map.put("5", getNdbRuleExitEventEnd5Data());
-        map.put("6", getNdbRuleExitEventEnd6Data());
+//        map.put("1", getNdbRuleExitEventEnd1Data());
+//        map.put("2", getNdbRuleExitEventEnd2Data());
+//        map.put("3", getNdbRuleExitEventEnd3Data());
+//        map.put("41", getNdbRuleExitEventEnd41Data());
+//        map.put("42", getNdbRuleExitEventEnd42Data());
+//        map.put("5", getNdbRuleExitEventEnd5Data());
+//        map.put("6", getNdbRuleExitEventEnd6Data());
         map.put("7", getNdbRuleExitEventEnd7Data());
-        map.put("8", getNdbRuleExitEventEnd8Data());
-        map.put("9", getNdbRuleExitEventEnd9Data());
+//        map.put("8", getNdbRuleExitEventEnd8Data());
+//        map.put("9", getNdbRuleExitEventEnd9Data());
 
         // Loop through the list with data and insert all the data into the according tables
         setupRuleData(map);

@@ -2,7 +2,7 @@ package tests.click_house_api_service_tests;
 
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
-import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudType;
 import io.qameta.allure.AllureId;
@@ -31,16 +31,16 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetAbuseTypesTests extends TestBaseApi {
 
-    private static ClientFraudTypesObject fraud1;
-    private static ClientFraudTypesObject fraud2;
-    private static ClientFraudTypesObject fraud3;
+    private static ClientFraudTypes fraud1;
+    private static ClientFraudTypes fraud2;
+    private static ClientFraudTypes fraud3;
 
     @BeforeAll
     static void setupData() {
         ClientHelper client = getRandomVantageClient();
-        fraud1 = new ClientFraudTypesObject(client.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud2 = new ClientFraudTypesObject(client.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypesObject(getRandomVantageClient().getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud1 = new ClientFraudTypes(client.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2 = new ClientFraudTypes(client.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypes(getRandomVantageClient().getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
     }
 

@@ -23,7 +23,7 @@ public class ClientFraudTypesFactory {
     }
 
     @Step("Create fraud for user with ucid '{ucid}' in BO")
-    public static void createUserFraudsCh(String ucid, String... fraudTypeCode) throws Exception {
+    public static void createClientFraudsCh(String ucid, String... fraudTypeCode) throws Exception {
         Thread.sleep(2000);
         List<ClientFraudTypes> frauds = new java.util.ArrayList<>(List.of());
         for (String fraudCode : fraudTypeCode) {

@@ -2,7 +2,7 @@ package tests.connection_search_api_service_tests;
 
 import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByClientId;
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponseFactory.*;
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.connectionInfoToString;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudType.*;
@@ -48,8 +48,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
     static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userTo1_1, userTo1_3);
 
-    private static ClientFraudTypesObject fraud11;
-    private static ClientFraudTypesObject fraud12;
+    private static ClientFraudTypes fraud11;
+    private static ClientFraudTypes fraud12;
 
     //Data 2
     static final ClientHelper userFrom2 = getRandomVantageClient();
@@ -61,24 +61,24 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     static ConnectionTableEntry connectionTableEntry22 = getConnectionTableEntry(userFrom2, userTo2_2);
     static ConnectionTableEntry connectionTableEntry23 = getConnectionTableEntryLvl2(userTo2_2, userTo2_3);
 
-    private static ClientFraudTypesObject fraud2_2;
+    private static ClientFraudTypes fraud2_2;
 
     //Data 3
     static final ClientHelper userFrom3 = getRandomVantageClient();
     static final ClientHelper userTo3 = getRandomVantageClient();
     static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
 
-    private static ClientFraudTypesObject fraud3;
+    private static ClientFraudTypes fraud3;
 
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
 
-        fraud11 = new ClientFraudTypesObject(userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud12 = new ClientFraudTypesObject(userTo1_2.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud2_2 = new ClientFraudTypesObject(userTo2_3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypesObject(userTo3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud11 = new ClientFraudTypes(userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud12 = new ClientFraudTypes(userTo1_2.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2_2 = new ClientFraudTypes(userTo2_3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypes(userTo3.getUcid(), CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud11);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);

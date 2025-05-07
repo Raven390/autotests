@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createUserFraudsCh;
+import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudsCh;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.deleteUserFraudsCh;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
@@ -179,8 +179,8 @@ public class ConnectionSearchTest extends TestBaseWeb {
         createSimpleAlert(client1.getUcid(), "HEDGING");
         deleteUserFraudsCh(client2.getUcid());
         deleteUserFraudsCh(client3.getUcid());
-        createUserFraudsCh(client3.getUcid(), FraudType.GAP_TRADING.getKey());
-        createUserFraudsCh(client3.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey());
+        createClientFraudsCh(client3.getUcid(), FraudType.GAP_TRADING.getKey());
+        createClientFraudsCh(client3.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey());
         connectionPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
@@ -387,7 +387,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         for (FraudType i : FraudType.values()) {
             deleteUserFraudsCh(client4.getUcid());
-            createUserFraudsCh(client4.getUcid(), i.getKey());
+            createClientFraudsCh(client4.getUcid(), i.getKey());
             connectionPage.navigateConnectionTab(client1.getUcid());
             connectionPage.checkClientStatus(client4.getUcid(), i.getDisplayName());
         }

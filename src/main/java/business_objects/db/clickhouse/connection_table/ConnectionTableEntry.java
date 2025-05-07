@@ -19,7 +19,7 @@ public class ConnectionTableEntry {
         this.userTo = userTo;
         this.degreeConnection = degreeConnection;
         this.connectionScore = connectionScore;
-        this.connectionInfo = connectionInfoToString(connectionInfo);
+        this.connectionInfo = ConnectionInfo.connectionInfoToString(connectionInfo);
         this.datetime = datetime;
     }
 
@@ -70,26 +70,31 @@ public class ConnectionTableEntry {
             this.relationType = relationType;
         }
 
+        public ConnectionInfo() {
+        }
+
+        public static String connectionInfoToString(List<ConnectionInfo> connectionInfos) {
+//
+            StringBuilder bld = new StringBuilder();
+            bld.append("[");
+            int counter = connectionInfos.size();
+            for (ConnectionInfo i : connectionInfos) {
+                String infoString = i.toString();
+                bld.append(infoString);
+                if (counter > 1) {
+                    bld.append(",");
+                    counter -= 1;
+                }
+            }
+            bld.append("]");
+            return bld.toString();
+        }
+
         @Override
         public String toString() {
             return "{" + "\"connectionAttributeName\":\"" + connectionAttributeName + '\"' + ", \"connectionAttributeValue\":\"" + connectionAttributeValue + '\"' + ", \"sourceAttributeValue\":\"" + sourceAttributeValue + '\"' + ", \"relationType\":\"" + relationType + '\"' + '}';
         }
     }
 
-    public static String connectionInfoToString(List<ConnectionInfo> connectionInfos) {
-//
-        StringBuilder bld = new StringBuilder();
-        bld.append("[");
-        int counter = connectionInfos.size();
-        for (ConnectionInfo i : connectionInfos) {
-            String infoString = i.toString();
-            bld.append(infoString);
-            if (counter > 1) {
-                bld.append(",");
-                counter -= 1;
-            }
-        }
-        bld.append("]");
-        return bld.toString();
-    }
+
 }
