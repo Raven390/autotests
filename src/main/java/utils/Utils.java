@@ -32,6 +32,7 @@ import static helpers.data.enums.Brand.*;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.BO;
 import static helpers.database.DbName.CLICKHOUSE;
+import static org.junit.jupiter.api.Assertions.fail;
 import static utils.Constants.BO_ALERT_TABLE_NAME;
 import static utils.Constants.CONNECTIONS_TABLE_NAME;
 
@@ -478,7 +479,11 @@ public class Utils {
             Thread.sleep(1000);
         }
         if (!updated) {
-            throw new TimeoutException("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");
+            try {
+                throw new TimeoutException("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");
+            } catch (TimeoutException e) {
+                fail("Connection search did not provide a non empty response while requesting connection for " + ucid + " !");//fail test if there no response
+            }
         }
     }
 

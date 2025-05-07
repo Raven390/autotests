@@ -2,7 +2,7 @@ package helpers.data.rules.mirror_trading_rule;
 
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
-import business_objects.db.clickhouse.bo_client_fraud_types.ClientFraudTypesObject;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -97,10 +97,10 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("Create user");
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd2Client);
         Allure.step("Client has previous restrictions");
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+        ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 data.clientHelper.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         return data;
     }
 
@@ -110,12 +110,12 @@ public class MirrorTradingRuleDataFactory {
         Allure.step("Client has mirror trading abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
-        ClientFraudTypesObject clientFraudTypesObject = new ClientFraudTypesObject(
+        ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
                 connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Set restriction");
         Allure.step("Send alert");
-        data.clientFraudTypes.add(clientFraudTypesObject);
+        data.clientFraudTypes.add(clientFraudTypes);
         return data;
     }
 
