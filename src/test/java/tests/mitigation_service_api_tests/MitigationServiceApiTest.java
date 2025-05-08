@@ -50,7 +50,7 @@ class MitigationServiceApiTest extends TestBaseApi {
 
     @BeforeEach
     void before() throws Exception {
-        CleanTableHelper.cleanUserRestriction(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
     }
 

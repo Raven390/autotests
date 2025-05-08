@@ -131,6 +131,6 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
     @AfterAll
     public static void teardown() throws Exception {
         cleanCrmUserTableByClient(client.getUcid());
-        cleanUserRestriction(client.getUcid());
+        cleanUserRestrictionGeneral(client.getUcid());
     }
 }

@@ -1,7 +1,7 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.enums.Restriction;
 import helpers.data.rules.RuleDataHelper;
@@ -64,8 +64,8 @@ class NdbRuleTests extends TestBaseRule {
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is no alerts", consumedMessages.size(), equalTo(0));
 
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -82,8 +82,8 @@ class NdbRuleTests extends TestBaseRule {
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is no alerts", consumedMessages.size(), equalTo(0));
 
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -100,8 +100,8 @@ class NdbRuleTests extends TestBaseRule {
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is no alerts", consumedMessages.size(), equalTo(0));
 
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -140,12 +140,12 @@ class NdbRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-        assertThat("Verify that restriction is Manual Withdrawal Review", clientsRestrictions.getFirst().restrictionId, equalTo(Restriction.MANUAL_WITHDRAWAL_REVIEW.getId().longValue()));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
+        assertThat("Verify that restriction is Manual Withdrawal Review", clientsRestrictionGenerals.getFirst().restrictionId, equalTo(Restriction.MANUAL_WITHDRAWAL_REVIEW.getId().longValue()));
     }
 
     @Test
@@ -184,11 +184,11 @@ class NdbRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
     }
 
     @Test
@@ -241,8 +241,8 @@ class NdbRuleTests extends TestBaseRule {
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(0));
 
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -281,10 +281,10 @@ class NdbRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
     }
 
     @Test
@@ -301,8 +301,8 @@ class NdbRuleTests extends TestBaseRule {
         List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
         assertThat("Verify that there is no alerts", consumedMessages.size(), equalTo(0));
 
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -341,9 +341,9 @@ class NdbRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
     }
 }

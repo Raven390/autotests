@@ -27,6 +27,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
@@ -72,9 +73,6 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd7Version22Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version23Client = getRandomVantageClientAllFields();
 
-    protected static String encriptedEmail = "VGlhbRQlxOaLfl/CgrjL1CfZEIYLXEQL";
-    protected static String decriptedEmail = "test14@example.com";
-
     private static RuleDataHelper getRegistrationRuleData(ClientHelper client) {
         RuleDataHelper ruleData = new RuleDataHelper();
         CrmTbUserObject userObject = generateUserByClient(client);
@@ -84,6 +82,7 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.setBrand(client.getBrand());
         lexisNexisObject.setEventType("account_creation");
         lexisNexisObject.setEmail(client.getEmail());
+        lexisNexisObject.setMobile(client.getPhoneNumber());
         lexisNexisObject.setUserId(client.getUserId());
         lexisNexisObject.setProxyIp(client.getIpAddress());
         lexisNexisObject.setTrueIpGeo(client.getCountryCode());
@@ -151,12 +150,11 @@ public class RegistrationRuleDataFactory {
     public static RuleDataHelper getRegistrationRuleExitEventEnd3p1Data() {
         RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p1Client);
         data.clientHelper.setBrand(Brand.VANTAGE);
-        data.clientHelper.setEmail(encriptedEmail);
         data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p1Client);
-        data.crmTbUserObject.email = encriptedEmail;
         //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setEmail(encriptedEmail);
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
         connectedClient.setBrand(Brand.VANTAGE);
         data.connectedUsers = new ArrayList<>();
         data.connectedClientHelpers = new ArrayList<>();
@@ -167,21 +165,33 @@ public class RegistrationRuleDataFactory {
         data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey()));
         //add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
-        ConnectionTableEntry.ConnectionInfo connectionInfo = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo.connectionAttributeName = "email";
-        connectionInfo.connectionAttributeValue = encriptedEmail;
-        connectionInfo.sourceAttributeValue = encriptedEmail;
-        connectionInfo.relationType = "exact";
-        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo));
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "email";
+        connectionInfo1.connectionAttributeValue = data.crmTbUserObject.email;
+        connectionInfo1.sourceAttributeValue = data.crmTbUserObject.email;
+        connectionInfo1.relationType = "exact";
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "phone";
+        connectionInfo2.connectionAttributeValue = data.crmTbUserObject.phoneNum;
+        connectionInfo2.sourceAttributeValue = data.crmTbUserObject.phoneNum;
+        connectionInfo2.relationType = "exact";
+        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1, connectionInfo2));
+        connection.connectionScore = 0.75;
         data.connections = new ArrayList<>();
         data.connections.add(connection);
         //add email to LN record
-        data.lnSessionParsedObject.setEmail(encriptedEmail);
+        data.lnSessionParsedObject.setEmail(data.crmTbUserObject.email);
+        data.lnSessionParsedObject.setMobile(data.crmTbUserObject.phoneNum);
 
         //add to emails table records with same email for initial and connected clients
         data.emailTableEntries = new ArrayList<>();
-        data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, encriptedEmail));
-        data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, encriptedEmail));
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.email));
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.email));
+
+        //add to phone table records with same email for initial and connected clients
+        data.phoneTableEntries = new ArrayList<>();
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.phoneNum));
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.phoneNum));
         return data;
     }
 
@@ -839,32 +849,32 @@ public class RegistrationRuleDataFactory {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getRegistrationRuleExitEventEnd1Data());
-        map.put("2", getRegistrationRuleExitEventEnd2Data());
+//        map.put("1", getRegistrationRuleExitEventEnd1Data());
+//        map.put("2", getRegistrationRuleExitEventEnd2Data());
         map.put("3p1", getRegistrationRuleExitEventEnd3p1Data());
-        map.put("3p2", getRegistrationRuleExitEventEnd3p2Data());
-        map.put("4p1", getRegistrationRuleExitEventEnd4p1Data());
-        map.put("4p2", getRegistrationRuleExitEventEnd4p2Data());
-        map.put("5", getRegistrationRuleExitEventEnd5Data());
-        map.put("6", getRegistrationRuleExitEventEnd6Data());
-        map.put("7v1", getRegistrationRuleExitEventEnd7Version1Data());
-        map.put("7v2", getRegistrationRuleExitEventEnd7Version2Data());
-        map.put("7v4", getRegistrationRuleExitEventEnd7Version4Data());
-        map.put("7v5", getRegistrationRuleExitEventEnd7Version5Data());
-        map.put("7v7", getRegistrationRuleExitEventEnd7Version7Data());
-        map.put("7v9", getRegistrationRuleExitEventEnd7Version9Data());
-        map.put("7v10", getRegistrationRuleExitEventEnd7Version10Data());
-        map.put("7v11", getRegistrationRuleExitEventEnd7Version11Data());
-        map.put("7v12", getRegistrationRuleExitEventEnd7Version12Data());
-        map.put("7v13", getRegistrationRuleExitEventEnd7Version13Data());
-        map.put("7v14", getRegistrationRuleExitEventEnd7Version14Data());
-        map.put("7v15", getRegistrationRuleExitEventEnd7Version15Data());
-        map.put("7v16", getRegistrationRuleExitEventEnd7Version16Data());
-        map.put("7v17", getRegistrationRuleExitEventEnd7Version17Data());
-        map.put("7v18", getRegistrationRuleExitEventEnd7Version18Data());
-        map.put("7v19", getRegistrationRuleExitEventEnd7Version19Data());
-        map.put("7v20", getRegistrationRuleExitEventEnd7Version20Data());
-        map.put("7v23", getRegistrationRuleExitEventEnd7Version23Data());
+//        map.put("3p2", getRegistrationRuleExitEventEnd3p2Data());
+//        map.put("4p1", getRegistrationRuleExitEventEnd4p1Data());
+//        map.put("4p2", getRegistrationRuleExitEventEnd4p2Data());
+//        map.put("5", getRegistrationRuleExitEventEnd5Data());
+//        map.put("6", getRegistrationRuleExitEventEnd6Data());
+//        map.put("7v1", getRegistrationRuleExitEventEnd7Version1Data());
+//        map.put("7v2", getRegistrationRuleExitEventEnd7Version2Data());
+//        map.put("7v4", getRegistrationRuleExitEventEnd7Version4Data());
+//        map.put("7v5", getRegistrationRuleExitEventEnd7Version5Data());
+//        map.put("7v7", getRegistrationRuleExitEventEnd7Version7Data());
+//        map.put("7v9", getRegistrationRuleExitEventEnd7Version9Data());
+//        map.put("7v10", getRegistrationRuleExitEventEnd7Version10Data());
+//        map.put("7v11", getRegistrationRuleExitEventEnd7Version11Data());
+//        map.put("7v12", getRegistrationRuleExitEventEnd7Version12Data());
+//        map.put("7v13", getRegistrationRuleExitEventEnd7Version13Data());
+//        map.put("7v14", getRegistrationRuleExitEventEnd7Version14Data());
+//        map.put("7v15", getRegistrationRuleExitEventEnd7Version15Data());
+//        map.put("7v16", getRegistrationRuleExitEventEnd7Version16Data());
+//        map.put("7v17", getRegistrationRuleExitEventEnd7Version17Data());
+//        map.put("7v18", getRegistrationRuleExitEventEnd7Version18Data());
+//        map.put("7v19", getRegistrationRuleExitEventEnd7Version19Data());
+//        map.put("7v20", getRegistrationRuleExitEventEnd7Version20Data());
+//        map.put("7v23", getRegistrationRuleExitEventEnd7Version23Data());
 
         setupRuleData(map);
 

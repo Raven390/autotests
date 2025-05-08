@@ -21,6 +21,7 @@ import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObj
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.crm_events.WithdrawalEvent;
@@ -71,6 +72,7 @@ public class RuleDataHelper {
     public RegistrationEvent registrationEvent;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
+    public List<PhoneTableEntry> phoneTableEntries;
     public List<DeviceIdTableEntry> deviceIdTableEntries;
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
@@ -178,6 +180,9 @@ public class RuleDataHelper {
             if (data.emailTableEntries != null) {
                 data.emailTableEntries.forEach(emailTableEntry -> insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry));
             }
+            if (data.phoneTableEntries != null) {
+                data.phoneTableEntries.forEach(phoneTableEntry -> insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry));
+            }
             if (data.deviceIdTableEntries != null) {
                 data.deviceIdTableEntries.forEach(payout -> insertObjectToDb(DEVICE_ID_TABLE_NAME, payout));
             }
@@ -279,6 +284,9 @@ public class RuleDataHelper {
             if (data.emailTableEntries != null) {
                 data.emailTableEntries.forEach(emailTableEntry -> deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email)));
             }
+            if (data.phoneTableEntries != null) {
+                data.phoneTableEntries.forEach(phoneTableEntry -> deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum)));
+            }
             if (data.deviceIdTableEntries != null) {
                 data.deviceIdTableEntries.forEach(deviceIdTableEntry -> deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId)));
             }
@@ -288,7 +296,7 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             }
-            cleanUserRestriction(data.clientHelper.getUcid());
+            cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
             if ((data.connectedUsers != null) && (!data.connectedUsers.isEmpty())) {
                 int size = data.connectedUsers.size();

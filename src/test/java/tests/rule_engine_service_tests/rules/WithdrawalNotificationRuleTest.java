@@ -69,8 +69,8 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
-        cleanUserRestriction(client1.getUcid());
-        cleanUserRestriction(client2.getUcid());
+        cleanUserRestrictionGeneral(client1.getUcid());
+        cleanUserRestrictionGeneral(client2.getUcid());
         closeAlert(client1.getUcid());
         stopSshTunnel();
     }

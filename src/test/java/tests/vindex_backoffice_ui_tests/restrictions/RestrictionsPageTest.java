@@ -85,7 +85,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
     @BeforeEach
     public void before() throws Exception {
-        cleanUserRestriction(restrictionClient.getUcid());
+        cleanUserRestrictionGeneral(restrictionClient.getUcid());
         restrictionPage.cleanUserAudit(restrictionClient.getUcid());
     }
 

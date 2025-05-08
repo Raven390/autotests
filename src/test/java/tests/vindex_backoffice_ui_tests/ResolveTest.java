@@ -833,7 +833,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Restrictions can be added on resolve screen")
     public void restrictionCanBeAdded() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        cleanUserRestriction(resolveClient.getUcid());
+        cleanUserRestrictionGeneral(resolveClient.getUcid());
         createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
@@ -857,7 +857,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Restrictions can be added and then removed on resolve screen")
     public void restrictionCanBeAddedAndRemoved() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        cleanUserRestriction(resolveClient.getUcid());
+        cleanUserRestrictionGeneral(resolveClient.getUcid());
         createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
@@ -881,7 +881,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Restrictions can be added and then removed on resolve screen")
     public void previousSetRestrictionCanBeRemoved() throws Exception {
         deleteUserBO(resolveClient.getUcid());
-        cleanUserRestriction(resolveClient.getUcid());
+        cleanUserRestrictionGeneral(resolveClient.getUcid());
         createUserFraudsBo(resolveClient.getUcid(), FraudType.ANOMALOUS_PROFIT.getFraudTypeId());
         FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());

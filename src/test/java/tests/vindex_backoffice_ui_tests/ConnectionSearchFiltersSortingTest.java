@@ -424,8 +424,8 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         closeAlert(client.getUcid());
         closeAlert(connectedClient1.getUcid());
         closeAlert(connectedClient6.getUcid());
-        cleanUserRestriction(connectedClient2.getUcid());
-        cleanUserRestriction(connectedClient5.getUcid());
+        cleanUserRestrictionGeneral(connectedClient2.getUcid());
+        cleanUserRestrictionGeneral(connectedClient5.getUcid());
         deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid IN ('%s', '%s')", connectedClient1.getUcid(), connectedClient6.getUcid()));
     }
 }

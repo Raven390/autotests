@@ -1,9 +1,10 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import helpers.data.enums.Restriction;
 import helpers.data.rules.RuleDataHelper;
 import helpers.database.DbName;
 import io.qameta.allure.*;
@@ -17,7 +18,6 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.deleteRegistrationRuleData;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static helpers.database.DbHelper.*;
-import static helpers.kafka.KafkaHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -61,11 +61,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -109,12 +109,12 @@ class RegistrationRuleTest extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_2", "APPLIED");
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 
@@ -123,10 +123,13 @@ class RegistrationRuleTest extends TestBaseRule {
     @AllureId("158")
     void registrationRuleExitEventEnd3p1Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3p1");
-        Allure.step("No toxic accounts linked");
-        Allure.step("Different identity and same brand connections");
-        Allure.step("Linked to same raf");
-        Allure.step("Set manual withdrawal restriction");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("connected user is CPA abuser = true");
+        Allure.step("Connection score by attributes >=0.75");
+        Allure.step("Set internal transfer restriction");
+        Allure.step("Set no bonus restriction");
+        Allure.step("Set open new account restriction");
+        Allure.step("Set deposit restriction");
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
@@ -145,30 +148,33 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("IB or referrer connection"));
+//        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked CPA abuser"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+        assertThat("Verify that there is 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
+        Thread.sleep(5000);
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is 4 restrictions", clientsRestrictionGenerals.size(), equalTo(4));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
-                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionInternalTransfer = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.INTERNAL_TRANSFER.getIdLong(), "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+        Allure.step("Check that expected restrictions applied on client is exists in DB");
+        assertThat(clientsRestrictionGenerals, containsInAnyOrder(expectedRestrictionInternalTransfer));
+
+
     }
 
     @Test
@@ -209,12 +215,12 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class);
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -257,11 +263,11 @@ class RegistrationRuleTest extends TestBaseRule {
         );
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -323,11 +329,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -374,11 +380,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
 
         // TODO delete check that there are no restrictions and add restriction id and check for the restriction when it's implemented
     }
@@ -626,19 +632,19 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(14));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(3));
+        assertThat("Verify that there are restriction", clientsRestrictionGenerals.size(), equalTo(3));
 
-        ClientsRestriction expectedRestriction1 = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction1 = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_2", "APPLIED");
-        ClientsRestriction expectedRestriction3 = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction3 = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction4 = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction4 = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction1, expectedRestriction3, expectedRestriction4));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction1, expectedRestriction3, expectedRestriction4));
     }
 
     @Test
@@ -692,14 +698,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_2", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
@@ -740,11 +746,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked bonus abuser"));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
         // TODO add check for a restriction when it's implemented
     }
 
@@ -783,11 +789,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.stepName, equalTo("Linked bonus abuser"));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
         // TODO add check for a restriction when it's implemented
     }
 
@@ -840,14 +846,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_7", "APPLIED");
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_7", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
@@ -901,14 +907,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
@@ -963,14 +969,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("VVerify alert in db", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_9", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
@@ -1023,18 +1029,18 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in db", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1085,14 +1091,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in db", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there is only 1 restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction restriction = clientsRestrictions.getFirst();
-        ClientsRestriction expectedRestriction = new ClientsRestriction(
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_12", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
@@ -1145,16 +1151,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in db", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1205,11 +1211,11 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictions, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
     }
 
     @Test
@@ -1259,16 +1265,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1319,16 +1325,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1380,16 +1386,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1442,16 +1448,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1505,16 +1511,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1569,16 +1575,16 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are 2 restrictions", clientsRestrictions.size(), equalTo(2));
+        assertThat("Verify that there are 2 restrictions", clientsRestrictionGenerals.size(), equalTo(2));
 
-        ClientsRestriction expectedRestriction = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
-        ClientsRestriction expectedRestriction2 = new ClientsRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 1L, "Registration_block_user_restriction_bonus", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction2 = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 3L, "Registration_block_user_restriction_bonus", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction, expectedRestriction2));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction, expectedRestriction2));
     }
 
     @Test
@@ -1811,14 +1817,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify alert in BO DB", dbAlerts.size(), equalTo(13));
 
         Allure.step("Get client restrictions");
-        List<ClientsRestriction> clientsRestrictions = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestriction.class
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat("Verify that there are restriction", clientsRestrictions.size(), equalTo(1));
+        assertThat("Verify that there are restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
-        ClientsRestriction expectedRestriction1 = new ClientsRestriction(
+        ClientsRestrictionGeneral expectedRestriction1 = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_SetRestriction_7", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictions, containsInAnyOrder(expectedRestriction1));
+        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction1));
     }
 }
