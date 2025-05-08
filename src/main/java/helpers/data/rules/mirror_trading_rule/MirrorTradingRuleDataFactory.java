@@ -605,7 +605,7 @@ public class MirrorTradingRuleDataFactory {
             data.mirrorLoginObjects.forEach(mirrorLoginObject -> {
                 deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = %s", mirrorLoginObject.login_1));
             });
-            cleanUserRestriction(data.clientHelper.getUcid());
+            cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
         }
         stopSshTunnel();

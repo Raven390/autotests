@@ -2,7 +2,7 @@ package page_objects.backoffice_pages;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.audit_service_db.Event;
-import business_objects.db.mitigation_service_db.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.restriction_events.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -594,8 +594,8 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
         Allure.step("Clean user restriction history of client " + ucid);
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestriction.class);
-        for (ClientsRestriction i : restrictionList) {
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "clients_restriction", "ucid = '" + ucid + "'", ClientsRestrictionGeneral.class);
+        for (ClientsRestrictionGeneral i : restrictionList) {
             String idString = i.id.toString();
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "action", "clients_restriction_id = " + idString);
             Thread.sleep(200);
@@ -612,8 +612,8 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestriction(String ucid, int restrictionId, String applicationReason,
             String expectedStatus) throws Exception {
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestriction.class);
-        ClientsRestriction restriction = restrictionList.getLast();
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestrictionGeneral.class);
+        ClientsRestrictionGeneral restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
     }
@@ -621,8 +621,8 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestriction(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestriction.class);
-        ClientsRestriction restriction = restrictionList.getLast();
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestrictionGeneral.class);
+        ClientsRestrictionGeneral restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
     }

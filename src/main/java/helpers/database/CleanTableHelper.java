@@ -1,6 +1,6 @@
 package helpers.database;
 
-import business_objects.db.mitigation_service_db.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import io.qameta.allure.Step;
 
 import java.sql.SQLException;
@@ -144,17 +144,17 @@ public class CleanTableHelper {
     // Mitigation db
 
     @Step("Clean users restriction history for ucid '{ucid}'")
-    public static void cleanUserRestriction(String ucid) throws Exception {
-        List<ClientsRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "ucid = '" + ucid + "'", ClientsRestriction.class);
-        for (ClientsRestriction i : restrictionList) {
+    public static void cleanUserRestrictionGeneral(String ucid) throws Exception {
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "'", ClientsRestrictionGeneral.class);
+        for (ClientsRestrictionGeneral i : restrictionList) {
             String Id = i.id.toString();
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_ACTION, "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + Id);
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST, "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + Id);
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE, "clients_restriction_id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + Id);
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENTS_RESTRICTION, "id = " + Id);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "id = " + Id);
             Thread.sleep(100);
         }
     }

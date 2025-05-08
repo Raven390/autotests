@@ -1,7 +1,7 @@
 package helpers.api;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
-import business_objects.db.mitigation_service_db.ClientsRestriction;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import io.qameta.allure.Allure;
 import okhttp3.Response;
 
@@ -25,9 +25,10 @@ public class MitigationHelper {
         assertEquals(response.code(), 200);
     }
 
-    public static void checkAppliedRestriction(List<ClientsRestriction> clientsRestrictions, Integer restrictionCode) {
-        for (ClientsRestriction clientsRestriction : clientsRestrictions) {
-            if ("APPLIED".equals(clientsRestriction.status) && clientsRestriction.restrictionId == restrictionCode.longValue()) {
+    public static void checkAppliedRestriction(List<ClientsRestrictionGeneral> clientsRestrictionGenerals,
+            Integer restrictionCode) {
+        for (ClientsRestrictionGeneral clientsRestrictionGeneral : clientsRestrictionGenerals) {
+            if ("APPLIED".equals(clientsRestrictionGeneral.status) && clientsRestrictionGeneral.restrictionId == restrictionCode.longValue()) {
                 return;
             }
             fail("expected restriction is not in applied restrictions");
