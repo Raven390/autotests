@@ -13,6 +13,7 @@ import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
 import business_objects.db.clickhouse.email_table.EmailTableEntry;
+import business_objects.db.clickhouse.ip_table.IpTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
@@ -73,6 +74,7 @@ public class RuleDataHelper {
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
     public List<PhoneTableEntry> phoneTableEntries;
+    public List<IpTableEntry> ipTableEntries;
     public List<DeviceIdTableEntry> deviceIdTableEntries;
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
@@ -180,6 +182,9 @@ public class RuleDataHelper {
             if (data.emailTableEntries != null) {
                 data.emailTableEntries.forEach(emailTableEntry -> insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry));
             }
+            if (data.ipTableEntries != null) {
+                data.ipTableEntries.forEach(ipTableEntry -> insertObjectToDb(IP_TABLE_NAME, ipTableEntry));
+            }
             if (data.phoneTableEntries != null) {
                 data.phoneTableEntries.forEach(phoneTableEntry -> insertObjectToDb(PHONE_TABLE_NAME, phoneTableEntry));
             }
@@ -283,6 +288,9 @@ public class RuleDataHelper {
             }
             if (data.emailTableEntries != null) {
                 data.emailTableEntries.forEach(emailTableEntry -> deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email)));
+            }
+            if (data.ipTableEntries != null) {
+                data.ipTableEntries.forEach(ipTableEntry -> deleteEntryFromDb(IP_TABLE_NAME, String.format("ip = '%s'", ipTableEntry.ip)));
             }
             if (data.phoneTableEntries != null) {
                 data.phoneTableEntries.forEach(phoneTableEntry -> deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum)));

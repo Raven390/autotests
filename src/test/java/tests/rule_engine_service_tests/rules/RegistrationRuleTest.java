@@ -150,7 +150,6 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
         assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-//        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
         assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked CPA abuser"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
@@ -160,7 +159,6 @@ class RegistrationRuleTest extends TestBaseRule {
         // Verify alert in BO db
         assertThat("Verify that there is 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
-        Thread.sleep(5000);
         Allure.step("Get client restrictions");
         List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
@@ -170,10 +168,15 @@ class RegistrationRuleTest extends TestBaseRule {
 
         ClientsRestrictionGeneral expectedRestrictionInternalTransfer = new ClientsRestrictionGeneral(
                 data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.INTERNAL_TRANSFER.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionBonus = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.CREDIT_AND_BONUS.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionNewAccount = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.ACCOUNT_CREATION.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionDeposit = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.DEPOSITS.getIdLong(), "APPLIED");
 
         Allure.step("Check that expected restrictions applied on client is exists in DB");
-        assertThat(clientsRestrictionGenerals, containsInAnyOrder(expectedRestrictionInternalTransfer));
-
+        assertThat(clientsRestrictionGenerals, containsInAnyOrder(expectedRestrictionInternalTransfer, expectedRestrictionBonus, expectedRestrictionNewAccount, expectedRestrictionDeposit));
 
     }
 
@@ -182,10 +185,10 @@ class RegistrationRuleTest extends TestBaseRule {
     @AllureId("1135")
     void registrationRuleExitEventEnd3p2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("3p2");
-        Allure.step("No toxic accounts linked");
-        Allure.step("Different identity and same brand connections");
-        Allure.step("Linked to same IB account");
-        Allure.step("Set manual withdrawal restriction");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("connected user is CPA abuser = true");
+        Allure.step("Connection score by attributes >=0.75");
+        Allure.step("Set manual withdrawal review restriction");
         Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
@@ -204,15 +207,14 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("CPA_ABUSE"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes stepName is correct", alert.rule.attributes.reason, equalTo("IB or referrer connection"));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked CPA abuser"));
         List<Alert> dbAlerts = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class);
 
         // Verify alert in BO db
 
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Get client restrictions");
         List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
@@ -220,21 +222,24 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
 
         ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "Registration_set_manual_withdrawal_restriction_3", "APPLIED");
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong(), "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 
     @Test
-    @DisplayName("Registration rule exit Event4p1")
+    @DisplayName("Registration rule exit Event3p3")
     @AllureId("1136")
-    void registrationRuleExitEventEnd4p1Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4p1");
-
-        Allure.step("No toxic accounts linked");
-        Allure.step("Different identity and same brand connections");
-        Allure.step("Not linked to IB account OR Same referrer");
-        Allure.step("LN score == medium");
+    void registrationRuleExitEventEnd3p3Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3p3");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("connected user is Mirror Trader (Hedger) abuser = true");
+        Allure.step("Connection score by attributes >=0.75");
+        Allure.step("Set internal transfer restriction");
+        Allure.step("Set no bonus restriction");
+        Allure.step("Set open new account restriction");
+        Allure.step("Set deposit restriction");
+        Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -244,6 +249,7 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
 
+        // Verify alert
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
@@ -251,35 +257,47 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("High or medium Lexis score with connected clients"));
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo("medium"));
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-49"));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked hedging abuser"));
 
         List<Alert> dbAlerts = getObjectsFromDB(
                 DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
         );
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+
+        // Verify alert in BO db
+        assertThat("Verify that there is 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
         Allure.step("Get client restrictions");
         List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
                 DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        assertThat("Verify that there is 4 restrictions", clientsRestrictionGenerals.size(), equalTo(4));
+
+        ClientsRestrictionGeneral expectedRestrictionInternalTransfer = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.INTERNAL_TRANSFER.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionBonus = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.CREDIT_AND_BONUS.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionNewAccount = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.ACCOUNT_CREATION.getIdLong(), "APPLIED");
+        ClientsRestrictionGeneral expectedRestrictionDeposit = new ClientsRestrictionGeneral(
+                data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.DEPOSITS.getIdLong(), "APPLIED");
+
+        Allure.step("Check that expected restrictions applied on client is exists in DB");
+        assertThat(clientsRestrictionGenerals, containsInAnyOrder(expectedRestrictionInternalTransfer, expectedRestrictionBonus, expectedRestrictionNewAccount, expectedRestrictionDeposit));
     }
 
     @Test
-    @DisplayName("Registration rule exit Event4p2")
+    @DisplayName("Registration rule exit Event3p4")
     @AllureId("1137")
-    void registrationRuleExitEventEnd4p2Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4p2");
-
-        Allure.step("No toxic accounts linked");
-        Allure.step("Different identity and same brand connections");
-        Allure.step("Not linked to IB account OR Same referrer");
-        Allure.step("LN score == high");
+    void registrationRuleExitEventEnd3p4Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3p4");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("connected user is Mirror Trader (Hedger) abuser = true");
+        Allure.step("Connection score by attributes < 0.75");
+        Allure.step("Set manual withdrawal review restriction");
+        Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -289,6 +307,7 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
         RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
 
+        // Verify alert
         assertThat("Verify alert id not null", alert.alertId, notNullValue());
         assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
         assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
@@ -296,44 +315,74 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name not null", alert.rule.name, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo(data.lnSessionParsedObject.getRiskRating()));
-        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("High Lexis score"));
-        assertThat("Verify rule attributes riskRating is correct", alert.rule.attributes.riskRating, equalTo("high"));
-        assertThat("Verify rule attributes policyScore is correct", alert.rule.attributes.policyScore, equalTo("-49"));
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked hedging abuser"));
+        List<Alert> dbAlerts = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class);
 
-        List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class
-        );
-        assertThat("Verify that there is only 1 restriction in BO DB", dbAlerts.size(), equalTo(1));
+        // Verify alert in BO db
+
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
+        Allure.step("Get client restrictions");
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
+
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
+
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong(), "APPLIED");
+
+        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
 
     @Test
-    @DisplayName("Registration rule exit Event_End_5")
+    @DisplayName("Registration rule exit Event3p5")
     @AllureId("159")
-    void registrationRuleExitEventEnd5Test() throws Exception {
-        RuleDataHelper data = dbDataMap.get("5");
-
-        Allure.step("No toxic accounts linked");
-        Allure.step("Different identity and same brand connections");
-        Allure.step("Not linked to IB account OR Same referrer");
-        Allure.step("LN score != Medium or High");
-        Allure.step("Empty exit");
+    void registrationRuleExitEventEnd3p5Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3p5");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("Brand in event = VJP");
+        Allure.step("connected user is Mirror Trader (Hedger) abuser = true");
+        Allure.step("Connection score by attributes < 0.75");
+        Allure.step("Set manual withdrawal review restriction");
+        Allure.step("Generate alert");
 
         Allure.step("Produce registration event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
 
         Allure.step("Get alerts");
-        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid());
-        assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+
+        // Verify alert
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("HEDGING"));
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked hedging abuser"));
+        List<Alert> dbAlerts = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, data.clientHelper.getUcid()), Alert.class);
+
+        // Verify alert in BO db
+
+        assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
+
 
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
-        );
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        assertThat("Verify that there is only 1 restriction", clientsRestrictionGenerals.size(), equalTo(1));
+
+        ClientsRestrictionGeneral restriction = clientsRestrictionGenerals.getFirst();
+        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong(), "APPLIED");
+
+        assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
+
     }
 
     @Test

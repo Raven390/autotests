@@ -33,6 +33,13 @@ public class ClientFactory {
         );
     }
 
+    public static ClientHelper getRandomVjpClientAllFields() {
+        Faker faker = new Faker();
+        return new ClientHelper(
+                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VJP, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName()
+        );
+    }
+
     public static ClientHelper getRandomStarTraderClientAllFields() {
         ClientHelper client = getRandomVantageClientAllFields();
         client.setBrand(Brand.STAR_TRADER);
