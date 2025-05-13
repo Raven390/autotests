@@ -66,6 +66,8 @@ public class ConfigFactory {
     public static final String RULE_ENGINE_RULES = CONFIG.ruleEngineRules();
     public static final String RULE_ENGINE_RULE_DEPLOYMENTS = CONFIG.ruleEngineRuleDeployments();
     public static final String RULE_ENGINE_RULE_DEPLOYMENT_BY_UUID = CONFIG.ruleEngineRuleDeploymentsByUuid();
+    // Mirror trading score service
+    public static final String MIRROR_TRADING_SCORE_SERVICE_GET_SCORE = CONFIG.mirrorTradingScoreGetScore();
     // Rule engine database
     public static final String RULE_ENGINE_DB_NAME = CONFIG.ruleEngineDbName();
     public static final String RULE_ENGINE_DB_USER = CONFIG.ruleEngineDbUser();
@@ -330,6 +332,11 @@ public class ConfigFactory {
 
         @Key("ruleEngineRuleDeploymentByUuid")
         String ruleEngineRuleDeploymentsByUuid();
+
+        // Mirror trading score service
+
+        @Key("mirrorTradingScoreGetScore")
+        String mirrorTradingScoreGetScore();
 
         // Rule engine database
 
