@@ -14,6 +14,7 @@ public class Constants {
     public static final String SUITE_MITIGATION_SERVICE = "suite_mitigation_service";
     public static final String SUITE_RULE_ENGINE_RULES_TESTS = "suite_rule_engine_rules_tests";
     public static final String SUITE_RULE_ENGINE_API_TESTS = "suite_rule_engine_api_tests";
+    public static final String SUITE_MIRROR_TRADING_SCORE_API_TESTS = "mirror_trading_score_api_tests";
     public static final String DEBUG_RUNNER = "debug_runner";
     // TEST LAYERS
     public static final String LAYER_API = "layer_api";
@@ -25,6 +26,7 @@ public class Constants {
     public static final String FEATURE_CLICKHOUSE_API_SERVICE = "Clickhouse api service";
     public static final String FEATURE_EVENT_GENERATOR_SERVICE = "Event generator service";
     public static final String FEATURE_CONNECTION_SEARCH_API_SERVICE = "Connection search api service";
+    public static final String FEATURE_MIRROR_TRADING_SCORE_API_SERVICE = "Mirror trading score api service";
     // STORIES
     public static final String STORY_PRODUCTION_TESTS = "Production smoke test cases";
     public static final String STORY_EVENT_GENERATOR_SERVICE_LOGIN = "Login event in Event Generator";
@@ -56,6 +58,7 @@ public class Constants {
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
+    public static final String STORY_GET_MIRROR_TRADING_SCORE = "Get mirror trading score";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule in Rule Engine service";
@@ -173,6 +176,8 @@ public class Constants {
     public static final String RULE_ENGINE_RULE_DEPLOYMENT_TABLE = "ruleengine.rule_deployment";
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "vindex_test.account_ib_relation_snapshot";
     public static final String BO_WD_REQUEST_TABLE_NAME = "postgres.bo.wd_request";
+    public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME = "data_science_test.ucid_mirror_score";
+    public static final String DATA_SCIENCE_MIRROR_DATA_WITH_STAT_TABLE_NAME = "data_science_test.mirror_model_mirror_data_with_stat";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

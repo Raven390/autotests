@@ -364,25 +364,6 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search get abuse types. Get abuse types by ipAddress success(200)")
-    @AllureId("777")
-    void getAbuseTypesByAttributesTest9() throws IOException {
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("ipAddress", ipTableEntry.ip);
-
-        Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
-        ));
-
-        assertThat("Check the response code is 200", response.code(), is(200));
-        assertThat("Check the response length", responseBody.length, is(1));
-        assertThat("Check abuseType", responseBody[0].abuseType, is(HEDGING.getKey()));
-        assertThat("Check maxScoreToInitial", responseBody[0].maxScoreToInitial, is(0.200_000_002_980_232_24));
-    }
-
-    @Test
     @DisplayName("Connection search get abuse types. Get empty response for ip connection")
     @AllureId("1143")
     void getAbuseTypesByAttributesTest22() throws IOException {

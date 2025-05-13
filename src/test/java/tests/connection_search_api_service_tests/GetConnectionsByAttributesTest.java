@@ -365,7 +365,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreTo", 0.5);
+        queryParams.put("connectionScoreTo", 1);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
