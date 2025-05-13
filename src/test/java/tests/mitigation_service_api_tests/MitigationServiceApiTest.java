@@ -51,6 +51,7 @@ class MitigationServiceApiTest extends TestBaseApi {
     @BeforeEach
     void before() throws Exception {
         CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionTrading(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
     }
 
@@ -93,7 +94,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -112,7 +113,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -131,7 +132,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -150,7 +151,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -169,7 +170,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -188,7 +189,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -207,7 +208,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -226,7 +227,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -245,7 +246,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -264,7 +265,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -283,7 +284,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -302,7 +303,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -321,7 +322,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -340,7 +341,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -359,7 +360,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test
@@ -378,7 +379,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -397,7 +398,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -416,7 +417,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restrictionID, "APPLIED");
     }
 
     @Test
@@ -435,7 +436,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         int restrictionID = Integer.parseInt(restrictionIdRaw.split(":")[1].replace("}", ""));
         RestrictionPage.checkRestrictionApplymentAuditTrading(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName(), restrictionClient.getTradingAccount());
         RestrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount(), restrictionClient.getServerId(), 525_600, restrictionID, applyReason, restriction.getCode());
-        RestrictionPage.checkUserHaveRestriction(restrictionClient.getUcid(), restrictionID, applyReason, "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionTrading(restrictionClient.getUcid(), restrictionID);
     }
 
     @Test

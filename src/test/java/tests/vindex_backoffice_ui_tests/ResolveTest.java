@@ -846,7 +846,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addRestriction(Restriction.DEPOSITS.getName());
         resolvePage.resolveFillCommentary("test" + timestamp);
         resolvePage.resolveInvestigation();
-        RestrictionPage.checkUserHaveRestriction(resolveClient.getUcid(), Restriction.DEPOSITS.getId(), "APPLIED");
+        RestrictionPage.checkUserHaveRestrictionGeneral(resolveClient.getUcid(), Restriction.DEPOSITS.getId(), "APPLIED");
     }
 
     @Test
