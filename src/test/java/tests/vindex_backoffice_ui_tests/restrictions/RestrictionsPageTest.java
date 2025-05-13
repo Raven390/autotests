@@ -2,7 +2,6 @@ package tests.vindex_backoffice_ui_tests.restrictions;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -17,14 +16,12 @@ import page_objects.backoffice_pages.RestrictionPage;
 import tests.TestBaseWeb;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountInactive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateStaticWithdrawalByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -38,7 +35,6 @@ import static utils.Constants.*;
 public class RestrictionsPageTest extends TestBaseWeb {
 
     static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
-    static ClientHelper withdrawalClient = new ClientHelper(141_402, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_102, 42);
     static ClientHelper labelClient = new ClientHelper(141_403, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_103, 42);
 
     @BeforeAll
@@ -47,39 +43,18 @@ public class RestrictionsPageTest extends TestBaseWeb {
         assertNotNull(response);
 
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
-        CrmTbUserObject withdrawalClientDB = generateStaticUserByClient(withdrawalClient);
         CrmTbUserObject labelClientDB = generateStaticUserByClient(labelClient);
-        CrmTbWithdrawalObject withdrawal1 = generateStaticWithdrawalByClient(withdrawalClient, "first withdrawal", 1);
-        CrmTbWithdrawalObject withdrawal2 = generateStaticWithdrawalByClient(withdrawalClient, "second withdrawal", 2);
-        CrmTbWithdrawalObject withdrawal3 = generateStaticWithdrawalByClient(withdrawalClient, "third withdrawal", 3);
 
         CrmTbAccountObject active = generateStaticCrmTbAccountActive(restrictionClient);
         MtAccountObject mtAccountActive1 = generateMtAccountByCrmTbAccount(active);
-        CrmTbAccountObject active2 = generateStaticCrmTbAccountActive(withdrawalClient);
-        MtAccountObject mtAccountActive2 = generateMtAccountByCrmTbAccount(active2);
         CrmTbAccountObject inactive = generateStaticCrmTbAccountInactive(labelClient);
         MtAccountObject mtAccountInactive = generateMtAccountByCrmTbAccount(inactive);
 
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccountActive1, mtAccountInactive));
 
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccountActive1, mtAccountActive2, mtAccountInactive));
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, labelClientDB));
 
-        List<CrmTbUserObject> testUser = new ArrayList<>();
-        testUser.add(restrictionClientDB);
-        testUser.add(withdrawalClientDB);
-        testUser.add(labelClientDB);
-        insertObjectsToDb(CRM_USER_TABLE_NAME, testUser);
-
-        List<CrmTbWithdrawalObject> withdrawals = new ArrayList<>();
-        withdrawals.add(withdrawal1);
-        withdrawals.add(withdrawal2);
-        withdrawals.add(withdrawal3);
-        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawals);
-
-        List<CrmTbAccountObject> accounts = new ArrayList<>();
-        accounts.add(active);
-        accounts.add(inactive);
-        accounts.add(active2);
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, accounts);
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(active, inactive));
     }
 
 
@@ -358,7 +333,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.clickOffQuotesModeSwitch();
         restrictionPage.fillApplyReasonTradingAllAccs("test reason");
         restrictionPage.checkThatAOffQuotesIsChecked();
-//        restrictionPage.checkKafkaRequestApplyTradeUCID("141401");
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Off quotes; account: 14140101");
     }
 
@@ -496,91 +470,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
         restrictionPage.fillCancelReason("test reason");
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getName());
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("361")
-    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions all green")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsGreenTest() throws Exception {
-        restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(withdrawalClient.getUcid());
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalAllGreen("test reason");
-        String details = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
-        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
-        checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("365")
-    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions all refuse")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsRefuseTest() throws Exception {
-        restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(withdrawalClient.getUcid());
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalAllrefuse("test reason");
-        String details = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
-        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Refuse");
-        checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("366")
-    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client with transactions approve one")
-    void cancelManualWithdrawalRestrictionUITestWithTransactionsApproveOneTest() throws Exception {
-        //login
-        restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        investigationPage.navigateEnterPage();
-        //first run
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(withdrawalClient.getUcid());
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
-        String details1 = "Transaction ID 14140201; 1.00 USD 2024-10-13 12:03 first withdrawal; Approve";
-        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details1);
-        restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
-        checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
-        //second run
-        restrictionPage.cleanUserAudit(withdrawalClient.getUcid());
-        restrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), "13");
-        restrictionPage.navigate(withdrawalClient.getUcid());
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalApproveOneByPaymentType("test reason", "first withdrawal");
-        String details2 = "Transaction ID 14140202; 1.00 USD 2024-10-13 12:03 second withdrawal; Refuse";
-        restrictionPage.checkRestrictionCancellationAuditBO(withdrawalClient.getUcid(), "WD_REQUEST_DECISION", details2);
-        restrictionPage.checkKafkaRequestWithdrawal("14140202", "Refuse");
-        checkKafkaRequestApplyUserId(withdrawalClient.getUserId());
     }
 
 }

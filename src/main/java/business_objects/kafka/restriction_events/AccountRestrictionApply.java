@@ -28,19 +28,19 @@ public class AccountRestrictionApply {
     @JsonProperty("modifier")
     public String modifier;
 
-    @JsonProperty("restrictions")
-    public Restriction[] restrictions;
+    @JsonProperty("restriction")
+    public Restriction restriction;
 
     public static class Restriction {
 
         @JsonProperty("restrictionId")
         public Integer restrictionId;
 
-//        @JsonProperty("internalReason")
-//        public String internalReason;
-
         @JsonProperty("restrictionCode")
         public String restrictionCode;
+
+        @JsonProperty("sites")
+        public String[] sites;
     }
 
 }

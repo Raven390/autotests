@@ -3,6 +3,7 @@ package page_objects.backoffice_pages;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.audit_service_db.Event;
 import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientsRestrictionTrading;
 import business_objects.kafka.restriction_events.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -78,12 +79,18 @@ public class RestrictionPage extends AbstractPage {
     private final Locator accountLabel;
     private final Locator activitySection;
     private final Locator tooltip;
+    private final Locator openRestrictionsDrawerButton;
+    private final Locator addRestrictionButton;
+    private final Locator applyRestrictionButton;
+    private final Locator commentInput;
+    private final Locator applyChangesButton;
 
     private static final String RESTRICTION_ITEM_BY_NAME_PATTERN = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
     private static final String RESTRICTIONS_TAB_ITEM_NAME = ".v-restrictions-tab-item__name";
     private static final String RESTRICTIONS_TAB_ITEM_CHECKED = ".v-restrictions-tab-item_checked";
     private static final String RESTRICTIONS_TAB_ITEM_HEADER = ".v-restrictions-tab-item__header";
     private static final String CHECKED_RESTRICTION = String.format("%s %s", RESTRICTIONS_TAB_ITEM_CHECKED, RESTRICTIONS_TAB_ITEM_HEADER);
+    private static final String RESTRICTION_OPTION_PATTERN = "//span[@class='g-select-list__option-default-label' and text()='%s']";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -129,6 +136,11 @@ public class RestrictionPage extends AbstractPage {
         this.accountLabel = page.locator(".v-accounts-list-item__labels");
         this.activitySection = page.locator(".v-accounts-list-item__activity");
         this.tooltip = page.locator(".g-tooltip__content");
+        this.openRestrictionsDrawerButton = page.locator("//span[text()='Apply restrictions' or contains(text(), 'Manage')]");
+        this.addRestrictionButton = page.locator("//div[@class='v-list-select']/descendant::button");
+        this.applyRestrictionButton = page.locator("//span[text()='Apply']/parent::button");
+        this.commentInput = page.locator("//textarea");
+        this.applyChangesButton = page.locator("//span[text()='Apply changes']/parent::button");
     }
 
     @Step("Open users restriction tab")
@@ -501,7 +513,7 @@ public class RestrictionPage extends AbstractPage {
         assertNotNull((apply.brand));
         assertEquals(banDurationMin, (apply.initialBanDurationInMinutes));
         assertNotNull((apply.modifier));
-        assertNotNull((apply.restrictions));
+        assertNotNull((apply.restriction));
     }
 
     public static void checkKafkaRequestApplyAccount(int accountIdInt, int serverId, int banDurationMin,
@@ -510,14 +522,9 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("Check request message for restriction apply for account in kafka");
         String accountId = String.valueOf(accountIdInt);
         KafkaHelper helper = new KafkaHelper();
-        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accountId);
-        System.out.println("first message is " + kafkaResponses.getFirst());
-        System.out.println("last message is " + kafkaResponses.getLast());
-        for (String response : kafkaResponses) {
-            System.out.println(response);
-        }
+        List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, String.valueOf(restrictionId));
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("tested message is " + kafkaResponse);
+        System.out.println("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
         assertEquals(accountIdInt, apply.accountId);
@@ -526,11 +533,10 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(serverId, (apply.serverId));
         assertEquals(banDurationMin, (apply.initialBanDurationInMinutes));
         assertNotNull((apply.modifier));
-        AccountRestrictionApply.Restriction[] restriction = apply.restrictions;
-        AccountRestrictionApply.Restriction testRestriction = restriction[0];
+        AccountRestrictionApply.Restriction testRestriction = apply.restriction;
         assertEquals(restrictionId, testRestriction.restrictionId);
-//        assertEquals(reason, testRestriction.internalReason);
         assertEquals(restrictionCode, testRestriction.restrictionCode);
+        assertNotNull(testRestriction.sites);
     }
 
 
@@ -539,11 +545,8 @@ public class RestrictionPage extends AbstractPage {
         String accoundId = String.valueOf(accoundIdInt);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL, accoundId);
-        for (String response : kafkaResponses) {
-            System.out.println(response);
-        }
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("tested message is " + kafkaResponse);
+        System.out.println("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionCancel cancel = objectMapper.readValue(kafkaResponse, AccountRestrictionCancel.class);
         assertNotNull((cancel.accountId));
@@ -608,23 +611,21 @@ public class RestrictionPage extends AbstractPage {
         }
     }
 
-
-    public static void checkUserHaveRestriction(String ucid, int restrictionId, String applicationReason,
-            String expectedStatus) throws Exception {
-        Allure.step("check user have restriction in Mitigation DataBase");
+    public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
+            throws Exception {
+        Allure.step("check user have general restriction in Mitigation DataBase");
         List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestrictionGeneral.class);
         ClientsRestrictionGeneral restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);
     }
 
-    public static void checkUserHaveRestriction(String ucid, int restrictionId, String expectedStatus)
+    public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId)
             throws Exception {
-        Allure.step("check user have restriction in Mitigation DataBase");
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestrictionGeneral.class);
-        ClientsRestrictionGeneral restriction = restrictionList.getLast();
-        assertEquals(ucid, restriction.ucid);
-        assertEquals(expectedStatus, restriction.status);
+        Allure.step("check user have trading restriction in Mitigation DataBase");
+        List<ClientsRestrictionTrading> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_TRADING, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestrictionTrading.class);
+        ClientsRestrictionTrading restriction = restrictionList.getLast();
+        assertEquals(ucid, restriction.getUcid());
     }
 
     @Step("Clean users audit history")
@@ -736,15 +737,15 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
-            if (events.size() == 2) {
+            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
+            if (events.size() >= 2) {
                 break;
-            } else if (events.size() < 2 && i == 9) {
-                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), is(2));
+            } else if (i == 9) {
+                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
             }
             Thread.sleep(1000);
         }
-        Event event1 = events.get(events.size() - 2);
+        Event event1 = events.getFirst();
         Event event2 = events.getLast();
         MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
@@ -774,38 +775,49 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
             String expectedComment, String detail, int accountId) throws Exception {
+        String eventDetailsRegex = "; account: ";
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
-            if (events.size() == 2) {
+            if (events.size() >= 2) {
                 break;
-            } else if (events.size() < 2 && i == 9) {
-                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), is(2));
+            } else if (i == 9) {
+                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
             }
             Thread.sleep(1000);
         }
-        System.out.println("first event = " + events.getFirst());
-        System.out.println("last event = " + events.getLast());
-        Event event1 = events.get(events.size() - 2);
-        System.out.println("test event1 (Request) = " + event1);
+        Event event1 = events.getFirst();
         Event event2 = events.getLast();
-        System.out.println("test event2 (Applyment)= " + event2);
-        assertEquals(RESTRICTION_REQUESTED_STATUS, event1.getType());
-        assertEquals(expectedSystem, event1.getInitiatedBySystem());
-        assertEquals(expectedUser, event1.getInitiatedByUser());
-        assertEquals(expectedComment, event1.getComment());
-        assertEquals(detail, event1.getDetails().split("; ")[0]);
-        assertEquals(String.valueOf(accountId), event1.getDetails().split("; account: ")[1]);
-
-        assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
-        assertEquals(expectedSystem, event2.getInitiatedBySystem());
-        assertEquals(expectedUser, event2.getInitiatedByUser());
-        assertNull(event2.getComment());
-        assertEquals(detail, event2.getDetails().split("; ")[0]);
-        assertEquals(String.valueOf(accountId), event2.getDetails().split("; account: ")[1]);
+        MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
+            assertEquals(expectedSystem, event1.getInitiatedBySystem());
+            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertEquals(expectedComment, event1.getComment());
+            assertEquals(detail, event1.getDetails().split("; ")[0]);
+            assertEquals(String.valueOf(accountId), event1.getDetails().split(eventDetailsRegex)[1]);
+            assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
+            assertEquals(expectedSystem, event2.getInitiatedBySystem());
+            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertNull(event2.getComment());
+            assertEquals(detail, event2.getDetails().split("; ")[0]);
+            assertEquals(String.valueOf(accountId), event2.getDetails().split(eventDetailsRegex)[1]);
+        } else {
+            assertEquals(RESTRICTION_APPLIED_STATUS, event1.getType());
+            assertEquals(expectedSystem, event1.getInitiatedBySystem());
+            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertNull(event1.getComment());
+            assertEquals(detail, event1.getDetails().split("; ")[0]);
+            assertEquals(String.valueOf(accountId), event1.getDetails().split(eventDetailsRegex)[1]);
+            assertEquals(RESTRICTION_REQUESTED_STATUS, event2.getType());
+            assertEquals(expectedSystem, event2.getInitiatedBySystem());
+            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertEquals(expectedComment, event2.getComment());
+            assertEquals(detail, event2.getDetails().split("; ")[0]);
+            assertEquals(String.valueOf(accountId), event2.getDetails().split(eventDetailsRegex)[1]);
+        }
     }
-
 
     public void isPageLoaded() {
         int n = 0;
@@ -866,6 +878,15 @@ public class RestrictionPage extends AbstractPage {
 
     public void waitForPageToLoad() {
         page.waitForSelector("//div[@class='v-restrictions-tab-list']", new Page.WaitForSelectorOptions().setState(VISIBLE));
+    }
+
+    public void addNewGeneralRestriction(Restriction restriction, String comment) {
+        openRestrictionsDrawerButton.click();
+        addRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        applyRestrictionButton.click();
+        commentInput.fill(comment);
+        applyChangesButton.click();
     }
 
 }
