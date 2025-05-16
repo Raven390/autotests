@@ -49,6 +49,7 @@ public class TestBaseWeb {
     public ActivityTab activityTab;
     public IbCpaOverviewPage ibCpaOverviewPage;
     public GeneralSearchElements generalSearch;
+    public AlertHistoryPage alertHistoryPage;
     public static OpenPositions openPositions;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
@@ -101,6 +102,7 @@ public class TestBaseWeb {
         ibCpaOverviewPage = new IbCpaOverviewPage(page);
         generalSearch = new GeneralSearchElements(page);
         openPositions = new OpenPositions(page);
+        alertHistoryPage = new AlertHistoryPage(page);
     }
 
     @AfterEach
