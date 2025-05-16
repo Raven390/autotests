@@ -99,7 +99,7 @@ public class ConnectionPage extends AbstractPage {
     private final Locator multiselectAddCommentButton;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
-    private final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table";
+    private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
     private final String CONNECTION_GRAPH_SELECTOR = ".v-connection-search-graph";
     private final String LEVEL_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_level";
     private final String CONNECTION_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_connection";
@@ -129,7 +129,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
     private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls__zoom-controls']";
     private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
-    private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets']";
+    private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets-v2']";
     private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN = CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";
 
     public ConnectionPage(Page page) {
@@ -169,7 +169,7 @@ public class ConnectionPage extends AbstractPage {
         this.connectionTableAttribute = page.locator("//div[@class='v-connection-search-table-view__attributes-list']/div");
         this.unmaskConnectionTableDataButton = page.locator("//div[contains(@class,'v-connection-search-table-view__custom-header-cell')]");
         this.unmaskAttributeCardDataButton = page.locator("//div[@class = 'v-graph-attribute-details']/div/div/button[1]");
-        this.filterButton = page.locator("//div[@class='v-connection-search-filter-button__filters']/button");
+        this.filterButton = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/button");
         this.filterOptionButton = page.locator("//span[@class='g-button__text']");
         this.filterCheckboxListOption = page.locator("//span[@class='g-control-label__text']/div");
         this.filterSliderRange = page.locator("//div[contains(@class,'g-text_ws_nowrap')]");
@@ -192,14 +192,14 @@ public class ConnectionPage extends AbstractPage {
         this.behaviorFilterButtons = page.locator(String.format(CHECKBOX_BY_LABEL_PATTERN, "Behavior"));
         this.attributesFilterSelectedItems = page.locator("//div[@class='v-drop-down-menu__checked-values']");
         this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
-        this.graphNodesUnhidden = page.locator(String.format("%s%s", GRAPH_NODES_GROUP, "/descendant::div[@class='v-graph-node']"));
+        this.graphNodesUnhidden = page.locator("//div[contains(@class,'v-graph-node-v2__title-text')]");
         this.graphNodesHiddenTitles = page.locator(String.format("%s%s", GRAPH_NODES_GROUP, "/descendant::div[@class='v-graph-hidden-node']/div[contains(@class,'g-text')]"));
         this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
-        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'v-connection-search-table-view__client')]/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
+        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'client')]/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
         this.appliedFiltersHidden = page.locator("//div[contains(@class,'v-collapsible-horizontal-list__item_hidden')]/descendant::div[@class='g-label__content']");
-        this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button__filters']/div");
+        this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/div");
         this.connectionTableBehaviorValue = page.locator("div.v-connection-search-table-view__behavior");
         this.connectionTableScoreValue = page.locator("//td[contains(@class,'v-connection-search-table-view__column_type_connection')]/descendant::div[contains(@class,'g-color-text_color_secondary')]");
         this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
@@ -310,6 +310,7 @@ public class ConnectionPage extends AbstractPage {
         page.waitForSelector(CONNECTION_TABLE_BUTTON_SELECTOR);
         tableViewButton.click();
         page.waitForSelector(CONNECTION_TABLE_SELECTOR);
+        page.waitForTimeout(1000);
     }
 
     public void connectionTableIsRendered() {
@@ -611,6 +612,7 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click filter button")
     public void clickFilterButton() {
         filterButton.click();
+        page.waitForTimeout(1000);
     }
 
     @Step("Wait until filter is visible")
@@ -887,14 +889,14 @@ public class ConnectionPage extends AbstractPage {
         verifyNoLastLoginValueIsSelected();
     }
 
-    @Step("Get all unhidden nodes ucids")
-    public List<String> getAllUnhiddenNodesUcids() {
-        List<String> ucidsList = new ArrayList<>();
+    @Step("Get all unhidden nodes names")
+    public List<String> getAllUnhiddenNodesNames() {
+        List<String> namesList = new ArrayList<>();
         for (int i = 0; i < graphNodesUnhidden.count(); i++) {
             Locator node = graphNodesUnhidden.nth(i);
-            ucidsList.add(node.getAttribute("data-qa"));
+            namesList.add(node.textContent().trim());
         }
-        return ucidsList;
+        return namesList;
     }
 
     @Step("Get all hidden nodes text")
@@ -910,6 +912,7 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click apply filters button")
     public void clickApplyFiltersButton() {
         applyFiltersButton.click();
+        page.waitForTimeout(1000);
     }
 
     @Step("Get connection table row count")

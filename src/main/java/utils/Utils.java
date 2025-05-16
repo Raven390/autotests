@@ -155,7 +155,6 @@ public class Utils {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 1, 0, 0, 0, 0);
     }
 
-    @Deprecated
     public static String getPreviousWeekDate() {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 6, 0, 0);
     }
@@ -341,16 +340,7 @@ public class Utils {
     }
 
     public static String getUcidByUserIdAndBrand(Integer userId, Brand brand) {
-        Map<Brand, String> brandToUcidBrandMap = new HashMap<>();
-        brandToUcidBrandMap.put(VANTAGE, "vantage");
-        brandToUcidBrandMap.put(VJP, "vjp");
-        brandToUcidBrandMap.put(VT, "vt");
-        brandToUcidBrandMap.put(PU_PRIME, "puprime");
-        brandToUcidBrandMap.put(STAR_TRADER, "startrader");
-        brandToUcidBrandMap.put(MONETA, "moneta");
-        brandToUcidBrandMap.put(ULTIMA_MARKETS, "ultimamarkets");
-        brandToUcidBrandMap.put(INFINOX, "infinox");
-        return String.format("%s-%s", brandToUcidBrandMap.get(brand), userId);
+        return String.format("%s-%s", brand.getUcidBrand(), userId);
     }
 
     public static String convertDateTimeDbToDate(String dtDbFormat) {
