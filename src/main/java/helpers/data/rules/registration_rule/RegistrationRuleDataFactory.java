@@ -1,7 +1,6 @@
 package helpers.data.rules.registration_rule;
 
 
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
@@ -23,16 +22,12 @@ import java.util.Map;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnection;
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.ClientFactory.getRandomVjpClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
@@ -49,32 +44,31 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleExitEventEnd3p2Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd3p3Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd3p4Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd3p5Client = getRandomVjpClientAllFields();
-
-    private static final ClientHelper registrationRuleExitEventEnd6Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p5Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p6Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p7Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p8Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version3Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version4Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version5Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p9Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p10Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version6Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version7Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p11Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version8Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version9Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version10Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version11Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version12Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version13Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version14Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version15Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version16Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version17Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version18Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version19Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version20Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p12Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p13Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p14Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p15Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p16Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p17Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p18Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p19Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p20Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p21Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p22Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p23Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version21Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd7Version22Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd7Version23Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleExitEventEnd3p24Client = getRandomVantageClientAllFields();
 
     static Faker faker = new Faker();
 
@@ -238,7 +232,6 @@ public class RegistrationRuleDataFactory {
 
     public static RuleDataHelper getRegistrationRuleExitEventEnd3p5Data() {
         RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p5Client);
-        data.clientHelper.setBrand(Brand.VJP);
         data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p5Client);
         //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -251,589 +244,390 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HEDGING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p6Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p6Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p6Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd6Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd6Client);
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p7Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p7Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p7Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd6Client, connectedClient);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.lnSessionParsedObject.setRiskRating("high");
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NEWS_TRADER.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version1Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version1Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
-        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
-        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
-        ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientGapAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientLatencyAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientPricingErrorAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientNbpAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientHftAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientLoopholeAbuser = getRandomVantageClientAllFields();
-        connectedClientCpa.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientVoucherAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientTls.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientSwapAbuse.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientMarketManipulator.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientUnknownAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientGapAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientLatencyAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientPricingErrorAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientNbpAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientHftAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientLoopholeAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-
-        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNewsTrader);
-        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
-        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
-        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
-        ConnectionAndConnectedUser connectionAndConnectedUserUnknownFraudster = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientUnknownAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserGap = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientGapAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserLatency = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLatencyAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserPricingError = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientPricingErrorAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserNbp = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNbpAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientUnknownAbuser.getUcid(), FRAUD_TYPE_UNKNOWN, FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientGapAbuser.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientLatencyAbuser.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientPricingErrorAbuser.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNbpAbuser.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientHftAbuser.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientLoopholeAbuser.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.lnSessionParsedObject.setPolicyScore(-21);
-        registrationRuleData.lnSessionParsedObject.setRiskRating("high");
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientTls);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientSwapAbuse);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownFraudster.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientUnknownAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserGap.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserGap.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientGapAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLatency.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserLatency.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientLatencyAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserPricingError.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserPricingError.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientPricingErrorAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNbp.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNbp.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNbpAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserHft.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserHft.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientHftAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLoophole.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserLoophole.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientLoopholeAbuser);
-
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientCpa));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientBonusAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientVoucherAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientSwapAbuse));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientMarketManipulator));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientUnknownAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientGapAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientLatencyAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientPricingErrorAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNbpAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientHftAbuser));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientLoopholeAbuser));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version2Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version2Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
-        connectedClientCpa.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version2Client, connectedClientCpa);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.lnSessionParsedObject.setPolicyScore(-19);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientCpa));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version4Data() {
-        registrationRuleExitEventEnd7Version4Client.setBrand(Brand.STAR_TRADER);
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version4Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientBonusAbuser.setBrand(Brand.STAR_TRADER);
-
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version4Client, connectedClientBonusAbuser);
-        connectionAndConnectedUserBonusAbuser.connectionTableEntry.connectionScore = 1d;
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper, registrationRuleData.clientHelper.getEmail()));
-
-        String deviceId = getRandomUuidString();
-        registrationRuleData.lnSessionParsedObject.setDeviceId(deviceId);
-        registrationRuleData.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(registrationRuleData.clientHelper, deviceId));
-        return registrationRuleData;
-
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version5Data() {
-        registrationRuleExitEventEnd7Version5Client.setBrand(Brand.STAR_TRADER);
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version5Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        connectedClientBonusAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientBonusAbuser.setBrand(Brand.STAR_TRADER);
-
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version5Client, connectedClientBonusAbuser);
-        connectionAndConnectedUserBonusAbuser.connectionTableEntry.connectionScore = 1d;
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientBonusAbuser.getUcid(), FraudType.BONUS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper, registrationRuleData.clientHelper.getEmail()));
-
-        String deviceId = getRandomUuidString();
-        registrationRuleData.lnSessionParsedObject.setDeviceId(deviceId);
-        registrationRuleData.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(registrationRuleData.clientHelper, deviceId));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version7Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version7Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
-        connectedClientVoucherAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version7Client, connectedClientVoucherAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.lnSessionParsedObject.setPolicyScore(-19);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientVoucherAbuser));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version9Data() {
-        registrationRuleExitEventEnd7Version9Client.setBrand(Brand.VJP);
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version9Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientNewsTrader.setBrand(Brand.VJP);
-        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version9Client, connectedClientNewsTrader);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version10Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version10Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        connectedClientNewsTrader.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version10Client, connectedClientNewsTrader);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientNewsTrader));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version11Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version11Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
-        connectedClientTls.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version11Client, connectedClientTls);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientTls);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientTls));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version12Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version12Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
-        connectedClientSwapAbuse.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version12Client, connectedClientSwapAbuse);
-
-        registrationRuleData.lnSessionParsedObject.setRiskRating("high");
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientSwapAbuse);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientSwapAbuse));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version13Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version13Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
-        connectedClientMarketManipulator.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version13Client, connectedClientMarketManipulator);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
-
-        registrationRuleData.crmTbAccountObject = generateCrmTbAccountData(registrationRuleData.clientHelper);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientMarketManipulator));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version14Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version14Client);
-
-        // Abuser connected clients
-        ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
-        connectedClientUnknownAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserUnknownAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version14Client, connectedClientUnknownAbuser);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientUnknownAbuser.getUcid(), FRAUD_TYPE_UNKNOWN, FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientUnknownAbuser.getUcid(), FRAUD_TYPE_MOREUNKNOWN, FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserUnknownAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientUnknownAbuser);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientUnknownAbuser));
-        return registrationRuleData;
-    }
-
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version15Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version15Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p8Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p8Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p8Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version15Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NEWS_TRADER.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version16Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version16Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p9Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p9Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p9Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version16Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.TLS_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version17Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version17Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p10Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p10Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p10Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version17Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.TLS_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version18Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version18Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p11Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p11Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p11Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version18Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.SWAP_ARBITRAGE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version19Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version19Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p12Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p12Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p12Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version19Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.SWAP_ARBITRAGE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version20Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version20Client);
-
-        // Abuser connected clients
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p13Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p13Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p13Client);
+        //add connected client
         ClientHelper connectedClient = getRandomVantageClientAllFields();
-        connectedClient.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version20Client, connectedClient);
-
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClient);
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClient));
-        return registrationRuleData;
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleExitEventEnd7Version23Data() {
-        RuleDataHelper registrationRuleData = getRegistrationRuleData(registrationRuleExitEventEnd7Version23Client);
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p14Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p14Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p14Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
+    }
 
-        // Abuser connected clients
-        ClientHelper connectedClientCpa = getRandomVantageClientAllFields();
-        ClientHelper connectedClientBonusAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientVoucherAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientNewsTrader = getRandomVantageClientAllFields();
-        ClientHelper connectedClientTls = getRandomVantageClientAllFields();
-        ClientHelper connectedClientSwapAbuse = getRandomVantageClientAllFields();
-        ClientHelper connectedClientMarketManipulator = getRandomVantageClientAllFields();
-        ClientHelper connectedClientUnknownAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientGapAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientLatencyAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientPricingErrorAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientNbpAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientHftAbuser = getRandomVantageClientAllFields();
-        ClientHelper connectedClientLoopholeAbuser = getRandomVantageClientAllFields();
-        connectedClientCpa.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientBonusAbuser.setSessionId(registrationRuleData.clientHelper.getSessionId());
-        connectedClientVoucherAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientNewsTrader.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientTls.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientSwapAbuse.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientMarketManipulator.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientUnknownAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientGapAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientLatencyAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientPricingErrorAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientNbpAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientHftAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
-        connectedClientLoopholeAbuser.setEmail(registrationRuleData.clientHelper.getEmail());
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p15Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p15Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p15Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
 
-        ConnectionAndConnectedUser connectionAndConnectedUserCpa = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientCpa);
-        ConnectionAndConnectedUser connectionAndConnectedUserBonusAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientBonusAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserVoucherAbuser = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientVoucherAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserNewsTrader = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNewsTrader);
-        ConnectionAndConnectedUser connectionAndConnectedUserTls = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientTls);
-        ConnectionAndConnectedUser connectionAndConnectedUserSwapAbuse = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientSwapAbuse);
-        ConnectionAndConnectedUser connectionAndConnectedUserMarketManipulator = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientMarketManipulator);
-        ConnectionAndConnectedUser connectionAndConnectedUserUnknownFraudster = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientUnknownAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserGap = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientGapAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserLatency = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLatencyAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserPricingError = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientPricingErrorAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserNbp = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientNbpAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserHft = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientHftAbuser);
-        ConnectionAndConnectedUser connectionAndConnectedUserLoophole = getConnectionAndConnectedUser(registrationRuleExitEventEnd7Version1Client, connectedClientLoopholeAbuser);
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p16Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p16Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p16Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
+    }
 
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientCpa.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientBonusAbuser.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientVoucherAbuser.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNewsTrader.getUcid(), FraudType.NEWS_TRADER.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientTls.getUcid(), FraudType.TLS_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientSwapAbuse.getUcid(), FraudType.SWAP_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientMarketManipulator.getUcid(), FraudType.MARKET_MANIPULATION.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientUnknownAbuser.getUcid(), FRAUD_TYPE_UNKNOWN, FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientGapAbuser.getUcid(), FraudType.GAP_TRADING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientLatencyAbuser.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientPricingErrorAbuser.getUcid(), FraudType.PRICING_ERROR.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientNbpAbuser.getUcid(), FraudType.NBP_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientHftAbuser.getUcid(), FraudType.HFT_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
-        registrationRuleData.clientFraudTypes.add(new ClientFraudTypes(connectedClientLoopholeAbuser.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()));
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p17Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p17Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p17Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
 
-        registrationRuleData.lnSessionParsedObject.setPolicyScore(-21);
-        registrationRuleData.lnSessionParsedObject.setRiskRating("high");
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserCpa.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserCpa.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientCpa);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserBonusAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserBonusAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientBonusAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserVoucherAbuser.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserVoucherAbuser.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientVoucherAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNewsTrader.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNewsTrader.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNewsTrader);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserTls.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserTls.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientTls);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserSwapAbuse.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserSwapAbuse.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientSwapAbuse);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserMarketManipulator.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserMarketManipulator.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientMarketManipulator);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserUnknownFraudster.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserUnknownFraudster.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientUnknownAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserGap.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserGap.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientGapAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLatency.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserLatency.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientLatencyAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserPricingError.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserPricingError.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientPricingErrorAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserNbp.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserNbp.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientNbpAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserHft.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserHft.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientHftAbuser);
-        registrationRuleData.connectedUsers.add(connectionAndConnectedUserLoophole.crmTbUserObject);
-        registrationRuleData.connections.add(connectionAndConnectedUserLoophole.connectionTableEntry);
-        registrationRuleData.connectedClientHelpers.add(connectedClientLoopholeAbuser);
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p18Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p18Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p18Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
+    }
 
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(registrationRuleData.clientHelper));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientCpa));
-        registrationRuleData.sessionIdTableEntries.add(sessionIdTableEntryForConnectionSearch(connectedClientBonusAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientVoucherAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientNewsTrader));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientSwapAbuse));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientMarketManipulator));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientUnknownAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientGapAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientLatencyAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientPricingErrorAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientNbpAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientHftAbuser));
-        registrationRuleData.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClientLoopholeAbuser));
-        return registrationRuleData;
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p19Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p19Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p19Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p20Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p20Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p20Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p21Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p21Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p21Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p22Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p22Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p22Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p23Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p23Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p23Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
+
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p24Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p24Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p24Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey()));
+        //add connection with connected client
+        setupAttrConnection06(data);
+        return data;
     }
 
     public static Map<String, RuleDataHelper> setupRegistrationRuleData() {
@@ -847,25 +641,25 @@ public class RegistrationRuleDataFactory {
         map.put("3p3", getRegistrationRuleExitEventEnd3p3Data());
         map.put("3p4", getRegistrationRuleExitEventEnd3p4Data());
         map.put("3p5", getRegistrationRuleExitEventEnd3p5Data());
-        map.put("6", getRegistrationRuleExitEventEnd6Data());
-        map.put("7v1", getRegistrationRuleExitEventEnd7Version1Data());
-        map.put("7v2", getRegistrationRuleExitEventEnd7Version2Data());
-        map.put("7v4", getRegistrationRuleExitEventEnd7Version4Data());
-        map.put("7v5", getRegistrationRuleExitEventEnd7Version5Data());
-        map.put("7v7", getRegistrationRuleExitEventEnd7Version7Data());
-        map.put("7v9", getRegistrationRuleExitEventEnd7Version9Data());
-        map.put("7v10", getRegistrationRuleExitEventEnd7Version10Data());
-        map.put("7v11", getRegistrationRuleExitEventEnd7Version11Data());
-        map.put("7v12", getRegistrationRuleExitEventEnd7Version12Data());
-        map.put("7v13", getRegistrationRuleExitEventEnd7Version13Data());
-        map.put("7v14", getRegistrationRuleExitEventEnd7Version14Data());
-        map.put("7v15", getRegistrationRuleExitEventEnd7Version15Data());
-        map.put("7v16", getRegistrationRuleExitEventEnd7Version16Data());
-        map.put("7v17", getRegistrationRuleExitEventEnd7Version17Data());
-        map.put("7v18", getRegistrationRuleExitEventEnd7Version18Data());
-        map.put("7v19", getRegistrationRuleExitEventEnd7Version19Data());
-        map.put("7v20", getRegistrationRuleExitEventEnd7Version20Data());
-        map.put("7v23", getRegistrationRuleExitEventEnd7Version23Data());
+        map.put("3p6", getRegistrationRuleExitEventEnd3p6Data());
+        map.put("3p7", getRegistrationRuleExitEventEnd3p7Data());
+        map.put("3p8", getRegistrationRuleExitEventEnd3p8Data());
+        map.put("3p9", getRegistrationRuleExitEventEnd3p9Data());
+        map.put("3p10", getRegistrationRuleExitEventEnd3p10Data());
+        map.put("3p11", getRegistrationRuleExitEventEnd3p11Data());
+        map.put("3p12", getRegistrationRuleExitEventEnd3p12Data());
+        map.put("3p13", getRegistrationRuleExitEventEnd3p13Data());
+        map.put("3p14", getRegistrationRuleExitEventEnd3p14Data());
+        map.put("3p15", getRegistrationRuleExitEventEnd3p15Data());
+        map.put("3p16", getRegistrationRuleExitEventEnd3p16Data());
+        map.put("3p17", getRegistrationRuleExitEventEnd3p17Data());
+        map.put("3p18", getRegistrationRuleExitEventEnd3p18Data());
+        map.put("3p19", getRegistrationRuleExitEventEnd3p19Data());
+        map.put("3p20", getRegistrationRuleExitEventEnd3p20Data());
+        map.put("3p21", getRegistrationRuleExitEventEnd3p21Data());
+        map.put("3p22", getRegistrationRuleExitEventEnd3p22Data());
+        map.put("3p23", getRegistrationRuleExitEventEnd3p23Data());
+        map.put("3p24", getRegistrationRuleExitEventEnd3p24Data());
 
         setupRuleData(map);
 
