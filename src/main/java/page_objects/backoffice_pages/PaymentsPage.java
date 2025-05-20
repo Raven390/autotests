@@ -677,6 +677,18 @@ public class PaymentsPage extends AbstractPage {
         rejectAllButton.click();
     }
 
+    public void clickApproveAllButton() {
+        approveAllButton.click();
+    }
+
+    public void clickRejectButton() {
+        rejectButton.click();
+    }
+
+    public void clickApproveButton() {
+        approveButton.click();
+    }
+
     @Step("Get Rebates received widget title")
     public String getRebatesReceivedWidgetTitle() {
         return rebatesReceivedWidgetTitle.textContent();

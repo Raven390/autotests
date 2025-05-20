@@ -131,6 +131,16 @@ public class ConnectionPage extends AbstractPage {
     private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
     private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets-v2']";
     private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN = CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";
+    private static final String GRAPH_NODE_BY_ORDER = "//div[@class='graph-block-container undefined' and contains(@style,'--graph-block-order: %s;')]";
+    private static final String GRAPH_NODE_SECTION_BY_NAME = "//div[text()='%s']/ancestor::div[@class='v-graph-node-details-section-v2']";
+    private static final String GRAPH_NODE_GENERAL_INFO_SECTION = String.format(GRAPH_NODE_SECTION_BY_NAME, "General info");
+    private static final String GRAPH_NODE_SUMMARY_SECTION = String.format(GRAPH_NODE_SECTION_BY_NAME, "Summary");
+    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_SECTION = String.format(GRAPH_NODE_SECTION_BY_NAME, "Direct connections");
+    private static final String GRAPH_NODE_VALUE_BY_TITLE = "/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']/descendant::*[contains(@class,'g-text')]";
+    private static final String GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME = "/descendant::div[text()='%s']/ancestor::div[@class='v-graph-node-details-connection-data-v2']";
+    private static final String GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE = String.format("%s%s", GRAPH_NODE_GENERAL_INFO_SECTION, GRAPH_NODE_VALUE_BY_TITLE);
+    private static final String GRAPH_NODE_SUMMARY_VALUE_BY_TITLE = String.format("%s%s", GRAPH_NODE_SUMMARY_SECTION, GRAPH_NODE_VALUE_BY_TITLE);
+    private static final String GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE = String.format("%s%s%s", GRAPH_NODE_DIRECT_CONNECTIONS_SECTION, GRAPH_NODE_DIRECT_CONNECTION_BY_CLIENT_NAME, GRAPH_NODE_VALUE_BY_TITLE);
 
     public ConnectionPage(Page page) {
         super(page);
@@ -165,9 +175,9 @@ public class ConnectionPage extends AbstractPage {
         this.connectionCardSwitch = page.locator(CONNECTION_CARD_SWITCH_SELECTOR);
         this.connectionCard = page.locator(CONNECTION_CARD_SELECTOR);
         this.connectionCardLink = page.locator(CONNECTION_CARD_LINK_SELECTOR);
-        this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header__buttons']/button");
-        this.connectionTableAttribute = page.locator("//div[@class='v-connection-search-table-view__attributes-list']/div");
-        this.unmaskConnectionTableDataButton = page.locator("//div[contains(@class,'v-connection-search-table-view__custom-header-cell')]");
+        this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/button");
+        this.connectionTableAttribute = page.locator("//div[@class='v-table-view-v2__attributes-list']/div");
+        this.unmaskConnectionTableDataButton = page.locator("//div[contains(@class,'v-table-view-v2__custom-header-cell')]");
         this.unmaskAttributeCardDataButton = page.locator("//div[@class = 'v-graph-attribute-details']/div/div/button[1]");
         this.filterButton = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/button");
         this.filterOptionButton = page.locator("//span[@class='g-button__text']");
@@ -463,27 +473,20 @@ public class ConnectionPage extends AbstractPage {
     }
 
 
-    public void ccCheckDirectConnectionRows(String clientToName, String rowTitle, String expectedVale) {
-        Allure.step("Check direct connection values, connect to user in field " + rowTitle);
-        String locator = ("//div[text() = 'Direct connections']/../../..//div[text() = '" + clientToName + "']/../..//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
-        System.out.println("searched element is " + locator);
-        page.waitForSelector(locator);
-        String actualValue = page.locator(locator).textContent();
-        assertEquals(expectedVale, actualValue);
+    public void checkDirectConnectionRows(String clientToName, String rowTitle, String expectedValue) {
+        Allure.step(String.format("Check direct connection values, connect to user in field %s", rowTitle));
+        assertThat(page.locator(String.format(GRAPH_NODE_DIRECT_CONNECTIONS_VALUE_BY_CLIENT_AND_TITLE, clientToName, rowTitle))).hasText(expectedValue);
     }
 
-    public void ccCheckGeneralInfoRows(String rowTitle, String expectedVale) {
-        Allure.step("Check general data values, field " + rowTitle);
-        page.waitForSelector("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
-        String actualValue = page.locator("//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
-        assertEquals(expectedVale.trim(), actualValue.trim());
+    public void checkGeneralInfoRows(String rowTitle, String expectedValue) {
+        Allure.step(String.format("Check general data values, field %s", rowTitle));
+        assertThat(page.locator(String.format(GRAPH_NODE_GENERAL_INFO_VALUE_BY_TITLE, rowTitle))).hasText(expectedValue);
+
     }
 
-    public void ccCheckSummaryRows(String rowTitle, String expectedVale) {
-        Allure.step("Check Summary data values, field " + rowTitle);
-        page.waitForSelector("//*[contains(text(), 'Summary')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']");
-        String actualValue = page.locator("//*[contains(text(), 'Summary')]/ancestor::div[@class='v-graph-node-details__content']//td//span[text()='" + rowTitle + "']/ancestor::tr/td//*[text()='" + expectedVale + "']").textContent();
-        assertEquals(expectedVale, actualValue);
+    public void checkSummaryRows(String rowTitle, String expectedValue) {
+        Allure.step(String.format("Check Summary data values, field %s", rowTitle));
+        assertThat(page.locator(String.format(GRAPH_NODE_SUMMARY_VALUE_BY_TITLE, rowTitle))).hasText(expectedValue);
     }
 
     public void ccCheckHeaderClientName(String clientName) {
@@ -1030,5 +1033,10 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click multiselect add comment button")
     public void clickMultiselectAddCommentButton() {
         multiselectAddCommentButton.click();
+    }
+
+    @Step("Click connection node by order")
+    public void clickConnectionNodeByOrder(int order) {
+        page.locator(String.format(GRAPH_NODE_BY_ORDER, order)).click();
     }
 }

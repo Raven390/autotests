@@ -311,9 +311,9 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client15.getUcid());
-        connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "Type", "Same Person");
-        connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "Score", "0.16");
-        connectionPage.ccCheckDirectConnectionRows("Connect Threerteenhman", "payoutId", "535456**** **0344");
+        connectionPage.checkDirectConnectionRows("Connect Threerteenhman", "Type", "Same Person");
+        connectionPage.checkDirectConnectionRows("Connect Threerteenhman", "Score", "0.16");
+        connectionPage.checkDirectConnectionRows("Connect Threerteenhman", "payoutId", "535456**** **0344");
     }
 
     @Test
@@ -326,12 +326,12 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client6.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Brand", client6.getBrand());
-        connectionPage.ccCheckGeneralInfoRows("Country", "Cyprus");
-        connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
-        connectionPage.ccCheckGeneralInfoRows("CPA", "2");
-        connectionPage.ccCheckGeneralInfoRows("Registered", "2014-10-23");
-        connectionPage.ccCheckGeneralInfoRows("Last login", "-");
+        connectionPage.checkGeneralInfoRows("Brand", client6.getBrand());
+        connectionPage.checkGeneralInfoRows("Country", "Cyprus");
+        connectionPage.checkGeneralInfoRows("Email", "t***4@example.com");
+        connectionPage.checkGeneralInfoRows("CPA", "2");
+        connectionPage.checkGeneralInfoRows("Registered", "2014-10-23");
+        connectionPage.checkGeneralInfoRows("Last login", "-");
     }
 
     @Test
@@ -355,10 +355,10 @@ public class ConnectionSearchTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
         connectionPage.openConnectionCard(client13.getUcid());
-        connectionPage.ccCheckSummaryRows("Trading", "1 closed deal");
-        connectionPage.ccCheckSummaryRows("Total PNL", dfd.format(trade.profitUsd + trade.commissionUsd + trade.storageUsd) + " USD");
-        connectionPage.ccCheckSummaryRows("Deposit", dfd.format(depositObject.amountUsd) + " USD");
-        connectionPage.ccCheckSummaryRows("Withdrawal", dfd.format(withdrawalObject.amountUsd - withdrawalObject.reversedAmountUsd) + " USD");
+        connectionPage.checkSummaryRows("Trading", "1 closed deal");
+        connectionPage.checkSummaryRows("Total PNL", dfd.format(trade.profitUsd + trade.commissionUsd + trade.storageUsd) + " USD");
+        connectionPage.checkSummaryRows("Deposit", dfd.format(depositObject.amountUsd) + " USD");
+        connectionPage.checkSummaryRows("Withdrawal", dfd.format(withdrawalObject.amountUsd - withdrawalObject.reversedAmountUsd) + " USD");
     }
 
     @Test

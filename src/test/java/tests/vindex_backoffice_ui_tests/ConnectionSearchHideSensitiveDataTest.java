@@ -2,10 +2,7 @@ package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -15,7 +12,6 @@ import java.util.List;
 
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
@@ -26,8 +22,6 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static ClientHelper client;
     private static ClientHelper connectedClient;
 
@@ -42,8 +36,6 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         ConnectionTableEntry connectionTableEntry = getConnectionTableEntryForUi(client, connectedClient);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
         waitForConnectionSearchToUpdate(client);
-        RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -57,16 +49,16 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
-        connectionPage.openConnectionCard(client.getUcid());
-        connectionPage.ccCheckGeneralInfoRows("Email", "t***4@example.com");
-        connectionPage.ccCheckDirectConnectionRows("Test User", "phoneNumber", "+1*********3");
-        connectionPage.ccCheckDirectConnectionRows("Test User", "emailAddress", "m***e@gmx.net");
-        connectionPage.ccCheckDirectConnectionRows("Test User", "documentNumber", "3***********2");
+        connectionPage.clickConnectionNodeByOrder(1);
+        connectionPage.checkGeneralInfoRows("Email", "t***4@example.com");
+        connectionPage.checkDirectConnectionRows("Test User", "phoneNumber", "+1*********3");
+        connectionPage.checkDirectConnectionRows("Test User", "emailAddress", "m***e@gmx.net");
+        connectionPage.checkDirectConnectionRows("Test User", "documentNumber", "3***********2");
         connectionPage.clickUnmaskConnectionCardDataButton();
-        connectionPage.ccCheckGeneralInfoRows("Email", "test14@example.com");
-        connectionPage.ccCheckDirectConnectionRows("Test User", "phoneNumber", "+1810347493");
-        connectionPage.ccCheckDirectConnectionRows("Test User", "emailAddress", CONNECTION_SEARCH_DATA_EMAIL1);
-        connectionPage.ccCheckDirectConnectionRows("Test User", "documentNumber", "3110200460092");
+        connectionPage.checkGeneralInfoRows("Email", "test14@example.com");
+        connectionPage.checkDirectConnectionRows("Test User", "phoneNumber", "+1810347493");
+        connectionPage.checkDirectConnectionRows("Test User", "emailAddress", CONNECTION_SEARCH_DATA_EMAIL1);
+        connectionPage.checkDirectConnectionRows("Test User", "documentNumber", "3110200460092");
     }
 
     @Test

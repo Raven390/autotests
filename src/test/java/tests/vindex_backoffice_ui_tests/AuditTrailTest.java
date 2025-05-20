@@ -1,9 +1,7 @@
 package tests.vindex_backoffice_ui_tests;
 
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.audit_trail.AuditTrailItem;
 import business_objects.ui.user.User;
@@ -12,8 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
-import io.qameta.allure.Muted;
-import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -22,13 +18,13 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static business_objects.ui.user.UserFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Restriction.*;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -163,12 +159,10 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
-        restrictionPage.clickLoginSwitch();
         String commentSet = "Test restriction requested action type";
-        restrictionPage.fillApplyReason(commentSet);
-        restrictionPage.clickCheckedLogin();
+        restrictionPage.addNewRestriction(LOGIN_CRM, commentSet);
         String commentCancel = "Test cancellation requested action type";
-        restrictionPage.fillCancelReason(commentCancel);
+        restrictionPage.removeRestriction(LOGIN_CRM, commentCancel);
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
         assertThat("Assert that there are 5 audit trail items", auditTrailItems, hasSize(5));
@@ -190,38 +184,34 @@ public class AuditTrailTest extends TestBaseWeb {
         assertThat("Verify audit trail items", auditTrailItems, hasItems(restrictionRequested, restrictionApplied, cancellationRequested, restrictionCancelled));
     }
 
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("606")
     @DisplayName("Audit trail. Verify message for withdrawal request decision action type")
     public void verifyWithdrawalRequestDecisionTest() throws IOException {
-        Response response = postRestriction(new PostRestrictionRequestBody(
-                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
-        assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
-        CrmTbWithdrawalObject withdrawal = generateWithdrawalByClient(client);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        RuleAlert withdrawalAlert = generateWithdrawalNotificationAlert(client);
+        kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
-        restrictionPage.openRestrictionsTab();
-        restrictionPage.clickCheckedManual();
+        paymentsPage.clickPaymentsTabButton();
+        paymentsPage.clickWithdrawalsTabButton();
+        paymentsPage.selectAllWithdrawals();
         String comment = "Test withdrawal request decision action type";
-        restrictionPage.fillCancelReasonManualWithdrawalApproveOne(comment);
+        paymentsPage.fillSubmitPanelInput(comment);
+        paymentsPage.clickApproveButton();
+        page.waitForTimeout(2000);
         auditTrailPage.openAuditTrailTab();
         List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
-        assertThat("Assert that there are 6 audit trail items", auditTrailItems, hasSize(6));
+        assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
         for (AuditTrailItem item : auditTrailItems) {
             assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
         }
-        AuditTrailItem cancellationRequested = new AuditTrailItem(
-                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Approve", withdrawal.transferId, new DecimalFormat("#.00").format(withdrawal.amount), withdrawal.currency, withdrawal.createTime.substring(0, withdrawal.createTime.length() - 3), withdrawal.paymentType), null
+        AuditTrailItem withdrawalRequestDecision = new AuditTrailItem(
+                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Approve", withdrawalAlert.rule.attributes.withdrawalId, new DecimalFormat("#.00").format(Float.valueOf(withdrawalAlert.rule.attributes.amount)), withdrawalAlert.rule.attributes.currency, withdrawalAlert.rule.attributes.createTime.substring(0, withdrawalAlert.rule.attributes.createTime.length() - 9).replace("T", " "), withdrawalAlert.rule.attributes.paymentType), null
         );
-        assertThat("Verify audit trail items", auditTrailItems, hasItem(cancellationRequested));
+        assertThat("Verify audit trail items", auditTrailItems, hasItem(withdrawalRequestDecision));
     }
 }
