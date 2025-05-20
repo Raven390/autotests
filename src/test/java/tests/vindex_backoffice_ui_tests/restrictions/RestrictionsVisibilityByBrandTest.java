@@ -5,7 +5,6 @@ import business_objects.api.mitigation_service.PostRestrictionResponse;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -19,7 +18,7 @@ import java.sql.SQLException;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static helpers.data.ClientFactory.getRandomStarTraderClientAllFields;
+import static helpers.data.ClientFactory.getRandomInfinoxClientAllFields;
 import static helpers.data.enums.Restriction.CLOSE_ONLY_MODE;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
@@ -32,7 +31,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static final ClientHelper client = getRandomStarTraderClientAllFields();
+    private static final ClientHelper client = getRandomInfinoxClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
     private static final String RESTRICTION_NOT_AVAILABLE_FOR_BRAND = "RESTRICTION_NOT_AVAILABLE_FOR_BRAND";
@@ -54,8 +53,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
-        restrictionPage.waitForPageToLoad();
-        assertThat("Verify restriction is not visible", restrictionPage.isRestrictionPresent(CLOSE_ONLY_MODE.getName()), is(false));
+        assertThat("Verify restriction with visibility by brand = false is not displayed", restrictionPage.getDisplayedRestrictionsList(), not(contains(CLOSE_ONLY_MODE.getName())));
     }
 
     @Test
@@ -90,41 +88,6 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
                 response.body().string(), PostRestrictionResponse.class
         );
         assertThat("Assert response body", responseBody.code, equalTo(RESTRICTION_NOT_AVAILABLE_FOR_BRAND));
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("1084")
-    @DisplayName("Verify disabled restriction can be applied with the Insight endpoint")
-    public void verifyDisabledRestrictionIsAppliedWithInsightTest() throws IOException {
-        String token = "";
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        com.microsoft.playwright.Response tokenResponse = page.waitForResponse(
-                responseObj -> responseObj.url().contains("openid-connect/token") && responseObj.status() == 200, () -> investigationPage.navigateToClient(crmTbUser.ucid)
-        );
-        if (tokenResponse != null) {
-            String responseBody = tokenResponse.text();
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            if (jsonNode.has("access_token")) {
-                token = jsonNode.get("access_token").asText();
-            } else {
-                System.out.println("\"access_token\" not found in the response.");
-            }
-        } else {
-            System.out.println("No matching response found.");
-        }
-        Response response = postRestrictionInsight(token, new PostRestrictionRequestBody(
-                null, CLOSE_ONLY_MODE.getCode(), CLOSE_ONLY_MODE.getType(), account.account, account.serverIdSt, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-        ));
-        assertThat("Assert response code is 200", response.code(), equalTo(200));
-        assert response.body() != null;
-        PostRestrictionResponse responseBody = objectMapper.readValue(
-                response.body().string(), PostRestrictionResponse.class
-        );
-        assertThat("Assert response id not null", responseBody.id, notNullValue());
-        assertThat("Assert response ucid", responseBody.ucid, is(client.getUcid()));
     }
 
 

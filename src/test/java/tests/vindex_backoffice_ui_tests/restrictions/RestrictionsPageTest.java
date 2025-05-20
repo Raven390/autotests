@@ -416,6 +416,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        assertThat(restrictionPage.getDisplayedRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
+        assertThat("Verify only restrictions with bo_visibility = true are displayed", restrictionPage.getDisplayedRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
     }
 }

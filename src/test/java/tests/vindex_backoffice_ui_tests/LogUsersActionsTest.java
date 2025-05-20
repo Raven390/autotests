@@ -3,7 +3,6 @@ package tests.vindex_backoffice_ui_tests;
 import business_objects.db.backoffice_db.user_action_audit.UserActionAudit;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -23,8 +22,10 @@ import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntry
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.ctm_tb_id_proof.IdProofTableEntryFactory.getIdProof;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Restriction.LOGIN_CRM;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.BoHelper.getUserIdByUser;
 import static helpers.database.DbHelper.*;
@@ -37,17 +38,15 @@ public class LogUsersActionsTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static CrmTbUserObject crmTbUser;
+    private static final ClientHelper client = getRandomVantageClientAllFields();
+    private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static CrmTbUserObject crmTbUserConnected;
-    private static CrmTbAccountObject account;
+    private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
     private static String userId;
-    private static CrmTbWithdrawalObject withdrawal;
     private static final String QUERY_WHERE = "user_id = '%s' ORDER BY created_at DESC LIMIT 100";
 
     @BeforeAll
     public static void setup() throws Exception {
-        ClientHelper client = getRandomVantageClientAllFields();
-        crmTbUser = generateUserByClient(client);
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         crmTbUserConnected = generateUserByClient(connectedClient);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
@@ -55,16 +54,9 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, getConnectionTableEntryForUi(client, connectedClient));
         insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
         insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
-        account = generateCrmTbAccountDataForUi(client);
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
-//        Response response = postRestriction(new PostRestrictionRequestBody(
-//                crmTbUser.ucid, "13", "GENERAL", null, null, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
-//        ));
-//        assertThat("Assert that restriction has been set successfully", response.code(), equalTo(200));
-//        withdrawal = generateWithdrawalByClient(client);
-//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
         userId = getUserIdByUser(autotestUserOne());
     }
 
@@ -100,7 +92,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         generalTab.clickGeneralTabButton();
         generalTab.clickShowHiddenDataButton();
         connectionPage.clickConnectionTabButton();
-        connectionPage.openConnectionCard(crmTbUser.ucid);
+        connectionPage.clickConnectionNodeByOrder(1);
         connectionPage.clickUnmaskConnectionCardDataButton();
         connectionPage.openConnectionTable();
         connectionPage.clickUnmaskConnectionTableDataButton();
@@ -108,9 +100,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s' AND entity = 'SENSITIVE_DATA' ORDER BY created_at DESC LIMIT 100", userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
-        UserActionAudit expectedUserActionAuditConnectionTable = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
-        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditGeneral, expectedUserActionAuditConnection, expectedUserActionAuditConnectionTable));
+        UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
+        assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItems(expectedUserActionAuditGeneral, expectedUserActionAuditConnection, expectedUserActionAuditConnection));
     }
 
     @Test
@@ -225,10 +216,8 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         restrictionPage.openRestrictionsTab();
-        restrictionPage.clickLoginSwitch();
-        restrictionPage.fillApplyReason("Test log users actions restriction apply");
-        restrictionPage.clickCheckedLogin();
-        restrictionPage.fillCancelReason("Test log users actions restriction cancel");
+        restrictionPage.addNewRestriction(LOGIN_CRM, "Test log users actions restriction apply");
+        restrictionPage.removeRestriction(LOGIN_CRM, "Test log users actions restriction cancel");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
@@ -247,17 +236,22 @@ public class LogUsersActionsTest extends TestBaseWeb {
     @AllureId("653")
     @DisplayName("Log users actions. Withdrawal")
     public void verifyLogUsersActionsWithdrawalTest() throws Exception {
+        RuleAlert alert = generateWithdrawalNotificationAlert(client);
+        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
-        restrictionPage.openRestrictionsTab();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReasonManualWithdrawalApproveOne("Test log users actions withdrawal");
+        paymentsPage.clickPaymentsTabButton();
+        paymentsPage.clickWithdrawalsTabButton();
+        paymentsPage.selectAllWithdrawals();
+        paymentsPage.fillSubmitPanelInput("Test log users actions withdrawal");
+        paymentsPage.clickApproveButton();
+        page.waitForTimeout(2000);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ACCEPT", "WD_REQUEST", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "transferId", withdrawal.transferId));
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ACCEPT", "WD_REQUEST", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "transferId", alert.rule.attributes.withdrawalId));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
     }
 

@@ -52,6 +52,12 @@ public class ClientFactory {
         return client;
     }
 
+    public static ClientHelper getRandomInfinoxClientAllFields() {
+        ClientHelper client = getRandomVantageClientAllFields();
+        client.setBrand(Brand.INFINOX);
+        return client;
+    }
+
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
