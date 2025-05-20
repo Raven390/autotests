@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.cpa_abuse_rule.CpaAbuseRuleDataFactory.deleteCpaAbuseRuleData;
 import static helpers.data.rules.cpa_abuse_rule.CpaAbuseRuleDataFactory.setupCpaAbuseRuleData;
@@ -46,7 +45,6 @@ class CpaAbuseRuleTests extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         deleteCpaAbuseRuleData(dbDataMap);
-        disableCRMEmulator();
     }
 
     @Test

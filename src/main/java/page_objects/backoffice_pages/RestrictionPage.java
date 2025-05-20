@@ -5,6 +5,7 @@ import business_objects.db.audit_service_db.Event;
 import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.db.mitigation_service_db.ClientsRestrictionTrading;
 import business_objects.kafka.restriction_events.*;
+import business_objects.ui.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
@@ -22,14 +23,12 @@ import java.util.List;
 import java.util.Objects;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
-import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
-import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static com.microsoft.playwright.options.WaitForSelectorState.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.Matchers.*;
 
-import org.hamcrest.MatcherAssert;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
@@ -84,6 +83,14 @@ public class RestrictionPage extends AbstractPage {
     private final Locator applyRestrictionButton;
     private final Locator commentInput;
     private final Locator applyChangesButton;
+    private final Locator restrictionAppliedIcon;
+    private final Locator restrictionAppliedBy;
+    private final Locator restrictionAppliedComment;
+    private final Locator restrictionAppliedDate;
+    private final Locator restrictionTabLoaded;
+    private final Locator inactiveAccountLabel;
+    private final Locator restrictionOption;
+    private final Locator restrictionOptionsContainer;
 
     private static final String RESTRICTION_ITEM_BY_NAME_PATTERN = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']";
     private static final String RESTRICTIONS_TAB_ITEM_NAME = ".v-restrictions-tab-item__name";
@@ -91,6 +98,10 @@ public class RestrictionPage extends AbstractPage {
     private static final String RESTRICTIONS_TAB_ITEM_HEADER = ".v-restrictions-tab-item__header";
     private static final String CHECKED_RESTRICTION = String.format("%s %s", RESTRICTIONS_TAB_ITEM_CHECKED, RESTRICTIONS_TAB_ITEM_HEADER);
     private static final String RESTRICTION_OPTION_PATTERN = "//span[@class='g-select-list__option-default-label' and text()='%s']";
+    private static final String RESTRICTION_TAB_ITEM_BY_NAME = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']/ancestor::div[@class='v-restrictions-tab-item']";
+    private static final String ACTIVE_RESTRICTION_BY_NAME = "//div[text()='%s']/ancestor::div[@class='v-client-restrictions-list-item']";
+    private static final String CLEAR_RESTRICTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[@data-qa='selected_fraud_type_item__remove_button']";
+    private static final String RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::span[contains(text(),'account')]/ancestor::button";
 
     public RestrictionPage(Page page) {
         super(page);
@@ -138,9 +149,17 @@ public class RestrictionPage extends AbstractPage {
         this.tooltip = page.locator(".g-tooltip__content");
         this.openRestrictionsDrawerButton = page.locator("//span[text()='Apply restrictions' or contains(text(), 'Manage')]");
         this.addRestrictionButton = page.locator("//div[@class='v-list-select']/descendant::button");
-        this.applyRestrictionButton = page.locator("//span[text()='Apply']/parent::button");
+        this.applyRestrictionButton = page.locator("//span[text()='Apply']/parent::button[not(@disabled)]");
         this.commentInput = page.locator("//textarea");
-        this.applyChangesButton = page.locator("//span[text()='Apply changes']/parent::button");
+        this.applyChangesButton = page.locator("//div[@class='v-restrictions-tab-drawer__footer']/descendant::span[text()='Apply changes' or text()='Apply']/parent::button");
+        this.restrictionAppliedIcon = page.locator("//div[@class='v-restrictions-tab-item__status']/*[not(@class)]");
+        this.restrictionAppliedBy = page.locator("//span[contains(@class,'v-restrictions-tab-item__actor')]");
+        this.restrictionAppliedComment = page.locator("//span[contains(@class,'v-restrictions-tab-item__comment')]");
+        this.restrictionAppliedDate = page.locator("//span[contains(@class,'v-restrictions-tab-item__date')]");
+        this.restrictionTabLoaded = page.locator("//div[@class='v-restrictions-tab-list']");
+        this.inactiveAccountLabel = page.locator("//div[@class='v-accounts-list-item__labels']/descendant::div[text()='Inactive']").first();
+        this.restrictionOption = page.locator("//span[@class='g-select-list__option-default-label']");
+        this.restrictionOptionsContainer = page.locator("//div[@class='v-list-select__list-container']");
     }
 
     @Step("Open users restriction tab")
@@ -549,12 +568,12 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionCancel cancel = objectMapper.readValue(kafkaResponse, AccountRestrictionCancel.class);
-        assertNotNull((cancel.accountId));
-        assertNotNull((cancel.timestamp));
-        assertNotNull((cancel.messageId));
-        assertNotNull((cancel.serverId));
-        assertNotNull((cancel.modifier));
-        assertNotNull((cancel.restrictions));
+        assertNotNull((cancel.getAccountId()));
+        assertNotNull((cancel.getTimestamp()));
+        assertNotNull((cancel.getMessageId()));
+        assertNotNull((cancel.getServerId()));
+        assertNotNull((cancel.getModifier()));
+        assertNotNull((cancel.getRestrictions()));
     }
 
 
@@ -741,14 +760,14 @@ public class RestrictionPage extends AbstractPage {
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
-                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
+                assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
             }
             Thread.sleep(1000);
         }
         Event event1 = events.getFirst();
         Event event2 = events.getLast();
-        MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
             assertEquals(expectedSystem, event1.getInitiatedBySystem());
             assertEquals(expectedUser, event1.getInitiatedByUser());
@@ -783,14 +802,14 @@ public class RestrictionPage extends AbstractPage {
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
-                MatcherAssert.assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
+                assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
             }
             Thread.sleep(1000);
         }
         Event event1 = events.getFirst();
         Event event2 = events.getLast();
-        MatcherAssert.assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        MatcherAssert.assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
+        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
             assertEquals(expectedSystem, event1.getInitiatedBySystem());
             assertEquals(expectedUser, event1.getInitiatedByUser());
@@ -852,15 +871,6 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(text, label);
     }
 
-    public void checkDisplayedRestrictionsDetails() {
-        Allure.step("check that text displayed near restrictions is correct'");
-        for (Restriction restriction : Restriction.values()) {
-            if (restriction.isBoVisibility()) {
-                assertThat(page.locator("//div[contains(@class, 'v-restrictions-tab-item__name') and text()='" + restriction.getName() + "']/../following-sibling::div")).hasText(restriction.getDescription());
-                System.out.println("restriction '" + restriction.getName() + "' have correct description :'" + restriction.getDescription() + "'");
-            }
-        }
-    }
 
     public void checkDisplayedRestrictions() {
         Allure.step("check that only restrictions with bo_visibility == true in database is displayed");
@@ -877,16 +887,73 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void waitForPageToLoad() {
-        page.waitForSelector("//div[@class='v-restrictions-tab-list']", new Page.WaitForSelectorOptions().setState(VISIBLE));
+        restrictionTabLoaded.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 
-    public void addNewGeneralRestriction(Restriction restriction, String comment) {
+    @Step("Set the provided restriction in UI")
+    public void addNewRestriction(Restriction restriction, String comment) {
         openRestrictionsDrawerButton.click();
         addRestrictionButton.click();
         page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
         applyRestrictionButton.click();
         commentInput.fill(comment);
         applyChangesButton.click();
+    }
+
+    @Step("Verify restriction is applied in UI")
+    public void verifyRestrictionAppliedInUi(Restriction restriction, User user, String comment) {
+        Locator restrictionItem = page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName()));
+        restrictionItem.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        assertThat("Verify lock icon is visible", restrictionItem.locator(restrictionAppliedIcon).isVisible(), is(true));
+        assertThat("Verify applied by text", restrictionItem.locator(restrictionAppliedBy).textContent(), is(String.format("Set by %s %s", user.getFirstName(), user.getLastName())));
+        assertThat("Verify comment", restrictionItem.locator(restrictionAppliedComment).textContent(), is(String.format(" %s", comment)));
+        assertThat("Verify application date", restrictionItem.locator(restrictionAppliedDate).textContent(), matchesPattern("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}"));
+    }
+
+    @Step("Remove the provided restriction")
+    public void removeRestriction(Restriction restriction, String comment) {
+        openRestrictionsDrawerButton.click();
+        page.locator(String.format(CLEAR_RESTRICTION_BUTTON_BY_NAME, restriction.getName())).click();
+        commentInput.fill(comment);
+        applyChangesButton.click();
+    }
+
+    @Step("Verify restriction is not applied in UI")
+    public void verifyRestrictionNotAppliedInUi(Restriction restriction) {
+        page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName())).waitFor(new Locator.WaitForOptions().setState(DETACHED));
+    }
+
+    @Step("Verify inactive label in account selection is visible")
+    public void verifyInactiveLabelIsVisible(Restriction restriction) {
+        openRestrictionsDrawerButton.click();
+        addRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        applyRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName())).click();
+        inactiveAccountLabel.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    @Step("Get last activity tooltip text")
+    public String getLastActivityTooltip(Restriction restriction) {
+        openRestrictionsDrawerButton.click();
+        addRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_OPTION_PATTERN, restriction.getName())).click();
+        applyRestrictionButton.click();
+        page.locator(String.format(RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME, restriction.getName())).click();
+        activitySection.hover();
+        return tooltip.textContent();
+    }
+
+    @Step("Get list of all displayed restrictions")
+    public List<String> getDisplayedRestrictionsList() {
+        openRestrictionsDrawerButton.click();
+        addRestrictionButton.click();
+        restrictionOptionsContainer.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < restrictionOption.count(); i++) {
+            list.add(restrictionOption.nth(i).textContent());
+        }
+        return list;
     }
 
 }

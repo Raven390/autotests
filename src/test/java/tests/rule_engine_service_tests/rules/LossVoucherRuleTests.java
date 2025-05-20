@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 
 import static helpers.data.rules.loss_voucher_rule.LossVoucherRuleDataFactory.deleteLossVoucherRuleData;
@@ -46,7 +45,6 @@ class LossVoucherRuleTests extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         deleteLossVoucherRuleData(dbDataMap);
-        disableCRMEmulator();
     }
 
     @Test

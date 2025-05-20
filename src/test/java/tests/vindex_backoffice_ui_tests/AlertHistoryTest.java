@@ -53,7 +53,6 @@ class AlertHistoryTest extends TestBaseWeb {
     @Order(1)
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("1150")
     @DisplayName("Setup data before Alert history test execution")
     void setupData() {
         investigationPage.navigateToClient(client.getUcid());

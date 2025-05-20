@@ -1,6 +1,5 @@
 package tests;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -74,7 +73,6 @@ public class TestBaseWeb {
             playwright.close();
         }
         stopSshTunnel();
-        disableCRMEmulator();
     }
 
     @BeforeEach
