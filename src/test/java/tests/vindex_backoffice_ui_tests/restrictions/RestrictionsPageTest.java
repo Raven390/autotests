@@ -3,13 +3,12 @@ package tests.vindex_backoffice_ui_tests.restrictions;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.ui.user.User;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
-import helpers.data.enums.Restriction;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Muted;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.RestrictionPage;
@@ -23,9 +22,13 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountInactive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.CleanTableHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static page_objects.backoffice_pages.RestrictionPage.checkKafkaRequestApplyUserId;
 import static page_objects.backoffice_pages.RestrictionPage.checkRestrictionApplymentAuditGeneral;
@@ -36,6 +39,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
     static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
     static ClientHelper labelClient = new ClientHelper(141_403, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_103, 42);
+
+    private static final String RESTRICTION_COMMENT = "test reason";
+    private static final User user = autotestUserOne();
 
     @BeforeAll
     static void setup() throws Exception {
@@ -61,7 +67,9 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @BeforeEach
     public void before() throws Exception {
         cleanUserRestrictionGeneral(restrictionClient.getUcid());
+        cleanUserRestrictionTrading(restrictionClient.getUcid());
         restrictionPage.cleanUserAudit(restrictionClient.getUcid());
+
     }
 
     @Test
@@ -73,9 +81,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickAccountSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatAccountIsChecked();
+        restrictionPage.addNewRestriction(ACCOUNT_CREATION, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(ACCOUNT_CREATION, user, RESTRICTION_COMMENT);
         checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), ACCOUNT_CREATION.getName());
     }
@@ -90,9 +97,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatAccountIsChecked();
-        restrictionPage.clickCheckedAccount();
-        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.removeRestriction(ACCOUNT_CREATION, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(ACCOUNT_CREATION);
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), ACCOUNT_CREATION.getName());
     }
@@ -106,9 +112,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickTransferSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatTransferIsChecked();
+        restrictionPage.addNewRestriction(INTERNAL_TRANSFER, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(INTERNAL_TRANSFER, user, RESTRICTION_COMMENT);
         checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getName());
     }
@@ -119,13 +124,12 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("330")
     @DisplayName("Restriction tab remove Transfer Restriction UI")
     void cancelTransferRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getCode());
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatTransferIsChecked();
-        restrictionPage.clickCheckedTransfer();
-        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.removeRestriction(INTERNAL_TRANSFER, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(INTERNAL_TRANSFER);
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), INTERNAL_TRANSFER.getName());
     }
@@ -139,9 +143,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickDepositsSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatDepositsIsChecked();
+        restrictionPage.addNewRestriction(DEPOSITS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(DEPOSITS, user, RESTRICTION_COMMENT);
         checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), DEPOSITS.getName());
     }
@@ -152,13 +155,12 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("332")
     @DisplayName("Restriction tab remove Deposits restriction UI")
     void cancelDepositsRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), DEPOSITS.getCode());
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), DEPOSITS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatDepositsIsChecked();
-        restrictionPage.clickCheckedDeposits();
-        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.removeRestriction(DEPOSITS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(DEPOSITS);
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), DEPOSITS.getName());
     }
@@ -172,9 +174,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickWithdrawalsSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatWithdrawalsIsChecked();
+        restrictionPage.addNewRestriction(WITHDRAWALS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(WITHDRAWALS, user, RESTRICTION_COMMENT);
         checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), WITHDRAWALS.getName());
     }
@@ -185,13 +186,12 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("334")
     @DisplayName("Restriction tab remove Withdrawals restriction UI")
     void cancelWithdrawalsRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), WITHDRAWALS.getCode());
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), WITHDRAWALS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatWithdrawalsIsChecked();
-        restrictionPage.clickCheckedWithdrawals();
-        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.removeRestriction(WITHDRAWALS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(WITHDRAWALS);
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
         restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), WITHDRAWALS.getName());
     }
@@ -205,9 +205,8 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickLoginSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatLoginIsChecked();
+        restrictionPage.addNewRestriction(LOGIN_CRM, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(LOGIN_CRM, user, RESTRICTION_COMMENT);
         checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), LOGIN_CRM.getName());
     }
@@ -218,17 +217,108 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("336")
     @DisplayName("Restriction tab remove Login CRM restriction UI")
     void cancelLoginCRMRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "05");
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), LOGIN_CRM.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatLoginIsChecked();
-        restrictionPage.clickCheckedLogin();
-        restrictionPage.fillCancelReason("test reason");
+        restrictionPage.removeRestriction(LOGIN_CRM, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(LOGIN_CRM);
         restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), Restriction.LOGIN_CRM.getName());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), LOGIN_CRM.getName());
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("742")
+    @DisplayName("Restriction tab set Credit and Bonus Review restriction UI")
+    void setCreditAndBonusRestrictionUITest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.addNewRestriction(CREDIT_AND_BONUS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(CREDIT_AND_BONUS, user, RESTRICTION_COMMENT);
+        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), CREDIT_AND_BONUS.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("743")
+    @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
+    void cancelCreditAndBonusRestrictionUITest() throws Exception {
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), CREDIT_AND_BONUS.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.removeRestriction(CREDIT_AND_BONUS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(CREDIT_AND_BONUS);
+        restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), CREDIT_AND_BONUS.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("337")
+    @DisplayName("Restriction tab set Manual Withdrawal Review restriction UI")
+    void setManualWithdrawalRestrictionUITest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.addNewRestriction(MANUAL_WITHDRAWAL_REVIEW, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(MANUAL_WITHDRAWAL_REVIEW, user, RESTRICTION_COMMENT);
+        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("338")
+    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI")
+    void cancelManualWithdrawalRestrictionUITest() throws Exception {
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.removeRestriction(MANUAL_WITHDRAWAL_REVIEW, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(MANUAL_WITHDRAWAL_REVIEW);
+        restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1157")
+    @DisplayName("Restriction tab set Note for withdrawals restriction UI")
+    void setNoteForWithdrawalsRestrictionUITest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.addNewRestriction(NOTE_FOR_WITHDRAWALS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(NOTE_FOR_WITHDRAWALS, user, RESTRICTION_COMMENT);
+        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
+        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1158")
+    @DisplayName("Restriction tab remove Note for withdrawals restriction UI")
+    void cancelNoteForWithdrawalsRestrictionUITest() throws Exception {
+        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.removeRestriction(NOTE_FOR_WITHDRAWALS, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(NOTE_FOR_WITHDRAWALS);
+        restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getName());
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -239,11 +329,10 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickCloseOnlyModeSwitch();
-        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
-        restrictionPage.checkThatCloseOnlyIsChecked();
-        restrictionPage.checkKafkaRequestApplyAccount(14_140_101);
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Close only mode; account: 14140101");
+        restrictionPage.addNewRestriction(CLOSE_ONLY_MODE, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(CLOSE_ONLY_MODE, user, RESTRICTION_COMMENT);
+        restrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount());
+        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), String.format("%s; account: %s", CLOSE_ONLY_MODE.getName(), restrictionClient.getTradingAccount()));
     }
 
     @Test
@@ -252,15 +341,45 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("340")
     @DisplayName("Restriction tab remove Close only mode restriction UI")
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, CLOSE_ONLY_MODE.getCode());
+        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), CLOSE_ONLY_MODE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatCloseOnlyIsChecked();
-        restrictionPage.clickCheckedCloseOnly();
-        restrictionPage.fillCancelReasonTrade("test reason");
-        restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Close only mode; account: 14140101");
+        restrictionPage.removeRestriction(CLOSE_ONLY_MODE, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(CLOSE_ONLY_MODE);
+        restrictionPage.checkKafkaRequestCancelAccount(restrictionClient.getTradingAccount());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), String.format("%s; account: %s", CLOSE_ONLY_MODE.getName(), restrictionClient.getTradingAccount()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("341")
+    @DisplayName("Restriction tab set Off quotes Review restriction UI")
+    void setOffQuotesRestrictionUITest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.addNewRestriction(OFF_QUOTES, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionAppliedInUi(OFF_QUOTES, user, RESTRICTION_COMMENT);
+        restrictionPage.checkKafkaRequestApplyAccount(restrictionClient.getTradingAccount());
+        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), String.format("%s; account: %s", OFF_QUOTES.getName(), restrictionClient.getTradingAccount()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("342")
+    @DisplayName("Restriction tab remove Off quotes restriction UI")
+    void cancelOffQuotesRestrictionUITest() throws Exception {
+        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), OFF_QUOTES.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        restrictionPage.navigate(restrictionClient.getUcid());
+        restrictionPage.removeRestriction(OFF_QUOTES, RESTRICTION_COMMENT);
+        restrictionPage.verifyRestrictionNotAppliedInUi(OFF_QUOTES);
+        restrictionPage.checkKafkaRequestCancelAccount(restrictionClient.getTradingAccount());
+        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), String.format("%s; account: %s", OFF_QUOTES.getName(), restrictionClient.getTradingAccount()));
     }
 
     @Test
@@ -272,8 +391,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        restrictionPage.clickCloseOnlyModeSwitch();
-        restrictionPage.isInactiveAccountLabelPresented();
+        restrictionPage.verifyInactiveLabelIsVisible(CLOSE_ONLY_MODE);
     }
 
     @Test
@@ -285,22 +403,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        restrictionPage.clickCloseOnlyModeSwitch();
-        restrictionPage.hoverOverActivitySection();
-        restrictionPage.checkTooltipText("Last activity");
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("918")
-    @Feature("BMS-755 Add new restrictions")
-    @DisplayName("Restriction tab. check descriptions for restrictions displayed on UI")
-    void descriptionsUiTest() {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(labelClient.getUcid());
-        restrictionPage.checkDisplayedRestrictionsDetails();
+        assertThat("Verify popup text for last activity of an account", restrictionPage.getLastActivityTooltip(CLOSE_ONLY_MODE), is("Last activity"));
     }
 
     @Test
@@ -313,163 +416,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(labelClient.getUcid());
-        restrictionPage.checkDisplayedRestrictions();
+        assertThat(restrictionPage.getDisplayedRestrictionsList(), containsInAnyOrder(getVisibleRestrictionsList().toArray()));
     }
-
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("341")
-    @DisplayName("Restriction tab set Off quotes Review restriction UI")
-    void setOffQuotesRestrictionUITest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickOffQuotesModeSwitch();
-        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
-        restrictionPage.checkThatAOffQuotesIsChecked();
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "Off quotes; account: 14140101");
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("342")
-    @DisplayName("Restriction tab remove Off quotes restriction UI")
-    void cancelOffQuotesRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "08");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatAOffQuotesIsChecked();
-        restrictionPage.clickCheckedOffQuotes();
-        restrictionPage.fillCancelReasonTrade("test reason");
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "Off quotes; account: 14140101");
-    }
-
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("343")
-    @DisplayName("Restriction tab set AB book Review restriction UI")
-    void setAbBookRestrictionUITest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickAbBookSwitch();
-        restrictionPage.fillApplyReasonTradingAllAccs("test reason");
-        restrictionPage.checkThatAbBookIsChecked();
-        restrictionPage.checkKafkaRequestApplyAccount(14_140_101);
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("344")
-    @DisplayName("Restriction tab remove AB book restriction UI")
-    void cancelAbBookRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), 14_140_101, 3, "09");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatAbBookIsChecked();
-        restrictionPage.clickCheckedAbBook();
-        restrictionPage.fillCancelReasonTrade("test reason");
-        restrictionPage.checkKafkaRequestCancelAccount(14_140_101);
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), "B-Book -> A-Book; account: 14140101");
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("742")
-    @DisplayName("Restriction tab set Credit and Bonus Review restriction UI")
-    void setCreditAndBonusRestrictionUITest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickCreditAndBonusSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatCreditAndBonusIsChecked();
-        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), Restriction.CREDIT_AND_BONUS.getName());
-    }
-
-    @Disabled
-    @Muted
-    @Tag(TAG_MANUAL)
-    //restriction hidden from UI
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("743")
-    @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
-    void cancelCreditAndBonusRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), "14");
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatCreditAndBonusIsChecked();
-        restrictionPage.clickCheckedCreditAndBonus();
-        restrictionPage.fillCancelReason("test reason");
-        restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), Restriction.CREDIT_AND_BONUS.getName());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("337")
-    @DisplayName("Restriction tab set Manual Withdrawal Review restriction UI")
-    void setManualWithdrawalRestrictionUITest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.clickManualWithdrawalSwitch();
-        restrictionPage.fillApplyReason("test reason");
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getName());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("338")
-    @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI client without transactions")
-    void cancelManualWithdrawalRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.checkThatManualWithdrawalIsChecked();
-        restrictionPage.clickCheckedManual();
-        restrictionPage.fillCancelReason("test reason");
-        restrictionPage.checkKafkaRequestCancelUcid(restrictionClient.getUserId());
-        restrictionPage.checkRestrictionCancellationAuditBO(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getName());
-    }
-
 }

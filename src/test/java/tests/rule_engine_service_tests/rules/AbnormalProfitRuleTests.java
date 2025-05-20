@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.abnormal_profit_rule.AbnormalProfitRuleDataFactory.deleteAbnormalProfitRuleData;
 import static helpers.data.rules.abnormal_profit_rule.AbnormalProfitRuleDataFactory.setupAbnormalProfitRuleData;
@@ -49,7 +48,6 @@ class AbnormalProfitRuleTests extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         deleteAbnormalProfitRuleData(dbDataMap);
-        disableCRMEmulator();
     }
 
     @Test

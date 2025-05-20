@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.disableCRMEmulator;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.rules.ndb_rule.NdbRuleDataFactory.deleteNdbRuleData;
@@ -47,7 +46,6 @@ class NdbRuleTests extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         deleteNdbRuleData(dbDataMap);
-        disableCRMEmulator();
     }
 
     @Test

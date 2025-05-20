@@ -1,5 +1,8 @@
 package helpers.data.enums;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static utils.Constants.RESTRICTION_TYPE_GENERAL;
 import static utils.Constants.RESTRICTION_TYPE_TRADING;
 
@@ -50,6 +53,9 @@ public enum Restriction {
         return id;
     }
 
+    public static List<String> getVisibleRestrictionsList() {
+        return Arrays.stream(Restriction.values()).filter(Restriction::isBoVisibility).map(Restriction::getName).toList();
+    }
 
     @Override
     public String toString() {
