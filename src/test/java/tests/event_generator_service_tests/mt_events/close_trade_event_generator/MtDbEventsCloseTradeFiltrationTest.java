@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.close_trade;
+package tests.event_generator_service_tests.mt_events.close_trade_event_generator;
 
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
@@ -7,8 +7,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt5;
@@ -16,6 +14,7 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 import java.time.Instant;
 
@@ -24,10 +23,7 @@ import java.time.Instant;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class MtDbEventsCloseTradeFiltrationTest {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class MtDbEventsCloseTradeFiltrationTest extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate close event with event generator service that should be filtered out by the Event Generator")

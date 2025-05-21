@@ -8,8 +8,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt4;
 import business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventMt5;
 import business_objects.kafka.mt_events.RafBalanceOrderMtEvent;
@@ -17,6 +15,7 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 import java.util.List;
 import java.util.Map;
@@ -26,10 +25,7 @@ import java.util.Map;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class MtDbEventsRafBalanceOrderTest {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class MtDbEventsRafBalanceOrderTest extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate RAF balance order with event generator service from MT4 source with all fields populated")
