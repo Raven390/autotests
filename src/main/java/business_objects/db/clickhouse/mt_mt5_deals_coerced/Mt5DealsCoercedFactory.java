@@ -18,7 +18,7 @@ public class Mt5DealsCoercedFactory {
     @Step("Generate mt5 deals by client")
     public static Mt5DealsCoercedObject generateTradeByClient(ClientHelper client) {
         return new Mt5DealsCoercedObject(client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getTradingAccount(), PLATFORM_MT_5, client.getServerId(), "MT5", "accountType", "accountGroup", "USD", getRandomLongPositive(), getRandomLongPositive(), 0, 0, 1, 1d, getCurrentTimestampMinusOffsetFormatted(
-                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+                DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0), getCurrentTimestampDbFormat(), EURUSD, EURUSD, "EUR", "USD", 1d, 1d, 1d, 1d, 1d, 1.25d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1L, getRandomLongPositive(), COMMENT_AUTOMATION_TESTS, 1d, 2d, 1d, 1d, 1d, 1d, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
     }
 
     @Step("Generate mt5 deals by client")
