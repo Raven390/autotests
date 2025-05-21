@@ -230,7 +230,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
     @DisplayName("Verify filtration by volume in trading - operations tab")
     public void verifyTradingInfoDealsVolumeFiltrationTest() {
         tradingPage.openFilter();
-        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
+        tradingPage.fillVolumeAmountValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.clickApplyButton();
         assertThat("Verify there is 1 operations with filtration", tradingPage.getOperationsCount(), equalTo(1));
         assertThat("Assert only the expected operation is present in the table", tradingPage.getOperationAccountByIndex(0), equalTo(String.format("%s%s", trade2.account, trade2.platform)));
@@ -291,7 +291,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.fillProfitValues(trade2.profitUsd.toString(), "200");
         tradingPage.resetProfitFilterAndVerify();
         // Volume
-        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
+        tradingPage.fillVolumeAmountValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.resetVolumeFilterAndVerify();
         // Reset All
         tradingPage.clickFilterCheckbox(trade2.ticketType);
@@ -302,7 +302,7 @@ public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
         tradingPage.selectCloseDate(convertDateTimeDbToDate(trade2.closeTimeUtc));
         tradingPage.fillDurationValues("1", "");
         tradingPage.fillProfitValues(trade2.profitUsd.toString(), "200");
-        tradingPage.fillVolumeValues(trade2.notionalValueUsd.toString(), "200");
+        tradingPage.fillVolumeAmountValues(trade2.notionalValueUsd.toString(), "200");
         tradingPage.resetAllFiltersAndVerify();
     }
 

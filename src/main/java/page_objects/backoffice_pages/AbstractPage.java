@@ -44,6 +44,7 @@ public abstract class AbstractPage {
     static final String HEADER_2_LOCATOR = "*[contains(@class, 'g-text_variant_header-2')]";
     static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
     static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
+    static final String VARIANT_CAPTION_2_SELECTOR = "*[contains(@class, 'g-text_variant_caption-2')]";
 
     Logger logger = Logger.getLogger("TestPageLogger");
 

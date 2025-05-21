@@ -6,6 +6,7 @@ import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
+import helpers.data.enums.Symbol;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -19,6 +20,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoerced;
+import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedRandomized;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
@@ -209,6 +211,39 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         assertThat("Verify Volume total label", tradingPage.getVolumeTotalLabel(), is("Total"));
         assertThat("Verify Volume max volume graph dot value", tradingPage.getVolumeMaxGraphDot(), is(maxVolume));
         assertThat("Verify Volume x axis labels match expected pattern", tradingPage.getVolumeXAxisLabels(), everyItem(matchesPattern(YEAR_LABEL_PATTERN)));
+    }
+
+
+    @Disabled("need hack for canvas")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("")
+    @DisplayName("Verify Volume chart in Trading shows volume in lots")
+    public void verifyTradingSummaryVolumeLotsTest() throws Exception {
+        cleanCrmUserTableByClient(crmTbUser.ucid);
+        crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 38, 0, 0, 0);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade13, trade14));
+
+        tradingPage.deleteClientDeals(client.getUcid());
+        MtMt4TradesCoercedObject trade21 = generateMt4TradesCoercedRandomized(client);
+        MtMt4TradesCoercedObject trade22 = generateMt4TradesCoercedRandomized(client);
+
+        Symbol simbol1 = Symbol.getRandomSymbol();
+        trade21.symbol = simbol1.getSymbolCode();
+        trade22.symbol = simbol1.getSymbolCode();
+
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade21, trade22));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        tradingPage.navigate(client.getUcid());
+
+        tradingPage.enableViewLots();
+        tradingPage.hoverOverVolumeTradedBar(0);
+        int expectedVolume2 = tradingPage.calculateLotsByDealInt(trade21, trade22);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade21.symbol, expectedVolume2);
     }
 
     @AfterAll

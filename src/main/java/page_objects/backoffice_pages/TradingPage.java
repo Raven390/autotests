@@ -23,8 +23,7 @@ import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertTha
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.MT4_TRADES_COERCED_TABLE_NAME;
 import static utils.Utils.*;
@@ -66,8 +65,8 @@ public class TradingPage extends AbstractPage {
     private final Locator typeShowMoreButton;
     private final Locator applyFiltersButton;
     private final Locator filterContainer;
-    private final Locator volumeFromInput;
-    private final Locator volumeToInput;
+    private final Locator volumeAmountFromInput;
+    private final Locator volumeAmountToInput;
     private final Locator volumeUsdValue;
     private final Locator openColumnCellDate;
     private final Locator closeColumnCellDate;
@@ -191,6 +190,7 @@ public class TradingPage extends AbstractPage {
     private final Locator disabledHftButton;
     private final Locator typeColumnCell;
     private final Locator volumeColumnCell;
+    private final Locator lotsAmountSwitch;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
@@ -249,14 +249,16 @@ public class TradingPage extends AbstractPage {
     private static final String PNL_SYMBOL_BAR_POSITIVE = "//div[(@class='v-pnl-symbol-bar__bar') or (contains(@class,'v-pnl-symbol-bar__bar') and contains(@class,'v-pnl-symbol-bar__bar_begin'))]";
     private static final String PNL_SYMBOL_BAR_POSITIVE_BEGIN = "//div[contains(@class,'v-pnl-symbol-bar__bar_begin')]";
     private static final String SYMBOL_TRADED_BAR = "//div[@class='v-symbol-traded-bar__bar' or @class='v-symbol-traded-bar__bar v-symbol-traded-bar__bar_isFirst' ]";
+    private static final String VOLUME_TRADED_BAR_ANNOTATION = "//div[@class='v-trading-summary-volume__chart-container']/div[contains(@class, 'g-text_variant_body-short')]";
     private static final String SYMBOL_TRADED_BAR_FIRST = "//div[contains(@class,'v-symbol-traded-bar__bar_isFirst')]";
     private static final String PNL_SYMBOL_TOOLTIP_LINE = "//div[(@class='v-pnl-symbol-tooltip__symbol')]";
     private static final String SYMBOL_TRADED_TOOLTIP = "//div[(@class='v-symbol-traded-tooltip')]";
+    private static final String VOLUME_TOOLTIP = "//div[(@class='v-trading-summary-volume__tooltip')]";
     private static final String SYMBOL_TRADED_TOOLTIP_LINE = "//div[(@class='v-symbol-traded-tooltip__symbol')]";
     private static final String SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE = "//div[(@class='v-symbol-traded-tooltip__other-title')]";
     private static final String SYMBOL_TRADED_BAR_DESCRIPTION = "//div[(@class='v-symbol-traded-bar__bar-description')]";
     private static final String TRADING_CHART_FEATURE = "//div[@class='v-chart-wrapper__feature']";
-    private static final String TRADING_CHART_FEATURE_VALUE = "//div[contains(@class,'v-chart-wrapper__feature-value')]";
+    private static final String TRADING_CHART_FEATURE_VALUE = "//div[contains(@class,'g-text_variant_header-1')]";
     private static final String HOLDING_TIME_SECTION = "//*[text()='Holding time']/ancestor::div[@class='v-trading-summary__chart']";
     private static final String HOLDING_TIME_BAR_ANNOTATION = "//div[@class='v-trading-summary-holding-time__ticks-container']/div/div";
     private static final String HOLDING_TIME_TOOLTIP = "//div[@class='v-trading-summary-holding-time__tooltip']";
@@ -275,6 +277,10 @@ public class TradingPage extends AbstractPage {
     private static final String ACCOUNT_ROW_CELL = "//td[contains(@class ,'v-trading-tab-accounts-table__column')]";
     private static final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
     private static final String TABLE_HEADER = "*[contains(@class,'header-cell')";
+    private static final String LOTS_AMOUNT_SWITCH = "//span[text()='Volume in USD']//preceding-sibling::span/input";
+    private final Locator volumeLotFromInput;
+    private final Locator volumeLotToInput;
+    private final Locator errorMessage;
 
 
     public TradingPage(Page page) {
@@ -319,8 +325,10 @@ public class TradingPage extends AbstractPage {
         this.typeShowMoreButton = page.locator(".v-trading-tab-deals-filter__filter-container button").getByText("Show more");
         this.applyFiltersButton = page.locator("button").getByText("Apply");
         this.filterContainer = page.locator("v-trading-tab-deals-filter__filter-container");
-        this.volumeFromInput = page.locator("//div[text()=\"Volume\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
-        this.volumeToInput = page.locator("//div[text()=\"Volume\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.volumeAmountFromInput = page.locator("//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.volumeAmountToInput = page.locator("//div[text()=\"Volume in USD\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
+        this.volumeLotFromInput = page.locator("//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
+        this.volumeLotToInput = page.locator("//div[text()=\"Volume in lots\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.durationFromInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
         this.durationToInput = page.locator("//div[text()=\"Duration\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"To\"]/ancestor::span/input");
         this.profitFromInput = page.locator("//div[text()=\"Profit\"]/ancestor::div[contains(@class,'v-numeric-range-input')]/descendant::span[text()=\"From\"]/ancestor::span/input");
@@ -439,6 +447,8 @@ public class TradingPage extends AbstractPage {
         this.disabledHftButton = page.locator("//*[text()=' HFT']/ancestor::button[not (contains(@class, 'g-button_view_toned-action'))]");
         this.highlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row_highlighted')]");
         this.notHighlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
+        this.lotsAmountSwitch = page.locator(LOTS_AMOUNT_SWITCH);
+        this.errorMessage = page.locator("//div[@class='v-error-view__error-text']");
     }
 
     @Step("Navigate to users trading tab")
@@ -592,10 +602,17 @@ public class TradingPage extends AbstractPage {
     }
 
     @Step("Fill volume values")
-    public void fillVolumeValues(String from, String to) {
-        Allure.step("Fill volume values");
-        volumeFromInput.fill(from);
-        volumeToInput.fill(to);
+    public void fillVolumeAmountValues(String from, String to) {
+        Allure.step("Fill volume amount values");
+        volumeAmountFromInput.fill(from);
+        volumeAmountToInput.fill(to);
+    }
+
+    @Step("Fill volume values")
+    public void fillVolumeLotValues(String from, String to) {
+        Allure.step("Fill volume amount values");
+        volumeLotFromInput.fill(from);
+        volumeLotToInput.fill(to);
     }
 
     @Step("Fill profit values")
@@ -612,11 +629,22 @@ public class TradingPage extends AbstractPage {
         durationToInput.fill(to);
     }
 
-    @Step("Check text content of first and last Volume cells on page is in interval")
+    @Step("Check text content of first and last Volume in USD cells on page is in interval")
     public void checkVolumeCellsContentUSD(int from, int to) {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
         String firstCell = volumeUsdValue.first().textContent().replace(" USD", "");
         String lastCell = volumeUsdValue.last().textContent().replace(" USD", "");
+        System.out.println(Integer.parseInt(firstCell));
+        System.out.println(Integer.parseInt(lastCell));
+        assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
+        assertTrue(from <= Integer.parseInt(lastCell) && Integer.parseInt(lastCell) <= to);
+    }
+
+    @Step("Check text content of first and last Volume in Lots cells on page is in interval")
+    public void checkVolumeCellsContentLots(int from, int to) {
+        Allure.step("Check text content of first and last Volume cells on page is in interval");
+        String firstCell = volumeLotsValue.first().textContent().replace(" lots", "");
+        String lastCell = volumeLotsValue.last().textContent().replace(" lots", "");
         System.out.println(Integer.parseInt(firstCell));
         System.out.println(Integer.parseInt(lastCell));
         assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
@@ -1064,17 +1092,17 @@ public class TradingPage extends AbstractPage {
         assertThat(profitToInput).hasValue("");
         // Volume
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "0-50")).click();
-        assertThat(volumeFromInput).hasValue("0 USD");
-        assertThat(volumeToInput).hasValue("50 USD");
+        assertThat(volumeAmountFromInput).hasValue("0 USD");
+        assertThat(volumeAmountToInput).hasValue("50 USD");
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "50-200")).click();
-        assertThat(volumeFromInput).hasValue("50 USD");
-        assertThat(volumeToInput).hasValue("200 USD");
+        assertThat(volumeAmountFromInput).hasValue("50 USD");
+        assertThat(volumeAmountToInput).hasValue("200 USD");
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, "200-500")).click();
-        assertThat(volumeFromInput).hasValue("200 USD");
-        assertThat(volumeToInput).hasValue("500 USD");
+        assertThat(volumeAmountFromInput).hasValue("200 USD");
+        assertThat(volumeAmountToInput).hasValue("500 USD");
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, volume, ">500")).click();
-        assertThat(volumeFromInput).hasValue("500 USD");
-        assertThat(volumeToInput).hasValue("");
+        assertThat(volumeAmountFromInput).hasValue("500 USD");
+        assertThat(volumeAmountToInput).hasValue("");
     }
 
     public void verifyNoTypeIsSelected() {
@@ -1172,8 +1200,8 @@ public class TradingPage extends AbstractPage {
     }
 
     public void verifyNoVolumeIsFilled() {
-        assertThat(volumeFromInput).hasValue("");
-        assertThat(volumeToInput).hasValue("");
+        assertThat(volumeAmountFromInput).hasValue("");
+        assertThat(volumeAmountToInput).hasValue("");
     }
 
     @Step("Press reset button for volume and verify that none are selected")
@@ -1608,9 +1636,31 @@ public class TradingPage extends AbstractPage {
 
     public void hoverOverSymbolTradedBar(int index) {
         Allure.step("Hover over Symbol traded graph bar");
+        page.waitForTimeout(300);
         page.waitForSelector(SYMBOL_TRADED_BAR).waitForElementState(ElementState.VISIBLE);
         page.locator(SYMBOL_TRADED_BAR).nth(index).hover();
+        page.waitForTimeout(300);
+        page.locator(SYMBOL_TRADED_BAR).nth(index).hover();
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP).waitForElementState(ElementState.VISIBLE);
+    }
+
+    public void hoverOverVolumeTradedBar(int index) {
+        Allure.step("Hover over Volume traded graph bar");
+        page.waitForSelector(VOLUME_TRADED_BAR_ANNOTATION).waitForElementState(ElementState.VISIBLE);
+
+        Locator target = page.locator(VOLUME_TRADED_BAR_ANNOTATION).nth(index);
+        target.hover();
+        page.waitForTimeout(300);
+        target.hover();
+        int i = 1;
+        while ((!(page.locator(VOLUME_TOOLTIP).isVisible())) && (i < 1000)) {
+            page.waitForTimeout(10);
+            page.mouse().move(target.boundingBox().x, target.boundingBox().y + (i));
+            page.waitForTimeout(10);
+            i += 10;
+        }
+        page.waitForTimeout(100);
+        page.waitForSelector(VOLUME_TOOLTIP).waitForElementState(ElementState.VISIBLE);
     }
 
     public void countSymbolTradedBar(int expectedCount) {
@@ -1648,6 +1698,14 @@ public class TradingPage extends AbstractPage {
         return (int) (Math.round(result));
     }
 
+    public int calculateLotsByDealInt(MtMt4TradesCoercedObject... trades) {
+        double result = 0;
+        for (MtMt4TradesCoercedObject i : trades) {
+            result += i.volumeLots;
+        }
+        return (int) (Math.round(result));
+    }
+
     public double calculateNotionValueUsdByDealDouble(MtMt4TradesCoercedObject... trades) {
         double result = 0;
         for (MtMt4TradesCoercedObject i : trades) {
@@ -1665,29 +1723,29 @@ public class TradingPage extends AbstractPage {
     public void checkSymbolTradedOtherTooltipFooter(int expectedCount, int expectedAmount) {
         Allure.step("Check the count inside the tooltip including header and footer");
         page.waitForSelector(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE).waitForElementState(ElementState.VISIBLE);
-        assertEquals(expectedCount, page.locator(SYMBOL_TRADED_TOOLTIP_LINE).count());
         assertEquals("Others", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "//" + PRIMARY_TEXT).textContent());
         assertEquals(decimalFormat.format(expectedCount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + SECONDARY_TEXT).textContent());
-        assertEquals(decimalFormat.format(expectedAmount), page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div").textContent());
+        assertEquals(decimalFormat.format(expectedAmount) + " USD", page.locator(SYMBOL_TRADED_TOOLTIP_FOOTER_TITLE + "/following-sibling::div").textContent());
     }
 
     public void checkSymbolTradedHeaderMostTraded(String expectedSymbol) {
         Allure.step("Check the most traded symbol info above the graph");
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
         assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(0).textContent());
-        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + GREEN_TEXT).nth(0).textContent());
-        assertEquals("Most tradeable", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(0).textContent());
+        assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + SYMBOL_TRADED_BAR_DESCRIPTION + SECONDARY_TEXT).nth(0).textContent());
+        assertEquals("Most tradeable", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(0).textContent());
     }
 
     public void checkSymbolTradedHeader(int position, String expectedSymbol) {
         Allure.step("Check the most traded symbol info above the graph");
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
         if (position == 2) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + PRIMARY_TEXT).nth(0).textContent());
-            assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(1).textContent());
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(1).textContent());
+            System.out.println(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR);
+            assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(2).textContent());
         } else if (position == 3) {
-            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + PRIMARY_TEXT).nth(1).textContent());
-            assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + SECONDARY_TEXT).nth(2).textContent());
+            assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(2).textContent());
+            assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(4).textContent());
         } else {
             System.out.println("unexpected position " + position);
             assertTrue(false);
@@ -1711,6 +1769,16 @@ public class TradingPage extends AbstractPage {
         assertEquals(expectedAmount + " USD", actualAmount);
     }
 
+
+    public void checkSymbolTradedTooltipValueLots(int numberOfLine, String expectedSymbol, String expectedLots) {
+        Allure.step("Check the symbol and PNL amount in the tooltip");
+        page.waitForSelector(SYMBOL_TRADED_TOOLTIP_LINE).waitForElementState(ElementState.VISIBLE);
+        String actualSymbol = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(0).textContent();
+        String actualAmount = page.locator(SYMBOL_TRADED_TOOLTIP_LINE + "[" + (numberOfLine + 1) + "]" + "//" + PRIMARY_TEXT).nth(1).textContent();
+        assertEquals(expectedSymbol, actualSymbol);
+        assertEquals(expectedLots + " lots", actualAmount);
+    }
+
     public void checkSymbolTradedTooltipValue(String expectedSymbol, String expectedAmount) {
         checkSymbolTradedTooltipValue(0, expectedSymbol, expectedAmount);
     }
@@ -1721,6 +1789,18 @@ public class TradingPage extends AbstractPage {
 
     public void checkSymbolTradedTooltipValue(String expectedSymbol, double expectedAmount) {
         checkSymbolTradedTooltipValue(expectedSymbol, (decimalFormat.format((int) Math.round(expectedAmount))));
+    }
+
+    public void checkSymbolTradedTooltipValueLots(String expectedSymbol, String expectedLots) {
+        checkSymbolTradedTooltipValueLots(0, expectedSymbol, expectedLots);
+    }
+
+    public void checkSymbolTradedTooltipValueLots(String expectedSymbol, int expectedLots) {
+        checkSymbolTradedTooltipValueLots(expectedSymbol, (decimalFormat.format(expectedLots)));
+    }
+
+    public void checkSymbolTradedTooltipValueLots(String expectedSymbol, double expectedLots) {
+        checkSymbolTradedTooltipValueLots(expectedSymbol, (decimalFormat.format((int) Math.round(expectedLots))));
     }
 
     public void openHoldingTimeTooltip(String annotationText) {
@@ -2112,6 +2192,32 @@ public class TradingPage extends AbstractPage {
     public void checkCountNotHighlightedRows(Integer expectedRowCount) {
         super.waitForPageToLoad();
         assertEquals(expectedRowCount, notHighlightedRow.count());
+    }
+
+    public void enableViewAmount() {
+        super.waitForPageToLoad();
+        if ("false".equals(lotsAmountSwitch.getAttribute("aria-checked"))) {
+//            lotsAmountSwitch.click();
+            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']").click();
+            assertEquals("true", lotsAmountSwitch.getAttribute("aria-checked"));
+            page.waitForTimeout(300);
+        }
+    }
+
+    public void enableViewLots() {
+        super.waitForPageToLoad();
+        if ("true".equals(lotsAmountSwitch.getAttribute("aria-checked"))) {
+//            lotsAmountSwitch.click();
+            page.locator(LOTS_AMOUNT_SWITCH + "/following-sibling::span[@class='g-switch__slider']").click();
+            assertEquals("false", lotsAmountSwitch.getAttribute("aria-checked"));
+            page.waitForTimeout(300);
+        }
+    }
+
+    public void errorMessageIsNotVisible() {
+        super.waitForPageToLoad();
+        page.waitForTimeout(500);
+        assertFalse(errorMessage.isVisible());
     }
 
 }
