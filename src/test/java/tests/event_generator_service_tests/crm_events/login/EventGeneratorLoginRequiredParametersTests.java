@@ -1,14 +1,13 @@
 package tests.event_generator_service_tests.crm_events.login;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.crm_db_events.login.LoginDbEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 
 import static business_objects.kafka.crm_db_events.login.LoginDbEventFactory.generateLoginDbEvent;
@@ -21,10 +20,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class EventGeneratorLoginRequiredParametersTests {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class EventGeneratorLoginRequiredParametersTests extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate login event with any of the required parameters = null and verify that the Event Generator didn't produce the event")

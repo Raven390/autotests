@@ -6,23 +6,21 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import business_objects.kafka.crm_db_events.login.LoginDbEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_LOGIN)
 @Tag(LAYER_API)
 @Tag(TEAM_CORE)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class EventGeneratorLoginTests {
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class EventGeneratorLoginTests extends TestBaseKafka {
+
 
     @Test
     @DisplayName("Generate login event with event generator service")

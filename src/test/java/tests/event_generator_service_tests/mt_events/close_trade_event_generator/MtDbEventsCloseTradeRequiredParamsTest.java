@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.close_trade;
+package tests.event_generator_service_tests.mt_events.close_trade_event_generator;
 
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;
@@ -17,16 +17,14 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class MtDbEventsCloseTradeRequiredParamsTest {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class MtDbEventsCloseTradeRequiredParamsTest extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate close event with any of the required parameters = null and verify that the Event Generator didn't produce the event")

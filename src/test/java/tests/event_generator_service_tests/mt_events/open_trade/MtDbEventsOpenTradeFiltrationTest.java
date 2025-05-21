@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import helpers.kafka.MatchResultWithMessage;
 import helpers.kafka.MessageWithHeaders;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
@@ -17,6 +15,7 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 import java.time.Instant;
 
@@ -25,10 +24,7 @@ import java.time.Instant;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class MtDbEventsOpenTradeFiltrationTest {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class MtDbEventsOpenTradeFiltrationTest extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate open event with event generator service that should be filtered out by the Event Generator")

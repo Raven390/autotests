@@ -8,8 +8,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import helpers.kafka.KafkaHelper;
 import helpers.kafka.MessageWithHeaders;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt5;
@@ -18,16 +16,14 @@ import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.TestBaseKafka;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-class MtDbEventsOpenTradeTest {
-
-    KafkaHelper kafka = new KafkaHelper();
-    ObjectMapper objectMapper = new ObjectMapper();
+class MtDbEventsOpenTradeTest extends TestBaseKafka {
 
     @Test
     @DisplayName("Generate open event with event generator service from MT4 source with all fields populated")

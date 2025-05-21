@@ -20,6 +20,7 @@ public class Constants {
     public static final String LAYER_API = "layer_api";
     public static final String LAYER_WEB = "layer_web";
     public static final String LAYER_MOBILE = "layer_mobile";
+    public static final String LAYER_KAFKA = "layer_kafka";
     // FEATURES
     public static final String FEATURE_LEXIS_NEXIS = "Lexis Nexis integration";
     public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
@@ -85,6 +86,8 @@ public class Constants {
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";
     public static final String KAFKA_TOPIC_MT_EVENTS = "mt-events";
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
+    public static final String KAFKA_TOPIC_MT_4_TRADE_RECORD = "mt4_trade_record";
+    public static final String KAFKA_TOPIC_MT_5_DEAL = "mt5_Deal";
     public static final String KAFKA_TOPIC_ALERTS = "alerts";
     public static final String KAFKA_NO_MESSAGE_FOUND_ERROR = "Max attempts reached without finding a matching message";
     public static final String KAFKA_ALL_PARAMETERS_FOUND = "All the parameters were found in messages.";
