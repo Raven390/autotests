@@ -23,6 +23,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -57,16 +58,14 @@ class GetTradesTests extends TestBaseApi {
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3));
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(client));
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(client1Account));
-
-        System.out.println(clientHelper.getServerId());
-        System.out.println(trade1.getServerId());
     }
 
     @AfterAll
-    static void teardownTrades() {
-        //deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", account));
+    static void teardownTrades() throws Exception {
+        cleanMt5CoercedTableByUcid(clientHelper.getUcid());
     }
 
+    @Tag("CSV-1228")
     @Test
     @DisplayName("Clickhouse Api. Get Trades by all params")
     @AllureId("214")
@@ -97,6 +96,7 @@ class GetTradesTests extends TestBaseApi {
         assertThat("Assert symbol", mappedResponse[0].symbol, is(trade1.getSymbol()));
         assertThat("Assert profitUSD", mappedResponse[0].profitUsd, is(trade1.getProfit()));
         assertThat("Assert profit", mappedResponse[0].profit, is(trade1.getProfit()));
+        assertThat("Assert volumeInLots", mappedResponse[0].volumeInLots, is(trade1.getVolumeLots()));
         assertThat("Assert comment", mappedResponse[0].comment, is(trade1.getComment()));
     }
 
