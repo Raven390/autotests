@@ -12,10 +12,7 @@ import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
@@ -216,8 +213,8 @@ public class TradingTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("475")
-    @DisplayName("Test that Volume filter ")
-    public void testVolumeFilter() {
+    @DisplayName("Test that Volume amount filter ")
+    public void testVolumeAmountFilter() {
         deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
         MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
         trade0.ticketType = "Sell";
@@ -242,9 +239,45 @@ public class TradingTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.openFilter();
-        tradingPage.fillVolumeValues(String.valueOf(from), String.valueOf(to));
+        tradingPage.fillVolumeAmountValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();
         tradingPage.checkVolumeCellsContentUSD(from, to);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1175")
+    @Feature("BMS-1364 Trading volume in lots")
+    @DisplayName("Test that Volume Lot filter ")
+    public void testVolumeLotFilter() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.volumeLots = 3.9;
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.volumeLots = 4.0;
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.volumeLots = 4.1;
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.volumeLots = 8.0;
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.volumeLots = 8.1;
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
+
+        int from = 4;
+        int to = 8;
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.openFilter();
+        tradingPage.fillVolumeLotValues(String.valueOf(from), String.valueOf(to));
+        tradingPage.clickApplyButton();
+        tradingPage.checkVolumeCellsContentLots(from, to);
     }
 
     @Test
@@ -543,5 +576,104 @@ public class TradingTest extends TestBaseWeb {
         tradingPage.disableHftButton();
         tradingPage.checkCountNotHighlightedRows(1);
         tradingPage.checkCountHighlightedRows(0);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1176")
+    @DisplayName("Test that multiple filters not return empty state")
+    public void testMultipleFiltersShowResult() {
+
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.profitUsd = 4.99;
+        trade0.openTime = "2025-03-17 11:00:00";
+        trade0.closeTime = "2025-03-17 11:03:59";
+        trade0.notionalValueUsd = 390.0;
+        trade0.volumeLots = 3.9;
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.profitUsd = 5.00;
+        trade1.openTime = "2025-03-17 11:00:00";
+        trade1.closeTime = "2025-03-17 11:04:00";
+        trade1.notionalValueUsd = 400.0;
+        trade1.volumeLots = 4.0;
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.profitUsd = 79.99;
+        trade2.openTime = "2025-03-17 11:00:00";
+        trade2.closeTime = "2025-03-17 11:07:59";
+        trade2.notionalValueUsd = 410.0;
+        trade2.volumeLots = 4.1;
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.profitUsd = 80.00;
+        trade3.openTime = "2025-03-17 11:00:00";
+        trade3.closeTime = "2025-03-17 11:08:00";
+        trade3.notionalValueUsd = 800.0;
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.profitUsd = 800.1;
+        trade4.openTime = "2025-03-17 11:00:00";
+        trade4.closeTime = "2025-03-17 11:08:01";
+        trade4.notionalValueUsd = 810.0;
+        trade4.volumeLots = 8.1;
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
+
+        int profitUSDFrom = 5;
+        int profitUSDTo = 80;
+        int durationFrom = 4;
+        int durationTo = 8;
+        int volumeUSDFrom = 400;
+        int volumeUSDTo = 800;
+        int lotsFrom = 4;
+        int lotsTo = 8;
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        tradingPage.navigateOperations(client.getUcid());
+        tradingPage.openFilter();
+        tradingPage.fillVolumeLotValues(String.valueOf(lotsFrom), String.valueOf(lotsTo));
+        tradingPage.fillProfitValues(String.valueOf(profitUSDFrom), String.valueOf(profitUSDTo));
+        tradingPage.fillDurationValues(String.valueOf(durationFrom), String.valueOf(durationTo));
+        tradingPage.fillVolumeAmountValues(String.valueOf(volumeUSDFrom), String.valueOf(volumeUSDTo));
+        tradingPage.clickApplyButton();
+        tradingPage.errorMessageIsNotVisible();
+
+    }
+
+
+    @Disabled
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("")
+    @DisplayName("generateTestData ")
+    public void generateTestData() {
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
+        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
+        trade0.ticketType = "Sell";
+        trade0.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 0, 0, 0);
+        trade0.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 0, 0, 0);
+        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
+        trade1.ticketType = "Sell";
+        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 0, 0, 0);
+        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 0, 0, 0);
+        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
+        trade2.ticketType = "Sell";
+        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 4, 0, 0, 0);
+        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 4, 0, 0, 0);
+        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
+        trade3.ticketType = "Sell";
+        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
+        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
+        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
+        trade4.ticketType = "Sell";
+        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
+        trade4.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
+
     }
 }

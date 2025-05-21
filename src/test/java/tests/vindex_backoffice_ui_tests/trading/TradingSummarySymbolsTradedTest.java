@@ -122,6 +122,7 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        tradingPage.enableViewAmount();
         tradingPage.countSymbolTradedBar(1);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14, trade15, trade16);
         tradingPage.hoverOverSymbolTradedBar(0);
@@ -143,33 +144,41 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
 
         trade1.notionalValueUsd = 50_000.1;
+        trade1.volumeLots = 10.0;
         trade2.notionalValueUsd = 50_000.16;
+        trade2.volumeLots = 1.0;
         trade3.notionalValueUsd = 50_000.14;
+        trade3.volumeLots = 11.14;
         trade4.notionalValueUsd = 25_000.5;
+        trade4.volumeLots = 25_000.56;
         trade5.notionalValueUsd = 25_000.2;
+        trade5.volumeLots = 29_000.2;
 
-        Symbol simbol1 = Symbol.getRandomSymbol();
-        Symbol simbol2 = Symbol.getNextRandomSymbol(simbol1);
-        Symbol simbol3 = Symbol.getNextRandomSymbol(simbol1, simbol2);
-        Symbol simbol4 = Symbol.getNextRandomSymbol(simbol1, simbol2, simbol3);
-
-        trade1.symbol = simbol1.getSymbolCode();
-        trade2.symbol = simbol1.getSymbolCode();
-        trade3.symbol = simbol2.getSymbolCode();
-        trade4.symbol = simbol3.getSymbolCode();
-        trade5.symbol = simbol4.getSymbolCode();
+        trade1.symbol = "FIRST";
+        trade2.symbol = "FIRST";
+        trade3.symbol = "THRIRD";
+        trade4.symbol = "FOURTH";
+        trade5.symbol = "FIFTH";
 
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        tradingPage.enableViewAmount();
         tradingPage.countSymbolTradedBar(4);
         tradingPage.checkSymbolTradedHeaderMostTraded(trade1.symbol);
         tradingPage.checkSymbolTradedHeader(2, trade3.symbol);
         tradingPage.checkSymbolTradedHeader(3, trade4.symbol);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2);
         tradingPage.checkSymbolTradedGraphDescription(expectedAmount, trade1.symbol);
+
+        Allure.step("repeat for volume in lots");
+        tradingPage.enableViewLots();
+        tradingPage.countSymbolTradedBar(3);
+        tradingPage.checkSymbolTradedHeaderMostTraded(trade5.symbol);
+        tradingPage.checkSymbolTradedHeader(2, trade4.symbol);
+        tradingPage.checkSymbolTradedHeader(3, trade3.symbol);
     }
 
     @Test
@@ -184,10 +193,15 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade5 = generateMt4TradesCoercedRandomized(client);
 
         trade1.notionalValueUsd = 50_000.1;
+        trade1.volumeLots = 253_200.2;
         trade2.notionalValueUsd = 50_000.16;
+        trade2.volumeLots = 110.16;
         trade3.notionalValueUsd = 50_000.14;
+        trade3.volumeLots = 5032.14;
         trade4.notionalValueUsd = 25_000.5;
+        trade4.volumeLots = 21_000.5;
         trade5.notionalValueUsd = 25_000.2;
+        trade5.volumeLots = 253_200.2;
 
         Symbol simbol1 = Symbol.getRandomSymbol();
         Symbol simbol2 = Symbol.getNextRandomSymbol(simbol1);
@@ -205,11 +219,20 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        tradingPage.enableViewAmount();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedAmount = tradingPage.calculateNotionValueUsdByDealInt(trade1, trade2);
         tradingPage.checkSymbolTradedTooltipValue(trade1.symbol, expectedAmount);
         tradingPage.hoverOverSymbolTradedBar(1);
         tradingPage.checkSymbolTradedTooltipValue(trade3.symbol, trade3.notionalValueUsd);
+
+        Allure.step("repeat the same for lots view");
+        tradingPage.enableViewLots();
+        tradingPage.hoverOverSymbolTradedBar(0);
+        int expectedVolume = tradingPage.calculateLotsByDealInt(trade1, trade2);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade1.symbol, expectedVolume);
+        tradingPage.hoverOverSymbolTradedBar(1);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade5.symbol, trade5.volumeLots);
 
         Allure.step("now try to repeat with two trades with one symbol and random values");
         tradingPage.deleteClientDeals(client.getUcid());
@@ -222,9 +245,15 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade21, trade22));
 
         tradingPage.navigate(client.getUcid());
+        tradingPage.enableViewAmount();
         tradingPage.hoverOverSymbolTradedBar(0);
         int expectedAmount2 = tradingPage.calculateNotionValueUsdByDealInt(trade21, trade22);
         tradingPage.checkSymbolTradedTooltipValue(trade21.symbol, expectedAmount2);
+
+        tradingPage.enableViewLots();
+        tradingPage.hoverOverSymbolTradedBar(0);
+        int expectedVolume2 = tradingPage.calculateLotsByDealInt(trade21, trade22);
+        tradingPage.checkSymbolTradedTooltipValueLots(trade21.symbol, expectedVolume2);
     }
 
 }

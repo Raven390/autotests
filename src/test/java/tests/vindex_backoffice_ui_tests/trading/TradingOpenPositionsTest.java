@@ -11,10 +11,7 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.TradingPage;
 import tests.TestBaseWeb;
 
@@ -128,6 +125,66 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         openPositions.navigateOpenPositions(client.getUcid());
         openPositions.openPositionsRenders();
+    }
+
+
+    @Disabled("not yet implemented")
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1174")
+    @Feature("BMS-1364 Trading volume in lots")
+    @DisplayName("Test that Volume Lot filter Open Position")
+    void testVolumeLotFilter() {
+        openPositions.openPositionsClean(client);
+        MtMt4TradesObject mt4trade1 = generateMt4TradesObject(client);
+        mt4trade1.setCloseTime("1970-01-01 00:00:00");
+        mt4trade1.setCmd(0);
+        mt4trade1.setVolumeLots(3.9);
+        mt4trade1.setAccount(client.getTradingAccount());
+        mt4trade1.setServerId(client.getServerId());
+
+        MtMt4TradesObject mt4trade2 = generateMt4TradesObject(client);
+        mt4trade2.setCloseTime("1970-01-01 00:00:00");
+        mt4trade2.setCmd(0);
+        mt4trade2.setVolumeLots(4.0);
+        mt4trade2.setAccount(client.getTradingAccount());
+        mt4trade2.setServerId(client.getServerId());
+
+        MtMt4TradesObject mt4trade3 = generateMt4TradesObject(client);
+        mt4trade3.setCloseTime("1970-01-01 00:00:00");
+        mt4trade3.setCmd(0);
+        mt4trade3.setVolumeLots(4.1);
+        mt4trade3.setAccount(client.getTradingAccount());
+        mt4trade3.setServerId(client.getServerId());
+
+        MtMt4TradesObject mt4trade4 = generateMt4TradesObject(client);
+        mt4trade4.setCloseTime("1970-01-01 00:00:00");
+        mt4trade4.setCmd(0);
+        mt4trade1.setVolumeLots(8.0);
+        mt4trade4.setAccount(client.getTradingAccount());
+        mt4trade4.setServerId(client.getServerId());
+
+        MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client);
+        position1.setVolumeLots(8.1);
+        position1.setAccount(client.getTradingAccount2());
+        Mt5DealsCoercedObject deal = generateMt5DealsCoercedObject(position1);
+        position1.setAccount(client.getTradingAccount2());
+        insertObjectsToDb(MT4_TRADES_TABLE_NAME, List.of(mt4trade1, mt4trade2, mt4trade3, mt4trade4));
+        insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position1);
+        insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        openPositions.navigateOpenPositions(client.getUcid());
+        openPositions.openPositionsRenders();
+
+        int from = 4;
+        int to = 8;
+        tradingPage.openFilter();
+        tradingPage.fillVolumeLotValues(String.valueOf(from), String.valueOf(to));
+        tradingPage.clickApplyButton();
+        tradingPage.checkVolumeCellsContentLots(from, to);
+
     }
 
 
