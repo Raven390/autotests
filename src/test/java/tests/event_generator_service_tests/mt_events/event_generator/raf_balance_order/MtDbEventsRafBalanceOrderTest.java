@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.raf_balance_order;
+package tests.event_generator_service_tests.mt_events.event_generator.raf_balance_order;
 
 import static business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt4;
 import static business_objects.kafka.mt_db_events.raf_balance_order.RafBalanceOrderMtDbEventFactory.generateRafBalanceOrderMtDbEventMt5;

@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.open_trade;
+package tests.event_generator_service_tests.mt_events.event_generator.open_trade;
 
 import static business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventFactory.*;
 import static org.hamcrest.MatcherAssert.assertThat;

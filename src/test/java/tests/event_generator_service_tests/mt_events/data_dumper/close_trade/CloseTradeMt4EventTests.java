@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.close_trade_data_dumper;
+package tests.event_generator_service_tests.mt_events.data_dumper.close_trade;
 
 import business_objects.kafka.mt_data_dumper_events.close_trade.CloseTradeMt4;
 import business_objects.kafka.mt_events.CloseTradeMtEvent_NEW;
@@ -24,9 +24,10 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
-public class CloseTradeMt4EventTests extends TestBaseKafka {
+class CloseTradeMt4EventTests extends TestBaseKafka {
 
     @Test
+    @Tag("CSV-1253")
     @DisplayName("Generate close event with event generator service from MT4 data dumper source with all fields populated")
     @AllureId("1159")
     void generateMt4CloseTradeEventTest() throws JsonProcessingException, InterruptedException {

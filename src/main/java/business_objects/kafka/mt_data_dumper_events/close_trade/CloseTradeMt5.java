@@ -25,15 +25,15 @@ public class CloseTradeMt5 {
         public String msgType;
 
         @JsonProperty("Operation")
-        public int operation;
+        public Integer operation;
 
         @JsonProperty("ServerId")
-        public int serverId;
+        public Integer serverId;
 
         @JsonProperty("Timestamp")
-        public long timestamp;
+        public Long timestamp;
 
-        public Header(String msgId, String msgType, int operation, int serverId, long timestamp) {
+        public Header(String msgId, String msgType, Integer operation, Integer serverId, Long timestamp) {
             this.msgId = msgId;
             this.msgType = msgType;
             this.operation = operation;
@@ -57,27 +57,27 @@ public class CloseTradeMt5 {
             this.msgType = msgType;
         }
 
-        public int getOperation() {
+        public Integer getOperation() {
             return operation;
         }
 
-        public void setOperation(int operation) {
+        public void setOperation(Integer operation) {
             this.operation = operation;
         }
 
-        public int getServerId() {
+        public Integer getServerId() {
             return serverId;
         }
 
-        public void setServerId(int serverId) {
+        public void setServerId(Integer serverId) {
             this.serverId = serverId;
         }
 
-        public long getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
 
-        public void setTimestamp(long timestamp) {
+        public void setTimestamp(Long timestamp) {
             this.timestamp = timestamp;
         }
 
@@ -101,163 +101,167 @@ public class CloseTradeMt5 {
 
     public static class Payload {
         @JsonProperty("AccountRate")
-        public double accountRate;
+        public Double accountRate;
 
         @JsonProperty("Action")
-        public int action;
+        public Integer action;
 
         @JsonProperty("Balance")
-        public double balance;
+        public Double balance;
 
         @JsonProperty("Comment")
         public String comment;
 
         @JsonProperty("Commission")
-        public double commission;
+        public Double commission;
 
         @JsonProperty("ContractSize")
-        public double contractSize;
+        public Double contractSize;
 
         @JsonProperty("Deal")
-        public long deal;
+        public Long deal;
 
         @JsonProperty("Dealer")
-        public long dealer;
+        public Long dealer;
 
         @JsonProperty("Digits")
-        public int digits;
+        public Integer digits;
 
         @JsonProperty("DigitsCurrency")
-        public int digitsCurrency;
+        public Integer digitsCurrency;
 
         @JsonProperty("Entry")
-        public int entry;
+        public Integer entry;
 
         @JsonProperty("Equity")
-        public double equity;
+        public Double equity;
 
         @JsonProperty("ExpertID")
-        public long expertId;
+        public Long expertId;
 
         @JsonProperty("ExternalID")
         public String externalId;
 
         @JsonProperty("Fee")
-        public double fee;
+        public Double fee;
 
         @JsonProperty("Flags")
-        public int flags;
+        public Integer flags;
 
         @JsonProperty("FreeMargin")
-        public double freeMargin;
+        public Double freeMargin;
 
         @JsonProperty("Gateway")
         public String gateway;
 
         @JsonProperty("Leverage")
-        public int leverage;
+        public Integer leverage;
 
         @JsonProperty("Login")
-        public long login;
+        public Long login;
 
         @JsonProperty("Margin")
-        public double margin;
+        public Double margin;
 
         @JsonProperty("MarketAsk")
-        public double marketAsk;
+        public Double marketAsk;
 
         @JsonProperty("MarketBid")
-        public double marketBid;
+        public Double marketBid;
 
         @JsonProperty("MarketLast")
-        public double marketLast;
+        public Double marketLast;
 
         @JsonProperty("ModificationFlags")
-        public int modificationFlags;
+        public Integer modificationFlags;
 
         @JsonProperty("Order")
-        public long order;
+        public Long order;
 
         @JsonProperty("PositionID")
-        public long positionId;
+        public Long positionId;
 
         @JsonProperty("Price")
-        public double price;
+        public Double price;
 
         @JsonProperty("PriceGateway")
-        public double priceGateway;
+        public Double priceGateway;
 
         @JsonProperty("PricePosition")
-        public double pricePosition;
+        public Double pricePosition;
 
         @JsonProperty("PriceSL")
-        public double priceSL;
+        public Double priceSL;
 
         @JsonProperty("PriceTP")
-        public double priceTP;
+        public Double priceTP;
 
         @JsonProperty("Profit")
-        public double profit;
+        public Double profit;
 
         @JsonProperty("ProfitRaw")
-        public double profitRaw;
+        public Double profitRaw;
 
         @JsonProperty("RateMargin")
-        public double rateMargin;
+        public Double rateMargin;
 
         @JsonProperty("RateProfit")
-        public double rateProfit;
+        public Double rateProfit;
 
         @JsonProperty("RawApiData")
         public List<RawApiData> rawApiData;
 
         @JsonProperty("Reason")
-        public int reason;
+        public Integer reason;
 
         @JsonProperty("Storage")
-        public double storage;
+        public Double storage;
 
         @JsonProperty("Symbol")
         public String symbol;
 
         @JsonProperty("TickSize")
-        public double tickSize;
+        public Double tickSize;
 
         @JsonProperty("TickValue")
-        public double tickValue;
+        public Double tickValue;
 
         @JsonProperty("Time")
-        public long time;
+        public Long time;
 
         @JsonProperty("TimeUtc")
-        public long timeUtc;
+        public Long timeUtc;
 
         @JsonProperty("Value")
-        public double value;
+        public Double value;
 
         @JsonProperty("Volume")
-        public long volume;
+        public Long volume;
 
         @JsonProperty("VolumeClosed")
-        public long volumeClosed;
+        public Long volumeClosed;
 
         @JsonProperty("VolumeClosedExt")
-        public long volumeClosedExt;
+        public Long volumeClosedExt;
 
         @JsonProperty("VolumeExt")
-        public long volumeExt;
+        public Long volumeExt;
 
         public Payload(
-                double accountRate, int action, double balance, String comment, double commission, double contractSize,
-                long deal, long dealer, int digits, int digitsCurrency, int entry, double equity, long expertId,
-                String externalId, double fee, int flags, double freeMargin, String gateway, int leverage, long login,
-                double margin, double marketAsk, double marketBid, double marketLast, int modificationFlags, long order,
-                long positionId, double price, double priceGateway, double pricePosition, double priceSL,
-                double priceTP,
-                double profit, double profitRaw, double rateMargin, double rateProfit, List<RawApiData> rawApiData,
-                int reason,
-                double storage, String symbol, double tickSize, double tickValue, long time, long timeUtc, double value,
-                long volume, long volumeClosed, long volumeClosedExt, long volumeExt) {
+                Double accountRate, Integer action, Double balance, String comment, Double commission,
+                Double contractSize,
+                Long deal, Long dealer, Integer digits, Integer digitsCurrency, Integer entry, Double equity,
+                Long expertId,
+                String externalId, Double fee, Integer flags, Double freeMargin, String gateway, Integer leverage,
+                Long login,
+                Double margin, Double marketAsk, Double marketBid, Double marketLast, Integer modificationFlags,
+                Long order,
+                Long positionId, Double price, Double priceGateway, Double pricePosition, Double priceSL,
+                Double priceTP,
+                Double profit, Double profitRaw, Double rateMargin, Double rateProfit, List<RawApiData> rawApiData,
+                Integer reason,
+                Double storage, String symbol, Double tickSize, Double tickValue, Long time, Long timeUtc, Double value,
+                Long volume, Long volumeClosed, Long volumeClosedExt, Long volumeExt) {
             this.accountRate = accountRate;
             this.action = action;
             this.balance = balance;
@@ -309,27 +313,27 @@ public class CloseTradeMt5 {
             this.volumeExt = volumeExt;
         }
 
-        public double getAccountRate() {
+        public Double getAccountRate() {
             return accountRate;
         }
 
-        public void setAccountRate(double accountRate) {
+        public void setAccountRate(Double accountRate) {
             this.accountRate = accountRate;
         }
 
-        public int getAction() {
+        public Integer getAction() {
             return action;
         }
 
-        public void setAction(int action) {
+        public void setAction(Integer action) {
             this.action = action;
         }
 
-        public double getBalance() {
+        public Double getBalance() {
             return balance;
         }
 
-        public void setBalance(double balance) {
+        public void setBalance(Double balance) {
             this.balance = balance;
         }
 
@@ -341,75 +345,75 @@ public class CloseTradeMt5 {
             this.comment = comment;
         }
 
-        public double getCommission() {
+        public Double getCommission() {
             return commission;
         }
 
-        public void setCommission(double commission) {
+        public void setCommission(Double commission) {
             this.commission = commission;
         }
 
-        public double getContractSize() {
+        public Double getContractSize() {
             return contractSize;
         }
 
-        public void setContractSize(double contractSize) {
+        public void setContractSize(Double contractSize) {
             this.contractSize = contractSize;
         }
 
-        public long getDeal() {
+        public Long getDeal() {
             return deal;
         }
 
-        public void setDeal(long deal) {
+        public void setDeal(Long deal) {
             this.deal = deal;
         }
 
-        public long getDealer() {
+        public Long getDealer() {
             return dealer;
         }
 
-        public void setDealer(long dealer) {
+        public void setDealer(Long dealer) {
             this.dealer = dealer;
         }
 
-        public int getDigits() {
+        public Integer getDigits() {
             return digits;
         }
 
-        public void setDigits(int digits) {
+        public void setDigits(Integer digits) {
             this.digits = digits;
         }
 
-        public int getDigitsCurrency() {
+        public Integer getDigitsCurrency() {
             return digitsCurrency;
         }
 
-        public void setDigitsCurrency(int digitsCurrency) {
+        public void setDigitsCurrency(Integer digitsCurrency) {
             this.digitsCurrency = digitsCurrency;
         }
 
-        public int getEntry() {
+        public Integer getEntry() {
             return entry;
         }
 
-        public void setEntry(int entry) {
+        public void setEntry(Integer entry) {
             this.entry = entry;
         }
 
-        public double getEquity() {
+        public Double getEquity() {
             return equity;
         }
 
-        public void setEquity(double equity) {
+        public void setEquity(Double equity) {
             this.equity = equity;
         }
 
-        public long getExpertId() {
+        public Long getExpertId() {
             return expertId;
         }
 
-        public void setExpertId(long expertId) {
+        public void setExpertId(Long expertId) {
             this.expertId = expertId;
         }
 
@@ -421,27 +425,27 @@ public class CloseTradeMt5 {
             this.externalId = externalId;
         }
 
-        public double getFee() {
+        public Double getFee() {
             return fee;
         }
 
-        public void setFee(double fee) {
+        public void setFee(Double fee) {
             this.fee = fee;
         }
 
-        public int getFlags() {
+        public Integer getFlags() {
             return flags;
         }
 
-        public void setFlags(int flags) {
+        public void setFlags(Integer flags) {
             this.flags = flags;
         }
 
-        public double getFreeMargin() {
+        public Double getFreeMargin() {
             return freeMargin;
         }
 
-        public void setFreeMargin(double freeMargin) {
+        public void setFreeMargin(Double freeMargin) {
             this.freeMargin = freeMargin;
         }
 
@@ -457,143 +461,143 @@ public class CloseTradeMt5 {
             return leverage;
         }
 
-        public void setLeverage(int leverage) {
+        public void setLeverage(Integer leverage) {
             this.leverage = leverage;
         }
 
-        public long getLogin() {
+        public Long getLogin() {
             return login;
         }
 
-        public void setLogin(long login) {
+        public void setLogin(Long login) {
             this.login = login;
         }
 
-        public double getMargin() {
+        public Double getMargin() {
             return margin;
         }
 
-        public void setMargin(double margin) {
+        public void setMargin(Double margin) {
             this.margin = margin;
         }
 
-        public double getMarketAsk() {
+        public Double getMarketAsk() {
             return marketAsk;
         }
 
-        public void setMarketAsk(double marketAsk) {
+        public void setMarketAsk(Double marketAsk) {
             this.marketAsk = marketAsk;
         }
 
-        public double getMarketBid() {
+        public Double getMarketBid() {
             return marketBid;
         }
 
-        public void setMarketBid(double marketBid) {
+        public void setMarketBid(Double marketBid) {
             this.marketBid = marketBid;
         }
 
-        public double getMarketLast() {
+        public Double getMarketLast() {
             return marketLast;
         }
 
-        public void setMarketLast(double marketLast) {
+        public void setMarketLast(Double marketLast) {
             this.marketLast = marketLast;
         }
 
-        public int getModificationFlags() {
+        public Integer getModificationFlags() {
             return modificationFlags;
         }
 
-        public void setModificationFlags(int modificationFlags) {
+        public void setModificationFlags(Integer modificationFlags) {
             this.modificationFlags = modificationFlags;
         }
 
-        public long getOrder() {
+        public Long getOrder() {
             return order;
         }
 
-        public void setOrder(long order) {
+        public void setOrder(Long order) {
             this.order = order;
         }
 
-        public long getPositionId() {
+        public Long getPositionId() {
             return positionId;
         }
 
-        public void setPositionId(long positionId) {
+        public void setPositionId(Long positionId) {
             this.positionId = positionId;
         }
 
-        public double getPrice() {
+        public Double getPrice() {
             return price;
         }
 
-        public void setPrice(double price) {
+        public void setPrice(Double price) {
             this.price = price;
         }
 
-        public double getPriceGateway() {
+        public Double getPriceGateway() {
             return priceGateway;
         }
 
-        public void setPriceGateway(double priceGateway) {
+        public void setPriceGateway(Double priceGateway) {
             this.priceGateway = priceGateway;
         }
 
-        public double getPricePosition() {
+        public Double getPricePosition() {
             return pricePosition;
         }
 
-        public void setPricePosition(double pricePosition) {
+        public void setPricePosition(Double pricePosition) {
             this.pricePosition = pricePosition;
         }
 
-        public double getPriceSL() {
+        public Double getPriceSL() {
             return priceSL;
         }
 
-        public void setPriceSL(double priceSL) {
+        public void setPriceSL(Double priceSL) {
             this.priceSL = priceSL;
         }
 
-        public double getPriceTP() {
+        public Double getPriceTP() {
             return priceTP;
         }
 
-        public void setPriceTP(double priceTP) {
+        public void setPriceTP(Double priceTP) {
             this.priceTP = priceTP;
         }
 
-        public double getProfit() {
+        public Double getProfit() {
             return profit;
         }
 
-        public void setProfit(double profit) {
+        public void setProfit(Double profit) {
             this.profit = profit;
         }
 
-        public double getProfitRaw() {
+        public Double getProfitRaw() {
             return profitRaw;
         }
 
-        public void setProfitRaw(double profitRaw) {
+        public void setProfitRaw(Double profitRaw) {
             this.profitRaw = profitRaw;
         }
 
-        public double getRateMargin() {
+        public Double getRateMargin() {
             return rateMargin;
         }
 
-        public void setRateMargin(double rateMargin) {
+        public void setRateMargin(Double rateMargin) {
             this.rateMargin = rateMargin;
         }
 
-        public double getRateProfit() {
+        public Double getRateProfit() {
             return rateProfit;
         }
 
-        public void setRateProfit(double rateProfit) {
+        public void setRateProfit(Double rateProfit) {
             this.rateProfit = rateProfit;
         }
 
@@ -606,19 +610,19 @@ public class CloseTradeMt5 {
             this.rawApiData = rawApiData;
         }
 
-        public int getReason() {
+        public Integer getReason() {
             return reason;
         }
 
-        public void setReason(int reason) {
+        public void setReason(Integer reason) {
             this.reason = reason;
         }
 
-        public double getStorage() {
+        public Double getStorage() {
             return storage;
         }
 
-        public void setStorage(double storage) {
+        public void setStorage(Double storage) {
             this.storage = storage;
         }
 
@@ -630,75 +634,75 @@ public class CloseTradeMt5 {
             this.symbol = symbol;
         }
 
-        public double getTickSize() {
+        public Double getTickSize() {
             return tickSize;
         }
 
-        public void setTickSize(double tickSize) {
+        public void setTickSize(Double tickSize) {
             this.tickSize = tickSize;
         }
 
-        public double getTickValue() {
+        public Double getTickValue() {
             return tickValue;
         }
 
-        public void setTickValue(double tickValue) {
+        public void setTickValue(Double tickValue) {
             this.tickValue = tickValue;
         }
 
-        public long getTime() {
+        public Long getTime() {
             return time;
         }
 
-        public void setTime(long time) {
+        public void setTime(Long time) {
             this.time = time;
         }
 
-        public long getTimeUtc() {
+        public Long getTimeUtc() {
             return timeUtc;
         }
 
-        public void setTimeUtc(long timeUtc) {
+        public void setTimeUtc(Long timeUtc) {
             this.timeUtc = timeUtc;
         }
 
-        public double getValue() {
+        public Double getValue() {
             return value;
         }
 
-        public void setValue(double value) {
+        public void setValue(Double value) {
             this.value = value;
         }
 
-        public long getVolume() {
+        public Long getVolume() {
             return volume;
         }
 
-        public void setVolume(long volume) {
+        public void setVolume(Long volume) {
             this.volume = volume;
         }
 
-        public long getVolumeClosed() {
+        public Long getVolumeClosed() {
             return volumeClosed;
         }
 
-        public void setVolumeClosed(long volumeClosed) {
+        public void setVolumeClosed(Long volumeClosed) {
             this.volumeClosed = volumeClosed;
         }
 
-        public long getVolumeClosedExt() {
+        public Long getVolumeClosedExt() {
             return volumeClosedExt;
         }
 
-        public void setVolumeClosedExt(long volumeClosedExt) {
+        public void setVolumeClosedExt(Long volumeClosedExt) {
             this.volumeClosedExt = volumeClosedExt;
         }
 
-        public long getVolumeExt() {
+        public Long getVolumeExt() {
             return volumeExt;
         }
 
-        public void setVolumeExt(long volumeExt) {
+        public void setVolumeExt(Long volumeExt) {
             this.volumeExt = volumeExt;
         }
 
