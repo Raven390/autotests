@@ -52,13 +52,13 @@ public enum FraudType {
         return frauds[random.nextInt(frauds.length)];
     }
 
-    public static FraudType getRandomFraudType(FraudType... fraudType) {
+    public static FraudType getRandomFraudType(FraudType... excludedFraudType) {
         FraudType fraud;
         do {
             FraudType[] frauds = values();
             Random random = new Random();
             fraud = frauds[random.nextInt(frauds.length)];
-        } while (Arrays.stream(fraudType).toList().contains(fraud));
+        } while (Arrays.stream(excludedFraudType).toList().contains(fraud));
         return fraud;
     }
 }

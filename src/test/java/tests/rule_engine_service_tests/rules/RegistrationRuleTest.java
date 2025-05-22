@@ -1364,4 +1364,45 @@ class RegistrationRuleTest extends TestBaseRule {
         ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong(), "APPLIED");
         assertThat("Verify that the restriction is as expected", restriction, equalTo(expectedRestriction));
     }
+
+    @Test
+    @DisplayName("Registration rule exit Event_End_3p25")
+    @AllureId("1178")
+    void registrationRuleExitEventEnd3p25Test() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3p25");
+        Allure.step("toxic accounts linked = true");
+        Allure.step("connected user fraud is none of listed in other cases");
+        Allure.step("Connection score by attributes < 0.75");
+        Allure.step("Set manual withdrawal review restriction");
+        Allure.step("Generate alert");
+
+        Allure.step("Produce registration event to crm-events topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
+
+        Allure.step("Get alerts");
+        List<String> consumedMessages = kafka.consumeMessages(KAFKA_TOPIC_ALERTS, data.clientHelper.getUcid(), 100);
+        assertThat("Verify that there is only 1 alert", consumedMessages.size(), equalTo(1));
+        RuleAlert alert = objectMapper.readValue(consumedMessages.getFirst(), RuleAlert.class);
+
+        // Verify alert
+        assertThat("Verify alert id not null", alert.alertId, notNullValue());
+        assertThat("Verify timestamp not null", alert.timestamp, notNullValue());
+        assertThat("Verify ucid is correct", alert.ucid, equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify rule not null", alert.rule, notNullValue());
+        assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
+        assertThat("Verify rule name not null", alert.rule.name, notNullValue());
+        assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Registration"));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo("POTENTIAL_ABUSE"));
+        assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
+        assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, equalTo("Linked unknown abuser"));
+
+        // Verify restrictions in Mitigation Service db
+
+        Allure.step("Get client restrictions");
+        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        );
+
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+    }
 }

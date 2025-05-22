@@ -109,6 +109,13 @@ public class RuleAlert {
             @JsonProperty("Check")
             public String check;
 
+            @JsonProperty("FMax Connection Score")
+            @JsonAlias({"Max Connection Score", "FMax Connection Score"})
+            public String maxConnectionScore;
+
+            @JsonProperty("Fraud type of linked abuser")
+            public String fraudTypeOfLinkedAbuser;
+
             @JsonProperty("Same CPA connections")
             public String sameCPAConnections;
 
@@ -123,9 +130,6 @@ public class RuleAlert {
 
             @JsonProperty("Same brand connections")
             public String sameBrandConnections;
-
-            @JsonProperty("Max Connection Score")
-            public String maxConnectionScore;
 
             @JsonProperty("Order Id")
             public String orderId;
