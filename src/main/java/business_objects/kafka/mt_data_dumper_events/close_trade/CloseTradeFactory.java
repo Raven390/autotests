@@ -22,7 +22,7 @@ public class CloseTradeFactory {
 
     @Step("Generate MT4 close trade data dumper event payload")
     static CloseTradeMt4.Payload generateMt4CloseTradeMtDbEventPayload() {
-        return new CloseTradeMt4.Payload(1d, List.of(1, 1), 100, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 1, "Automation tests", 1d, 1d, List.of(1d, 1d), List.of(1, 1), 1d, 1d, 2, 1d, 1L, 1L, 1d, 1d, 1d, 1L, 1d, 1d, Utils.getRandomLongPositive(), 1L, 1, 1d, 2, 1d, 1L, 1L, 1L, 1d, 1, 1d, 1, 1d, "EURUSD", 1d, 1L, 1L, 1d, 1d);
+        return new CloseTradeMt4.Payload(1d, List.of(1, 1), 100d, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 1, "Automation tests", 1d, 1d, List.of(1d, 1d), List.of(1, 1), 1d, 1d, 2, 1d, 1L, 1L, 1d, 1d, 1d, 1L, 1d, 1d, Utils.getRandomLongPositive(), 1L, 1d, 1d, 2, 1d, 1L, 1L, 1L, 1d, 1, 1d, 1, 1d, "EURUSD", 1d, 1L, 1L, 1d, 1d);
     }
 
     // MT5 event
@@ -40,7 +40,7 @@ public class CloseTradeFactory {
 
     @Step("Generate MT5 close trade data dumper event payload")
     private static CloseTradeMt5.Payload generateMt5CloseTradeMtDbEventPayload(CloseTradeMt5.RawApiData rawApiData) {
-        return new CloseTradeMt5.Payload(1.0, 1, 100, "Automation tests", 1.0, 1.0, Utils.getRandomIntPositive(), 0, 1, 2, 1, 100, 0, "", 1.0, 0, 100, "1", 1, Utils.getRandomLongPositive(), 1d, 1d, 1d, 1d, 1, 1L, 1L, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, List.of(rawApiData), 0, 1d, "EURUSD", 1d, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 1d, 1, 0, 0, 0);
+        return new CloseTradeMt5.Payload(1.0, 1, 100d, "Automation tests", 1.0, 1.0, Utils.getRandomLongPositive(), 0L, 1, 2, 1, 100d, 0L, "", 1.0, 0, 100d, "1", 1, Utils.getRandomLongPositive(), 1d, 1d, 1d, 1d, 1, 1L, 1L, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, List.of(rawApiData), 0, 1d, "EURUSD", 1d, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 1d, 1L, 0L, 0L, 0L);
     }
 
     @Step("Generate MT5 close trade data dumper event rawApiData")

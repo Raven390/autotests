@@ -1,4 +1,4 @@
-package tests.event_generator_service_tests.mt_events.close_trade_event_generator;
+package tests.event_generator_service_tests.mt_events.event_generator.close_trade;
 
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt4;
 import static business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventFactory.generateCloseTradeMtDbEventMt5;

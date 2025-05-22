@@ -26,15 +26,15 @@ public class CloseTradeMt4 {
         public String msgType;
 
         @JsonProperty("operation")
-        public int operation;
+        public Integer operation;
 
         @JsonProperty("server_id")
-        public int serverId;
+        public Integer serverId;
 
         @JsonProperty("timestamp")
-        public long timestamp;
+        public Long timestamp;
 
-        public Header(String msgId, String msgType, int operation, int serverId, long timestamp) {
+        public Header(String msgId, String msgType, Integer operation, Integer serverId, Long timestamp) {
             this.msgId = msgId;
             this.msgType = msgType;
             this.operation = operation;
@@ -58,27 +58,27 @@ public class CloseTradeMt4 {
             this.msgType = msgType;
         }
 
-        public int getOperation() {
+        public Integer getOperation() {
             return operation;
         }
 
-        public void setOperation(int operation) {
+        public void setOperation(Integer operation) {
             this.operation = operation;
         }
 
-        public int getServerId() {
+        public Integer getServerId() {
             return serverId;
         }
 
-        public void setServerId(int serverId) {
+        public void setServerId(Integer serverId) {
             this.serverId = serverId;
         }
 
-        public long getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
 
-        public void setTimestamp(long timestamp) {
+        public void setTimestamp(Long timestamp) {
             this.timestamp = timestamp;
         }
 
@@ -101,35 +101,36 @@ public class CloseTradeMt4 {
     }
 
     public static class Payload {
+
         @JsonProperty("account_rate")
-        public double accountRate;
+        public Double accountRate;
 
         @JsonProperty("api_data")
         public List<Integer> apiData;
 
         @JsonProperty("balance")
-        public double balance;
+        public Double balance;
 
         @JsonProperty("close_price")
-        public double closePrice;
+        public Double closePrice;
 
         @JsonProperty("close_time")
-        public long closeTime;
+        public Long closeTime;
 
         @JsonProperty("close_time_utc")
-        public long closeTimeUtc;
+        public Long closeTimeUtc;
 
         @JsonProperty("cmd")
-        public int cmd;
+        public Integer cmd;
 
         @JsonProperty("comment")
         public String comment;
 
         @JsonProperty("commission")
-        public double commission;
+        public Double commission;
 
         @JsonProperty("commission_agent")
-        public double commissionAgent;
+        public Double commissionAgent;
 
         @JsonProperty("conv_rates")
         public List<Double> convRates;
@@ -138,113 +139,114 @@ public class CloseTradeMt4 {
         public List<Integer> convReserv;
 
         @JsonProperty("current_ask")
-        public double currentAsk;
+        public Double currentAsk;
 
         @JsonProperty("current_bid")
-        public double currentBid;
+        public Double currentBid;
 
         @JsonProperty("digits")
-        public int digits;
+        public Integer digits;
 
         @JsonProperty("equity")
-        public double equity;
+        public Double equity;
 
         @JsonProperty("expiration")
-        public long expiration;
+        public Long expiration;
 
         @JsonProperty("expiration_utc")
-        public long expirationUtc;
+        public Long expirationUtc;
 
         @JsonProperty("free_margin")
-        public double freeMargin;
+        public Double freeMargin;
 
         @JsonProperty("gw_close_price")
-        public double gwClosePrice;
+        public Double gwClosePrice;
 
         @JsonProperty("gw_open_price")
-        public double gwOpenPrice;
+        public Double gwOpenPrice;
 
         @JsonProperty("gw_order")
-        public long gwOrder;
+        public Long gwOrder;
 
         @JsonProperty("gw_volume")
-        public double gwVolume;
+        public Double gwVolume;
 
         @JsonProperty("leverage")
-        public double leverage;
+        public Double leverage;
 
         @JsonProperty("login")
-        public long login;
+        public Long login;
 
         @JsonProperty("magic")
-        public long magic;
+        public Long magic;
 
         @JsonProperty("margin")
-        public double margin;
+        public Double margin;
 
         @JsonProperty("margin_rate")
-        public double marginRate;
+        public Double marginRate;
 
         @JsonProperty("mode")
-        public int mode;
+        public Integer mode;
 
         @JsonProperty("open_price")
-        public double openPrice;
+        public Double openPrice;
 
         @JsonProperty("open_time")
-        public long openTime;
+        public Long openTime;
 
         @JsonProperty("open_time_utc")
-        public long openTimeUtc;
+        public Long openTimeUtc;
 
         @JsonProperty("order")
-        public long order;
+        public Long order;
 
         @JsonProperty("profit")
-        public double profit;
+        public Double profit;
 
         @JsonProperty("reason")
-        public int reason;
+        public Integer reason;
 
         @JsonProperty("sl")
-        public double sl;
+        public Double sl;
 
         @JsonProperty("state")
-        public int state;
+        public Integer state;
 
         @JsonProperty("storage")
-        public double storage;
+        public Double storage;
 
         @JsonProperty("symbol")
         public String symbol;
 
         @JsonProperty("taxes")
-        public double taxes;
+        public Double taxes;
 
         @JsonProperty("timestamp")
-        public long timestamp;
+        public Long timestamp;
 
         @JsonProperty("timestamp_utc")
-        public long timestampUtc;
+        public Long timestampUtc;
 
         @JsonProperty("tp")
-        public double tp;
+        public Double tp;
 
         @JsonProperty("volume")
-        public double volume;
+        public Double volume;
 
         public Payload(
-                double accountRate, List<Integer> apiData, double balance, double closePrice, long closeTime,
-                long closeTimeUtc,
-                int cmd, String comment, double commission, double commissionAgent, List<Double> convRates,
-                List<Integer> convReserv, double currentAsk, double currentBid, int digits, double equity,
-                long expiration,
-                long expirationUtc, double freeMargin, double gwClosePrice, double gwOpenPrice, long gwOrder,
-                double gwVolume,
-                double leverage, long login, long magic, double margin, double marginRate, int mode, double openPrice,
-                long openTime, long openTimeUtc, long order, double profit, int reason, double sl, int state,
-                double storage,
-                String symbol, double taxes, long timestamp, long timestampUtc, double tp, double volume) {
+                Double accountRate, List<Integer> apiData, Double balance, Double closePrice, Long closeTime,
+                Long closeTimeUtc,
+                Integer cmd, String comment, Double commission, Double commissionAgent, List<Double> convRates,
+                List<Integer> convReserv, Double currentAsk, Double currentBid, Integer digits, Double equity,
+                Long expiration,
+                Long expirationUtc, Double freeMargin, Double gwClosePrice, Double gwOpenPrice, Long gwOrder,
+                Double gwVolume,
+                Double leverage, Long login, Long magic, Double margin, Double marginRate, Integer mode,
+                Double openPrice,
+                Long openTime, Long openTimeUtc, Long order, Double profit, Integer reason, Double sl, Integer state,
+                Double storage,
+                String symbol, Double taxes, Long timestamp, Long timestampUtc, Double tp, Double volume) {
             this.accountRate = accountRate;
             this.apiData = apiData;
             this.balance = balance;
@@ -291,11 +293,11 @@ public class CloseTradeMt4 {
             this.volume = volume;
         }
 
-        public double getAccountRate() {
+        public Double getAccountRate() {
             return accountRate;
         }
 
-        public void setAccountRate(double accountRate) {
+        public void setAccountRate(Double accountRate) {
             this.accountRate = accountRate;
         }
 
@@ -307,43 +309,43 @@ public class CloseTradeMt4 {
             this.apiData = apiData;
         }
 
-        public double getBalance() {
+        public Double getBalance() {
             return balance;
         }
 
-        public void setBalance(double balance) {
+        public void setBalance(Double balance) {
             this.balance = balance;
         }
 
-        public double getClosePrice() {
+        public Double getClosePrice() {
             return closePrice;
         }
 
-        public void setClosePrice(double closePrice) {
+        public void setClosePrice(Double closePrice) {
             this.closePrice = closePrice;
         }
 
-        public long getCloseTime() {
+        public Long getCloseTime() {
             return closeTime;
         }
 
-        public void setCloseTime(long closeTime) {
+        public void setCloseTime(Long closeTime) {
             this.closeTime = closeTime;
         }
 
-        public long getCloseTimeUtc() {
+        public Long getCloseTimeUtc() {
             return closeTimeUtc;
         }
 
-        public void setCloseTimeUtc(long closeTimeUtc) {
+        public void setCloseTimeUtc(Long closeTimeUtc) {
             this.closeTimeUtc = closeTimeUtc;
         }
 
-        public int getCmd() {
+        public Integer getCmd() {
             return cmd;
         }
 
-        public void setCmd(int cmd) {
+        public void setCmd(Integer cmd) {
             this.cmd = cmd;
         }
 
@@ -355,19 +357,19 @@ public class CloseTradeMt4 {
             this.comment = comment;
         }
 
-        public double getCommission() {
+        public Double getCommission() {
             return commission;
         }
 
-        public void setCommission(double commission) {
+        public void setCommission(Double commission) {
             this.commission = commission;
         }
 
-        public double getCommissionAgent() {
+        public Double getCommissionAgent() {
             return commissionAgent;
         }
 
-        public void setCommissionAgent(double commissionAgent) {
+        public void setCommissionAgent(Double commissionAgent) {
             this.commissionAgent = commissionAgent;
         }
 
@@ -387,211 +389,211 @@ public class CloseTradeMt4 {
             this.convReserv = convReserv;
         }
 
-        public double getCurrentAsk() {
+        public Double getCurrentAsk() {
             return currentAsk;
         }
 
-        public void setCurrentAsk(double currentAsk) {
+        public void setCurrentAsk(Double currentAsk) {
             this.currentAsk = currentAsk;
         }
 
-        public double getCurrentBid() {
+        public Double getCurrentBid() {
             return currentBid;
         }
 
-        public void setCurrentBid(double currentBid) {
+        public void setCurrentBid(Double currentBid) {
             this.currentBid = currentBid;
         }
 
-        public int getDigits() {
+        public Integer getDigits() {
             return digits;
         }
 
-        public void setDigits(int digits) {
+        public void setDigits(Integer digits) {
             this.digits = digits;
         }
 
-        public double getEquity() {
+        public Double getEquity() {
             return equity;
         }
 
-        public void setEquity(double equity) {
+        public void setEquity(Double equity) {
             this.equity = equity;
         }
 
-        public long getExpiration() {
+        public Long getExpiration() {
             return expiration;
         }
 
-        public void setExpiration(long expiration) {
+        public void setExpiration(Long expiration) {
             this.expiration = expiration;
         }
 
-        public long getExpirationUtc() {
+        public Long getExpirationUtc() {
             return expirationUtc;
         }
 
-        public void setExpirationUtc(long expirationUtc) {
+        public void setExpirationUtc(Long expirationUtc) {
             this.expirationUtc = expirationUtc;
         }
 
-        public double getFreeMargin() {
+        public Double getFreeMargin() {
             return freeMargin;
         }
 
-        public void setFreeMargin(double freeMargin) {
+        public void setFreeMargin(Double freeMargin) {
             this.freeMargin = freeMargin;
         }
 
-        public double getGwClosePrice() {
+        public Double getGwClosePrice() {
             return gwClosePrice;
         }
 
-        public void setGwClosePrice(double gwClosePrice) {
+        public void setGwClosePrice(Double gwClosePrice) {
             this.gwClosePrice = gwClosePrice;
         }
 
-        public double getGwOpenPrice() {
+        public Double getGwOpenPrice() {
             return gwOpenPrice;
         }
 
-        public void setGwOpenPrice(double gwOpenPrice) {
+        public void setGwOpenPrice(Double gwOpenPrice) {
             this.gwOpenPrice = gwOpenPrice;
         }
 
-        public long getGwOrder() {
+        public Long getGwOrder() {
             return gwOrder;
         }
 
-        public void setGwOrder(long gwOrder) {
+        public void setGwOrder(Long gwOrder) {
             this.gwOrder = gwOrder;
         }
 
-        public double getGwVolume() {
+        public Double getGwVolume() {
             return gwVolume;
         }
 
-        public void setGwVolume(double gwVolume) {
+        public void setGwVolume(Double gwVolume) {
             this.gwVolume = gwVolume;
         }
 
-        public double getLeverage() {
+        public Double getLeverage() {
             return leverage;
         }
 
-        public void setLeverage(int leverage) {
+        public void setLeverage(Double leverage) {
             this.leverage = leverage;
         }
 
-        public long getLogin() {
+        public Long getLogin() {
             return login;
         }
 
-        public void setLogin(long login) {
+        public void setLogin(Long login) {
             this.login = login;
         }
 
-        public long getMagic() {
+        public Long getMagic() {
             return magic;
         }
 
-        public void setMagic(long magic) {
+        public void setMagic(Long magic) {
             this.magic = magic;
         }
 
-        public double getMargin() {
+        public Double getMargin() {
             return margin;
         }
 
-        public void setMargin(double margin) {
+        public void setMargin(Double margin) {
             this.margin = margin;
         }
 
-        public double getMarginRate() {
+        public Double getMarginRate() {
             return marginRate;
         }
 
-        public void setMarginRate(double marginRate) {
+        public void setMarginRate(Double marginRate) {
             this.marginRate = marginRate;
         }
 
-        public int getMode() {
+        public Integer getMode() {
             return mode;
         }
 
-        public void setMode(int mode) {
+        public void setMode(Integer mode) {
             this.mode = mode;
         }
 
-        public double getOpenPrice() {
+        public Double getOpenPrice() {
             return openPrice;
         }
 
-        public void setOpenPrice(double openPrice) {
+        public void setOpenPrice(Double openPrice) {
             this.openPrice = openPrice;
         }
 
-        public long getOpenTime() {
+        public Long getOpenTime() {
             return openTime;
         }
 
-        public void setOpenTime(long openTime) {
+        public void setOpenTime(Long openTime) {
             this.openTime = openTime;
         }
 
-        public long getOpenTimeUtc() {
+        public Long getOpenTimeUtc() {
             return openTimeUtc;
         }
 
-        public void setOpenTimeUtc(long openTimeUtc) {
+        public void setOpenTimeUtc(Long openTimeUtc) {
             this.openTimeUtc = openTimeUtc;
         }
 
-        public long getOrder() {
+        public Long getOrder() {
             return order;
         }
 
-        public void setOrder(long order) {
+        public void setOrder(Long order) {
             this.order = order;
         }
 
-        public double getProfit() {
+        public Double getProfit() {
             return profit;
         }
 
-        public void setProfit(double profit) {
+        public void setProfit(Double profit) {
             this.profit = profit;
         }
 
-        public int getReason() {
+        public Integer getReason() {
             return reason;
         }
 
-        public void setReason(int reason) {
+        public void setReason(Integer reason) {
             this.reason = reason;
         }
 
-        public double getSl() {
+        public Double getSl() {
             return sl;
         }
 
-        public void setSl(double sl) {
+        public void setSl(Double sl) {
             this.sl = sl;
         }
 
-        public int getState() {
+        public Integer getState() {
             return state;
         }
 
-        public void setState(int state) {
+        public void setState(Integer state) {
             this.state = state;
         }
 
-        public double getStorage() {
+        public Double getStorage() {
             return storage;
         }
 
-        public void setStorage(double storage) {
+        public void setStorage(Double storage) {
             this.storage = storage;
         }
 
@@ -603,43 +605,43 @@ public class CloseTradeMt4 {
             this.symbol = symbol;
         }
 
-        public double getTaxes() {
+        public Double getTaxes() {
             return taxes;
         }
 
-        public void setTaxes(double taxes) {
+        public void setTaxes(Double taxes) {
             this.taxes = taxes;
         }
 
-        public long getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
 
-        public void setTimestamp(long timestamp) {
+        public void setTimestamp(Long timestamp) {
             this.timestamp = timestamp;
         }
 
-        public long getTimestampUtc() {
+        public Long getTimestampUtc() {
             return timestampUtc;
         }
 
-        public void setTimestampUtc(long timestampUtc) {
+        public void setTimestampUtc(Long timestampUtc) {
             this.timestampUtc = timestampUtc;
         }
 
-        public double getTp() {
+        public Double getTp() {
             return tp;
         }
 
-        public void setTp(double tp) {
+        public void setTp(Double tp) {
             this.tp = tp;
         }
 
-        public double getVolume() {
+        public Double getVolume() {
             return volume;
         }
 
-        public void setVolume(double volume) {
+        public void setVolume(Double volume) {
             this.volume = volume;
         }
 
