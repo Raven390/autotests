@@ -28,6 +28,7 @@ import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTabl
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.FraudType.*;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
@@ -630,6 +631,26 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
+    public static RuleDataHelper getRegistrationRuleExitEventEnd3p25Data() {
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd3p24Client);
+        data.crmTbUserObject = generateUserByClient(registrationRuleExitEventEnd3p24Client);
+        //add connected client
+        ClientHelper connectedClient = getRandomVantageClientAllFields();
+        connectedClient.setEmail(data.crmTbUserObject.email);
+        connectedClient.setPhoneNumber(data.crmTbUserObject.phoneNum);
+        connectedClient.setBrand(Brand.VANTAGE);
+        data.connectedUsers = new ArrayList<>();
+        data.connectedClientHelpers = new ArrayList<>();
+        data.connectedUsers.add(generateUserByClient(connectedClient));
+        data.connectedClientHelpers.add(connectedClient);
+        //add frauds for connected client
+        data.clientFraudTypes = new ArrayList<>();
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), getRandomFraudType(CPA_ABUSE, HEDGING, BONUS_ABUSE, LOSS_VOUCHER_ABUSE, NEWS_TRADER, TLS_ABUSE, SWAP_ARBITRAGE, MARKET_MANIPULATION, GAP_TRADING, LATENCY_ARBITRAGE, PRICING_ERROR, NBP_ABUSE, HFT_ABUSE, LOOPHOLE_ABUSE).getKey()));
+        //add connection with connected client
+        setupAttrConnection075(data);
+        return data;
+    }
+
     public static Map<String, RuleDataHelper> setupRegistrationRuleData() {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
@@ -660,6 +681,7 @@ public class RegistrationRuleDataFactory {
         map.put("3p22", getRegistrationRuleExitEventEnd3p22Data());
         map.put("3p23", getRegistrationRuleExitEventEnd3p23Data());
         map.put("3p24", getRegistrationRuleExitEventEnd3p24Data());
+        map.put("3p25", getRegistrationRuleExitEventEnd3p25Data());
 
         setupRuleData(map);
 
