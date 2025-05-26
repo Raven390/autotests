@@ -23,4 +23,21 @@ public class AccountIbRelationFactory {
         relation.setLastUpdated(getCurrentTimestampDbFormat());
         return relation;
     }
+
+    public static AccountIbRelationObject generateAccountIbRelationObjectByClientAdditional(ClientHelper client) {
+        AccountIbRelationObject relation = new AccountIbRelationObject();
+        relation.setUserId(client.getUserId());
+        relation.setBrand(client.getBrand());
+        relation.setRegulator(client.getRegulator());
+        relation.setUcid(client.getUcid());
+        relation.setAccount(client.getTradingAccount2().longValue());
+        relation.setServerId(client.getServerId());
+        relation.setRecordEffectiveStartDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 1, 0, 0, 0, 0));
+        relation.setRecordEffectiveEndDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, -1, 0, 0, 0, 0));
+        relation.setRecordActiveFlag(true);
+        relation.setCreateTime(getCurrentTimestampDbFormat());
+        relation.setCreateTimeUtc(getCurrentTimestampDbFormat());
+        relation.setLastUpdated(getCurrentTimestampDbFormat());
+        return relation;
+    }
 }

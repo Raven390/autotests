@@ -4,6 +4,7 @@ import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObjec
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
 import business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.kafka.alerts.RuleAlert;
@@ -30,6 +31,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.s3___dim_client.S3DimClientFactory.generateS3DimClientObject;
 import static business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsFactory.generates3FactCpaCommissionsObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -162,6 +164,8 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
     @DisplayName("General Tab. System displays different IB connections between one pair of users as one")
     public void ibSeparateTest() {
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
         ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
@@ -327,6 +331,70 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         generalTab.navigate(client.getUcid());
         generalTab.CpaSectionNotDisplayed();
+    }
+
+    @Test
+    @AllureId("")
+    @Feature("BMS-1194 Sales person whom belongs client")
+    @DisplayName("")
+    public void SalesPersonDisplayedTest() throws InterruptedException {
+
+        ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
+        CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
+
+        crmTbReferral.firstName = "Relation";
+        crmTbReferral.lastName = "Clientson";
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbReferral);
+        CrmTbAccountObject refAccount1 = generateStaticCrmTbAccountActive(referral);
+        CrmTbAccountObject refAccount2 = generateAdditionalCrmTbAccountData(referral);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, refAccount1);
+        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, refAccount2);
+        MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
+        MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount2);
+
+
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
+        relation = generateAccountIbRelationObjectByClient(client);
+        relation.setSalesId(getRandomIntPositive());
+        relation.setDirectIbRebateAccount(referral.getTradingAccount());
+        insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation);
+        commission = generateS3FactIbSalesCommissionsClient(client);
+        commission.setIbRebateAccount(relation.getDirectIbRebateAccount());
+        commission.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission);
+        AccountIbRelationObject relation2 = generateAccountIbRelationObjectByClient(client);
+        relation2.setDirectIbRebateAccount(referral.getTradingAccount2());
+        relation2.setSalesId(relation.getSalesId() + 1);//this is for sorting by id
+        insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation2);
+        S3FactIbSalesCommissionsObject commission2 = generateS3FactIbSalesCommissionsClient(client);
+        commission2.setIbRebateAccount(relation2.getDirectIbRebateAccount());
+        commission2.setSalesCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
+        insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission2);
+
+        S3DimClientObject manager1 = generateS3DimClientObject();
+        manager1.setBrand(client.getBrand());
+        manager1.setUserId(relation.getSalesId().longValue());
+        S3DimClientObject manager2 = generateS3DimClientObject();
+        manager2.setUserId(relation2.getSalesId().longValue());
+        manager2.setBrand(client.getBrand());
+        insertObjectToDb(S3_DIM_CLIENT, manager1);
+        insertObjectToDb(S3_DIM_CLIENT, manager2);
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalTab.navigate(client.getUcid());
+        generalTab.checkManagerData(manager1.getUserName(), manager1.getOrgName(), relation.getAccount().toString());
+        generalTab.checkManagerData(manager2.getUserName(), manager2.getOrgName(), relation2.getAccount().toString());
+
+
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "user_id =" + manager1.getUserId());
+        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "user_id =" + manager2.getUserId());
+
     }
 
     @AfterAll
