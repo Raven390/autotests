@@ -160,6 +160,7 @@ public class Constants {
     public static final String CLIENT_METRICS_LIFETIME_TABLE_NAME = "vindex_test.client_metrics_lifetime";
     public static final String MIRROR_LOGIN_TABLE_NAME = "vindex_test.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "vindex_test.mirror_ucid";
+    public static final String S3_DIM_CLIENT = "vindex_test.s3___dim_client";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     public static final String AGGR_FLOATING_TRADES_GROUP_BY = "vindex_test_api.aggr__floating_trades_group_by";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "vindex_test.account_ib_relation";

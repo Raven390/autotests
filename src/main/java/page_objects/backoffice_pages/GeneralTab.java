@@ -88,6 +88,9 @@ public class GeneralTab extends AbstractPage {
     private static final String REFERRAL_DATE = "//*[contains(@class, 'v-registration-source-row__date')]";
     private static final String REFERRAL_REBATES = "//*[contains(@class, 'v-registration-source-row__cell v-registration-source-row__cell_type_rebates')]";
     private static final String TEXT_ELEMENT = "//*[contains(@class, 'v-text-with-icon__text')]";
+    private static final String MANAGER_NAME = "//*[contains(@class,'v-sales-manager-item__name')]";
+    private static final String MANAGER_ORGANISATION = "//*[@class='v-sales-manager-item__manager-org-name']//" + VARIANT_BODY_1_SELECTOR;
+    private static final String MANAGER_ACCOUNTS = "//*[@class='v-sales-manager-item__manager-accounts-list']//" + VARIANT_BODY_1_SELECTOR;
 
     public GeneralTab(Page page) {
         super(page);
@@ -458,6 +461,40 @@ public class GeneralTab extends AbstractPage {
         String testedValue = decimalFormat.format(expectedValue);
         assertEquals("IB rebates " + testedValue + "  USD", page.locator(locator).textContent());
 
+    }
+
+    public void checkManagerData(String expectedName, String expectedOrg, String expectedAcc) {
+        Allure.step("check manager name is displayed");
+        String sectionLocator = "//*[text()='" + expectedName + "']/ancestor::*[@class='v-sales-manager-item__manager']";
+        Locator nameLocator = page.locator(sectionLocator + MANAGER_NAME);
+        nameLocator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedName, nameLocator.textContent());
+        Allure.step("check manager organisation");
+        Locator orgLocator = page.locator(sectionLocator + MANAGER_ORGANISATION);
+        orgLocator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedOrg, orgLocator.textContent());
+        Allure.step("check manager account");
+        Locator accLocator = page.locator(sectionLocator + MANAGER_ACCOUNTS);
+        accLocator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedAcc, accLocator.textContent());
+    }
+
+    public void checkManagerOrganisation(int index, String expectedName) {
+    }
+
+    public void checkManagerAccounts(int index, String expectedName) {
+        Allure.step("check manager account");
+        Locator locator = page.locator(MANAGER_ACCOUNTS).nth(index);
+        locator.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertEquals(expectedName, locator.textContent());
+    }
+
+    public void checkManagerAccounts(int index, Integer expectedName) {
+        checkManagerAccounts(index, expectedName.toString());
+    }
+
+    public void checkManagerAccounts(int index, Long expectedName) {
+        checkManagerAccounts(index, expectedName.toString());
     }
 
     public void IbSectionNotDisplayed() {
