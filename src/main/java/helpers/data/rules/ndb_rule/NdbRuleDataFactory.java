@@ -335,16 +335,16 @@ public class NdbRuleDataFactory {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-//        map.put("1", getNdbRuleExitEventEnd1Data());
-//        map.put("2", getNdbRuleExitEventEnd2Data());
-//        map.put("3", getNdbRuleExitEventEnd3Data());
-//        map.put("41", getNdbRuleExitEventEnd41Data());
-//        map.put("42", getNdbRuleExitEventEnd42Data());
-//        map.put("5", getNdbRuleExitEventEnd5Data());
-//        map.put("6", getNdbRuleExitEventEnd6Data());
+        map.put("1", getNdbRuleExitEventEnd1Data());
+        map.put("2", getNdbRuleExitEventEnd2Data());
+        map.put("3", getNdbRuleExitEventEnd3Data());
+        map.put("41", getNdbRuleExitEventEnd41Data());
+        map.put("42", getNdbRuleExitEventEnd42Data());
+        map.put("5", getNdbRuleExitEventEnd5Data());
+        map.put("6", getNdbRuleExitEventEnd6Data());
         map.put("7", getNdbRuleExitEventEnd7Data());
-//        map.put("8", getNdbRuleExitEventEnd8Data());
-//        map.put("9", getNdbRuleExitEventEnd9Data());
+        map.put("8", getNdbRuleExitEventEnd8Data());
+        map.put("9", getNdbRuleExitEventEnd9Data());
 
         // Loop through the list with data and insert all the data into the according tables
         setupRuleData(map);
