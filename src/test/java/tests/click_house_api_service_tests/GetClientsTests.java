@@ -61,11 +61,14 @@ class GetClientsTests extends TestBaseApi {
         queryParams.put("serverId", client.getServerId());
         Response response = getClientsIdByTradingAccountServerId(queryParams);
 
-        GetClientsResponse clients = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
+        GetClientsResponse clientsResponse = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
 
         // Assert response
         assertThat("Check response code", response.code(), is(200));
-        assertThat("Check client ucid", clients.getClientId(), is(client.getUcid()));
+        assertThat("Check client ucid", clientsResponse.getClientId(), is(client.getUcid()));
+        assertThat("Check objectType", clientsResponse.getObjectType(), is("clientId"));
+        assertThat("Check tradingAccount", clientsResponse.getTradingAccount(), is(client.getTradingAccount()));
+        assertThat("Check tradingAccount", clientsResponse.getServerId(), is(client.getServerId()));
     }
 
     @Test
