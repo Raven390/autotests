@@ -6,8 +6,17 @@ import java.util.Objects;
 
 public class GetClientsResponse {
 
+    @JsonProperty("objectType")
+    String objectType;
+
     @JsonProperty("clientId")
     String clientId;
+
+    @JsonProperty("tradingAccount")
+    Integer tradingAccount;
+
+    @JsonProperty("serverId")
+    Integer serverId;
 
     public GetClientsResponse() {
     }
@@ -39,5 +48,29 @@ public class GetClientsResponse {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
+
+    public Integer getTradingAccount() {
+        return tradingAccount;
+    }
+
+    public void setTradingAccount(Integer tradingAccount) {
+        this.tradingAccount = tradingAccount;
+    }
+
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
     }
 }

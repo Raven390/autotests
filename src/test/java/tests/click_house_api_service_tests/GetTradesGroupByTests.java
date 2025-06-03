@@ -21,6 +21,7 @@ import static business_objects.api.clickhouse_api_service.get_trades_group_by.Ge
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByUcid;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -34,16 +35,22 @@ import static utils.Constants.*;
 class GetTradesGroupByTests extends TestBaseApi {
 
     private static ClientHelper client;
+    private static ClientHelper client2;
+    private static ClientHelper client3;
 
     private static Mt5DealsCoercedObject trade1;
     private static Mt5DealsCoercedObject trade2;
     private static Mt5DealsCoercedObject trade3;
     private static Mt5DealsCoercedObject trade4;
     private static Mt5DealsCoercedObject trade5;
+    private static Mt5DealsCoercedObject trade6;
+    private static Mt5DealsCoercedObject trade7;
 
     @BeforeAll
     static void setupTradesGroupBy() {
         client = getRandomVantageClient();
+        client2 = getRandomVantageClient();
+        client3 = getRandomVantageClient();
         trade1 = generateTradeByClient(client);
         trade1.setAction(1);
         trade1.setEntry(1);
@@ -70,43 +77,43 @@ class GetTradesGroupByTests extends TestBaseApi {
         trade5.setProfitUsd(5d);
         trade5.setProfit(5d);
         trade5.setServerId(trade5.getServerId() + 1);
+        trade6 = generateTradeByClient(client2);
+        trade6.setSymbol("BTCUSD");
+        trade7 = generateTradeByClient(client3);
+        trade6.setSymbol("BTCEUR");
 
-        System.out.println("UCID=" + client.getUcid());
-        System.out.println(trade1.getUcid());
-        System.out.println(trade2.getUcid());
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
-        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
+        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateCrmTbAccountData(client2), generateCrmTbAccountData(client3)));
+        insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7));
     }
 
     @AfterAll
-    static void teardownTradesGroupBy() {
-        deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
+    static void teardownTradesGroupBy() throws Exception {
+        cleanMt5CoercedTableByUcid(client.getUcid(), client2.getUcid(), client3.getUcid());
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with mandatory params (200)")
     @AllureId("213")
-    void getTradesGroupByWithMandatoryParamsTest() throws IOException {
+    void getTradesGroupByTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
-        System.out.println("UCID1=" + client.getUcid());
 
         assert response.body() != null;
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with action (200)")
     @AllureId("485")
-    void getTradesGroupByWithActionTest() throws IOException {
+    void getTradesGroupByTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -118,15 +125,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with entry (200)")
     @AllureId("486")
-    void getTradesGroupByWithEntryTest() throws IOException {
+    void getTradesGroupByTest3() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -138,15 +145,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with dateFrom (200)")
     @AllureId("487")
-    void getTradesGroupByWithDateFromTest() throws IOException {
+    void getTradesGroupByTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -158,15 +165,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade2.getSymbol(), trade2.getProfit(), trade2.getProfit(), trade2.getVolumeLots(), trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade2.getStorageUsd(), trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade4.getSymbol(), trade4.getProfit(), trade4.getProfit(), trade4.getVolumeLots(), trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade4.getStorageUsd(), trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with dateTo (200)")
     @AllureId("488")
-    void getTradesGroupByWithDateToTest() throws IOException {
+    void getTradesGroupByTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -178,15 +185,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit(), trade1.getProfit(), trade1.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd(), trade1.getStorageUsd(), trade1.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit(), trade3.getProfit(), trade3.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd(), trade3.getStorageUsd(), trade3.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy symbol asc (200)")
     @AllureId("489")
-    void getTradesGroupByOrderBySymbolAscTest() throws IOException {
+    void getTradesGroupByTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -199,15 +206,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy profit desc (200)")
     @AllureId("490")
-    void getTradesGroupByOrderByProfitDescTest() throws IOException {
+    void getTradesGroupByTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -220,15 +227,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy symbol default (200)")
     @AllureId("491")
-    void getTradesGroupByOrderBySymbolDefaultTest() throws IOException {
+    void getTradesGroupByTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -240,15 +247,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup1, responseGroup2));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with orderBy profit default (200)")
     @AllureId("492")
-    void getTradesGroupByOrderByProfitDefaultTest() throws IOException {
+    void getTradesGroupByTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -260,15 +267,15 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
-        assertThat("Assert response body", mappedResponse, containsInRelativeOrder(responseGroup2, responseGroup1));
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup2, responseGroup1));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with limit (200)")
     @AllureId("493")
-    void getTradesGroupByWithLimitTest() throws IOException {
+    void getTradesGroupByTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -280,15 +287,14 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
-        assertThat("Assert response body", mappedResponse, anyOf(hasItem(responseGroup1), hasItem(responseGroup2)));
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), null, trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        assertThat("Assert response body", mappedResponse, anyOf(hasItem(responseGroup1)));
     }
 
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request without tradingAccount (400)")
     @AllureId("494")
-    void getTradesGroupByNoTradingAccountTest() throws IOException {
+    void getTradesGroupByTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
@@ -304,7 +310,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request without serverId (400)")
     @AllureId("495")
-    void getTradesGroupByNoServerIdTest() throws IOException {
+    void getTradesGroupByTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getTradesGroupBy(queryParams);
@@ -320,7 +326,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request tradingAccount not int (400)")
     @AllureId("496")
-    void getTradesGroupByTradingAccountNotIntTest() throws IOException {
+    void getTradesGroupByTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", "test");
         queryParams.put("serverId", client.getServerId());
@@ -337,7 +343,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request serverId not int (400)")
     @AllureId("497")
-    void getTradesGroupByServerIdNotIntTest() throws IOException {
+    void getTradesGroupByTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", "test");
@@ -354,7 +360,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request action not int (400)")
     @AllureId("498")
-    void getTradesGroupByActionNotIntTest() throws IOException {
+    void getTradesGroupByTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -374,7 +380,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request entry not int (400)")
     @AllureId("499")
-    void getTradesGroupByEntryNotIntTest() throws IOException {
+    void getTradesGroupByTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -394,7 +400,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect dateFrom (400)")
     @AllureId("500")
-    void getTradesGroupByIncorrectDateFromTest() throws IOException {
+    void getTradesGroupByTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -414,7 +420,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect dateTo (400)")
     @AllureId("501")
-    void getTradesGroupByIncorrectDateToTest() throws IOException {
+    void getTradesGroupByTest18() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -434,7 +440,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect orderBy (400)")
     @AllureId("502")
-    void getTradesGroupByIncorrectOrderByTest() throws IOException {
+    void getTradesGroupByTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -452,7 +458,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request incorrect sortOrder (400)")
     @AllureId("503")
-    void getTradesGroupByIncorrectSortOrderTest() throws IOException {
+    void getTradesGroupByTest20() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -470,7 +476,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request limit not int (400)")
     @AllureId("504")
-    void getTradesGroupByLimitNotIntTest() throws IOException {
+    void getTradesGroupByTest21() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client.getTradingAccount());
         queryParams.put("serverId", client.getServerId());
@@ -490,7 +496,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     @Test
     @DisplayName("Clickhouse Api. Get trades groupBy request with ucid (200)")
     @AllureId("1076")
-    void getTradesGroupByWithUcidTest() throws IOException {
+    void getTradesGroupByTest22() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientIds", List.of(client.getUcid()));
         Response response = getTradesGroupBy(queryParams);
@@ -500,8 +506,49 @@ class GetTradesGroupByTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
 
-        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
-        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), client.getUcid(), trade1.getSymbol(), trade1.getProfit() + trade2.getProfit(), trade1.getProfit() + trade2.getProfit(), trade1.getVolumeLots() + trade2.getVolumeLots(), trade1.getProfitUsd() + trade1.getCommissionUsd() + trade1.getStorageUsd() + trade2.getProfitUsd() + trade2.getCommissionUsd() + trade2.getStorageUsd(), trade1.getStorageUsd() + trade2.getStorageUsd(), trade1.getCommissionUsd() + trade2.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client.getTradingAccount().toString(), client.getServerId().toString(), client.getUcid(), trade3.getSymbol(), trade3.getProfit() + trade4.getProfit(), trade3.getProfit() + trade4.getProfit(), trade3.getVolumeLots() + trade4.getVolumeLots(), trade3.getProfitUsd() + trade3.getCommissionUsd() + trade3.getStorageUsd() + trade4.getProfitUsd() + trade4.getCommissionUsd() + trade4.getStorageUsd(), trade3.getStorageUsd() + trade4.getStorageUsd(), trade3.getCommissionUsd() + trade4.getCommissionUsd());
+        assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
+    }
+
+    @Test
+    @Tag("CSV-1287")
+    @AllureId("1208")
+    @DisplayName("Clickhouse Api. Get trades groupBy request by list of users (200)")
+    void getTradesGroupByTest23() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("tradingAccount", List.of(client2.getTradingAccount(), client3.getTradingAccount()));
+        queryParams.put("serverId", List.of(client2.getServerId(), client3.getServerId()));
+        Response response = getTradesGroupBy(queryParams);
+
+        assert response.body() != null;
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.size(), is(2));
+
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client2.getTradingAccount().toString(), client2.getServerId().toString(), null, trade6.getSymbol(), trade6.getProfit(), trade6.getProfit(), trade6.getVolumeLots(), trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(), trade6.getStorageUsd(), trade6.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client3.getTradingAccount().toString(), client3.getServerId().toString(), null, trade7.getSymbol(), trade7.getProfit(), trade7.getProfit(), trade7.getVolumeLots(), trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(), trade7.getStorageUsd(), trade7.getCommissionUsd());
+        assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
+
+    }
+
+    @Test
+    @Tag("CSV-1287")
+    @AllureId("1209")
+    @DisplayName("Clickhouse Api. Get trades groupBy request by list of users in concatenated string (200)")
+    void getTradesGroupByTest24() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("tradingAccount", client2.getTradingAccount() + "," + client3.getTradingAccount());
+        queryParams.put("serverId", client2.getServerId() + "," + client3.getServerId());
+        Response response = getTradesGroupBy(queryParams);
+
+        assert response.body() != null;
+        List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert response length", mappedResponse.size(), is(2));
+
+        GetTradesGroupByResponse responseGroup1 = new GetTradesGroupByResponse(client2.getTradingAccount().toString(), client2.getServerId().toString(), null, trade6.getSymbol(), trade6.getProfit(), trade6.getProfit(), trade6.getVolumeLots(), trade6.getProfitUsd() + trade6.getCommissionUsd() + trade6.getStorageUsd(), trade6.getStorageUsd(), trade6.getCommissionUsd());
+        GetTradesGroupByResponse responseGroup2 = new GetTradesGroupByResponse(client3.getTradingAccount().toString(), client3.getServerId().toString(), null, trade7.getSymbol(), trade7.getProfit(), trade7.getProfit(), trade7.getVolumeLots(), trade7.getProfitUsd() + trade7.getCommissionUsd() + trade7.getStorageUsd(), trade7.getStorageUsd(), trade7.getCommissionUsd());
         assertThat("Assert response body", mappedResponse, containsInAnyOrder(responseGroup1, responseGroup2));
     }
 }
