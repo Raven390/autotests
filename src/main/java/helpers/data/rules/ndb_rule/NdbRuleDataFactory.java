@@ -6,7 +6,7 @@ import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
-import business_objects.kafka.crm_events.WithdrawalEvent;
+import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
@@ -61,7 +61,7 @@ public class NdbRuleDataFactory {
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.ibId = 1;
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+        EgWithdrawalEvent withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
         LnSessionParsedObject lexisNexisObject = generateLexisNexisDataByClient(client);
         lexisNexisObject.setBrand(client.getBrand());
         lexisNexisObject.setEventType("account_creation");

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class WithdrawalEvent {
+public class EgWithdrawalEvent {
     @JsonProperty("id")
     public String id;
 
@@ -104,10 +104,10 @@ public class WithdrawalEvent {
     @JsonProperty("metadata")
     public CrmEventMetadata metadata;
 
-    public WithdrawalEvent() {
+    public EgWithdrawalEvent() {
     }
 
-    public WithdrawalEvent(String eventDate, Integer withdrawalId, Integer clientId, Integer metaTraderAccount,
+    public EgWithdrawalEvent(String eventDate, Integer withdrawalId, Integer clientId, Integer metaTraderAccount,
             String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
             Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
             String orderNumber, String cpsMandatoryField, Integer wdIsRememberInfo,
@@ -144,7 +144,7 @@ public class WithdrawalEvent {
         this.type = type;
     }
 
-    public WithdrawalEvent(String id, String eventDate, Integer withdrawalId, Integer clientId,
+    public EgWithdrawalEvent(String id, String eventDate, Integer withdrawalId, Integer clientId,
             Integer metaTraderAccount,
             String brand, String regulator, String paymentMethodCode, Integer withdrawType, Double withdrawalAmount,
             Double fee, Double actualAmount, Double paymentAmount, String cardHash, Integer wdIsDel, String updateTime,
@@ -186,7 +186,7 @@ public class WithdrawalEvent {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        WithdrawalEvent that = (WithdrawalEvent) o;
+        EgWithdrawalEvent that = (EgWithdrawalEvent) o;
         return Objects.equals(eventDate, that.eventDate) && Objects.equals(withdrawalId, that.withdrawalId) && Objects.equals(clientId, that.clientId) && Objects.equals(metaTraderAccount, that.metaTraderAccount) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(paymentMethodCode, that.paymentMethodCode) && Objects.equals(withdrawType, that.withdrawType) && Objects.equals(withdrawalAmount, that.withdrawalAmount) && Objects.equals(fee, that.fee) && Objects.equals(actualAmount, that.actualAmount) && Objects.equals(paymentAmount, that.paymentAmount) && Objects.equals(cardHash, that.cardHash) && Objects.equals(wdIsDel, that.wdIsDel) && Objects.equals(updateTime, that.updateTime) && Objects.equals(orderNumber, that.orderNumber) && Objects.equals(cpsMandatoryField, that.cpsMandatoryField) && Objects.equals(wdIsRememberInfo, that.wdIsRememberInfo) && Objects.equals(deductCredit, that.deductCredit) && Objects.equals(userSalesId, that.userSalesId) && Objects.equals(accountSalesId, that.accountSalesId) && Objects.equals(withdrawalCurrency, that.withdrawalCurrency) && Objects.equals(checkingStatus, that.checkingStatus) && Objects.equals(wdIsTrade, that.wdIsTrade) && Objects.equals(rate, that.rate) && Objects.equals(wdIsNonApp, that.wdIsNonApp) && Objects.equals(toUsdRate, that.toUsdRate) && Objects.equals(type, that.type);
     }
 

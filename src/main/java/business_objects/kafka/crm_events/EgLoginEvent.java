@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class LoginEvent {
+public class EgLoginEvent {
     @JsonProperty("id")
     public String id;
 
@@ -38,10 +38,10 @@ public class LoginEvent {
     @JsonProperty("initialEventTime")
     public String initialEventTime;
 
-    public LoginEvent() {
+    public EgLoginEvent() {
     }
 
-    public LoginEvent(String eventDate, Integer clientId, String brand, String ipAddress, String cid, String cookie,
+    public EgLoginEvent(String eventDate, Integer clientId, String brand, String ipAddress, String cid, String cookie,
             String loginType, String type) {
         this.eventDate = eventDate;
         this.clientId = clientId;
@@ -53,7 +53,7 @@ public class LoginEvent {
         this.type = type;
     }
 
-    public LoginEvent(String id, String eventDate, Integer clientId, String brand, String ipAddress, String cid,
+    public EgLoginEvent(String id, String eventDate, Integer clientId, String brand, String ipAddress, String cid,
             String cookie, String loginType, String type) {
         this.id = id;
         this.eventDate = eventDate;
@@ -70,7 +70,7 @@ public class LoginEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LoginEvent that = (LoginEvent) o;
+        EgLoginEvent that = (EgLoginEvent) o;
         return Objects.equals(eventDate, that.eventDate) && Objects.equals(clientId, that.clientId) && Objects.equals(brand, that.brand) && Objects.equals(ipAddress, that.ipAddress) && Objects.equals(cid, that.cid) && Objects.equals(cookie, that.cookie) && Objects.equals(loginType, that.loginType) && Objects.equals(type, that.type);
     }
 

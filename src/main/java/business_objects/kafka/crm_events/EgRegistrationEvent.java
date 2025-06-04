@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class RegistrationEvent {
+public class EgRegistrationEvent {
 
     @JsonProperty("schemaVersion")
     public String schemaVersion;
@@ -110,7 +110,7 @@ public class RegistrationEvent {
         }
     }
 
-    public RegistrationEvent(
+    public EgRegistrationEvent(
             String createTime, Integer clientId, String brand, String regulator, Integer metaTraderAccount,
             String initialEventTime, String type, String eventDate) {
         this.createTime = createTime;
@@ -123,7 +123,7 @@ public class RegistrationEvent {
         this.eventDate = eventDate;
     }
 
-    public RegistrationEvent() {
+    public EgRegistrationEvent() {
     }
 
     @Override
@@ -135,7 +135,7 @@ public class RegistrationEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RegistrationEvent that = (RegistrationEvent) o;
+        EgRegistrationEvent that = (EgRegistrationEvent) o;
         return ibId == that.ibId && cpaId == that.cpaId && Objects.equals(schemaVersion, that.schemaVersion) && Objects.equals(id, that.id) && Objects.equals(createTime, that.createTime) && Objects.equals(clientId, that.clientId) && Objects.equals(brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(metaTraderAccount, that.metaTraderAccount) && Objects.equals(type, that.type) && Objects.equals(eventDate, that.eventDate) && Objects.equals(metadata, that.metadata) && Objects.equals(initialEventTime, that.initialEventTime) && Objects.equals(referrerId, that.referrerId) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(birthday, that.birthday) && Objects.equals(firstLanguage, that.firstLanguage) && Objects.equals(nationalityCode, that.nationalityCode) && Objects.equals(residencyCode, that.residencyCode) && Objects.equals(websiteUserType, that.websiteUserType) && Objects.equals(lexisNexis, that.lexisNexis);
     }
 
