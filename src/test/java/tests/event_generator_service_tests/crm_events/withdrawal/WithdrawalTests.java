@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import business_objects.kafka.crm_db_events.withdrawal.WithdrawalDbEvent;
 import business_objects.kafka.crm_db_events.withdrawal.WithdrawalDbEventCps;
-import business_objects.kafka.crm_events.WithdrawalEvent;
+import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -40,9 +40,9 @@ class WithdrawalTests extends TestBaseKafka {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, withdrawalDbEvent.data.id.toString());
-        WithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
+        EgWithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, EgWithdrawalEvent.class);
 
-        WithdrawalEvent expectedWithdrawalEvent = new WithdrawalEvent(
+        EgWithdrawalEvent expectedWithdrawalEvent = new EgWithdrawalEvent(
                 withdrawalDbEvent.data.createTime, withdrawalDbEvent.data.id, withdrawalDbEvent.data.userId, withdrawalDbEvent.data.mt4Account, withdrawalDbEvent.data.brand, withdrawalDbEvent.data.regulator, withdrawalDbEvent.data.paymentMethodCode, withdrawalDbEvent.data.withdrawType, withdrawalDbEvent.data.withdrawAmount, withdrawalDbEvent.data.fee, withdrawalDbEvent.data.actualAmount, withdrawalDbEvent.data.paymentAmount, withdrawalDbEvent.data.cardNumber, withdrawalDbEvent.data.isDel, withdrawalDbEvent.data.updateTime, withdrawalDbEvent.data.orderNumber, withdrawalDbEvent.data.cpsMandatoryField, withdrawalDbEvent.data.isRememberInfo, withdrawalDbEvent.data.deductCredit, withdrawalDbEvent.data.userSalesId, withdrawalDbEvent.data.accountSalesId, withdrawalDbEvent.data.orderCurrency, withdrawalDbEvent.data.checkingStatus, withdrawalDbEvent.data.isTrade, withdrawalDbEvent.data.rate, withdrawalDbEvent.data.isNonApp, withdrawalDbEvent.data.toUsdRate, EG_WITHDRAWAL_EVENT
         );
 
@@ -65,9 +65,9 @@ class WithdrawalTests extends TestBaseKafka {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, withdrawalDbEventCps.data.id.toString());
-        WithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, WithdrawalEvent.class);
+        EgWithdrawalEvent retrievedWithdrawalEvent = objectMapper.readValue(consumedMessage, EgWithdrawalEvent.class);
 
-        WithdrawalEvent expectedWithdrawalEvent = new WithdrawalEvent(
+        EgWithdrawalEvent expectedWithdrawalEvent = new EgWithdrawalEvent(
                 withdrawalDbEventCps.data.createTime, withdrawalDbEventCps.data.id, withdrawalDbEventCps.data.userId, withdrawalDbEventCps.data.mt4Account, withdrawalDbEventCps.data.brand, withdrawalDbEventCps.data.regulator, "UnionPay", withdrawalDbEventCps.data.withdrawType, withdrawalDbEventCps.data.withdrawAmount, withdrawalDbEventCps.data.fee, withdrawalDbEventCps.data.actualAmount, withdrawalDbEventCps.data.paymentAmount, withdrawalDbEventCps.data.cardNumber, withdrawalDbEventCps.data.isDel, withdrawalDbEventCps.data.updateTime, withdrawalDbEventCps.data.orderNumber, null, null, withdrawalDbEventCps.data.deductCredit, withdrawalDbEventCps.data.userSalesId, withdrawalDbEventCps.data.accountSalesId, withdrawalDbEventCps.data.orderCurrency, withdrawalDbEventCps.data.checkingStatus, null, withdrawalDbEventCps.data.rate, null, withdrawalDbEventCps.data.toUsdRate, EG_WITHDRAWAL_EVENT
         );
 

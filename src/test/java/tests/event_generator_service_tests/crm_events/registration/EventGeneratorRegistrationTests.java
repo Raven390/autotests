@@ -8,7 +8,7 @@ import static utils.Constants.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.kafka.MatchResultWithMessage;
 import business_objects.kafka.crm_db_events.registration.RegistrationDbEvent;
-import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.EgRegistrationEvent;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -37,9 +37,9 @@ class EventGeneratorRegistrationTests extends TestBaseKafka {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent.data.userId.toString());
-        RegistrationEvent retrievedRegistrationEvent = objectMapper.readValue(consumedMessage, RegistrationEvent.class);
+        EgRegistrationEvent retrievedRegistrationEvent = objectMapper.readValue(consumedMessage, EgRegistrationEvent.class);
 
-        RegistrationEvent expectedRegistrationEvent = new RegistrationEvent(
+        EgRegistrationEvent expectedRegistrationEvent = new EgRegistrationEvent(
                 registrationDbEvent.data.createTime, registrationDbEvent.data.userId, registrationDbEvent.data.brand, registrationDbEvent.data.regulator, registrationDbEvent.data.mtAccount, registrationDbEvent.data.createTime, "egRegistration", registrationDbEvent.data.createTime
         );
 

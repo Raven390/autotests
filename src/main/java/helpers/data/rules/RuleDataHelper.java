@@ -24,8 +24,8 @@ import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
-import business_objects.kafka.crm_events.RegistrationEvent;
-import business_objects.kafka.crm_events.WithdrawalEvent;
+import business_objects.kafka.crm_events.EgRegistrationEvent;
+import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
@@ -49,7 +49,7 @@ public class RuleDataHelper {
     public LnSessionParsedObject lnSessionParsedObjectLogin;
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
-    public WithdrawalEvent withdrawalEvent;
+    public EgWithdrawalEvent withdrawalEvent;
     public CloseTradeMtEvent closeTradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
@@ -70,7 +70,7 @@ public class RuleDataHelper {
     public List<LoyaltiesRedemptionObject> loyaltyObjects;
     public List<MtMt5PositionsObject> mtMt5PositionsObjects;
     public LnSessionParsedObject lnSessionParsedObject;
-    public RegistrationEvent registrationEvent;
+    public EgRegistrationEvent registrationEvent;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
     public List<PhoneTableEntry> phoneTableEntries;
@@ -86,7 +86,7 @@ public class RuleDataHelper {
     public RuleDataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
-            WithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent,
+            EgWithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent,
             List<ClientFraudTypes> clientFraudTypes,
             List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
             CrmTbAccountObject crmTbAccountObject,

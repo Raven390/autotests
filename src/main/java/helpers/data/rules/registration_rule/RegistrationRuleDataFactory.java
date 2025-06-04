@@ -4,7 +4,7 @@ package helpers.data.rules.registration_rule;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.EgRegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
@@ -89,7 +89,7 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.setSessionId(client.getSessionId());
         lexisNexisObject.setPolicyScore(-49);
         lexisNexisObject.setRiskRating("low");
-        RegistrationEvent registrationEvent = new RegistrationEvent();
+        EgRegistrationEvent registrationEvent = new EgRegistrationEvent();
         registrationEvent.clientId = client.getUserId();
         registrationEvent.brand = client.getBrand();
         registrationEvent.regulator = Regulator.VFSC.getDisplayName();

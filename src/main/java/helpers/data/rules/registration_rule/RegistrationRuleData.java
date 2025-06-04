@@ -8,7 +8,7 @@ import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.email_table.EmailTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
-import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.EgRegistrationEvent;
 import helpers.data.ClientHelper;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class RegistrationRuleData {
     public List<ConnectionTableEntry> connections;
     public List<CrmTbUserObject> connectedUsers;
     public List<ClientHelper> connectedClientHelpers;
-    public RegistrationEvent registrationEvent;
+    public EgRegistrationEvent registrationEvent;
     public List<ClientFraudTypes> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
     public List<SessionIdTableEntry> sessionIdTableEntries;
@@ -34,7 +34,7 @@ public class RegistrationRuleData {
     public RegistrationRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObject, List<ConnectionTableEntry> connections,
             List<CrmTbUserObject> connectedUsers, List<ClientHelper> connectedClientHelpers,
-            RegistrationEvent registrationEvent, List<ClientFraudTypes> clientFraudTypes,
+            EgRegistrationEvent registrationEvent, List<ClientFraudTypes> clientFraudTypes,
             CrmTbAccountObject crmTbAccountObject, List<SessionIdTableEntry> sessionIdTableEntries,
             List<EmailTableEntry> emailTableEntries, List<DeviceIdTableEntry> deviceIdTableEntries) {
         this.clientHelper = clientHelper;

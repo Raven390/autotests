@@ -1,7 +1,7 @@
 package tests.vindex_backoffice_ui_tests;
 
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import business_objects.kafka.crm_events.RegistrationEvent;
+import business_objects.kafka.crm_events.EgRegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Country;
 import helpers.data.enums.Regulator;
@@ -87,8 +87,8 @@ class KafkaParserTest extends TestBaseRule {
         lexis.setScreenRes("1515x" + getCurrentTimestamp());
         lexis.setDeviceId(null);
 
-        RegistrationEvent registrationEvent = new RegistrationEvent();
-        registrationEvent.lexisNexis = new RegistrationEvent.LexisNexis();
+        EgRegistrationEvent registrationEvent = new EgRegistrationEvent();
+        registrationEvent.lexisNexis = new EgRegistrationEvent.LexisNexis();
         registrationEvent.schemaVersion = "2.0";
         registrationEvent.clientId = client.getUserId();
         registrationEvent.brand = client.getBrand();

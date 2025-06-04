@@ -3,7 +3,7 @@ package tests.rule_engine_service_tests.rules;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.crm_events.WithdrawalEvent;
+import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Restriction;
 import helpers.database.DbName;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +32,6 @@ import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
-@Disabled("Temporarily disabling this test class because rule is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
 @Tag(TEAM_CORE)
@@ -76,17 +74,42 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Withdrawal notification rule manual withdrawal review restriction")
+    @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     @AllureId("962")
     void withdrawalNotificationRule1Test() throws Exception {
         ClientHelper client = client1;
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+
+        CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
+                "MT4",                   // accountType
+                "486951",                            // binNumber
+                client1.getBrand().toLowerCase(),    // brand
+                "checkname",                         // checkName
+                client1.getUserId(),                 // clientId
+                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                "4",                                 // expMonth
+                "2030",                              // expYear
+                "1",                                 // fullName
+                getRandomUuidString(),               // id
+                "VTSG" + client1.getTradingAccount() + "20250603144826", // merchantOrderId (example)
+                client1.getTradingAccount(),         // mt4Account
+                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
+                "-",                                 // paymentChannelName
+                "CREDIT_CARD",                       // paymentMethodCode
+                "WEB",                               // platform
+                client1.getRegulator(),              // regulator
+                "1.0",                               // schemaVersion
+                CRM_WITHDRAWAL_EVENT,                // type
+                1,                                   // withdrawalAmount
+                "2025-06-03T16:30:07",               // withdrawalApplicationTime
+                "EUR",                               // withdrawalCurrency
+                getRandomIntPositive()               // withdrawalId
+        );
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
-        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
+        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client1.getUcid()).toString(), RuleAlert[].class)).toList();
         assertThat("Verify amount of alerts in kafka", alerts.size(), greaterThan(0));
 
         // Verify alert
@@ -98,10 +121,10 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
             }
         }
 
-        assertThat("Check that withdrawal notification is present", isAlertPresent, is(true));
+        assertThat("Check that withdrawal notification alert is present", isAlertPresent, is(true));
 
         List<Alert> dbAlerts = getObjectsFromDB(
-                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, client.getUcid()), Alert.class
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, client1.getUcid()), Alert.class
         );
 
         // Verify alert in BO db
@@ -110,52 +133,121 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Withdrawal notification rule other restriction")
     @AllureId("963")
+    @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     void withdrawalNotificationRule2Test() throws Exception {
         ClientHelper client = client2;
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+
+
+        CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
+                "MT4",                   // accountType
+                "486951",                            // binNumber
+                client2.getBrand().toLowerCase(),    // brand
+                "",                                  // checkName
+                client2.getUserId(),                 // clientId
+                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                "4",                                 // expMonth
+                "2030",                              // expYear
+                "1",                                 // fullName
+                getRandomUuidString(),               // id
+                "VTSG" + client2.getTradingAccount() + "20250603144826", // merchantOrderId (example)
+                client2.getTradingAccount(),         // mt4Account
+                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
+                "-",                                 // paymentChannelName
+                "CREDIT_CARD",                       // paymentMethodCode
+                "WEB",                               // platform
+                client2.getRegulator(),              // regulator
+                "1.0",                               // schemaVersion
+                CRM_WITHDRAWAL_EVENT,                // type
+                1,                                   // withdrawalAmount
+                "2025-06-03T16:30:07",               // withdrawalApplicationTime
+                "EUR",                               // withdrawalCurrency
+                getRandomIntPositive()               // withdrawalId
+        );
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
-        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
+        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client2.getUcid()).toString(), RuleAlert[].class)).toList();
+        assertThat("Verify amount of alerts in kafka", alerts.size(), is(0));
 
         // Verify alert
         boolean isAlertPresent = false;
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client1.getUcid())) {
+            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client2.getUcid())) {
                 isAlertPresent = true;
                 break;
             }
         }
 
-        assertThat("Check that withdrawal notification is not present", isAlertPresent, is(false));
+        assertThat("Check that withdrawal notification alert is present", isAlertPresent, is(false));
+
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, client2.getUcid()), Alert.class
+        );
+
+        // Verify alert in BO db
+
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
     @Test
-    @DisplayName("Withdrawal notification rule no restrictions")
-    @AllureId("964")
+    @AllureId("963")
+    @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     void withdrawalNotificationRule3Test() throws Exception {
         ClientHelper client = client3;
 
         Allure.step("Produce withdrawal event to crm-events topic");
-        WithdrawalEvent withdrawalEvent = new WithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+
+        CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
+                "MT4",                   // accountType
+                "486951",                            // binNumber
+                client3.getBrand().toLowerCase(),    // brand
+                null,                                // checkName
+                client3.getUserId(),                 // clientId
+                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                "4",                                 // expMonth
+                "2030",                              // expYear
+                "1",                                 // fullName
+                getRandomUuidString(),               // id
+                "VTSG" + client3.getTradingAccount() + "20250603144826", // merchantOrderId (example)
+                client3.getTradingAccount(),         // mt4Account
+                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
+                "-",                                 // paymentChannelName
+                "CREDIT_CARD",                       // paymentMethodCode
+                "WEB",                               // platform
+                client3.getRegulator(),              // regulator
+                "1.0",                               // schemaVersion
+                CRM_WITHDRAWAL_EVENT,                // type
+                1,                                   // withdrawalAmount
+                "2025-06-03T16:30:07",               // withdrawalApplicationTime
+                "EUR",                               // withdrawalCurrency
+                getRandomIntPositive()               // withdrawalId
+        );
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(withdrawalEvent), KAFKA_TOPIC_MT_EVENTS);
 
         Allure.step("Get alerts");
-        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
+        List<RuleAlert> alerts = Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client3.getUcid()).toString(), RuleAlert[].class)).toList();
+        assertThat("Verify amount of alerts in kafka", alerts.size(), is(0));
 
         // Verify alert
         boolean isAlertPresent = false;
         for (RuleAlert alert : alerts) {
-            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client1.getUcid())) {
+            if (Objects.equals(alert.rule.name, "Withdrawal Review") && Objects.equals(alert.ucid, client3.getUcid())) {
                 isAlertPresent = true;
                 break;
             }
         }
 
-        assertThat("Check that withdrawal notification is not present", isAlertPresent, is(false));
+        assertThat("Check that withdrawal notification alert is present", isAlertPresent, is(false));
+
+        List<Alert> dbAlerts = getObjectsFromDB(
+                DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, client3.getUcid()), Alert.class
+        );
+
+        // Verify alert in BO db
+
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 }

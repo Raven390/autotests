@@ -7,7 +7,7 @@ import static utils.Constants.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import business_objects.kafka.crm_db_events.login.LoginDbEvent;
-import business_objects.kafka.crm_events.LoginEvent;
+import business_objects.kafka.crm_events.EgLoginEvent;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,9 +34,9 @@ class EventGeneratorLoginTests extends TestBaseKafka {
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         String consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_CRM_EVENTS, loginDbEvent.data.userId.toString());
-        LoginEvent retrievedLoginEvent = objectMapper.readValue(consumedMessage, LoginEvent.class);
+        EgLoginEvent retrievedLoginEvent = objectMapper.readValue(consumedMessage, EgLoginEvent.class);
 
-        LoginEvent expectedLoginEvent = new LoginEvent(
+        EgLoginEvent expectedLoginEvent = new EgLoginEvent(
                 loginDbEvent.data.loginDatetime, loginDbEvent.data.userId, loginDbEvent.data.brand, loginDbEvent.data.ipAddress, loginDbEvent.data.uaString, loginDbEvent.data.cookie, "websiteLogin", EG_LOGIN_EVENT
         );
 
