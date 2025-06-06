@@ -1,10 +1,10 @@
-package business_objects.kafka.mt_data_dumper_events.close_trade;
+package business_objects.kafka.mt_data_dumper_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
 
-public class CloseTradeMt5 {
+public class TradeEventMt5 {
 
     @JsonProperty("Header")
     public Header header;
@@ -12,7 +12,7 @@ public class CloseTradeMt5 {
     @JsonProperty("Payload")
     public Payload payload;
 
-    public CloseTradeMt5(Header header, Payload payload) {
+    public TradeEventMt5(Header header, Payload payload) {
         this.header = header;
         this.payload = payload;
     }
@@ -815,7 +815,7 @@ public class CloseTradeMt5 {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof CloseTradeMt5 that)) return false;
+        if (!(o instanceof TradeEventMt5 that)) return false;
         return Objects.equals(header, that.header) && Objects.equals(payload, that.payload);
     }
 

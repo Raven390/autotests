@@ -23,10 +23,8 @@ import static utils.Utils.getCurrentTimestamp;
 
 class KafkaParserTest extends TestBaseRule {
 
-
     Faker faker = new Faker();
 
-    @Disabled
     @Test
     @DisplayName("Registration kafka parser")
     @AllureId("")
@@ -119,7 +117,7 @@ class KafkaParserTest extends TestBaseRule {
         registrationEvent.lexisNexis.rawResponse = lexis.toStringRawResponse();
         registrationEvent.eventDate = getCurrentTimestampDbFormat();
 
-        System.out.println("event is : \n" + registrationEvent.toString());
+        System.out.println("event is : \n" + registrationEvent);
 
 
         Allure.step("Produce registration event to crm-events topic");
