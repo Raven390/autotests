@@ -13,7 +13,7 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.RestrictionPage;
+import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseApi;
 
 import java.io.IOException;

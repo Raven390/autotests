@@ -35,18 +35,18 @@ public abstract class AbstractPage {
     protected static final String CALENDAR_XPATH = "//div[contains(@class,'v-date-picker__calendar')]";
     protected static final String CALENDAR_BUTTON_WITH_TEXT_PATTERN = "//div[contains(@class,'g-date-calendar__button') and not(contains(@class,'g-date-calendar__button_out-of-boundary')) and text()='%s']";
     protected static final String LOADING_SKELETON = "//div[contains(@class, '_skeleton-container')]";
-    static final String DANGER_HEAVY_TEXT = "*[contains(@class,'g-color-text_color_danger-heavy')]";
-    static final String PRIMARY_TEXT = "*[contains(@class,'g-color-text_color_primary')]";
-    static final String SECONDARY_TEXT = "*[contains(@class,'g-color-text_color_secondary')]";
-    static final String SUBHEADER_2_TEXT = "*[contains(@class,'g-text_variant_subheader-2')]";
-    static final String CAPTION_2_TEXT = "*[contains(@class,'g-text_variant_caption-2')]";
-    static final String SUBHEADER_3_LOCATOR = "*[contains(@class, 'g-text_variant_subheader-3')]";
-    static final String HEADER_2_LOCATOR = "*[contains(@class, 'g-text_variant_header-2')]";
-    static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
-    static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
-    static final String VARIANT_CAPTION_2_SELECTOR = "*[contains(@class, 'g-text_variant_caption-2')]";
+    protected static final String DANGER_HEAVY_TEXT = "*[contains(@class,'g-color-text_color_danger-heavy')]";
+    protected static final String PRIMARY_TEXT = "*[contains(@class,'g-color-text_color_primary')]";
+    protected static final String SECONDARY_TEXT = "*[contains(@class,'g-color-text_color_secondary')]";
+    protected static final String SUBHEADER_2_TEXT = "*[contains(@class,'g-text_variant_subheader-2')]";
+    protected static final String CAPTION_2_TEXT = "*[contains(@class,'g-text_variant_caption-2')]";
+    protected static final String SUBHEADER_3_LOCATOR = "*[contains(@class, 'g-text_variant_subheader-3')]";
+    protected static final String HEADER_2_LOCATOR = "*[contains(@class, 'g-text_variant_header-2')]";
+    protected static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
+    protected static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
+    protected static final String VARIANT_CAPTION_2_SELECTOR = "*[contains(@class, 'g-text_variant_caption-2')]";
 
-    Logger logger = Logger.getLogger("TestPageLogger");
+    public Logger logger = Logger.getLogger("TestPageLogger");
 
     public AbstractPage(Page page) {
         this.page = page;

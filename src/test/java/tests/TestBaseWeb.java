@@ -13,7 +13,9 @@ import java.text.DecimalFormat;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import page_objects.backoffice_pages.*;
+import page_objects.backoffice_pages.abuseRegestry.AbuseRegistryPage;
+import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
+import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.vantage_user_account_pages.StageRegistrationHelperPage;
 import page_objects.vantage_user_account_pages.VantageUserAccountPage;
 import utils.TestResultWatcher;
@@ -50,6 +52,7 @@ public class TestBaseWeb {
     public GeneralSearchElements generalSearch;
     public AlertHistoryPage alertHistoryPage;
     public static OpenPositions openPositions;
+    public AbuseRegistryPage abuseRegistryPage;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -101,6 +104,7 @@ public class TestBaseWeb {
         generalSearch = new GeneralSearchElements(page);
         openPositions = new OpenPositions(page);
         alertHistoryPage = new AlertHistoryPage(page);
+        abuseRegistryPage = new AbuseRegistryPage(page);
     }
 
     @AfterEach

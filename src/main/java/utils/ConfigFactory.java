@@ -96,6 +96,16 @@ public class ConfigFactory {
     public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
     public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
     public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
+    // Postrgres db
+    public static final String POSTGRES_DB_SSH_HOST = CONFIG.postgresDbSshHost();
+    public static final String POSTGRES_DB_SSH_PORT = String.valueOf(CONFIG.postgresDbSshPort());
+    public static final String POSTGRES_DB_SSH_USER = CONFIG.postgresDbSshUser();
+    public static final String POSTGRES_DB_SSH_PRIVATE_KEY = CONFIG.postgresDbSshPrivateKey();
+    public static final String POSTGRES_DB_HOST = CONFIG.postgresDbHost(); // As seen from the SSH server
+    public static final String POSTGRES_DB_PORT = String.valueOf(CONFIG.postgresDbPort());
+    public static final String POSTGRES_DB_USER = CONFIG.postgresDbUser();
+    public static final String POSTGRES_DB_PASSWORD = CONFIG.postgresDbPassword();
+    public static final String POSTGRES_DB_NAME = CONFIG.postgresDbName();
     // Data science db
     public static final String DATA_SCIENCE_MIRROR_LOGIN = CONFIG.mitigationDbName();
     // Audit service db
@@ -106,8 +116,6 @@ public class ConfigFactory {
     public static final String BACKOFFICE_BO_DB_USER = CONFIG.backofficeDbUser();
     public static final String BACKOFFICE_DB_PASSWORD = CONFIG.backofficeDbPassword();
     public static final String BACKOFFICE_DB_NAME = CONFIG.backofficeDbName();
-    // Backoffice db general
-    public static final String POSTGRES_DB_HOST = CONFIG.postgresDBHost();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
@@ -417,6 +425,35 @@ public class ConfigFactory {
 
         @Key("mitigationDbName")
         String mitigationDbName();
+
+        // Postgres db
+
+        @Key("postgresDbSshHost")
+        String postgresDbSshHost();
+
+        @Key("postgresDbSshPort")
+        int postgresDbSshPort();
+
+        @Key("postgresDbSshUser")
+        String postgresDbSshUser();
+
+        @Key("postgresDbSshPrivateKey")
+        String postgresDbSshPrivateKey();
+
+        @Key("postgresDbHost")
+        String postgresDbHost();
+
+        @Key("postgresDbPort")
+        int postgresDbPort();
+
+        @Key("postgresDbUser")
+        String postgresDbUser();
+
+        @Key("postgresDbPassword")
+        String postgresDbPassword();
+
+        @Key("postgresDbName")
+        String postgresDbName();
 
         // Audit service db
 

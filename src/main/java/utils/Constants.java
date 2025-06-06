@@ -21,6 +21,8 @@ public class Constants {
     public static final String LAYER_WEB = "layer_web";
     public static final String LAYER_MOBILE = "layer_mobile";
     public static final String LAYER_KAFKA = "layer_kafka";
+    // VINDEX SERVICES
+    public static final String ABUSE_REGISTRY = "abuse_registry";
     // FEATURES
     public static final String FEATURE_LEXIS_NEXIS = "Lexis Nexis integration";
     public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
@@ -153,6 +155,9 @@ public class Constants {
     public static final String MT5_POSITIONS_TABLE_NAME = "vindex_test.mt___mt5_positions";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
+    public static final String AR_ABUSER_TABLE_NAME = "postgres.ar.abuser";
+    public static final String AR_ABUSER_FRAUD_TYPE_TABLE_NAME = "postgres.ar.abuser_fraud_type";
+    public static final String AR_ABUSER_HISTORY_TABLE_NAME = "postgres.ar.abuser_history";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String AGGR_CREDIT_EQUITY_RATE = "vindex_test_api.aggr__credit_equity_rate";
     public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO = "vindex_test_api.aggr__credit_risk_free_revenue_ratio";
