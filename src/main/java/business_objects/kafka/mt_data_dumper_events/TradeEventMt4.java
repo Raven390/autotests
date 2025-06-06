@@ -1,11 +1,11 @@
-package business_objects.kafka.mt_data_dumper_events.close_trade;
+package business_objects.kafka.mt_data_dumper_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Objects;
 
-public class CloseTradeMt4 {
+public class TradeEventMt4 {
 
     @JsonProperty("header")
     public Header header;
@@ -13,7 +13,7 @@ public class CloseTradeMt4 {
     @JsonProperty("payload")
     public Payload payload;
 
-    public CloseTradeMt4(Header header, Payload payload) {
+    public TradeEventMt4(Header header, Payload payload) {
         this.header = header;
         this.payload = payload;
     }

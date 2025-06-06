@@ -1,6 +1,6 @@
 package tests.event_generator_service_tests.mt_events.data_dumper.close_trade;
 
-import business_objects.kafka.mt_data_dumper_events.close_trade.CloseTradeMt5;
+import business_objects.kafka.mt_data_dumper_events.TradeEventMt5;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.kafka.MatchResultWithMessage;
 import io.qameta.allure.Allure;
@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
 
-import static business_objects.kafka.mt_data_dumper_events.close_trade.CloseTradeFactory.generateCloseTradeDataDumperMt5;
+import static business_objects.kafka.mt_data_dumper_events.CloseTradeFactory.generateCloseTradeDataDumperMt5;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
-@Story(STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE)
+@Story(STORY_DATA_DUMPER_CLOSE_TRADE_EVENT)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
@@ -30,7 +30,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with header=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest1() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.setHeader(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -51,7 +51,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest2() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         String login = String.valueOf(closeTradeMt5.getPayload().getLogin());
         closeTradeMt5.setPayload(null);
 
@@ -73,7 +73,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with header.operation=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest3() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setOperation(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -94,7 +94,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with header.MsgType=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest4() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setMsgType(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -115,7 +115,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with header.MsgId=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest5() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setMsgId(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -136,7 +136,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with header.ServerId=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest6() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setServerId(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -157,7 +157,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Time=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest7() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setTime(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -178,7 +178,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.TimeUtc=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest8() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setTimeUtc(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -199,7 +199,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Deal=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest9() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setDeal(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -220,7 +220,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Login=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest10() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         String login = String.valueOf(closeTradeMt5.getPayload().getLogin());
         closeTradeMt5.getPayload().setLogin(null);
 
@@ -242,7 +242,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Volume=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest11() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setVolume(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -263,7 +263,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Symbol=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest12() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setSymbol(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -284,7 +284,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Entry=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest13() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setEntry(null);
 
         Allure.step("Write message to mt4_trade_record topic");
@@ -305,7 +305,7 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
     @DisplayName("MT5 close trade event with payload.Action=null is not processed by EG")
     void requiredParametersMt5CloseTradeEventTest14() throws JsonProcessingException {
 
-        CloseTradeMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
+        TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setAction(null);
 
         Allure.step("Write message to mt4_trade_record topic");

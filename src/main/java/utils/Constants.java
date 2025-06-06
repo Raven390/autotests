@@ -36,6 +36,10 @@ public class Constants {
     public static final String STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE = "Open trade event in Event Generator";
     public static final String STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE = "Close trade event in Event Generator";
     public static final String STORY_EVENT_GENERATOR_SERVICE_RAF_BALANCE = "Raf balance trade event in Event Generator";
+    public static final String STORY_DATA_DUMPER_CLOSE_TRADE_EVENT = "Data dumper. Close trade event";
+    public static final String STORY_DATA_DUMPER_OPEN_TRADE_EVENT = "Data dumper. Open trade event";
+    public static final String STORY_DATA_DUMPER_STOP_OUT_EVENT = "Data dumper. Stopout trade event";
+    public static final String STORY_DATA_DUMPER_LOSS_COMPENSATION_EVENT = "Data dumper. Trade loss compensation event";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT_TRADING_ACCOUNTS = "Clickhouse api. Get client trading accounts request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS = "Clickhouse api. Get client by trading account & server ID";

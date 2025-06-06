@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class CloseTradeMtEvent_NEW {
+public class TradeEvent {
 
     @JsonProperty("tradeId")
     public long tradeId;
@@ -195,7 +195,7 @@ public class CloseTradeMtEvent_NEW {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof CloseTradeMtEvent_NEW that)) return false;
+        if (!(o instanceof TradeEvent that)) return false;
         return tradeId == that.tradeId && serverId == that.serverId && tradingAccount == that.tradingAccount && Double.compare(
                 volume, that.volume) == 0 && Double.compare(equity, that.equity) == 0 && Double.compare(
                         balance, that.balance) == 0 && Double.compare(leverage, that.leverage) == 0 && Double.compare(
