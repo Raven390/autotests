@@ -45,6 +45,26 @@ public class BoHelper {
         }
     }
 
+    @Step("Delete user from AR")
+    public static void deleteUserAR(String ucid) throws Exception {
+        try {
+            Allure.step("delete user from AR");
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, "ucid = '" + ucid + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid = '" + ucid + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, "ucid = '" + ucid + "'");
+            Thread.sleep(100);
+        } catch (NoSuchElementException e) {
+            System.out.println("no such client in AR");
+
+        }
+    }
+
+    public static void cleanUserAR(String ucid) throws Exception {
+        deleteUserAR(ucid);
+    }
+
     @Step("Delete user's frauds from BO")
     public static void cleanUserFraudsBo(String ucid) throws Exception {
 

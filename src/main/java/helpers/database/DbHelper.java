@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.util.stream.Collectors;
 
 import static utils.ConfigFactory.*;
+import static utils.ConfigFactory.POSTGRES_DB_USER;
 
 public class DbHelper {
 
@@ -266,6 +267,8 @@ public class DbHelper {
     private static Connection createConnection(DbName dbName) throws SQLException {
         if (dbName == DbName.MITIGATION_POSTGRES) {
             return createPostgresConnection();
+        } else if (dbName == DbName.POSTGRES) {
+            return createPostgresConnection();
         } else if (dbName == DbName.AUDIT) {
             return createPostgresConnectionAudit();
         } else if (dbName == DbName.BO) {
@@ -302,15 +305,15 @@ public class DbHelper {
     private static Connection createPostgresConnection() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
         }
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", MITIGATION_DB_USER);
-        connectionProps.setProperty("password", MITIGATION_DB_PASSWORD);
+        connectionProps.setProperty("user", POSTGRES_DB_USER);
+        connectionProps.setProperty("password", POSTGRES_DB_PASSWORD);
 
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }
