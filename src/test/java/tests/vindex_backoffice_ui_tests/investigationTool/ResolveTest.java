@@ -28,7 +28,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
-import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
+import static helpers.data.enums.Restriction.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
@@ -650,7 +650,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("238")
     @DisplayName("Resolve tab have info about currently applied restrictions")
     public void resolveRestrictionsListTest() throws Exception {
-        Restriction restriction = Restriction.ACCOUNT_CREATION;
+        Restriction restriction = ACCOUNT_CREATION;
         //run 1
         RestrictionPage.cleanUserRestriction(resolveClient.getUcid());
         deleteUserBO(resolveClient.getUcid());
@@ -820,7 +820,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING.getDisplayName());
         resolvePage.checkFraudDisplayed(FraudType.ANOMALOUS_PROFIT.getDisplayName(), FraudType.HEDGING.getDisplayName());
-        resolvePage.resetFrauds();
+        resolvePage.resetFraudsChanges();
         resolvePage.checkFraudDisplayed(FraudType.ANOMALOUS_PROFIT.getDisplayName());
         resolvePage.checkFraudNotDisplayed(FraudType.HEDGING.getDisplayName());
     }
@@ -900,6 +900,105 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.clickDeleteRestrictionButtonByName(Restriction.DEPOSITS.getName());
         resolvePage.confirmRestrictionDeletion("Yes");
         resolvePage.checkRestrictionNotDisplayed(Restriction.DEPOSITS.getName());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1323")
+    @Feature("BMS-1139 Predefined restrictions")
+    @DisplayName("Predefined restriction for the fraud type appears on the resolve screen")
+    public void predefinedRestrictionAppearsOnResolveScreen() throws Exception {
+        deleteUserBO(resolveClient.getUcid());
+        cleanUserRestrictionGeneral(resolveClient.getUcid());
+        deleteUserAR(resolveClient.getUcid());
+        FraudType fraud = FraudType.HEDGING;
+        cleanUserAudit(resolveClient.getUcid());
+        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.addFraud(FraudType.HEDGING.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud("Swap Arbitrage");
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.checkRestrictionNotDisplayed(DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud("Market Manipulation");
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.LATENCY_ARBITRAGE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.CPA_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.NBP_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.LOSS_VOUCHER_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.GAP_TRADING.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName(), WITHDRAWALS.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.REBATE_CHURNING.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud("Pricing Errors");
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.TLS_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.BONUS_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.LOOPHOLE_ABUSE.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.NEWS_TRADER.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.MONEY_LAUNDRY_RECORD.getDisplayName());
+        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), WITHDRAWALS.getName());
+        resolvePage.checkRestrictionNotDisplayed(INTERNAL_TRANSFER.getName(), CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
+        resolvePage.addFraud(FraudType.CHARGEBACK.getDisplayName());
+        resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
+        resolvePage.resetRestrictionChanges();
+        resolvePage.resetFraudsChanges();
     }
 
 }

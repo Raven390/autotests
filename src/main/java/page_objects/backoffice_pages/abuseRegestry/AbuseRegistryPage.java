@@ -128,6 +128,7 @@ public class AbuseRegistryPage extends AbstractPage {
 
     public void clickApplyUpload() {
         applyUploadButton.click();
+        uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     public void verifySuccessMessage() {
