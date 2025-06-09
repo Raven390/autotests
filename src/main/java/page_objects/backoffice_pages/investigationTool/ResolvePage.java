@@ -49,7 +49,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator selectedFraudLabel;
     private final Locator fraudDeletionPopup;
     private final Locator confirmFraudDeletionButton;
-    private final Locator resetButton;
+    private final Locator resetFraudChangesButton;
     private final Locator restrictionListButton;
     private final Locator applyButton;
 
@@ -59,10 +59,14 @@ public class ResolvePage extends AbstractPage {
     private final String RESTRICTION_LIST_LOCATOR_ANCESTOR = "//ancestor::*[@class='v-client-restrictions-list-item']";
     private final String RESTRICTION_LIST_LOCATOR = "//*[@class='v-client-restrictions-list-item']";
     private final String RESTRICTION_DELETION_POPUP_LOCATOR = "//*[contains(@class,'v-client-restrictions-list-item__popup') and contains(@class,'g-popup ')]";
-    private final String RESET_CHANGES_BUTTON_LOCATOR = "//*[@data-qa='fraud_type_selector_clear_button']";
+    private final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//*[@data-qa='fraud_type_selector_clear_button']";
+    private final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR = "//*[@class='v-client-restrictions-selector']/button/*[text()='Reset changes']";
     private final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-fraud-type']";
     private final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
     private final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
+    private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
+    private final String fraudDropoutListElementLocator = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
+    private final Locator resetRestrictionsChangesButton;
 
 
     public ResolvePage(Page page) {
@@ -95,7 +99,8 @@ public class ResolvePage extends AbstractPage {
         this.selectedFraudLabel = page.locator(SELECTED_FRAUD_LOCATOR);
         this.fraudDeletionPopup = page.locator("//div[@class='v-fraud-type__action-content']");
         this.confirmFraudDeletionButton = page.locator("//span[@class='g-button__text' and text()='Yes']");
-        this.resetButton = page.locator(RESET_CHANGES_BUTTON_LOCATOR);
+        this.resetFraudChangesButton = page.locator(RESET_FRAUD_CHANGES_BUTTON_LOCATOR);
+        this.resetRestrictionsChangesButton = page.locator(RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR);
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -217,13 +222,23 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
-    public void addFraud(String... addedFraud) {
-        Allure.step("add fraud on resolve screen");
+    public void addFraud(String fraud, String status) {
         fraudListButton.click();
-        for (String i : addedFraud) {
-            fraudSelectItem.getByText(i).click();
+        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        if (!(page.locator(element).isVisible())) {
+            page.locator(fraudDropoutListElementLocator).nth(0).hover();
+            page.mouse().wheel(0, 5000);
+
         }
-        fraudSelectApplyButton.click();
+        page.locator(element).hover();
+        page.locator(element).hover();
+        String subelement = element + "/../../..//div[@class='v-dropdown-select-item__sub-menu-content']//div[text()='" + status + "']";
+        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator(subelement).click();
+    }
+
+    public void addFraud(String fraud) {
+        addFraud(fraud, "Confirmed");
     }
 
     public void addRestriction(String... addedRestriction) {
@@ -235,9 +250,16 @@ public class ResolvePage extends AbstractPage {
         applyButton.click();
     }
 
-    public void resetFrauds() {
-        Allure.step("click 'Reset changes' button");
-        resetButton.click();
+    public void resetFraudsChanges() {
+        Allure.step("click 'Reset fraud changes' button");
+        resetFraudChangesButton.click();
+        page.waitForTimeout(500);
+    }
+
+    public void resetRestrictionChanges() {
+        Allure.step("click 'Reset restriction changes' button");
+        resetRestrictionsChangesButton.click();
+        page.waitForTimeout(500);
     }
 
     @Step("Resolve with adding a few frauds")
@@ -385,6 +407,7 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Get time label for the provided fraud")
     public String getFraudTimeByName(String fraudName) {
+        Allure.step("Get time label for the provided fraud");
         return page.locator(String.format(FRAUD_TIME_BY_NAME_PATTERN, fraudName)).textContent();
     }
 
@@ -395,6 +418,7 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Click delete fraud and confirm the popup")
     public void deleteFraudByName(String fraudName) {
+        Allure.step("Click delete fraud and confirm the popup");
         page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
         assertThat(fraudDeletionPopup).containsText("Are you sure that the client should not be identified with this fraud anymore?");
         confirmFraudDeletionButton.click();
@@ -402,22 +426,23 @@ public class ResolvePage extends AbstractPage {
         submitFraudButton.click();
     }
 
-    @Step("Click delete fraud ")
+    @Step("Click delete restriction ")
     public void clickDeleteRestrictionButtonByName(String restriction) {
+        Allure.step("click delete restriction button");
         String locator = "//*[text()='" + restriction + "']" + RESTRICTION_LIST_LOCATOR_ANCESTOR + REMOVE_BUTTON_LOCATOR;
         page.locator(locator).click();
     }
 
-    public void checkRestrictionDisplayed(String... addedFraud) {
+    public void checkRestrictionDisplayed(String... addedRestriction) {
         Allure.step("check that fraud type displayed");
-        for (String i : addedFraud) {
+        for (String i : addedRestriction) {
             page.locator(RESTRICTION_LIST_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         }
     }
 
-    public void checkRestrictionNotDisplayed(String... addedFraud) {
+    public void checkRestrictionNotDisplayed(String... addedRestriction) {
         Allure.step("check that fraud type displayed");
-        for (String i : addedFraud) {
+        for (String i : addedRestriction) {
             page.locator(RESTRICTION_LIST_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
         }
     }
@@ -426,6 +451,16 @@ public class ResolvePage extends AbstractPage {
         Allure.step("Click button " + buttonText + " in popup");
         page.waitForSelector(RESTRICTION_DELETION_POPUP_LOCATOR).waitForElementState(ElementState.VISIBLE);
         page.locator(RESTRICTION_DELETION_POPUP_LOCATOR).getByText(buttonText).click();
+    }
+
+    @Deprecated()//"version for old UI"
+    public void addFraudOld(String... addedFraud) {
+        Allure.step("add fraud on resolve screen");
+        fraudListButton.click();
+        for (String i : addedFraud) {
+            fraudSelectItem.getByText(i).click();
+        }
+        fraudSelectApplyButton.click();
     }
 
 
