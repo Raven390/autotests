@@ -374,6 +374,12 @@ public class ResolvePage extends AbstractPage {
         assertTrue(reportForm.isVisible());
     }
 
+    public void cantOpenReportFraudForm() {
+        isPageLoaded();
+        reportFraudButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(reportFraudButton.isDisabled());
+    }
+
     @Step("Resolve with adding fraud")
     public void reportAddFraud(String comment, String addedFraud) {
         commentInput.fill(comment);

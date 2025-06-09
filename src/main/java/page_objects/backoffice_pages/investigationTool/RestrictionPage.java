@@ -558,6 +558,13 @@ public class RestrictionPage extends AbstractPage {
         applyChangesButton.click();
     }
 
+    @Step("check that the manage restriction button is disabled")
+    public void cantAddNewRestriction() {
+        Allure.step("check that the manage restriction button is disabled");
+        waitForPageToLoad();
+        assertTrue(openRestrictionsDrawerButton.isDisabled());
+    }
+
     @Step("Verify restriction is applied in UI")
     public void verifyRestrictionAppliedInUi(Restriction restriction, User user, String comment) {
         Locator restrictionItem = page.locator(String.format(RESTRICTION_TAB_ITEM_BY_NAME, restriction.getName()));

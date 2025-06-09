@@ -442,6 +442,13 @@ public class InvestigationPage extends AbstractPage {
         }
     }
 
+    @Step("take client to investigation from the client card")
+    public void cantInvestigateClientCard() {
+        waitForPageToLoad();
+        Allure.step("check that client cant be taken to investigation from the client card");
+        assertTrue(investigateButton.isDisabled());
+    }
+
     public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
         Allure.step("check assigment event in Audit DB");
         page.waitForTimeout(5000);
@@ -731,6 +738,13 @@ public class InvestigationPage extends AbstractPage {
     public void openCommentForm() {
         commentButton.click();
         addCommentInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+
+    }
+
+
+    public void cantOpenCommentForm() {
+        waitForPageToLoad();
+        assertTrue(commentButton.isDisabled());
 
     }
 

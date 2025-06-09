@@ -69,6 +69,12 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(autotestUserOne());
     }
 
+    @Step("Log in as AF user")
+    public void loginAsAFUser() {
+        Allure.step("Login as AF user");
+        loginWithUser(autotestUserAF());
+    }
+
     @Step("Log in as dev user")
     public void loginAsDevUser() {
         loginWithUser(devUser());
