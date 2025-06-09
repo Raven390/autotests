@@ -67,7 +67,7 @@ public class AbuseRegistryPage extends AbstractPage {
     }
 
     public void selectBrandToUpload(String brandName) {
-        page.click(String.format(brandSelectButtonLocatorPattern, "brandName"));
+        page.click(String.format(brandSelectButtonLocatorPattern, brandName));
     }
 
     public void typeClientID(String clientID) {

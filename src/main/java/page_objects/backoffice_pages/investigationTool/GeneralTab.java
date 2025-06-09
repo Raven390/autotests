@@ -80,8 +80,8 @@ public class GeneralTab extends AbstractPage {
     private static final String SECONDARY_TEXT_SELECTOR = "//*[contains(@class,'g-color-text_color_secondary')]";
     private static final String NOT_SECONDARY_TEXT_SELECTOR = "//*[not (contains(@class,'g-color-text_color_secondary'))]";
     private static final String SUMMARY_PANEL = "//*[@data-qa='investigation_page__investigation_tools'";
-    private static final String SUMMARY_PANEL_VALUE = "//div[contains(@class, 'v-client-summary-panel__value')]/div[@class= 'v-text-with-icon__text']";
-    private static final String SUMMARY_PANEL_ITEM = "//div[contains(@class, 'v-client-summary-panel__item')]";
+    private static final String SUMMARY_PANEL_VALUE = "//div[contains(@class, 'v-client-summary-panel-v2__value')]/div[@class= 'v-text-with-icon__text']";
+    private static final String SUMMARY_PANEL_ITEM = "//div[contains(@class, 'v-client-summary-panel-v2__item')]";
     private static final String IB_ROW = "//*[text()='IB program']//ancestor::tr";
     private static final String REFERRAL_ROW = "//*[text()='Referral client']//ancestor::tr";
     private static final String CPA_ROW = "//*[text()='CPA affiliate']//ancestor::tr";
