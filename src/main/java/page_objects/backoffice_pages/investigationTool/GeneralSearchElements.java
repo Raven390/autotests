@@ -35,7 +35,7 @@ public class GeneralSearchElements extends AbstractPage {
 
     public GeneralSearchElements(Page page) {
         super(page);
-        searchButton = page.locator("//" + SIDEBAR_BUTTON_LOCATOR).nth(2);
+        searchButton = page.locator("//" + SIDEBAR_BUTTON_LOCATOR).nth(4);
         searchInput = page.locator("//" + SEARCH_OVERLAY_LOCATOR + "//input");
         errorScreen = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR);
         errorText1 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + "//" + SUBHEADER_2_TEXT);
@@ -44,7 +44,7 @@ public class GeneralSearchElements extends AbstractPage {
 
     public void openSearch() {
         Allure.step("Open search form");
-        searchButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        waitForPageToLoad();
         searchButton.click();
         searchInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
