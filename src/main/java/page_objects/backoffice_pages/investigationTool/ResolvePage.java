@@ -209,9 +209,7 @@ public class ResolvePage extends AbstractPage {
     @Step("Resolve with adding fraud")
     public void resolveAddFraud(String comment, String addedFraud) {
         commentInput.fill(comment);
-        fraudListButton.click();
-        fraudSelectItem.getByText(addedFraud).click();
-        fraudSelectApplyButton.click();
+        addFraud(addedFraud);
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }

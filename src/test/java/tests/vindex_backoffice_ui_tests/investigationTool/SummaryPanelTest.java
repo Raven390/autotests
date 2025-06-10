@@ -36,8 +36,7 @@ import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.ge
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.data.enums.FraudType.getRandomFraudType;
-import static helpers.database.BoHelper.cleanUserFraudsBo;
-import static helpers.database.BoHelper.createUserFraudsBo;
+import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -183,6 +182,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Fraud, no frauds")
     public void clientSummaryFraudEmptyTest() throws Exception {
         cleanUserFraudsBo(client.getUcid());
+        cleanUserAR(client.getUcid());
         Allure.step("Prepare DB data for test user");
 
         investigationPage.navigateEnterPage();
