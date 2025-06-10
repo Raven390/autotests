@@ -747,6 +747,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Alert in 'Fraud Type Mismatch' state when fraud in alert not match fraud in history")
     public void resolveNoFraudAssignedMismatchFraudInHistoryTest() throws Exception {
         deleteUserBO(resolveClient.getUcid());
+        cleanUserAR(resolveClient.getUcid());
         createUserFraudsBo(resolveClient.getUcid(), FraudType.HEDGING.getFraudTypeId());
         FraudType fraud = FraudType.ANOMALOUS_PROFIT;
         cleanUserAudit(resolveClient.getUcid());
