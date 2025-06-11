@@ -17,6 +17,8 @@ public class Alert {
     private String fraudType;
     private String ruleAttributes;
     private String alertResolution;
+    private Boolean isHighPriority;
+    private String investigatorId;
 
     public Long getId() {
         return id;
@@ -122,12 +124,28 @@ public class Alert {
         this.alertResolution = alertResolution;
     }
 
+    public Boolean getHighPriority() {
+        return isHighPriority;
+    }
+
+    public void setHighPriority(Boolean highPriority) {
+        isHighPriority = highPriority;
+    }
+
+    public String getInvestigatorId() {
+        return investigatorId;
+    }
+
+    public void setInvestigatorId(String investigatorId) {
+        this.investigatorId = investigatorId;
+    }
+
     public Alert() {
     }
 
     public Alert(Long id, String uuid, Long clientId, String happenedAt, String receivedAt, String closedAt,
-            String status, String rule, String trigger, String ruleVersion, String fraudType,
-            String ruleAttributes, String alertResolution) {
+            String status, String rule, String trigger, String ruleVersion, String fraudType, String ruleAttributes,
+            String alertResolution, Boolean isHighPriority, String investigatorId) {
         this.id = id;
         this.uuid = uuid;
         this.clientId = clientId;
@@ -141,23 +159,24 @@ public class Alert {
         this.fraudType = fraudType;
         this.ruleAttributes = ruleAttributes;
         this.alertResolution = alertResolution;
+        this.isHighPriority = isHighPriority;
+        this.investigatorId = investigatorId;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Alert alert = (Alert) o;
-        return Objects.equals(id, alert.id) && Objects.equals(uuid, alert.uuid) && Objects.equals(clientId, alert.clientId) && Objects.equals(happenedAt, alert.happenedAt) && Objects.equals(receivedAt, alert.receivedAt) && Objects.equals(closedAt, alert.closedAt) && Objects.equals(status, alert.status) && Objects.equals(rule, alert.rule) && Objects.equals(trigger, alert.trigger) && Objects.equals(ruleVersion, alert.ruleVersion) && Objects.equals(fraudType, alert.fraudType) && Objects.equals(ruleAttributes, alert.ruleAttributes) && Objects.equals(alertResolution, alert.alertResolution);
+        return Objects.equals(id, alert.id) && Objects.equals(uuid, alert.uuid) && Objects.equals(clientId, alert.clientId) && Objects.equals(happenedAt, alert.happenedAt) && Objects.equals(receivedAt, alert.receivedAt) && Objects.equals(closedAt, alert.closedAt) && Objects.equals(status, alert.status) && Objects.equals(rule, alert.rule) && Objects.equals(trigger, alert.trigger) && Objects.equals(ruleVersion, alert.ruleVersion) && Objects.equals(fraudType, alert.fraudType) && Objects.equals(ruleAttributes, alert.ruleAttributes) && Objects.equals(alertResolution, alert.alertResolution) && Objects.equals(isHighPriority, alert.isHighPriority) && Objects.equals(investigatorId, alert.investigatorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uuid, clientId, happenedAt, receivedAt, closedAt, status, rule, trigger, ruleVersion, fraudType, ruleAttributes, alertResolution);
+        return Objects.hash(id, uuid, clientId, happenedAt, receivedAt, closedAt, status, rule, trigger, ruleVersion, fraudType, ruleAttributes, alertResolution, isHighPriority, investigatorId);
     }
 
     @Override
     public String toString() {
-        return "Alert{" + "id=" + id + ", uuid='" + uuid + '\'' + ", clientId=" + clientId + ", happenedAt='" + happenedAt + '\'' + ", receivedAt='" + receivedAt + '\'' + ", closedAt='" + closedAt + '\'' + ", status='" + status + '\'' + ", rule='" + rule + '\'' + ", trigger='" + trigger + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", fraudType='" + fraudType + '\'' + ", ruleAttributes='" + ruleAttributes + '\'' + ", confirmed=" + alertResolution + '}';
+        return "Alert{" + "id=" + id + ", uuid='" + uuid + '\'' + ", clientId=" + clientId + ", happenedAt='" + happenedAt + '\'' + ", receivedAt='" + receivedAt + '\'' + ", closedAt='" + closedAt + '\'' + ", status='" + status + '\'' + ", rule='" + rule + '\'' + ", trigger='" + trigger + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", fraudType='" + fraudType + '\'' + ", ruleAttributes='" + ruleAttributes + '\'' + ", alertResolution='" + alertResolution + '\'' + ", isHighPriority=" + isHighPriority + ", investigatorId='" + investigatorId + '\'' + '}';
     }
 }

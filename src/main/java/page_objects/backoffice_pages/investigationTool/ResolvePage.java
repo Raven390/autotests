@@ -9,7 +9,6 @@ import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.FraudType;
-import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
@@ -19,6 +18,7 @@ import page_objects.backoffice_pages.AbstractPage;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ResolvePage extends AbstractPage {
@@ -57,7 +57,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator resetRestrictionsChangesButton;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
-    private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type__popup')]";
+    private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
     private static final String REMOVE_BUTTON_LOCATOR = "//button[@data-qa='selected_fraud_type_item__remove_button']";
     private static final String RESTRICTION_LIST_LOCATOR_ANCESTOR = "//ancestor::*[@class='v-client-restrictions-list-item']";
     private static final String RESTRICTION_LIST_LOCATOR = "//*[@class='v-client-restrictions-list-item']";
@@ -89,10 +89,10 @@ public class ResolvePage extends AbstractPage {
         this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
-        this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
+        this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type-v2']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
         this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
-        this.fraudSelectItem = page.locator("[data-qa='fraud_type_select_item']");
+        this.fraudSelectItem = page.locator("//div[@class='v-dropdown-select-item-base']");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.applyButton = page.locator("//button/*[text()='Apply']");
         this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
@@ -209,7 +209,7 @@ public class ResolvePage extends AbstractPage {
     }
 
     @Step("Resolve with adding fraud")
-    public void resolveAddFraud(String comment, String addedFraud) {
+    public void resolveAddFraud(String comment, FraudType addedFraud) {
         commentInput.fill(comment);
         addFraud(addedFraud);
         completeInvestigationButton.click();
@@ -222,23 +222,15 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
-    public void addFraud(String fraud, String status) {
+    public void addFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
-        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
-        if (!(page.locator(element).isVisible())) {
-            page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR).nth(0).hover();
-            page.mouse().wheel(0, 5000);
-
-        }
-        page.locator(element).hover();
-        page.locator(element).hover();
-        String subelement = element + "/../../..//div[@class='v-dropdown-select-item__sub-menu-content']//div[text()='" + status + "']";
-        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        page.locator(subelement).click();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, fraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, fraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, String.format("%s:%s", fraud.getCode(), status.getStatus()))).click();
     }
 
-    public void addFraud(String fraud) {
-        addFraud(fraud, "Confirmed");
+    public void addFraud(FraudType fraud) {
+        addFraud(fraud, CONFIRMED);
     }
 
     public void addRestriction(String... addedRestriction) {
@@ -263,14 +255,11 @@ public class ResolvePage extends AbstractPage {
     }
 
     @Step("Resolve with adding a few frauds")
-    public void resolveAddMultipleFraud(String comment, String... addedFraud) {
+    public void resolveAddMultipleFraud(String comment, FraudType... addedFraud) {
         commentInput.fill(comment);
-        for (String i : addedFraud) {
-            fraudListButton.click();
-            fraudSelectItem.getByText(i).click();
-            fraudSelectApplyButton.click();
+        for (FraudType fraud : addedFraud) {
+            addFraud(fraud, CONFIRMED);
         }
-
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
@@ -278,9 +267,9 @@ public class ResolvePage extends AbstractPage {
 
     public void checkFraudsList() {
         fraudListButton.click();
-        FraudTypeOld[] fraudsTypes = FraudTypeOld.values();
-        for (FraudTypeOld i : fraudsTypes) {
-            String item = i.getDisplayName();
+        FraudType[] fraudsTypes = FraudType.values();
+        for (FraudType fraud : fraudsTypes) {
+            String item = fraud.getName();
             assertTrue(fraudSelectItem.getByText(item).isVisible());
         }
 
