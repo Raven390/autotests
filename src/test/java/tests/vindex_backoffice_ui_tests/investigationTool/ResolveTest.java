@@ -1,13 +1,15 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 
+import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
-import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
 import helpers.database.DbName;
@@ -15,10 +17,7 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseWeb;
 
@@ -28,11 +27,15 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
 
@@ -45,9 +48,10 @@ public class ResolveTest extends TestBaseWeb {
     private static final RuleAlert alert1 = generateWithdrawalNotificationAlert(withdrawalClient);
     private static final RuleAlert alert2 = generateWithdrawalNotificationAlert(withdrawalClient);
     private static final RuleAlert alert3 = generateWithdrawalNotificationAlert(withdrawalClient);
+    private static final String WHERE_STATEMENT = "ucid = '%s'";
 
     @BeforeAll
-    public static void setup() throws Exception {
+    static void setup() {
         CrmTbUserObject withdrawalClientDB = generateStaticUserByClient(withdrawalClient);
         CrmTbUserObject resolveClientDB = generateStaticUserByClient(resolveClient);
         alert1.rule.attributes.withdrawalId = "14140201";
@@ -75,17 +79,22 @@ public class ResolveTest extends TestBaseWeb {
         insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
     }
 
+    @BeforeEach
+    void cleanData() throws Exception {
+        deleteUserBO(resolveClient.getUcid());
+        cleanUserAudit(resolveClient.getUcid());
+        deleteUserAR(resolveClient.getUcid());
+    }
+
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
-    @DisplayName("resolve client with withdrawal transactions approve all")
+    @DisplayName("Resolve client with withdrawal transactions approve all")
     public void resolveWithWithdrawalsApproveAllTest() throws Exception {
         cleanUserAudit(withdrawalClient.getUcid());
         deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
-        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
-        Response response = enableCRMEmulator();
-        assertNotNull(response);
+        cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
@@ -103,15 +112,11 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
-    @DisplayName("resolve client with withdrawal transactions reject all")
+    @DisplayName("Resolve client with withdrawal transactions reject all")
     public void resolveWithWithdrawalsRejectAllTest() throws Exception {
-        cleanUserAudit(withdrawalClient.getUcid());
         deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
-        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
-        Response response = enableCRMEmulator();
-        assertNotNull(response);
+        cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
-
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -127,14 +132,11 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("432")
-    @DisplayName("resolve client with withdrawal transactions approve one")
+    @DisplayName("Resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOneTest() throws Exception {
         //first run
-        cleanUserAudit(withdrawalClient.getUcid());
         deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
-        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
-        Response response = enableCRMEmulator();
-        assertNotNull(response);
+        cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateEnterPage();
@@ -148,7 +150,7 @@ public class ResolveTest extends TestBaseWeb {
         //second run
         cleanUserAudit(withdrawalClient.getUcid());
         deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
-        RestrictionPage.cleanUserRestriction(withdrawalClient.getUcid());
+        cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
         investigationPage.navigateToClient(withdrawalClient.getUcid());
@@ -165,9 +167,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("286")
     @DisplayName("BO user can assign suspicious client with the active alert to himself to perform investigation from the alert list")
     public void assignAlertListTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -182,9 +182,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("226")
     @DisplayName("BO user can assign suspicious client with the active alert to himself to perform investigation from the client card")
     public void assignClientCardTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -195,78 +193,21 @@ public class ResolveTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("301")
-    @DisplayName("BO user can resolve client in with fraud type BONUS_ABUSE")
-    public void resolveClientBonusAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.BONUS_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("300")
-    @DisplayName("BO user can resolve client in with fraud type CPA_ABUSE")
-    public void resolveClientCpaTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.CPA_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("298")
-    @DisplayName("BO user can resolve client in with fraud type GAP_TRADING")
-    public void resolveClientGapTradingTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.GAP_TRADING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("294")
     @DisplayName("BO user can resolve client in with fraud type HEDGING")
     public void resolveClientHedgingTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.HEDGING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -275,17 +216,58 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("295")
     @DisplayName("BO user can resolve client in with fraud type LATENCY_ARBITRAGE")
     public void resolveClientGapLatencyArbitrageTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.LATENCY_ARBITRAGE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.LATENCY_ARBITRAGE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("300")
+    @DisplayName("BO user can resolve client in with fraud type CPA_ABUSE")
+    public void resolveClientCpaTest() throws Exception {
+        FraudType fraud = FraudType.CPA_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("301")
+    @DisplayName("BO user can resolve client in with fraud type BONUS_ABUSE")
+    public void resolveClientBonusAbuseTest() throws Exception {
+        FraudType fraud = FraudType.BONUS_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -294,36 +276,18 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("304")
     @DisplayName("BO user can resolve client in with fraud type LOSS_VOUCHER_ABUSE")
     public void resolveClientGapLossVoucherAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.LOSS_VOUCHER_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.LOSS_VOUCHER_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("296")
-    @DisplayName("BO user can resolve client in with fraud type MARKET_MANIPULATION")
-    public void resolveClientGapMarketManipulationTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.MARKET_MANIPULATION;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -332,74 +296,38 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("305")
     @DisplayName("BO user can resolve client in with fraud type NBP_ABUSE")
     public void resolveClientGapNBPAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.NBP_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.NBP_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("307")
-    @DisplayName("BO user can resolve client in with fraud type POTENTIAL_ABUSE")
-    public void resolveClientGapPotentialAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.POTENTIAL_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+    @AllureId("298")
+    @DisplayName("BO user can resolve client in with fraud type GAP_TRADING")
+    public void resolveClientGapTradingTest() throws Exception {
+        FraudType fraud = FraudType.GAP_TRADING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("297")
-    @DisplayName("BO user can resolve client in with fraud type PRICING_ERRORS")
-    public void resolveClientGapPricingErrorsTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.PRICING_ERROR;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("302")
-    @DisplayName("BO user can resolve client in with fraud type RAF_ABUSE")
-    public void resolveClientGapRAFAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.RAF_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -408,36 +336,18 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("303")
     @DisplayName("BO user can resolve client in with fraud type REBATE_CHURNING")
     public void resolveClientGapRebateChurningTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.REBATE_CHURNING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.REBATE_CHURNING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("299")
-    @DisplayName("BO user can resolve client in with fraud type SWAP_ARBITRAGE")
-    public void resolveClientSwapArbitrageTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.SWAP_ARBITRAGE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -446,17 +356,18 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("306")
     @DisplayName("BO user can resolve client in with fraud type TLS_ABUSE")
     public void resolveClientTLSAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.TLS_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.TLS_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -465,36 +376,18 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("762")
     @DisplayName("BO user can resolve client in with fraud type LOOPHOLE_ABUSE")
     public void resolveClientLoopholeAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.LOOPHOLE_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.LOOPHOLE_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("763")
-    @DisplayName("BO user can resolve client in with fraud type HFT_ABUSE")
-    public void resolveClientHfyAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.HFT_ABUSE;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient(resolveClient.getUcid());
-        investigationPage.investigateClientCard();
-        resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -503,36 +396,118 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("764")
     @DisplayName("BO user can resolve client in with fraud type NEWS_TRADER")
     public void resolveClientNewsTraderAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.NEWS_TRADER;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.NEWS_TRADER;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("302")
+    @DisplayName("BO user can resolve client in with fraud type CHARGEBACK")
+    public void resolveClientChargebackAbuseTest() throws Exception {
+        FraudType fraud = FraudType.CHARGEBACK;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("296")
+    @DisplayName("BO user can resolve client in with fraud type MARKET_MANIPULATION")
+    public void resolveClientGapMarketManipulationTest() throws Exception {
+        FraudType fraud = FraudType.MARKET_MANIPULATION;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("299")
+    @DisplayName("BO user can resolve client in with fraud type SWAP_ARBITRAGE")
+    public void resolveClientSwapArbitrageTest() throws Exception {
+        FraudType fraud = FraudType.SWAP_ARBITRAGE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("297")
+    @DisplayName("BO user can resolve client in with fraud type PRICING_ERRORS")
+    public void resolveClientGapPricingErrorsTest() throws Exception {
+        FraudType fraud = FraudType.PRICING_ERROR;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(resolveClient.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("765")
-    @DisplayName("BO user can resolve client in with fraud type ANOMALOUS_PROFIT")
-    public void resolveClientAnomalousProfitAbuseTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+    @DisplayName("BO user can resolve client in with fraud type SLIPPAGE_FREE_ABUSE")
+    public void resolveClientSlippageFreeAbuseTest() throws Exception {
+        FraudType fraud = FraudType.SLIPPAGE_FREE_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, fraud.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud.getFraudTypeId());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
+        assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraud.getCode()));
+        assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -541,19 +516,21 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("322")
     @DisplayName("BO user can resolve client in with multiple fraud types")
     public void resolveClientMultipleAbuseTest() throws Exception {
-        FraudTypeOld fraud1 = FraudTypeOld.HEDGING;
-        FraudTypeOld fraud2 = FraudTypeOld.TLS_ABUSE;
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud1.getKey());
+        FraudType fraud1 = FraudType.HEDGING;
+        FraudType fraud2 = FraudType.TLS_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud1.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddMultipleFraud("test" + timestamp, fraud1.getDisplayName(), fraud2.getDisplayName());
-        checkUserFraudBo(resolveClient.getUcid(), fraud1.getFraudTypeId());
-        checkUserFraudBo(resolveClient.getUcid(), fraud2.getFraudTypeId());
+        resolvePage.resolveAddMultipleFraud("test" + timestamp, fraud1, fraud2);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there are 2 frauds", frauds.size(), is(2));
+        assertThat("Verify first fraud type", frauds.getFirst().getFraudTypeCode(), anyOf(is(fraud1.getCode()), is(fraud2.getCode())));
+        assertThat("Verify second fraud type", frauds.getLast().getFraudTypeCode(), anyOf(is(fraud1.getCode()), is(fraud2.getCode())));
+        assertThat("Verify first fraud status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify first fraud status", frauds.getLast().getStatus(), is(CONFIRMED.getStatus()));
     }
 
     @Test
@@ -562,9 +539,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("325")
     @DisplayName("BO user can resolve client without any applied fraud")
     public void resolveClientNoFraudTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -580,9 +555,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("291")
     @DisplayName("BO user can't type more than a 250 symbols into resolve commentary section")
     public void cantTypeMoreThan250CommentTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -595,11 +568,9 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("233")
-    @DisplayName("on resolve violated rule can be tagged as false positive")
+    @DisplayName("On resolve violated rule can be tagged as false positive")
     public void resolveFalsePositiveTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -613,17 +584,16 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("289")
-    @DisplayName("on resolve violated rule can be tagged as true positive")
+    @DisplayName("On resolve violated rule can be tagged as true positive")
     public void resolveTruePositiveTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        FraudType fraud = FraudType.TLS_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, FraudTypeOld.TLS_ABUSE.getDisplayName());
+        resolvePage.resolveAddFraud("test" + timestamp, fraud);
         checkUserAlertConfirmation(resolveClient.getUcid(), "CONFIRMED");
     }
 
@@ -632,10 +602,8 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("250")
     @DisplayName("Resolve have actual list of violations")
-    public void resolveViolationsListTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+    public void resolveViolationsListTest() {
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -653,12 +621,10 @@ public class ResolveTest extends TestBaseWeb {
         Restriction restriction = ACCOUNT_CREATION;
         //run 1
         RestrictionPage.cleanUserRestriction(resolveClient.getUcid());
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
         Response response = enableCRMEmulator();
         assertNotNull(response);
         RestrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction.getCode());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -671,7 +637,7 @@ public class ResolveTest extends TestBaseWeb {
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), restriction1.getCode());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.TLS_ABUSE.getCode());
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
@@ -683,11 +649,9 @@ public class ResolveTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("744")
     @DisplayName("Resolve Flow. User can comment suspicious client outside of resolve screen")
-    public void commentOutsideResolveTest() throws Exception {
+    public void commentOutsideResolveTest() {
         String comment = "test" + timestamp;
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -705,10 +669,8 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Alert in 'false positive' state when fraud not set and no frauds in history")
     public void resolveNoFraudAssignedNoFraudInHistoryTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.CPA_ABUSE;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -725,11 +687,10 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Alert in 'confirmed' state when fraud in alert match fraud in history")
     public void resolveNoFraudAssignedMatchFraudInHistoryTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
+        FraudType fraud = FraudType.HEDGING;
+        addFraudsForClient(resolveClient, List.of(fraud), CONFIRMED);
         cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -746,12 +707,8 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Alert in 'Fraud Type Mismatch' state when fraud in alert not match fraud in history")
     public void resolveNoFraudAssignedMismatchFraudInHistoryTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        cleanUserAR(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.HEDGING.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        addFraudsForClient(resolveClient, List.of(FraudType.HEDGING), CONFIRMED);
+        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -768,16 +725,13 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Alert in 'Fraud Type Mismatch' state when fraud in alert not match fraud in resolve")
     public void resolveMismatchFraudInResolveTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveAddFraud("test" + timestamp, FraudTypeOld.TLS_ABUSE.getDisplayName());
+        resolvePage.resolveAddFraud("test" + timestamp, FraudType.HEDGING);
         checkUserAlertConfirmation(resolveClient.getUcid(), "FRAUD_TYPE_MISMATCH");
     }
 
@@ -788,11 +742,9 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Alert in 'False Positive' state when fraud in alert not match fraud in history")
     public void resolveNoFraudAssignedDeleteFraudInHistoryTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.ANOMALOUS_PROFIT;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.HEDGING;
+        addFraudsForClient(resolveClient, List.of(fraud), CONFIRMED);
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -809,21 +761,20 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Fraud types changes can be reset on resolve screen")
     public void resolveAddedFraudsCanBeResetTest() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
+        addFraudsForClient(resolveClient, List.of(FraudType.CPA_ABUSE), CONFIRMED);
+        FraudType fraud = FraudType.HEDGING;
         cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.addFraud(FraudTypeOld.HEDGING.getDisplayName());
-        resolvePage.checkFraudDisplayed(FraudTypeOld.ANOMALOUS_PROFIT.getDisplayName(), FraudTypeOld.HEDGING.getDisplayName());
+        resolvePage.addFraud(FraudType.HEDGING);
+        resolvePage.checkFraudDisplayed(FraudType.CPA_ABUSE.getName(), FraudType.HEDGING.getName());
         resolvePage.resetFraudsChanges();
-        resolvePage.checkFraudDisplayed(FraudTypeOld.ANOMALOUS_PROFIT.getDisplayName());
-        resolvePage.checkFraudNotDisplayed(FraudTypeOld.HEDGING.getDisplayName());
+        resolvePage.checkFraudDisplayed(FraudType.CPA_ABUSE.getName());
+        resolvePage.checkFraudNotDisplayed(FraudType.HEDGING.getName());
     }
 
     @Test
@@ -833,12 +784,10 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Restrictions can be added on resolve screen")
     public void restrictionCanBeAdded() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
         cleanUserRestrictionGeneral(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        addFraudsForClient(resolveClient, List.of(FraudType.CPA_ABUSE), CONFIRMED);
+        FraudType fraud = FraudType.HEDGING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -847,7 +796,8 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addRestriction(Restriction.DEPOSITS.getName());
         resolvePage.resolveFillCommentary("test" + timestamp);
         resolvePage.resolveInvestigation();
-        RestrictionPage.checkUserHaveRestrictionGeneral(resolveClient.getUcid(), Restriction.DEPOSITS.getId(), "APPLIED");
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s' and restriction_id = %s and status = '%s'", resolveClient.getUcid(), DEPOSITS.getId(), APPLIED_STATUS), ClientsRestrictionGeneral.class);
+        assertThat("Verify restriction is present in DB", restrictionList.size(), is(1));
     }
 
     @Test
@@ -857,12 +807,10 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Restrictions can be added and then removed on resolve screen")
     public void restrictionCanBeAddedAndRemoved() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
         cleanUserRestrictionGeneral(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        addFraudsForClient(resolveClient, List.of(FraudType.CPA_ABUSE), CONFIRMED);
+        FraudType fraud = FraudType.HEDGING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
@@ -881,13 +829,10 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-903 Manage restrictions & fraud types from resolve")
     @DisplayName("Restrictions can be added and then removed on resolve screen")
     public void previousSetRestrictionCanBeRemoved() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
         cleanUserRestrictionGeneral(resolveClient.getUcid());
-        createUserFraudsBo(resolveClient.getUcid(), FraudTypeOld.ANOMALOUS_PROFIT.getFraudTypeId());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
-        cleanUserAudit(resolveClient.getUcid());
-        enableCRMEmulator();
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        addFraudsForClient(resolveClient, List.of(FraudType.CPA_ABUSE), CONFIRMED);
+        FraudType fraud = FraudType.HEDGING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         RestrictionPage.setRestrictionAPIGeneral(resolveClient.getUcid(), Restriction.DEPOSITS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -910,94 +855,82 @@ public class ResolveTest extends TestBaseWeb {
     @Feature("BMS-1139 Predefined restrictions")
     @DisplayName("Predefined restriction for the fraud type appears on the resolve screen")
     public void predefinedRestrictionAppearsOnResolveScreen() throws Exception {
-        deleteUserBO(resolveClient.getUcid());
         cleanUserRestrictionGeneral(resolveClient.getUcid());
-        deleteUserAR(resolveClient.getUcid());
-        FraudTypeOld fraud = FraudTypeOld.HEDGING;
-        cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), fraud.getKey());
+        FraudType fraud = FraudType.HEDGING;
+        createSimpleAlert(resolveClient.getUcid(), fraud.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
-        resolvePage.addFraud(FraudTypeOld.HEDGING.getDisplayName());
+        resolvePage.addFraud(FraudType.HEDGING);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud("Swap Arbitrage");
+        resolvePage.addFraud(FraudType.SWAP_ARBITRAGE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.checkRestrictionNotDisplayed(DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud("Market Manipulation");
+        resolvePage.addFraud(FraudType.MARKET_MANIPULATION);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.LATENCY_ARBITRAGE.getDisplayName());
+        resolvePage.addFraud(FraudType.LATENCY_ARBITRAGE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.CPA_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.CPA_ABUSE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.NBP_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.NBP_ABUSE);
         resolvePage.checkRestrictionDisplayed(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.LOSS_VOUCHER_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.LOSS_VOUCHER_ABUSE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.GAP_TRADING.getDisplayName());
+        resolvePage.addFraud(FraudType.GAP_TRADING);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName(), WITHDRAWALS.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.REBATE_CHURNING.getDisplayName());
+        resolvePage.addFraud(FraudType.REBATE_CHURNING);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud("Pricing Errors");
+        resolvePage.addFraud(FraudType.PRICING_ERROR);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.TLS_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.TLS_ABUSE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.BONUS_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.BONUS_ABUSE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.LOOPHOLE_ABUSE.getDisplayName());
+        resolvePage.addFraud(FraudType.LOOPHOLE_ABUSE);
         resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
         resolvePage.checkRestrictionNotDisplayed(MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.NEWS_TRADER.getDisplayName());
+        resolvePage.addFraud(FraudType.NEWS_TRADER);
         resolvePage.checkRestrictionDisplayed(CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName());
-        resolvePage.resetRestrictionChanges();
-        resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.MONEY_LAUNDRY_RECORD.getDisplayName());
-        resolvePage.checkRestrictionDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), WITHDRAWALS.getName());
-        resolvePage.checkRestrictionNotDisplayed(INTERNAL_TRANSFER.getName(), CREDIT_AND_BONUS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
-        resolvePage.resetRestrictionChanges();
-        resolvePage.resetFraudsChanges();
-        resolvePage.addFraud(FraudTypeOld.CHARGEBACK.getDisplayName());
-        resolvePage.checkRestrictionNotDisplayed(ACCOUNT_CREATION.getName(), DEPOSITS.getName(), CREDIT_AND_BONUS.getName(), INTERNAL_TRANSFER.getName(), WITHDRAWALS.getName(), MANUAL_WITHDRAWAL_REVIEW.getName());
         resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
     }
