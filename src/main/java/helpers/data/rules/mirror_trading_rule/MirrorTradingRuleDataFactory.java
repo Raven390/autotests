@@ -15,7 +15,7 @@ import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -98,7 +98,7 @@ public class MirrorTradingRuleDataFactory {
         MirrorTradingRuleData data = getMirrorTradingRuleData(mirrorTradingRuleExitEventEnd2Client);
         Allure.step("Client has previous restrictions");
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                data.clientHelper.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                data.clientHelper.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         data.clientFraudTypes.add(clientFraudTypes);
         return data;
@@ -111,7 +111,7 @@ public class MirrorTradingRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Set restriction");
         Allure.step("Send alert");

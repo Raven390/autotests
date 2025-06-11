@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.data.rules.ndb_rule.NdbRuleDataFactory.deleteNdbRuleData;
 import static helpers.data.rules.ndb_rule.NdbRuleDataFactory.setupNdbRuleData;
 import static helpers.database.DbHelper.getObjectsFromDB;

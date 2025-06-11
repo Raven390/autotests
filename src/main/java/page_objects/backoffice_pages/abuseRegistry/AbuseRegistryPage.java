@@ -1,4 +1,4 @@
-package page_objects.backoffice_pages.abuseRegestry;
+package page_objects.backoffice_pages.abuseRegistry;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

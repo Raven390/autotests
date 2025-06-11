@@ -41,7 +41,7 @@ import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneT
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;

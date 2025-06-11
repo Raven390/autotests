@@ -101,7 +101,7 @@ public class ConnectionPage extends AbstractPage {
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
-    private final String CONNECTION_GRAPH_SELECTOR = ".v-connection-search-graph";
+    private static final String CONNECTION_GRAPH_SELECTOR = ".v-graph-canvas-v2";
     private final String LEVEL_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_level";
     private final String CONNECTION_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_connection";
     private final String GRAPH_LINK_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_graph-link";
@@ -128,7 +128,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
     private static final String GRAPH_NODES_GROUP = "//div[@class='v-connection-search-graph-view__group']";
     private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
-    private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls__zoom-controls']";
+    private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls-v2__zoom-controls']";
     private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
     private static final String CONNECTION_SCORE_FILTER_PRESETS = "//div[@class='v-connection-search-filter-score-presets-v2']";
     private static final String CONNECTION_SCORE_FILTER_PRESET_BY_TEXT_PATTERN = CONNECTION_SCORE_FILTER_PRESETS + "/descendant::span[@class='g-button__text' and text()='%s']/..";

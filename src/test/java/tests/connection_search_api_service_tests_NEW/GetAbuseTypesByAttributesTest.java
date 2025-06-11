@@ -6,8 +6,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 
-import static helpers.data.enums.FraudType.*;
-import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)

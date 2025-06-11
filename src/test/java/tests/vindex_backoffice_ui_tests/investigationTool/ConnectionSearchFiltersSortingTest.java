@@ -1,8 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
-import business_objects.db.backoffice_db.client.Client;
-import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -11,7 +9,6 @@ import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
-import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import okhttp3.Response;
@@ -27,7 +24,10 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserWithUcidFirstName;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedForConnectionSearch;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
@@ -96,17 +96,8 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         kafka.produceMessage(connectionAlert1.alertId, objectMapper.writeValueAsString(connectionAlert1), KAFKA_TOPIC_ALERTS);
         RuleAlert connectionAlert2 = generateRuleAlertByUcid(connectedClient6.getUcid());
         kafka.produceMessage(connectionAlert2.alertId, objectMapper.writeValueAsString(connectionAlert2), KAFKA_TOPIC_ALERTS);
-        Client connectedBoClient1 = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", connectedClient1.getUcid()), Client.class).getFirst();
-        Client connectedBoClient6 = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", connectedClient6.getUcid()), Client.class).getFirst();
-        ClientFraudTypes fraud1 = new ClientFraudTypes(connectedBoClient1.ucid, "REBATE_CHURNING", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud2 = new ClientFraudTypes(connectedBoClient1.ucid, "LATENCY_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud3 = new ClientFraudTypes(connectedBoClient1.ucid, "MARKET_MANIPULATION", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud4 = new ClientFraudTypes(connectedBoClient1.ucid, "PRICING_ERROR", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud5 = new ClientFraudTypes(connectedBoClient6.ucid, "GAP_TRADING", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud6 = new ClientFraudTypes(connectedBoClient6.ucid, "SWAP_ARBITRAGE", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud7 = new ClientFraudTypes(connectedBoClient6.ucid, "RAF_ABUSE", "VINDEX", 0, getCurrentTimestampDbFormat());
-        ClientFraudTypes fraud8 = new ClientFraudTypes(connectedBoClient6.ucid, "REBATE_CHURNING", "VINDEX", 0, getCurrentTimestampDbFormat());
-        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3, fraud4, fraud5, fraud6, fraud7, fraud8));
+        addFraudsForClient(connectedClient1, List.of(REBATE_CHURNING, LATENCY_ARBITRAGE, MARKET_MANIPULATION, PRICING_ERROR), CONFIRMED);
+        addFraudsForClient(connectedClient6, List.of(GAP_TRADING, SWAP_ARBITRAGE, NBP_ABUSE, REBATE_CHURNING), CONFIRMED);
         waitForConnectionSearchToUpdate(client);
     }
 
@@ -134,7 +125,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.clickAttributeFilterDropdown();
         assertThat("Verify options of the attribute filter dropdown", connectionPage.getAttributeFilterDropdownOptions(), contains("device2 values", "documentNumber1 value", "payoutId1 value"));
         List<String> behaviorFilterOptions = connectionPage.getBehaviorFilterOptions();
-        assertThat("Verify that all options are present in behavior filter", behaviorFilterOptions, containsInAnyOrder("Normal", "Suspicious", "Gap trading", "Latency arbitrage", "Market manipulation", "Pricing error", "RAF abuse", "Rebate churning", "Swap arbitrage"));
+        assertThat("Verify that all options are present in behavior filter", behaviorFilterOptions, containsInAnyOrder("Normal", "Suspicious", GAP_TRADING.getName(), LATENCY_ARBITRAGE.getName(), MARKET_MANIPULATION.getName(), PRICING_ERROR.getName(), NBP_ABUSE.getName(), REBATE_CHURNING.getName(), SWAP_ARBITRAGE.getName()));
         assertThat("Verify that active restrictions switch is visible", connectionPage.isActiveRestrictionsFilterSwitchVisible(), equalTo(true));
         assertThat("Verify placeholder of the PNL from filter", connectionPage.getPnlFilterFromPlaceholder(), equalTo("12.45 USD"));
         assertThat("Verify placeholder of the PNL to filter", connectionPage.getPnlFilterToPlaceholder(), equalTo("1,111.24 USD"));
@@ -264,7 +255,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     public void verifyConnectionSearchFiltration8Test() {
         connectionPage.clickFilterButton();
         connectionPage.selectBehaviorFilterOption("Normal");
-        connectionPage.selectBehaviorFilterOption("Market manipulation");
+        connectionPage.selectBehaviorFilterOption(MARKET_MANIPULATION.getName());
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
         assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid()));
@@ -412,6 +403,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         closeAlert(connectedClient6.getUcid());
         cleanUserRestrictionGeneral(connectedClient2.getUcid());
         cleanUserRestrictionGeneral(connectedClient5.getUcid());
-        deleteEntryFromDb(CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid IN ('%s', '%s')", connectedClient1.getUcid(), connectedClient6.getUcid()));
+        deleteUserAR(connectedClient1.getUcid());
+        deleteUserAR(connectedClient6.getUcid());
     }
 }

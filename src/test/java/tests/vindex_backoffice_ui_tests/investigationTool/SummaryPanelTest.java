@@ -14,7 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.DateTimeFormat;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -35,7 +35,7 @@ import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalOb
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static helpers.data.enums.FraudType.getRandomFraudType;
+import static helpers.data.enums.FraudTypeOld.getRandomFraudType;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -199,18 +199,18 @@ public class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Fraud")
     public void clientSummaryFraudTest() throws Exception {
         cleanUserFraudsBo(client.getUcid());
-        FraudType fraudType = getRandomFraudType();
+        FraudTypeOld fraudTypeOld = getRandomFraudType();
         Allure.step("Prepare DB data for test user");
-        createUserFraudsBo(client.getUcid(), fraudType.getFraudTypeId());
-        FraudType fraudType2 = getRandomFraudType(fraudType);
+        createUserFraudsBo(client.getUcid(), fraudTypeOld.getFraudTypeId());
+        FraudTypeOld fraudTypeOld2 = getRandomFraudType(fraudTypeOld);
         Allure.step("Prepare DB data for test user");
-        createUserFraudsBo(client.getUcid(), fraudType2.getFraudTypeId());
+        createUserFraudsBo(client.getUcid(), fraudTypeOld2.getFraudTypeId());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelFraudValue("Fraud", fraudType.getDisplayName());
-        generalTab.checkSummaryPanelFraudValue("Fraud", fraudType2.getDisplayName());
+        generalTab.checkSummaryPanelFraudValue("Fraud", fraudTypeOld.getDisplayName());
+        generalTab.checkSummaryPanelFraudValue("Fraud", fraudTypeOld2.getDisplayName());
     }
 
     @Test

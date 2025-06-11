@@ -11,7 +11,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -129,7 +129,7 @@ public class CpaAbuseRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         CrmTbUserObject connectedUserCrmTbUserObject = generateUserByClient(connectedClient);
         data.connectedUsers.add(connectedUserCrmTbUserObject);
