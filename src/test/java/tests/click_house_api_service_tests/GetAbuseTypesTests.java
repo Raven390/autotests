@@ -4,7 +4,7 @@ import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import helpers.data.ClientHelper;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -38,9 +38,9 @@ class GetAbuseTypesTests extends TestBaseApi {
     @BeforeAll
     static void setupData() {
         ClientHelper client = getRandomVantageClient();
-        fraud1 = new ClientFraudTypes(client.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud2 = new ClientFraudTypes(client.getUcid(), FraudType.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypes(getRandomVantageClient().getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud1 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud2 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        fraud3 = new ClientFraudTypes(getRandomVantageClient().getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
     }
 

@@ -19,14 +19,16 @@ import static utils.Constants.*;
 public class FirstLoginTest extends TestBaseWeb {
 
     private static final User uiUser = firstLoginUser();
+    private static final String USER_ID_WHERE_STATEMENT = String.format("user_id = (select id from %s where first_name = '%s' and last_name = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getFirstName(), uiUser.getLastName());
+    private static final String BO_USER_WHERE_STATEMENT = String.format("first_name = '%s' and last_name = '%s'", uiUser.getFirstName(), uiUser.getLastName());
 
     @BeforeAll
     public static void setup() throws Exception {
-        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
-        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
-        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()));
+        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
         List<BackofficeUser> usersList = getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()), BackofficeUser.class
+                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
         );
         assertThat(usersList, empty());
     }
@@ -42,17 +44,17 @@ public class FirstLoginTest extends TestBaseWeb {
         investigationPage.navigateBase();
         investigationPage.waitForPageToLoad();
         List<BackofficeUser> usersList = getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()), BackofficeUser.class
+                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
         );
         assertThat(usersList, hasSize(1));
-        BackofficeUser expectedUser = new BackofficeUser(uiUser.getFirstName(), uiUser.getLastName(), uiUser.getEmail(), uiUser.getRole());
+        BackofficeUser expectedUser = new BackofficeUser(uiUser.getFirstName(), uiUser.getLastName(), uiUser.getRole());
         assertThat("Compare user in db against expected", usersList.getFirst(), equalTo(expectedUser));
     }
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
-        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, String.format("user_id = (select id from %s where email = '%s')", BO_BACKOFFICE_USER_TABLE_NAME, uiUser.getEmail()));
-        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", uiUser.getEmail()));
+        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
     }
 }

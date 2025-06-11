@@ -135,7 +135,7 @@ public class BoHelper {
     @Step("Get user_id from bo db by user")
     public static String getUserIdByUser(User user) throws Exception {
         return getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("email = '%s'", user.getEmail()), BackofficeUser.class
+                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()), BackofficeUser.class
         ).getFirst().id;
     }
 

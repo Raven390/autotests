@@ -4,7 +4,7 @@ import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
@@ -66,8 +66,8 @@ public class MassUploadTest extends TestBaseWeb {
         abuseRegistryPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         abuseRegistryPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
         abuseRegistryPage.clickAddFraudButton();
-        FraudType fraudType = FraudType.BONUS_ABUSE;
-        abuseRegistryPage.addSelectedFraudFraud(fraudType.getDisplayName(), "Confirmed");
+        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
+        abuseRegistryPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
         abuseRegistryPage.clickAddRestrictionButton();
         abuseRegistryPage.selectRestriction("Deposits");
         abuseRegistryPage.clickApplyselectedRestrictions();
@@ -85,7 +85,7 @@ public class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
         Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudType.getKey(), fraud.getFraudTypeCode());
+        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
 

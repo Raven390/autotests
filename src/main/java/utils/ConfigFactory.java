@@ -152,6 +152,9 @@ public class ConfigFactory {
     public static final String FIRST_NAME_AUTOTEST_ONE = CONFIG.firstNameAutotestOne();
     public static final String LAST_NAME_AUTOTEST_ONE = CONFIG.lastNameAutotestOne();
     public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
+    // Abuse registry
+    public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
+    public static final String ABUSE_REGISTRY_POST_FRAUD_TYPES = CONFIG.abuseRegistryPostFraudTypes();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -576,6 +579,12 @@ public class ConfigFactory {
 
         @Key("lastNameAutotestOne")
         String lastNameAutotestOne();
+
+        @Key("abuseRegistryBasePath")
+        String abuseRegistryBasePath();
+
+        @Key("abuseRegistryPostFraudTypes")
+        String abuseRegistryPostFraudTypes();
     }
 
     public static boolean isGitlab() {

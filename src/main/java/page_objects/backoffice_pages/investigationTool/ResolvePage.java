@@ -9,6 +9,8 @@ import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.FraudTypeStatus;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -52,22 +54,22 @@ public class ResolvePage extends AbstractPage {
     private final Locator resetFraudChangesButton;
     private final Locator restrictionListButton;
     private final Locator applyButton;
-
-    private final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
-    private final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type__popup')]";
-    private final String REMOVE_BUTTON_LOCATOR = "//button[@data-qa='selected_fraud_type_item__remove_button']";
-    private final String RESTRICTION_LIST_LOCATOR_ANCESTOR = "//ancestor::*[@class='v-client-restrictions-list-item']";
-    private final String RESTRICTION_LIST_LOCATOR = "//*[@class='v-client-restrictions-list-item']";
-    private final String RESTRICTION_DELETION_POPUP_LOCATOR = "//*[contains(@class,'v-client-restrictions-list-item__popup') and contains(@class,'g-popup ')]";
-    private final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//*[@data-qa='fraud_type_selector_clear_button']";
-    private final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR = "//*[@class='v-client-restrictions-selector']/button/*[text()='Reset changes']";
-    private final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-fraud-type']";
-    private final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
-    private final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
-    private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
-    private final String fraudDropoutListElementLocator = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
     private final Locator resetRestrictionsChangesButton;
 
+    private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
+    private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type__popup')]";
+    private static final String REMOVE_BUTTON_LOCATOR = "//button[@data-qa='selected_fraud_type_item__remove_button']";
+    private static final String RESTRICTION_LIST_LOCATOR_ANCESTOR = "//ancestor::*[@class='v-client-restrictions-list-item']";
+    private static final String RESTRICTION_LIST_LOCATOR = "//*[@class='v-client-restrictions-list-item']";
+    private static final String RESTRICTION_DELETION_POPUP_LOCATOR = "//*[contains(@class,'v-client-restrictions-list-item__popup') and contains(@class,'g-popup ')]";
+    private static final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//*[@data-qa='fraud_type_selector_clear_button']";
+    private static final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR = "//*[@class='v-client-restrictions-selector']/button/*[text()='Reset changes']";
+    private static final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-fraud-type-v2']";
+    private static final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
+    private static final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
+    private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
+    private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
+    private static final String FRAUD_BY_DD_VALUE_PATTERN = "//div[@data-dd-value='%s']";
 
     public ResolvePage(Page page) {
         super(page);
@@ -97,7 +99,7 @@ public class ResolvePage extends AbstractPage {
         this.submitCommentButton = page.locator("[data-qa='investigation_tools__add_comment_textarea_container']");
         this.submitFraudButton = page.locator("button[data-qa='report_fraud_drawer__submit_button']");
         this.selectedFraudLabel = page.locator(SELECTED_FRAUD_LOCATOR);
-        this.fraudDeletionPopup = page.locator("//div[@class='v-fraud-type__action-content']");
+        this.fraudDeletionPopup = page.locator("//div[@class='v-fraud-type-v2__action-content']");
         this.confirmFraudDeletionButton = page.locator("//span[@class='g-button__text' and text()='Yes']");
         this.resetFraudChangesButton = page.locator(RESET_FRAUD_CHANGES_BUTTON_LOCATOR);
         this.resetRestrictionsChangesButton = page.locator(RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR);
@@ -222,9 +224,9 @@ public class ResolvePage extends AbstractPage {
 
     public void addFraud(String fraud, String status) {
         fraudListButton.click();
-        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        String element = String.format(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN, fraud);
         if (!(page.locator(element).isVisible())) {
-            page.locator(fraudDropoutListElementLocator).nth(0).hover();
+            page.locator(FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR).nth(0).hover();
             page.mouse().wheel(0, 5000);
 
         }
@@ -276,8 +278,8 @@ public class ResolvePage extends AbstractPage {
 
     public void checkFraudsList() {
         fraudListButton.click();
-        FraudType[] fraudsTypes = FraudType.values();
-        for (FraudType i : fraudsTypes) {
+        FraudTypeOld[] fraudsTypes = FraudTypeOld.values();
+        for (FraudTypeOld i : fraudsTypes) {
             String item = i.getDisplayName();
             assertTrue(fraudSelectItem.getByText(item).isVisible());
         }
@@ -378,12 +380,13 @@ public class ResolvePage extends AbstractPage {
         assertTrue(reportFraudButton.isDisabled());
     }
 
-    @Step("Resolve with adding fraud")
-    public void reportAddFraud(String comment, String addedFraud) {
+    @Step("Add new fraud in report fraud drawer")
+    public void reportAddFraud(String comment, FraudType addedFraud, FraudTypeStatus fraudStatus) {
         commentInput.fill(comment);
         fraudListButton.click();
-        fraudSelectItem.getByText(addedFraud).click();
-        fraudSelectApplyButton.click();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, addedFraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, addedFraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, String.format("%s:%s", addedFraud.getCode(), fraudStatus.getStatus()))).click();
         submitFraudButton.click();
         successToast.getByText("Fraud reported. Good job!").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.getByText("Fraud reported. Good job!").isVisible());

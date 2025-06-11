@@ -1,65 +1,41 @@
 package helpers.data.enums;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public enum FraudType {
-    HEDGING(1, "HEDGING", "Hedging"), LATENCY_ARBITRAGE(2, "LATENCY_ARBITRAGE", "Latency arbitrage"), MARKET_MANIPULATION(3, "MARKET_MANIPULATION", "Market manipulation"), PRICING_ERROR(4, "PRICING_ERROR", "Pricing error"), GAP_TRADING(5, "GAP_TRADING", "Gap trading"), SWAP_ARBITRAGE(6, "SWAP_ARBITRAGE", "Swap arbitrage"), CPA_ABUSE(7, "CPA_ABUSE", "CPA abuse"), RAF_ABUSE(9, "RAF_ABUSE", "RAF abuse"), REBATE_CHURNING(10, "REBATE_CHURNING", "Rebate churning"), LOSS_VOUCHER_ABUSE(11, "LOSS_VOUCHER_ABUSE", "Loss voucher abuse"), NBP_ABUSE(12, "NBP_ABUSE", "NBP abuse"), TLS_ABUSE(13, "TLS_ABUSE", "TLS abuse"), POTENTIAL_ABUSE(14, "POTENTIAL_ABUSE", "Potential abuse"), BONUS_ABUSE(15, "BONUS_ABUSE", "Bonus abuse"), LOOPHOLE_ABUSE(16, "LOOPHOLE_ABUSE", "Loophole abuse"), HFT_ABUSE(17, "HFT_ABUSE", "HFT abuse"), NEWS_TRADER(18, "NEWS_TRADER", "News trader"), ANOMALOUS_PROFIT(19, "ANOMALOUS_PROFIT", "Anomalous profit"), MONEY_LAUNDRY_RECORD(20, "MONEY_LAUNDRY_RECORD", "Money Laundry - Record"), CHARGEBACK(22, "CHARGEBACK", "Chargeback");
+    HEDGING("HEDGING", "Hedging", "Client are engaging in Hedging (Mirror trading) fraud in order to abuse our deposit bonus scheme and gain guaranteed profit through their trades."), LATENCY_ARBITRAGE("LATENCY_ARBITRAGE", "Latency arbitrage", "Client is taking advantage of delays in our quotes from liquidity providers to perform high-frequency trades for guaranteed profit."), CPA_ABUSE("CPA_ABUSE", "CPA abuse", "Clients under CPA only fulfill the minimum requirements to be eligible for CPA rebates and then stop all trading activity and withdraw their funds. By doing this, they can generate high amounts of rebates with minimal risk."), BONUS_ABUSE("BONUS_ABUSE", "Bonus abuse", "Client is suspected to have registered this account to abuse our bonuses, such as our No Deposit Bonus scheme, to get credits and gain guaranteed, risk-free profit."), LOSS_VOUCHER_ABUSE("LOSS_VOUCHER_ABUSE", "Loss voucher abuse", "By placing hedged orders within 1 account or across 2 different ones, client can utilize loss vouchers to get guaranteed profit by offsetting their losses by funds that can be withdrawn."), NBP_ABUSE("NBP_ABUSE", "NBP abuse", "Client is abusing the negative balance protection feature to hedge and gain guaranteed profit."), GAP_TRADING("GAP_TRADING", "Gap trading", "Client is taking advantage of high leverage to open positions by the time of market close. Then close the positions immediately after the market open. High profit due to high leverage and limited loss due to negative balance protection."), REBATE_CHURNING("REBATE_CHURNING", "Rebate churning", "Client is abusing any kind of loophole to repeatedly  open and close the positions without cost. Now most cases should be covered by IVR."), TLS_ABUSE("TLS_ABUSE", "TLS abuse", "Clients is taking advantage of the forex mid price bias during the EOD time to do the high win rate trades."), LOOPHOLE_ABUSE("LOOPHOLE_ABUSE", "Loophole abuse", "Client is abusing any kind of loophole to arbitrage."), HFT_ABUSE("HFT_ABUSE", "HFT abuse", "Client is constantly profiting in high-frequent trading with extremely high win rate, and we have no idea what the client is actually doing. This is similar to MM sometimes."), NEWS_TRADER("NEWS_TRADER", "News trader", "Client is using some EAs to detect the market price that react not enough to perform high-frequent trades with high win-rate trades."), CHARGEBACK("CHARGEBACK", "Chargeback", "A type of fraud where a client disputes a previously completed payment (e.g. account funding) in an attempt to reclaim the funds after they have already been used for trading"), MARKET_MANIPULATION("MARKET_MANIPULATION", "Market manipulation", "Client is manipulating real market prices and takes advantage of the predicted price movements in our broker, thus making large guaranteed profits."), SWAP_ARBITRAGE("SWAP_ARBITRAGE", "Swap arbitrage", "Client is only opening the swap-receiving direction positions and hedging the positions outside to abuse swap-free trading environment."), PRICING_ERROR("PRICING_ERROR", "Pricing errors", "Client is taking advantage of errors in our quotes/pricing in order to make guaranteed profits."), MONEY_LAUNDRY_RECORD("MONEY_LAUNDRY_RECORD", "Money laundry - record", "For those clients abusing our payment channel to do the ML or transfer funds to another channel with virtually no transaction fees. The clients are making large deposits and withdrawals through different payment channels, with no or few trades."), SLIPPAGE_FREE_ABUSE("SLIPPAGE_FREE_ABUSE", "Slippage-free abuser", "For those clients are abusing our slippage-free trading environment. The client will frequently use stop orders (buy stop、sell stop、stop loss) and modify the corresponding price to make a higher win rate in the volatile market. These clients often combines with price latency or system configuration loopholes to increase arbitrage opportunities.");
 
-    private final int fraudTypeId;
-    private final String key;
-    private final String displayName;
+    private final String code;
+    private final String name;
+    private final String description;
 
-    FraudType(int fraudTypeId, String key, String displayName) {
-        this.fraudTypeId = fraudTypeId;
-        this.key = key;
-        this.displayName = displayName;
+    FraudType(String code, String name, String description) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
     }
 
-    public int getFraudTypeId() {
-        return fraudTypeId;
+    public String getCode() {
+        return code;
     }
 
-    public String getKey() {
-        return key;
+    public String getName() {
+        return name;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getDescription() {
+        return description;
     }
 
-    public static FraudType getById(int id) {
-        for (FraudType fraud : values()) {
-            if (fraud.getFraudTypeId() == id) {
-                return fraud;
-            }
-        }
-        throw new IllegalArgumentException("No FraudType with id " + id);
-    }
-
-    public static FraudType getByKey(String key) {
-        for (FraudType issue : values()) {
-            if (issue.getKey().equalsIgnoreCase(key)) {
-                return issue;
-            }
-        }
-        throw new IllegalArgumentException("No FraudType with key " + key);
+    @Override
+    public String toString() {
+        return "FraudType{" + "code='" + code + '\'' + ", name='" + name + '\'' + ", description='" + description + '\'' + '}';
     }
 
     public static FraudType getRandomFraudType() {
         FraudType[] frauds = values();
         Random random = new Random();
         return frauds[random.nextInt(frauds.length)];
-    }
-
-    public static FraudType getRandomFraudType(FraudType... excludedFraudType) {
-        FraudType fraud;
-        do {
-            FraudType[] frauds = values();
-            Random random = new Random();
-            fraud = frauds[random.nextInt(frauds.length)];
-        } while (Arrays.stream(excludedFraudType).toList().contains(fraud));
-        return fraud;
     }
 }
 

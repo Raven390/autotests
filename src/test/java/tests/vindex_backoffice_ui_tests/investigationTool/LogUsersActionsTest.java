@@ -32,6 +32,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LogUsersActionsTest extends TestBaseWeb {
@@ -91,6 +92,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         generalTab.clickGeneralTabButton();
         generalTab.clickShowHiddenDataButton();
+        waitForConnectionSearchToUpdate(client);
         connectionPage.clickConnectionTabButton();
         connectionPage.clickConnectionNodeByOrder(1);
         connectionPage.clickUnmaskConnectionCardDataButton();

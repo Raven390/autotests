@@ -3,7 +3,7 @@ package tests.rule_engine_service_tests.rules;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.rules.mirror_trading_rule.MirrorTradingRuleData;
 import helpers.database.DbName;
 import io.qameta.allure.*;
@@ -87,7 +87,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -142,7 +142,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getDisplayName()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getDisplayName()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -334,7 +334,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -386,7 +386,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -438,7 +438,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -489,7 +489,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -540,7 +540,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -590,7 +590,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));
@@ -641,7 +641,7 @@ class MirrorTradeRuleTest extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Mirror Trading"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Close Trade"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.HEDGING.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.HEDGING.getKey()));
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes tradingAccount is correct", alert.rule.attributes.tradingAccount, equalTo(data.clientHelper.getTradingAccount()));
         assertThat("Verify rule attributes serverId is correct", alert.rule.attributes.serverId, equalTo(data.clientHelper.getServerId()));

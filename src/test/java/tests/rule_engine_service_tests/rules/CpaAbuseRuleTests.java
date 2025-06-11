@@ -3,7 +3,7 @@ package tests.rule_engine_service_tests.rules;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Restriction;
 import helpers.data.rules.RuleDataHelper;
 import helpers.database.DbName;
@@ -134,7 +134,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.CPA_ABUSE.getKey()));
         assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes reason is correct", alert.rule.attributes.reason, is("One or many connected clients are CPA abusers"));
@@ -219,7 +219,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.CPA_ABUSE.getKey()));
         assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("At least 65% of connected clients have CPA Id value"));
@@ -334,7 +334,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.CPA_ABUSE.getKey()));
         assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("CPA abuse found by rule engine"));
@@ -377,7 +377,7 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("CPA Abuse"));
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo(ruleEventType));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.CPA_ABUSE.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.CPA_ABUSE.getKey()));
         assertThat("Verify rule fraud name is correct", alert.rule.name, notNullValue());
         assertThat("Verify rule attributes not null", alert.rule.attributes, notNullValue());
         assertThat("Verify rule attributes creason is correct", alert.rule.attributes.reason, is("CPA abuse found by rule engine"));

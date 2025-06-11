@@ -1,7 +1,7 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,7 +39,7 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
 
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
-        createSimpleAlert(resolveClient.getUcid(), FraudType.CPA_ABUSE.getKey());
+        createSimpleAlert(resolveClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAFUser();
         investigationPage.navigateToClient(resolveClient.getUcid());

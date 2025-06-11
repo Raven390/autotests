@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import page_objects.backoffice_pages.abuseRegestry.AbuseRegistryPage;
+import page_objects.backoffice_pages.abuseRegistry.AbuseRegistryPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.vantage_user_account_pages.StageRegistrationHelperPage;

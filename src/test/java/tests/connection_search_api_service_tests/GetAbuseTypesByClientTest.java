@@ -22,7 +22,7 @@ import static business_objects.api.connection_search_api.get_abuse_types.GetAbus
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -9,7 +9,7 @@ import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedOb
 import com.microsoft.playwright.Page;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -179,8 +179,8 @@ public class ConnectionSearchTest extends TestBaseWeb {
         createSimpleAlert(client1.getUcid(), "HEDGING");
         deleteUserFraudsCh(client2.getUcid());
         deleteUserFraudsCh(client3.getUcid());
-        createClientFraudsCh(client3.getUcid(), FraudType.GAP_TRADING.getKey());
-        createClientFraudsCh(client3.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey());
+        createClientFraudsCh(client3.getUcid(), FraudTypeOld.GAP_TRADING.getKey());
+        createClientFraudsCh(client3.getUcid(), FraudTypeOld.LATENCY_ARBITRAGE.getKey());
         connectionPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         connectionPage.navigateConnectionTab(client1.getUcid());
@@ -385,7 +385,7 @@ public class ConnectionSearchTest extends TestBaseWeb {
     void csGraphPageConnectionHaveFraudsFromDBTest() throws Exception {
         connectionPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        for (FraudType i : FraudType.values()) {
+        for (FraudTypeOld i : FraudTypeOld.values()) {
             deleteUserFraudsCh(client4.getUcid());
             createClientFraudsCh(client4.getUcid(), i.getKey());
             connectionPage.navigateConnectionTab(client1.getUcid());

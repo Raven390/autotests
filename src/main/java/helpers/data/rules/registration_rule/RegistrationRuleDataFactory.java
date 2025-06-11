@@ -8,7 +8,7 @@ import business_objects.kafka.crm_events.EgRegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import helpers.data.rules.RuleDataHelper;
 import net.datafaker.Faker;
@@ -28,7 +28,7 @@ import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTabl
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.enums.FraudType.*;
+import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
@@ -157,7 +157,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -179,7 +179,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.CPA_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -200,7 +200,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HEDGING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.HEDGING.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -221,7 +221,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HEDGING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.HEDGING.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -241,7 +241,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -261,7 +261,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -281,7 +281,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NEWS_TRADER.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.NEWS_TRADER.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -301,7 +301,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NEWS_TRADER.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.NEWS_TRADER.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -321,7 +321,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.TLS_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -341,7 +341,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.TLS_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.TLS_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -361,7 +361,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.SWAP_ARBITRAGE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.SWAP_ARBITRAGE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -381,7 +381,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.SWAP_ARBITRAGE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.SWAP_ARBITRAGE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -401,7 +401,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.GAP_TRADING.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -421,7 +421,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.GAP_TRADING.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.GAP_TRADING.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -441,7 +441,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LATENCY_ARBITRAGE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -461,7 +461,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LATENCY_ARBITRAGE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LATENCY_ARBITRAGE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -481,7 +481,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.PRICING_ERROR.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -501,7 +501,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.PRICING_ERROR.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.PRICING_ERROR.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -521,7 +521,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.NBP_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -541,7 +541,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.NBP_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.NBP_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -561,7 +561,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.HFT_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -581,7 +581,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.HFT_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.HFT_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;
@@ -601,7 +601,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LOOPHOLE_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection075(data);
         return data;
@@ -621,7 +621,7 @@ public class RegistrationRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         //add frauds for connected client
         data.clientFraudTypes = new ArrayList<>();
-        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudType.LOOPHOLE_ABUSE.getKey()));
+        data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.LOOPHOLE_ABUSE.getKey()));
         //add connection with connected client
         setupAttrConnection06(data);
         return data;

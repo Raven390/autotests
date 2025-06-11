@@ -6,8 +6,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 
-import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponseFactory.*;
-import static helpers.data.enums.FraudType.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)

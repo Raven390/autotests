@@ -10,7 +10,7 @@ import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -126,7 +126,7 @@ public class NdbRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudType.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
@@ -147,7 +147,7 @@ public class NdbRuleDataFactory {
         ClientHelper connectedClient = getRandomVantageClientAllFields();
         data.connections.add(getConnection(data.clientHelper, connectedClient));
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudType.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);
@@ -170,7 +170,7 @@ public class NdbRuleDataFactory {
         connection.connectionInfo = "[{\"connectionAttributeName\": \"email\", \"connectionAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"sourceAttributeValue\": \"D1Rud4qkIAuHeGI3vIAsa5/WaBiHSPPa\", \"relationType\": \"exact\"}]";
         data.connections.add(connection);
         ClientFraudTypes clientFraudTypes = new ClientFraudTypes(
-                connectedClient.getUcid(), FraudType.getRandomFraudType(FraudType.LOSS_VOUCHER_ABUSE, FraudType.HEDGING).getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
+                connectedClient.getUcid(), FraudTypeOld.getRandomFraudType(FraudTypeOld.LOSS_VOUCHER_ABUSE, FraudTypeOld.HEDGING).getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat()
         );
         Allure.step("Add data");
         data.mtTbCreditsObjects.add(credit);

@@ -2,7 +2,7 @@ package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.enums.FraudType;
+import helpers.data.enums.FraudTypeOld;
 import helpers.data.rules.RuleDataHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
@@ -105,7 +105,7 @@ class LossVoucherRuleTests extends TestBaseRule {
         assertThat("Verify rule ver not null", alert.rule.ver, notNullValue());
         assertThat("Verify rule trigger is correct", alert.rule.trigger, equalTo("Trade Loss Compensation"));
         assertThat("Verify rule name is correct", alert.rule.name, equalTo("Loss Voucher Abuse"));
-        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudType.LOSS_VOUCHER_ABUSE.getKey()));
+        assertThat("Verify rule fraud type is correct", alert.rule.fraudType, equalTo(FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey()));
         assertThat("Verify rule attributes step name", alert.rule.attributes.reason, equalTo("Confirmed loss voucher abuser"));
         assertThat("Verify rule attributes lossVoucherAmount", alert.rule.attributes.lossVoucherAmount, equalTo("100"));
 
