@@ -313,16 +313,16 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
         Allure.step("Clean user restriction history of client " + ucid);
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, "mi.clients_restriction", "ucid = '" + ucid + "'", ClientsRestrictionGeneral.class);
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "'", ClientsRestrictionGeneral.class);
         for (ClientsRestrictionGeneral i : restrictionList) {
             String idString = i.id.toString();
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "action", "clients_restriction_id = " + idString);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_request", "clients_restriction_id = " + idString);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "kafka_response", "clients_restriction_id = " + idString);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, "clients_restriction", "id = " + idString);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "id = " + idString);
             Thread.sleep(200);
         }
     }
@@ -330,7 +330,7 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have general restriction in Mitigation DataBase");
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestrictionGeneral.class);
+        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestrictionGeneral.class);
         ClientsRestrictionGeneral restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.ucid);
         assertEquals(expectedStatus, restriction.status);

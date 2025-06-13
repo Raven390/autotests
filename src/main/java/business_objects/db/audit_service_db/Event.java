@@ -14,6 +14,15 @@ public class Event {
     String comment;
     String details;
 
+    public Event() {
+    }
+
+    public Event(String ucid, String type, String comment) {
+        this.ucid = ucid;
+        this.type = type;
+        this.comment = comment;
+    }
+
     @Override
     public String toString() {
         return "Event{" + "id=" + id + ", kafkaMessageId='" + kafkaMessageId + '\'' + ", ucid='" + ucid + '\'' + ", type='" + type + '\'' + ", createdAt='" + createdAt + '\'' + ", initiatedBySystem='" + initiatedBySystem + '\'' + ", initiatedByUser='" + initiatedByUser + '\'' + ", comment='" + comment + '\'' + ", details='" + details + '\'' + '}';
