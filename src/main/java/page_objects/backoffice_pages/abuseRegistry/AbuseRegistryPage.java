@@ -2,6 +2,7 @@ package page_objects.backoffice_pages.abuseRegistry;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import page_objects.backoffice_pages.AbstractPage;
@@ -29,15 +30,18 @@ public class AbuseRegistryPage extends AbstractPage {
     private final Locator commentaryField;
     private final Locator applyUploadButton;
     private final Locator successToast;
+    private final Locator restrictionListButton;
+    private final Locator restrictionApplyButton;
 
 
     public AbuseRegistryPage(Page page) {
         super(page);
-        this.uploadListButton = page.locator("//button/*[text() = 'Upload list']");
+        this.uploadListButton = page.locator("//button/*[text() = 'Add fraudsters list']");
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
-        this.clientIdInput = page.locator(uploadDrawerLocator + "//*[@class='v-limited-text-area']//textarea[@placeholder='Enter client IDs']");
-        this.addFraudButton = page.locator(fraudTypeSelectionSection + "//*[@data-qa='fraud_type_select_anchor_button']");
+        this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons, or new lines']");
+        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_select_anchor_button']");
         this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
+        this.restrictionApplyButton = page.locator(restrictionSelectionSection + "//button/*[text()='Apply']");
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
         this.fraudDropoutListElement = page.locator("//*[contains(@class,'v-dropdown-select-item-base')]/div/div");
         this.selectPopup = page.locator("[data-qa=\"select-popup\"]");
@@ -45,6 +49,7 @@ public class AbuseRegistryPage extends AbstractPage {
         this.commentaryField = page.locator("//textarea[@placeholder='Describe your decision']");
         this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
+        this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
 
     }
 
@@ -134,6 +139,15 @@ public class AbuseRegistryPage extends AbstractPage {
     public void verifySuccessMessage() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.textContent().contains("Request for adding clients to abuse registry is sent"));
+    }
+
+    public void addRestriction(String... addedRestriction) {
+        Allure.step("add fraud on resolve screen");
+        restrictionListButton.click();
+        for (String i : addedRestriction) {
+            page.getByRole(AriaRole.OPTION).getByText(i).click();
+        }
+        restrictionApplyButton.click();
     }
 }
 

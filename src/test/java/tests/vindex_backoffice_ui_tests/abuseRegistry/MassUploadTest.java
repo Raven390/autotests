@@ -1,11 +1,13 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry;
 
 import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.audit_service_db.Event;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
+import helpers.data.enums.Restriction;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -18,10 +20,12 @@ import tests.TestBaseWeb;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.cleanUserAR;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static page_objects.backoffice_pages.investigationTool.RestrictionPage.checkUserHaveRestrictionGeneral;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
@@ -49,6 +53,8 @@ public class MassUploadTest extends TestBaseWeb {
     @AllureId("1289")
     @DisplayName("Abuse registry full flow simple test")
     public void abuseRegistryMassUploadSimpleFullFlowTest() throws Exception {
+
+        cleanClientAudit(client1.getUcid(), client2.getUcid());
         deleteUserBO(client1.getUcid());
         deleteUserBO(client2.getUcid());
         deleteUserBO(client3.getUcid());
@@ -69,7 +75,8 @@ public class MassUploadTest extends TestBaseWeb {
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
         abuseRegistryPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
         abuseRegistryPage.clickAddRestrictionButton();
-        abuseRegistryPage.selectRestriction("Deposits");
+        Restriction restriction = Restriction.DEPOSITS;
+        abuseRegistryPage.selectRestriction(restriction.getName());
         abuseRegistryPage.clickApplyselectedRestrictions();
         String commentary = "test" + getCurrentTimestamp();
         abuseRegistryPage.fillCommentary(commentary);
@@ -89,6 +96,13 @@ public class MassUploadTest extends TestBaseWeb {
         Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
         assertEquals(commentary, fraud.getComment());
 
+
+        List<Event> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'", Event.class);
+
+        Event event = events.getFirst();
+        assertEquals("Batch operation. " + commentary, event.getComment());
+
+        checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");
 
     }
 

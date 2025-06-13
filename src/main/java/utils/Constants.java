@@ -167,7 +167,7 @@ public class Constants {
     public static final String KYC_FILES_TABLE_NAME = "vindex_test.crm___tb_kyc_files";
     public static final String ID_PROOF_TABLE_NAME = "vindex_test.crm___tb_id_proof";
     public static final String CLIENT_METRICS_LIFETIME_TABLE_NAME = "vindex_test.client_metrics_lifetime";
-    public static final String MIRROR_LOGIN_TABLE_NAME = "vindex_test.mirror_login";
+    public static final String MIRROR_LOGIN_TABLE_NAME = "data_science_test.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "vindex_test.mirror_ucid";
     public static final String S3_DIM_CLIENT = "vindex_test.s3___dim_client";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
