@@ -45,9 +45,14 @@ class EventGeneratorRegistrationTests extends TestBaseKafka {
 
         Allure.step("Verify that message was written correctly");
         assertThat("Check id", retrievedRegistrationEvent.id, notNullValue());
-        System.out.println(retrievedRegistrationEvent);
-        System.out.println(expectedRegistrationEvent);
-        assertThat("Check all fields except id", retrievedRegistrationEvent, equalTo(expectedRegistrationEvent));
+        assertThat("Check createTime", retrievedRegistrationEvent.createTime, equalTo(expectedRegistrationEvent.createTime));
+        assertThat("Check eventDate", retrievedRegistrationEvent.eventDate, equalTo(expectedRegistrationEvent.eventDate));
+        assertThat("Check regulator", retrievedRegistrationEvent.regulator, equalTo(expectedRegistrationEvent.regulator));
+        assertThat("Check metaTraderAccount", retrievedRegistrationEvent.metaTraderAccount, equalTo(expectedRegistrationEvent.metaTraderAccount));
+        assertThat("Check initialEventTime", retrievedRegistrationEvent.initialEventTime, equalTo(expectedRegistrationEvent.initialEventTime));
+        assertThat("Check clientId", retrievedRegistrationEvent.clientId, equalTo(expectedRegistrationEvent.clientId));
+        assertThat("Check brand", retrievedRegistrationEvent.brand, equalTo(expectedRegistrationEvent.brand));
+        assertThat("Check type", retrievedRegistrationEvent.type, equalTo(expectedRegistrationEvent.type));
     }
 
     @Test

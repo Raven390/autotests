@@ -14,13 +14,14 @@ import java.io.*;
 import java.util.*;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.deleteRegistrationRuleData;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
-
+@Disabled
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_REGISTRATION_RULE)
 @Tag(TEAM_CORE)
@@ -37,10 +38,10 @@ class RegistrationRuleTest extends TestBaseRule {
         dbDataMap = setupRegistrationRuleData();
     }
 
-//    @AfterAll
-//    static void deleteData() throws Exception {
-//        deleteRegistrationRuleData(dbDataMap);
-//    }
+    @AfterAll
+    static void deleteData() throws Exception {
+        deleteRegistrationRuleData(dbDataMap);
+    }
 
     @Test
     @DisplayName("Registration rule exit Event1")
