@@ -77,10 +77,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     @AllureId("962")
     void withdrawalNotificationRule1Test() throws Exception {
-        ClientHelper client = client1;
-
         Allure.step("Produce withdrawal event to crm-events topic");
-
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
                 "486951",                            // binNumber
@@ -136,11 +133,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     @AllureId("963")
     @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     void withdrawalNotificationRule2Test() throws Exception {
-        ClientHelper client = client2;
-
         Allure.step("Produce withdrawal event to crm-events topic");
-
-
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
                 "486951",                            // binNumber
@@ -196,10 +189,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     @AllureId("963")
     @DisplayName("Withdrawal notification rule. Send alert for not empty check name")
     void withdrawalNotificationRule3Test() throws Exception {
-        ClientHelper client = client3;
-
         Allure.step("Produce withdrawal event to crm-events topic");
-
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
                 "486951",                            // binNumber

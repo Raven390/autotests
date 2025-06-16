@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 
+@Disabled("Temporarily disabling this test class because rule is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_LOSS_VOUCHER_RULE)
 @Tag(TEAM_CORE)

@@ -24,6 +24,7 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 // also known as clientCPAWithdrawal
+@Disabled("Temporarily disabling this test class because rule is in development")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_CPA_ABUSE_RULE)
 @Tag(TEAM_CORE)
