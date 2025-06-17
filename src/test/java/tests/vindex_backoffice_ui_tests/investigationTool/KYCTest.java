@@ -231,7 +231,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("902")
     @DisplayName("POF - Check correct status display Submitted")
-    public void checkCorrectStatusDisplaySubmittedPofTest() throws SQLException, ReflectiveOperationException {
+    public void checkCorrectStatusDisplaySubmittedPofTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -260,7 +260,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("903")
     @DisplayName("POF - Check correct status display Rejected")
-    public void checkCorrectStatusDisplayRejectedPofTest() throws SQLException, ReflectiveOperationException {
+    public void checkCorrectStatusDisplayRejectedPofTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -289,7 +289,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("904")
     @DisplayName("POF - Check correct status display Approved")
-    public void checkCorrectStatusDisplayApprovedPofTest() throws SQLException, ReflectiveOperationException {
+    public void checkCorrectStatusDisplayApprovedPofTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -316,7 +316,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("905")
     @DisplayName("POF - Check correct status display Pending")
-    public void checkCorrectStatusPendingApprovedPofTest() throws SQLException, ReflectiveOperationException {
+    public void checkCorrectStatusPendingApprovedPofTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -343,7 +343,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("906")
     @DisplayName("POF - Check correct image displayed in Viewer")
-    public void checkThatImageDrawerShowsRightImagePofTest() throws SQLException, ReflectiveOperationException {
+    public void checkThatImageDrawerShowsRightImagePofTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -371,7 +371,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("912")
     @DisplayName("POF - viewer show attempt history")
-    public void checkThatImageDrawerShowHistoryTest() throws SQLException, ReflectiveOperationException {
+    public void checkThatImageDrawerShowHistoryTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
@@ -413,7 +413,7 @@ public class KYCTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("913")
     @DisplayName("POF - row shows actual data")
-    public void checkThatPofDataInGeneralTest() throws SQLException, ReflectiveOperationException {
+    public void checkThatPofDataInGeneralTest() throws SQLException {
 
         generalTab.deleteClientsPofAttempts(pofClient.getUcid());
         generalTab.deleteClientsPofFileRecord(pofClient.getUcid());
