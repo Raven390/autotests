@@ -57,6 +57,15 @@ public enum Restriction {
         return Arrays.stream(Restriction.values()).filter(Restriction::isBoVisibility).map(Restriction::getName).toList();
     }
 
+    public static Restriction getRestrictionById(int id) {
+        for (Restriction restriction : values()) {
+            if (restriction.getId() == id) {
+                return restriction;
+            }
+        }
+        throw new IllegalArgumentException("No restriction with id: " + id);
+    }
+
     @Override
     public String toString() {
         return String.format("TransactionType{id=%d, code='%s', name='%s'}", id, code, name);

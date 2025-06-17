@@ -137,10 +137,10 @@ public class Constants {
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
-    public static final String MITIGATION_CLIENT_RESTRICTION_GENERAL = "postgres.mi.client_general_restriction";
+    public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION = "postgres.mi.client_general_restriction";
     public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION = "postgres.mi.client_general_restriction_action";
     public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION = "postgres.mi.client_trading_restriction_action";
-    public static final String MITIGATION_CLIENT_RESTRICTION_TRADING = "postgres.mi.client_trading_restriction";
+    public static final String MITIGATION_CLIENT_TRADING_RESTRICTION = "postgres.mi.client_trading_restriction";
     public static final String MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE = "postgres.mi.client_trading_restriction_status_by_site";
     public static final String MITIGATION_CLIENTS_RESTRICTION_OLD = "postgres.mi.clients_restriction";
     public static final String MITIGATION_ACTION = "postgres.mi.action";

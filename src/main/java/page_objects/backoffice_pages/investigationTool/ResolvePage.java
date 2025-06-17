@@ -377,8 +377,8 @@ public class ResolvePage extends AbstractPage {
         page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, addedFraud.getCode())).hover();
         page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, String.format("%s:%s", addedFraud.getCode(), fraudStatus.getStatus()))).click();
         submitFraudButton.click();
-        successToast.getByText("Fraud reported. Good job!").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertTrue(successToast.getByText("Fraud reported. Good job!").isVisible());
+        successToast.getByText("Fraud management completed").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(successToast.getByText("Fraud management completed").isVisible());
     }
 
     @Step("Resolve with adding fraud")

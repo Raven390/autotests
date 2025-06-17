@@ -1,7 +1,7 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.rules.RuleDataHelper;
 import helpers.database.DbName;
@@ -14,7 +14,6 @@ import tests.TestBaseRule;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.nbp_winning_leg_rule.NbpWinningLegRuleDataFactory.deleteNbpWinningLegRuleData;
@@ -60,11 +59,11 @@ class NbpWinningLegRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        List<String> reasons = clientsRestrictionGenerals.stream().map(restriction -> restriction.comment).collect(Collectors.toList());
+        List<String> reasons = clientGeneralRestrictions.stream().map(ClientGeneralRestriction::getComment).toList();
         assertThat("Verify there is no restriction sent from the current rule", reasons, not(hasItem("NBP_set_restriction")));
     }
 
@@ -83,11 +82,11 @@ class NbpWinningLegRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        List<String> reasons = clientsRestrictionGenerals.stream().map(restriction -> restriction.comment).collect(Collectors.toList());
+        List<String> reasons = clientGeneralRestrictions.stream().map(ClientGeneralRestriction::getComment).toList();
         assertThat("Verify there is no restriction sent from the current rule", reasons, not(hasItem("NBP_set_restriction")));
     }
 
@@ -136,12 +135,12 @@ class NbpWinningLegRuleTest extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP_set_restriction", "APPLIED");
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP_set_restriction", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, hasItem(expectedRestriction));
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, hasItem(expectedRestriction));
     }
 }
