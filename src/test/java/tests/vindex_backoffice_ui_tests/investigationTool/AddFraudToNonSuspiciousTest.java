@@ -18,19 +18,22 @@ import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.api.MitigationHelper.getClientRestrictionListFromDb;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CLEANED;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
+import static helpers.data.enums.Restriction.*;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
 public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
 
-    static ClientHelper innocentClient = new ClientHelper(191_901, Brand.INFINOX, Regulator.FCA);
+    static ClientHelper innocentClient = new ClientHelper(191_901, Brand.VANTAGE, Regulator.FCA);
     private static final String WHERE_STATEMENT = "ucid = '%s'";
     private static final String UPDATE_FRAUD_TIME_QUERY = "UPDATE %s SET updated_at = '%s', created_at = '%s' WHERE ucid = '%s' AND fraud_type_code = '%s'";
 
@@ -45,6 +48,8 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
     void cleanUser() throws Exception {
         deleteUserBO(innocentClient.getUcid());
         cleanUserAudit(innocentClient.getUcid());
+        cleanUserRestrictionGeneral(innocentClient.getUcid());
+        cleanUserRestrictionTrading(innocentClient.getUcid());
         deleteUserAR(innocentClient.getUcid());
     }
 
@@ -64,6 +69,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -82,6 +88,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -100,6 +107,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS));
     }
 
     @Test
@@ -118,6 +126,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -136,6 +145,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -154,6 +164,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(CREDIT_AND_BONUS, MANUAL_WITHDRAWAL_REVIEW));
     }
 
     @Test
@@ -172,6 +183,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER));
     }
 
     @Test
@@ -190,6 +202,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -208,6 +221,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -226,6 +240,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -244,6 +259,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(CREDIT_AND_BONUS, MANUAL_WITHDRAWAL_REVIEW));
     }
 
     @Test
@@ -262,6 +278,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS));
     }
 
     @Test
@@ -280,6 +297,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test
@@ -298,6 +316,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, MANUAL_WITHDRAWAL_REVIEW));
     }
 
     @Test
@@ -316,6 +335,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         assertThat("Verify there is only 1 fraud", frauds.size(), is(1));
         assertThat("Verify fraud type", frauds.getFirst().getFraudTypeCode(), is(fraudType.getCode()));
         assertThat("Verify status", frauds.getFirst().getStatus(), is(CONFIRMED.getStatus()));
+        assertThat("Verify preset restrictions", getClientRestrictionListFromDb(innocentClient), containsInAnyOrder(ACCOUNT_CREATION, CREDIT_AND_BONUS, DEPOSITS, INTERNAL_TRANSFER, WITHDRAWALS));
     }
 
     @Test

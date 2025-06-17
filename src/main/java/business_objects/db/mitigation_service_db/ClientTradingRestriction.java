@@ -2,7 +2,7 @@ package business_objects.db.mitigation_service_db;
 
 import java.util.Objects;
 
-public class ClientsRestrictionTrading {
+public class ClientTradingRestriction {
 
     private Long id;
     private String ucid;
@@ -15,10 +15,10 @@ public class ClientsRestrictionTrading {
     private String createdAt;
     private String updatedAt;
 
-    public ClientsRestrictionTrading() {
+    public ClientTradingRestriction() {
     }
 
-    public ClientsRestrictionTrading(Long id, String ucid, String regulator, Long accountId, Long serverId,
+    public ClientTradingRestriction(Long id, String ucid, String regulator, Long accountId, Long serverId,
             Long restrictionId, String comment, String cancellationReason, String createdAt, String updatedAt) {
         this.setId(id);
         this.setUcid(ucid);
@@ -30,23 +30,6 @@ public class ClientsRestrictionTrading {
         this.setCancellationReason(cancellationReason);
         this.setCreatedAt(createdAt);
         this.setUpdatedAt(updatedAt);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        ClientsRestrictionTrading that = (ClientsRestrictionTrading) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getUcid(), that.getUcid()) && Objects.equals(getRegulator(), that.getRegulator()) && Objects.equals(getAccountId(), that.getAccountId()) && Objects.equals(getServerId(), that.getServerId()) && Objects.equals(getRestrictionId(), that.getRestrictionId()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCancellationReason(), that.getCancellationReason()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getUcid(), getRegulator(), getAccountId(), getServerId(), getRestrictionId(), getComment(), getCancellationReason(), getCreatedAt(), getUpdatedAt());
-    }
-
-    @Override
-    public String toString() {
-        return "ClientsRestrictionTrading{" + "id=" + getId() + ", ucid='" + getUcid() + '\'' + ", regulator='" + getRegulator() + '\'' + ", accountId=" + getAccountId() + ", serverId=" + getServerId() + ", restrictionId=" + getRestrictionId() + ", comment='" + getComment() + '\'' + ", cancellationReason='" + getCancellationReason() + '\'' + ", createdAt='" + getCreatedAt() + '\'' + ", updatedAt='" + getUpdatedAt() + '\'' + '}';
     }
 
     public Long getId() {
@@ -127,5 +110,22 @@ public class ClientsRestrictionTrading {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ClientTradingRestriction that = (ClientTradingRestriction) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getUcid(), that.getUcid()) && Objects.equals(getRegulator(), that.getRegulator()) && Objects.equals(getAccountId(), that.getAccountId()) && Objects.equals(getServerId(), that.getServerId()) && Objects.equals(getRestrictionId(), that.getRestrictionId()) && Objects.equals(getComment(), that.getComment()) && Objects.equals(getCancellationReason(), that.getCancellationReason()) && Objects.equals(getCreatedAt(), that.getCreatedAt()) && Objects.equals(getUpdatedAt(), that.getUpdatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUcid(), getRegulator(), getAccountId(), getServerId(), getRestrictionId(), getComment(), getCancellationReason(), getCreatedAt(), getUpdatedAt());
+    }
+
+    @Override
+    public String toString() {
+        return "ClientsRestrictionTrading{" + "id=" + getId() + ", ucid='" + getUcid() + '\'' + ", regulator='" + getRegulator() + '\'' + ", accountId=" + getAccountId() + ", serverId=" + getServerId() + ", restrictionId=" + getRestrictionId() + ", comment='" + getComment() + '\'' + ", cancellationReason='" + getCancellationReason() + '\'' + ", createdAt='" + getCreatedAt() + '\'' + ", updatedAt='" + getUpdatedAt() + '\'' + '}';
     }
 }

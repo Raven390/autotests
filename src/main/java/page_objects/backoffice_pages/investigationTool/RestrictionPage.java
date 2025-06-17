@@ -2,8 +2,8 @@ package page_objects.backoffice_pages.investigationTool;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.audit_service_db.Event;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
-import business_objects.db.mitigation_service_db.ClientsRestrictionTrading;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.db.mitigation_service_db.ClientTradingRestriction;
 import business_objects.kafka.restriction_events.*;
 import business_objects.ui.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -313,16 +313,16 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
         Allure.step("Clean user restriction history of client " + ucid);
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "'", ClientsRestrictionGeneral.class);
-        for (ClientsRestrictionGeneral i : restrictionList) {
-            String idString = i.id.toString();
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "'", ClientGeneralRestriction.class);
+        for (ClientGeneralRestriction i : restrictionList) {
+            String idString = i.getId().toString();
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
             Thread.sleep(200);
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
             deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "id = " + idString);
+            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
             Thread.sleep(200);
         }
     }
@@ -330,17 +330,17 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have general restriction in Mitigation DataBase");
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientsRestrictionGeneral.class);
-        ClientsRestrictionGeneral restriction = restrictionList.getLast();
-        assertEquals(ucid, restriction.ucid);
-        assertEquals(expectedStatus, restriction.status);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientGeneralRestriction.class);
+        ClientGeneralRestriction restriction = restrictionList.getLast();
+        assertEquals(ucid, restriction.getUcid());
+        assertEquals(expectedStatus, restriction.getStatus());
     }
 
     public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId)
             throws Exception {
         Allure.step("check user have trading restriction in Mitigation DataBase");
-        List<ClientsRestrictionTrading> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_TRADING, "ucid = '" + ucid + "' and id = " + restrictionId, ClientsRestrictionTrading.class);
-        ClientsRestrictionTrading restriction = restrictionList.getLast();
+        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and id = " + restrictionId, ClientTradingRestriction.class);
+        ClientTradingRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
     }
 

@@ -4,7 +4,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -796,7 +796,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.addRestriction(Restriction.DEPOSITS.getName());
         resolvePage.resolveFillCommentary("test" + timestamp);
         resolvePage.resolveInvestigation();
-        List<ClientsRestrictionGeneral> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s' and restriction_id = %s and status = '%s'", resolveClient.getUcid(), DEPOSITS.getId(), APPLIED_STATUS), ClientsRestrictionGeneral.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s' and restriction_id = %s and status = '%s'", resolveClient.getUcid(), DEPOSITS.getId(), APPLIED_STATUS), ClientGeneralRestriction.class);
         assertThat("Verify restriction is present in DB", restrictionList.size(), is(1));
     }
 

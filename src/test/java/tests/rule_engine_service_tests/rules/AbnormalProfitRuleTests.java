@@ -2,7 +2,7 @@ package tests.rule_engine_service_tests.rules;
 
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.rules.RuleDataHelper;
@@ -84,13 +84,13 @@ class AbnormalProfitRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        assertThat("Verify amount of restrictions", clientsRestrictionGenerals.size(), equalTo(1));
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 12L, "Loss voucher", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction));
+        assertThat("Verify amount of restrictions", clientGeneralRestrictions.size(), equalTo(1));
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 12L, "Loss voucher", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Restriction;
@@ -65,8 +65,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -86,8 +86,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -107,8 +107,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -148,12 +148,12 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Verify client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
-        assertThat("Verify amount of restrictions", clientsRestrictionGenerals.size(), equalTo(1));
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction));
+        assertThat("Verify amount of restrictions", clientGeneralRestrictions.size(), equalTo(1));
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
@@ -173,8 +173,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -194,8 +194,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -233,12 +233,12 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Verify client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
-        assertThat("Verify amount of restrictions", clientsRestrictionGenerals.size(), equalTo(1));
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction));
+        assertThat("Verify amount of restrictions", clientGeneralRestrictions.size(), equalTo(1));
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
@@ -255,8 +255,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -273,8 +273,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -291,8 +291,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -309,8 +309,8 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Check that there is no restrictions on client");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class);
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class);
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -348,12 +348,12 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Verify client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
-        assertThat("Verify amount of restrictions", clientsRestrictionGenerals.size(), equalTo(1));
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, containsInAnyOrder(expectedRestriction));
+        assertThat("Verify amount of restrictions", clientGeneralRestrictions.size(), equalTo(1));
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, (Restriction.MANUAL_WITHDRAWAL_REVIEW.getIdLong()), "CPA abuse", "APPLIED");
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, containsInAnyOrder(expectedRestriction));
     }
 
     @Test
@@ -391,9 +391,9 @@ class CpaAbuseRuleTests extends TestBaseRule {
         assertThat("Verify that there is only 1 alert in BO DB", dbAlerts.size(), equalTo(1));
 
         Allure.step("Verify client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 }

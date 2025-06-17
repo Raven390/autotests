@@ -1,7 +1,7 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientsRestrictionGeneral;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.ClientHelper;
 import helpers.data.rules.RuleDataHelper;
@@ -57,11 +57,11 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -79,11 +79,11 @@ class NbpLosingLegRuleTest extends TestBaseRule {
         assertThat(String.format("Check that there are no alerts for ucid %s", data.clientHelper.getUcid()), consumedMessages, empty());
 
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientsRestrictionGenerals, empty());
+        assertThat(String.format("Check that there are no restrictions for ucid %s", data.clientHelper.getUcid()), clientGeneralRestrictions, empty());
     }
 
     @Test
@@ -132,13 +132,13 @@ class NbpLosingLegRuleTest extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, hasItem(expectedRestriction));
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, hasItem(expectedRestriction));
     }
 
     @Test
@@ -187,13 +187,13 @@ class NbpLosingLegRuleTest extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, hasItem(expectedRestriction));
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, hasItem(expectedRestriction));
     }
 
     @Test
@@ -255,13 +255,13 @@ class NbpLosingLegRuleTest extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionGenerals = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", data.clientHelper.getUcid()), ClientGeneralRestriction.class
         );
 
-        ClientsRestrictionGeneral expectedRestriction = new ClientsRestrictionGeneral(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
+        ClientGeneralRestriction expectedRestriction = new ClientGeneralRestriction(data.clientHelper.getUcid(), data.crmTbUserObject.regulator, 8L, "NBP Losing", "APPLIED");
 
-        assertThat("Verify that the restriction is as expected", clientsRestrictionGenerals, hasItem(expectedRestriction));
+        assertThat("Verify that the restriction is as expected", clientGeneralRestrictions, hasItem(expectedRestriction));
 
         Allure.step("Get alerts");
         List<RuleAlert> mirrorAlerts = alertsMap.get(mirrorClient.getUcid()).stream().map(json -> {
@@ -297,14 +297,14 @@ class NbpLosingLegRuleTest extends TestBaseRule {
 
         // Verify mirror client restriction
         Allure.step("Get client restrictions");
-        List<ClientsRestrictionGeneral> clientsRestrictionsMirrorOld = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_RESTRICTION_GENERAL, String.format("ucid = '%s'", mirrorClient.getUcid()), ClientsRestrictionGeneral.class
+        List<ClientGeneralRestriction> clientsRestrictionsMirrorOld = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", mirrorClient.getUcid()), ClientGeneralRestriction.class
         );
 
         assertThat("Verify amount of restrictions", clientsRestrictionsMirrorOld.size(), equalTo(1));
 
-        ClientsRestrictionGeneral restrictionMirror = clientsRestrictionsMirrorOld.getFirst();
-        ClientsRestrictionGeneral expectedRestrictionMirror = new ClientsRestrictionGeneral(mirrorClient.getUcid(), mirrorClient.getRegulator(), 8L, "NBP_set_restriction", "APPLIED");
+        ClientGeneralRestriction restrictionMirror = clientsRestrictionsMirrorOld.getFirst();
+        ClientGeneralRestriction expectedRestrictionMirror = new ClientGeneralRestriction(mirrorClient.getUcid(), mirrorClient.getRegulator(), 8L, "NBP_set_restriction", "APPLIED");
 
         assertThat("Verify that the restriction is as expected", restrictionMirror, equalTo(expectedRestrictionMirror));
     }
