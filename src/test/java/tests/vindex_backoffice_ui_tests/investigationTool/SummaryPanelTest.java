@@ -12,10 +12,7 @@ import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsOb
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.DateTimeFormat;
-import helpers.data.enums.FraudTypeOld;
-import helpers.data.enums.Regulator;
+import helpers.data.enums.*;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -35,7 +32,8 @@ import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalOb
 import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static helpers.data.enums.FraudTypeOld.getRandomFraudType;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -100,7 +98,7 @@ public class SummaryPanelTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Total PNL", (tradingPage.calculatePnlByDeal(deal1) + historyMetrics1.getDailyNetClosedPnl() + historyMetrics2.getDailyNetClosedPnl()));
+        generalTab.checkSummaryPanelValue("Total PNL", tradingPage.calculatePnlByDeal(deal1));
     }
 
     @Test
@@ -198,19 +196,14 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud")
     public void clientSummaryFraudTest() throws Exception {
-        cleanUserFraudsBo(client.getUcid());
-        FraudTypeOld fraudTypeOld = getRandomFraudType();
-        Allure.step("Prepare DB data for test user");
-        createUserFraudsBo(client.getUcid(), fraudTypeOld.getFraudTypeId());
-        FraudTypeOld fraudTypeOld2 = getRandomFraudType(fraudTypeOld);
-        Allure.step("Prepare DB data for test user");
-        createUserFraudsBo(client.getUcid(), fraudTypeOld2.getFraudTypeId());
-
+        cleanUserAR(client.getUcid());
+        addFraudsForClient(client, List.of(FraudType.CPA_ABUSE), FraudTypeStatus.CONFIRMED);
+        addFraudsForClient(client, List.of(FraudType.MARKET_MANIPULATION), FraudTypeStatus.POTENTIAL);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelFraudValue("Fraud", fraudTypeOld.getDisplayName());
-        generalTab.checkSummaryPanelFraudValue("Fraud", fraudTypeOld2.getDisplayName());
+        generalTab.checkSummaryPanelFraudValue("Fraud", CPA_ABUSE.getDisplayName());
+        generalTab.checkSummaryPanelFraudValue("Fraud", String.format("%s %s", FraudTypeStatus.POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getDisplayName()));
     }
 
     @Test

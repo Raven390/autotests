@@ -20,12 +20,9 @@ import static utils.Utils.*;
 
 public class ConnectionPage extends AbstractPage {
 
-    private final Locator loaderAnimation;
     private final Locator connectionTab;
     private final Locator tableViewButton;
     private final Locator graphViewButton;
-    private final Locator connectionTable;
-    private final Locator connectionGraph;
     private final Locator levelHeader;
     private final Locator clientHeader;
     private final Locator connectionHeader;
@@ -36,20 +33,8 @@ public class ConnectionPage extends AbstractPage {
     private final Locator ibHeader;
     private final Locator registeredHeader;
     private final Locator lastLoginHeader;
-    private final Locator graphLinkHeader;
     private final Locator levelCell;
-    private final Locator clientCell;
-    private final Locator connectionCell;
-    private final Locator attributeCell;
-    private final Locator behaviorCell;
-    private final Locator pnlCell;
-    private final Locator operationCell;
-    private final Locator ibCell;
-    private final Locator registeredCell;
-    private final Locator lastLoginCell;
-    private final Locator graphLinkCell;
     private final Locator connectionCardSwitch;
-    private final Locator connectionCard;
     private final Locator connectionCardLink;
     private final Locator unmaskConnectionCardDataButton;
     private final Locator connectionTableAttribute;
@@ -79,13 +64,11 @@ public class ConnectionPage extends AbstractPage {
     private final Locator attributesFilterSelectedItems;
     private final Locator resetAllButton;
     private final Locator graphNodesUnhidden;
-    private final Locator graphNodesHiddenTitles;
     private final Locator applyFiltersButton;
     private final Locator connectionTableRow;
     private final Locator connectionTableUserIds;
     private final Locator appliedFilters;
     private final Locator filtersCounter;
-    private final Locator appliedFiltersHidden;
     private final Locator connectionTableBehaviorValue;
     private final Locator connectionTableScoreValue;
     private final Locator zoomInButton;
@@ -102,21 +85,18 @@ public class ConnectionPage extends AbstractPage {
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
     private static final String CONNECTION_GRAPH_SELECTOR = ".v-graph-canvas-v2";
-    private final String LEVEL_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_level";
-    private final String CONNECTION_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_connection";
-    private final String GRAPH_LINK_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_graph-link";
-    private final String CONNECTION_NODE_SELECTOR = ".v-graph-node";
-    private final String CONNECTION_CARD_SWITCH_ON_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button[contains(@class, 'g-button_selected')]";
-    private final String CONNECTION_CARD_SWITCH_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button";
-    private final String CONNECTION_CARD_SELECTOR = "div.v-graph-node-details";
-    private final String CONNECTION_CARD_LINK_SELECTOR = "//div[contains(@class, 'v-graph-node-details')]/div[@class='v-graph-node-details-header']//a/button";
-    private final String CONNECTION_CARD_UNMASK_GENERAL_SELECTOR = "//*[contains(text(), 'General info')]/ancestor::div[@class='v-graph-node-details__content']//button[1]";
-    private final String CONNECTION_CARD_HEADER_ID_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'g-color-text_color_secondary')]";
-    private final String CONNECTION_CARD_HEADER_NAME_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'v-graph-node-details-header__client-name')]";
-    private final String CONNECTION_CARD_HEADER_LEVEL_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[1]//span";
-    private final String CONNECTION_CARD_HEADER_POINTS_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[2]//span";
+    private static final String LEVEL_CELL_SELECTOR = "td.v-connection-search-table-view__column_type_level";
+    private static final String CONNECTION_NODE_SELECTOR = ".v-graph-node";
+    private static final String CONNECTION_CARD_SWITCH_ON_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button[contains(@class, 'g-button_selected')]";
+    private static final String CONNECTION_CARD_SWITCH_SELECTOR = "//div[@class='v-connection-search-graph__right-side-controls']/button";
+    private static final String CONNECTION_CARD_SELECTOR = "div.v-graph-node-details";
+    private static final String CONNECTION_CARD_LINK_SELECTOR = "//div[contains(@class, 'v-graph-node-details')]/div[@class='v-graph-node-details-header']//a/button";
+    private static final String CONNECTION_CARD_HEADER_ID_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'g-color-text_color_secondary')]";
+    private static final String CONNECTION_CARD_HEADER_NAME_SELECTOR = "//div[@class='v-graph-node-details-header']//div[contains(@class, 'v-graph-node-details-header__client-name')]";
+    private static final String CONNECTION_CARD_HEADER_LEVEL_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[1]//span";
+    private static final String CONNECTION_CARD_HEADER_POINTS_SELECTOR = "//div[@class='v-graph-node-details-header']//div[@class='v-graph-node-details-header__attributes']/div[2]//span";
     private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
-    private final String MASKED_TEXT_LOCATOR = "//div[contains(text(), '***')]";
+    private static final String MASKED_TEXT_LOCATOR = "//div[contains(text(), '***')]";
     private static final String FILTER_CONTAINER_BY_TITLE_PATTERN = "//div[@class='v-text-with-icon__text' and text()='%s']/ancestor::div[@class='v-filter-container']";
     private static final String FILTER_CONTAINER = "//div[@class='v-drawer-content-wrapper__content']";
     private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='%s']";
@@ -126,7 +106,6 @@ public class ConnectionPage extends AbstractPage {
     private static final String BUTTON_BY_LABEL_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::button";
     private static final String ATTRIBUTE_FILTER_NAME_PATTERN = "//div[@class='v-drop-down-menu__menu']/descendant::div[text()='%s']";
     private static final String ATTRIBUTE_FILTER_VALUE_PATTERN = "//div[contains(@data-dd-value,'%s')]/descendant::div[text()='%s']";
-    private static final String GRAPH_NODES_GROUP = "//div[@class='v-connection-search-graph-view__group']";
     private static final String CONNECTION_TABLE_ROW = "//div[contains(@class,'v-body-row')]";
     private static final String ZOOM_CONTROLS = "//div[@class='v-graph-scale-controls-v2__zoom-controls']";
     private static final String CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN = "//div[contains(@class,'header-cell') and text()='%s']";
@@ -145,12 +124,9 @@ public class ConnectionPage extends AbstractPage {
 
     public ConnectionPage(Page page) {
         super(page);
-        this.loaderAnimation = page.locator(".v-loader");
         this.connectionTab = page.locator("[role=\"tab\"][title=\"Connections\"]");
         this.tableViewButton = page.locator(CONNECTION_TABLE_BUTTON_SELECTOR);
         this.graphViewButton = page.locator("input[value='GRAPH']");
-        this.connectionTable = page.locator(CONNECTION_TABLE_SELECTOR);
-        this.connectionGraph = page.locator(CONNECTION_GRAPH_SELECTOR);
         this.levelHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LVL"));
         this.clientHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CLIENT"));
         this.connectionHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CONNECTION"));
@@ -161,20 +137,8 @@ public class ConnectionPage extends AbstractPage {
         this.ibHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "CPA/IB"));
         this.registeredHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "REGISTERED"));
         this.lastLoginHeader = page.locator(String.format(CONNECTION_TABLE_HEADER_BY_TEXT_PATTERN, "LAST LOGIN"));
-        this.graphLinkHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon')) and not(text())]");
         this.levelCell = page.locator(LEVEL_CELL_SELECTOR);
-        this.clientCell = page.locator("td.v-connection-search-table-view__column_type_client");
-        this.connectionCell = page.locator(CONNECTION_CELL_SELECTOR);
-        this.attributeCell = page.locator("td.v-connection-search-table-view__column_type_attribute");
-        this.behaviorCell = page.locator("td.v-connection-search-table-view__column_type_behavior");
-        this.pnlCell = page.locator("td.v-connection-search-table-view__column_type_pnl");
-        this.operationCell = page.locator("td.v-connection-search-table-view__column_type_operations");
-        this.ibCell = page.locator("td.v-connection-search-table-view__column_type_ib");
-        this.registeredCell = page.locator("td.v-connection-search-table-view__column_type_registered");
-        this.lastLoginCell = page.locator("td.v-connection-search-table-view__column_type_last-login");
-        this.graphLinkCell = page.locator(GRAPH_LINK_CELL_SELECTOR);
         this.connectionCardSwitch = page.locator(CONNECTION_CARD_SWITCH_SELECTOR);
-        this.connectionCard = page.locator(CONNECTION_CARD_SELECTOR);
         this.connectionCardLink = page.locator(CONNECTION_CARD_LINK_SELECTOR);
         this.unmaskConnectionCardDataButton = page.locator("//div[@class='v-graph-node-details-header-v2__buttons']/button");
         this.connectionTableAttribute = page.locator("//div[@class='v-table-view-v2__attributes-list']/div");
@@ -204,12 +168,10 @@ public class ConnectionPage extends AbstractPage {
         this.attributesFilterSelectedItems = page.locator("//div[@class='v-drop-down-menu__checked-values']");
         this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
         this.graphNodesUnhidden = page.locator("//div[contains(@class,'v-graph-node-v2__title-text')]");
-        this.graphNodesHiddenTitles = page.locator(String.format("%s%s", GRAPH_NODES_GROUP, "/descendant::div[@class='v-graph-hidden-node']/div[contains(@class,'g-text')]"));
         this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
         this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'client')]/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
-        this.appliedFiltersHidden = page.locator("//div[contains(@class,'v-collapsible-horizontal-list__item_hidden')]/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/div");
         this.connectionTableBehaviorValue = page.locator("div.v-connection-search-table-view__behavior");
         this.connectionTableScoreValue = page.locator("//td[contains(@class,'v-connection-search-table-view__column_type_connection')]/descendant::div[contains(@class,'g-color-text_color_secondary')]");
@@ -221,11 +183,9 @@ public class ConnectionPage extends AbstractPage {
         this.multiselectSelectAllCheckbox = page.locator("//input[@type='checkbox']").first();
         this.multiselectCounter = page.locator("//div[@class='v-multiselect-panel__counter']");
         this.multiselectCommentButton = page.locator("//div[@class='v-multiselect-panel__body']/button");
-        this.multiselectCommentInput = page.locator("//div[@class='v-connection-search-multiselect-panel__input']/descendant::input");
-        this.multiselectAddCommentButton = page.locator("//div[@class='v-connection-search-multiselect-panel__buttons']/button");
+        this.multiselectCommentInput = page.locator("//div[@class='v-connection-search-multiselect-panel-v2__input']/descendant::input");
+        this.multiselectAddCommentButton = page.locator("//div[@class='v-connection-search-multiselect-panel-v2__buttons']/button");
     }
-
-    String mappedResponce = "{\n" + "    \"connections\": [\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424202\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424203\",\n" + "            \"connectionScore\": 12,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"email\",\n" + "                    \"connectionAttributeValue\": \"4242424@2424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        },\n" + "        {\n" + "            \"clientIdFrom\": \"infinox-424201\",\n" + "            \"clientIdTo\": \"infinox-424204\",\n" + "            \"connectionScore\": 50,\n" + "            \"connectionDetail\": [\n" + "                {\n" + "                    \"connectionAttributeName\": \"payout\",\n" + "                    \"connectionAttributeValue\": \"42424242424242\"\n" + "                }\n" + "            ],\n" + "            \"connectionType\": \"sameIdentity\",\n" + "            \"connectionDepth\": 1,\n" + "            \"abuseType\": null\n" + "        }\n" + "    ],\n" + "    \"clients\": {\n" + "        \"infinox-424204\": {\n" + "            \"clientName\": \"Connect Fourthman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424202\": {\n" + "            \"clientName\": \"Connect Secondman\",\n" + "            \"status\": \"NORMAL\",\n" + "            \"fraudTypes\": null\n" + "        },\n" + "        \"infinox-424203\": {\n" + "            \"clientName\": \"Connect Thrirdman\",\n" + "            \"status\": \"FRAUDSTER\",\n" + "            \"fraudTypes\": [\n" + "                {\n" + "                    \"key\": \"GAP_TRADING\",\n" + "                    \"value\": \"Gap trading\"\n" + "                },\n" + "                {\n" + "                    \"key\": \"LATENCY_ARBITRAGE\",\n" + "                    \"value\": \"Latency arbitrage\"\n" + "                }\n" + "            ]\n" + "        },\n" + "        \"infinox-424201\": {\n" + "            \"clientName\": \"Connect Firstman\",\n" + "            \"status\": \"SUSPICIOUS\",\n" + "            \"fraudTypes\": null\n" + "        }\n" + "    }\n" + "}";
 
     @Step("Open users restriction tab")
     public void navigateConnectionTab(String ucid) {
@@ -240,24 +200,6 @@ public class ConnectionPage extends AbstractPage {
         Allure.step("Click connections tab");
         connectionTab.click();
         waitForPageToLoad();
-    }
-
-    @Step("Go to main page")
-    public void navigateMain() {
-        Allure.step("Go to main page");
-        page.navigate(BASE_URL_E2E);
-
-    }
-
-    public void checkLineStyle(String ucid1, String ucid2, String attributeName, double connectionScore) {
-        Allure.step("check width of connection between two users");
-        waitForPageToLoad();
-        int width = connectionWidth(connectionScore);
-        waitForPageToLoad();
-        String locator = (String.format("[data-qa=\"%s:%s:%s\"][style=\"stroke-width: %s;\"]", ucid1, ucid2, attributeName, width));
-        System.out.println("searched element is " + locator);
-        assertTrue(page.locator(locator).isVisible());
-
     }
 
     public void checkLineStyle(String ucid1, String ucid2, double connectionScore) {
@@ -299,20 +241,6 @@ public class ConnectionPage extends AbstractPage {
         page.waitForSelector("//div[@data-qa='" + ucid + "']//div[text()='" + name + "']");
         assertTrue(page.locator("//div[@data-qa='" + ucid + "']//div[text()='" + name + "']").isVisible());
 
-    }
-
-    @Step("Open the MOCKED Connection search page")
-    public void navigateMock() {
-        page.route("**/api/alerts", route -> {
-            String alert = "{\n" + "        \"id\": 1518,\n" + "        \"uuid\": \"c6b6af2e-43a2-425d-bf87-ee2b6141e267\",\n" + "        \"date\": \"2024-09-12T07:57:46.713048Z\",\n" + "        \"amount\": {\n" + "            \"value\": -235331367481903743,\n" + "            \"currency\": \"Monica\"\n" + "        },\n" + "        \"rule\": [\n" + "            \"ProctorMan\",\n" + "            \"Marquez\",\n" + "            \"Ramirez\",\n" + "            \"Simpson\",\n" + "            \"McFadden\",\n" + "            \"Farley\"\n" + "        ],\n" + "        \"client\": {\n" + "            \"id\": null,\n" + "            \"regulator\": null,\n" + "            \"brand\": null\n" + "        },\n" + "        \"status\": \"NEW\",\n" + "        \"tag\": []\n" + "    }";
-            APIResponse response = route.fetch();
-            String body = response.text();
-            Map<String, String> headers = response.headers();
-            route.fulfill(new Route.FulfillOptions().setResponse(response).setBody(alert).setHeaders(headers));
-        });
-        page.navigate(BASE_URL_E2E);
-        waitForPageToLoad();
-        page.evaluate("document.querySelector('.v-alert-list__cell_date .g-text_variant_body-1').innerText = 'YESTERDAY'");
     }
 
     @Step("Open connection table")
@@ -903,16 +831,6 @@ public class ConnectionPage extends AbstractPage {
         return namesList;
     }
 
-    @Step("Get all hidden nodes text")
-    public List<String> getAllHiddenNodesText() {
-        List<String> textList = new ArrayList<>();
-        for (int i = 0; i < graphNodesHiddenTitles.count(); i++) {
-            Locator title = graphNodesHiddenTitles.nth(i);
-            textList.add(title.textContent());
-        }
-        return textList;
-    }
-
     @Step("Click apply filters button")
     public void clickApplyFiltersButton() {
         applyFiltersButton.click();
@@ -939,16 +857,6 @@ public class ConnectionPage extends AbstractPage {
         List<String> filtersList = new ArrayList<>();
         for (int i = 0; i < appliedFilters.count(); i++) {
             Locator filter = appliedFilters.nth(i);
-            filtersList.add(filter.textContent());
-        }
-        return filtersList;
-    }
-
-    @Step("Get list of applied hidden filters")
-    public List<String> getAppliedFiltersHiddenList() {
-        List<String> filtersList = new ArrayList<>();
-        for (int i = 0; i < appliedFiltersHidden.count(); i++) {
-            Locator filter = appliedFiltersHidden.nth(i);
             filtersList.add(filter.textContent());
         }
         return filtersList;

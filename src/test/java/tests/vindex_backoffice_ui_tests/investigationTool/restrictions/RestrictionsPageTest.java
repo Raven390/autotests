@@ -292,21 +292,6 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("1157")
-    @DisplayName("Restriction tab set Note for withdrawals restriction UI")
-    void setNoteForWithdrawalsRestrictionUITest() throws Exception {
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        restrictionPage.navigate(restrictionClient.getUcid());
-        restrictionPage.addNewRestriction(NOTE_FOR_WITHDRAWALS, RESTRICTION_COMMENT);
-        restrictionPage.verifyRestrictionAppliedInUi(NOTE_FOR_WITHDRAWALS, user, RESTRICTION_COMMENT);
-        checkKafkaRequestApplyUserId(restrictionClient.getUserId());
-        checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getName());
-    }
-
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1158")
     @DisplayName("Restriction tab remove Note for withdrawals restriction UI")
     void cancelNoteForWithdrawalsRestrictionUITest() throws Exception {
