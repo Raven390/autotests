@@ -9,8 +9,10 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -45,19 +47,23 @@ public class BoHelper {
         }
     }
 
-    @Step("Delete user from AR")
-    public static void deleteUserAR(String ucid) throws Exception {
+    public static void deleteUserAR(String... ucid) throws Exception {
         try {
-            Allure.step("delete user from AR");
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, "ucid = '" + ucid + "'");
-            Thread.sleep(100);
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid = '" + ucid + "'");
-            Thread.sleep(100);
-            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, "ucid = '" + ucid + "'");
-            Thread.sleep(100);
-        } catch (NoSuchElementException e) {
-            System.out.println("no such client in AR");
+            Allure.step("delete user(s) from AR");
 
+            String ucids = Arrays.stream(ucid).map(u -> "'" + u + "'").collect(Collectors.joining(", "));
+
+            String condition = "ucid IN (" + ucids + ")";
+
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, condition);
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, condition);
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, condition);
+            Thread.sleep(100);
+
+        } catch (NoSuchElementException e) {
+            System.out.println("No such client(s) in AR");
         }
     }
 
