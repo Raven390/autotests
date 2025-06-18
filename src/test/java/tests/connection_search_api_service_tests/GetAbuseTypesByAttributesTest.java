@@ -25,9 +25,7 @@ import tests.TestBaseApi;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByAttributes;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
@@ -45,6 +43,7 @@ import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFac
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
+import static helpers.database.BoHelper.deleteUserAR;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -173,7 +172,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final ClientFraudTypes fraud1 = new ClientFraudTypes(userTo31.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypes fraud2 = new ClientFraudTypes(userTo32.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
-    static final List<CrmTbUserObject> clientsDB = generateUserByClients(List.of(userFromDocument, userToDocument));
+    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userFromDocument, userToDocument, userToEmail, userFromDepth, userTo2Depth, userTo3Depth, userToEmail2, userToIp, userToIp2, userToPhone, userFromPhone, userToPayout, userToDeviceId, userToDigitalId, userToNameBirth, userToSessionId, userToWebSessionId, userTo31, userTo32));
+    static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
 
 
     @BeforeAll
@@ -195,8 +195,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         //insert data to fraud table
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2));
         waitForConnectionSearchToUpdate();
-        addFraudsForClient(fraudDocumentTo);
-        Thread.sleep(5000);
+        addFraudsForClient(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2);
+        Thread.sleep(15_000);//pause for asink services like CS and AR
     }
 
     @AfterAll
@@ -219,6 +219,13 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
         //Delete data from fraud type table
         cleanBoFraudTypesTableByUcid(userFromEmail.getUcid(), userToEmail.getUcid(), userFromDocument.getUcid(), userToDocument.getUcid(), userFromIp.getUcid(), userToIp.getUcid(), userFromPayout.getUcid(), userToPayout.getUcid(), userFromPhone.getUcid(), userToPhone.getUcid(), userFromNameBirth.getUcid(), userToNameBirth.getUcid(), userToDeviceId.getUcid(), userFromDeviceId.getUcid(), userToSessionId.getUcid(), userFromSessionId.getUcid(), userToWebSessionId.getUcid(), userFromWebSessionId.getUcid());
+        //delete client objects from DB
+        List<String> clientUcids = new java.util.ArrayList<>(List.of());
+        for (CrmTbUserObject client : clientsDB) {
+            clientUcids.add(client.ucid);
+        }
+        cleanCrmUserTableByClient(String.valueOf(clientUcids));
+        deleteUserAR(String.valueOf(clientUcids));
     }
 
     @Test
