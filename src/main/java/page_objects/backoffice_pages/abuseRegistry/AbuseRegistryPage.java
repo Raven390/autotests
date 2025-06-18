@@ -32,6 +32,7 @@ public class AbuseRegistryPage extends AbstractPage {
     private final Locator successToast;
     private final Locator restrictionListButton;
     private final Locator restrictionApplyButton;
+    private final Locator deleteUploadButton;
 
 
     public AbuseRegistryPage(Page page) {
@@ -48,6 +49,7 @@ public class AbuseRegistryPage extends AbstractPage {
         this.selectPopupApplyButton = page.locator("//*[@data-qa=\"select-popup\"]//button/*[text()='Apply']");
         this.commentaryField = page.locator("//textarea[@placeholder='Describe your decision']");
         this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
+        this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Delete']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
 
@@ -136,9 +138,19 @@ public class AbuseRegistryPage extends AbstractPage {
         uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
-    public void verifySuccessMessage() {
+    public void clickDeleteUpload() {
+        deleteUploadButton.click();
+        uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    public void verifySuccessMessageUpload() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.textContent().contains("Request for adding clients to abuse registry is sent"));
+    }
+
+    public void verifySuccessMessageDelete() {
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(successToast.textContent().contains("Selected actions are now being processed"));
     }
 
     public void addRestriction(String... addedRestriction) {

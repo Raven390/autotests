@@ -4,6 +4,7 @@ import business_objects.api.connection_search_api.ConnectionSearchResponseError;
 import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntry;
 import business_objects.db.clickhouse.document_table.DocumentTableEntry;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByAttributes;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
@@ -40,10 +42,12 @@ import static business_objects.db.clickhouse.payout.PayoutTableEntryFactory.payo
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.CleanTableHelper.*;
-import static helpers.database.DbHelper.*;
+import static helpers.database.DbHelper.deleteEntryFromDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -169,9 +173,13 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final ClientFraudTypes fraud1 = new ClientFraudTypes(userTo31.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypes fraud2 = new ClientFraudTypes(userTo32.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
+    static final List<CrmTbUserObject> clientsDB = generateUserByClients(List.of(userFromDocument, userToDocument));
+
+
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
         // Insert data to connections table
+        insertObjectsToDb(CRM_USER_TABLE_NAME, clientsDB);
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3, connectionTableEntryByEmail4, connectionTableEntryByIp1, connectionTableEntryByIp2, connectionTableEntryByIp3));
         // Insert data to attributes tables
         insertObjectsToDb(DOCUMENT_TABLE_NAME, List.of(documentTableEntry, documentTableEntry2));
@@ -187,6 +195,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         //insert data to fraud table
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2));
         waitForConnectionSearchToUpdate();
+        addFraudsForClient(fraudDocumentTo);
+        Thread.sleep(5000);
     }
 
     @AfterAll

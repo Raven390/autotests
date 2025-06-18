@@ -1,36 +1,34 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry;
 
 import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.Event;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.FraudTypeOld;
-import helpers.data.enums.Regulator;
-import helpers.data.enums.Restriction;
+import helpers.data.enums.*;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import io.qameta.allure.Feature;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.data.enums.FraudType.CPA_ABUSE;
+import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.AuHelper.cleanClientAudit;
-import static helpers.database.BoHelper.*;
-import static helpers.database.DbHelper.*;
+import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.BoHelper.deleteUserBO;
+import static helpers.database.DbHelper.getObjectsFromDB;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static page_objects.backoffice_pages.investigationTool.RestrictionPage.checkUserHaveRestrictionGeneral;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
-import static utils.Constants.LAYER_WEB;
 import static utils.Utils.getCurrentTimestamp;
 
-public class MassUploadTest extends TestBaseWeb {
+@Feature("BMS-1475 Mass delete. Limited access")
+public class MassDeleteTest extends TestBaseWeb {
 
     static ClientHelper client1 = new ClientHelper(313_101, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_101_001, 42);
     static ClientHelper client2 = new ClientHelper(313_102, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_102_001, 42);
@@ -49,9 +47,9 @@ public class MassUploadTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @Tag(ABUSE_REGISTRY)
-    @AllureId("1289")
-    @DisplayName("Abuse registry full flow simple test")
-    public void abuseRegistryMassUploadSimpleFullFlowTest() throws Exception {
+    @AllureId("1328")
+    @DisplayName("Abuse registry mass delete full flow simple test")
+    public void abuseRegistryMassDeleteSimpleFullFlowTest() throws Exception {
 
         cleanClientAudit(client1.getUcid(), client2.getUcid());
         deleteUserBO(client1.getUcid());
@@ -62,6 +60,10 @@ public class MassUploadTest extends TestBaseWeb {
         cleanUserRestriction(client3.getUcid());
         deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
+        addFraudsForClient(client1, List.of(HEDGING, CPA_ABUSE), FraudTypeStatus.CONFIRMED);
+        addFraudsForClient(client2, List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+        addFraudsForClient(client3, List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         abuseRegistryPage.navigateAbuseRegistryFraudsters();
@@ -69,38 +71,34 @@ public class MassUploadTest extends TestBaseWeb {
         abuseRegistryPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
         abuseRegistryPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
         abuseRegistryPage.clickAddFraudButton();
-        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
+        FraudTypeOld fraudTypeOld = FraudTypeOld.HEDGING;
         abuseRegistryPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
-        abuseRegistryPage.clickAddRestrictionButton();
-        Restriction restriction = Restriction.DEPOSITS;
-        abuseRegistryPage.selectRestriction(restriction.getName());
-        abuseRegistryPage.clickApplyselectedRestrictions();
         String commentary = "test" + getCurrentTimestamp();
         abuseRegistryPage.fillCommentary(commentary);
-        abuseRegistryPage.clickApplyUpload();
-        abuseRegistryPage.verifySuccessMessageUpload();
+        abuseRegistryPage.clickDeleteUpload();
+        abuseRegistryPage.verifySuccessMessageDelete();
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, "ar.abuser_fraud_type", "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
-        Allure.step("Assert that there only one record in ar.abuser_fraud_type");
-        assertEquals(frauds.size(), 1);
-        AbuserFraudType fraud = frauds.getFirst();
+        List<AbuserFraudType> fraudsFirst = getObjectsFromDB(DbName.POSTGRES, "ar.abuser_fraud_type", "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        Allure.step("Assert that there two records in ar.abuser_fraud_type for the first client");
+        assertEquals(2, fraudsFirst.size());
+
+        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
+
+        AbuserFraudType fraudFirst = fraudsFirst.stream().filter(fraud -> fraud.getFraudTypeCode().equals(CPA_ABUSE.getCode())).findFirst().orElse(null);
+        Assertions.assertNotNull(fraudFirst);
+
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
-        assertEquals("CONFIRMED", fraud.getStatus());
-        Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
-        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
-        Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
-        assertEquals(commentary, fraud.getComment());
+        assertEquals("CONFIRMED", fraudFirst.getStatus());
 
+        Allure.step("Find among frauds of firs user fraud with time CPA Abuse (that that we not deleted)");
 
-        List<Event> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'", Event.class);
+        AbuserFraudType fraudSecond = fraudsFirst.stream().filter(fraud -> fraud.getFraudTypeCode().equals(HEDGING.getCode())).findFirst().orElse(null);
+        Assertions.assertNotNull(fraudSecond);
 
-        Event event = events.getFirst();
-        assertEquals("Batch operation. " + commentary, event.getComment());
-
-        checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");
-
+        Allure.step("Assert that record in ar.abuser_fraud_type have right status");
+        assertEquals("CLEANED", fraudSecond.getStatus());
     }
 
 
