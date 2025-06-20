@@ -1,13 +1,11 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mtAccount.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,9 +44,6 @@ public class SummaryPanelTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
-    private static AccountIbRelationObject relation;
-    private static S3FactIbSalesCommissionsObject commission;
-
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException,
@@ -179,7 +174,6 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud, no frauds")
     public void clientSummaryFraudEmptyTest() throws Exception {
-        cleanUserFraudsBo(client.getUcid());
         cleanUserAR(client.getUcid());
         Allure.step("Prepare DB data for test user");
 
