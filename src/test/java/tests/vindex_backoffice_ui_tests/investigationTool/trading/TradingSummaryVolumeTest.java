@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Symbol;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -107,6 +108,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
+        tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("15K"));
         String maxVolumeDate = transformDate(trade2.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_DAY);
@@ -138,6 +140,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
+        tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("35K"));
         String maxVolume = formatter.format(Stream.of(trade9, trade10).mapToDouble(t -> t.notionalValueUsd).sum());
@@ -168,6 +171,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
+        tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
         String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, MONTH_TEXT_AND_YEAR);
@@ -199,6 +203,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
+        tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
         assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
         String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
@@ -215,6 +220,8 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
 
 
     @Disabled("need hack for canvas")
+    @Muted
+    @Tag(TAG_MANUAL)
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)

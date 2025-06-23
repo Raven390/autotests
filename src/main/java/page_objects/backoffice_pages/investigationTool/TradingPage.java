@@ -387,7 +387,7 @@ public class TradingPage extends AbstractPage {
         this.resetCloseDateButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Close date"));
         this.resetDurationButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Duration"));
         this.resetProfitButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Profit"));
-        this.resetVolumeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Volume"));
+        this.resetVolumeButton = page.locator(String.format(RESET_BUTTON_BY_LABEL_PATTERN, "Volume in USD"));
         this.resetAllButton = page.locator("//span[text()='Reset all']/parent::button");
         this.openDateTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Open date"));
         this.profitTooltip = page.locator(String.format(TOOLTIP_BY_LABEL_PATTERN, "Profit"));
@@ -483,7 +483,7 @@ public class TradingPage extends AbstractPage {
     public void openAccountsTab() {
         Allure.step("Open users trading-accounts tab");
         accountsTab.click();
-        super.waitForPageToLoad();
+        page.waitForTimeout(500);
     }
 
 
@@ -1059,7 +1059,7 @@ public class TradingPage extends AbstractPage {
         String openDate = "Open date";
         String closeDate = "Close date";
         String profit = "Profit";
-        String volume = "Volume";
+        String volume = "Volume in USD";
         // Open date
         page.locator(String.format(PRESET_BY_LABEL_AND_VALUE_PATTERN, openDate, "Today")).click();
         assertThat(openDatePicker).hasValue(Utils.getCurrentDate());

@@ -97,7 +97,6 @@ public class DemoClientCreator {
 
         KycFilesTableEntry file = getKycFile(client1);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);

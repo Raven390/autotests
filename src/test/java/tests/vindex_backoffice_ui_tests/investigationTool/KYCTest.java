@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObject;
 import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntryFactory.getKycFile;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static helpers.data.enums.Brand.INFINOX;
+import static helpers.data.enums.Brand.VANTAGE;
 import static helpers.data.enums.Regulator.VFSC2;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -28,7 +28,7 @@ public class KYCTest extends TestBaseWeb {
 
     static Faker faker = new Faker();
 
-    static ClientHelper pofClient = new ClientHelper(525_210, INFINOX, VFSC2);
+    static ClientHelper pofClient = new ClientHelper(525_210, VANTAGE, VFSC2);
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException {
@@ -47,7 +47,7 @@ public class KYCTest extends TestBaseWeb {
     public void checkCorrectStatusDisplaySubmittedTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525206");
+        generalTab.navigateGeneralTab("vantage-525206");
         generalTab.checkKycStatusGeneral("Proof of identity", "Submitted");
     }
 
@@ -59,7 +59,7 @@ public class KYCTest extends TestBaseWeb {
     public void checkCorrectStatusDisplayRejectedTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525208");
+        generalTab.navigateGeneralTab("vantage-525208");
         generalTab.checkKycStatusGeneral("Proof of identity", "Rejected");
     }
 
@@ -71,7 +71,7 @@ public class KYCTest extends TestBaseWeb {
     public void checkCorrectStatusDisplayPendingTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525207");
+        generalTab.navigateGeneralTab("vantage-525207");
         generalTab.checkKycStatusGeneral("Proof of identity", "Pending");
     }
 
@@ -83,7 +83,7 @@ public class KYCTest extends TestBaseWeb {
     public void checkCorrectStatusDisplayCompletedTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525205");
+        generalTab.navigateGeneralTab("vantage-525205");
         generalTab.checkKycStatusGeneral("Proof of identity", "Approved");
     }
 
@@ -95,7 +95,7 @@ public class KYCTest extends TestBaseWeb {
     public void userCanZoomTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVZoomFunctions();
     }
@@ -108,7 +108,7 @@ public class KYCTest extends TestBaseWeb {
     public void userCanRotateTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVRotateFunctions();
     }
@@ -121,7 +121,7 @@ public class KYCTest extends TestBaseWeb {
     public void userCanMirrorTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVMirrorFunctions();
     }
@@ -134,7 +134,7 @@ public class KYCTest extends TestBaseWeb {
     public void userCanSlideTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.FVSlideFunctions();
     }
@@ -147,7 +147,7 @@ public class KYCTest extends TestBaseWeb {
     public void userHasHistoryDrawerTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.kycDetailsOpen("Proof of identity");
         generalTab.kycHistoryDrawerDisplayed();
     }
@@ -160,7 +160,7 @@ public class KYCTest extends TestBaseWeb {
     public void userHavePlaceholderNoKYCTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525201");
+        generalTab.navigateGeneralTab("vantage-525201");
         generalTab.noAppliedIsVisible();
     }
 
@@ -172,7 +172,7 @@ public class KYCTest extends TestBaseWeb {
     public void userHaveNumberOfAttemptTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.checkKycAttemptsGeneral("Proof of identity", "2");
         generalTab.checkKycAttemptsGeneral("Proof of address", "2");
     }
@@ -185,7 +185,7 @@ public class KYCTest extends TestBaseWeb {
     public void clientHaveAddressInfoGeneralTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525204");
+        generalTab.navigateGeneralTab("vantage-525204");
         generalTab.poaDetailsGeneral("USA, DC, Washington", "321 Main St, 654321");
     }
 
@@ -197,7 +197,7 @@ public class KYCTest extends TestBaseWeb {
     public void clientHavePlaceholderPOATest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525202");
+        generalTab.navigateGeneralTab("vantage-525202");
         generalTab.poaPlaceholderIsVisible();
     }
 
@@ -209,7 +209,7 @@ public class KYCTest extends TestBaseWeb {
     public void clientHavePlaceholderPOI() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab("infinox-525203");
+        generalTab.navigateGeneralTab("vantage-525203");
         generalTab.poiPlaceholderIsVisible();
     }
 
@@ -242,7 +242,6 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file = getKycFile(pofClient);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
@@ -271,7 +270,6 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file = getKycFile(pofClient);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
@@ -300,7 +298,6 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file = getKycFile(pofClient);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
@@ -327,7 +324,6 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file = getKycFile(pofClient);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
@@ -354,7 +350,6 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file = getKycFile(pofClient);
         file.proofId = idProofObject.getId();
-        file.fileName = FILE_KYC_POF_1_NAME;
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
@@ -387,13 +382,11 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file1 = getKycFile(pofClient);
         file1.proofId = idProofObject1.getId();
-        file1.fileName = FILE_KYC_POF_1_NAME;
         file1.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
 
         KycFilesTableEntry file2 = getKycFile(pofClient);
         file2.proofId = idProofObject2.getId();
-        file2.fileName = FILE_KYC_POF_2_NAME;
         file2.fileTypeId = 27;
 
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
@@ -436,13 +429,11 @@ public class KYCTest extends TestBaseWeb {
 
         KycFilesTableEntry file1 = getKycFile(pofClient);
         file1.proofId = idProofObject1.getId();
-        file1.fileName = FILE_KYC_POF_1_NAME;
         file1.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);
 
         KycFilesTableEntry file2 = getKycFile(pofClient);
         file2.proofId = idProofObject2.getId();
-        file2.fileName = FILE_KYC_POF_2_NAME;
         file2.fileTypeId = 27;
 
         insertObjectToDb(KYC_FILES_TABLE_NAME, file1);

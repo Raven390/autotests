@@ -546,7 +546,8 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.resolveNoFrauds("test" + timestamp);
-        checkUserNoFraudBo(resolveClient.getUcid());
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(WHERE_STATEMENT, resolveClient.getUcid()), AbuserFraudType.class);
+        assertThat("Verify there are no frauds", frauds, is(empty()));
     }
 
     @Test
