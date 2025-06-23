@@ -57,6 +57,10 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+        crmTbUser.email = "";
+        crmTbUser.phoneNum = "";
+        ibCrmTbUser.email = "";
+        ibCrmTbUser.phoneNum = "";
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, ibCrmTbUser));
         insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
         insertObjectToDb(CRM_TB_USER_EXTENDS_TABLE_NAME, crmTbUserExtends);

@@ -36,10 +36,13 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
+    private static final String CURRENCY_USD = "USD";
     private static CrmTbAccountObject account1;
     private static CrmTbAccountObject account2;
     private static MtAccountObject mtAccount1;
     private static MtAccountObject mtAccount2;
+    private static Mt5DealsCoercedObject trade1;
+    private static Mt5DealsCoercedObject trade2;
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
@@ -51,11 +54,11 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
         account2.accountStatus = "Inactive";
-        Mt5DealsCoercedObject trade1 = generateTradeByClient(client);
+        trade1 = generateTradeByClient(client);
         trade1.setProfitUsd(22.2);
         trade1.setStorageUsd(0d);
         trade1.setCommissionUsd(0.0);
-        Mt5DealsCoercedObject trade2 = generateTradeByClient(client);
+        trade2 = generateTradeByClient(client);
         trade2.setAccount(account2.account);
         trade2.setServerId(account2.serverIdSt);
         trade2.setProfitUsd(22.2);
@@ -97,7 +100,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account1.account), equalTo(account1.accountStatus));
         assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account1.account), equalTo(account1.platform));
         assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account1.account), equalTo(account1.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account1.account), equalTo(String.format("%s %s", account1.pnl, account1.currency)));
+        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account1.account), equalTo(String.format("%s %s", trade1.getProfitUsd(), CURRENCY_USD)));
         assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account1.account), equalTo(String.format("%s %s", account1.equity, account1.currency)));
         assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account1.account), equalTo(String.format("%s %s", account1.credit, account1.currency)));
         assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account1.account), equalTo(account1.leverage.toString()));
@@ -111,7 +114,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account2.account), equalTo(account2.accountStatus));
         assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account2.account), equalTo(account2.platform));
         assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account2.account), equalTo(account2.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account2.account), equalTo(String.format("%s %s", account2.pnl, account2.currency)));
+        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account2.account), equalTo(String.format("%s %s", trade2.getProfitUsd(), CURRENCY_USD)));
         assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account2.account), equalTo(String.format("%s %s", account2.equity, account2.currency)));
         assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account2.account), equalTo(String.format("%s %s", account2.credit, account2.currency)));
         assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account2.account), equalTo(account2.leverage.toString()));

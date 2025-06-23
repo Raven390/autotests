@@ -25,7 +25,7 @@ public class GeneralSearchElements extends AbstractPage {
     private final Locator errorText2;
     private final Locator errorScreen;
 
-    private static final String SIDEBAR_BUTTON_LOCATOR = "*[contains(@class, 'v-sidebar-button')]";
+    private static final String SIDEBAR_MENU = "//div[@class='v-sidebar__menu']";
     private static final String SEARCH_OVERLAY_LOCATOR = "*[@class='v-search-overlay']";
     private static final String SEARCH_CLIENT_CARD_LOCATOR = "*[@class='v-search-client-card']";
     private static final String SEARCH_CLIENT_CARD_COUNTRY_LOCATOR = "*[contains(@class, 'v-search-client-card__country')]";
@@ -35,7 +35,7 @@ public class GeneralSearchElements extends AbstractPage {
 
     public GeneralSearchElements(Page page) {
         super(page);
-        searchButton = page.locator("//" + SIDEBAR_BUTTON_LOCATOR).nth(4);
+        searchButton = page.locator(SIDEBAR_MENU).locator("//div/div[@class='v-sidebar-button']");
         searchInput = page.locator("//" + SEARCH_OVERLAY_LOCATOR + "//input");
         errorScreen = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR);
         errorText1 = page.locator("//" + SEARCH_ERROR_CONTAINER_LOCATOR + "//" + SUBHEADER_2_TEXT);
