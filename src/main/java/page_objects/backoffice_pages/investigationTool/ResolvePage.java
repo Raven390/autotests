@@ -80,7 +80,7 @@ public class ResolvePage extends AbstractPage {
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.completeInvestigationButton = page.locator(".g-button__text").getByText("Complete investigation");
         this.resolutionForm = page.locator("[data-qa='drawer_body']").getByText("Resolution");
-        this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Report fraud");
+        this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Fraud management");
         this.commentInput = page.locator(".v-drawer-section-layout textarea");
         this.withdrawalList = page.locator(".v-withdrawals-list");
         this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
