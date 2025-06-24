@@ -155,7 +155,7 @@ public class GetConnectionsResponseFactory {
 
     public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessEmailInitial(ClientHelper user) {
         return new GetConnectionsResponse(
-                null, user.getUcid(), 1d, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_EMAIL_ADDRESS, user.getEmail(), user.getEmail(), CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 1d, 1d, 1d
+                null, user.getUcid(), 0.5, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_EMAIL_ADDRESS, user.getEmail(), user.getEmail(), CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 0.5, 0.5, 0.5
         );
     }
 
@@ -163,7 +163,7 @@ public class GetConnectionsResponseFactory {
             ClientHelper userTo) {
         return new GetConnectionsResponse(
                 userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
-                        CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1d, 0.5
+                        CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 0.5, 1.0, 0.5
         );
     }
 

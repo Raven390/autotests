@@ -14,6 +14,7 @@ import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
 import business_objects.db.clickhouse.web_session.WebSessionTableEntry;
 import helpers.data.ClientHelper;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -29,7 +30,7 @@ import static business_objects.api.connection_search_api.get_connections.GetConn
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearchRandomized;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
 import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
@@ -43,6 +44,7 @@ import static helpers.database.CleanTableHelper.cleanConnectionsTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
@@ -105,7 +107,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static GetConnectionsResponse getConnectionsByAttributesWebSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessWebSessionIdLvl2(userFromWebSessionId, userToWebSessionId);
 
     // Objects to insert to attributes tables
-    static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearchRandomized(userFromDocument);
     static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
     static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp, true);
     static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userFromIp2, true);
@@ -195,7 +197,29 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length > 0, equalTo(true));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDocumentResponseSuccessInitial, getConnectionsByAttributesDocumentResponseSuccess));
+        Allure.step("Get connections with null as client from");
+        GetConnectionsResponse connection = Arrays.stream(responseBody).filter(connect -> connect.clientIdFrom == null).findFirst().orElse(null);
+        assertNotNull(connection);
+
+
+        GetConnectionsResponse.ConnectionDetail[] details = connection.connectionDetail;
+        //get connection detail documentType
+        GetConnectionsResponse.ConnectionDetail documentType = Arrays.stream(details).filter(connect -> "documentType".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(documentType);
+        assertEquals(documentTableEntry.accIdType, documentType.connectionAttributeValue);
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
+
+        Allure.step("Check value of document number in connection details");
+        GetConnectionsResponse.ConnectionDetail documentNumber = Arrays.stream(details).filter(connect -> "documentNumber".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(documentNumber);
+        assertEquals(documentTableEntry.accIdNum, documentNumber.connectionAttributeValue);
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
+
+        Allure.step("Check value of document nation code in connection details");
+        GetConnectionsResponse.ConnectionDetail natCode = Arrays.stream(details).filter(connect -> "documentCountryId".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(natCode);
+        assertEquals(documentTableEntry.nationalityId, Integer.valueOf(natCode.connectionAttributeValue));
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
     }
 
     @Test
@@ -217,7 +241,29 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
 
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesDocumentResponseSuccessInitial));
+        Allure.step("Get connections with null as client from");
+        GetConnectionsResponse connection = Arrays.stream(responseBody).filter(connect -> connect.clientIdFrom == null).findFirst().orElse(null);
+        assertNotNull(connection);
+
+
+        GetConnectionsResponse.ConnectionDetail[] details = connection.connectionDetail;
+        //get connection detail documentType
+        GetConnectionsResponse.ConnectionDetail documentType = Arrays.stream(details).filter(connect -> "documentType".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(documentType);
+        assertEquals(documentTableEntry.accIdType, documentType.connectionAttributeValue);
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
+
+        Allure.step("Check value of document number in connection details");
+        GetConnectionsResponse.ConnectionDetail documentNumber = Arrays.stream(details).filter(connect -> "documentNumber".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(documentNumber);
+        assertEquals(documentTableEntry.accIdNum, documentNumber.connectionAttributeValue);
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
+
+        Allure.step("Check value of document nation code in connection details");
+        GetConnectionsResponse.ConnectionDetail natCode = Arrays.stream(details).filter(connect -> "documentCountryId".equals(connect.connectionAttributeName)).findFirst().orElse(null);
+        assertNotNull(natCode);
+        assertEquals(documentTableEntry.nationalityId, Integer.valueOf(natCode.connectionAttributeValue));
+        assertEquals(userFromDocument.getUcid(), connection.clientIdTo);
     }
 
     @Test
@@ -365,7 +411,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreTo", 1);
+        queryParams.put("connectionScoreTo", 0.5);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
