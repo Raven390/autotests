@@ -2,6 +2,8 @@ package business_objects.db.clickhouse.email_table;
 
 import helpers.data.ClientHelper;
 
+import static utils.Utils.getCurrentTimestamp;
+
 
 public class EmailTableEntryFactory {
 
@@ -13,7 +15,7 @@ public class EmailTableEntryFactory {
 
     public static EmailTableEntry emailTableEntryForConnectionSearchFiltration(ClientHelper client) {
         return new EmailTableEntry(
-                client.getUcid(), "testfiltration@qatest.com"
+                client.getUcid(), "testfiltration" + getCurrentTimestamp() + "@qatest.com"
         );
     }
 
