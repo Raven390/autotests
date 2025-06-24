@@ -320,16 +320,16 @@ public class TradingSummaryVolumeActivityTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigate(client.getUcid());
+        tradingPage.enableViewAmount();
         Allure.step("filter 2 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
         paymentsPage.clickVolumeButtonTimeline();
-        paymentsPage.checkStileValueOfTimelineBar(2, "height: 33.3333%;");
-        paymentsPage.checkStileValueOfTimelineBar(3, "height: 100%;");
+        paymentsPage.checkStileValueOfTimelineBar(2, "height: 33.3333%; min-height: 2px;");
+        paymentsPage.checkStileValueOfTimelineBar(3, "height: 100%; min-height: 2px;");
         paymentsPage.clickActivityButtonTimeline();
-        paymentsPage.checkStileValueOfTimelineBar(2, "height: 100%;");
-        paymentsPage.checkStileValueOfTimelineBar(3, "height: 33.3333%;");
+        paymentsPage.checkStileValueOfTimelineBar(2, "height: 100%; min-height: 2px;");
+        paymentsPage.checkStileValueOfTimelineBar(3, "height: 33.3333%; min-height: 2px;");
     }
-
 
     @Test
     @Tag(TEAM_BACKOFFICE)

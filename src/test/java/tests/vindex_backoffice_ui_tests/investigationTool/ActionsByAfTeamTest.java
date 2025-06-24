@@ -68,9 +68,9 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
     @DisplayName("AF user can't report fraud")
     @AllureId("1325")
     @Feature("BMS-1453 Actions by AF team")
-    public void reportFraudTestHedging() throws Exception {
+    public void reportFraudTestHedging() {
         resolvePage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
+        keycloackPage.loginAsAFUser();
         investigationPage.navigateToClient(resolveClient.getUcid());
         resolvePage.cantOpenReportFraudForm();
     }
@@ -80,7 +80,7 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1327")
     @DisplayName("Restriction tab AF user can't set  restriction UI")
-    void setAccountRestrictionUITest() throws Exception {
+    void setAccountRestrictionUITest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAFUser();
         restrictionPage.navigate(resolveClient.getUcid());

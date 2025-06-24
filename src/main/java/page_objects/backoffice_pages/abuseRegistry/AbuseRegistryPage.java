@@ -145,7 +145,7 @@ public class AbuseRegistryPage extends AbstractPage {
 
     public void verifySuccessMessageUpload() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertTrue(successToast.textContent().contains("Request for adding clients to abuse registry is sent"));
+        assertTrue(successToast.textContent().contains("Selected actions are now being processed"));
     }
 
     public void verifySuccessMessageDelete() {

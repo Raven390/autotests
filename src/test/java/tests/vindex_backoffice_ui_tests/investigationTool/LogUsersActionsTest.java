@@ -122,7 +122,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
                 DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
-        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "KYC_DATA", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", "POA.jpg"));
+        UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "KYC_DATA", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME.substring(1)));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
     }
 

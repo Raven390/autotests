@@ -330,7 +330,7 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have general restriction in Mitigation DataBase");
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and id = " + restrictionId, ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientGeneralRestriction.class);
         ClientGeneralRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
         assertEquals(expectedStatus, restriction.getStatus());
@@ -339,7 +339,7 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId)
             throws Exception {
         Allure.step("check user have trading restriction in Mitigation DataBase");
-        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and id = " + restrictionId, ClientTradingRestriction.class);
+        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientTradingRestriction.class);
         ClientTradingRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
     }

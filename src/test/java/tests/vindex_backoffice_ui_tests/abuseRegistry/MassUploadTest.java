@@ -82,7 +82,7 @@ public class MassUploadTest extends TestBaseWeb {
 
         page.waitForTimeout(1000);
 
-        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, "ar.abuser_fraud_type", "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
         assertEquals(frauds.size(), 1);
         AbuserFraudType fraud = frauds.getFirst();
