@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.investigationTool;
+package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -13,7 +13,6 @@ import java.util.List;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
@@ -85,6 +84,5 @@ public class ConnectionSearchHideSensitiveDataTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", connectedClient.getUcid()));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", client.getUcid()));
-        closeAlert(client.getUcid());
     }
 }

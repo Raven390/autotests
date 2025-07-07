@@ -123,7 +123,7 @@ public class Constants {
     public static final String MT_TRADES_TABLE_NAME = "vindex_test.mt__tb_trade";
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "vindex_test.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "vindex_test.mt___mt4_trades";
-    public static final String CONNECTIONS_TABLE_NAME = "vindex_test.connection_table";
+    public static final String CONNECTIONS_TABLE_NAME = "data_science_test.connection_table";
     public static final String DOCUMENT_TABLE_NAME = "vindex_test.document";
     public static final String DIGITAL_ID_TABLE_NAME = "vindex_test.digital_id";
     public static final String DEVICE_ID_TABLE_NAME = "vindex_test.device_id";
@@ -294,4 +294,7 @@ public class Constants {
     public static final String COMMENT_ADDED_TYPE = "COMMENT_ADDED";
     public static final String VINDEX_BO_SYSTEM = "Vindex BO";
     public static final String APPLIED_STATUS = "APPLIED";
+    public static final String ENCODED_EMAIL = "paRP/scRJ89KbGWkZOrJVF/FbLaXR1jx";
+    public static final String ENCODED_PHONE = "OlIoGyRiWyMgmlKyQZkW6w==";
+    public static final String STATUS_NEW = "new";
 }

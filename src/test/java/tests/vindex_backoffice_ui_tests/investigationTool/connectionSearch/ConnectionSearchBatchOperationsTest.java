@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.investigationTool;
+package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.db.audit_service_db.Event;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
