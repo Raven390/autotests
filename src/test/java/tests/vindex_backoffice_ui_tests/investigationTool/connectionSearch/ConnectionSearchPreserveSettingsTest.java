@@ -1,11 +1,8 @@
-package tests.vindex_backoffice_ui_tests.investigationTool;
+package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -14,9 +11,7 @@ import java.util.List;
 
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -25,8 +20,6 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient = getRandomVantageClientAllFields();
 
@@ -38,8 +31,6 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
         ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(client, connectedClient);
         insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry);
         waitForConnectionSearchToUpdate(client);
-        RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
-        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -89,6 +80,5 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
     public static void teardown() throws Exception {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", client.getUcid()));
-        closeAlert(client.getUcid());
     }
 }

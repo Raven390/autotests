@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.investigationTool;
+package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -13,6 +13,7 @@ import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -35,7 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class ConnectionSearchTest extends TestBaseWeb {
+@Tag(TAG_MANUAL)
+@Disabled
+@Muted
+public class ConnectionSearchOldTest extends TestBaseWeb {
 
 
     DecimalFormat dfd = new DecimalFormat("#####,###.##");
@@ -55,9 +59,6 @@ public class ConnectionSearchTest extends TestBaseWeb {
     static ClientHelper client13 = new ClientHelper(42_424_213, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_213_001, 42);
     static ClientHelper client14 = new ClientHelper(42_424_214, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_214_001, 42);
     static ClientHelper client15 = new ClientHelper(42_424_215, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_215_001, 42);
-
-    CrmTbUserObject client13DB;
-    CrmTbUserObject client6DB;
 
     @BeforeAll
     static void setup() throws Exception {
