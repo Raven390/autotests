@@ -24,6 +24,12 @@ public class TradeEvent {
     @JsonProperty("volume")
     public double volume;
 
+    @JsonProperty("openTime")
+    public String openTime;
+
+    @JsonProperty("openTimeUtc")
+    public String openTimeUtc;
+
     @JsonProperty("closeTime")
     public String closeTime;
 

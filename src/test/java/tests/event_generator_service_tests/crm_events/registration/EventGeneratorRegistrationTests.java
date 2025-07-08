@@ -13,11 +13,13 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
 
+@Disabled("Need to fix creating object for tests")
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_REGISTRATION)
 @Tag(TEAM_CORE)

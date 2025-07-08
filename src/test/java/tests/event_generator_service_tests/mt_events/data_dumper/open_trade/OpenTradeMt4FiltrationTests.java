@@ -7,7 +7,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
 
-@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_OPEN_TRADE_EVENT)
 @Tag(TEAM_CORE)
@@ -40,7 +38,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1215")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 0, state = 0")
+    @DisplayName("MT4 open trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 0, state = 0")
     void filtrationMt4CloseTradeEventTest1() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -67,7 +65,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1216")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 0")
+    @DisplayName("MT4 open trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 0")
     void filtrationMt4CloseTradeEventTest2() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -103,7 +101,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1217")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 1, mode = 1, open_time = 0, cmd = 0, state = 0")
+    @DisplayName("MT4 open trade event passing filtering. msg_type = ‘trade_record’, operation = 1, mode = 1, open_time = 0, cmd = 0, state = 0")
     void filtrationMt4CloseTradeEventTest3() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -131,7 +129,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1218")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 1, mode = 1, open_time = 0, cmd = 0, state = 0")
+    @DisplayName("MT4 open trade event passing filtering. msg_type = ‘trade_record’, operation = 1, mode = 1, open_time = 0, cmd = 0, state = 0")
     void filtrationMt4CloseTradeEventTest4() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -162,7 +160,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1225")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record1’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 0")
+    @DisplayName("MT4 open trade event not passing filtering. msg_type = ‘trade_record1’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 0")
     void filtrationMt4CloseTradeEventTest5() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -189,7 +187,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1226")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 5, mode = 0, open_time = 0, cmd = 1, state = 0")
+    @DisplayName("MT4 open trade event not passing filtering. msg_type = ‘trade_record’, operation = 5, mode = 0, open_time = 0, cmd = 1, state = 0")
     void filtrationMt4CloseTradeEventTest6() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -216,7 +214,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1227")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 5, open_time = 0, cmd = 1, state = 0")
+    @DisplayName("MT4 open trade event not passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 5, open_time = 0, cmd = 1, state = 0")
     void filtrationMt4CloseTradeEventTest7() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -243,7 +241,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
     @Test
     @AllureId("1228")
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 1, cmd = 1, state = 0")
+    @DisplayName("MT4 open trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 1, cmd = 1, state = 0")
     void filtrationMt4CloseTradeEventTest8() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -261,15 +259,15 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
                 KAFKA_TOPIC_MT_EVENTS, String.valueOf(openTradeMt4.getPayload().getLogin()));
 
-        Allure.step("Verify that no matched results were found");
+        Allure.step("Verify that matched results were found");
         assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(false));
+                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(true));
 
     }
 
     @Test
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 2, state = 0")
+    @DisplayName("MT4 open trade event not passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 2, state = 0")
     void filtrationMt4CloseTradeEventTest9() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
@@ -295,7 +293,7 @@ class OpenTradeMt4FiltrationTests extends TestBaseKafka {
 
     @Test
     @Tag("CSV-1280")
-    @DisplayName("MT4 close trade event passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 1")
+    @DisplayName("MT4 open trade event not passing filtering. msg_type = ‘trade_record’, operation = 0, mode = 0, open_time = 0, cmd = 1, state = 1")
     void filtrationMt4CloseTradeEventTest10() throws JsonProcessingException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();

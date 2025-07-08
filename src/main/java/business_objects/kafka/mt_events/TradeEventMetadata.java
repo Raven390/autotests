@@ -8,6 +8,9 @@ public class TradeEventMetadata {
     @JsonProperty("created")
     public String created;
 
+    @JsonProperty("platform")
+    public String platform;
+
     public TradeEventMetadata() {
     }
 
