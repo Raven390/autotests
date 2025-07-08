@@ -457,7 +457,7 @@ public class TradeEventMt5 {
             this.gateway = gateway;
         }
 
-        public int getLeverage() {
+        public Integer getLeverage() {
             return leverage;
         }
 

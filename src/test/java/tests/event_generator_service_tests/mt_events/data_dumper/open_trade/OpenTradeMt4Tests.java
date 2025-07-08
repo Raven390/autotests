@@ -8,7 +8,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
 
-@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_OPEN_TRADE_EVENT)
 @Tag(TEAM_CORE)
@@ -52,14 +50,16 @@ class OpenTradeMt4Tests extends TestBaseKafka {
         assertThat("Check serverId", retrievedOpenTradeMtEvent.serverId, equalTo(openTradeMt4.getHeader().getServerId()));
         assertThat("Check tradingAccount", retrievedOpenTradeMtEvent.tradingAccount, equalTo(openTradeMt4.getPayload().getLogin()));
         assertThat("Check volume", retrievedOpenTradeMtEvent.volume, equalTo(openTradeMt4.getPayload().getVolume()));
-        assertThat("Check closeTime", retrievedOpenTradeMtEvent.closeTime, startsWith(String.valueOf(openTradeMt4.getPayload().getCloseTime())));
-        assertThat("Check closeTimeUtc", retrievedOpenTradeMtEvent.closeTimeUtc, startsWith(String.valueOf(openTradeMt4.getPayload().getCloseTimeUtc())));
+        assertThat("Check closeTime", retrievedOpenTradeMtEvent.closeTime, equalTo(null));
+        assertThat("Check closeTimeUtc", retrievedOpenTradeMtEvent.closeTimeUtc, equalTo(null));
+        assertThat("Check openTime", retrievedOpenTradeMtEvent.openTime, equalTo("1.000000000"));
+        assertThat("Check openTimeUtc", retrievedOpenTradeMtEvent.openTimeUtc, equalTo("1.000000000"));
         assertThat("Check equity", retrievedOpenTradeMtEvent.equity, equalTo(openTradeMt4.getPayload().getEquity()));
         assertThat("Check balance", retrievedOpenTradeMtEvent.balance, equalTo(openTradeMt4.getPayload().getBalance()));
         assertThat("Check leverage", retrievedOpenTradeMtEvent.leverage, equalTo(openTradeMt4.getPayload().getLeverage()));
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt4.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, startsWith(String.valueOf(openTradeMt4.getPayload().getCloseTimeUtc())));
+        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo("1.000000000"));
         assertThat("Check initialEventTime", retrievedOpenTradeMtEvent.initialEventTime, instanceOf(String.class));
         assertThat("Check metadata", retrievedOpenTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));

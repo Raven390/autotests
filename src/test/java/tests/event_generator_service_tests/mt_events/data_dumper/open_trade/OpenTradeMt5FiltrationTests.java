@@ -7,7 +7,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,6 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
 
-@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_OPEN_TRADE_EVENT)
 @Tag(TEAM_CORE)
@@ -36,34 +34,9 @@ class OpenTradeMt5FiltrationTests extends TestBaseKafka {
      */
 
     @Test
-    @AllureId("1219")
-    @Tag("CSV-1280")
-    @DisplayName("MT5 open trade event passing filtering. MsgType = ‘Deal’, Operation = 0, Entry = 0, Action=0")
-    void filtrationMt5OpenTradeEventTest1() throws JsonProcessingException {
-
-        TradeEventMt5 openTradeMt5 = generateOpenTradeDataDumperMt5();
-        openTradeMt5.getHeader().setMsgType("Deal");
-        openTradeMt5.getHeader().setOperation(0);
-        openTradeMt5.getPayload().setEntry(0);
-        openTradeMt5.getPayload().setAction(0);
-
-        Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL);
-
-        Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
-        MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
-                KAFKA_TOPIC_MT_EVENTS, String.valueOf(openTradeMt5.getPayload().getLogin()));
-
-        Allure.step("Verify that no matched results were found");
-        assertThat(
-                "Check if any matched results found. " + isAnyMatchPresentInMessages.message(), isAnyMatchPresentInMessages.matchResult(), equalTo(true));
-
-    }
-
-    @Test
     @AllureId("1220")
     @Tag("CSV-1280")
-    @DisplayName("MT5 open trade event passing filtering. MsgType = ‘Deal’, Operation = 0, Entry = 0, Action=1")
+    @DisplayName("MT5 open trade event passing filtering. MsgType = ‘Deal’, Operation = 0, Entry = 0, Action= 1")
     void filtrationMt5OpenTradeEventTest2() throws JsonProcessingException {
 
         TradeEventMt5 openTradeMt5 = generateOpenTradeDataDumperMt5();

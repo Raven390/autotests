@@ -8,6 +8,9 @@ public class CrmEventMetadata {
     @JsonProperty("created")
     public String created;
 
+    @JsonProperty("platform")
+    public String platform;
+
     public CrmEventMetadata() {
     }
 
@@ -17,18 +20,17 @@ public class CrmEventMetadata {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        CrmEventMetadata that = (CrmEventMetadata) o;
-        return Objects.equals(created, that.created);
+        if (!(o instanceof CrmEventMetadata that)) return false;
+        return Objects.equals(created, that.created) && Objects.equals(platform, that.platform);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(created);
+        return Objects.hash(created, platform);
     }
 
     @Override
     public String toString() {
-        return "RegistrationEventMetadata{" + "created='" + created + '\'' + '}';
+        return "CrmEventMetadata{" + "created='" + created + '\'' + ", platform='" + platform + '\'' + '}';
     }
 }
