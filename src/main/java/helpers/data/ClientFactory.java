@@ -26,6 +26,12 @@ public class ClientFactory {
         return client;
     }
 
+    public static ClientHelper getRandomBybitClient() {
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.BYBIT, getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50));
+        client.setRegulator(Regulator.VFSC);
+        return client;
+    }
+
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
