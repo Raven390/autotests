@@ -1,6 +1,7 @@
 package tests.mirror_trading_score_service_tests;
 
-import business_objects.db.data_science.mirror_data_with_stat.MirrorDataWithStat;
+import business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStore;
+import business_objects.db.data_science.feature_store_service.FeatureStoreService;
 import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
@@ -14,8 +15,9 @@ import tests.TestBaseApi;
 import java.util.List;
 
 import static business_objects.api.mirror_trading_score_service.MirrorTradingScoreRequest.getMirrorTradingScore;
-import static business_objects.db.data_science.mirror_data_with_stat.MirrorDataWithStatFactory.getMirrorDataWithStatObject;
-import static business_objects.db.data_science.mirror_data_with_stat.MirrorDataWithStatFactory.getMirrorDataWithStatObject1;
+import static business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStoreFactory.*;
+import static business_objects.db.data_science.feature_store_service.FeatureStoreServiceFactory.*;
+import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.*;
 import static helpers.database.MirrorScoreHelper.cleanUserMirrorScoreDataDb;
@@ -28,14 +30,15 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_MIRROR_TRADING_SCORE_API_TESTS)
-public class GetMirrorTradingScoreTests extends TestBaseApi {
+class GetMirrorTradingScoreTests extends TestBaseApi {
 
     static ClientHelper client;
-
+    static ClientHelper client2;
 
     @BeforeAll
     static void setupData() {
         client = getRandomVantageClient();
+        client2 = getRandomBybitClient();
     }
 
     @AfterAll
@@ -51,20 +54,44 @@ public class GetMirrorTradingScoreTests extends TestBaseApi {
 
         Allure.step("setup DB data");
         cleanUserMirrorScoreDataDb(client.getUcid());
-        MirrorDataWithStat source = getMirrorDataWithStatObject(client);
-        MirrorDataWithStat source1 = getMirrorDataWithStatObject1(client);
+        FeatureStoreService source4 = getFeatureStoreServiceDepositObject(client);
 
-        insertObjectsToDb(DATA_SCIENCE_MIRROR_DATA_WITH_STAT_TABLE_NAME, List.of(source, source1));
+        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source4));
 
+        // Add wait for service to process the data
+        Thread.sleep(10_000);
 
         Allure.step("send API request for mirror score data");
         Response response = getMirrorTradingScore(client);
         assertThat(response.code(), is(200));
-
         Allure.step("Validate Data in response");
         UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
-        assertThat("Assert that ModelScore is match expected", mappedResponse.getUcidScore(), is(0.5));
-        assertThat("Assert that ModelScore is match expected", mappedResponse.getModelScore(), is(0.998_024));
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.889_995_75));
+        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
+    }
+
+    @Test
+    @AllureId("1363")
+    @DisplayName("Get mirror score data for bybit user API")
+    void getMirrorScoreTest2() throws Exception {
+
+        Allure.step("setup DB data");
+        cleanUserMirrorScoreDataDb(client2.getUcid());
+
+        // Create BybitFeatureStore objects using the factory methods
+        BybitFeatureStore source3 = getBybitFeatureStoreWithdrawalObject(client2);
+        insertObjectsToDb(DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME, List.of(source3));
+
+        // Add wait for service to process the data
+        Thread.sleep(10_000);
+
+        Allure.step("send API request for mirror score data");
+        Response response = getMirrorTradingScore(client2);
+        assertThat(response.code(), is(200));
+        Allure.step("Validate Data in response");
+        UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.885_080_2));
+        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
     }
 
 }

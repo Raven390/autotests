@@ -14,7 +14,7 @@ public class MirrorScoreHelper {
     public static void cleanUserMirrorScoreDataDb(String ucid) throws Exception {
         Allure.step("delete user's mirror score data from DB");
 
-        deleteEntryFromDb(DATA_SCIENCE_MIRROR_DATA_WITH_STAT_TABLE_NAME, "ucid = '" + ucid + "'");
+        deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, "ucid = '" + ucid + "'");
         logger.info("source mirror score table is cleared");
         deleteEntryFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, "ucid = '" + ucid + "'");
         logger.info("result mirror score table is cleared");
