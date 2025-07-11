@@ -184,4 +184,9 @@ public class GetLexisNexisResponse {
     @JsonProperty("vpnScore")
     public int vpnScore;
 
+    @JsonProperty("fuzzyDeviceId")
+    public int fuzzyDeviceId;
+
+    @JsonProperty("browserStringHash")
+    public int browserStringHash;
 }

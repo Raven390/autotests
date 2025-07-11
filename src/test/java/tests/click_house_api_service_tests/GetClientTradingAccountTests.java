@@ -59,6 +59,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
         assertThat("Check list data", mappedResponse, containsInAnyOrder(response1, response2));
     }
 
+    @Disabled("Covered in clickhouse-api repoe")
     @Test
     @DisplayName("Clickhouse Api. Get client trading accounts wrong ucid (400)")
     @AllureId("459")
