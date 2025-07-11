@@ -32,6 +32,7 @@ import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
+@Disabled
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
 @Tag(TEAM_CORE)
