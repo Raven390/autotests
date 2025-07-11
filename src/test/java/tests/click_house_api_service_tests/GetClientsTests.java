@@ -10,6 +10,7 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import okhttp3.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,7 @@ import static utils.Constants.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetClientsTests extends TestBaseApi {
 
+    @Disabled("covered in clickhouse api repo")
     @Test
     @DisplayName("Clickhouse Api. Get client by trading account & server ID")
     @AllureId("200")

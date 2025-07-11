@@ -5,10 +5,7 @@ import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import okhttp3.Response;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
@@ -47,6 +44,7 @@ class GetLexisNexisTests extends TestBaseApi {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
+    @Disabled("covered in clickhouse api repo")
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis success response(200)")
     @AllureId("141")
@@ -78,8 +76,6 @@ class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response eventDateTime", lexisNexisResponse.eventDatetime, is("1971-01-01T00:00:00Z"));
         assertThat("Check response eventId", lexisNexisResponse.eventId, is(123));
         assertThat("Check response proxyIp", lexisNexisResponse.proxyIp, is("127.0.0.1"));
-        //assertThat("Check response proxyIpActivities", Arrays.asList(lexisNexisResponse.proxyIpActivities), is(List.of("proxyIpActivities")));
-        //assertThat("Check response proxyIpAttributes", Arrays.asList(lexisNexisResponse.proxyIpAttributes), is(Arrays.asList("String_1", "String_2")));
         assertThat("Check response proxyIpCity", lexisNexisResponse.proxyIpCity, is("proxyIpCity"));
         assertThat("Check response proxyIpConnectionType", lexisNexisResponse.proxyIpConnectionType, is("proxyIpConnection"));
         assertThat("Check response proxyIpFirstSeen", lexisNexisResponse.proxyIpFirstSeen, is("1972-01-01"));
@@ -102,7 +98,6 @@ class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response proxyType", lexisNexisResponse.proxyType, is("proxyType"));
         assertThat("Check response trueIp", lexisNexisResponse.trueIp, is("192.168.0.1"));
         assertThat("Check response trueIpActivities", lexisNexisResponse.trueIpActivities, is("trueIpActivities"));
-        //assertThat("Check response trueIpAttributes", Arrays.asList(lexisNexisResponse.trueIpAttributes), is(Arrays.asList("String_1", "String_2")));
         assertThat("Check response proxyIpCity", lexisNexisResponse.proxyIpCity, is("proxyIpCity"));
         assertThat("Check response trueIpCity", lexisNexisResponse.trueIpCity, is("trueIpCity"));
         assertThat("Check response trueIpCountryConfidence", lexisNexisResponse.trueIpCountryConfidence, is(4));
@@ -120,6 +115,7 @@ class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response trueIpWorstScore", lexisNexisResponse.trueIpWorstScore, is(1));
         assertThat("Check response trueIpv6", lexisNexisResponse.trueIpv6, is("1"));
         assertThat("Check response vpnScore", lexisNexisResponse.vpnScore, is(1));
+        assertThat("Check response browserStringHash", lexisNexisResponse.browserStringHash, is(1));
     }
 
     @Test
