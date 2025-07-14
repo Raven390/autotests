@@ -3,6 +3,7 @@ package tests.click_house_api_service_tests;
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
 import io.qameta.allure.AllureId;
@@ -16,7 +17,10 @@ import java.io.IOException;
 import java.util.List;
 
 import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesRequest.getAbuseTypes;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.BoHelper.deleteUserAR;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,19 +39,31 @@ class GetAbuseTypesTests extends TestBaseApi {
     private static ClientFraudTypes fraud1;
     private static ClientFraudTypes fraud2;
     private static ClientFraudTypes fraud3;
+    static ClientHelper client = getRandomVantageClient();
+    static ClientHelper client2 = getRandomVantageClient();
 
     @BeforeAll
-    static void setupData() {
-        ClientHelper client = getRandomVantageClient();
+    static void setupData() throws IOException, InterruptedException {
+        CrmTbUserObject user = generateUserByClient(client);
+        CrmTbUserObject user2 = generateUserByClient(client2);
+
+        insertObjectToDb(CRM_USER_TABLE_NAME, user);
+        insertObjectToDb(CRM_USER_TABLE_NAME, user2);
+        Thread.sleep(30_000);
+
         fraud1 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         fraud2 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        fraud3 = new ClientFraudTypes(getRandomVantageClient().getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
-        insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraud1, fraud2, fraud3));
+        fraud3 = new ClientFraudTypes(client2.getUcid(), FraudTypeOld.LOSS_VOUCHER_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+        addFraudsForClient(fraud1, fraud2, fraud3);
     }
 
     @AfterAll
     static void deleteData() throws Exception {
         cleanFraudTypeTableByClient(fraud1.getUcid(), fraud2.getUcid(), fraud3.getUcid());
+        deleteUserAR(client.getUcid());
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteUserAR(client2.getUcid());
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
     }
 
     @Test

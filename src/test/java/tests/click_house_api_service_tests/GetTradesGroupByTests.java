@@ -335,7 +335,7 @@ class GetTradesGroupByTests extends TestBaseApi {
 
         assert response.body() != null;
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        assertThat("Assert that code is 200", response.code(), is(400));
+        assertThat("Assert that code is 400", response.code(), is(400));
 
         assertThat("Assert status", mappedResponse.getStatus(), equalTo(400));
         assertThat("Assert error", mappedResponse.getError(), equalTo("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));

@@ -209,6 +209,7 @@ public class Constants {
     public static final String CONNECTION_ATTRIBUTE_NAME_DIGITAL = "digital";
     public static final String CONNECTION_ATTRIBUTE_NAME_DEVICE = "device";
     public static final String CONNECTION_ATTRIBUTE_NAME_PHONE = "phone";
+    public static final String CONNECTION_ATTRIBUTE_NAME_PHONE_NUMBER = "phoneNumber";
     public static final String CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS = "ipAddress";
     public static final String CONNECTION_ATTRIBUTE_NAME_IP = "ip";
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_TYPE = "documentType";
