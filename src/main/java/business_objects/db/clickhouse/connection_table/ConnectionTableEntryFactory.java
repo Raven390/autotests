@@ -1,6 +1,7 @@
 package business_objects.db.clickhouse.connection_table;
 
 import helpers.data.ClientHelper;
+import helpers.data.enums.ConnectionAttributes;
 
 import java.util.List;
 
@@ -8,6 +9,14 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class ConnectionTableEntryFactory {
+
+    public static ConnectionTableEntry getConnectionTableEntry(ClientHelper userFrom, ClientHelper userTo,
+            ConnectionAttributes connectionAttrName) {
+        return new ConnectionTableEntry(
+                userFrom.getUcid(), userTo.getUcid(), CONNECTION_TYPE_SAME_PERSON, 1d, List.of(
+                        new ConnectionTableEntry.ConnectionInfo(connectionAttrName.toString(), CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat(), STATUS_NEW, 0
+        );
+    }
 
     public static ConnectionTableEntry getConnectionTableEntry(ClientHelper userFrom, ClientHelper userTo) {
         return new ConnectionTableEntry(

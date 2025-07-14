@@ -14,6 +14,7 @@ import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
 import business_objects.db.clickhouse.web_session.WebSessionTableEntry;
 import helpers.data.ClientHelper;
+import helpers.data.enums.ConnectionAttributes;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -40,6 +41,7 @@ import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneT
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.ConnectionAttributes.*;
 import static helpers.database.CleanTableHelper.cleanConnectionsTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -97,9 +99,9 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     final GetConnectionsResponse[] getConnectionsByAttributesFiltrationResponseSuccess = getConnectionsForFiltrationByParams(userFromFiltration, userToFiltration1, userToFiltration2);
     final GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDeviceIdInitial(userFromDeviceId);
     static GetConnectionsResponse getConnectionsByAttributesDeviceIdResponseSuccess = getConnectionsByAttributesResponseSuccessDeviceIdLvl2(userFromDeviceId, userToDeviceId);
-    final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
+    static final GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDigitalIdInitial(userFromDigitalId);
     static GetConnectionsResponse getConnectionsByAttributesDigitalIdResponseSuccess = getConnectionsByAttributesResponseSuccessDigitalIdLvl2(userFromDigitalId, userToDigitalId);
-    final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
+    static final GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccessInitial = getConnectionsByAttributesResponseSuccessNameBirthInitial(userFromNameBirth);
     static GetConnectionsResponse getConnectionsByAttributesNameBirthResponseSuccess = getConnectionsByAttributesResponseSuccessNameBirthLvl2(userFromNameBirth, userToNameBirth);
     final GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccessInitial = getConnectionsByAttributesResponseSuccessSessionIdInitial(userFromSessionId);
     static GetConnectionsResponse getConnectionsByAttributesSessionIdResponseSuccess = getConnectionsByAttributesResponseSuccessSessionIdLvl2(userFromSessionId, userToSessionId);
@@ -123,25 +125,30 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
 
     // Objects to insert to connections table
-    static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument);
-    static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail);
-    static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp);
+    static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument, DOCUMENT);
+    static final ConnectionTableEntry connectionTableEntryByEmail = getConnectionTableEntry(userFromEmail, userToEmail, EMAIL);
+    static final ConnectionTableEntry connectionTableEntryByIp = getConnectionTableEntry(userFromIp, userToIp, IP);
     static final ConnectionTableEntry connectionTableEntryByIp2 = getConnectionTableEntry(userFromIp2, userToIp2, userFromIp2.getIpAddress());
-    static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFromIp2, userToIp3);
-    static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone);
-    static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout);
+    static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFromIp2, userToIp3, IP);
+    static final ConnectionTableEntry connectionTableEntryNotByIp3 = getConnectionTableEntry(userFromIp2, userToIp3, PAYOUT);
+    static final ConnectionTableEntry connectionTableEntryByPhone = getConnectionTableEntry(userFromPhone, userToPhone, PHONE);
+    static final ConnectionTableEntry connectionTableEntryByPayout = getConnectionTableEntry(userFromPayout, userToPayout, PAYOUT);
     static final ConnectionTableEntry connectionTableEntryForDepth1 = getConnectionTableEntry(userFromDepth, userToDepth1);
     static final ConnectionTableEntry connectionTableEntryForDepth2 = getConnectionTableEntryLvl2(userToDepth1, userToDepth2);
     static final ConnectionTableEntry connectionTableEntryFiltration1 = getConnectionTableEntry(userFromFiltration, userToFiltration1);
     static final ConnectionTableEntry connectionTableEntryFiltration2 = getConnectionTableEntryForFiltration(userToFiltration1, userToFiltration2);
-    static final ConnectionTableEntry connectionTableEntryByDeviceId = getConnectionTableEntry(userFromDeviceId, userToDeviceId);
-    static final ConnectionTableEntry connectionTableEntryByDigitalId = getConnectionTableEntry(userFromDigitalId, userToDigitalId);
-    static final ConnectionTableEntry connectionTableEntryByNameBirth = getConnectionTableEntry(userFromNameBirth, userToNameBirth);
-    static final ConnectionTableEntry connectionTableEntryBySessionId = getConnectionTableEntry(userFromSessionId, userToSessionId);
-    static final ConnectionTableEntry connectionTableEntryByWebSessionId = getConnectionTableEntry(userFromWebSessionId, userToWebSessionId);
+    static final ConnectionTableEntry connectionTableEntryByDeviceId = getConnectionTableEntry(userFromDeviceId, userToDeviceId, ConnectionAttributes.DEVICE);
+    static final ConnectionTableEntry connectionTableEntryByDigitalId = getConnectionTableEntry(userFromDigitalId, userToDigitalId, ConnectionAttributes.DIGITAL);
+    static final ConnectionTableEntry connectionTableEntryByNameBirth = getConnectionTableEntry(userFromNameBirth, userToNameBirth, NAME_BIRTH);
+    static final ConnectionTableEntry connectionTableEntryBySessionId = getConnectionTableEntry(userFromSessionId, userToSessionId, SESSION);
+    static final ConnectionTableEntry connectionTableEntryByWebSessionId = getConnectionTableEntry(userFromWebSessionId, userToWebSessionId, WEB_SESSION);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
+        getConnectionsByAttributesDigitalIdResponseSuccessInitial.connectionStrengthToInitial = 0.699_999_988_079_071;
+        getConnectionsByAttributesDigitalIdResponseSuccessInitial.connectionScoreToInitial = getConnectionsByAttributesDigitalIdResponseSuccessInitial.connectionStrengthToInitial;
+        getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionStrengthToInitial = 0.800_000_011_920_929;
+        getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionScoreToInitial = getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionStrengthToInitial;
         // Insert data to connections table
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByDocument, connectionTableEntryByEmail, connectionTableEntryByIp, connectionTableEntryByIp2, connectionTableEntryByIp3, connectionTableEntryByPhone, connectionTableEntryByPayout, connectionTableEntryForDepth1, connectionTableEntryForDepth2, connectionTableEntryFiltration1, connectionTableEntryFiltration2, connectionTableEntryByDeviceId, connectionTableEntryByDigitalId, connectionTableEntryByNameBirth, connectionTableEntryBySessionId, connectionTableEntryByWebSessionId));
         // Insert data to attributes tables
@@ -159,6 +166,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryFrom);
         insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryTo);
         waitForConnectionSearchToUpdate();
+        Thread.sleep(5000);
     }
 
     @AfterAll
@@ -282,7 +290,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesEmailResponseSuccessInitial, getConnectionsByAttributesEmailResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesEmailResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesEmailResponseSuccessInitial));
     }
 
     @Test
@@ -335,7 +344,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccessInitial));
     }
 
     @Test
@@ -354,7 +364,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccessInitial));
     }
 
     @Test
@@ -442,7 +453,24 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody[0], equalTo(getConnectionsByAttributesFiltrationResponseSuccess[0]));
+        GetConnectionsResponse connectNull = null;
+        for (GetConnectionsResponse resp : responseBody) {
+            connectNull = resp;
+            if (connectNull.clientIdFrom == null) {
+                break;
+            }
+        }
+
+        GetConnectionsResponse connectFrom = null;
+        for (GetConnectionsResponse resp : responseBody) {
+            connectFrom = resp;
+            if (connectFrom.clientIdFrom != null && !("null".equals(connectFrom.clientIdFrom)) && connectFrom.clientIdFrom.equals(userFromFiltration.getUcid())) {
+                break;
+            }
+        }
+
+        assertThat("Check the response body", connectNull, equalTo(getConnectionsByAttributesFiltrationResponseSuccess[0]));
+        assertThat("Check the response body", connectFrom, equalTo(getConnectionsByAttributesFiltrationResponseSuccess[1]));
     }
 
     @Test
@@ -587,7 +615,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDeviceIdResponseSuccess, getConnectionsByAttributesDeviceIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesDeviceIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesDeviceIdResponseSuccess));
     }
 
     @Test
@@ -607,7 +636,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesDigitalIdResponseSuccess, getConnectionsByAttributesDigitalIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesDigitalIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesDigitalIdResponseSuccess));
     }
 
     @Test
@@ -627,7 +657,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesNameBirthResponseSuccess, getConnectionsByAttributesNameBirthResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesNameBirthResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesNameBirthResponseSuccessInitial));
     }
 
     @Test
@@ -647,7 +678,8 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesSessionIdResponseSuccess, getConnectionsByAttributesSessionIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesSessionIdResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesSessionIdResponseSuccessInitial));
     }
 
     @Test
@@ -666,6 +698,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
 
-        assertThat("Check the response body", responseBody, arrayContainingInAnyOrder(getConnectionsByAttributesWebSessionIdResponseSuccess, getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesWebSessionIdResponseSuccess));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
     }
 }
