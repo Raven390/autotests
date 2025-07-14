@@ -134,6 +134,21 @@ sonar {
         property 'sonar.projectKey', 'antifraud-test-automation'
         property 'sonar.sources', 'src/main'
         property 'sonar.tests', 'src/test'
+        property 'sonar.java.binaries', 'build/classes/java/main,build/classes/java/test'
+    }
+}
+
+// Make sonar task depend on build task but skip tests
+tasks.named('sonar').configure {
+    dependsOn 'build'
+
+    // Skip tests when running sonar
+    gradle.taskGraph.whenReady { graph ->
+        if (graph.hasTask(tasks.named('sonar').get())) {
+            tasks.withType(Test).configureEach {
+                enabled = false
+            }
+        }
     }
 }
 
