@@ -497,9 +497,9 @@ public class Utils {
         for (ConnectionTableEntry connection : connections) {
             connection.datetime = getCurrentTimestampDbFormat();
             insertObjectToDb(CONNECTIONS_TABLE_NAME, connection);
-            waitForConnectionSearchToUpdate(connection.userFrom);
             Thread.sleep(1000);
         }
+        waitForConnectionSearchToUpdate(connections[connections.length - 1].userFrom);
     }
 
     public static void deleteConnectionFromDb(String... ucids) throws Exception {

@@ -15,6 +15,9 @@ public class GetAbuseTypesResponse {
     @JsonProperty("maxScoreClientId")
     public String maxScoreClientId;
 
+    @JsonProperty("fraudTypeStatus")
+    public String fraudTypeStatus;
+
     @Override
     public String toString() {
         return "GetAbuseTypesResponse{" + "abuseType='" + abuseType + '\'' + ", maxScoreToInitial=" + maxScoreToInitial + ", maxScoreClientId=" + maxScoreClientId + '}';

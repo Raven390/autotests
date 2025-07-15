@@ -2,6 +2,7 @@ package business_objects.api.connection_search_api.get_abuse_types;
 
 
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
+import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 
 public class GetAbuseTypesResponseFactory {
 
@@ -25,7 +26,7 @@ public class GetAbuseTypesResponseFactory {
 
     public static ConnectionSearchResponseError getAbuseTypesResponseErrorUnknownAttributeBadRequest() {
         return new ConnectionSearchResponseError(
-                null, 400, "Unknown attribute provided: payout. Valid values are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth]", null, null, null, null, null
+                null, 400, "Unknown attribute provided: payout. Valid values are: [payoutId, emailAddress, phoneNumber, ipAddress, documentType, documentNumber, documentCountryId, customAttribute, digital, device, session, webSession, nameBirth, nameBirthNoKyc, fuzzyDevice, browserStringHash]", null, null, null, null, null
         );
     }
 
@@ -33,5 +34,14 @@ public class GetAbuseTypesResponseFactory {
         return new ConnectionSearchResponseError(
                 null, 400, "Invalid &quot;clientId&quot; property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030", null, null, null, null, null
         );
+    }
+
+    public static GetAbuseTypesResponse getAbuseTypesResponseByFraud(ClientFraudTypes fraud, String status) {
+        GetAbuseTypesResponse response = new GetAbuseTypesResponse();
+        response.abuseType = fraud.getFraudTypeCode();
+        response.fraudTypeStatus = status;
+        response.maxScoreToInitial = 1.0;
+        response.maxScoreClientId = fraud.getUcid();
+        return response;
     }
 }

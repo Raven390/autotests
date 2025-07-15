@@ -4,6 +4,7 @@ import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesR
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +23,17 @@ import static business_objects.api.connection_search_api.get_abuse_types.GetAbus
 import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponseFactory.*;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
+import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.waitForConnectionSearchToUpdate;
+import static utils.Utils.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
@@ -70,9 +74,13 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
     private static ClientFraudTypes fraud3;
 
+    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo2_1, userTo2_2, userTo2_3, userTo3));
+    static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
+
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {
+        insertObjectsToDb(CRM_USER_TABLE_NAME, clientsDB);
         connectionTableEntry11.connectionInfo = connectionInfoToString(List.of(new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)));
 
         fraud11 = new ClientFraudTypes(userTo1_1.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
@@ -84,18 +92,14 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud12);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud2_2);
         insertObjectToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, fraud3);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry11);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry12);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry13);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry21);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry22);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry23);
-        insertObjectToDb(CONNECTIONS_TABLE_NAME, connectionTableEntry3);
+        addFraudsForClient(fraud11, fraud12, fraud2_2, fraud3);
+        insertConnectionToDb(connectionTableEntry11, connectionTableEntry12, connectionTableEntry13, connectionTableEntry21, connectionTableEntry22, connectionTableEntry23, connectionTableEntry3);
         waitForConnectionSearchToUpdate();
+        Thread.sleep(5000);//pause for asinc services like CS and AR alvays set up connections last and use waitForConnectionSearchToUpdate() before this wait.
     }
 
     @AfterAll
-    static void deleteConnectionTableEntry() {
+    static void deleteConnectionTableEntry() throws Exception {
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry11.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry12.userFrom));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connectionTableEntry13.userFrom));
@@ -107,6 +111,13 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud12.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud2_2.getUcid()));
         deleteEntryFromDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, String.format("ucid = '%s'", fraud3.getUcid()));
+
+        List<String> clientUcids = new java.util.ArrayList<>(List.of());
+        for (CrmTbUserObject client : clientsDB) {
+            clientUcids.add(client.ucid);
+        }
+        cleanCrmUserTableByClient(String.valueOf(clientUcids));
+        deleteUserAR(String.valueOf(clientUcids));
     }
 
     @Test
@@ -124,8 +135,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
-        assertThat("Check the response body", responseBody[1].abuseType, is(CPA_ABUSE.getKey()));
-        assertThat("Check the response body", responseBody[0].abuseType, is(HEDGING.getKey()));
+        assertThat("Check the response body", responseBody, hasItemInArray(getAbuseTypesResponseByFraud(fraud11, "CONFIRMED")));
+        assertThat("Check the response body", responseBody, hasItemInArray(getAbuseTypesResponseByFraud(fraud12, "CONFIRMED")));
     }
 
     @Test
@@ -318,7 +329,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
                 response.body().string(), ConnectionSearchResponseError.class
         ));
 
-        assertThat("Check the response code is 200", response.code(), is(400));
+        assertThat("Check the response code is 400", response.code(), is(400));
         assertThat("Check the response body is empty", responseBody, equalTo(getAbuseTypesResponseErrorUnknownAttributeBadRequest()));
     }
 
