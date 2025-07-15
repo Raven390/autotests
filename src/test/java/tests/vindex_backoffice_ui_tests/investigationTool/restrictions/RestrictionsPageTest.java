@@ -2,7 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool.restrictions;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.ui.user.User;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -21,7 +21,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountInactive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.DbHelper.insertObjectsToDb;

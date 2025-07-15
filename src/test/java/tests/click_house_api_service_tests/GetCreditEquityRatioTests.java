@@ -2,7 +2,7 @@ package tests.click_house_api_service_tests;
 
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_credit_equity_ratio.GetCreditEquityResponse;
-import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_credit_equity_ratio.GetCreditEquityRequest.getCreditEquity;
-import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;

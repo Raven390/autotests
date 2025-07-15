@@ -1,4 +1,4 @@
-package business_objects.db.clickhouse.mtAccount;
+package business_objects.db.clickhouse.mt_account;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;

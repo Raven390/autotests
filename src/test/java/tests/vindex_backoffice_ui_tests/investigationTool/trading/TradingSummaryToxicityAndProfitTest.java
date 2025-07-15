@@ -2,7 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool.trading;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
@@ -16,7 +16,7 @@ import java.util.List;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityFactory.generateMt5DealsCoercedToxicityAdditionalByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced_toxicity.Mt5DealsCoercedToxicityFactory.generateMt5DealsCoercedToxicityByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;

@@ -155,6 +155,7 @@ public class ConfigFactory {
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
     public static final String ABUSE_REGISTRY_POST_FRAUD_TYPES = CONFIG.abuseRegistryPostFraudTypes();
+    public static final String ABUSE_REGISTRY_POST_ABUSER_STATUS = CONFIG.abuseRegistryPostAbuserStatus();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -585,6 +586,9 @@ public class ConfigFactory {
 
         @Key("abuseRegistryPostFraudTypes")
         String abuseRegistryPostFraudTypes();
+
+        @Key("abuseRegistryPostAbuserStatus")
+        String abuseRegistryPostAbuserStatus();
     }
 
     public static boolean isGitlab() {

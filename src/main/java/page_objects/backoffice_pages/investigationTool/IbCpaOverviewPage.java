@@ -26,6 +26,7 @@ public class IbCpaOverviewPage extends AbstractPage {
     private final Locator tableHeader;
     private final Locator tableRow;
     private final Locator tableCell;
+    private final Locator closeDrawerButton;
 
     private static final String OVERVIEW_SUBHEADER = "//div[contains(@class,'v-drawer-header__sub-header')]";
     private static final String UNDER_THIS_SECTION = "//div[contains(@class,'v-registration-source-drawer-referrals')]";
@@ -50,6 +51,7 @@ public class IbCpaOverviewPage extends AbstractPage {
         tableHeader = page.locator("//div[contains(@class,'header-cell') and not(contains(@class,'icon'))]");
         tableRow = page.locator("//div[contains(@class,'v-body-row')]");
         tableCell = tableRow.locator("//div[contains(@class,'g-text')]");
+        closeDrawerButton = page.locator("//button[@data-qa='drawer_header__close_button']");
     }
 
     @Step("Get overview title")
@@ -143,5 +145,10 @@ public class IbCpaOverviewPage extends AbstractPage {
             tableCells.add(tableCell.nth(i).textContent());
         }
         return tableCells;
+    }
+
+    @Step("Click close drawer button")
+    public void clickCloseDrawerButton() {
+        closeDrawerButton.click();
     }
 }
