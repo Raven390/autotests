@@ -214,9 +214,11 @@ public class Constants {
     public static final String CONNECTION_ATTRIBUTE_NAME_IP = "ip";
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_TYPE = "documentType";
     public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT = "document";
+    public static final String CONNECTION_ATTRIBUTE_NAME_DOCUMENT_NUMBER = "documentNumber";
     public static final String CONNECTION_TYPE_SAME_PERSON = "Same Person";
     public static final String CONNECTION_TYPE_SAME_NETWORK = "Same Network";
     public static final String CONNECTION_TYPE_SAME_IDENTITY = "Same Identity";
+    public static final String CONNECTION_TYPE_INDIRECT = "Indirect";
     public static final String CONNECTION_TYPE_RELATION_TYPE_EXACT = "exact";
     public static final String CONNECTION_TYPE_RELATION_TYPE_SIMILAR = "similar";
     public static final String CONNECTION_SEARCH_DATA_CARD_NUMBER = "535456**** **0344";
@@ -230,6 +232,9 @@ public class Constants {
     public static final String CONNECTION_SEARCH_DATA_DEVICE = "4a25971ab724427eb8fc24a257c5b2df";
     public static final String CONNECTION_SEARCH_DATA_DEVICE2 = "5a25971ab724427eb8fc24a257c5b2df";
     public static final String CONNECTION_SEARCH_DATA_DOCUMENT = "3110200460092";
+    public static final String CONNECTION_SEARCH_DATA_DIGITAL = "5784170d787442f8945926a2c9b24c40";
+    public static final String CONNECTION_SEARCH_DATA_NAME_BIRTH = "kanjana sirajindapirom 1978-02-17";
+    public static final String CONNECTION_SEARCH_DATA_SESSION = "63767f3e2a9340efafd32c354660b128";
     //
     public static final String COMMENT_AUTOMATION_TESTS = "Automation tests";
     public static final String TIME_2024_12_31_00_00_00 = "2024-12-31 00:00:00";
@@ -299,4 +304,10 @@ public class Constants {
     public static final String ENCODED_EMAIL = "paRP/scRJ89KbGWkZOrJVF/FbLaXR1jx";
     public static final String ENCODED_PHONE = "OlIoGyRiWyMgmlKyQZkW6w==";
     public static final String STATUS_NEW = "new";
+    public static final String STATUS_NORMAL = "Normal";
+    public static final String STATUS_SUSPICIOUS = "Suspicious";
+    public static final String POTENTIAL_ABUSE = "Potential Abuse";
+    public static final String CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN = "3***********2";
+    public static final String CONNECTION_SEARCH_DATA_PHONE_HIDDEN = "+1*********3";
+    public static final String CONNECTION_SEARCH_DATA_EMAIL_HIDDEN = "m***e@gmx.net";
 }

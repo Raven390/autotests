@@ -5,7 +5,7 @@ import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_transfer.CrmTbTransferObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
-import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.payments_total.PaymentsTotalObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,7 +29,7 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositOb
 import static business_objects.db.clickhouse.crm_tb_transfer.CrmTbTransferFactory.generateCrmTbTransferRandomized;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
-import static business_objects.db.clickhouse.mtAccount.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClientRandomized;
 import static helpers.data.enums.DateTimeFormat.*;
 import static helpers.data.enums.DateTimeFormat.MONTH_TEXT_AND_YEAR;

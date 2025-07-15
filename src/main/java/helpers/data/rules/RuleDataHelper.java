@@ -17,7 +17,7 @@ import business_objects.db.clickhouse.ip_table.IpTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionObject;
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
-import business_objects.db.clickhouse.mtAccount.MtAccountObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;

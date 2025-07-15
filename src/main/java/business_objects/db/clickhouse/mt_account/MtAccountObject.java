@@ -1,4 +1,4 @@
-package business_objects.db.clickhouse.mtAccount;
+package business_objects.db.clickhouse.mt_account;
 
 import java.util.Objects;
 

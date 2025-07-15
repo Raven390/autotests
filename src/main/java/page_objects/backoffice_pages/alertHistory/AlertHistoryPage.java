@@ -33,7 +33,7 @@ public class AlertHistoryPage extends AbstractPage {
 
     public AlertHistoryPage(Page page) {
         super(page);
-        this.alertHistoryButton = page.locator("//div[@class='v-sidebar__menu']/a[contains(@href,'alert-history')]");
+        this.alertHistoryButton = page.locator("//div[@class='v-sidebar__menu']/descendant::a[contains(@href,'alert-history')]");
         this.alertHistoryTitle = page.locator("//div[@class='v-alert-history-layout__header']/div").first();
         this.alertHistoryTableHeaders = page.locator("//div[contains(@class,'v-header-cell')]");
         this.filterButton = page.locator("//div[@class='v-alert-history-filter-button__filters']/button");

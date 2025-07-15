@@ -1,5 +1,6 @@
 package helpers.api;
 
+import business_objects.api.abuse_registry.PostAbuserStatusRequestBody;
 import business_objects.api.abuse_registry.PostFraudTypesRequestBody;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import helpers.data.ClientHelper;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import static business_objects.api.abuse_registry.AbuseRegistryRequest.postAbuserStatus;
 import static business_objects.api.abuse_registry.AbuseRegistryRequest.postFraudTypes;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -62,4 +64,10 @@ public class AbuseRegistryHelper {
     }
 
 
+    public static void setClientStatus(ClientHelper client, FraudTypeStatus status)
+            throws IOException {
+        PostAbuserStatusRequestBody requestBody = new PostAbuserStatusRequestBody(
+                "Auto Test", "BO", "Set by autotest", status.getStatus());
+        assertThat("Check that request was successful", postAbuserStatus(client, requestBody).code(), is(200));
+    }
 }

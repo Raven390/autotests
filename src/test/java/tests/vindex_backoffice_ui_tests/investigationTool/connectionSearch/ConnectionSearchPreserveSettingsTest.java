@@ -52,7 +52,7 @@ public class ConnectionSearchPreserveSettingsTest extends TestBaseWeb {
         generalTab.clickGeneralTabButton();
         generalTab.waitForPageToLoad();
         connectionPage.clickConnectionTabButton();
-        connectionPage.connectionTableIsRendered();
+        connectionPage.verifyConnectionTableIsRendered();
         connectionPage.openConnectionGraph();
         assertThat("Verify applied filters are saved", connectionPage.getAppliedFiltersList(), contains("Behavior"));
     }

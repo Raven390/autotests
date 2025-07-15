@@ -23,4 +23,10 @@ public class AbuseRegistryRequest {
         return new HttpHelper().sendPostRequest(String.format(ABUSE_REGISTRY_BASE_PATH + ABUSE_REGISTRY_POST_FRAUD_TYPES, ucid), null, null, postFraudTypesRequestBody);
     }
 
+    public static Response postAbuserStatus(ClientHelper client,
+            PostAbuserStatusRequestBody postAbuserStatusRequestBody)
+            throws IOException {
+        return new HttpHelper().sendPostRequest(String.format(ABUSE_REGISTRY_BASE_PATH + ABUSE_REGISTRY_POST_ABUSER_STATUS, client.getUcid()), null, null, postAbuserStatusRequestBody);
+    }
+
 }

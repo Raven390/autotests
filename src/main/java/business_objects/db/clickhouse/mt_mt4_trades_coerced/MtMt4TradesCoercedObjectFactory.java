@@ -22,11 +22,11 @@ public class MtMt4TradesCoercedObjectFactory {
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
-            double profit, String closeTime) {
+            double profitUsd, String closeTime) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
         trade.storageUsd = 0d;
         trade.commissionUsd = 0d;
-        trade.profitUsd = profit;
+        trade.profitUsd = profitUsd;
         trade.closeTime = closeTime;
         return trade;
     }
