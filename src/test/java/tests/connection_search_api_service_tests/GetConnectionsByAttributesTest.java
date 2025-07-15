@@ -48,6 +48,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
+import static utils.Utils.insertConnectionToDb;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
@@ -149,8 +150,6 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         getConnectionsByAttributesDigitalIdResponseSuccessInitial.connectionScoreToInitial = getConnectionsByAttributesDigitalIdResponseSuccessInitial.connectionStrengthToInitial;
         getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionStrengthToInitial = 0.800_000_011_920_929;
         getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionScoreToInitial = getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionStrengthToInitial;
-        // Insert data to connections table
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByDocument, connectionTableEntryByEmail, connectionTableEntryByIp, connectionTableEntryByIp2, connectionTableEntryByIp3, connectionTableEntryByPhone, connectionTableEntryByPayout, connectionTableEntryForDepth1, connectionTableEntryForDepth2, connectionTableEntryFiltration1, connectionTableEntryFiltration2, connectionTableEntryByDeviceId, connectionTableEntryByDigitalId, connectionTableEntryByNameBirth, connectionTableEntryBySessionId, connectionTableEntryByWebSessionId));
         // Insert data to attributes tables
         insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
@@ -165,8 +164,10 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
         insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryFrom);
         insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryTo);
+        // Insert data to connections table
+        insertConnectionToDb(connectionTableEntryByDocument, connectionTableEntryByEmail, connectionTableEntryByIp, connectionTableEntryByIp2, connectionTableEntryByIp3, connectionTableEntryByPhone, connectionTableEntryByPayout, connectionTableEntryForDepth1, connectionTableEntryForDepth2, connectionTableEntryFiltration1, connectionTableEntryFiltration2, connectionTableEntryByDeviceId, connectionTableEntryByDigitalId, connectionTableEntryByNameBirth, connectionTableEntryBySessionId, connectionTableEntryByWebSessionId);
         waitForConnectionSearchToUpdate();
-        Thread.sleep(5000);
+        Thread.sleep(15_000);//pause for asinc services like CS and AR alvays set up connections last and use waitForConnectionSearchToUpdate() before this wait.
     }
 
     @AfterAll

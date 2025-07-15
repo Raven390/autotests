@@ -133,7 +133,7 @@ public class Constants {
     public static final String EMAIL_TABLE_NAME = "data_science_test.email";
     public static final String IP_TABLE_NAME = "data_science_test.ip";
     public static final String PHONE_TABLE_NAME = "data_science_test.phone";
-    public static final String PAYOUT_TABLE_NAME = "vindex_test.payout";
+    public static final String PAYOUT_TABLE_NAME = "data_science_test.payout";
     public static final String LEXIS_NEXIS_TABLE_NAME = "vindex_test.ln_session_parsed";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";

@@ -50,8 +50,7 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.waitForConnectionSearchToUpdate;
+import static utils.Utils.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
 @Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
@@ -180,7 +179,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static void setupConnectionTableEntry() throws Exception {
         // Insert data to connections table
         insertObjectsToDb(CRM_USER_TABLE_NAME, clientsDB);
-        insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3, connectionTableEntryByEmail4, connectionTableEntryByIp1, connectionTableEntryByIp2, connectionTableEntryByIp3));
+        addFraudsForClient(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2);
         // Insert data to attributes tables
         insertObjectsToDb(DOCUMENT_TABLE_NAME, List.of(documentTableEntry, documentTableEntry2));
         insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry, emailTableEntryForDepth1, emailTableEntry2));
@@ -195,8 +194,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         //insert data to fraud table
         insertObjectsToDb(CLIENT_FRAUD_TYPES_TABLE_NAME, List.of(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2));
         waitForConnectionSearchToUpdate();
-        addFraudsForClient(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2);
-        Thread.sleep(15_000);//pause for asink services like CS and AR
+        insertConnectionToDb(connectionTableEntryByEmail1, connectionTableEntryByEmail2, connectionTableEntryByEmail3, connectionTableEntryByEmail4, connectionTableEntryByIp1, connectionTableEntryByIp2, connectionTableEntryByIp3);
+        Thread.sleep(5000);//pause for asinc services like CS and AR alvays set up connections last and use waitForConnectionSearchToUpdate() before this wait.
     }
 
     @AfterAll
