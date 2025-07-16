@@ -40,6 +40,7 @@ import static business_objects.db.clickhouse.payout.PayoutTableEntryFactory.payo
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
+import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
@@ -103,6 +104,9 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final ClientHelper userTo2Depth = getRandomVantageClientAllFields();
     static final ClientHelper userTo3Depth = getRandomVantageClientAllFields();
 
+    static final ClientHelper userFraudConfirmed = getRandomVantageClientAllFields();
+    static final ClientHelper userFraudPotential = getRandomVantageClientAllFields();
+
     // Objects to insert to attributes tables
     static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
     static final DocumentTableEntry documentTableEntry2 = documentTableEntryForConnectionSearch(userToDocument);
@@ -119,6 +123,9 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     static final IpTableEntry ipTableEntry4 = ipTableEntryForConnectionSearch(userToIp2);
     static final IpTableEntry ipTableEntry5 = ipTableEntryForConnectionSearch(userTo31);
     static final IpTableEntry ipTableEntry6 = ipTableEntryForConnectionSearch(userToEmail2);
+
+    static final PhoneTableEntry phoneTableEntryStatusConfirmed = phoneTableEntryForConnectionSearch(userFraudConfirmed);
+    static final PhoneTableEntry phoneTableEntryStatusPotential = phoneTableEntryForConnectionSearch(userFraudPotential);
 
     static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
     static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
@@ -170,8 +177,10 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
     private static final ClientFraudTypes fraudWebSessionIdTo = new ClientFraudTypes(userToWebSessionId.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypes fraud1 = new ClientFraudTypes(userTo31.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
     private static final ClientFraudTypes fraud2 = new ClientFraudTypes(userTo32.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypes fraudConfirmed = new ClientFraudTypes(userFraudConfirmed.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
+    private static final ClientFraudTypes fraudPotential = new ClientFraudTypes(userFraudPotential.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
-    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userFromDocument, userToDocument, userToEmail, userFromDepth, userTo2Depth, userTo3Depth, userToEmail2, userToIp, userToIp2, userToPhone, userFromPhone, userToPayout, userToDeviceId, userToDigitalId, userToNameBirth, userToSessionId, userToWebSessionId, userTo31, userTo32));
+    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userFromDocument, userToDocument, userToEmail, userFromDepth, userTo2Depth, userTo3Depth, userToEmail2, userToIp, userToIp2, userToPhone, userFromPhone, userToPayout, userToDeviceId, userToDigitalId, userToNameBirth, userToSessionId, userToWebSessionId, userTo31, userTo32, userFraudConfirmed, userFraudPotential));
     static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
 
 
@@ -180,11 +189,13 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         // Insert data to connections table
         insertObjectsToDb(CRM_USER_TABLE_NAME, clientsDB);
         addFraudsForClient(fraudPhoneFrom, fraudEmail1, fraudEmail2, fraudEmail3, fraudEmail4, fraudDocumentTo, fraudEmailTo, fraudIpTo, fraudIp2To, fraudPhoneTo, fraudPayoutTo, fraudDeviceIdTo, fraudDigitalIdTo, fraudNameBirthTo, fraudSessionIdTo, fraudWebSessionIdTo, fraud1, fraud2);
+        addFraudForClient(fraudConfirmed, "CONFIRMED");
+        addFraudForClient(fraudPotential, "POTENTIAL");
         // Insert data to attributes tables
         insertObjectsToDb(DOCUMENT_TABLE_NAME, List.of(documentTableEntry, documentTableEntry2));
         insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry, emailTableEntryForDepth1, emailTableEntry2));
         insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry, ipTableEntry2, ipTableEntry3, ipTableEntry4, ipTableEntry5, ipTableEntry6));
-        insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
+        insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2, phoneTableEntryStatusConfirmed, phoneTableEntryStatusPotential));
         insertObjectsToDb(PAYOUT_TABLE_NAME, List.of(payoutTableEntry, payoutTableEntry2));
         insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntry2));
         insertObjectsToDb(DEVICE_ID_TABLE_NAME, List.of(deviceIdTableEntry, deviceIdTableEntry2, deviceIdTableEntry3));
@@ -216,6 +227,10 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(PAYOUT_TABLE_NAME, String.format("payout = '%s'", payoutTableEntry2.payout));
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry2.accIdNum));
+        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry.phoneNum));
+        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntry2.phoneNum));
+        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusConfirmed.phoneNum));
+        deleteEntryFromDb(PHONE_TABLE_NAME, String.format("phone_num = '%s'", phoneTableEntryStatusPotential.phoneNum));
         //Delete data from fraud type table
         cleanBoFraudTypesTableByUcid(userFromEmail.getUcid(), userToEmail.getUcid(), userFromDocument.getUcid(), userToDocument.getUcid(), userFromIp.getUcid(), userToIp.getUcid(), userFromPayout.getUcid(), userToPayout.getUcid(), userFromPhone.getUcid(), userToPhone.getUcid(), userFromNameBirth.getUcid(), userToNameBirth.getUcid(), userToDeviceId.getUcid(), userFromDeviceId.getUcid(), userToSessionId.getUcid(), userFromSessionId.getUcid(), userToWebSessionId.getUcid(), userFromWebSessionId.getUcid());
         //delete client objects from DB
@@ -619,5 +634,36 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
         assertThat("Check the response code is 200", response.code(), is(400));
         assertThat("Check the response length", responseBody.status, is(400));
         assertThat("Check the response length", responseBody.error, is("Unknown connection type provided: . Valid values are: [Same Identity, Same Person, Same Network, UNKNOWN]"));
+    }
+
+    @Test
+    @DisplayName("Connection search get abuse types. Response have fraud status from AR")
+    @AllureId("1365")
+    void getAbuseTypesResponseHaveStatusFromAR() throws IOException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("phoneNumber", phoneTableEntryStatusConfirmed.phoneNum);
+
+        Response response = getAbuseTypesByAttributes(queryParams);
+        assert response.body() != null;
+        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponse[].class
+        ));
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+        assertThat("Check the response length", responseBody.length, is(1));
+        assertThat("Check the response body element", responseBody[0].fraudTypeStatus, is("CONFIRMED"));
+
+        Map<String, Object> queryParams2 = new HashMap<>();
+        queryParams2.put("phoneNumber", phoneTableEntryStatusPotential.phoneNum);
+
+        Response response2 = getAbuseTypesByAttributes(queryParams2);
+        assert response2.body() != null;
+        GetAbuseTypesResponse[] responseBody2 = (objectMapper.readValue(
+                response2.body().string(), GetAbuseTypesResponse[].class
+        ));
+
+        assertThat("Check the response code is 200", response2.code(), is(200));
+        assertThat("Check the response length", responseBody2.length, is(1));
+        assertThat("Check the response body element", responseBody2[0].fraudTypeStatus, is("POTENTIAL"));
     }
 }
