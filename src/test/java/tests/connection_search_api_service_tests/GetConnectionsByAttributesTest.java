@@ -114,6 +114,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
     static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp, true);
     static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userFromIp2, true);
+    static final DigitalIdTableEntry digitalIdTableEntryIp = digitalIdTableEntryForConnectionSearch(userFromIp2);
     static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
     static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToIp3);
     static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
@@ -158,7 +159,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
         insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryFiltration);
-        insertObjectToDb(DIGITAL_ID_TABLE_NAME, digitalIdTableEntry);
+        insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntryIp));
         insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
         insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
@@ -183,6 +184,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntryFiltration.email));
         deleteEntryFromDb(DEVICE_ID_TABLE_NAME, String.format("device_id = '%s'", deviceIdTableEntry.deviceId));
         deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntry.digitalId));
+        deleteEntryFromDb(DIGITAL_ID_TABLE_NAME, String.format("digital_id = '%s'", digitalIdTableEntryIp.digitalId));
         deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntryFrom.webSessionId));
@@ -318,6 +320,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest23() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("ipAddress", ipTableEntry2.ip);
+        queryParams.put("digital", digitalIdTableEntryIp.digitalId);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
