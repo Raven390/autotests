@@ -37,7 +37,7 @@ public class AbuseRegistryPage extends AbstractPage {
 
     public AbuseRegistryPage(Page page) {
         super(page);
-        this.uploadListButton = page.locator("//button/*[text() = 'Add fraudsters list']");
+        this.uploadListButton = page.locator("//button/*[text()='Add']");
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
         this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons, or new lines']");
         this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_select_anchor_button']");

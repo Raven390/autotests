@@ -99,4 +99,7 @@ public class CrmTbAccountObjectFactory {
         return new CrmTbAccountObject(10, 5, client.getBrand(), client.getRegulator(), client.getUserId(), client.getUcid(), client.getUid(), client.getTradingAccount(), client.getServerId(), "server1", 1, ACCOUNT_TYPE_STANDARD, ACCOUNT_GROUP_S_VFX_EUR, PLATFORM_MT_4, TIME_2024_2024_12_29_14_59_30_084000000, TIME_2024_2024_12_29_14_59_30_084000000, "2015-12-29", "2015-12-29", ACCOUNT_STATUS_INACTIVE, TIME_2024_2024_12_29_14_59_30_084000000, TIME_2024_2024_12_29_14_59_30_084000000, TIME_2024_2024_12_29_14_59_30_084000000, TIME_2024_2024_12_29_14_59_30_084000000, 101.5, Currency.getInstance("USD").getCurrencyCode(), 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, 0, 42, 42, 0, 0, 0, 0, 0, 0, 0, TIME_2024_2024_12_29_14_59_30_084000000, COMMENT_AUTOMATION_TESTS);
     }
 
+    public static CrmTbAccountObject generateCrmTbAccountDataBybit(ClientHelper client) {
+        return new CrmTbAccountObject(19, 11, client.getBrand(), "", client.getUserId(), client.getUcid(), "00000000-0000-0000-0000-000000000000", client.getTradingAccount(), client.getServerId(), "Bybit-Demo", 0, "", "BYBIT_Hedge\\M_BYBIT_E_V0_USTT", PLATFORM_MT_5, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), getCurrentDate(), getCurrentDate(), "", getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), null, null, 101.5, Currency.getInstance("USD").getCurrencyCode(), 102.7, 11.1, 99.9, 22.2, 3, 7.77, 0, null, null, 0, 0, 0, 0, 0, 0, 0, 0, getCurrentTimestampDbFormat(), COMMENT_AUTOMATION_TESTS);
+    }
 }

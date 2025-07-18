@@ -29,7 +29,7 @@ public class GeneralSearchElements extends AbstractPage {
     private static final String SEARCH_OVERLAY_LOCATOR = "*[@class='v-search-overlay']";
     private static final String SEARCH_CLIENT_CARD_LOCATOR = "*[@class='v-search-client-card']";
     private static final String SEARCH_CLIENT_CARD_COUNTRY_LOCATOR = "*[contains(@class, 'v-search-client-card__country')]";
-    private static final String SEARCH_ERROR_CONTAINER_LOCATOR = "*[@class='v-error-view__content']";
+    private static final String SEARCH_ERROR_CONTAINER_LOCATOR = "div[@class='v-search']/descendant::div[@class='v-error-view__content']";
     private static final String SEARCH_CLIENT_CARD_HEADER_LOCATOR = "*[@class='v-search-client-card__header']";
     private static final String SEARCH_CLIENT_CARD_BUTTONS_LOCATOR = "*[@class='v-search-client-card__externals']/button";
 
