@@ -37,4 +37,9 @@ public class CrmTbUserObjectFactory {
         user.lastName = "";
         return user;
     }
+
+    @Step("Generate Bybit user object by Client")
+    public static CrmTbUserObject generateBybitUserByClient(ClientHelper client) {
+        return new CrmTbUserObject(client.getUserId(), client.getUcid(), client.getBrand(), "", getCurrentDate(), getCurrentDate(), "", "", "", "1961-02-01", "", "", "", "", "", "", "", "0", "0", "", "2", "0", "0", 0, 0, 0, "UNKNOWN", getCurrentTimestampDbFormat(), "2025-01-30 14:56:59.000", "2025-01-30 14:56:59.000", null, "0", null);
+    }
 }

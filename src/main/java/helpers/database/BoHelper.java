@@ -25,7 +25,7 @@ public class BoHelper {
     @Step("Close alerts for user {ucid}")
     public static void closeAlert(String ucid) throws SQLException {
         executeQueryToDb(
-                DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s' WHERE client_id = (select id from %s where ucid = '%s')", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", BO_CLIENT_TABLE_NAME, ucid
+                DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_id = (select id from %s where ucid = '%s')", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", BO_CLIENT_TABLE_NAME, ucid
                 )
         );
     }
