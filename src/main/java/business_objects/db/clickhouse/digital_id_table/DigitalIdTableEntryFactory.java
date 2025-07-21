@@ -15,4 +15,10 @@ public class DigitalIdTableEntryFactory {
                 client.getUcid(), digitalId
         );
     }
+
+    public static DigitalIdTableEntry digitalIdTableEntryForConnectionSearchFiltration(ClientHelper client) {
+        return new DigitalIdTableEntry(
+                client.getUcid(), "digitalIdFiltration"
+        );
+    }
 }

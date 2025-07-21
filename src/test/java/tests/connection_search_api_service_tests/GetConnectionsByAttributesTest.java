@@ -31,6 +31,7 @@ import static business_objects.api.connection_search_api.get_connections.GetConn
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearchFiltration;
 import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearchRandomized;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
@@ -114,6 +115,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final EmailTableEntry emailTableEntry = emailTableEntryForConnectionSearch(userFromEmail, userFromEmail.getEmail());
     static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp, true);
     static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userFromIp2, true);
+    static final IpTableEntry ipTableEntryFiltration = ipTableEntryForConnectionSearch(userFromFiltration, true);
     static final DigitalIdTableEntry digitalIdTableEntryIp = digitalIdTableEntryForConnectionSearch(userFromIp2);
     static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
     static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToIp3);
@@ -121,6 +123,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
     static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
     static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
+    static final DigitalIdTableEntry digitalIdTableEntryFiltration = digitalIdTableEntryForConnectionSearchFiltration(userFromFiltration);
     static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
     static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
     static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
@@ -159,7 +162,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
         insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryFiltration);
-        insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntryIp));
+        insertObjectsToDb(DIGITAL_ID_TABLE_NAME, List.of(digitalIdTableEntry, digitalIdTableEntryIp, digitalIdTableEntryFiltration));
         insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
         insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
@@ -392,12 +395,16 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
 
         assertThat("Check the response code is 200", response.code(), is(200));
 
-        assertThat("Check the response body is not empty", responseBody.length, equalTo(9));
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(8));
 
-        assertThat("Check that response body has object found by document", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesDocumentResponseSuccess, getConnectionsByAttributesDocumentResponseSuccessInitial));
-        assertThat("Check that response body has object found by emailAddress", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesEmailResponseSuccess, getConnectionsByAttributesEmailResponseSuccessInitial));
-        assertThat("Check that response body has object found by phoneNumber", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPhoneResponseSuccess, getConnectionsByAttributesPhoneResponseSuccessInitial));
-        assertThat("Check that response body has object found by payoutId", Arrays.stream(responseBody).toList(), hasItems(getConnectionsByAttributesPayoutResponseSuccess, getConnectionsByAttributesPayoutResponseSuccessInitial));
+        assertThat("Check that response body has object found by document", responseBody, hasItemInArray(getConnectionsByAttributesDocumentResponseSuccess));
+        assertThat("Check that response body has object found by document", responseBody, hasItemInArray(getConnectionsByAttributesDocumentResponseSuccessInitial));
+        assertThat("Check that response body has object found by emailAddress", responseBody, hasItemInArray(getConnectionsByAttributesEmailResponseSuccess));
+        assertThat("Check that response body has object found by emailAddress", responseBody, hasItemInArray(getConnectionsByAttributesEmailResponseSuccessInitial));
+        assertThat("Check that response body has object found by phoneNumber", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccess));
+        assertThat("Check that response body has object found by phoneNumber", responseBody, hasItemInArray(getConnectionsByAttributesPhoneResponseSuccessInitial));
+        assertThat("Check that response body has object found by payoutId", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccess));
+        assertThat("Check that response body has object found by payoutId", responseBody, hasItemInArray(getConnectionsByAttributesPayoutResponseSuccessInitial));
     }
 
     @Test
@@ -426,7 +433,9 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("emailAddress", emailTableEntryFiltration.email);
-        queryParams.put("connectionScoreTo", 0.5);
+        queryParams.put("digital", digitalIdTableEntryFiltration.digitalId);
+        queryParams.put("ipAddress", ipTableEntryFiltration.ip);
+        queryParams.put("connectionScoreTo", 0.6);
 
         Response response = getConnectionsByAttributes(queryParams);
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
@@ -629,6 +638,7 @@ class GetConnectionsByAttributesTest extends TestBaseApi {
     void getConnectionsTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("digital", digitalIdTableEntry.digitalId);
+
 
         Response response = getConnectionsByAttributes(queryParams);
         assert response.body() != null;

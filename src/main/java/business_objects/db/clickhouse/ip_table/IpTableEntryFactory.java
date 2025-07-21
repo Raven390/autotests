@@ -20,6 +20,12 @@ public class IpTableEntryFactory {
         );
     }
 
+    public static IpTableEntry ipTableEntryForConnectionSearchFiltration(ClientHelper client) {
+        return new IpTableEntry(
+                client.getUcid(), "filtrationIp"
+        );
+    }
+
     public static IpTableEntry ipTableEntryForConnectionSearch(ClientHelper client, boolean randomIp) {
         IpTableEntry ipTableEntry = null;
         if (randomIp) {
