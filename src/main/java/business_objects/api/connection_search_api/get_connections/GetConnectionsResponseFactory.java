@@ -149,7 +149,7 @@ public class GetConnectionsResponseFactory {
             ClientHelper userTo) {
         return new GetConnectionsResponse(
                 userFrom.getUcid(), userTo.getUcid(), 1.0, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(
-                        CONNECTION_ATTRIBUTE_NAME_DOCUMENT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
+                        CONNECTION_ATTRIBUTE_NAME_DOCUMENT_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1d, 1d, 1d
         );
     }
 

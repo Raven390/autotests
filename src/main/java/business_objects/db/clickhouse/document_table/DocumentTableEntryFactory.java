@@ -2,7 +2,6 @@ package business_objects.db.clickhouse.document_table;
 
 import helpers.data.ClientHelper;
 
-import static utils.Utils.getCurrentTimestamp;
 
 public class DocumentTableEntryFactory {
 
@@ -14,7 +13,7 @@ public class DocumentTableEntryFactory {
 
     public static DocumentTableEntry documentTableEntryForConnectionSearchRandomized(ClientHelper client) {
         return new DocumentTableEntry(
-                client.getUcid(), "passport", "testaccidnum" + getCurrentTimestamp(), 1
+                client.getUcid(), "passport", "testaccidnum", 1
         );
     }
 
