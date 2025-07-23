@@ -53,6 +53,8 @@ public class BoHelper {
 
             String condition = "ucid IN (" + ucids + ")";
 
+            deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, condition);
+            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, condition);
             Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, condition);

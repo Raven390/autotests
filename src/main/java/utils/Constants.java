@@ -158,6 +158,7 @@ public class Constants {
     public static final String AR_ABUSER_TABLE_NAME = "postgres.ar.abuser";
     public static final String AR_ABUSER_FRAUD_TYPE_TABLE_NAME = "postgres.ar.abuser_fraud_type";
     public static final String AR_ABUSER_HISTORY_TABLE_NAME = "postgres.ar.abuser_history";
+    public static final String AR_ABUSER_DEDUCTION_TABLE_NAME = "postgres.ar.abuser_deduction";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String AGGR_CREDIT_EQUITY_RATE = "vindex_test_api.aggr__credit_equity_rate";
     public static final String AGGR_CREDIT_RISK_FREE_REVENUE_RATIO = "vindex_test_api.aggr__credit_risk_free_revenue_ratio";

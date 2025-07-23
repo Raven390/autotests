@@ -66,17 +66,17 @@ public class MassDeleteTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        abuseRegistryPage.navigateAbuseRegistryFraudsters();
-        abuseRegistryPage.openUploadDrawer();
-        abuseRegistryPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
-        abuseRegistryPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
-        abuseRegistryPage.clickAddFraudButton();
+        fraudstersPage.navigateAbuseRegistryFraudsters();
+        fraudstersPage.openUploadDrawer();
+        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
+        fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.HEDGING;
-        abuseRegistryPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
         String commentary = "test" + getCurrentTimestamp();
-        abuseRegistryPage.fillCommentary(commentary);
-        abuseRegistryPage.clickDeleteUpload();
-        abuseRegistryPage.verifySuccessMessageDelete();
+        fraudstersPage.fillCommentary(commentary);
+        fraudstersPage.clickDeleteUpload();
+        fraudstersPage.verifySuccessMessageDelete();
 
         page.waitForTimeout(1000);
 
