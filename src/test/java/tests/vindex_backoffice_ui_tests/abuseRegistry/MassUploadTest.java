@@ -64,21 +64,21 @@ public class MassUploadTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        abuseRegistryPage.navigateAbuseRegistryFraudsters();
-        abuseRegistryPage.openUploadDrawer();
-        abuseRegistryPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
-        abuseRegistryPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
-        abuseRegistryPage.clickAddFraudButton();
+        fraudstersPage.navigateAbuseRegistryFraudsters();
+        fraudstersPage.openUploadDrawer();
+        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
+        fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        abuseRegistryPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
-        abuseRegistryPage.clickAddRestrictionButton();
+        fraudstersPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
-        abuseRegistryPage.selectRestriction(restriction.getName());
-        abuseRegistryPage.clickApplyselectedRestrictions();
+        fraudstersPage.selectRestriction(restriction.getName());
+        fraudstersPage.clickApplyselectedRestrictions();
         String commentary = "test" + getCurrentTimestamp();
-        abuseRegistryPage.fillCommentary(commentary);
-        abuseRegistryPage.clickApplyUpload();
-        abuseRegistryPage.verifySuccessMessageUpload();
+        fraudstersPage.fillCommentary(commentary);
+        fraudstersPage.clickApplyUpload();
+        fraudstersPage.verifySuccessMessageUpload();
 
         page.waitForTimeout(1000);
 

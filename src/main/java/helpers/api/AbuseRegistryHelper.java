@@ -2,8 +2,10 @@ package helpers.api;
 
 import business_objects.api.abuse_registry.PostAbuserStatusRequestBody;
 import business_objects.api.abuse_registry.PostFraudTypesRequestBody;
+import business_objects.api.abuse_registry.PostFraudTypesV2RequestBody;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import helpers.data.ClientHelper;
+import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
 
@@ -11,13 +13,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-import static business_objects.api.abuse_registry.AbuseRegistryRequest.postAbuserStatus;
-import static business_objects.api.abuse_registry.AbuseRegistryRequest.postFraudTypes;
+import static business_objects.api.abuse_registry.AbuseRegistryRequest.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
 public class AbuseRegistryHelper {
+
+    private static final String FRAUDS_ADDED_SUCCESSFULLY = "Frauds successfully sent for client %s";
 
     private AbuseRegistryHelper() {
     }
@@ -30,7 +33,16 @@ public class AbuseRegistryHelper {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 "Auto Test", "BO", "Set by autotest", fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
         assertThat("Check that request was successful", postFraudTypes(client, requestBody).code(), is(200));
-        ln.info("frauds successfully sent for client " + client.getUcid());
+        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
+    }
+
+    public static void addFraudForClient(ClientHelper client, FraudType fraudType, FraudSubtype fraudSubtype,
+            FraudTypeStatus status, List<String> symbols)
+            throws IOException {
+        PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
+                "Auto Test", "BO", "Set by autotest", List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", fraudSubtype.getCode(), symbols)));
+        assertThat("Check that request was successful", postFraudTypesV2(client, requestBody).code(), is(200));
+        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
     public static void addFraudsForClient(String ucid, List<FraudType> fraudTypes, FraudTypeStatus status)
@@ -39,7 +51,7 @@ public class AbuseRegistryHelper {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 "Auto Test", "BO", "Set by autotest", fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
         assertThat("Check that request was successful", postFraudTypes(ucid, requestBody).code(), is(200));
-        ln.info("frauds successfully sent for client " + ucid);
+        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, ucid));
     }
 
     public static void addFraudForClient(ClientFraudTypes fraud)

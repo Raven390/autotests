@@ -13,7 +13,8 @@ import java.text.DecimalFormat;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import page_objects.backoffice_pages.abuseRegistry.AbuseRegistryPage;
+import page_objects.backoffice_pages.abuseRegistry.DeductionPage;
+import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.vantage_user_account_pages.StageRegistrationHelperPage;
@@ -52,7 +53,8 @@ public class TestBaseWeb {
     public GeneralSearchElements generalSearch;
     public AlertHistoryPage alertHistoryPage;
     public static OpenPositions openPositions;
-    public AbuseRegistryPage abuseRegistryPage;
+    public FraudstersPage fraudstersPage;
+    public DeductionPage deductionPage;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -104,7 +106,8 @@ public class TestBaseWeb {
         generalSearch = new GeneralSearchElements(page);
         openPositions = new OpenPositions(page);
         alertHistoryPage = new AlertHistoryPage(page);
-        abuseRegistryPage = new AbuseRegistryPage(page);
+        fraudstersPage = new FraudstersPage(page);
+        deductionPage = new DeductionPage(page);
     }
 
     @AfterEach

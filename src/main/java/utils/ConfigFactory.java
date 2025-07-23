@@ -154,6 +154,7 @@ public class ConfigFactory {
     public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
+    public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
     public static final String ABUSE_REGISTRY_POST_FRAUD_TYPES = CONFIG.abuseRegistryPostFraudTypes();
     public static final String ABUSE_REGISTRY_POST_ABUSER_STATUS = CONFIG.abuseRegistryPostAbuserStatus();
 
@@ -583,6 +584,9 @@ public class ConfigFactory {
 
         @Key("abuseRegistryBasePath")
         String abuseRegistryBasePath();
+
+        @Key("abuseRegistryV2BasePath")
+        String abuseRegistryV2BasePath();
 
         @Key("abuseRegistryPostFraudTypes")
         String abuseRegistryPostFraudTypes();

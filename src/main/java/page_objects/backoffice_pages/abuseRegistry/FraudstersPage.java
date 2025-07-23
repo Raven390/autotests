@@ -10,7 +10,7 @@ import page_objects.backoffice_pages.AbstractPage;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
-public class AbuseRegistryPage extends AbstractPage {
+public class FraudstersPage extends AbstractPage {
 
     private final Locator uploadListButton;
     private final Locator uploadDrawer;
@@ -35,7 +35,7 @@ public class AbuseRegistryPage extends AbstractPage {
     private final Locator deleteUploadButton;
 
 
-    public AbuseRegistryPage(Page page) {
+    public FraudstersPage(Page page) {
         super(page);
         this.uploadListButton = page.locator("//button/*[text()='Add']");
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
