@@ -60,9 +60,6 @@ public class TradeEvent {
     @JsonProperty("metadata")
     public TradeEventMetadata metadata;
 
-    @JsonProperty("initialEventTime")
-    public String initialEventTime;
-
     public long getTradeId() {
         return tradeId;
     }
@@ -191,14 +188,6 @@ public class TradeEvent {
         this.metadata = metadata;
     }
 
-    public String getInitialEventTime() {
-        return initialEventTime;
-    }
-
-    public void setInitialEventTime(String initialEventTime) {
-        this.initialEventTime = initialEventTime;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof TradeEvent that)) return false;
@@ -208,17 +197,16 @@ public class TradeEvent {
                                 margin, that.margin) == 0 && Double.compare(freeMargin, that.freeMargin) == 0 && Objects.equals(
                                         symbol, that.symbol) && Objects.equals(id, that.id) && Objects.equals(closeTime, that.closeTime) && Objects.equals(
                                                 closeTimeUtc, that.closeTimeUtc) && Objects.equals(type, that.type) && Objects.equals(
-                                                        eventDate, that.eventDate) && Objects.equals(metadata, that.metadata) && Objects.equals(
-                                                                initialEventTime, that.initialEventTime);
+                                                        eventDate, that.eventDate) && Objects.equals(metadata, that.metadata);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tradeId, symbol, id, serverId, tradingAccount, volume, closeTime, closeTimeUtc, equity, balance, leverage, margin, freeMargin, type, eventDate, metadata, initialEventTime);
+        return Objects.hash(tradeId, symbol, id, serverId, tradingAccount, volume, closeTime, closeTimeUtc, equity, balance, leverage, margin, freeMargin, type, eventDate, metadata);
     }
 
     @Override
     public String toString() {
-        return "CloseTradeMtEvent_NEW{" + "tradeId=" + tradeId + ", symbol='" + symbol + '\'' + ", id='" + id + '\'' + ", serverId=" + serverId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='" + closeTimeUtc + '\'' + ", equity=" + equity + ", balance=" + balance + ", leverage=" + leverage + ", margin=" + margin + ", freeMargin=" + freeMargin + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + ", initialEventTime='" + initialEventTime + '\'' + '}';
+        return "CloseTradeMtEvent_NEW{" + "tradeId=" + tradeId + ", symbol='" + symbol + '\'' + ", id='" + id + '\'' + ", serverId=" + serverId + ", tradingAccount=" + tradingAccount + ", volume=" + volume + ", closeTime='" + closeTime + '\'' + ", closeTimeUtc='" + closeTimeUtc + '\'' + ", equity=" + equity + ", balance=" + balance + ", leverage=" + leverage + ", margin=" + margin + ", freeMargin=" + freeMargin + ", type='" + type + '\'' + ", eventDate='" + eventDate + '\'' + ", metadata=" + metadata + '\'' + '}';
     }
 }

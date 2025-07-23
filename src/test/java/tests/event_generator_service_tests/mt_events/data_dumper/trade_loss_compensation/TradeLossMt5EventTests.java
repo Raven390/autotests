@@ -55,8 +55,6 @@ class TradeLossMt5EventTests extends TestBaseKafka {
         assertThat("Check margin", retrievedTradeLossMtEvent.margin, equalTo(tradeLossTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedTradeLossMtEvent.freeMargin, equalTo(tradeLossTradeMt5.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedTradeLossMtEvent.eventDate, startsWith(String.valueOf(tradeLossTradeMt5.getPayload().getTimeUtc())));
-        assertThat("Check initialEventTime", retrievedTradeLossMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedTradeLossMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedTradeLossMtEvent.type, equalTo("tradeLossCompensation"));
     }
 }

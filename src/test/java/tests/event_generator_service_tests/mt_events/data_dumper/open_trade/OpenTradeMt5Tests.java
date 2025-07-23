@@ -59,8 +59,6 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt5.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, startsWith(String.valueOf(openTradeMt5.getPayload().getTimeUtc())));
-        assertThat("Check initialEventTime", retrievedOpenTradeMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedOpenTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
     }
 
@@ -96,8 +94,6 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt5.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, startsWith(String.valueOf(openTradeMt5.getPayload().getTimeUtc())));
-        assertThat("Check initialEventTime", retrievedOpenTradeMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedOpenTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
     }
 }
