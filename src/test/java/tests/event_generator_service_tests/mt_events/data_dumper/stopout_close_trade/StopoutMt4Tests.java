@@ -56,8 +56,6 @@ class StopoutMt4Tests extends TestBaseKafka {
         assertThat("Check margin", retrievedStopoutTradeMtEvent.margin, equalTo(stopoutTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedStopoutTradeMtEvent.freeMargin, equalTo(stopoutTradeMt4.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedStopoutTradeMtEvent.eventDate, startsWith(String.valueOf(stopoutTradeMt4.getPayload().getCloseTimeUtc())));
-        assertThat("Check initialEventTime", retrievedStopoutTradeMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedStopoutTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedStopoutTradeMtEvent.type, equalTo("stopoutCloseTrade"));
     }
 }

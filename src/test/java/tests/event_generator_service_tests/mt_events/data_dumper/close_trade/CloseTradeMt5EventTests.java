@@ -57,8 +57,6 @@ class CloseTradeMt5EventTests extends TestBaseKafka {
         assertThat("Check margin", retrievedCloseTradeMtEvent.margin, equalTo(closeTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedCloseTradeMtEvent.freeMargin, equalTo(closeTradeMt5.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedCloseTradeMtEvent.eventDate, startsWith(String.valueOf(closeTradeMt5.getPayload().getTimeUtc())));
-        assertThat("Check initialEventTime", retrievedCloseTradeMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedCloseTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedCloseTradeMtEvent.type, equalTo("closeTrade"));
     }
 

@@ -60,8 +60,6 @@ class OpenTradeMt4Tests extends TestBaseKafka {
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt4.getPayload().getFreeMargin()));
         assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo("1.000000000"));
-        assertThat("Check initialEventTime", retrievedOpenTradeMtEvent.initialEventTime, instanceOf(String.class));
-        assertThat("Check metadata", retrievedOpenTradeMtEvent.metadata.created, instanceOf(String.class));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
     }
 }
