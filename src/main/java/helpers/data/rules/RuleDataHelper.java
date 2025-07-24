@@ -139,7 +139,6 @@ public class RuleDataHelper {
             if (data.connections != null && (!data.connections.isEmpty())) try {
                 for (ConnectionTableEntry i : data.connections) {
                     i.datetime = getCurrentTimestampDbFormat();
-//                    insertObjectToDb(CONNECTIONS_TABLE_NAME, i);
                     logger.info("WE ARE INSERTING connections");
 
                     executeQueryToDb(DbName.CLICKHOUSE, " INSERT INTO " + CONNECTIONS_TABLE_NAME + " (user_from, user_to, degree_connection, connection_score, connection_info, `datetime`, ver, status) VALUES('" + i.userFrom + "','" + i.userTo + "','" + i.degreeConnection + "','" + i.connectionScore + "','" + i.connectionInfo + "', NOW(), '1','new');");
@@ -162,7 +161,6 @@ public class RuleDataHelper {
             if (data.dictAccountToUcidObject != null) {
                 insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
             }
-
             insertObjectsToDb(CRM_USER_TABLE_NAME, data.connectedUsers);
             if (data.clientFraudTypes != null) {
                 data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
