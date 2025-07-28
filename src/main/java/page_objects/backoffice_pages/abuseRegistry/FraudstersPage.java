@@ -33,12 +33,16 @@ public class FraudstersPage extends AbstractPage {
     private final Locator restrictionListButton;
     private final Locator restrictionApplyButton;
     private final Locator deleteUploadButton;
+    private final Locator removeListButton;
+    private final Locator removeDrawer;
 
 
     public FraudstersPage(Page page) {
         super(page);
         this.uploadListButton = page.locator("//button/*[text()='Add']");
+        this.removeListButton = page.locator("//button/*[text()='Remove']");
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
+        this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
         this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons, or new lines']");
         this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_select_anchor_button']");
         this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
@@ -49,7 +53,7 @@ public class FraudstersPage extends AbstractPage {
         this.selectPopupApplyButton = page.locator("//*[@data-qa=\"select-popup\"]//button/*[text()='Apply']");
         this.commentaryField = page.locator("//textarea[@placeholder='Describe your decision']");
         this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
-        this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Delete']");
+        this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Remove']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
 
@@ -65,6 +69,12 @@ public class FraudstersPage extends AbstractPage {
         Allure.step("navigate abuse to registry page / fraudsters");
         page.navigate(BASE_URL_E2E + "abuse-registry/fraudsters");
         waitForPageToLoad();
+    }
+
+    public void openRemoveDrawer() {
+        Allure.step("open upload remove by click to remove list button");
+        removeListButton.click();
+        removeDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     public void openUploadDrawer() {
@@ -104,13 +114,21 @@ public class FraudstersPage extends AbstractPage {
         fraudTypeInput.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
-    public void addSelectedFraudFraud(String fraud, String status) {
+    public void addSelectedFraudAdd(String fraud, String status) {
         String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
         page.locator(element).hover();
         page.locator(element).hover();
         String subelement = element + "/../../..//div[@class='v-dropdown-select-item__sub-menu-content']//div[text()='" + status + "']";
         page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         page.locator(subelement).click();
+    }
+
+    public void addSelectedFraudDelete(String fraud) {
+        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        page.locator(element).hover();
+        page.locator(element).hover();
+        page.locator(element).click();
+        page.waitForTimeout(500);
     }
 
     public void clickAddRestrictionButton() {

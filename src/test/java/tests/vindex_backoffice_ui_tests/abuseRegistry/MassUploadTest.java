@@ -70,7 +70,7 @@ public class MassUploadTest extends TestBaseWeb {
         fraudstersPage.typeClientsID(client1.getUserId().toString(), client2.getUserId().toString(), client3.getUserId().toString());
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
-        fraudstersPage.addSelectedFraudFraud(fraudTypeOld.getDisplayName(), "Confirmed");
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getDisplayName(), "Confirmed");
         fraudstersPage.clickAddRestrictionButton();
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
