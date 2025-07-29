@@ -49,7 +49,7 @@ public class AuditTrailTest extends TestBaseWeb {
         crmTbUser = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account = generateCrmTbAccountDataForUi(client);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }

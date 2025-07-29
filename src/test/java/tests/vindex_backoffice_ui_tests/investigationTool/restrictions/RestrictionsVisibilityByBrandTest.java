@@ -39,7 +39,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
     }
 
     @Test

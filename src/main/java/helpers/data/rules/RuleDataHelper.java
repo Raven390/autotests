@@ -6,12 +6,15 @@ import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLogin
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
+import business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictActiveTradingDaysByUcidObject;
+import business_objects.db.clickhouse.dict_is_test.DictIsTestObject;
 import business_objects.db.clickhouse.email_table.EmailTableEntry;
 import business_objects.db.clickhouse.ip_table.IpTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
@@ -23,6 +26,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.phone.PhoneTableEntry;
+import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
 import business_objects.kafka.crm_events.EgRegistrationEvent;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
@@ -45,6 +49,8 @@ public class RuleDataHelper {
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
     public DictAccountToUcidObject dictAccountToUcidObject;
+    public DictIsTestObject dictIsTestObject;
+    public List<DictActiveTradingDaysByUcidObject> dictActiveTradingDaysByUcidObject;
     public LnSessionParsedObject lnSessionParsedObjectRegistration;
     public LnSessionParsedObject lnSessionParsedObjectLogin;
     public List<ConnectionTableEntry> connections;
@@ -53,6 +59,7 @@ public class RuleDataHelper {
     public CloseTradeMtEvent closeTradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
+    public CrmTbAccountForMtObject crmTbAccountForMtObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
     public List<MtTbCreditsObject> mtTbCreditsObjects;
     public List<CrmTbWithdrawalObject> crmTbWithdrawalObjects;
@@ -78,27 +85,33 @@ public class RuleDataHelper {
     public List<DeviceIdTableEntry> deviceIdTableEntries;
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
-
+    public List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject;
 
     public RuleDataHelper() {
     }
 
     public RuleDataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
+            DictAccountToUcidObject dictAccountToUcidObject, DictIsTestObject dictIsTestObject,
+            List<DictActiveTradingDaysByUcidObject> dictActiveTradingDaysByUcidObjects,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
             EgWithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent,
             List<ClientFraudTypes> clientFraudTypes,
             List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
-            CrmTbAccountObject crmTbAccountObject,
+            CrmTbAccountObject crmTbAccountObject, CrmTbAccountForMtObject crmTbAccountForMtObject,
             List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
             List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsCoercedObjects,
             AggrCreditEquityRateObject aggrCreditEquityRate, MirrorLoginObject aggrMirrorAccountsByTrades,
             List<MtBalanceOrdersObject> mtBalanceOrdersObjects, List<MirrorLoginObject> mirrorLoginObjects,
             List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
             List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
-            List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects) {
+            List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
+            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
+        this.dictAccountToUcidObject = dictAccountToUcidObject;
+        this.dictIsTestObject = dictIsTestObject;
+        this.dictActiveTradingDaysByUcidObject = dictActiveTradingDaysByUcidObjects;
         this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;
         this.lnSessionParsedObjectLogin = lnSessionParsedObjectLogin;
         this.connections = connections;
@@ -107,6 +120,7 @@ public class RuleDataHelper {
         this.closeTradeEvent = closeTradeEvent;
         this.clientFraudTypes = clientFraudTypes;
         this.crmTbAccountObject = crmTbAccountObject;
+        this.crmTbAccountForMtObject = crmTbAccountForMtObject;
         this.crmTbAccountObjectConnections = crmTbAccountObjectConnections;
         this.mtTbCreditsObjects = mtTbCreditsObjects;
         this.crmTbWithdrawalObjects = crmTbWithdrawalObjects;
@@ -123,13 +137,14 @@ public class RuleDataHelper {
         this.mtAccountObject = mtAccountObject;
         this.loyaltyObjects = loyaltyObjects;
         this.mtMt5PositionsObjects = mtMt5PositionsObjects;
+        this.s3FactIbSalesCommissionsObject = s3FactIbSalesCommissionsObject;
     }
 
     static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
 
     @Override
     public String toString() {
-        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + '}';
+        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", dictAccountToUcidObject=" + dictAccountToUcidObject + ", dictIsTestObject=" + dictIsTestObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + ", lnSessionParsedObject=" + lnSessionParsedObject + ", registrationEvent=" + registrationEvent + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", phoneTableEntries=" + phoneTableEntries + ", ipTableEntries=" + ipTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + ", closeTradeMtEvent=" + closeTradeMtEvent + ", mt5DealsObjects=" + mt5DealsObjects + '}';
     }
 
     public static void setupRuleData(Map<String, RuleDataHelper> map) {
@@ -147,6 +162,19 @@ public class RuleDataHelper {
             } catch (Exception e) {
                 logger.info("Error while inserting connections into table: " + e.getMessage());
             }
+            if (data.crmTbUserObject != null) {
+                insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
+            }
+            if (data.dictAccountToUcidObject != null) {
+                insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
+            }
+            if (data.dictIsTestObject != null) {
+                insertObjectToDb(DICT_IS_TEST, data.dictIsTestObject);
+            }
+            if (data.dictActiveTradingDaysByUcidObject != null) {
+                data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> insertObjectToDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, tradingDays));
+            }
+            insertObjectsToDb(CRM_USER_TABLE_NAME, data.connectedUsers);
             if (data.lnSessionParsedObjectRegistration != null) {
                 logger.info("WE ARE INSERTING LN");
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
@@ -155,21 +183,17 @@ public class RuleDataHelper {
                 logger.info("WE ARE INSERTING LN");
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
             }
-            if (data.crmTbUserObject != null) {
-                insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);
-            }
-            if (data.dictAccountToUcidObject != null) {
-                insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
-            }
-            insertObjectsToDb(CRM_USER_TABLE_NAME, data.connectedUsers);
             if (data.clientFraudTypes != null) {
                 data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
             }
             if (data.crmTbAccountObject != null) {
-                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
+                insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
+            }
+            if (data.crmTbAccountForMtObject != null) {
+                insertObjectToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, data.crmTbAccountForMtObject);
             }
             if (data.crmTbAccountObjectConnections != null) {
-                data.crmTbAccountObjectConnections.forEach(credit -> insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit));
+                data.crmTbAccountObjectConnections.forEach(credit -> insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, credit));
             }
             if (data.mtTbCreditsObjects != null) {
                 data.mtTbCreditsObjects.forEach(credit -> insertObjectToDb(MT_CREDITS_TABLE_NAME, credit));
@@ -198,8 +222,8 @@ public class RuleDataHelper {
             if (data.crmTbBonusObjects != null) {
                 data.crmTbBonusObjects.forEach(bonus -> insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus));
             }
-            if (data.mt5DealsCoercedObjects != null) {
-                data.mt5DealsCoercedObjects.forEach(deal -> insertObjectToDb(MT5_DEALS_COERCED_TABLE_NAME, deal));
+            if (data.mt5DealsCoercedObjects != null && !data.mt5DealsCoercedObjects.isEmpty()) {
+                insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, data.mt5DealsCoercedObjects);
             }
             if (data.mtMt5PositionsObjects != null) {
                 data.mtMt5PositionsObjects.forEach(position -> insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position));
@@ -225,8 +249,11 @@ public class RuleDataHelper {
             if (data.mirrorLoginObjects != null) {
                 data.mirrorUcidObjects.forEach(mirrorUcidObject -> insertObjectToDb(MIRROR_UCID_TABLE_NAME, mirrorUcidObject));
             }
-            if (data.mirrorLoginObjects != null) {
+            if (data.loyaltyObjects != null) {
                 data.loyaltyObjects.forEach(loyaltyObjects -> insertObjectToDb(CRM_TB_LOYALTY_REDEMPTION, loyaltyObjects));
+            }
+            if (data.s3FactIbSalesCommissionsObject != null) {
+                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, salesComm));
             }
         }
     }
@@ -238,6 +265,9 @@ public class RuleDataHelper {
             }
             if (data.dictAccountToUcidObject != null) {
                 deleteEntryFromDb(DICT_ACCOUNT_TO_UCID, String.format("ucid = '%s'", data.dictAccountToUcidObject.ucid));
+            }
+            if (data.dictActiveTradingDaysByUcidObject != null) {
+                data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> deleteEntryFromDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, String.format("ucid = '%s'", tradingDays.ucid)));
             }
             if (data.connections != null) {
                 data.connections.forEach(connection -> deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from = '%s'", connection.userFrom)));
@@ -302,6 +332,9 @@ public class RuleDataHelper {
             if (data.aggrCreditEquityRate != null) {
                 data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             }
+            if (data.s3FactIbSalesCommissionsObject != null) {
+                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm)));
+            }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
             if ((data.connectedUsers != null) && (!data.connectedUsers.isEmpty())) {
@@ -318,7 +351,7 @@ public class RuleDataHelper {
                     }
                 }
                 sb.append(")");
-                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid in %s", sb.toString()));
+                deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid in %s", sb));
             }
         }
         stopSshTunnel();

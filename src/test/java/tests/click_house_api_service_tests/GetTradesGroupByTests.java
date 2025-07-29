@@ -83,7 +83,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         trade7 = generateTradeByClient(client3);
         trade6.setSymbol("BTCEUR");
 
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateCrmTbAccountData(client2), generateCrmTbAccountData(client3)));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateCrmTbAccountData(client2), generateCrmTbAccountData(client3)));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7));
     }
 

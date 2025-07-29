@@ -7,7 +7,7 @@ import static utils.Utils.getRandomIntPositive;
 
 public class MtBalanceOrdersObjectFactory {
     @Step("Generate mt balance orders for given account")
-    public static MtBalanceOrdersObject generateBalanceOrders(ClientHelper client, Double profit, Double profitUsd,
+    public static MtBalanceOrdersObject generateMtBalanceOrders(ClientHelper client, Double profit, Double profitUsd,
             String date) {
         return new MtBalanceOrdersObject(getRandomIntPositive(), client.getServerId(), "Test", client.getUcid(), client.getBrand(), "vfsc", client.getUserId(), client.getTradingAccount(), date, profit, profitUsd, "EURUSD", "Administration Fee Automation test");
     }

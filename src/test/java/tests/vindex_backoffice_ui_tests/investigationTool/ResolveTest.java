@@ -76,7 +76,7 @@ public class ResolveTest extends TestBaseWeb {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(withdrawalClientDB, resolveClientDB));
 
         CrmTbAccountObject account = generateStaticCrmTbAccountActive(withdrawalClient);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
     }
 
     @BeforeEach

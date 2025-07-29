@@ -55,7 +55,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, getConnectionTableEntryForUi(client, connectedClient));
         insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
         insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         userId = getUserIdByUser(autotestUserOne());

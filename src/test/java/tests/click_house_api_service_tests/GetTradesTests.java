@@ -69,7 +69,7 @@ class GetTradesTests extends TestBaseApi {
         trade3.setServerId(1000);
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5));
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(client, client2, client3));
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(client1Account, client2Account, client3Account));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(client1Account, client2Account, client3Account));
     }
 
     @AfterAll

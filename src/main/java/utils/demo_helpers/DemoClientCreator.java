@@ -82,7 +82,7 @@ public class DemoClientCreator {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(clientCrm1, clientCrm2, clientCrm3));
 
         CrmTbAccountObject account = generateStaticCrmTbAccountActive(client1);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
 
@@ -110,8 +110,8 @@ public class DemoClientCreator {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbReferral);
         CrmTbAccountObject refAccount1 = generateStaticCrmTbAccountActive(referral);
         CrmTbAccountObject refAccount2 = generateAdditionalCrmTbAccountData(referral);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, refAccount1);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, refAccount2);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount2);
         MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);

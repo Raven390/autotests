@@ -89,7 +89,7 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
     @AllureId("1133")
     @DisplayName("Verify Rebates received widget no rebates, 1 account in Payments - Summary")
     public void verifyPaymentsSummaryRebatesReceived2Test() {
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -108,7 +108,7 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
     @AllureId("1134")
     @DisplayName("Verify Rebates received widget rebates in Payments - Summary")
     public void verifyPaymentsSummaryRebatesReceived3Test() {
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account2, account3));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account2, account3));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount2, mtAccount3));
         insertObjectsToDb(S3_FACT_IB_SALES_COMMISSIONS, List.of(ibCommission1, ibCommission2, ibCommission3));
         S3FactIbSalesCommissionsObject commission1 = generateS3FactIbSalesCommissionsClient(getRandomVantageClientAllFields());

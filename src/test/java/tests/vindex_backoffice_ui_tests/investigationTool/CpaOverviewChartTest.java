@@ -83,7 +83,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, ibCrmTbUser));
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
         insertObjectToDb(CRM_TB_USER_EXTENDS_TABLE_NAME, crmTbUserExtends);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, ibMtAccount));
         // Relations

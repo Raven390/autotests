@@ -46,7 +46,7 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         account1.platform = "MT4";
         account2 = generateAdditionalStaticCrmTbAccountActive(client);
         account2.platform = "MT5";
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));

@@ -58,7 +58,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
 
     @BeforeAll
     static void setupData() {
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 

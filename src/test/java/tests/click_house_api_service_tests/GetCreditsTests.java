@@ -45,7 +45,7 @@ class GetCreditsTests extends TestBaseApi {
         credit2.account = credit1.account;
         credit2.createTime = getTomorrowTimestampDbFormat();
         credit2.amountUsd = 2.0;
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, generateCrmTbAccountData(client));
         insertObjectToDb(MT_CREDITS_TABLE_NAME, credit1);
         insertObjectToDb(MT_CREDITS_TABLE_NAME, credit2);
     }

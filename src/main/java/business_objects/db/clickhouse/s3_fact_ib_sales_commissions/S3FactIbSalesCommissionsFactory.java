@@ -7,7 +7,7 @@ import static utils.Utils.getCurrentDate;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
 public class S3FactIbSalesCommissionsFactory {
-    @Step("Generate data for given account")
+    @Step("Generate IB sale commission data")
     public static S3FactIbSalesCommissionsObject generateS3FactIbSalesCommissionsClient(ClientHelper client) {
         S3FactIbSalesCommissionsObject commission = new S3FactIbSalesCommissionsObject();
         commission.setDate(getCurrentDate());
@@ -19,6 +19,7 @@ public class S3FactIbSalesCommissionsFactory {
         commission.setServerId(client.getServerId());
         commission.setDlInsertTs(getCurrentTimestampDbFormat());
         commission.setDlUpdateTs(getCurrentTimestampDbFormat());
+        commission.setIbUserId(123);
         return commission;
     }
 

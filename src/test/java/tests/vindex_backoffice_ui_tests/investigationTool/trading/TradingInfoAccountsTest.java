@@ -49,7 +49,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = "EUR";
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
@@ -64,7 +64,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         trade2.setProfitUsd(22.2);
         trade2.setStorageUsd(0d);
         trade2.setCommissionUsd(0.0);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);

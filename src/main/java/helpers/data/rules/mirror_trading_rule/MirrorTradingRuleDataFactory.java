@@ -32,7 +32,7 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositOb
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataForUserId;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -257,7 +257,7 @@ public class MirrorTradingRuleDataFactory {
         Mt5DealsCoercedObject mirrorTrade4 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
         Mt5DealsCoercedObject mirrorTrade5 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
         Mt5DealsCoercedObject mirrorTrade6 = generateTradeByClient(mirrorTradingRuleExitEventEnd1_1Client);
-        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(mirrorTradingRuleExitEventEnd1_1Client, 1d, 2d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrders(mirrorTradingRuleExitEventEnd1_1Client, 1d, 2d, getCurrentTimestampDbFormat());
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -421,7 +421,7 @@ public class MirrorTradingRuleDataFactory {
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         Mt5DealsCoercedObject trade1 = generateTradeByClient(mirrorTradingRuleExitEventEnd7_3Client);
         Mt5DealsCoercedObject trade2 = generateTradeByClient(mirrorTradingRuleExitEventEnd7_3Client);
-        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(mirrorTradingRuleExitEventEnd7_3Client, 1d, 2d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrders(mirrorTradingRuleExitEventEnd7_3Client, 1d, 2d, getCurrentTimestampDbFormat());
         Allure.step("Client has no previous restrictions");
         Allure.step("Client has no connected account (or have, bu connected account has no bonuses)");
         Allure.step("Account has a credit");
@@ -536,10 +536,10 @@ public class MirrorTradingRuleDataFactory {
                 insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud);
             });
             if (data.crmTbAccountObject != null) {
-                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
+                insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
             data.crmTbAccountObjectConnections.forEach(credit -> {
-                insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, credit);
+                insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, credit);
             });
             data.mtTbCreditsObjects.forEach(credit -> {
                 insertObjectToDb(MT_CREDITS_TABLE_NAME, credit);

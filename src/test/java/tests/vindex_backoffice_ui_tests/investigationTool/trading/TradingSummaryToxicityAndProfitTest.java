@@ -79,7 +79,7 @@ public class TradingSummaryToxicityAndProfitTest extends TestBaseWeb {
         crmTbUser.registrationDate = transformDate(trade1.time, DATE_AND_TIME, DATE);
         crmTbUser.registrationDateUtc = transformDate(trade1.time, DATE_AND_TIME, DATE);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account, account2));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, account2));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
         insertObjectsToDb(MT5_DEALS_COERCED_TOXICITY_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9));
     }

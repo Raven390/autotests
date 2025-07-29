@@ -22,7 +22,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
@@ -43,7 +43,7 @@ public class LossVoucherRuleDataFactory {
         CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
         MtAccountObject account = generateMtAccountByClient(client);
         EgWithdrawalEvent withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), account, new ArrayList<>(), new ArrayList<>());
+        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), account, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     public static RuleDataHelper getLossVoucherRuleExitEventEnd11Data() {
@@ -57,7 +57,7 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd1_2Client);
-        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrders(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
 
@@ -90,7 +90,7 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd2Client);
-        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrders(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";
@@ -121,7 +121,7 @@ public class LossVoucherRuleDataFactory {
         Allure.step("Get client data");
         RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd3Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd3Client);
-        MtBalanceOrdersObject balanceOrder = generateBalanceOrders(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
+        MtBalanceOrdersObject balanceOrder = generateMtBalanceOrders(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
         data.mtBalanceOrdersObjects.add(balanceOrder);
         bonus.type = "Cash Adjustment - Debt W/O";

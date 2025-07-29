@@ -35,7 +35,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
 
     @BeforeAll
     static void setupMirrorTrades() {
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
     }
 
     @Test

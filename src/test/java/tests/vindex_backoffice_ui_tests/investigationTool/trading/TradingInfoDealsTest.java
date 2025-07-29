@@ -44,11 +44,11 @@ public class TradingInfoDealsTest extends TestBaseWeb {
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.platform = "MT5";
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account2);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account2));
         trade1 = generateMt4TradesCoerced(client);
         trade1.serverId = account1.serverIdSt.longValue();

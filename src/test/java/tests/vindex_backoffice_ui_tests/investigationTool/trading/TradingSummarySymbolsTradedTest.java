@@ -41,7 +41,7 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         crmTbUser.firstName = "Tradeus";
         crmTbUser.lastName = "Symboll";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
     }
 
