@@ -41,7 +41,7 @@ public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
         crmTbUser.firstName = "Pienell";
         crmTbUser.lastName = "Symboll";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
     }
 
     @BeforeEach

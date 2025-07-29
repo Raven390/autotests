@@ -12,6 +12,10 @@ public class TradeEventMetadata {
     public TradeEventMetadata() {
     }
 
+    public TradeEventMetadata(String platform) {
+        this.platform = platform;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

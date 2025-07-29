@@ -41,7 +41,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         crmTbUser.firstName = "Pienell";
         crmTbUser.lastName = "Duration";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
     }
 
     @Test

@@ -60,7 +60,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, labelClientDB));
 
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(active, inactive));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(active, inactive));
     }
 
 

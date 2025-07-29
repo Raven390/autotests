@@ -42,7 +42,7 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         crmTbUser.firstName = "Holden";
         crmTbUser.lastName = "Times";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
     }
 

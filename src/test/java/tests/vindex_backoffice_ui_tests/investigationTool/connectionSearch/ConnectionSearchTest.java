@@ -99,7 +99,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         // Other data
         // PNL related
         CrmTbAccountObject account = generateCrmTbAccountDataForUi(connectedClient3);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account));
         trade = generateMt4TradesCoercedForConnectionSearch(connectedClient3, 123.45, getCurrentTimestampDbFormat());
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, trade);

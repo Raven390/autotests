@@ -55,7 +55,7 @@ class GetClientsTests extends TestBaseApi {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
         CrmTbAccountObject accountObject = generateCrmTbAccountData(client);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, accountObject);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, accountObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();
@@ -88,7 +88,7 @@ class GetClientsTests extends TestBaseApi {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmObject);
         // Insert object in mt user table
         CrmTbAccountObject accountObject = generateCrmTbAccountData(client);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, accountObject);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, accountObject);
 
         // getClient request
         Map<String, Object> queryParams = new HashMap<>();

@@ -51,7 +51,7 @@ class DeductionTableTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account.currency = Currency.getInstance("EUR").getCurrencyCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         Thread.sleep(1000);
         addFraudForClient(client, HEDGING, INTERNAL, CONFIRMED, List.of("EURUSD", "GBPUSD"));

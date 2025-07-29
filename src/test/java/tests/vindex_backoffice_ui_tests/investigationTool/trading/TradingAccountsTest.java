@@ -43,7 +43,7 @@ public class TradingAccountsTest extends TestBaseWeb {
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateStaticCrmTbAccountActive(client);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount1);
         relation = generateAccountIbRelationObjectByClient(client);

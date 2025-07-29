@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_balance_orders.GetBalanceOrdersRequest.getBalanceOrders;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanMtBalanceOrdersTableByClient;
 import static helpers.database.DbHelper.*;
@@ -45,8 +45,8 @@ class GetBalanceOrdersTests extends TestBaseApi {
 
     @BeforeAll
     static void setupData() {
-        data1 = generateBalanceOrders(client1, 1d, 2d, tradeDate1);
-        data2 = generateBalanceOrders(client1, 3d, 4d, tradeDate2);
+        data1 = generateMtBalanceOrders(client1, 1d, 2d, tradeDate1);
+        data2 = generateMtBalanceOrders(client1, 3d, 4d, tradeDate2);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
     }
 

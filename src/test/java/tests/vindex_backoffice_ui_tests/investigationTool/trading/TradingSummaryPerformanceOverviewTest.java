@@ -104,7 +104,7 @@ public class TradingSummaryPerformanceOverviewTest extends TestBaseWeb {
         trade12.commissionUsd = -111.33d;
         crmTbUser.registrationDate = transformDate(trade9.openTime, DATE_AND_TIME, DATE);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_ACCOUNT_TABLE_NAME, account);
+        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12));
     }

@@ -79,6 +79,22 @@ public class CloseTradeMtEvent {
         this.type = type;
     }
 
+    public CloseTradeMtEvent(
+            String id, String closeTime, Long tradeId, Integer tradingAccount, Double volume, String symbol,
+            Integer serverId, String type, String eventDate, TradeEventMetadata metadata, String initialEventTime) {
+        this.id = id;
+        this.closeTime = closeTime;
+        this.tradeId = tradeId;
+        this.tradingAccount = tradingAccount;
+        this.volume = volume;
+        this.symbol = symbol;
+        this.serverId = serverId;
+        this.type = type;
+        this.eventDate = eventDate;
+        this.metadata = metadata;
+        this.initialEventTime = initialEventTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

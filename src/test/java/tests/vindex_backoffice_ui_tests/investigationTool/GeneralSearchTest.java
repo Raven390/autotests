@@ -52,14 +52,14 @@ class GeneralSearchTest extends TestBaseWeb {
         crmTbUser1.lastName = "Searchman";
         crmTbUser1.registrationDate = "2025-02-21";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account11, account12));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account11, account12));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount11, mtAccount12));
 
         crmTbUser2.firstName = "General";
         crmTbUser2.lastName = "Secondman";
         crmTbUser2.registrationDate = "2024-03-19";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
-        insertObjectsToDb(CRM_ACCOUNT_TABLE_NAME, List.of(account21, account22));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account21, account22));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount21, mtAccount22));
     }
 

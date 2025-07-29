@@ -1,0 +1,153 @@
+package tests.rule_engine_service_tests.rules;
+
+import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.kafka.alerts.RuleAlert;
+import helpers.data.rules.RuleDataHelper;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.*;
+import tests.TestBaseRule;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.latency_arbitrage_rule.LatencyArbitrageRuleDataFactory.*;
+import static helpers.database.DbHelper.startSshTunnel;
+import static helpers.database.DbHelper.stopSshTunnel;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static utils.Constants.*;
+
+@Feature(FEATURE_RULE_ENGINE_SERVICE)
+@Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
+@Tag(TEAM_CORE)
+@Tag(LAYER_API)
+@Tag(SUITE_RULE_ENGINE_RULES_TESTS)
+class LatencyArbitrageRuleTest extends TestBaseRule {
+
+    static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
+
+    @BeforeAll
+    static void setupData() throws IOException, InterruptedException {
+        startSshTunnel();
+        enableCRMEmulator();
+        dbDataMap = setupLatencyArbitrageData();
+    }
+
+    @AfterAll
+    static void deleteData() throws Exception {
+        deleteLatencyArbitrageRuleData(dbDataMap);
+        stopSshTunnel();
+    }
+
+
+    @Test
+    @AllureId("1372")
+    @DisplayName("Withdrawal notification rule. Exit without alert if platform is not MT5")
+    void latencyArbitrageRuleTest1() throws Exception {
+        RuleDataHelper data = dbDataMap.get("1");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1373")
+    @DisplayName("Latency arbitrage. Exit without alert if user is test or social trader user")
+    void latencyArbitrageRuleTest2() throws Exception {
+        RuleDataHelper data = dbDataMap.get("2");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1373")
+    @DisplayName("Latency arbitrage. Exit without alert if user has less that 10 trading days")
+    void latencyArbitrageRuleTest3() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1374")
+    @DisplayName("Latency arbitrage. Exit without alert if user has less than 100 trades")
+    void latencyArbitrageRuleTest4() throws Exception {
+        RuleDataHelper data = dbDataMap.get("4");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1375")
+    @DisplayName("Latency arbitrage. Exit without alert if netProfit + rebatesAmount not >= 500?")
+    void latencyArbitrageRuleTest5() throws Exception {
+        RuleDataHelper data = dbDataMap.get("5");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1375")
+    @DisplayName("Latency arbitrage. Exit without alert if Total Profit / Cumulative deposit not >= 0.3")
+    void latencyArbitrageRuleTest6() throws Exception {
+        RuleDataHelper data = dbDataMap.get("6");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Disabled
+    @Test
+    @AllureId("1376")
+    @DisplayName("Latency arbitrage. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80")
+    void latencyArbitrageRuleTest7() throws Exception {
+        RuleDataHelper data = dbDataMap.get("7");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+}
