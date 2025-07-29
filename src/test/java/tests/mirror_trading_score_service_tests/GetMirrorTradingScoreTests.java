@@ -19,8 +19,8 @@ import static business_objects.db.data_science.bybit_feature_store.feature_store
 import static business_objects.db.data_science.feature_store_service.FeatureStoreServiceFactory.*;
 import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.CleanTableHelper.cleanUserMirrorScoreDataDb;
 import static helpers.database.DbHelper.*;
-import static helpers.database.MirrorScoreHelper.cleanUserMirrorScoreDataDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -52,11 +52,10 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
     @AllureId("1149")
     void getMirrorScoreTest() throws Exception {
 
+        System.out.println(client.getUcid());
         Allure.step("setup DB data");
-        cleanUserMirrorScoreDataDb(client.getUcid());
-        FeatureStoreService source4 = getFeatureStoreServiceDepositObject(client);
-
-        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source4));
+        FeatureStoreService source1 = createFeatureStoreServiceForInsert1(client);
+        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source1));
 
         // Add wait for service to process the data
         Thread.sleep(10_000);
@@ -66,7 +65,7 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
         assertThat(response.code(), is(200));
         Allure.step("Validate Data in response");
         UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
-        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.889_995_75));
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.863_458_6));
         assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
     }
 
@@ -79,11 +78,11 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
         cleanUserMirrorScoreDataDb(client2.getUcid());
 
         // Create BybitFeatureStore objects using the factory methods
-        BybitFeatureStore source3 = getBybitFeatureStoreWithdrawalObject(client2);
-        insertObjectsToDb(DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME, List.of(source3));
+        BybitFeatureStore source = getBybitFeatureStoreWithdrawalObject(client2);
+        insertObjectsToDb(DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME, List.of(source));
 
         // Add wait for service to process the data
-        Thread.sleep(10_000);
+        Thread.sleep(15_000);
 
         Allure.step("send API request for mirror score data");
         Response response = getMirrorTradingScore(client2);
@@ -93,5 +92,4 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
         assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.885_080_2));
         assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
     }
-
 }

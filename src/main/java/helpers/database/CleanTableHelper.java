@@ -2,6 +2,7 @@ package helpers.database;
 
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.mitigation_service_db.ClientTradingRestriction;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.sql.SQLException;
@@ -189,6 +190,16 @@ public class CleanTableHelper {
     @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, "event", String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        Thread.sleep(100);
+    }
+
+    // Data science db
+
+    public static void cleanUserMirrorScoreDataDb(String ucid) throws Exception {
+        Allure.step("delete user's mirror score data from DB");
+
+        deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, "ucid = '" + ucid + "'");
+        //deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_V2_TABLE_NAME, "ucid = '" + ucid + "'");
         Thread.sleep(100);
     }
 }
