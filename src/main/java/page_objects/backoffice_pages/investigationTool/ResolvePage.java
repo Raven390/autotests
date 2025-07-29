@@ -15,6 +15,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
@@ -55,6 +56,16 @@ public class ResolvePage extends AbstractPage {
     private final Locator restrictionListButton;
     private final Locator applyButton;
     private final Locator resetRestrictionsChangesButton;
+    private final Locator suggestedDeductionHeader;
+    private final Locator suggestedDeductionAmount;
+    private final Locator noDeductionSwitch;
+    private final Locator illegalProfitAccountsDropdown;
+    private final Locator suggestedDeductionItems;
+    private final Locator suggestedDeductionValues;
+    private final Locator thunderIcon;
+    private final Locator accountIllegalProfit;
+    private final Locator useAsIllegalProfitButton;
+    private final Locator suggestedDeductionSection;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -69,7 +80,8 @@ public class ResolvePage extends AbstractPage {
     private static final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
-    private static final String FRAUD_BY_DD_VALUE_PATTERN = "//div[@data-dd-value='%s']";
+    private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[text()='%s']";
+    private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
 
     public ResolvePage(Page page) {
         super(page);
@@ -103,6 +115,16 @@ public class ResolvePage extends AbstractPage {
         this.confirmFraudDeletionButton = page.locator("//span[@class='g-button__text' and text()='Yes']");
         this.resetFraudChangesButton = page.locator(RESET_FRAUD_CHANGES_BUTTON_LOCATOR);
         this.resetRestrictionsChangesButton = page.locator(RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR);
+        this.suggestedDeductionHeader = page.locator("//div[@class='v-suggested-deduction__header']");
+        this.suggestedDeductionAmount = suggestedDeductionHeader.locator("//span[contains(@class,'g-text')]");
+        this.noDeductionSwitch = suggestedDeductionHeader.locator("//input");
+        this.illegalProfitAccountsDropdown = suggestedDeductionHeader.locator("//span[@class='g-button__text']");
+        this.suggestedDeductionItems = page.locator("//div[@class='v-suggested-deduction-item__info']");
+        this.suggestedDeductionValues = page.locator("//div[@class='v-suggested-deduction-item__deduction']");
+        this.thunderIcon = page.locator("//*[contains(@class,'g-icon v-suggested-deduction-select__thunder')]");
+        this.accountIllegalProfit = page.locator("//span[contains(@class,'g-text')]");
+        this.useAsIllegalProfitButton = page.locator("//div[@class='v-suggested-deduction-select__controls']/button[contains(@class,'g-button_view_action')]");
+        this.suggestedDeductionSection = page.locator("//div[@class='v-suggested-deduction']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -224,9 +246,9 @@ public class ResolvePage extends AbstractPage {
 
     public void addFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, fraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, fraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, String.format("%s:%s", fraud.getCode(), status.getStatus()))).click();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, status.getDisplayName())).click();
     }
 
     public void addFraud(FraudType fraud) {
@@ -373,9 +395,9 @@ public class ResolvePage extends AbstractPage {
     public void reportAddFraud(String comment, FraudType addedFraud, FraudTypeStatus fraudStatus) {
         commentInput.fill(comment);
         fraudListButton.click();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, addedFraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, addedFraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_DD_VALUE_PATTERN, String.format("%s:%s", addedFraud.getCode(), fraudStatus.getStatus()))).click();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, addedFraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, addedFraud.getCode())).hover();
+        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, String.format("%s:%s", addedFraud.getCode(), fraudStatus.getStatus()))).click();
         submitFraudButton.click();
         successToast.getByText("Fraud management completed").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.getByText("Fraud management completed").isVisible());
@@ -459,5 +481,61 @@ public class ResolvePage extends AbstractPage {
         fraudSelectApplyButton.click();
     }
 
+    @Step("Get suggested deduction amount")
+    public String getSuggestedDeductionAmount() {
+        return suggestedDeductionAmount.textContent();
+    }
 
+    @Step("Get illegal profit amount")
+    public String getIllegalProfitAmount() {
+        return illegalProfitAccountsDropdown.textContent();
+    }
+
+    @Step("Get suggested deduction items")
+    public List<String> getSuggestedDeductionItems() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < suggestedDeductionItems.count(); i++) {
+            list.add(suggestedDeductionItems.nth(i).textContent());
+        }
+        return list;
+    }
+
+    @Step("Get suggested deduction values")
+    public List<String> getSuggestedDeductionValues() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < suggestedDeductionValues.count(); i++) {
+            list.add(suggestedDeductionValues.nth(i).textContent());
+        }
+        return list;
+    }
+
+    @Step("Click illegal profit accounts dropdown")
+    public void clickIllegalProfitAccountsDropdown() {
+        illegalProfitAccountsDropdown.click();
+    }
+
+    @Step("Is lightning icon visible for the account")
+    public Boolean isAccountWithAlert(String account) {
+        return page.locator(String.format(DROPDOWN_ITEM_BY_ACCOUNT, account)).locator(thunderIcon).isVisible();
+    }
+
+    @Step("Click account in illegal profit accounts dropdown")
+    public void clickAccountInDropdown(String account) {
+        page.locator(String.format(DROPDOWN_ITEM_BY_ACCOUNT, account)).locator(accountIllegalProfit).click();
+    }
+
+    @Step("Click Use as illegal profit button")
+    public void clickUseAsIllegalProfit() {
+        useAsIllegalProfitButton.click();
+    }
+
+    @Step("Click No deduction switch")
+    public void clickNoDeductionSwitch() {
+        noDeductionSwitch.click();
+    }
+
+    @Step("Is Suggested deduction section visible")
+    public Boolean isSuggestedDeductionSectionVisible() {
+        return suggestedDeductionSection.isVisible();
+    }
 }
