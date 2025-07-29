@@ -19,6 +19,10 @@ public class FeatureStoreService {
     private String symbolUnderlying;
     private BigDecimal volumeLots;
     private BigDecimal profitUsd;
+    private BigDecimal storageUsd;
+    private BigDecimal commissionUsd;
+    private BigDecimal sl;
+    private BigDecimal tp;
     private String name;
     private Integer paymentChannelId;
     private Integer paymentTypeId;
@@ -47,8 +51,16 @@ public class FeatureStoreService {
     private Double connectionScore;
     private Long countConnection;
     private Long countFraud;
+    private Long countPotential;
+    private Double ratioFraud;
+    private Double ratioPotential;
     private Long timeDiff;
     private Long timeDiffReg;
+    private BigDecimal sumCpa;
+    private BigDecimal sumRebate;
+    private BigDecimal sumSwapFreePositive;
+    private BigDecimal sumSwapFreeNegative;
+    private BigDecimal sumSpread;
     private Long cumUniqueDeviceId;
     private Long cumUniqueDigitalId;
     private Long cumUniqueOs;
@@ -118,6 +130,8 @@ public class FeatureStoreService {
     private BigDecimal cumsumNotionalValueUsdEntry1;
     private BigDecimal cumsumProfitSymbol;
     private BigDecimal cumsumProfitUsd;
+    private BigDecimal cumsumStorageUsd;
+    private BigDecimal cumsumCommissionUsd;
     private Double creditToDeposit;
     private Double profitSymbolToProfit;
     private Double profitToCredit;
@@ -285,6 +299,38 @@ public class FeatureStoreService {
 
     public void setProfitUsd(BigDecimal profitUsd) {
         this.profitUsd = profitUsd;
+    }
+
+    public BigDecimal getStorageUsd() {
+        return storageUsd;
+    }
+
+    public void setStorageUsd(BigDecimal storageUsd) {
+        this.storageUsd = storageUsd;
+    }
+
+    public BigDecimal getCommissionUsd() {
+        return commissionUsd;
+    }
+
+    public void setCommissionUsd(BigDecimal commissionUsd) {
+        this.commissionUsd = commissionUsd;
+    }
+
+    public BigDecimal getSl() {
+        return sl;
+    }
+
+    public void setSl(BigDecimal sl) {
+        this.sl = sl;
+    }
+
+    public BigDecimal getTp() {
+        return tp;
+    }
+
+    public void setTp(BigDecimal tp) {
+        this.tp = tp;
     }
 
     public String getName() {
@@ -511,6 +557,30 @@ public class FeatureStoreService {
         this.countFraud = countFraud;
     }
 
+    public Long getCountPotential() {
+        return countPotential;
+    }
+
+    public void setCountPotential(Long countPotential) {
+        this.countPotential = countPotential;
+    }
+
+    public Double getRatioFraud() {
+        return ratioFraud;
+    }
+
+    public void setRatioFraud(Double ratioFraud) {
+        this.ratioFraud = ratioFraud;
+    }
+
+    public Double getRatioPotential() {
+        return ratioPotential;
+    }
+
+    public void setRatioPotential(Double ratioPotential) {
+        this.ratioPotential = ratioPotential;
+    }
+
     public Long getTimeDiff() {
         return timeDiff;
     }
@@ -525,6 +595,46 @@ public class FeatureStoreService {
 
     public void setTimeDiffReg(Long timeDiffReg) {
         this.timeDiffReg = timeDiffReg;
+    }
+
+    public BigDecimal getSumCpa() {
+        return sumCpa;
+    }
+
+    public void setSumCpa(BigDecimal sumCpa) {
+        this.sumCpa = sumCpa;
+    }
+
+    public BigDecimal getSumRebate() {
+        return sumRebate;
+    }
+
+    public void setSumRebate(BigDecimal sumRebate) {
+        this.sumRebate = sumRebate;
+    }
+
+    public BigDecimal getSumSwapFreePositive() {
+        return sumSwapFreePositive;
+    }
+
+    public void setSumSwapFreePositive(BigDecimal sumSwapFreePositive) {
+        this.sumSwapFreePositive = sumSwapFreePositive;
+    }
+
+    public BigDecimal getSumSwapFreeNegative() {
+        return sumSwapFreeNegative;
+    }
+
+    public void setSumSwapFreeNegative(BigDecimal sumSwapFreeNegative) {
+        this.sumSwapFreeNegative = sumSwapFreeNegative;
+    }
+
+    public BigDecimal getSumSpread() {
+        return sumSpread;
+    }
+
+    public void setSumSpread(BigDecimal sumSpread) {
+        this.sumSpread = sumSpread;
     }
 
     public Long getCumUniqueDeviceId() {
@@ -1077,6 +1187,22 @@ public class FeatureStoreService {
 
     public void setCumsumProfitUsd(BigDecimal cumsumProfitUsd) {
         this.cumsumProfitUsd = cumsumProfitUsd;
+    }
+
+    public BigDecimal getCumsumStorageUsd() {
+        return cumsumStorageUsd;
+    }
+
+    public void setCumsumStorageUsd(BigDecimal cumsumStorageUsd) {
+        this.cumsumStorageUsd = cumsumStorageUsd;
+    }
+
+    public BigDecimal getCumsumCommissionUsd() {
+        return cumsumCommissionUsd;
+    }
+
+    public void setCumsumCommissionUsd(BigDecimal cumsumCommissionUsd) {
+        this.cumsumCommissionUsd = cumsumCommissionUsd;
     }
 
     public Double getCreditToDeposit() {
