@@ -28,6 +28,7 @@ public class AbuserDeduction {
     private String modifiedByUser;
     private String modifiedBySystem;
     private String typeAccount;
+    private String deductionDate;
 
     public AbuserDeduction() {
     }
@@ -37,7 +38,7 @@ public class AbuserDeduction {
             String statusDeduction, String statusApproval, String comment, Double illegalProfit,
             Double illegalProfitUsd, Double suggestedDeduction, Double suggestedDeductionUsd, Double actualDeduction,
             Double actualDeductionUsd, Timestamp createdAt, Timestamp updatedAt, String modifiedByUser,
-            String modifiedBySystem, String typeAccount) {
+            String modifiedBySystem, String typeAccount, String deductionDate) {
         this.id = id;
         this.ucid = ucid;
         this.abuserHistoryId = abuserHistoryId;
@@ -62,6 +63,7 @@ public class AbuserDeduction {
         this.modifiedByUser = modifiedByUser;
         this.modifiedBySystem = modifiedBySystem;
         this.typeAccount = typeAccount;
+        this.deductionDate = deductionDate;
     }
 
     public AbuserDeduction(String ucid, Integer abuserHistoryId, String account, Integer serverId, String serverName,
@@ -69,7 +71,7 @@ public class AbuserDeduction {
             String statusApproval, String comment, Double illegalProfit, Double illegalProfitUsd,
             Double suggestedDeduction, Double suggestedDeductionUsd, Double actualDeduction, Double actualDeductionUsd,
             Timestamp createdAt, Timestamp updatedAt, String modifiedByUser, String modifiedBySystem,
-            String typeAccount) {
+            String typeAccount, String deductionDate) {
         this.ucid = ucid;
         this.abuserHistoryId = abuserHistoryId;
         this.account = account;
@@ -93,6 +95,7 @@ public class AbuserDeduction {
         this.modifiedByUser = modifiedByUser;
         this.modifiedBySystem = modifiedBySystem;
         this.typeAccount = typeAccount;
+        this.deductionDate = deductionDate;
     }
 
     public Integer getId() {
@@ -287,20 +290,28 @@ public class AbuserDeduction {
         this.typeAccount = typeAccount;
     }
 
+    public String getDeductionDate() {
+        return deductionDate;
+    }
+
+    public void setDeductionDate(String deductionDate) {
+        this.deductionDate = deductionDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        AbuserDeduction that = (AbuserDeduction) o;
-        return Objects.equals(id, that.id) && Objects.equals(ucid, that.ucid) && Objects.equals(abuserHistoryId, that.abuserHistoryId) && Objects.equals(account, that.account) && Objects.equals(serverId, that.serverId) && Objects.equals(serverName, that.serverName) && Objects.equals(currency, that.currency) && Objects.equals(brandGroup, that.brandGroup) && Objects.equals(statusOpenPositions, that.statusOpenPositions) && Objects.equals(statusEmail, that.statusEmail) && Objects.equals(statusDeduction, that.statusDeduction) && Objects.equals(statusApproval, that.statusApproval) && Objects.equals(comment, that.comment) && Objects.equals(illegalProfit, that.illegalProfit) && Objects.equals(illegalProfitUsd, that.illegalProfitUsd) && Objects.equals(suggestedDeduction, that.suggestedDeduction) && Objects.equals(suggestedDeductionUsd, that.suggestedDeductionUsd) && Objects.equals(actualDeduction, that.actualDeduction) && Objects.equals(actualDeductionUsd, that.actualDeductionUsd) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(modifiedByUser, that.modifiedByUser) && Objects.equals(modifiedBySystem, that.modifiedBySystem) && Objects.equals(typeAccount, that.typeAccount);
+        AbuserDeduction deduction = (AbuserDeduction) o;
+        return Objects.equals(ucid, deduction.ucid) && Objects.equals(account, deduction.account) && Objects.equals(serverId, deduction.serverId) && Objects.equals(serverName, deduction.serverName) && Objects.equals(currency, deduction.currency) && Objects.equals(brandGroup, deduction.brandGroup) && Objects.equals(statusOpenPositions, deduction.statusOpenPositions) && Objects.equals(statusEmail, deduction.statusEmail) && Objects.equals(statusDeduction, deduction.statusDeduction) && Objects.equals(statusApproval, deduction.statusApproval) && Objects.equals(comment, deduction.comment) && Objects.equals(illegalProfitUsd, deduction.illegalProfitUsd) && Objects.equals(suggestedDeductionUsd, deduction.suggestedDeductionUsd) && Objects.equals(actualDeductionUsd, deduction.actualDeductionUsd) && Objects.equals(modifiedByUser, deduction.modifiedByUser) && Objects.equals(modifiedBySystem, deduction.modifiedBySystem) && Objects.equals(typeAccount, deduction.typeAccount) && Objects.equals(deductionDate, deduction.deductionDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, ucid, abuserHistoryId, account, serverId, serverName, currency, brandGroup, statusOpenPositions, statusEmail, statusDeduction, statusApproval, comment, illegalProfit, illegalProfitUsd, suggestedDeduction, suggestedDeductionUsd, actualDeduction, actualDeductionUsd, createdAt, updatedAt, modifiedByUser, modifiedBySystem, typeAccount);
+        return Objects.hash(ucid, account, serverId, serverName, currency, brandGroup, statusOpenPositions, statusEmail, statusDeduction, statusApproval, comment, illegalProfitUsd, suggestedDeductionUsd, actualDeductionUsd, modifiedByUser, modifiedBySystem, typeAccount, deductionDate);
     }
 
     @Override
     public String toString() {
-        return "AbuserDeduction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", abuserHistoryId=" + abuserHistoryId + ", account='" + account + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", currency='" + currency + '\'' + ", brandGroup='" + brandGroup + '\'' + ", statusOpenPositions='" + statusOpenPositions + '\'' + ", statusEmail='" + statusEmail + '\'' + ", statusDeduction='" + statusDeduction + '\'' + ", statusApproval='" + statusApproval + '\'' + ", comment='" + comment + '\'' + ", illegalProfit=" + illegalProfit + ", illegalProfitUsd=" + illegalProfitUsd + ", suggestedDeduction=" + suggestedDeduction + ", suggestedDeductionUsd=" + suggestedDeductionUsd + ", actualDeduction=" + actualDeduction + ", actualDeductionUsd=" + actualDeductionUsd + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", typeAccount='" + typeAccount + '\'' + '}';
+        return "AbuserDeduction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", abuserHistoryId=" + abuserHistoryId + ", account='" + account + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", currency='" + currency + '\'' + ", brandGroup='" + brandGroup + '\'' + ", statusOpenPositions='" + statusOpenPositions + '\'' + ", statusEmail='" + statusEmail + '\'' + ", statusDeduction='" + statusDeduction + '\'' + ", statusApproval='" + statusApproval + '\'' + ", comment='" + comment + '\'' + ", illegalProfit=" + illegalProfit + ", illegalProfitUsd=" + illegalProfitUsd + ", suggestedDeduction=" + suggestedDeduction + ", suggestedDeductionUsd=" + suggestedDeductionUsd + ", actualDeduction=" + actualDeduction + ", actualDeductionUsd=" + actualDeductionUsd + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", typeAccount='" + typeAccount + '\'' + ", deductionDate='" + deductionDate + '\'' + '}';
     }
 }
