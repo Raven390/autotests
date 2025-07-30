@@ -102,7 +102,7 @@ public class ResolvePage extends AbstractPage {
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
         this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type-v2']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
-        this.fraudListButton = page.locator("button[data-qa='fraud_type_select_anchor_button']");
+        this.fraudListButton = page.locator("button[data-qa='client_resolving_drawer__fraud_type_selector__anchor']");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.fraudSelectItem = page.locator("//div[@class='v-dropdown-select-item-base']");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");

@@ -21,6 +21,6 @@ public class AbuserDeductionFactory {
 
     public static AbuserDeduction generateAbuserDeductionByAccount(CrmTbAccountObject account,
             Integer abuserHistoryId) {
-        return new AbuserDeduction(account.ucid, abuserHistoryId, account.account.toString(), account.serverIdSt, account.serverName, account.currency, account.brand, NOT_HOLDING.getDisplayName(), SENT.getDisplayName(), FAILED.getDisplayName(), APPROVED.getDisplayName(), "Automation deduction comment", 10_345.678, 12_345.6, 6346.24, 7400.7, 2346.24, 3400.7, Timestamp.from(Instant.now()), Timestamp.from(Instant.now()), String.format("%s %s", FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName());
+        return new AbuserDeduction(account.ucid, abuserHistoryId, account.account.toString(), account.serverIdSt, account.serverName, account.currency, account.brand, NOT_HOLDING.getDisplayName(), SENT.getDisplayName(), FAILED.getDisplayName(), APPROVED.getDisplayName(), "Automation deduction comment", 10_345.678, 12_345.6, 6346.24, 7400.7, 2346.24, 3400.7, Timestamp.from(Instant.now()), Timestamp.from(Instant.now()), String.format("%s %s", FIRST_NAME_AUTOTEST_ONE, LAST_NAME_AUTOTEST_ONE), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null);
     }
 }

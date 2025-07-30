@@ -1,5 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
@@ -25,19 +26,30 @@ import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalOb
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
+import static helpers.data.enums.deduction.DeductionStatusApproval.AWAITING_APPROVAL;
+import static helpers.data.enums.deduction.DeductionStatusDeduction.NO_DEDUCTION;
+import static helpers.data.enums.deduction.DeductionStatusDeduction.TO_BE_DEDUCTED;
+import static helpers.data.enums.deduction.DeductionStatusEmail.NOT_SENT;
+import static helpers.data.enums.deduction.DeductionStatusOpenPositions.HOLDING;
+import static helpers.data.enums.deduction.DeductionStatusOpenPositions.NOT_HOLDING;
+import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
+import static helpers.data.enums.deduction.DeductionTypeAccount.NO_ILLEGAL_PROFIT;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.BoHelper.deleteUserAR;
 import static helpers.database.DbHelper.*;
+import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 
 @Feature("BMS-1426 Resolution. Calculating illegal profit")
+@Feature("BMS-1812 Resolution. Complete investigation with deduction")
 class ResolveDeductionsCalculationTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -49,6 +61,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
     private static final DecimalFormat formatter = new DecimalFormat("#,##0.##");
     private static final String SUGGESTED_DEDUCTION_PATTERN_ILLEGAL = "Account %sBalance %s USD ・ Illegal %s USD";
     private static final String SUGGESTED_DEDUCTION_PATTERN = SUGGESTED_DEDUCTION_PATTERN_ILLEGAL.split(" ・")[0];
+    private static final String COMMENT = "Test comment for deductions";
     private static MtAccountObject mtAccount1;
     private static MtAccountObject mtAccount2;
     private static MtAccountObject mtAccount3;
@@ -119,7 +132,10 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("1381")
     @DisplayName("Verify calculation of deductions in resolve")
-    void deductionsCalculationTest() {
+    void deductionsCalculationTest() throws Exception {
+        RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
+        alert.rule.attributes.account = mtAccount1.account.toString();
+        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(crmTbUser.ucid);
@@ -133,6 +149,21 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         ));
         Function<MtAccountObject, String> calculateDeduction = acc -> String.format("%s USD", formatter.format(acc.balanceUsd * -1));
         assertThat("Verify suggested deductions by accounts", resolvePage.getSuggestedDeductionValues(), contains(calculateDeduction.apply(mtAccount1), calculateDeduction.apply(mtAccount5), calculateDeduction.apply(mtAccount4), calculateDeduction.apply(mtAccount3), "Holding"));
+        resolvePage.resolveSimple(COMMENT);
+        List<AbuserDeduction> deductionList = getObjectsFromDB(POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserDeduction.class);
+        for (AbuserDeduction deduction : deductionList) {
+            assertThat("Verify created deduction has abuser_history_id not null", deduction.getAbuserHistoryId(), notNullValue());
+            assertThat("Verify created deduction has illegal_profit not null", deduction.getIllegalProfit(), notNullValue());
+            assertThat("Verify created deduction has suggested_deduction not null", deduction.getSuggestedDeduction(), notNullValue());
+            assertThat("Verify created deduction has created_at not null", deduction.getCreatedAt(), notNullValue());
+            assertThat("Verify created deduction has updated_at not null", deduction.getUpdatedAt(), notNullValue());
+        }
+        AbuserDeduction deduction1 = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, mtAccount1.balanceUsd + withdrawal.amountUsd, null, mtAccount1.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction deduction2 = new AbuserDeduction(client.getUcid(), null, mtAccount5.account.toString(), mtAccount5.sourceIdSt, mtAccount5.server, mtAccount5.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount5.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction deduction3 = new AbuserDeduction(client.getUcid(), null, mtAccount4.account.toString(), mtAccount4.sourceIdSt, mtAccount4.server, mtAccount4.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount4.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction deduction4 = new AbuserDeduction(client.getUcid(), null, mtAccount3.account.toString(), mtAccount3.sourceIdSt, mtAccount3.server, mtAccount3.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount3.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction deduction5 = new AbuserDeduction(client.getUcid(), null, mtAccount2.account.toString(), mtAccount2.sourceIdSt, mtAccount2.server, mtAccount2.currency, client.getBrand(), HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
+        assertThat("Verify deductions in abuser_deduction table are as expected", deductionList, containsInAnyOrder(deduction1, deduction2, deduction3, deduction4, deduction5));
     }
 
     @Test
@@ -168,5 +199,56 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(MARKET_MANIPULATION, POTENTIAL);
         assertThat("Verify no suggested deduction when potential fraud type", resolvePage.isSuggestedDeductionSectionVisible(), is(false));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1384")
+    @DisplayName("Verify deductions when Holding is selected")
+    void deductionsHoldingTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
+        resolvePage.clickIllegalProfitAccountsDropdown();
+        resolvePage.clickAccountInDropdown(mtAccount1.account.toString());
+        resolvePage.clickAccountInDropdown(mtAccount2.account.toString());
+        resolvePage.clickUseAsIllegalProfit();
+        assertThat("Verify suggested deduction is 0 when no account is selected", resolvePage.getSuggestedDeductionAmount(), is("Holding"));
+        assertThat("Verify calculation of illegal profit and balance by accounts", resolvePage.getSuggestedDeductionItems(), contains(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount2.account, formatter.format(mtAccount2.balanceUsd), formatter.format(mtAccount2.balanceUsd))));
+        assertThat("Verify suggested deductions by accounts", resolvePage.getSuggestedDeductionValues(), contains("Holding"));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1386")
+    @DisplayName("Verify deductions when No deduction is selected")
+    void deductionsNoDeductionTest() throws Exception {
+        RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
+        alert.rule.attributes.account = mtAccount1.account.toString();
+        kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
+        resolvePage.clickNoDeductionSwitch();
+        assertThat("Verify total suggested deduction amount", resolvePage.getSuggestedDeductionAmount(), is("No deduction"));
+        assertThat("Verify total illegal profit amount", resolvePage.getIllegalProfitAmount(), is("1 fraud account"));
+        assertThat("Verify calculation of illegal profit and balance by accounts", resolvePage.getSuggestedDeductionItems(), contains(String.format("Account %sBalance %s USD ・ Profit %s USD", mtAccount1.account, formatter.format(mtAccount1.balanceUsd), formatter.format(mtAccount1.balanceUsd + withdrawal.amountUsd))));
+        resolvePage.resolveSimple(COMMENT);
+        AbuserDeduction deduction = getObjectsFromDB(POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserDeduction.class).getFirst();
+        assertThat("Verify created deduction has abuser_history_id not null", deduction.getAbuserHistoryId(), notNullValue());
+        assertThat("Verify created deduction has illegal_profit not null", deduction.getIllegalProfit(), notNullValue());
+        assertThat("Verify created deduction has suggested_deduction not null", deduction.getSuggestedDeduction(), notNullValue());
+        assertThat("Verify created deduction has created_at not null", deduction.getCreatedAt(), notNullValue());
+        assertThat("Verify created deduction has updated_at not null", deduction.getUpdatedAt(), notNullValue());
+        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), NO_DEDUCTION.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null);
+        assertThat("Verify deductions in abuser_deduction table are as expected", deduction, is(expectedDeduction));
     }
 }
