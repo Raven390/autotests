@@ -25,6 +25,23 @@ public class RuleAlertFactory {
         return alert;
     }
 
+    @Step("Generate rule alert for client with ucid '{ucid}'")
+    public static RuleAlert generateRuleAlertByUcid(ClientHelper client) {
+        RuleAlert alert = new RuleAlert();
+        alert.alertId = getRandomUuidString();
+        alert.timestamp = Instant.now().toString();
+        alert.ucid = client.getUcid();
+        alert.rule = new RuleAlert.Rule();
+        alert.rule.code = 11;
+        alert.rule.ver = "01";
+        alert.rule.name = "Mirror Trading";
+        alert.rule.trigger = "openTrade";
+        alert.rule.fraudType = "HEDGING";
+        alert.rule.attributes = new RuleAlert.Rule.Attribute();
+        alert.rule.attributes.stepName = "Linked hedging abuser";
+        return alert;
+    }
+
     @Step("Generate withdrawal notification alert")
     public static RuleAlert generateWithdrawalNotificationAlert(ClientHelper client) {
         RuleAlert alert = new RuleAlert();

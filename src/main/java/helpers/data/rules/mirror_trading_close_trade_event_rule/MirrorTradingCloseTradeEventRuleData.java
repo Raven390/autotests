@@ -1,4 +1,4 @@
-package helpers.data.rules.mirror_trading_rule;
+package helpers.data.rules.mirror_trading_close_trade_event_rule;
 
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
@@ -18,7 +18,7 @@ import helpers.data.ClientHelper;
 
 import java.util.List;
 
-public class MirrorTradingRuleData {
+public class MirrorTradingCloseTradeEventRuleData {
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
     public LnSessionParsedObject lnSessionParsedObjectRegistration;
@@ -39,10 +39,10 @@ public class MirrorTradingRuleData {
     public List<MtBalanceOrdersObject> mtBalanceOrdersObjects;
     public List<MirrorLoginObject> mirrorLoginObjects;
 
-    public MirrorTradingRuleData() {
+    public MirrorTradingCloseTradeEventRuleData() {
     }
 
-    public MirrorTradingRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
+    public MirrorTradingCloseTradeEventRuleData(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
             CloseTradeMtEvent closeTradeMtEvent, List<ClientFraudTypes> clientFraudTypes,

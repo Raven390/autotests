@@ -77,6 +77,8 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_NPB_WINNING_LEG_RULE = "NBP winning leg rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
+    public static final String STORY_RULE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -122,6 +124,7 @@ public class Constants {
     public static final String AR_ABUSER_TABLE_NAME = "postgres.ar.abuser";
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
+    public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";

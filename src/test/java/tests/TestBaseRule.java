@@ -1,9 +1,11 @@
 package tests;
 
 import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -35,6 +37,11 @@ public class TestBaseRule {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_MT_EVENTS);
     }
 
+    @Step("Produce open trade event to mt-events topic")
+    public static void produceTradeMessageToKafka(TradeEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_MT_EVENTS);
+    }
+
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client) throws InterruptedException,
             JsonProcessingException {
@@ -44,5 +51,12 @@ public class TestBaseRule {
     @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
         return getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_id = (select id from %s where ucid = '%s') AND status = 'OPEN'", BO_CLIENT_TABLE_NAME, client.getUcid()), Alert.class);
+    }
+
+    @Step("Get User restrictions from mitigation DB")
+    public static List<ClientGeneralRestriction> getUserRestrictionsFromDb(ClientHelper client) throws Exception {
+        return getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class
+        );
     }
 }

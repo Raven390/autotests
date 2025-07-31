@@ -5,6 +5,7 @@ import business_objects.db.backoffice_db.backoffice_user.BackofficeUser;
 import business_objects.db.backoffice_db.client.Client;
 import business_objects.db.backoffice_db.clients_fraud_types.ClientsFraudTypes;
 import business_objects.ui.user.User;
+import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -26,6 +27,14 @@ public class BoHelper {
     public static void closeAlert(String ucid) throws SQLException {
         executeQueryToDb(
                 DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_id = (select id from %s where ucid = '%s')", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", BO_CLIENT_TABLE_NAME, ucid
+                )
+        );
+    }
+
+    @Step("Close alerts for client")
+    public static void closeAlert(ClientHelper client) throws SQLException {
+        executeQueryToDb(
+                DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_id = (select id from %s where ucid = '%s')", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", BO_CLIENT_TABLE_NAME, client.getUcid()
                 )
         );
     }
