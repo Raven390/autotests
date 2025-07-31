@@ -109,6 +109,9 @@ public class RuleAlert {
             @JsonProperty("Check")
             public String check;
 
+            @JsonProperty("Symbol traded")
+            public String symbolTraded;
+
             @JsonProperty("FMax Connection Score")
             @JsonAlias({"Max Connection Score", "FMax Connection Score"})
             public String maxConnectionScore;

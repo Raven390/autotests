@@ -2,9 +2,7 @@ package helpers.data.rules.ndb_rule;
 
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
@@ -16,7 +14,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,15 +55,17 @@ public class NdbRuleDataFactory {
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getNdbRuleData(ClientHelper client) {
+        RuleDataHelper ruleData = new RuleDataHelper();
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.ibId = 1;
-        CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        EgWithdrawalEvent withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
-        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataByClient(client);
-        lexisNexisObject.setBrand(client.getBrand());
-        lexisNexisObject.setEventType("account_creation");
-        lexisNexisObject.setRiskRating("low");
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), lexisNexisObject, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
+        ruleData.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+        ruleData.lnSessionParsedObject = generateLexisNexisDataByClient(client);
+        ruleData.lnSessionParsedObject.setBrand(client.getBrand());
+        ruleData.lnSessionParsedObject.setEventType("account_creation");
+        ruleData.lnSessionParsedObject.setRiskRating("low");
+
+        return ruleData;
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {

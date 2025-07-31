@@ -131,6 +131,7 @@ public class Utils {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, days, 0, 0);
     }
 
+    @Deprecated
     public static String getTomorrowTimestampDbFormat() {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, -1, 0, 0);
     }

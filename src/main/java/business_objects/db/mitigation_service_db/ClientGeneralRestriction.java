@@ -11,6 +11,7 @@ public class ClientGeneralRestriction {
     private String comment;
     private String status;
     private String cancellationReason;
+    private String applicationReason;
     private String failReason;
     private String createdAt;
     private String updatedAt;

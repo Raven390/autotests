@@ -3,6 +3,7 @@ package helpers.data.rules;
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
+import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -28,9 +29,12 @@ import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
+import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.EgRegistrationEvent;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
+import business_objects.kafka.mt_events.TradeEvent;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 
@@ -57,6 +61,7 @@ public class RuleDataHelper {
     public List<CrmTbUserObject> connectedUsers;
     public EgWithdrawalEvent withdrawalEvent;
     public CloseTradeMtEvent closeTradeEvent;
+    public TradeEvent tradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;
     public CrmTbAccountObject crmTbAccountObject;
     public CrmTbAccountForMtObject crmTbAccountForMtObject;
@@ -86,6 +91,9 @@ public class RuleDataHelper {
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject;
+    public UcidMirrorScore ucidMirrorScore;
+    public List<RuleAlert> ruleAlerts;
+    public List<BoAlertsObject> boAlertsObjects;
 
     public RuleDataHelper() {
     }
@@ -95,7 +103,7 @@ public class RuleDataHelper {
             List<DictActiveTradingDaysByUcidObject> dictActiveTradingDaysByUcidObjects,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
             List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
-            EgWithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent,
+            EgWithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent, TradeEvent tradeEvent,
             List<ClientFraudTypes> clientFraudTypes,
             List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
             CrmTbAccountObject crmTbAccountObject, CrmTbAccountForMtObject crmTbAccountForMtObject,
@@ -106,7 +114,8 @@ public class RuleDataHelper {
             List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
             List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
             List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
-            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject) {
+            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScore ucidMirrorScore,
+            List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.dictAccountToUcidObject = dictAccountToUcidObject;
@@ -118,6 +127,7 @@ public class RuleDataHelper {
         this.connectedUsers = connectedUsers;
         this.withdrawalEvent = withdrawalEvent;
         this.closeTradeEvent = closeTradeEvent;
+        this.tradeEvent = tradeEvent;
         this.clientFraudTypes = clientFraudTypes;
         this.crmTbAccountObject = crmTbAccountObject;
         this.crmTbAccountForMtObject = crmTbAccountForMtObject;
@@ -138,6 +148,9 @@ public class RuleDataHelper {
         this.loyaltyObjects = loyaltyObjects;
         this.mtMt5PositionsObjects = mtMt5PositionsObjects;
         this.s3FactIbSalesCommissionsObject = s3FactIbSalesCommissionsObject;
+        this.ucidMirrorScore = ucidMirrorScore;
+        this.ruleAlerts = ruleAlerts;
+        this.boAlertsObjects = boAlertsObjects;
     }
 
     static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
@@ -255,6 +268,12 @@ public class RuleDataHelper {
             if (data.s3FactIbSalesCommissionsObject != null) {
                 data.s3FactIbSalesCommissionsObject.forEach(salesComm -> insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, salesComm));
             }
+            if (data.ucidMirrorScore != null) {
+                insertObjectToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, data.ucidMirrorScore);
+            }
+            if (data.boAlertsObjects != null) {
+                data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, alerts));
+            }
         }
     }
 
@@ -334,6 +353,12 @@ public class RuleDataHelper {
             }
             if (data.s3FactIbSalesCommissionsObject != null) {
                 data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm)));
+            }
+            if (data.ucidMirrorScore != null) {
+                deleteEntryFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = %s", data.ucidMirrorScore.getUcid()));
+            }
+            if (data.boAlertsObjects != null) {
+                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("ucid = '%s'", alert)));
             }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());

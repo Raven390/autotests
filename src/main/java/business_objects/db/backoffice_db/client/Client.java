@@ -30,6 +30,16 @@ public class Client {
         this.assignedUserId = assignedUserId;
     }
 
+    public Client(String ucid, Integer crmId, String clientBrand, String clientRegulator, String country,
+            String countryCode) {
+        this.ucid = ucid;
+        this.crmId = crmId;
+        this.clientBrand = clientBrand;
+        this.clientRegulator = clientRegulator;
+        this.country = country;
+        this.countryCode = countryCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

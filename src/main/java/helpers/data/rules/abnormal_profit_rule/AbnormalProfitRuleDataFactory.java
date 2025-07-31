@@ -1,8 +1,6 @@
 package helpers.data.rules.abnormal_profit_rule;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
@@ -12,7 +10,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +31,11 @@ public class AbnormalProfitRuleDataFactory {
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getAbnormalProfitRuleData(ClientHelper client) {
-        CrmTbUserObject userObject = generateUserByClient(client);
-        CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        CloseTradeMtEvent closeTradeMtEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), crmTbAccountObject.account, 100d, "EURUSD", crmTbAccountObject.serverIdSt, "closeTrade");
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), null, closeTradeMtEvent, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        RuleDataHelper ruleData = new RuleDataHelper();
+        ruleData.crmTbUserObject = generateUserByClient(client);
+        ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
+        ruleData.closeTradeEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), ruleData.crmTbAccountObject.account, 100d, "EURUSD", ruleData.crmTbAccountObject.serverIdSt, "closeTrade");
+        return ruleData;
     }
 
     public static RuleDataHelper getAbnormalProfitRuleExitEventEnd1Data() {

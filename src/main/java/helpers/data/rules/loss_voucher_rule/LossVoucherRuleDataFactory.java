@@ -1,9 +1,6 @@
 package helpers.data.rules.loss_voucher_rule;
 
-import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
-import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
@@ -14,7 +11,6 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,11 +35,12 @@ public class LossVoucherRuleDataFactory {
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getLossVoucherProfitRuleData(ClientHelper client) {
-        CrmTbUserObject userObject = generateUserByClient(client);
-        CrmTbAccountObject crmTbAccountObject = generateCrmTbAccountData(client);
-        MtAccountObject account = generateMtAccountByClient(client);
-        EgWithdrawalEvent withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
-        return new RuleDataHelper(client, userObject, null, null, new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), withdrawalEvent, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), crmTbAccountObject, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), account, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        RuleDataHelper ruleData = new RuleDataHelper();
+        ruleData.crmTbUserObject = generateUserByClient(client);
+        ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
+        ruleData.mtAccountObject = generateMtAccountByClient(client);
+        ruleData.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
+        return ruleData;
     }
 
     public static RuleDataHelper getLossVoucherRuleExitEventEnd11Data() {
