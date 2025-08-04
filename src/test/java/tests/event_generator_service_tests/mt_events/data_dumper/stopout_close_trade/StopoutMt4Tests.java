@@ -17,6 +17,8 @@ import static business_objects.kafka.mt_data_dumper_events.StopoutFactory.genera
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_STOP_OUT_EVENT)
@@ -32,6 +34,12 @@ class StopoutMt4Tests extends TestBaseKafka {
     void generateMt4StopoutEventTest() throws JsonProcessingException, InterruptedException {
 
         TradeEventMt4 stopoutTradeMt4 = generateStopoutTradeDataDumperMt4();
+        Long time = getCurrentTimestampMillis();
+        String convertedTimestamp = convertTimestampToIsoFormat(time);
+        stopoutTradeMt4.getPayload().setCloseTime(time);
+        stopoutTradeMt4.getPayload().setCloseTime(time);
+        stopoutTradeMt4.getPayload().setOpenTime(time);
+        stopoutTradeMt4.getPayload().setOpenTimeUtc(time);
 
         Allure.step("Write message to mt4_trade_record topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(stopoutTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
@@ -48,14 +56,15 @@ class StopoutMt4Tests extends TestBaseKafka {
         assertThat("Check serverId", retrievedStopoutTradeMtEvent.serverId, equalTo(stopoutTradeMt4.getHeader().getServerId()));
         assertThat("Check tradingAccount", retrievedStopoutTradeMtEvent.tradingAccount, equalTo(stopoutTradeMt4.getPayload().getLogin()));
         assertThat("Check volume", retrievedStopoutTradeMtEvent.volume, equalTo(stopoutTradeMt4.getPayload().getVolume()));
-        assertThat("Check closeTime", retrievedStopoutTradeMtEvent.closeTime, startsWith(String.valueOf(stopoutTradeMt4.getPayload().getCloseTime())));
-        assertThat("Check closeTimeUtc", retrievedStopoutTradeMtEvent.closeTimeUtc, startsWith(String.valueOf(stopoutTradeMt4.getPayload().getCloseTimeUtc())));
         assertThat("Check equity", retrievedStopoutTradeMtEvent.equity, equalTo(stopoutTradeMt4.getPayload().getEquity()));
         assertThat("Check balance", retrievedStopoutTradeMtEvent.balance, equalTo(stopoutTradeMt4.getPayload().getBalance()));
         assertThat("Check leverage", retrievedStopoutTradeMtEvent.leverage, equalTo(stopoutTradeMt4.getPayload().getLeverage()));
         assertThat("Check margin", retrievedStopoutTradeMtEvent.margin, equalTo(stopoutTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedStopoutTradeMtEvent.freeMargin, equalTo(stopoutTradeMt4.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedStopoutTradeMtEvent.eventDate, startsWith(String.valueOf(stopoutTradeMt4.getPayload().getCloseTimeUtc())));
+        assertThat("Check eventDate", retrievedStopoutTradeMtEvent.eventDate, equalTo(convertedTimestamp));
+        assertThat("Check closeTime", retrievedStopoutTradeMtEvent.closeTime, equalTo(convertedTimestamp));
+        assertThat("Check closeTimeUtc", retrievedStopoutTradeMtEvent.closeTimeUtc, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedStopoutTradeMtEvent.type, equalTo("stopoutCloseTrade"));
+
     }
 }

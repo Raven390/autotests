@@ -102,7 +102,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
     public static final String KAFKA_TOPIC_MT_4_TRADE_RECORD = "mt4_trade_record";
-    public static final String KAFKA_TOPIC_MT_5_DEAL = "mt5_Deal";
+    public static final String KAFKA_TOPIC_MT_5_DEAL_PERFORM = "mt5_DealPerform";
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
     public static final String KAFKA_TOPIC_MT_EVENTS = "mt-events";
     public static final String KAFKA_TOPIC_WITHDRAWAL_APPROVALS = "withdrawal.approvals";

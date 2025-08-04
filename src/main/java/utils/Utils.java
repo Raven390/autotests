@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.data.enums.Brand.*;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.BO;
 import static helpers.database.DbName.CLICKHOUSE;
@@ -78,8 +77,23 @@ public class Utils {
         return email;
     }
 
-    public static long getCurrentTimestamp() {
+    public static long getCurrentTimestampSeconds() {
         return Instant.now().getEpochSecond();
+    }
+
+    public static long getCurrentTimestampMillis() {
+        return Instant.now().toEpochMilli();
+    }
+
+    /**
+     * Converts a timestamp in milliseconds to ISO 8601 format with milliseconds and Z timezone indicator.
+     * Example: 2025-08-01T07:16:56.099Z
+     *
+     * @param timestampMillis timestamp in milliseconds
+     * @return formatted date-time string
+     */
+    public static String convertTimestampToIsoFormat(long timestampMillis) {
+        return Instant.ofEpochMilli(timestampMillis).toString();
     }
 
     public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,

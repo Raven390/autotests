@@ -425,7 +425,7 @@ public class KYCTest extends TestBaseWeb {
         idProofObject2.setCreateTime("2024-12-29 11:17:50.030000000");
         idProofObject2.setDateOfBirth(null);
         idProofObject2.setDocumentType(faker.animal().name());
-        idProofObject2.setDocumentNumber(String.valueOf(getCurrentTimestamp()));
+        idProofObject2.setDocumentNumber(String.valueOf(getCurrentTimestampSeconds()));
 
         KycFilesTableEntry file1 = getKycFile(pofClient);
         file1.proofId = idProofObject1.getId();

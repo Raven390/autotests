@@ -28,7 +28,7 @@ import static page_objects.backoffice_pages.investigationTool.RestrictionPage.ch
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
-import static utils.Utils.getCurrentTimestamp;
+import static utils.Utils.getCurrentTimestampSeconds;
 
 public class MassUploadTest extends TestBaseWeb {
 
@@ -75,7 +75,7 @@ public class MassUploadTest extends TestBaseWeb {
         Restriction restriction = Restriction.DEPOSITS;
         fraudstersPage.selectRestriction(restriction.getName());
         fraudstersPage.clickApplyselectedRestrictions();
-        String commentary = "test" + getCurrentTimestamp();
+        String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickApplyUpload();
         fraudstersPage.verifySuccessMessageUpload();

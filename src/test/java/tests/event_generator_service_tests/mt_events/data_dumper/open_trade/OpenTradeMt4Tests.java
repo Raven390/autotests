@@ -19,6 +19,8 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_OPEN_TRADE_EVENT)
@@ -34,12 +36,17 @@ class OpenTradeMt4Tests extends TestBaseKafka {
     void generateMt4OpenTradeEventTest() throws JsonProcessingException, InterruptedException {
 
         TradeEventMt4 openTradeMt4 = generateOpenTradeDataDumperMt4();
+        Long time = getCurrentTimestampMillis();
+        String convertedTimestamp = convertTimestampToIsoFormat(time);
+        openTradeMt4.getPayload().setOpenTime(time);
+        openTradeMt4.getPayload().setOpenTimeUtc(time);
+
 
         Allure.step("Write message to mt4_trade_record topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");
-        MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, String.valueOf(openTradeMt4.getPayload().getLogin()), true);
+        MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, convertedTimestamp, true);
 
         TradeEvent retrievedOpenTradeMtEvent = objectMapper.readValue(consumedMessage.message(), TradeEvent.class);
 
@@ -52,14 +59,14 @@ class OpenTradeMt4Tests extends TestBaseKafka {
         assertThat("Check volume", retrievedOpenTradeMtEvent.volume, equalTo(openTradeMt4.getPayload().getVolume()));
         assertThat("Check closeTime", retrievedOpenTradeMtEvent.closeTime, equalTo(null));
         assertThat("Check closeTimeUtc", retrievedOpenTradeMtEvent.closeTimeUtc, equalTo(null));
-        assertThat("Check openTime", retrievedOpenTradeMtEvent.openTime, equalTo("1.000000000"));
-        assertThat("Check openTimeUtc", retrievedOpenTradeMtEvent.openTimeUtc, equalTo("1.000000000"));
+        assertThat("Check openTime", retrievedOpenTradeMtEvent.openTime, equalTo(convertedTimestamp));
+        assertThat("Check openTimeUtc", retrievedOpenTradeMtEvent.openTimeUtc, equalTo(convertedTimestamp));
         assertThat("Check equity", retrievedOpenTradeMtEvent.equity, equalTo(openTradeMt4.getPayload().getEquity()));
         assertThat("Check balance", retrievedOpenTradeMtEvent.balance, equalTo(openTradeMt4.getPayload().getBalance()));
         assertThat("Check leverage", retrievedOpenTradeMtEvent.leverage, equalTo(openTradeMt4.getPayload().getLeverage()));
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt4.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo("1.000000000"));
+        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
     }
 }

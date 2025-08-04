@@ -52,8 +52,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
 
         ruleData.tradeEvent = new TradeEvent();
         ruleData.tradeEvent.type = "openTrade";
-        ruleData.tradeEvent.openTime = formatTimeToUtc(getCurrentTimestampDbFormat());
-        ruleData.tradeEvent.openTimeUtc = "0";
+        ruleData.tradeEvent.openTime = convertTimestampToIsoFormat(getCurrentTimestampMillis());
+        ruleData.tradeEvent.openTimeUtc = convertTimestampToIsoFormat(getCurrentTimestampMillis());
         ruleData.tradeEvent.tradeId = 123;
         ruleData.tradeEvent.volume = 1;
         ruleData.tradeEvent.symbol = "EURUSD";
@@ -62,7 +62,7 @@ public class MirrorTradingOpenTradeEventDataFactory {
         ruleData.tradeEvent.freeMargin = 10d;
         ruleData.tradeEvent.balance = 10d;
         ruleData.tradeEvent.leverage = 10d;
-        ruleData.tradeEvent.eventDate = formatTimeToUtc(getCurrentTimestampDbFormat());
+        ruleData.tradeEvent.eventDate = convertTimestampToIsoFormat(getCurrentTimestampMillis());
         ruleData.tradeEvent.id = getRandomUuidString();
         ruleData.tradeEvent.metadata = new TradeEventMetadata("MT5");
         ruleData.tradeEvent.serverId = client.getServerId();
