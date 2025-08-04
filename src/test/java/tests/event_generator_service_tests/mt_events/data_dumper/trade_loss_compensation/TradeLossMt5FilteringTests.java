@@ -46,7 +46,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Loss");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -71,7 +71,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("TLV");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -97,7 +97,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Loss");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -122,7 +122,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Loss");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -147,7 +147,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Loss");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -172,7 +172,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Loss");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -197,7 +197,7 @@ class TradeLossMt5FilteringTests extends TestBaseKafka {
         tradeLossMt5.getPayload().setComment("Trade Los");
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

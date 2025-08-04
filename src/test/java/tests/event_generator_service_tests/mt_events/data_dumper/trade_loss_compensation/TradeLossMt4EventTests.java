@@ -17,6 +17,8 @@ import static business_objects.kafka.mt_data_dumper_events.TradeLossFactory.gene
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_LOSS_COMPENSATION_EVENT)
@@ -32,6 +34,12 @@ class TradeLossMt4EventTests extends TestBaseKafka {
     void generateMt4TradeLossTradeEventTest() throws JsonProcessingException, InterruptedException {
 
         TradeEventMt4 tradeLossTradeMt4 = generateTradeLossTradeDataDumperMt4();
+        Long time = getCurrentTimestampMillis();
+        String convertedTimestamp = convertTimestampToIsoFormat(time);
+        tradeLossTradeMt4.getPayload().setOpenTime(time);
+        tradeLossTradeMt4.getPayload().setOpenTimeUtc(time);
+        tradeLossTradeMt4.getPayload().setCloseTime(time);
+        tradeLossTradeMt4.getPayload().setCloseTimeUtc(time);
 
         Allure.step("Write message to mt4_trade_record topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(tradeLossTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);
@@ -48,14 +56,14 @@ class TradeLossMt4EventTests extends TestBaseKafka {
         assertThat("Check serverId", retrievedTradeLossTradeMtEvent.serverId, equalTo(tradeLossTradeMt4.getHeader().getServerId()));
         assertThat("Check tradingAccount", retrievedTradeLossTradeMtEvent.tradingAccount, equalTo(tradeLossTradeMt4.getPayload().getLogin()));
         assertThat("Check volume", retrievedTradeLossTradeMtEvent.volume, equalTo(tradeLossTradeMt4.getPayload().getVolume()));
-        assertThat("Check closeTime", retrievedTradeLossTradeMtEvent.closeTime, startsWith(String.valueOf(tradeLossTradeMt4.getPayload().getCloseTime())));
-        assertThat("Check closeTimeUtc", retrievedTradeLossTradeMtEvent.closeTimeUtc, startsWith(String.valueOf(tradeLossTradeMt4.getPayload().getCloseTimeUtc())));
         assertThat("Check equity", retrievedTradeLossTradeMtEvent.equity, equalTo(tradeLossTradeMt4.getPayload().getEquity()));
         assertThat("Check balance", retrievedTradeLossTradeMtEvent.balance, equalTo(tradeLossTradeMt4.getPayload().getBalance()));
         assertThat("Check leverage", retrievedTradeLossTradeMtEvent.leverage, equalTo(tradeLossTradeMt4.getPayload().getLeverage()));
         assertThat("Check margin", retrievedTradeLossTradeMtEvent.margin, equalTo(tradeLossTradeMt4.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedTradeLossTradeMtEvent.freeMargin, equalTo(tradeLossTradeMt4.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedTradeLossTradeMtEvent.eventDate, startsWith(String.valueOf(tradeLossTradeMt4.getPayload().getCloseTimeUtc())));
+        assertThat("Check eventDate", retrievedTradeLossTradeMtEvent.eventDate, equalTo(convertedTimestamp));
+        assertThat("Check closeTime", retrievedTradeLossTradeMtEvent.closeTime, equalTo(convertedTimestamp));
+        assertThat("Check closeTimeUtc", retrievedTradeLossTradeMtEvent.closeTimeUtc, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedTradeLossTradeMtEvent.type, equalTo("tradeLossCompensation"));
     }
 }

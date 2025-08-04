@@ -25,7 +25,7 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestamp;
+import static utils.Utils.getCurrentTimestampSeconds;
 
 @Feature("BMS-1475 Mass delete. Limited access")
 public class MassDeleteTest extends TestBaseWeb {
@@ -73,7 +73,7 @@ public class MassDeleteTest extends TestBaseWeb {
         fraudstersPage.clickAddFraudButton();
         FraudTypeOld fraudTypeOld = FraudTypeOld.HEDGING;
         fraudstersPage.addSelectedFraudDelete(fraudTypeOld.getDisplayName());
-        String commentary = "test" + getCurrentTimestamp();
+        String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
         fraudstersPage.verifySuccessMessageDelete();
@@ -129,7 +129,7 @@ public class MassDeleteTest extends TestBaseWeb {
         fraudstersPage.addSelectedFraudDelete(fraudTypeOld1.getDisplayName());
         fraudstersPage.clickAddFraudButton();
         fraudstersPage.addSelectedFraudDelete(fraudTypeOld2.getDisplayName());
-        String commentary = "test" + getCurrentTimestamp();
+        String commentary = "test" + getCurrentTimestampSeconds();
         fraudstersPage.fillCommentary(commentary);
         fraudstersPage.clickDeleteUpload();
         fraudstersPage.verifySuccessMessageDelete();

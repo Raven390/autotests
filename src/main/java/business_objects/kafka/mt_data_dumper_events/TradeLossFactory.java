@@ -5,6 +5,8 @@ import utils.Utils;
 
 import java.util.List;
 
+import static utils.Utils.getCurrentTimestampMillis;
+
 public class TradeLossFactory {
 
     // MT4 event
@@ -17,12 +19,12 @@ public class TradeLossFactory {
     @Step("Generate MT4 Trade Loss data dumper event header")
     static TradeEventMt4.Header generateMt4TradeLossTradeMtDbEventHeader() {
         return new TradeEventMt4.Header(
-                Utils.getRandomUuidString(), "trade_record", 1, 18, Utils.getCurrentTimestamp());
+                Utils.getRandomUuidString(), "trade_record", 1, 18, Utils.getCurrentTimestampMillis());
     }
 
     @Step("Generate MT4 Trade Loss data dumper event payload")
     static TradeEventMt4.Payload generateMt4TradeLossTradeMtDbEventPayload() {
-        return new TradeEventMt4.Payload(1d, List.of(1, 1), 100d, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 6, "Automation tests for data dumper Trade Loss / TLV event", 1d, 1d, List.of(1d, 1d), List.of(1, 1), 1d, 1d, 2, 1d, 1L, 1L, 1d, 1d, 1d, 1L, 1d, 1d, Utils.getRandomIntPositive().longValue(), 1L, 1d, 1d, 2, 1d, 1L, 1L, 1L, 1d, 1, 1d, 1, 1d, "EURUSD", 1d, 1L, 1L, 1d, 1d);
+        return new TradeEventMt4.Payload(1d, List.of(1, 1), 100d, 1d, Utils.getCurrentTimestampMillis(), Utils.getCurrentTimestampMillis(), 6, "Automation tests for data dumper Trade Loss / TLV event", 1d, 1d, List.of(1d, 1d), List.of(1, 1), 1d, 1d, 2, 1d, 1L, 1L, 1d, 1d, 1d, 1L, 1d, 1d, Utils.getRandomIntPositive().longValue(), 1L, 1d, 1d, 2, 1d, getCurrentTimestampMillis(), getCurrentTimestampMillis(), 1L, 1d, 1, 1d, 1, 1d, "EURUSD", 1d, 1L, 1L, 1d, 1d);
     }
 
     // MT5 event
@@ -35,13 +37,13 @@ public class TradeLossFactory {
 
     @Step("Generate MT5 Trade Loss data dumper event header")
     private static TradeEventMt5.Header generateMt5TradeLossTradeMtDbEventHeader() {
-        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "Deal", 0, 33, Utils.getCurrentTimestamp());
+        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "Deal", 0, 33, Utils.getCurrentTimestampMillis());
     }
 
     @Step("Generate MT5 Trade Loss data dumper event payload")
     private static TradeEventMt5.Payload generateMt5TradeLossTradeMtDbEventPayload(
             TradeEventMt5.RawApiData rawApiData) {
-        return new TradeEventMt5.Payload(1.0, 2, 100d, "Automation tests for data dumper Trade Loss / TLV event", 1.0, 1.0, Utils.getRandomIntPositive().longValue(), 0L, 1, 2, 1, 100d, 0L, "", 1.0, 0, 100d, "1", 1, Utils.getRandomIntPositive().longValue(), 1d, 1d, 1d, 1d, 1, 1L, 1L, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, List.of(rawApiData), 0, 1d, "EURUSD", 1d, 1d, Utils.getCurrentTimestamp(), Utils.getCurrentTimestamp(), 1d, 1L, 0L, 0L, 0L);
+        return new TradeEventMt5.Payload(1.0, 2, 100d, "Automation tests for data dumper Trade Loss / TLV event", 1.0, 1.0, Utils.getRandomIntPositive().longValue(), 0L, 1, 2, 1, 100d, 0L, "", 1.0, 0, 100d, "1", 1, Utils.getRandomIntPositive().longValue(), 1d, 1d, 1d, 1d, 1, 1L, 1L, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, List.of(rawApiData), 0, 1d, "EURUSD", 1d, 1d, Utils.getCurrentTimestampMillis(), Utils.getCurrentTimestampMillis(), 1d, 1L, 0L, 0L, 0L);
     }
 
     @Step("Generate MT5 Trade Loss data dumper event rawApiData")

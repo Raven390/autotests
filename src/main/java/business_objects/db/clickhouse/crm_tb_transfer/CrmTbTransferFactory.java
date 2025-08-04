@@ -33,7 +33,7 @@ public class CrmTbTransferFactory {
         transfer.status = "ok";
         transfer.isDel = 0;
         transfer.isDeleted = 0;
-        transfer.internalComment = "autotest" + getCurrentTimestamp();
+        transfer.internalComment = "autotest" + getCurrentTimestampSeconds();
         transfer.lastUpdated = getCurrentTimestampDbFormat();
         return transfer;
     }

@@ -19,6 +19,8 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
+import static utils.Utils.convertTimestampToIsoFormat;
+import static utils.Utils.getCurrentTimestampMillis;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_OPEN_TRADE_EVENT)
@@ -35,9 +37,13 @@ class OpenTradeMt5Tests extends TestBaseKafka {
 
         TradeEventMt5 openTradeMt5 = generateOpenTradeDataDumperMt5();
         openTradeMt5.getPayload().setAction(0);
+        Long time = getCurrentTimestampMillis();
+        String convertedTimestamp = convertTimestampToIsoFormat(time);
+        openTradeMt5.getPayload().setTime(time);
+        openTradeMt5.getPayload().setTimeUtc(time);
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, String.valueOf(openTradeMt5.getPayload().getLogin()), true);
@@ -58,8 +64,10 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         assertThat("Check leverage", (int) retrievedOpenTradeMtEvent.leverage, equalTo(openTradeMt5.getPayload().getLeverage()));
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt5.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, startsWith(String.valueOf(openTradeMt5.getPayload().getTimeUtc())));
+        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
+        assertThat("Check openTime", retrievedOpenTradeMtEvent.openTime, equalTo(convertedTimestamp));
+        assertThat("Check openTimeUtc", retrievedOpenTradeMtEvent.openTimeUtc, equalTo(convertedTimestamp));
     }
 
     @Test
@@ -70,9 +78,13 @@ class OpenTradeMt5Tests extends TestBaseKafka {
 
         TradeEventMt5 openTradeMt5 = generateOpenTradeDataDumperMt5();
         openTradeMt5.getPayload().setAction(1);
+        Long time = getCurrentTimestampMillis();
+        String convertedTimestamp = convertTimestampToIsoFormat(time);
+        openTradeMt5.getPayload().setTime(time);
+        openTradeMt5.getPayload().setTimeUtc(time);
 
         Allure.step("Write message to Mt5_Deal topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");
         MessageWithHeaders consumedMessage = kafka.consumeMessage(KAFKA_TOPIC_MT_EVENTS, String.valueOf(openTradeMt5.getPayload().getLogin()), true);
@@ -93,7 +105,9 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         assertThat("Check leverage", (int) retrievedOpenTradeMtEvent.leverage, equalTo(openTradeMt5.getPayload().getLeverage()));
         assertThat("Check margin", retrievedOpenTradeMtEvent.margin, equalTo(openTradeMt5.getPayload().getMargin()));
         assertThat("Check freeMargin", retrievedOpenTradeMtEvent.freeMargin, equalTo(openTradeMt5.getPayload().getFreeMargin()));
-        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, startsWith(String.valueOf(openTradeMt5.getPayload().getTimeUtc())));
+        assertThat("Check eventDate", retrievedOpenTradeMtEvent.eventDate, equalTo(convertedTimestamp));
         assertThat("Check type", retrievedOpenTradeMtEvent.type, equalTo("openTrade"));
+        assertThat("Check openTime", retrievedOpenTradeMtEvent.openTime, equalTo(convertedTimestamp));
+        assertThat("Check openTimeUtc", retrievedOpenTradeMtEvent.openTimeUtc, equalTo(convertedTimestamp));
     }
 }

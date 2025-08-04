@@ -18,7 +18,7 @@ import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedOb
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static utils.Constants.*;
 import static utils.Utils.*;
-import static utils.Utils.getCurrentTimestamp;
+import static utils.Utils.getCurrentTimestampSeconds;
 
 
 class KafkaParserTest extends TestBaseRule {
@@ -51,38 +51,38 @@ class KafkaParserTest extends TestBaseRule {
         lexis.setEmailageEmailriskscoreEaadvice("test advice");
         lexis.setPolicyScore(RandomGenerator.getDefault().nextInt(0, 101));
         lexis.setTrueIp(faker.internet().ipV4Address());
-        lexis.setTrueIpIsp("some true IP ISP" + getCurrentTimestamp());
+        lexis.setTrueIpIsp("some true IP ISP" + getCurrentTimestampSeconds());
         lexis.setTrueIpPostalCode(faker.address().zipCode());
         lexis.setTrueIpCity(faker.address().city());
         lexis.setTrueIpRegion(faker.address().state());
         lexis.setTrueIpGeo(testCountry.getCountryCode());
-        lexis.setTrueIpConnectionType("some true IP connection type" + getCurrentTimestamp());
-        lexis.setTrueIpRoutingType("some true IP routing type" + getCurrentTimestamp());
-        lexis.setProxyType("some true IP proxy type" + getCurrentTimestamp());
+        lexis.setTrueIpConnectionType("some true IP connection type" + getCurrentTimestampSeconds());
+        lexis.setTrueIpRoutingType("some true IP routing type" + getCurrentTimestampSeconds());
+        lexis.setProxyType("some true IP proxy type" + getCurrentTimestampSeconds());
         lexis.setInputIpAddress(faker.internet().ipV4Address());
-        lexis.setInputIpIsp("some input IP ISP" + getCurrentTimestamp());
+        lexis.setInputIpIsp("some input IP ISP" + getCurrentTimestampSeconds());
         lexis.setInputIpCity(faker.address().city());
         lexis.setInputIpRegion(faker.address().state());
         lexis.setInputIpGeo(testCountry2.getCountryCode());
-        lexis.setInputIpRoutingType("some input IP routing type" + getCurrentTimestamp());
-        lexis.setDeviceId("some smart id" + getCurrentTimestamp());
-        lexis.setFuzzyDeviceId("some exact id" + getCurrentTimestamp());
-        lexis.setBrowser("browser name" + getCurrentTimestamp());
-        lexis.setBrowserVersion("browser version" + getCurrentTimestamp());
+        lexis.setInputIpRoutingType("some input IP routing type" + getCurrentTimestampSeconds());
+        lexis.setDeviceId("some smart id" + getCurrentTimestampSeconds());
+        lexis.setFuzzyDeviceId("some exact id" + getCurrentTimestampSeconds());
+        lexis.setBrowser("browser name" + getCurrentTimestampSeconds());
+        lexis.setBrowserVersion("browser version" + getCurrentTimestampSeconds());
         lexis.setScreenResZoom(RandomGenerator.getDefault().nextDouble(0, 101));
         lexis.setBrowserLanguage("en-US,en;q=0.9,zh-CN;q=0.8,zh-TW;q=0.7,zh;q=0.6");
-        lexis.setProfiledUrl("https://" + getCurrentTimestamp() + ".com/login");
-        lexis.setBrowserString("some user agent" + getCurrentTimestamp());
+        lexis.setProfiledUrl("https://" + getCurrentTimestampSeconds() + ".com/login");
+        lexis.setBrowserString("some user agent" + getCurrentTimestampSeconds());
         lexis.setPluginNumber(RandomGenerator.getDefault().nextInt(0, 101));
         lexis.setConditionAttrib5("Something");
         lexis.setOs("win");
-        lexis.setOsVersion("win" + getCurrentTimestamp());
-        lexis.setAgentBrand("brand1, brand2 " + getCurrentTimestamp());
-        lexis.setAgentModel("agent model" + getCurrentTimestamp());
-        lexis.setDeviceModel("device model" + getCurrentTimestamp());
-        lexis.setDeviceName("human readable device name " + getCurrentTimestamp());
+        lexis.setOsVersion("win" + getCurrentTimestampSeconds());
+        lexis.setAgentBrand("brand1, brand2 " + getCurrentTimestampSeconds());
+        lexis.setAgentModel("agent model" + getCurrentTimestampSeconds());
+        lexis.setDeviceModel("device model" + getCurrentTimestampSeconds());
+        lexis.setDeviceName("human readable device name " + getCurrentTimestampSeconds());
         lexis.setAgentLanguage("it-IT");
-        lexis.setScreenRes("1515x" + getCurrentTimestamp());
+        lexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         lexis.setDeviceId(null);
 
         EgRegistrationEvent registrationEvent = new EgRegistrationEvent();

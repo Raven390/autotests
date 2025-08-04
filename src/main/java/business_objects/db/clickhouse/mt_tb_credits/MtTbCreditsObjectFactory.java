@@ -31,7 +31,7 @@ public class MtTbCreditsObjectFactory {
         credit.createTimeUtc = getCurrentTimestampDbFormat();
         credit.amount = getRandomRoundedDouble(0.01, 999_999.99);
         credit.amountUsd = credit.amount;
-        credit.comment = "autotest" + getCurrentTimestamp();
+        credit.comment = "autotest" + getCurrentTimestampSeconds();
         credit.lastUpdated = getCurrentTimestampDbFormat();
         return credit;
     }

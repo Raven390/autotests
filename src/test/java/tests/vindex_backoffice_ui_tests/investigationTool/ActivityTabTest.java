@@ -756,12 +756,12 @@ public class ActivityTabTest extends TestBaseWeb {
         firstLexis.setPolicyScore(99);
 
         firstLexis.setEmailageEmailriskscoreEascore(1);
-        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
 
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Review");
 
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(100);
-        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestampSeconds());
 
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
@@ -784,12 +784,12 @@ public class ActivityTabTest extends TestBaseWeb {
         deleteLexis(activityClient);
         //email
         firstLexis.setEmailageEmailriskscoreEascore(300);
-        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
         //ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Very low");
         //digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(80);
-        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestampSeconds());
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
@@ -809,12 +809,12 @@ public class ActivityTabTest extends TestBaseWeb {
         deleteLexis(activityClient);
         //email
         firstLexis.setEmailageEmailriskscoreEascore(301);
-        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
         //ip
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Low");
         //digital identity
         firstLexis.setEmailageEmailriskscoreOveralldigitalidentityscore(79);
-        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreDisdescription("some description" + getCurrentTimestampSeconds());
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
@@ -981,26 +981,26 @@ public class ActivityTabTest extends TestBaseWeb {
         firstLexis.setPolicyScore(99);
 
         firstLexis.setEmailageEmailriskscoreEascore(RandomGenerator.getDefault().nextInt(0, 101));
-        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestamp());
-        firstLexis.setEmailageEmailriskscoreEareason("some email reason" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreEaadvice("some advice" + getCurrentTimestampSeconds());
+        firstLexis.setEmailageEmailriskscoreEareason("some email reason" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscoreEmailCreationDays(5);
         firstLexis.setEmailageEmailriskscoreEmailage("2007-11-19 06:58:43");
 
-        firstLexis.setEmailageEmailriskscorePhonecarriertype("phoneCarrier" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscorePhonecarriertype("phoneCarrier" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscorePhoneownermatch("U");
         firstLexis.setEmailageEmailriskscorePhonetofullnameconfidence(RandomGenerator.getDefault().nextInt(1, 101));
         firstLexis.setEmailageEmailriskscorePhonetolastnameconfidence(RandomGenerator.getDefault().nextInt(1, 101));
 
         firstLexis.setEmailageEmailriskscoreIpRisklevel("Review");
-        firstLexis.setEmailageEmailriskscoreIpRiskreason("some IP reason" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreIpRiskreason("some IP reason" + getCurrentTimestampSeconds());
 
-        firstLexis.setEmailageEmailriskscoreDomainrisklevel("some domain risk level" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreDomainrisklevel("some domain risk level" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscoreDomainCreationDays(RandomGenerator.getDefault().nextInt(0, 101));
         firstLexis.setEmailageEmailriskscoreDomainage("2007-11-19 06:58:43");
         firstLexis.setEmailageEmailriskscoreDomainexists("Not Sure");
-        firstLexis.setEmailageEmailriskscoreDomaincategory("some domain category" + getCurrentTimestamp());
-        firstLexis.setEmailageEmailriskscoreDomainname("some domain name" + getCurrentTimestamp());
-        firstLexis.setEmailageEmailriskscoreDomaincompany("some domain company" + getCurrentTimestamp());
+        firstLexis.setEmailageEmailriskscoreDomaincategory("some domain category" + getCurrentTimestampSeconds());
+        firstLexis.setEmailageEmailriskscoreDomainname("some domain name" + getCurrentTimestampSeconds());
+        firstLexis.setEmailageEmailriskscoreDomaincompany("some domain company" + getCurrentTimestampSeconds());
         firstLexis.setEmailageEmailriskscoreDomaincountry(Country.getRandomCountry().getCountryCode());
 
 
@@ -1096,12 +1096,12 @@ public class ActivityTabTest extends TestBaseWeb {
 
         firstLexis.setConditionAttrib5("agent_mobile");
         firstLexis.setOs("android");
-        firstLexis.setOsVersion("android" + getCurrentTimestamp());
-        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestamp());
-        firstLexis.setAgentModel("agent model" + getCurrentTimestamp());
-        firstLexis.setDeviceName("human readable device name " + getCurrentTimestamp());
+        firstLexis.setOsVersion("android" + getCurrentTimestampSeconds());
+        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestampSeconds());
+        firstLexis.setAgentModel("agent model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceName("human readable device name " + getCurrentTimestampSeconds());
         firstLexis.setAgentLanguage("en-US");
-        firstLexis.setScreenRes("1515x" + getCurrentTimestamp());
+        firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
         Allure.step("Prepare data for DB with the first set of data. set conditionAttrib5 = \"agent_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
@@ -1126,12 +1126,12 @@ public class ActivityTabTest extends TestBaseWeb {
 
         firstLexis.setConditionAttrib5("browser_mobile");
         firstLexis.setOs("android");
-        firstLexis.setOsVersion("android" + getCurrentTimestamp());
-        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestamp());
-        firstLexis.setAgentModel("agent model" + getCurrentTimestamp());
-        firstLexis.setDeviceName("human readable device name " + getCurrentTimestamp());
+        firstLexis.setOsVersion("android" + getCurrentTimestampSeconds());
+        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestampSeconds());
+        firstLexis.setAgentModel("agent model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceName("human readable device name " + getCurrentTimestampSeconds());
         firstLexis.setAgentLanguage("fr-FR");
-        firstLexis.setScreenRes("1515x" + getCurrentTimestamp());
+        firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
@@ -1153,13 +1153,13 @@ public class ActivityTabTest extends TestBaseWeb {
 
         firstLexis.setConditionAttrib5("browser_computer");
         firstLexis.setOs("win");
-        firstLexis.setOsVersion("win" + getCurrentTimestamp());
-        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestamp());
-        firstLexis.setAgentModel("agent model" + getCurrentTimestamp());
-        firstLexis.setDeviceModel("device model" + getCurrentTimestamp());
-        firstLexis.setDeviceName("human readable device name " + getCurrentTimestamp());
+        firstLexis.setOsVersion("win" + getCurrentTimestampSeconds());
+        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestampSeconds());
+        firstLexis.setAgentModel("agent model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceModel("device model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceName("human readable device name " + getCurrentTimestampSeconds());
         firstLexis.setAgentLanguage("it-IT");
-        firstLexis.setScreenRes("1515x" + getCurrentTimestamp());
+        firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_computer\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
@@ -1180,13 +1180,13 @@ public class ActivityTabTest extends TestBaseWeb {
 
         firstLexis.setConditionAttrib5("Something");
         firstLexis.setOs("win");
-        firstLexis.setOsVersion("win" + getCurrentTimestamp());
-        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestamp());
-        firstLexis.setAgentModel("agent model" + getCurrentTimestamp());
-        firstLexis.setDeviceModel("device model" + getCurrentTimestamp());
-        firstLexis.setDeviceName("human readable device name " + getCurrentTimestamp());
+        firstLexis.setOsVersion("win" + getCurrentTimestampSeconds());
+        firstLexis.setAgentBrand("brand1, brand2 " + getCurrentTimestampSeconds());
+        firstLexis.setAgentModel("agent model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceModel("device model" + getCurrentTimestampSeconds());
+        firstLexis.setDeviceName("human readable device name " + getCurrentTimestampSeconds());
         firstLexis.setAgentLanguage("it-IT");
-        firstLexis.setScreenRes("1515x" + getCurrentTimestamp());
+        firstLexis.setScreenRes("1515x" + getCurrentTimestampSeconds());
         firstLexis.setDeviceId(null);
 
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"Something\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
@@ -1220,12 +1220,12 @@ public class ActivityTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("high");
         firstLexis.setPolicyScore(RandomGenerator.getDefault().nextInt(0, 101));
 
-        firstLexis.setBrowser("browser name" + getCurrentTimestamp());
-        firstLexis.setBrowserVersion("browser version" + getCurrentTimestamp());
+        firstLexis.setBrowser("browser name" + getCurrentTimestampSeconds());
+        firstLexis.setBrowserVersion("browser version" + getCurrentTimestampSeconds());
         firstLexis.setScreenResZoom(RandomGenerator.getDefault().nextDouble(0, 101));
         firstLexis.setBrowserLanguage("en-US,en;q=0.9,zh-CN;q=0.8,zh-TW;q=0.7,zh;q=0.6");
-        firstLexis.setProfiledUrl("https://" + getCurrentTimestamp() + ".com/login");
-        firstLexis.setBrowserString("some user agent" + getCurrentTimestamp());
+        firstLexis.setProfiledUrl("https://" + getCurrentTimestampSeconds() + ".com/login");
+        firstLexis.setBrowserString("some user agent" + getCurrentTimestampSeconds());
         firstLexis.setPluginNumber(RandomGenerator.getDefault().nextInt(0, 101));
 
         Allure.step("Prepare data for DB with the set of the test data.");
@@ -1263,8 +1263,8 @@ public class ActivityTabTest extends TestBaseWeb {
         firstLexis.setRiskRating("high");
         firstLexis.setPolicyScore(RandomGenerator.getDefault().nextInt(0, 101));
 
-        firstLexis.setDeviceId("some smart id" + getCurrentTimestamp());
-        firstLexis.setFuzzyDeviceId("some exact id" + getCurrentTimestamp());
+        firstLexis.setDeviceId("some smart id" + getCurrentTimestampSeconds());
+        firstLexis.setFuzzyDeviceId("some exact id" + getCurrentTimestampSeconds());
 
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
@@ -1297,21 +1297,21 @@ public class ActivityTabTest extends TestBaseWeb {
         firstLexis.setPolicyScore(RandomGenerator.getDefault().nextInt(0, 101));
 
         firstLexis.setTrueIp(faker.internet().ipV4Address());
-        firstLexis.setTrueIpIsp("some true IP ISP" + getCurrentTimestamp());
+        firstLexis.setTrueIpIsp("some true IP ISP" + getCurrentTimestampSeconds());
         firstLexis.setTrueIpPostalCode(faker.address().zipCode());
         firstLexis.setTrueIpCity(faker.address().city());
         firstLexis.setTrueIpRegion(faker.address().state());
         firstLexis.setTrueIpGeo(testCountry.getCountryCode());
-        firstLexis.setTrueIpConnectionType("some true IP connection type" + getCurrentTimestamp());
-        firstLexis.setTrueIpRoutingType("some true IP routing type" + getCurrentTimestamp());
-        firstLexis.setProxyType("some true IP proxy type" + getCurrentTimestamp());
+        firstLexis.setTrueIpConnectionType("some true IP connection type" + getCurrentTimestampSeconds());
+        firstLexis.setTrueIpRoutingType("some true IP routing type" + getCurrentTimestampSeconds());
+        firstLexis.setProxyType("some true IP proxy type" + getCurrentTimestampSeconds());
 
         firstLexis.setInputIpAddress(faker.internet().ipV4Address());
-        firstLexis.setInputIpIsp("some input IP ISP" + getCurrentTimestamp());
+        firstLexis.setInputIpIsp("some input IP ISP" + getCurrentTimestampSeconds());
         firstLexis.setInputIpCity(faker.address().city());
         firstLexis.setInputIpRegion(faker.address().state());
         firstLexis.setInputIpGeo(testCountry2.getCountryCode());
-        firstLexis.setInputIpRoutingType("some input IP routing type" + getCurrentTimestamp());
+        firstLexis.setInputIpRoutingType("some input IP routing type" + getCurrentTimestampSeconds());
 
 
         Allure.step("Prepare data for DB with the set of the test data.");

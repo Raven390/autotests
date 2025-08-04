@@ -26,7 +26,7 @@ import utils.Utils;
 @ExtendWith(TestResultWatcher.class)
 public class TestBaseWeb {
     // Shared between all tests in this class.
-    public String timestamp = String.valueOf(Utils.getCurrentTimestamp());
+    public String timestamp = String.valueOf(Utils.getCurrentTimestampSeconds());
     static int n = 1;
     static Playwright playwright;
     static Browser browser;
