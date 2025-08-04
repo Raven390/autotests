@@ -9,11 +9,11 @@ import helpers.http_helper.HttpHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Story;
 import okhttp3.Response;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseApi;
+import utils.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,7 +33,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     private final String brand = "Vantage";
     private final String ucid = brand.toLowerCase() + "-" + userId;
     private final Integer tradingAccount = 52_625_605;
-    private final Integer serverId = 1;
+    private final Integer serverId = 107;
+    private final String dateFrom = "2024-12-31T11:11:11";
+    private final String dateTo = "2030-12-31T11:11:11";
 
     // TODO ADD REAL DATA
     @Test
@@ -74,8 +76,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     @AllureId("801")
     void testClickHouseApiProd4() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
-        queryParamsMap.put("userId", userId);
-        queryParamsMap.put("brand", "Vantage");
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         GetClientsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetClientsResponse.class);
@@ -140,6 +142,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
+        queryParamsMap.put("dateFrom", dateFrom);
+        queryParamsMap.put("dateTo", dateTo);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_EQUITY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -152,6 +156,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
+        queryParamsMap.put("dateFrom", dateFrom);
+        queryParamsMap.put("dateTo", dateTo);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -173,7 +179,7 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     @AllureId("807")
     void testClickHouseApiProd10() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
-        queryParamsMap.put("clientId", ucid);
+        queryParamsMap.put("clientId", "alphatick-11");
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_DEPOSITS, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
@@ -193,6 +199,8 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("tradingAccount", tradingAccount);
         queryParamsMap.put("serverId", serverId);
+        queryParamsMap.put("dateFrom", dateFrom);
+        queryParamsMap.put("action", 1);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -308,7 +316,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    @Disabled("Response body: {\"error\":\"Endpoint '/v1/swapFreeVolumes' is disabled by the administrator.\",\"status\":404}\n")
     @Test
     @DisplayName("Production smoke test. Get swap free volumes (200)")
     @AllureId("813")
@@ -399,10 +406,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     @AllureId("1013")
     void testClickHouseApiProd23() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
-        queryParamsMap.put("clientId", "vt-733549");
-        queryParamsMap.put("tradingAccount", 11_115_040);
-        queryParamsMap.put("serverId", 57);
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID.replace("{tradeId}", "2015940769"), null, queryParamsMap);
+        queryParamsMap.put("tradingAccount", 10_080);
+        queryParamsMap.put("serverId", 3);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_TRADES_BY_TRADE_ID.replace("{tradeId}", "4477144"), null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -430,7 +436,10 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     @DisplayName("Production smoke test. Get Financial Calendar (200)")
     @AllureId("1016")
     void testClickHouseApiProd26() throws IOException {
-        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FINANCIAL_CALENDAR, null, null);
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("dateFrom", Utils.convertTimestampToIsoFormat(Utils.getCurrentTimestampMillis()));
+        queryParamsMap.put("dateTo", Utils.convertTimestampToIsoFormat(Utils.getCurrentTimestampMillis()));
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FINANCIAL_CALENDAR, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
