@@ -352,10 +352,10 @@ public class RuleDataHelper {
                 data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             }
             if (data.s3FactIbSalesCommissionsObject != null) {
-                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm)));
+                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", data.clientHelper.getUcid())));
             }
             if (data.ucidMirrorScore != null) {
-                deleteEntryFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = %s", data.ucidMirrorScore.getUcid()));
+                deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("ucid = '%s'", alert)));
