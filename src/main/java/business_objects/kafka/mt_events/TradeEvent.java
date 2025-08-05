@@ -57,6 +57,9 @@ public class TradeEvent {
     @JsonProperty("eventDate")
     public String eventDate;
 
+    @JsonProperty("initialEventTime")
+    public String initialEventTime;
+
     @JsonProperty("metadata")
     public TradeEventMetadata metadata;
 
