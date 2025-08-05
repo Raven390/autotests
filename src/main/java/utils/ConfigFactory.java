@@ -32,6 +32,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_BASE_PROD = CONFIG.clickhouseBasePathProd();
     public static final String CLICKHOUSE_API_GET_CLIENT = CONFIG.clickhouseGetClientPath();
     public static final String CLICKHOUSE_API_GET_CLIENTS = CONFIG.clickhouseGetClientsPath();
+    public static final String CLICKHOUSE_API_GET_CLIENTS_V2 = CONFIG.clickhouseGetClientsV2Path();
     public static final String CLICKHOUSE_API_GET_CLIENT_TRADING_ACCOUNTS = CONFIG.clickhouseGetClientTradingAccountsPath();
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS = CONFIG.clickhouseGetLexisNexisPath();
     public static final String CLICKHOUSE_API_GET_LEXIS_NEXIS_DATA = CONFIG.clickhouseGetLexisNexisDataPath();
@@ -59,6 +60,26 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_DUMMY_TRADE_DATA = CONFIG.clickhouseGetDummyTradeData();
     public static final String CLICKHOUSE_API_GET_ACCOUNT_BALANCE = CONFIG.clickhouseGetAccountBalance();
     public static final String CLICKHOUSE_API_GET_ABNORMAL_PROFIT = CONFIG.clickhouseGetAbnormalProfit();
+    public static final String CLICKHOUSE_API_GET_WINNING_DEALS_COUNT = CONFIG.clickhouseGetWinningDealsCount();
+    public static final String CLICKHOUSE_API_GET_VERIFY_TRADING_ACCOUNT = CONFIG.clickhouseGetVerifyTradingAccount();
+    public static final String CLICKHOUSE_API_GET_STOPOUT_TRADES_RATIO = CONFIG.clickhouseGetStopoutTradesRatio();
+    public static final String CLICKHOUSE_API_GET_SLIPPAGE_AMOUNT = CONFIG.clickhouseGetSlippageAmount();
+    public static final String CLICKHOUSE_API_GET_SHORT_TOXICITY = CONFIG.clickhouseGetShortToxicity();
+    public static final String CLICKHOUSE_API_GET_REBATE_AMOUNT = CONFIG.clickhouseGetRebateAmount();
+    public static final String CLICKHOUSE_API_GET_PROFIT_TO_CAPITAL_RATIO = CONFIG.clickhouseGetProfitToCapital();
+    public static final String CLICKHOUSE_API_GET_NOTIONAL_VALUE_AMOUNT = CONFIG.clickhouseGetNotionalValueAmount();
+    public static final String CLICKHOUSE_API_GET_NET_PROFIT = CONFIG.clickhouseGetNetProfit();
+    public static final String CLICKHOUSE_API_GET_NAME_BIRTH = CONFIG.clickhouseGetNameBirth();
+    public static final String CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES = CONFIG.clickhouseGetMirrorTradeWaves();
+    public static final String CLICKHOUSE_API_GET_MIRROR_SCORE = CONFIG.clickhouseGetMirrorScore();
+    public static final String CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT = CONFIG.clickhouseGetMaxDailySlippageAmount();
+    public static final String CLICKHOUSE_API_GET_MARKET_MANIPULATOR_FLAG = CONFIG.clickhouseGetMarketManipulatorFlag();
+    public static final String CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT = CONFIG.clickhouseGetFastTradesAndTotalCount();
+    public static final String CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS = CONFIG.clickhouseGetCumulativeDeposits();
+    public static final String CLICKHOUSE_API_GET_COUNT_TRADING_DAYS = CONFIG.clickhouseGetCountTradingDays();
+    public static final String CLICKHOUSE_API_GET_COUNT_CPA = CONFIG.clickhouseGetCountCpa();
+    public static final String CLICKHOUSE_API_GET_CHARGEBACK_SCORE = CONFIG.clickhouseGetChargebackScore();
+    public static final String CLICKHOUSE_API_GET_ALERTS = CONFIG.clickhouseGetAlerts();
     // Rule engine
     public static final String RULE_ENGINE_PATH_TEST_ENV = CONFIG.ruleEngineBasePathTest();
     public static final String RULE_ENGINE_GET_BRANDS = CONFIG.ruleEngineGetBrands();
@@ -247,6 +268,9 @@ public class ConfigFactory {
         @Key("clickhouseGetClientsPath")
         String clickhouseGetClientsPath();
 
+        @Key("clickhouseGetClientsV2Path")
+        String clickhouseGetClientsV2Path();
+
         @Key("clickhouseGetClientTradingAccountsPath")
         String clickhouseGetClientTradingAccountsPath();
 
@@ -327,6 +351,66 @@ public class ConfigFactory {
 
         @Key("clickhouseGetAbnormalProfit")
         String clickhouseGetAbnormalProfit();
+
+        @Key("clickhouseGetWinningDealsCount")
+        String clickhouseGetWinningDealsCount();
+
+        @Key("clickhouseGetVerifyTradingAccount")
+        String clickhouseGetVerifyTradingAccount();
+
+        @Key("clickhouseGetStopoutTradesRatio")
+        String clickhouseGetStopoutTradesRatio();
+
+        @Key("clickhouseGetSlippageAmount")
+        String clickhouseGetSlippageAmount();
+
+        @Key("clickhouseGetShortToxicity")
+        String clickhouseGetShortToxicity();
+
+        @Key("clickhouseGetRebateAmount")
+        String clickhouseGetRebateAmount();
+
+        @Key("clickhouseGetProfitToCapital")
+        String clickhouseGetProfitToCapital();
+
+        @Key("clickhouseGetNotionalValueAmount")
+        String clickhouseGetNotionalValueAmount();
+
+        @Key("clickhouseGetNetProfit")
+        String clickhouseGetNetProfit();
+
+        @Key("clickhouseGetNameBirth")
+        String clickhouseGetNameBirth();
+
+        @Key("clickhouseGetMirrorTradeWaves")
+        String clickhouseGetMirrorTradeWaves();
+
+        @Key("clickhouseGetMirrorScore")
+        String clickhouseGetMirrorScore();
+
+        @Key("clickhouseGetMaxDailySlippageAmount")
+        String clickhouseGetMaxDailySlippageAmount();
+
+        @Key("clickhouseGetMarketManipulatorFlag")
+        String clickhouseGetMarketManipulatorFlag();
+
+        @Key("clickhouseGetFastTradesAndTotalCount")
+        String clickhouseGetFastTradesAndTotalCount();
+
+        @Key("clickhouseGetCumulativeDeposits")
+        String clickhouseGetCumulativeDeposits();
+
+        @Key("clickhouseGetCountTradingDays")
+        String clickhouseGetCountTradingDays();
+
+        @Key("clickhouseGetCountCpa")
+        String clickhouseGetCountCpa();
+
+        @Key("clickhouseGetChargebackScore")
+        String clickhouseGetChargebackScore();
+
+        @Key("clickhouseGetAlerts")
+        String clickhouseGetAlerts();
 
         // Rule engine
 
