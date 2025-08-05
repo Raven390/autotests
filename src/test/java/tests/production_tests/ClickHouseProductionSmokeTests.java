@@ -9,6 +9,7 @@ import helpers.http_helper.HttpHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Story;
 import okhttp3.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     private final String dateFrom = "2024-12-31T11:11:11";
     private final String dateTo = "2030-12-31T11:11:11";
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get abuse types (200)")
     @AllureId("741")
@@ -48,7 +48,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get balance orders (200)")
     @AllureId("799")
@@ -60,7 +59,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get bonuses (200)")
     @AllureId("800")
@@ -123,7 +121,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert lastUpdated not null", mappedResponse.getLastUpdated(), is(notNullValue()));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get client trading account (200)")
     @AllureId("803")
@@ -134,7 +131,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get credit equity ratio (200)")
     @AllureId("804")
@@ -148,7 +144,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get credit risk free revenue ratio (200)")
     @AllureId("805")
@@ -162,7 +157,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get credits (200)")
     @AllureId("806")
@@ -191,7 +185,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert clientId not null", mappedResponse[0].clientId, is(notNullValue()));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get floating trades group by (200)")
     @AllureId("808")
@@ -205,7 +198,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get lexis nexis data (200)")
     @AllureId("809")
@@ -291,7 +283,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
 
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get mirror accounts by trades (200)")
     @AllureId("811")
@@ -304,7 +295,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get swap free fees (200)")
     @AllureId("812")
@@ -330,7 +320,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert tradingIndicators not null", mappedResponse.tradingIndicators, is(notNullValue()));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get trades group by (200)")
     @AllureId("814")
@@ -342,7 +331,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get trades (200)")
     @AllureId("815")
@@ -354,7 +342,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get unclosed trades (200)")
     @AllureId("816")
@@ -366,7 +353,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
-    // TODO ADD REAL DATA
     @Test
     @DisplayName("Production smoke test. Get withdrawals (200)")
     @AllureId("817")
@@ -477,4 +463,262 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ABNORMAL_PROFIT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
+
+    @Test
+    @AllureId("1393")
+    @DisplayName("Production smoke test. Get clients v2(200)")
+    void testClickHouseApiProd30() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CLIENTS_V2, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+    }
+
+    @Test
+    @AllureId("1394")
+    @DisplayName("Production smoke test. Get winning deals count(200)")
+    void testClickHouseApiProd31() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        queryParamsMap.put("dateTo", "2030-12-31T11:11:11Z");
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_WINNING_DEALS_COUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+    }
+
+    @Test
+    @AllureId("1395")
+    @DisplayName("Production smoke test. Get verify trading account(200)")
+    void testClickHouseApiProd32() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_VERIFY_TRADING_ACCOUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("{\"isTest\":false,\"accountGroup\":\"VIG_Hedge\\\\M_VIG_USD\"}"));
+    }
+
+    @Test
+    @AllureId("1396")
+    @DisplayName("Production smoke test. Get verify trading account(200)")
+    void testClickHouseApiProd33() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_STOPOUT_TRADES_RATIO, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[{\"totalTrades\":0,\"stopOutTrades\":0,\"stopOutRatio\":0.00}]"));
+    }
+
+    @Test
+    @AllureId("1397")
+    @DisplayName("Production smoke test. Get slippage amount(200)")
+    void testClickHouseApiProd34() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SLIPPAGE_AMOUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Disabled("not working on test env")
+    @Test
+    @AllureId("1398")
+    @DisplayName("Production smoke test. Get short toxicity(200)")
+    void testClickHouseApiProd35() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_SHORT_TOXICITY, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1399")
+    @DisplayName("Production smoke test. Get rebate amount(200)")
+    void testClickHouseApiProd36() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_REBATE_AMOUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1400")
+    @DisplayName("Production smoke test. Get profit to capital(200)")
+    void testClickHouseApiProd37() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_PROFIT_TO_CAPITAL_RATIO, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1400")
+    @DisplayName("Production smoke test. Get notional value amount(200)")
+    void testClickHouseApiProd38() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NOTIONAL_VALUE_AMOUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1401")
+    @DisplayName("Production smoke test. Get net profit(200)")
+    void testClickHouseApiProd39() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NET_PROFIT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"netProfit\":0.0000}]"));
+    }
+
+    @Test
+    @AllureId("1402")
+    @DisplayName("Production smoke test. Get name birth(200)")
+    void testClickHouseApiProd40() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NAME_BIRTH, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"},{\"clientId\":\"vantage-3384621\",\"nameBirth\":\"NIKOLAI\"}]"));
+    }
+
+    @Test
+    @AllureId("1403")
+    @DisplayName("Production smoke test. Get mirror trade waves(200)")
+    void testClickHouseApiProd41() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientId", ucid);
+        queryParamsMap.put("wavePercent", 1);
+        queryParamsMap.put("leverage", 1);
+        queryParamsMap.put("bonusLvl", 1);
+        queryParamsMap.put("profitLvl", 1);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_TRADE_WAVES, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("{\"suspiciousFlag\":false}"));
+    }
+
+    @Test
+    @AllureId("1404")
+    @DisplayName("Production smoke test. Get mirror score(200)")
+    void testClickHouseApiProd42() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientId", ucid);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_SCORE, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.22355781,\"ucidScore\":0}"));
+    }
+
+    @Test
+    @AllureId("1405")
+    @DisplayName("Production smoke test. Get max daily slippage amount(200)")
+    void testClickHouseApiProd43() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MAX_DAILY_SLIPPAGE_AMOUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Disabled("Need to be rechecked")
+    @Test
+    @AllureId("1406")
+    @DisplayName("Production smoke test. Get market manipulator flag(200)")
+    void testClickHouseApiProd44() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientId", ucid);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MARKET_MANIPULATOR_FLAG, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1407")
+    @DisplayName("Production smoke test. Get fast trades and total count(200)")
+    void testClickHouseApiProd45() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccount", tradingAccount);
+        queryParamsMap.put("serverId", serverId);
+        queryParamsMap.put("tradeDurationSeconds", 10);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_FAST_TRADES_AND_TOTAL_COUNT, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[{\"lastDealTime\":\"1970-01-01T00:00:00Z\",\"tradingAccount\":\"0\",\"serverId\":\"0\",\"countTotalTrades\":0,\"countFastTrades\":0}]"));
+    }
+
+    @Test
+    @AllureId("1408")
+    @DisplayName("Production smoke test. Get cumulative deposits(200)")
+    void testClickHouseApiProd46() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("tradingAccounts", tradingAccount);
+        queryParamsMap.put("serverIds", serverId);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CUMULATIVE_DEPOSITS, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Disabled("Needs to be retested")
+    @Test
+    @AllureId("1409")
+    @DisplayName("Production smoke test. Get count trading days(200)")
+    void testClickHouseApiProd47() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientId", ucid);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_TRADING_DAYS, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+    @Test
+    @AllureId("1410")
+    @DisplayName("Production smoke test. Get count CPA(200)")
+    void testClickHouseApiProd48() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("cpa", 1);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_CPA, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[{\"count\":19}]"));
+    }
+
+    @Test
+    @AllureId("1411")
+    @DisplayName("Production smoke test. Get chargeback score(200)")
+    void testClickHouseApiProd49() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientId", ucid);
+        queryParamsMap.put("depositCardRatio", 1);
+        queryParamsMap.put("rebateRatio", 1);
+        queryParamsMap.put("rebateEffeciency", 1);
+        queryParamsMap.put("profitToDeposit", 1);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_CHARGEBACK_SCORE, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("{\"ratioAbuse\":0}"));
+    }
+
+    @Test
+    @AllureId("1412")
+    @DisplayName("Production smoke test. Get alerts (200)")
+    void testClickHouseApiProd50() throws IOException {
+        Map<String, Object> queryParamsMap = new HashMap<>();
+        queryParamsMap.put("clientIds", ucid);
+        Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_ALERTS, null, queryParamsMap);
+        assertThat("Assert that code is 200", response.code(), is(200));
+        assertThat("Assert body", response.body().string(), is("[]"));
+    }
+
+
 }
