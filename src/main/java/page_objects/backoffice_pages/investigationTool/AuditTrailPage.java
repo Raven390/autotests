@@ -51,6 +51,7 @@ public class AuditTrailPage extends AbstractPage {
     @Step("Open general tab")
     public void openAuditTrailTab() {
         auditTrailTab.click();
+        page.waitForTimeout(1000);
         waitForPageToLoad();
     }
 
@@ -67,6 +68,7 @@ public class AuditTrailPage extends AbstractPage {
 
     @Step("Get list of all audit trail items")
     public List<AuditTrailItem> getAuditTrailItems() {
+        waitForPageToLoad();
         List<AuditTrailItem> auditTrailItems = new ArrayList<>();
         for (int i = 0; i < auditTrailItem.count(); i++) {
             AuditTrailItem item = new AuditTrailItem();

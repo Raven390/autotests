@@ -25,8 +25,8 @@ public class KeycloackPage extends AbstractPage {
         super(page);
         this.loginField = page.locator("input[id=\"username\"]");
         this.passwordField = page.locator("input[id=\"password\"]");
-        this.loginConfirmButton = page.locator("input[type=\"submit\"]");
-        this.errorMessage = page.locator("[id=\"input-error\"]");
+        this.loginConfirmButton = page.locator("button[type=\"submit\"]");
+        this.errorMessage = page.locator("[id=\"input-error-username\"]");
         this.breadcrumbs = page.locator(".breadcrumps");
     }
 

@@ -101,7 +101,7 @@ public class RestrictionPage extends AbstractPage {
     private static final String RESTRICTION_OPTION_PATTERN = "//span[@class='g-select-list__option-default-label' and text()='%s']";
     private static final String RESTRICTION_TAB_ITEM_BY_NAME = "//div[contains(@class,'v-restrictions-tab-item__name') and text()='%s']/ancestor::div[@class='v-restrictions-tab-item']";
     private static final String ACTIVE_RESTRICTION_BY_NAME = "//div[text()='%s']/ancestor::div[@class='v-client-restrictions-list-item']";
-    private static final String CLEAR_RESTRICTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[@data-qa='selected_fraud_type_item__remove_button']";
+    private static final String CLEAR_RESTRICTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::button[contains(@data-qa,'control__remove')]";
     private static final String RESTRICTION_ACCOUNT_SELECTION_BUTTON_BY_NAME = ACTIVE_RESTRICTION_BY_NAME + "/descendant::span[contains(text(),'account')]/ancestor::button";
 
     public RestrictionPage(Page page) {
