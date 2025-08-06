@@ -49,10 +49,10 @@ class GetClientTradingAccountTests extends TestBaseApi {
         assert response.body() != null;
         List<GetClientTradingAccountsResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponse[].class)).toList();
         GetClientTradingAccountsResponse response1 = new GetClientTradingAccountsResponse(
-                "clientAccounts", client.getUcid(), client.getTradingAccount().toString(), client.getServerId().toString()
+                "clientAccounts", client.getUcid(), client.getTradingAccount().toString(), client.getServerId().toString(), "USD"
         );
         GetClientTradingAccountsResponse response2 = new GetClientTradingAccountsResponse(
-                "clientAccounts", client.getUcid(), client.getTradingAccount2().toString(), client.getServerId().toString()
+                "clientAccounts", client.getUcid(), client.getTradingAccount2().toString(), client.getServerId().toString(), "USD"
         );
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.size(), is(2));

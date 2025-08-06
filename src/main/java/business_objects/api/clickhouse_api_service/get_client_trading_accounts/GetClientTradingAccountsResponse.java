@@ -18,6 +18,9 @@ public class GetClientTradingAccountsResponse {
     @JsonProperty("serverId")
     String serverId;
 
+    @JsonProperty("tradingAccountCurrency")
+    String tradingAccountCurrency;
+
     public GetClientTradingAccountsResponse() {
     }
 
@@ -27,11 +30,12 @@ public class GetClientTradingAccountsResponse {
     }
 
     public GetClientTradingAccountsResponse(
-            String objectType, String clientId, String tradingAccount, String serverId) {
+            String objectType, String clientId, String tradingAccount, String serverId, String tradingAccountCurrency) {
         this.objectType = objectType;
         this.clientId = clientId;
         this.tradingAccount = tradingAccount;
         this.serverId = serverId;
+        this.tradingAccountCurrency = tradingAccountCurrency;
     }
 
     @Override
@@ -78,8 +82,16 @@ public class GetClientTradingAccountsResponse {
         this.serverId = serverId;
     }
 
+    public String getTradingAccountCurrency() {
+        return tradingAccountCurrency;
+    }
+
+    public void setTradingAccountCurrency(String tradingAccountCurrency) {
+        this.tradingAccountCurrency = tradingAccountCurrency;
+    }
+
     @Override
     public String toString() {
-        return "GetClientTradingAccountsResponse{" + "objectType='" + objectType + '\'' + ", clientId='" + clientId + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", serverId='" + serverId + '\'' + '}';
+        return "GetClientTradingAccountsResponse{" + "objectType='" + objectType + '\'' + ", clientId='" + clientId + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", serverId='" + serverId + '\'' + ", tradingAccountCurrency='" + tradingAccountCurrency + '\'' + '}';
     }
 }

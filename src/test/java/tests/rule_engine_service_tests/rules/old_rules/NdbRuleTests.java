@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests.rules;
+package tests.rule_engine_service_tests.rules.old_rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;

@@ -8,6 +8,8 @@ import helpers.data.ClientHelper;
 import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
+import helpers.http_helper.HttpHelper;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +19,7 @@ import static business_objects.api.abuse_registry.AbuseRegistryRequest.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
+import static utils.ConfigFactory.ABUSE_REGISTRY_BASE_PATH;
 
 public class AbuseRegistryHelper {
 
@@ -81,5 +84,9 @@ public class AbuseRegistryHelper {
         PostAbuserStatusRequestBody requestBody = new PostAbuserStatusRequestBody(
                 "Auto Test", "BO", "Set by autotest", status.getStatus());
         assertThat("Check that request was successful", postAbuserStatus(client, requestBody).code(), is(200));
+    }
+
+    public static Response getClientStatus(ClientHelper client) throws IOException {
+        return new HttpHelper().sendGetRequest(ABUSE_REGISTRY_BASE_PATH + "/v1/abusers/" + client.getUcid() + "/status", null, null);
     }
 }
