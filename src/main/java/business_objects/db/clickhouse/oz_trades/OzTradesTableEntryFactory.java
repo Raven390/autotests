@@ -1,0 +1,82 @@
+package business_objects.db.clickhouse.oz_trades;
+
+import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
+import helpers.data.ClientHelper;
+import utils.Utils;
+
+public class OzTradesTableEntryFactory {
+
+    public static OzTradesTableEntry generateOzTradesTableEntryByClient(ClientHelper client) {
+        OzTradesTableEntry entry = new OzTradesTableEntry();
+        entry.setServerId(client.getServerId());
+        entry.setServerName("Test");
+        entry.setAccount(client.getTradingAccount());
+        entry.setUcid(client.getUcid());
+        entry.setSlippage(0d);
+        entry.setTradeId(1);
+        entry.setOrderId(1);
+        entry.setMakerTradeId("1");
+        entry.setTradeTime(Utils.getCurrentTimestampDbFormat());
+        entry.setValueRollTimeUtc(Utils.getCurrentTimestampDbFormat());
+        entry.setMakerSide(1);
+        entry.setTakerRequestedVolume(1d);
+        entry.setMakerFilledVolume(1d);
+        entry.setCoreSymbol("USD");
+        entry.setTakerRequestedPrice(1d);
+        entry.setMakerExecutedPrice(1d);
+        entry.setTakerExecutedPrice(1d);
+        entry.setMakerSymbol("USD");
+        entry.setTakerOrderId("1");
+        entry.setTakerMtOrderType(1);
+        entry.setTakerSymbol("USD");
+        entry.setTakerAvgExecutedPrice(1d);
+        entry.setCoreOrderSide(1);
+        entry.setCoreOrderType(1);
+        entry.setCoreCreatedTime(Utils.getCurrentTimestampDbFormat());
+        entry.setOrderResult(1);
+        entry.setTakerConnectionName("Test");
+        entry.setMakerStreamName("Test");
+        entry.setTradeStatus(1);
+        entry.setTakerLogin("Test");
+        entry.setTradeDate(Utils.getCurrentDate());
+        entry.setRequestType(1);
+        entry.setCoreVolume(1d);
+        entry.setMatchedVolume(1d);
+        entry.setMakerProvider("Test");
+        entry.setRequestNewId(1);
+        entry.setTakerOrderType(1);
+        entry.setTakerSpread(1d);
+        entry.setCoreSpread(1d);
+        entry.setCoreTotalSpread(1d);
+        entry.setMakerComment("Test");
+        entry.setMakerExecutionDuration("1");
+        entry.setMakerValueDate(Utils.getCurrentDate());
+        entry.setUsdAmount(1d);
+        entry.setAnnotationFlags(1);
+        entry.setCoreMakerSpread(1d);
+        entry.setRequestedAppliedMinSpread(1d);
+        entry.setRequestedAppliedMaxSpread(1d);
+        entry.setMakerCcy2Amount(1d);
+        entry.setTakerCcy2Amount(1d);
+        entry.setLastModified(Utils.getCurrentTimestampDbFormat());
+        entry.setQuoteMakerStreamName("Test");
+        entry.setCoreComment("Test");
+        entry.setExecutionRejectReason(1);
+        entry.setOrderRejectReason(1);
+        entry.setBaseRefConversionRatio(1d);
+        entry.setRefCurrency("USD");
+        entry.setTermRefConversionRatio(1d);
+        entry.setTermCurrency("USD");
+        entry.setMatchedPrice(1d);
+        entry.setSystematicHedgeBucketId(1);
+        entry.setSystematicHedgeCcy2BucketId(1);
+        entry.setSystematicHedgeRefCurrencyAmount(1d);
+        entry.setProviderVolumes("Test");
+        entry.setTimeSentToMaker(Utils.getCurrentTimestampDbFormat());
+        entry.setOrderAnnotationFlags("Test");
+        entry.setLinkedOrderId(1);
+        entry.setMakerAdapter("Test");
+        entry.setOzBaseName("Test");
+        return entry;
+    }
+}

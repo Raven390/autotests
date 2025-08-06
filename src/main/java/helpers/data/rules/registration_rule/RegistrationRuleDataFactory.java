@@ -4,16 +4,14 @@ package helpers.data.rules.registration_rule;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
-import business_objects.kafka.crm_events.EgRegistrationEvent;
+import business_objects.kafka.crm_events.RegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
 import helpers.data.enums.FraudTypeOld;
-import helpers.data.enums.Regulator;
 import helpers.data.rules.RuleDataHelper;
 import net.datafaker.Faker;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +37,8 @@ import static utils.Utils.*;
 public class RegistrationRuleDataFactory {
 
     // Clients
-    private static final ClientHelper registrationRuleExitEventEnd1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper registrationRuleExitEventEnd2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper registrationRuleClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd3p1Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd3p2Client = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleExitEventEnd3p3Client = getRandomVantageClientAllFields();
@@ -84,18 +82,16 @@ public class RegistrationRuleDataFactory {
         lexisNexisObject.setSessionId(client.getSessionId());
         lexisNexisObject.setPolicyScore(-49);
         lexisNexisObject.setRiskRating("low");
-        EgRegistrationEvent registrationEvent = new EgRegistrationEvent();
-        registrationEvent.clientId = client.getUserId();
-        registrationEvent.brand = client.getBrand();
-        registrationEvent.regulator = Regulator.VFSC.getDisplayName();
-        registrationEvent.metaTraderAccount = 1;
-        registrationEvent.id = getRandomUuidString();
-        registrationEvent.createTime = Instant.now().toString();
-        registrationEvent.type = EG_REGISTRATION_EVENT;
+        RegistrationEvent registrationEvent = new RegistrationEvent();
+        registrationEvent.setBrand(client.getBrand());
+        registrationEvent.setClientId(client.getUserId());
+        registrationEvent.setEmail(client.getEmail());
+        RegistrationEvent.LexisNexis lexisNexis = new RegistrationEvent.LexisNexis();
+        ruleData.registrationEvent = registrationEvent;
+        ruleData.registrationEvent.setLexisNexis(lexisNexis);
         ruleData.clientHelper = client;
         ruleData.crmTbUserObject = userObject;
         ruleData.lnSessionParsedObject = lexisNexisObject;
-        ruleData.registrationEvent = registrationEvent;
         return ruleData;
     }
 
@@ -125,20 +121,20 @@ public class RegistrationRuleDataFactory {
     }
 
     public static RuleDataHelper getRegistrationRuleExitEventEnd1Data() {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd1Client);
-        //client dont have connections
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient1);
+        //No toxic accounts linked
         data.connections = null;
         //client have low risk in LN
-        data.lnSessionParsedObject.setRiskRating("low");
+        data.registrationEvent.getLexisNexis().setRiskRating("low");
         return data;
     }
 
     public static RuleDataHelper getRegistrationRuleExitEventEnd2Data() {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleExitEventEnd2Client);
-        //client dont have connections
+        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient2);
+        //No toxic accounts linked
         data.connections = null;
         //client have low high in LN
-        data.lnSessionParsedObject.setRiskRating("high");
+        data.registrationEvent.getLexisNexis().setRiskRating("high");
         return data;
     }
 
@@ -653,31 +649,6 @@ public class RegistrationRuleDataFactory {
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleExitEventEnd1Data());
         map.put("2", getRegistrationRuleExitEventEnd2Data());
-        map.put("3p1", getRegistrationRuleExitEventEnd3p1Data());
-        map.put("3p2", getRegistrationRuleExitEventEnd3p2Data());
-        map.put("3p3", getRegistrationRuleExitEventEnd3p3Data());
-        map.put("3p4", getRegistrationRuleExitEventEnd3p4Data());
-        map.put("3p5", getRegistrationRuleExitEventEnd3p5Data());
-        map.put("3p6", getRegistrationRuleExitEventEnd3p6Data());
-        map.put("3p7", getRegistrationRuleExitEventEnd3p7Data());
-        map.put("3p8", getRegistrationRuleExitEventEnd3p8Data());
-        map.put("3p9", getRegistrationRuleExitEventEnd3p9Data());
-        map.put("3p10", getRegistrationRuleExitEventEnd3p10Data());
-        map.put("3p11", getRegistrationRuleExitEventEnd3p11Data());
-        map.put("3p12", getRegistrationRuleExitEventEnd3p12Data());
-        map.put("3p13", getRegistrationRuleExitEventEnd3p13Data());
-        map.put("3p14", getRegistrationRuleExitEventEnd3p14Data());
-        map.put("3p15", getRegistrationRuleExitEventEnd3p15Data());
-        map.put("3p16", getRegistrationRuleExitEventEnd3p16Data());
-        map.put("3p17", getRegistrationRuleExitEventEnd3p17Data());
-        map.put("3p18", getRegistrationRuleExitEventEnd3p18Data());
-        map.put("3p19", getRegistrationRuleExitEventEnd3p19Data());
-        map.put("3p20", getRegistrationRuleExitEventEnd3p20Data());
-        map.put("3p21", getRegistrationRuleExitEventEnd3p21Data());
-        map.put("3p22", getRegistrationRuleExitEventEnd3p22Data());
-        map.put("3p23", getRegistrationRuleExitEventEnd3p23Data());
-        map.put("3p24", getRegistrationRuleExitEventEnd3p24Data());
-        map.put("3p25", getRegistrationRuleExitEventEnd3p25Data());
 
         setupRuleData(map);
 

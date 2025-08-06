@@ -30,13 +30,14 @@ import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
 import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.crm_events.EgRegistrationEvent;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
+import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
 import business_objects.kafka.mt_events.TradeEvent;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
+import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
 
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class RuleDataHelper {
     public List<LoyaltiesRedemptionObject> loyaltyObjects;
     public List<MtMt5PositionsObject> mtMt5PositionsObjects;
     public LnSessionParsedObject lnSessionParsedObject;
-    public EgRegistrationEvent registrationEvent;
+    public RegistrationEvent registrationEvent;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
     public List<PhoneTableEntry> phoneTableEntries;
@@ -94,6 +95,7 @@ public class RuleDataHelper {
     public UcidMirrorScore ucidMirrorScore;
     public List<RuleAlert> ruleAlerts;
     public List<BoAlertsObject> boAlertsObjects;
+    public List<OzTradesTableEntry> ozTradesTableObjets;
 
     public RuleDataHelper() {
     }
@@ -115,7 +117,8 @@ public class RuleDataHelper {
             List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
             List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
             List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScore ucidMirrorScore,
-            List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects) {
+            List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects,
+            List<OzTradesTableEntry> ozTradesTableObjets) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.dictAccountToUcidObject = dictAccountToUcidObject;
@@ -151,6 +154,7 @@ public class RuleDataHelper {
         this.ucidMirrorScore = ucidMirrorScore;
         this.ruleAlerts = ruleAlerts;
         this.boAlertsObjects = boAlertsObjects;
+        this.ozTradesTableObjets = ozTradesTableObjets;
     }
 
     static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
@@ -274,6 +278,9 @@ public class RuleDataHelper {
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, alerts));
             }
+            if (data.ozTradesTableObjets != null) {
+                data.ozTradesTableObjets.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
+            }
         }
     }
 
@@ -352,13 +359,16 @@ public class RuleDataHelper {
                 data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
             }
             if (data.s3FactIbSalesCommissionsObject != null) {
-                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", data.clientHelper.getUcid())));
+                data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm.getUcid())));
             }
             if (data.ucidMirrorScore != null) {
                 deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("ucid = '%s'", alert)));
+            }
+            if (data.ozTradesTableObjets != null) {
+                data.ozTradesTableObjets.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade)));
             }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());

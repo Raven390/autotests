@@ -125,6 +125,7 @@ public class Constants {
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";
+    public static final String CLICKHOUSE_OZ_TRADES_TABLE_NAME = "vindex_test.oz___trades";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
@@ -291,6 +292,7 @@ public class Constants {
     public static final String EG_OPEN_TRADE_EVENT = "egOpenTrade";
     public static final String EG_RAF_BALANCE_EVENT = "egRaf";
     public static final String EG_REGISTRATION_EVENT = "egRegistration";
+    public static final String REGISTRATION_EVENT = "registration";
     public static final String EG_WITHDRAWAL_EVENT = "egWithdrawal";
     public static final String KAFKA_MESSAGE_KEY = "QA";
     public static final String MT_CLOSE_TRADE_EVENT = "closeTrade";
