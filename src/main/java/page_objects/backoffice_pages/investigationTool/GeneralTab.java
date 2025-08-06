@@ -128,7 +128,7 @@ public class GeneralTab extends AbstractPage {
         this.historyDrawer = page.locator("[data-qa='drawer_body']");
         this.fullNameElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][1]", GENERAL_INFO_HEADER));
         this.registrationDateAgoElement = page.locator(String.format("%s/descendant::div[@class='v-text-with-icon__text'][2]", GENERAL_INFO_HEADER));
-        this.showHiddenDataButton = page.locator("//button[@data-qa='investigation_page__general_info_unmask_btn']");
+        this.showHiddenDataButton = page.locator("//button[@data-qa='general_info__unmask_btn']");
         this.registrationSourceReferral = page.locator("//span[text()='Referral client']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.registrationSourceCpa = page.locator("//span[text()='CPA affiliate']/ancestor::tr/descendant::div[@class='v-text-with-icon__text'][1]");
         this.fileViewerImage = page.locator("[data-qa='gallery__image']");
