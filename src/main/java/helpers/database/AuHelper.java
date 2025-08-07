@@ -14,8 +14,4 @@ public class AuHelper {
 
         Thread.sleep(200);
     }
-
-    public static void deleteClientAudit(String ucid) throws Exception {
-        cleanClientAudit(ucid);
-    }
 }

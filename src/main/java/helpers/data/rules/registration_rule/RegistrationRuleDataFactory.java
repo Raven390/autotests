@@ -3,7 +3,6 @@ package helpers.data.rules.registration_rule;
 
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObject;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -20,6 +19,8 @@ import java.util.Map;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnection;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
@@ -68,30 +69,33 @@ public class RegistrationRuleDataFactory {
 
     private static RuleDataHelper getRegistrationRuleData(ClientHelper client) {
         RuleDataHelper ruleData = new RuleDataHelper();
-        CrmTbUserObject userObject = generateUserByClient(client);
-        userObject.countryCode = client.getCountryCode();
-        userObject.isoCountryCode = client.getCountryCode();
-        LnSessionParsedObject lexisNexisObject = generateLexisNexisDataByClient(client);
-        lexisNexisObject.setBrand(client.getBrand());
-        lexisNexisObject.setEventType("account_creation");
-        lexisNexisObject.setEmail(client.getEmail());
-        lexisNexisObject.setMobile(client.getPhoneNumber());
-        lexisNexisObject.setUserId(client.getUserId());
-        lexisNexisObject.setProxyIp(client.getIpAddress());
-        lexisNexisObject.setTrueIpGeo(client.getCountryCode());
-        lexisNexisObject.setSessionId(client.getSessionId());
-        lexisNexisObject.setPolicyScore(-49);
-        lexisNexisObject.setRiskRating("low");
-        RegistrationEvent registrationEvent = new RegistrationEvent();
-        registrationEvent.setBrand(client.getBrand());
-        registrationEvent.setClientId(client.getUserId());
-        registrationEvent.setEmail(client.getEmail());
-        RegistrationEvent.LexisNexis lexisNexis = new RegistrationEvent.LexisNexis();
-        ruleData.registrationEvent = registrationEvent;
-        ruleData.registrationEvent.setLexisNexis(lexisNexis);
         ruleData.clientHelper = client;
-        ruleData.crmTbUserObject = userObject;
-        ruleData.lnSessionParsedObject = lexisNexisObject;
+        ruleData.crmTbUserObject = generateUserByClient(ruleData.clientHelper);
+        ruleData.crmTbAccountObject = generateAccountByClient(ruleData.clientHelper, false);
+        ruleData.crmTbAccountForMtObject = generateAccountForMtByClient(ruleData.clientHelper, false);
+        ruleData.crmTbUserObject.countryCode = client.getCountryCode();
+        ruleData.crmTbUserObject.isoCountryCode = client.getCountryCode();
+
+        ruleData.lnSessionParsedObject = generateLexisNexisDataByClient(client);
+        ruleData.lnSessionParsedObject.setBrand(client.getBrand());
+        ruleData.lnSessionParsedObject.setEventType("account_creation");
+        ruleData.lnSessionParsedObject.setEmail(client.getEmail());
+        ruleData.lnSessionParsedObject.setMobile(client.getPhoneNumber());
+        ruleData.lnSessionParsedObject.setUserId(client.getUserId());
+        ruleData.lnSessionParsedObject.setProxyIp(client.getIpAddress());
+        ruleData.lnSessionParsedObject.setTrueIpGeo(client.getCountryCode());
+        ruleData.lnSessionParsedObject.setSessionId(client.getSessionId());
+        ruleData.lnSessionParsedObject.setPolicyScore(-49);
+        ruleData.lnSessionParsedObject.setRiskRating("low");
+
+        ruleData.registrationEvent = new RegistrationEvent();
+        ruleData.registrationEvent.setId(getRandomUuidString());
+        ruleData.registrationEvent.setBrand(client.getBrand());
+        ruleData.registrationEvent.setClientId(client.getUserId());
+        ruleData.registrationEvent.setEmail(client.getEmail());
+        ruleData.registrationEvent.setType(REGISTRATION_EVENT);
+        ruleData.registrationEvent.setLexisNexis(new RegistrationEvent.LexisNexis());
+
         return ruleData;
     }
 

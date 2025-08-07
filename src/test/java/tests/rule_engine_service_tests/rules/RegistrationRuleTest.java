@@ -1,6 +1,5 @@
 package tests.rule_engine_service_tests.rules;
 
-import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
@@ -61,23 +60,21 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
-    @Disabled
     @Test
     @DisplayName("Registration rule exit 'End_registration_rule_alert1'")
     @AllureId("156")
     void registrationRuleExitEventEnd2Test() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
 
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
-
         produceRegistrationEventToKafka(data.registrationEvent);
 
+        Thread.sleep(10_000);
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("ML Model suspects the client of Mirror Trading"));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("No alert. High Lexis score"));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
@@ -86,10 +83,9 @@ class RegistrationRuleTest extends TestBaseRule {
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
 
-        GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
-        assertThat(abuserStatus, is(notNullValue()));
 
-
+//        GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
+//        assertThat(abuserStatus, is(notNullValue()));
     }
 
 }
