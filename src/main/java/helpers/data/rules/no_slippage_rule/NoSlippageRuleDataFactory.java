@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -17,6 +18,7 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.oz_trades.OzTradesTableEntryFactory.generateOzTradesTableEntryByClient;
+import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
@@ -61,8 +63,7 @@ public class NoSlippageRuleDataFactory {
     public static RuleDataHelper getNoSlippageRuleTest2Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient2);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.crmTbAccountForMtObject.currency = "USC";
         return data;
     }
 
@@ -70,9 +71,14 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient3);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(397d);
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(1d);
-        data.mt5DealsCoercedObjects.getFirst().setProfit(1d);
+        data.ozTradesTableObjets.getFirst().setSlippage(400d);
+        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(200d);
+        data.mt5DealsCoercedObjects.getFirst().setProfit(200d);
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(200d);
+        data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
+        data.boAlertsObjects.getFirst().setRule("No Slippage");
+        data.boAlertsObjects.getFirst().setStatus("CLOSED");
         return data;
     }
 
@@ -80,9 +86,11 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient4);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(397d);
-        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(400d);
-        data.mt5DealsCoercedObjects.getFirst().setProfit(400d);
+        data.ozTradesTableObjets.getFirst().setSlippage(400d);
+        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(200d);
+        data.mt5DealsCoercedObjects.getFirst().setProfit(200d);
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(200d);
         return data;
     }
 
@@ -128,7 +136,7 @@ public class NoSlippageRuleDataFactory {
         map.put("1", getNoSlippageRuleTest1Data());
         map.put("2", getNoSlippageRuleTest2Data());
         map.put("3", getNoSlippageRuleTest3Data());
-//        map.put("4", getNoSlippageRuleTest4Data());
+        map.put("4", getNoSlippageRuleTest4Data());
 //        map.put("5", getNoSlippageRuleTest5Data());
 //        map.put("6", getNoSlippageRuleTest6Data());
 //        map.put("7", getNoSlippageRuleTest7Data());

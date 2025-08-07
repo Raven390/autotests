@@ -365,10 +365,10 @@ public class RuleDataHelper {
                 deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
             if (data.boAlertsObjects != null) {
-                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("ucid = '%s'", alert)));
+                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
             }
             if (data.ozTradesTableObjets != null) {
-                data.ozTradesTableObjets.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade)));
+                data.ozTradesTableObjets.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
             }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());

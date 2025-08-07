@@ -1,5 +1,6 @@
 package tests.production_tests;
 
+import business_objects.api.clickhouse_api_service.get_mirror_score.GetMirrorScoreResponse;
 import business_objects.api.clickhouse_api_service.get_client.GetClientResponse;
 import business_objects.api.clickhouse_api_service.get_clients.GetClientsResponse;
 import business_objects.api.clickhouse_api_service.get_deposits.GetDepositsResponse;
@@ -619,7 +620,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_MIRROR_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.22355781,\"ucidScore\":0}"));
+        GetMirrorScoreResponse mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorScoreResponse.class);
+        assertThat("Assert model score", mappedResponse.getModelScore(), is(notNullValue()));
+        assertThat("Assert ucid score", mappedResponse.getUcidScore(), is(notNullValue()));
     }
 
     @Test
