@@ -146,4 +146,13 @@ public class Mt5DealsCoercedFactory {
         }
         return deals;
     }
+
+    public static List<Mt5DealsCoercedObject> generateMt5DealsCoercedObject(ClientHelper client, int number) {
+        List<Mt5DealsCoercedObject> deals = new ArrayList<>();
+        for (int i = 1; i <= number; i++) {
+            Mt5DealsCoercedObject trade = generateTradeByClient(client);
+            deals.add(trade);
+        }
+        return deals;
+    }
 }

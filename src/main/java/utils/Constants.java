@@ -79,6 +79,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
     public static final String STORY_RULE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
+    public static final String STORY_RULE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
