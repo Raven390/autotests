@@ -1,8 +1,10 @@
 package helpers.data.rules.no_slippage_rule;
 
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
+import helpers.data.enums.DateTimeFormat;
 import helpers.data.rules.RuleDataHelper;
 
 import java.time.Instant;
@@ -17,13 +19,16 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.oz_trades.OzTradesTableEntryFactory.generateOzTradesTableEntryByClient;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Constants.EURUSD;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
+import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 import static utils.Utils.getRandomUuidString;
 
 public class NoSlippageRuleDataFactory {
@@ -39,6 +44,7 @@ public class NoSlippageRuleDataFactory {
     private static final ClientHelper noSlippageRuleClient9 = getRandomVantageClientAllFields();
     private static final ClientHelper noSlippageRuleClient10 = getRandomVantageClientAllFields();
     private static final ClientHelper noSlippageRuleClient11 = getRandomVantageClientAllFields();
+    private static final ClientHelper noSlippageRuleClient12 = getRandomVantageClientAllFields();
 
     private static RuleDataHelper getNoSlippageRuleData(ClientHelper client) {
         RuleDataHelper ruleData = new RuleDataHelper();
@@ -96,36 +102,114 @@ public class NoSlippageRuleDataFactory {
 
     public static RuleDataHelper getNoSlippageRuleTest5Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient5);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest6Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient6);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = null;
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest7Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient7);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        // Deal 1
+        Mt5DealsCoercedObject deal1Open = generateTradeByClient(data.clientHelper);
+        deal1Open.setEntry(0);
+        deal1Open.setTime(getCurrentTimestampMinusOffsetFormatted(
+                DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0));
+        Mt5DealsCoercedObject deal1Close = generateTradeByClient(data.clientHelper);
+        deal1Close.setEntry(1);
+        deal1Close.setTime(getCurrentTimestampMinusOffsetFormatted(
+                DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 1));
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest8Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient8);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
+        data.mt5DealsCoercedObjects.get(1).setComment("so");
+        data.mt5DealsCoercedObjects.get(1).setEntry(3);
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest9Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient9);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
+        data.mt5DealsCoercedObjects.get(1).setComment("so");
+        data.mt5DealsCoercedObjects.get(1).setEntry(3);
+        data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(3_000_002d);
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest10Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient10);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
+        data.mt5DealsCoercedObjects.get(1).setComment("so");
+        data.mt5DealsCoercedObjects.get(1).setEntry(3);
+        data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(3_000_002d);
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(-20_000d);
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(-20_000d);
         return data;
     }
 
     public static RuleDataHelper getNoSlippageRuleTest11Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient11);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
+        data.mt5DealsCoercedObjects.get(1).setComment("so");
+        data.mt5DealsCoercedObjects.get(1).setEntry(3);
+        data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(3_000_002d);
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(1d);
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(1d);
+        data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
+        data.boAlertsObjects.getFirst().setRule("No Slippage");
+        data.boAlertsObjects.getFirst().setStatus("CLOSED");
+        return data;
+    }
+
+    public static RuleDataHelper getNoSlippageRuleTest12Data() {
+        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient12);
+        data.closeTradeMtEvent.symbol = EURUSD;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
+        data.mt5DealsCoercedObjects.get(1).setComment("so");
+        data.mt5DealsCoercedObjects.get(1).setEntry(3);
+        data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(3_000_002d);
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(1d);
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(1d);
         return data;
     }
 
@@ -137,13 +221,14 @@ public class NoSlippageRuleDataFactory {
         map.put("2", getNoSlippageRuleTest2Data());
         map.put("3", getNoSlippageRuleTest3Data());
         map.put("4", getNoSlippageRuleTest4Data());
-//        map.put("5", getNoSlippageRuleTest5Data());
-//        map.put("6", getNoSlippageRuleTest6Data());
-//        map.put("7", getNoSlippageRuleTest7Data());
-//        map.put("8", getNoSlippageRuleTest8Data());
-//        map.put("9", getNoSlippageRuleTest9Data());
-//        map.put("10", getNoSlippageRuleTest10Data());
-//        map.put("11", getNoSlippageRuleTest11Data());
+        map.put("5", getNoSlippageRuleTest5Data());
+        map.put("6", getNoSlippageRuleTest6Data());
+        map.put("7", getNoSlippageRuleTest7Data());
+        map.put("8", getNoSlippageRuleTest8Data());
+        map.put("9", getNoSlippageRuleTest9Data());
+        map.put("10", getNoSlippageRuleTest10Data());
+        map.put("11", getNoSlippageRuleTest11Data());
+        map.put("12", getNoSlippageRuleTest12Data());
 
         setupRuleData(map);
 

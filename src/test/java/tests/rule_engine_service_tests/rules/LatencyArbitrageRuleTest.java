@@ -44,7 +44,6 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
         stopSshTunnel();
     }
 
-
     @Test
     @AllureId("1372")
     @DisplayName("Withdrawal notification rule. Exit without alert if platform is not MT5")

@@ -65,7 +65,30 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
         assertThat(response.code(), is(200));
         Allure.step("Validate Data in response");
         UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
-        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.863_458_6));
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.859_450_2));
+        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
+    }
+
+    @Test
+    @AllureId("1363")
+    @DisplayName("Get mirror score data API. Null value in table error handling")
+    void getMirrorScoreTest3() throws Exception {
+
+        System.out.println(client.getUcid());
+        Allure.step("setup DB data");
+        FeatureStoreService source1 = createFeatureStoreServiceForInsert1(client);
+        source1.setCumsumCreditUsd(null);
+        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source1));
+
+        // Add wait for service to process the data
+        Thread.sleep(10_000);
+
+        Allure.step("send API request for mirror score data");
+        Response response = getMirrorTradingScore(client);
+        assertThat(response.code(), is(200));
+        Allure.step("Validate Data in response");
+        UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.859_450_2));
         assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
     }
 
@@ -82,7 +105,7 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
         insertObjectsToDb(DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME, List.of(source));
 
         // Add wait for service to process the data
-        Thread.sleep(15_000);
+        Thread.sleep(10_000);
 
         Allure.step("send API request for mirror score data");
         Response response = getMirrorTradingScore(client2);
