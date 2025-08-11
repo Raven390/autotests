@@ -33,8 +33,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.setHeader(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -55,8 +55,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         String login = String.valueOf(closeTradeMt5.getPayload().getLogin());
         closeTradeMt5.setPayload(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -76,8 +76,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setOperation(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -97,8 +97,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setMsgType(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -118,8 +118,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setMsgId(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -139,8 +139,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getHeader().setServerId(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -160,8 +160,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setTime(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -181,8 +181,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setTimeUtc(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -202,8 +202,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setDeal(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -224,8 +224,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         String login = String.valueOf(closeTradeMt5.getPayload().getLogin());
         closeTradeMt5.getPayload().setLogin(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -245,8 +245,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setVolume(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -266,8 +266,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setSymbol(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -287,8 +287,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setEntry(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(
@@ -308,8 +308,8 @@ class CloseTradeMt5EventRequiredParametersTests extends TestBaseKafka {
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
         closeTradeMt5.getPayload().setAction(null);
 
-        Allure.step("Write message to mt4_trade_record topic");
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_4_TRADE_RECORD);
+        Allure.step("Write message to mt5DealPerform topic");
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(

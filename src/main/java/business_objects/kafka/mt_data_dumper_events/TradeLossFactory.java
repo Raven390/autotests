@@ -37,7 +37,7 @@ public class TradeLossFactory {
 
     @Step("Generate MT5 Trade Loss data dumper event header")
     private static TradeEventMt5.Header generateMt5TradeLossTradeMtDbEventHeader() {
-        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "Deal", 0, 33, Utils.getCurrentTimestampMillis());
+        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "DealPerform", 0, 33, Utils.getCurrentTimestampMillis());
     }
 
     @Step("Generate MT5 Trade Loss data dumper event payload")
