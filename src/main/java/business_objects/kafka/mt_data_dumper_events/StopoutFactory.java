@@ -37,7 +37,7 @@ public class StopoutFactory {
 
     @Step("Generate MT5 Stopout trade data dumper event header")
     private static TradeEventMt5.Header generateMt5StopoutTradeMtDbEventHeader() {
-        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "Deal", 0, 33, Utils.getCurrentTimestampMillis());
+        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "DealPerform", 0, 33, Utils.getCurrentTimestampMillis());
     }
 
     @Step("Generate MT5 Stopout trade data dumper event payload")

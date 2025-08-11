@@ -26,7 +26,7 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
 
     /*
     Algorithm for filtering trades
-    MsgType = ‘Deal’
+    MsgType = ‘DealPerform’
     Operation = 0
     Entry IN (1, 3)
     Action IN (0, 1)
@@ -35,16 +35,15 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     @Test
     @Tag("CSV-1253")
     @AllureId("1168")
-    @DisplayName("MT5 close trade event passing filtering. MsgType = ‘Deal’, Operation = 0, Entry = 1, Action=0")
+    @DisplayName("MT5 close trade event passing filtering. MsgType = ‘DealPerform’, Operation = 0, Entry = 1, Action=0")
     void filtrationMt5CloseTradeEventTest1() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Deal");
         closeTradeMt5.getHeader().setOperation(0);
         closeTradeMt5.getPayload().setEntry(1);
         closeTradeMt5.getPayload().setAction(0);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
@@ -60,16 +59,15 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     @Test
     @Tag("CSV-1253")
     @AllureId("1173")
-    @DisplayName("MT5 close trade event passing filtering. MsgType = ‘Deal’, Operation = 0, Entry = 3, Action=1")
+    @DisplayName("MT5 close trade event passing filtering. MsgType = ‘DealPerform’, Operation = 0, Entry = 3, Action=1")
     void filtrationMt5CloseTradeEventTest6() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Deal");
         closeTradeMt5.getHeader().setOperation(0);
         closeTradeMt5.getPayload().setEntry(3);
         closeTradeMt5.getPayload().setAction(1);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
@@ -85,11 +83,11 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     @Test
     @Tag("CSV-1253")
     @AllureId("1169")
-    @DisplayName("MT5 close trade event NOT passing filtering. MsgType != ‘Deal’")
+    @DisplayName("MT5 close trade event NOT passing filtering. MsgType != ‘DealPerform’")
     void filtrationMt5CloseTradeEventTest2() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Dea");
+        closeTradeMt5.getHeader().setMsgType("DeaPerform");
         closeTradeMt5.getHeader().setOperation(0);
         closeTradeMt5.getPayload().setEntry(3);
         closeTradeMt5.getPayload().setAction(1);
@@ -114,12 +112,11 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     void filtrationMt5CloseTradeEventTest3() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Deal");
         closeTradeMt5.getHeader().setOperation(1);
         closeTradeMt5.getPayload().setEntry(3);
         closeTradeMt5.getPayload().setAction(1);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
@@ -139,12 +136,11 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     void filtrationMt5CloseTradeEventTest4() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Deal");
         closeTradeMt5.getHeader().setOperation(0);
         closeTradeMt5.getPayload().setEntry(2);
         closeTradeMt5.getPayload().setAction(1);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
@@ -164,12 +160,11 @@ class CloseTradeMt5EventFiltrationTests extends TestBaseKafka {
     void filtrationMt5CloseTradeEventTest5() throws JsonProcessingException {
 
         TradeEventMt5 closeTradeMt5 = generateCloseTradeDataDumperMt5();
-        closeTradeMt5.getHeader().setMsgType("Deal");
         closeTradeMt5.getHeader().setOperation(0);
         closeTradeMt5.getPayload().setEntry(3);
         closeTradeMt5.getPayload().setAction(2);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");

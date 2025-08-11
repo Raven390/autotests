@@ -42,7 +42,7 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         openTradeMt5.getPayload().setTime(time);
         openTradeMt5.getPayload().setTimeUtc(time);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");
@@ -83,7 +83,7 @@ class OpenTradeMt5Tests extends TestBaseKafka {
         openTradeMt5.getPayload().setTime(time);
         openTradeMt5.getPayload().setTimeUtc(time);
 
-        Allure.step("Write message to Mt5_Deal topic");
+        Allure.step("Write message to Mt5_DealPerform topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(openTradeMt5), KAFKA_TOPIC_MT_5_DEAL_PERFORM);
 
         Allure.step("Wait for event generator do some magic and consume message from mt-events topic");

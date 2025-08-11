@@ -37,7 +37,7 @@ public class CloseTradeFactory {
 
     @Step("Generate MT5 close trade data dumper event header")
     private static TradeEventMt5.Header generateMt5CloseTradeMtDbEventHeader() {
-        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "Deal", 0, 33, getCurrentTimestampMillis());
+        return new TradeEventMt5.Header(Utils.getRandomUuidString(), "DealPerform", 0, 33, getCurrentTimestampMillis());
     }
 
     @Step("Generate MT5 close trade data dumper event payload")
