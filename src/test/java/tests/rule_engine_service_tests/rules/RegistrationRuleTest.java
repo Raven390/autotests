@@ -82,10 +82,6 @@ class RegistrationRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-
-
-//        GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
-//        assertThat(abuserStatus, is(notNullValue()));
     }
 
 }

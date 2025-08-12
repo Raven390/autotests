@@ -37,7 +37,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setupData() throws IOException {
         // Enable emulator to set restrictions to status APPLIED
         startSshTunnel();
         enableCRMEmulator();

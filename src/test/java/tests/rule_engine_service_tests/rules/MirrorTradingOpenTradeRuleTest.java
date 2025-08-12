@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException, SQLException {
+    static void setupData() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingOpenTradeEventRuleData();
@@ -140,6 +139,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
+        Thread.sleep(5000);
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify rule name in alert", alerts.getFirst().rule.name, is("Mirror Trading"));
@@ -152,7 +152,6 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
-
 
         // Verify restriction
         Allure.step("Get client restrictions");
