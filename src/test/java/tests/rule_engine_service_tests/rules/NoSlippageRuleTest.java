@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
@@ -107,6 +108,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        Logger.getAnonymousLogger().info("client ucid: " + data.clientHelper.getUcid());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
