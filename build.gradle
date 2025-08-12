@@ -1,3 +1,5 @@
+import com.diffplug.gradle.spotless.SpotlessTask
+
 plugins {
     id 'java'
     id 'com.diffplug.spotless' version '6.25.0'
@@ -145,7 +147,13 @@ tasks.named('sonar').configure {
     // Skip tests when running sonar
     gradle.taskGraph.whenReady { graph ->
         if (graph.hasTask(tasks.named('sonar').get())) {
+            // Skip tests
             tasks.withType(Test).configureEach {
+                enabled = false
+            }
+
+            // Skip Spotless code checks
+            tasks.withType(SpotlessTask).configureEach {
                 enabled = false
             }
         }

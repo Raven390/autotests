@@ -32,7 +32,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setupData() throws IOException {
         startSshTunnel();
         enableCRMEmulator();
         dbDataMap = setupLatencyArbitrageData();
