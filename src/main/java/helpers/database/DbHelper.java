@@ -37,6 +37,16 @@ public class DbHelper {
         });
     }
 
+    @Step("Get objects from {dbName}, table {tableName} with condition {where}")
+    public static <T> List<T> getObjectsFromDBFinal(DbName dbName, String tableName, String where, Class<T> className)
+            throws Exception {
+        return executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                return fetchFinal(connection, tableName, where, className);
+            }
+        });
+    }
+
     private static <T> List<T> fetchObjects(Connection connection, String tableName, String where, Class<T> className)
             throws Exception {
         String query;
@@ -44,6 +54,20 @@ public class DbHelper {
             query = String.format("SELECT * FROM %s", tableName);
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
+        }
+        try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
+            System.out.println(query);
+            return mapResultSetToObjects(resultSet, className);
+        }
+    }
+
+    private static <T> List<T> fetchFinal(Connection connection, String tableName, String where, Class<T> className)
+            throws Exception {
+        String query;
+        if (where == null || where.isEmpty()) {
+            query = String.format("SELECT * FROM %s FINAL", tableName);
+        } else {
+            query = String.format("SELECT * FROM %s FINAL WHERE %s", tableName, where);
         }
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
             System.out.println(query);

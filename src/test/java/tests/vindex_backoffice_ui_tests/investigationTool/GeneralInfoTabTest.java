@@ -31,7 +31,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.s3___dim_client.S3DimClientFactory.generateS3DimClientObject;
+import static business_objects.db.clickhouse.s3___dim_client.S3DimClientFactory.generateS3DimClientObjectRandom;
 import static business_objects.db.clickhouse.s3_fact_cpa_commissions.S3FactCpaCommissionsFactory.generates3FactCpaCommissionsObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -376,10 +376,10 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         commission2.setIbCommission(getRandomRoundedDouble(0.00, 5_000_000.00));
         insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, commission2);
 
-        S3DimClientObject manager1 = generateS3DimClientObject();
+        S3DimClientObject manager1 = generateS3DimClientObjectRandom();
         manager1.setBrand(client.getBrand());
         manager1.setUserId(relation.getSalesId().longValue());
-        S3DimClientObject manager2 = generateS3DimClientObject();
+        S3DimClientObject manager2 = generateS3DimClientObjectRandom();
         manager2.setUserId(relation2.getSalesId().longValue());
         manager2.setBrand(client.getBrand());
         insertObjectToDb(S3_DIM_CLIENT, manager1);
