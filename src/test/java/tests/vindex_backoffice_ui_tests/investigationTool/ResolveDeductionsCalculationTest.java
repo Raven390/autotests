@@ -28,6 +28,8 @@ import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObje
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Currency.EUR;
+import static helpers.data.enums.Currency.USD;
 import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
@@ -40,7 +42,7 @@ import static helpers.data.enums.deduction.DeductionStatusOpenPositions.NOT_HOLD
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static helpers.data.enums.deduction.DeductionTypeAccount.NO_ILLEGAL_PROFIT;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -56,8 +58,6 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
-    private static final String CURRENCY_USD = "USD";
-    private static final String CURRENCY_EUR = "EUR";
     private static final DecimalFormat formatter = new DecimalFormat("#,##0.##");
     private static final String SUGGESTED_DEDUCTION_PATTERN_ILLEGAL = "Account %sBalance %s USD ・ Illegal %s USD";
     private static final String SUGGESTED_DEDUCTION_PATTERN = SUGGESTED_DEDUCTION_PATTERN_ILLEGAL.split(" ・")[0];
@@ -72,19 +72,19 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws JsonProcessingException {
         CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);
-        account1.currency = CURRENCY_USD;
+        account1.currency = USD.getCode();
         CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(client);
         account2.account = getRandomIntPositive();
-        account2.currency = CURRENCY_USD;
+        account2.currency = USD.getCode();
         CrmTbAccountObject account3 = generateCrmTbAccountDataForUi(client);
         account3.account = getRandomIntPositive();
-        account3.currency = CURRENCY_EUR;
+        account3.currency = EUR.getCode();
         CrmTbAccountObject account4 = generateCrmTbAccountDataForUi(client);
         account4.account = getRandomIntPositive();
-        account4.currency = CURRENCY_EUR;
+        account4.currency = EUR.getCode();
         CrmTbAccountObject account5 = generateCrmTbAccountDataForUi(client);
         account5.account = getRandomIntPositive();
-        account5.currency = CURRENCY_USD;
+        account5.currency = USD.getCode();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount1.balanceUsd = 500.12;
         mtAccount1.balance = 500.12;
@@ -158,11 +158,11 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
             assertThat("Verify created deduction has created_at not null", deduction.getCreatedAt(), notNullValue());
             assertThat("Verify created deduction has updated_at not null", deduction.getUpdatedAt(), notNullValue());
         }
-        AbuserDeduction deduction1 = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, mtAccount1.balanceUsd + withdrawal.amountUsd, null, mtAccount1.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null);
-        AbuserDeduction deduction2 = new AbuserDeduction(client.getUcid(), null, mtAccount5.account.toString(), mtAccount5.sourceIdSt, mtAccount5.server, mtAccount5.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount5.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
-        AbuserDeduction deduction3 = new AbuserDeduction(client.getUcid(), null, mtAccount4.account.toString(), mtAccount4.sourceIdSt, mtAccount4.server, mtAccount4.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount4.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
-        AbuserDeduction deduction4 = new AbuserDeduction(client.getUcid(), null, mtAccount3.account.toString(), mtAccount3.sourceIdSt, mtAccount3.server, mtAccount3.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount3.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
-        AbuserDeduction deduction5 = new AbuserDeduction(client.getUcid(), null, mtAccount2.account.toString(), mtAccount2.sourceIdSt, mtAccount2.server, mtAccount2.currency, client.getBrand(), HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction deduction1 = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, mtAccount1.balanceUsd + withdrawal.amountUsd, null, mtAccount1.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
+        AbuserDeduction deduction2 = new AbuserDeduction(client.getUcid(), null, mtAccount5.account.toString(), mtAccount5.sourceIdSt, mtAccount5.server, mtAccount5.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount5.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
+        AbuserDeduction deduction3 = new AbuserDeduction(client.getUcid(), null, mtAccount4.account.toString(), mtAccount4.sourceIdSt, mtAccount4.server, mtAccount4.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount4.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
+        AbuserDeduction deduction4 = new AbuserDeduction(client.getUcid(), null, mtAccount3.account.toString(), mtAccount3.sourceIdSt, mtAccount3.server, mtAccount3.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, mtAccount3.balanceUsd, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
+        AbuserDeduction deduction5 = new AbuserDeduction(client.getUcid(), null, mtAccount2.account.toString(), mtAccount2.sourceIdSt, mtAccount2.server, mtAccount2.currency, client.getBrand(), HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, NO_ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
         assertThat("Verify deductions in abuser_deduction table are as expected", deductionList, containsInAnyOrder(deduction1, deduction2, deduction3, deduction4, deduction5));
     }
 
@@ -248,7 +248,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         assertThat("Verify created deduction has suggested_deduction not null", deduction.getSuggestedDeduction(), notNullValue());
         assertThat("Verify created deduction has created_at not null", deduction.getCreatedAt(), notNullValue());
         assertThat("Verify created deduction has updated_at not null", deduction.getUpdatedAt(), notNullValue());
-        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), NO_DEDUCTION.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null);
+        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), NO_DEDUCTION.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, null, 0d, null, 0d, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, null, null, null, null, null, null, false);
         assertThat("Verify deductions in abuser_deduction table are as expected", deduction, is(expectedDeduction));
     }
 }

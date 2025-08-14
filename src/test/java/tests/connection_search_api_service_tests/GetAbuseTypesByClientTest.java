@@ -28,7 +28,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;

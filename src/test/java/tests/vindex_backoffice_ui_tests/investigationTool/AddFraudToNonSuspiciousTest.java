@@ -6,6 +6,7 @@ import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
+import helpers.database.ArHelper;
 import helpers.database.DbName;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
@@ -50,7 +51,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         cleanUserAudit(innocentClient.getUcid());
         cleanUserRestrictionGeneral(innocentClient.getUcid());
         cleanUserRestrictionTrading(innocentClient.getUcid());
-        deleteUserAR(innocentClient.getUcid());
+        ArHelper.deleteUserAR(innocentClient.getUcid());
     }
 
     @Test

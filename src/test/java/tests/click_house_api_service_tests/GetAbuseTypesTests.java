@@ -20,7 +20,7 @@ import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbu
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;

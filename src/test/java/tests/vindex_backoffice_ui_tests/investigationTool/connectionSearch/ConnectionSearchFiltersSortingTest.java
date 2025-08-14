@@ -9,6 +9,7 @@ import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
+import helpers.database.ArHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import okhttp3.Response;
@@ -403,7 +404,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         closeAlert(connectedClient6.getUcid());
         cleanUserRestrictionGeneral(connectedClient2.getUcid());
         cleanUserRestrictionGeneral(connectedClient5.getUcid());
-        deleteUserAR(connectedClient1.getUcid());
-        deleteUserAR(connectedClient6.getUcid());
+        ArHelper.deleteUserAR(connectedClient1.getUcid());
+        ArHelper.deleteUserAR(connectedClient6.getUcid());
     }
 }

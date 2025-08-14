@@ -12,6 +12,7 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
+import helpers.database.ArHelper;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
@@ -83,7 +84,7 @@ public class ResolveTest extends TestBaseWeb {
     void cleanData() throws Exception {
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
-        deleteUserAR(resolveClient.getUcid());
+        ArHelper.deleteUserAR(resolveClient.getUcid());
     }
 
     @Test

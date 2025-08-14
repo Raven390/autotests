@@ -18,7 +18,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudType.CPA_ABUSE;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.AuHelper.cleanClientAudit;
-import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectsToDb;

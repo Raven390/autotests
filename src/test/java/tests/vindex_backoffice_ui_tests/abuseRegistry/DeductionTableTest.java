@@ -14,7 +14,6 @@ import tests.TestBaseWeb;
 
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
-import java.util.Currency;
 import java.util.List;
 
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
@@ -23,13 +22,13 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.enums.Currency.EUR;
 import static helpers.data.enums.FraudSubtype.INTERNAL;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.deduction.DeductionEmailUi.*;
 import static helpers.data.enums.deduction.DeductionStatusUi.*;
-import static helpers.database.BoHelper.deleteUserAR;
-import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -49,11 +48,11 @@ class DeductionTableTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws Exception {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        account.currency = Currency.getInstance("EUR").getCurrencyCode();
+        account.currency = EUR.getCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
         insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         addFraudForClient(client, HEDGING, INTERNAL, CONFIRMED, List.of("EURUSD", "GBPUSD"));
         List<AbuserHistory> abuserHistory = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), AbuserHistory.class);
         deduction = generateAbuserDeductionByAccount(account, abuserHistory.getLast().getId());
@@ -63,7 +62,6 @@ class DeductionTableTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteUserAR(client.getUcid());
-        cleanCrmUserTableByClient(client.getUcid());
     }
 
     @Test
@@ -82,7 +80,7 @@ class DeductionTableTest extends TestBaseWeb {
         assertThat("Check table headers", deductionPage.getDeductionTableHeaders(), contains("CLIENT", "ACCOUNT", "BEHAVIOR", "STATUS", "EMAIL", "ILLEGAL PROFIT", "SUGGESTION", "DEDUCTION", "CREATED", "NOTE"));
         System.out.println(deductionPage.getDeductionTableDataByRows().getFirst());
         assertThat("Check table data", deductionPage.getDeductionTableDataByRows().getFirst(), contains(
-                String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), CURRENCY_USD), deduction.getCreatedAt().toLocalDateTime().toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment()
+                String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), CURRENCY_USD), deduction.getCreatedAt().toLocalDateTime().toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment(), deduction.getCommentDeduction()
         ));
     }
 

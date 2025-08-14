@@ -28,7 +28,14 @@ public class AbuserDeduction {
     private String modifiedByUser;
     private String modifiedBySystem;
     private String typeAccount;
-    private String deductionDate;
+    private Timestamp deductionDate;
+    private String commentDeduction;
+    private Double approvedDeduction;
+    private Double approvedDeductionUsd;
+    private String crmId;
+    private Double balanceAtResolution;
+    private Double balanceAtResolutionUsd;
+    private Boolean sendToLark;
 
     public AbuserDeduction() {
     }
@@ -38,7 +45,9 @@ public class AbuserDeduction {
             String statusDeduction, String statusApproval, String comment, Double illegalProfit,
             Double illegalProfitUsd, Double suggestedDeduction, Double suggestedDeductionUsd, Double actualDeduction,
             Double actualDeductionUsd, Timestamp createdAt, Timestamp updatedAt, String modifiedByUser,
-            String modifiedBySystem, String typeAccount, String deductionDate) {
+            String modifiedBySystem, String typeAccount, Timestamp deductionDate, String commentDeduction,
+            Double approvedDeduction, Double approvedDeductionUsd, String crmId, Double balanceAtResolution,
+            Double balanceAtResolutionUsd, Boolean sendToLark) {
         this.id = id;
         this.ucid = ucid;
         this.abuserHistoryId = abuserHistoryId;
@@ -64,6 +73,13 @@ public class AbuserDeduction {
         this.modifiedBySystem = modifiedBySystem;
         this.typeAccount = typeAccount;
         this.deductionDate = deductionDate;
+        this.commentDeduction = commentDeduction;
+        this.approvedDeduction = approvedDeduction;
+        this.approvedDeductionUsd = approvedDeductionUsd;
+        this.crmId = crmId;
+        this.balanceAtResolution = balanceAtResolution;
+        this.balanceAtResolutionUsd = balanceAtResolutionUsd;
+        this.sendToLark = sendToLark;
     }
 
     public AbuserDeduction(String ucid, Integer abuserHistoryId, String account, Integer serverId, String serverName,
@@ -71,7 +87,9 @@ public class AbuserDeduction {
             String statusApproval, String comment, Double illegalProfit, Double illegalProfitUsd,
             Double suggestedDeduction, Double suggestedDeductionUsd, Double actualDeduction, Double actualDeductionUsd,
             Timestamp createdAt, Timestamp updatedAt, String modifiedByUser, String modifiedBySystem,
-            String typeAccount, String deductionDate) {
+            String typeAccount, Timestamp deductionDate, String commentDeduction, Double approvedDeduction,
+            Double approvedDeductionUsd, String crmId, Double balanceAtResolution, Double balanceAtResolutionUsd,
+            Boolean sendToLark) {
         this.ucid = ucid;
         this.abuserHistoryId = abuserHistoryId;
         this.account = account;
@@ -96,6 +114,13 @@ public class AbuserDeduction {
         this.modifiedBySystem = modifiedBySystem;
         this.typeAccount = typeAccount;
         this.deductionDate = deductionDate;
+        this.commentDeduction = commentDeduction;
+        this.approvedDeduction = approvedDeduction;
+        this.approvedDeductionUsd = approvedDeductionUsd;
+        this.crmId = crmId;
+        this.balanceAtResolution = balanceAtResolution;
+        this.balanceAtResolutionUsd = balanceAtResolutionUsd;
+        this.sendToLark = sendToLark;
     }
 
     public Integer getId() {
@@ -290,28 +315,84 @@ public class AbuserDeduction {
         this.typeAccount = typeAccount;
     }
 
-    public String getDeductionDate() {
+    public Timestamp getDeductionDate() {
         return deductionDate;
     }
 
-    public void setDeductionDate(String deductionDate) {
+    public void setDeductionDate(Timestamp deductionDate) {
         this.deductionDate = deductionDate;
+    }
+
+    public String getCommentDeduction() {
+        return commentDeduction;
+    }
+
+    public void setCommentDeduction(String commentDeduction) {
+        this.commentDeduction = commentDeduction;
+    }
+
+    public Double getApprovedDeduction() {
+        return approvedDeduction;
+    }
+
+    public void setApprovedDeduction(Double approvedDeduction) {
+        this.approvedDeduction = approvedDeduction;
+    }
+
+    public Double getApprovedDeductionUsd() {
+        return approvedDeductionUsd;
+    }
+
+    public void setApprovedDeductionUsd(Double approvedDeductionUsd) {
+        this.approvedDeductionUsd = approvedDeductionUsd;
+    }
+
+    public String getCrmId() {
+        return crmId;
+    }
+
+    public void setCrmId(String crmId) {
+        this.crmId = crmId;
+    }
+
+    public Double getBalanceAtResolution() {
+        return balanceAtResolution;
+    }
+
+    public void setBalanceAtResolution(Double balanceAtResolution) {
+        this.balanceAtResolution = balanceAtResolution;
+    }
+
+    public Double getBalanceAtResolutionUsd() {
+        return balanceAtResolutionUsd;
+    }
+
+    public void setBalanceAtResolutionUsd(Double balanceAtResolutionUsd) {
+        this.balanceAtResolutionUsd = balanceAtResolutionUsd;
+    }
+
+    public Boolean getSendToLark() {
+        return sendToLark;
+    }
+
+    public void setSendToLark(Boolean sendToLark) {
+        this.sendToLark = sendToLark;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AbuserDeduction deduction = (AbuserDeduction) o;
-        return Objects.equals(ucid, deduction.ucid) && Objects.equals(account, deduction.account) && Objects.equals(serverId, deduction.serverId) && Objects.equals(serverName, deduction.serverName) && Objects.equals(currency, deduction.currency) && Objects.equals(brandGroup, deduction.brandGroup) && Objects.equals(statusOpenPositions, deduction.statusOpenPositions) && Objects.equals(statusEmail, deduction.statusEmail) && Objects.equals(statusDeduction, deduction.statusDeduction) && Objects.equals(statusApproval, deduction.statusApproval) && Objects.equals(comment, deduction.comment) && Objects.equals(illegalProfitUsd, deduction.illegalProfitUsd) && Objects.equals(suggestedDeductionUsd, deduction.suggestedDeductionUsd) && Objects.equals(actualDeductionUsd, deduction.actualDeductionUsd) && Objects.equals(modifiedByUser, deduction.modifiedByUser) && Objects.equals(modifiedBySystem, deduction.modifiedBySystem) && Objects.equals(typeAccount, deduction.typeAccount) && Objects.equals(deductionDate, deduction.deductionDate);
+        return Objects.equals(ucid, deduction.ucid) && Objects.equals(account, deduction.account) && Objects.equals(serverId, deduction.serverId) && Objects.equals(serverName, deduction.serverName) && Objects.equals(currency, deduction.currency) && Objects.equals(brandGroup, deduction.brandGroup) && Objects.equals(statusOpenPositions, deduction.statusOpenPositions) && Objects.equals(statusEmail, deduction.statusEmail) && Objects.equals(statusDeduction, deduction.statusDeduction) && Objects.equals(statusApproval, deduction.statusApproval) && Objects.equals(comment, deduction.comment) && Objects.equals(illegalProfit, deduction.illegalProfit) && Objects.equals(suggestedDeduction, deduction.suggestedDeduction) && Objects.equals(actualDeduction, deduction.actualDeduction) && Objects.equals(modifiedByUser, deduction.modifiedByUser) && Objects.equals(modifiedBySystem, deduction.modifiedBySystem) && Objects.equals(typeAccount, deduction.typeAccount) && Objects.equals(commentDeduction, deduction.commentDeduction) && Objects.equals(approvedDeduction, deduction.approvedDeduction) && Objects.equals(crmId, deduction.crmId) && Objects.equals(balanceAtResolution, deduction.balanceAtResolution) && Objects.equals(sendToLark, deduction.sendToLark);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, account, serverId, serverName, currency, brandGroup, statusOpenPositions, statusEmail, statusDeduction, statusApproval, comment, illegalProfitUsd, suggestedDeductionUsd, actualDeductionUsd, modifiedByUser, modifiedBySystem, typeAccount, deductionDate);
+        return Objects.hash(ucid, account, serverId, serverName, currency, brandGroup, statusOpenPositions, statusEmail, statusDeduction, statusApproval, comment, illegalProfit, suggestedDeduction, actualDeduction, modifiedByUser, modifiedBySystem, typeAccount, commentDeduction, approvedDeduction, crmId, balanceAtResolution, sendToLark);
     }
 
     @Override
     public String toString() {
-        return "AbuserDeduction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", abuserHistoryId=" + abuserHistoryId + ", account='" + account + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", currency='" + currency + '\'' + ", brandGroup='" + brandGroup + '\'' + ", statusOpenPositions='" + statusOpenPositions + '\'' + ", statusEmail='" + statusEmail + '\'' + ", statusDeduction='" + statusDeduction + '\'' + ", statusApproval='" + statusApproval + '\'' + ", comment='" + comment + '\'' + ", illegalProfit=" + illegalProfit + ", illegalProfitUsd=" + illegalProfitUsd + ", suggestedDeduction=" + suggestedDeduction + ", suggestedDeductionUsd=" + suggestedDeductionUsd + ", actualDeduction=" + actualDeduction + ", actualDeductionUsd=" + actualDeductionUsd + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", typeAccount='" + typeAccount + '\'' + ", deductionDate='" + deductionDate + '\'' + '}';
+        return "AbuserDeduction{" + "id=" + id + ", ucid='" + ucid + '\'' + ", abuserHistoryId=" + abuserHistoryId + ", account='" + account + '\'' + ", serverId=" + serverId + ", serverName='" + serverName + '\'' + ", currency='" + currency + '\'' + ", brandGroup='" + brandGroup + '\'' + ", statusOpenPositions='" + statusOpenPositions + '\'' + ", statusEmail='" + statusEmail + '\'' + ", statusDeduction='" + statusDeduction + '\'' + ", statusApproval='" + statusApproval + '\'' + ", comment='" + comment + '\'' + ", illegalProfit=" + illegalProfit + ", illegalProfitUsd=" + illegalProfitUsd + ", suggestedDeduction=" + suggestedDeduction + ", suggestedDeductionUsd=" + suggestedDeductionUsd + ", actualDeduction=" + actualDeduction + ", actualDeductionUsd=" + actualDeductionUsd + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", typeAccount='" + typeAccount + '\'' + ", deductionDate='" + deductionDate + '\'' + ", commentDeduction='" + commentDeduction + '\'' + ", approvedDeduction=" + approvedDeduction + ", approvedDeductionUsd=" + approvedDeductionUsd + ", crmId='" + crmId + '\'' + ", balanceAtResolution=" + balanceAtResolution + ", balanceAtResolutionUsd=" + balanceAtResolutionUsd + ", sendToLark=" + sendToLark + '}';
     }
 }
