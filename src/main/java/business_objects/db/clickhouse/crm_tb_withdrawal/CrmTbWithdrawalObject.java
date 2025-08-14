@@ -107,4 +107,292 @@ public class CrmTbWithdrawalObject {
     public String toString() {
         return "CrmTbWithdrawalObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", transferId=" + transferId + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", updateTime='" + updateTime + '\'' + ", updateTimeUtc='" + updateTimeUtc + '\'' + ", reversedTime='" + reversedTime + '\'' + ", reversedTimeUtc='" + reversedTimeUtc + '\'' + ", amount=" + amount + ", amountUsd=" + amountUsd + ", reversedAmount=" + reversedAmount + ", reversedAmountUsd=" + reversedAmountUsd + ", currency='" + currency + '\'' + ", statusId=" + statusId + ", status='" + status + '\'' + ", paymentTypeId='" + paymentTypeId + '\'' + ", paymentType='" + paymentType + '\'' + ", paymentChannelId='" + paymentChannelId + '\'' + ", paymentChannel='" + paymentChannel + '\'' + ", paymentSystemAccount='" + paymentSystemAccount + '\'' + ", paymentSystemCurrency='" + paymentSystemCurrency + '\'' + ", paymentDetails='" + paymentDetails + '\'' + ", paymentExpirationDate='" + paymentExpirationDate + '\'' + ", ticket=" + ticket + ", fee=" + fee + ", processedNotes='" + processedNotes + '\'' + ", isDel=" + isDel + ", isTrade=" + isTrade + ", isNonApp=" + isNonApp + ", lastUpdated='" + lastUpdated + '\'' + '}';
     }
+
+    public Integer getSourceIdSt() {
+        return sourceIdSt;
+    }
+
+    public void setSourceIdSt(Integer sourceIdSt) {
+        this.sourceIdSt = sourceIdSt;
+    }
+
+    public Integer getBrandUid() {
+        return brandUid;
+    }
+
+    public void setBrandUid(Integer brandUid) {
+        this.brandUid = brandUid;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getRegulator() {
+        return regulator;
+    }
+
+    public void setRegulator(String regulator) {
+        this.regulator = regulator;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUcid() {
+        return ucid;
+    }
+
+    public void setUcid(String ucid) {
+        this.ucid = ucid;
+    }
+
+    public Integer getAccount() {
+        return account;
+    }
+
+    public void setAccount(Integer account) {
+        this.account = account;
+    }
+
+    public Integer getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(Integer transferId) {
+        this.transferId = transferId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCreateTimeUtc() {
+        return createTimeUtc;
+    }
+
+    public void setCreateTimeUtc(String createTimeUtc) {
+        this.createTimeUtc = createTimeUtc;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUpdateTimeUtc() {
+        return updateTimeUtc;
+    }
+
+    public void setUpdateTimeUtc(String updateTimeUtc) {
+        this.updateTimeUtc = updateTimeUtc;
+    }
+
+    public String getReversedTime() {
+        return reversedTime;
+    }
+
+    public void setReversedTime(String reversedTime) {
+        this.reversedTime = reversedTime;
+    }
+
+    public String getReversedTimeUtc() {
+        return reversedTimeUtc;
+    }
+
+    public void setReversedTimeUtc(String reversedTimeUtc) {
+        this.reversedTimeUtc = reversedTimeUtc;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getAmountUsd() {
+        return amountUsd;
+    }
+
+    public void setAmountUsd(Double amountUsd) {
+        this.amountUsd = amountUsd;
+    }
+
+    public Double getReversedAmount() {
+        return reversedAmount;
+    }
+
+    public void setReversedAmount(Double reversedAmount) {
+        this.reversedAmount = reversedAmount;
+    }
+
+    public Double getReversedAmountUsd() {
+        return reversedAmountUsd;
+    }
+
+    public void setReversedAmountUsd(Double reversedAmountUsd) {
+        this.reversedAmountUsd = reversedAmountUsd;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public Integer getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getPaymentTypeId() {
+        return paymentTypeId;
+    }
+
+    public void setPaymentTypeId(Integer paymentTypeId) {
+        this.paymentTypeId = paymentTypeId;
+    }
+
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public Integer getPaymentChannelId() {
+        return paymentChannelId;
+    }
+
+    public void setPaymentChannelId(Integer paymentChannelId) {
+        this.paymentChannelId = paymentChannelId;
+    }
+
+    public String getPaymentChannel() {
+        return paymentChannel;
+    }
+
+    public void setPaymentChannel(String paymentChannel) {
+        this.paymentChannel = paymentChannel;
+    }
+
+    public String getPaymentSystemAccount() {
+        return paymentSystemAccount;
+    }
+
+    public void setPaymentSystemAccount(String paymentSystemAccount) {
+        this.paymentSystemAccount = paymentSystemAccount;
+    }
+
+    public String getPaymentSystemCurrency() {
+        return paymentSystemCurrency;
+    }
+
+    public void setPaymentSystemCurrency(String paymentSystemCurrency) {
+        this.paymentSystemCurrency = paymentSystemCurrency;
+    }
+
+    public String getPaymentDetails() {
+        return paymentDetails;
+    }
+
+    public void setPaymentDetails(String paymentDetails) {
+        this.paymentDetails = paymentDetails;
+    }
+
+    public String getPaymentExpirationDate() {
+        return paymentExpirationDate;
+    }
+
+    public void setPaymentExpirationDate(String paymentExpirationDate) {
+        this.paymentExpirationDate = paymentExpirationDate;
+    }
+
+    public Integer getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(Integer ticket) {
+        this.ticket = ticket;
+    }
+
+    public Double getFee() {
+        return fee;
+    }
+
+    public void setFee(Double fee) {
+        this.fee = fee;
+    }
+
+    public String getProcessedNotes() {
+        return processedNotes;
+    }
+
+    public void setProcessedNotes(String processedNotes) {
+        this.processedNotes = processedNotes;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
+    }
+
+    public Integer getIsTrade() {
+        return isTrade;
+    }
+
+    public void setIsTrade(Integer isTrade) {
+        this.isTrade = isTrade;
+    }
+
+    public Integer getIsNonApp() {
+        return isNonApp;
+    }
+
+    public void setIsNonApp(Integer isNonApp) {
+        this.isNonApp = isNonApp;
+    }
+
+    public String getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(String lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
 }

@@ -2,6 +2,7 @@ package page_objects.backoffice_pages.abuseRegistry;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class DeductionPage extends AbstractPage {
 
@@ -23,10 +25,14 @@ public class DeductionPage extends AbstractPage {
     private final Locator filterOptions;
     private final Locator statusValues;
     private final Locator emailValues;
+    private final Locator deductionTable;
+    private final Locator singleEditButton;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN = "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
     private static final String COLUMN_VALUE_BY_ORDER_PATTERN = "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
     private static final String DEDUCTION_FILTER_BY_ORDER_PATTERN = "//div[@class='v-deductions-filters']/div[%s]/descendant::button[contains(@class,'g-select-control__button')]";
+    private static final String DEDUCTION_TABLE_LOCATOR = "//*[@data-qa='deductions__table']";
+    private static final String DEDUCTION_TABLE_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
 
     public DeductionPage(Page page) {
         super(page);
@@ -41,6 +47,8 @@ public class DeductionPage extends AbstractPage {
         this.filterOptions = page.locator("//div[@data-qa='select-popup']/descendant::span[@class='g-select-list__option-default-label']");
         this.statusValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 5));
         this.emailValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).first();
+        this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
+        this.singleEditButton = page.locator("//*[contains(@data-qa,'manage_deduction')]/button");
     }
 
     @Step("Click abuse registry button")
@@ -118,6 +126,38 @@ public class DeductionPage extends AbstractPage {
             list.add(emailValues.nth(i).textContent());
         }
         return list;
+    }
+
+    public void navigateDeduction() {
+        page.navigate(BASE_URL_E2E + "abuse-registry/deductions");
+        deductionTable.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    public void hoverOverDeductionTableRow(String clientId) {
+        String targetRow = DEDUCTION_TABLE_LOCATOR + "//*[text()='" + clientId + "']";
+        Locator targetRowLocator = page.locator(targetRow);
+        int i = 0;
+        while (!targetRowLocator.isVisible() && i < 100) {
+            deductionTableRow.last().hover();
+            page.waitForTimeout(100);
+            page.mouse().wheel(0, 50);
+            i++;
+        }
+        targetRowLocator.hover();
+    }
+
+    public void hoverOverDeductionTableRow(int clientId) {
+        hoverOverDeductionTableRow(String.valueOf(clientId));
+    }
+
+    public void hoverOverDeductionTableRow(Long clientId) {
+        hoverOverDeductionTableRow(String.valueOf(clientId));
+    }
+
+    public void openEditDrawer() {
+        Allure.step("click edit button and open edit drawer");
+        singleEditButton.click();
+        page.locator(DEDUCTION_TABLE_DRAWER_LOCATOR).waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 }
 

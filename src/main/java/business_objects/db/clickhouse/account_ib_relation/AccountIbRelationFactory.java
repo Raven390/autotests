@@ -3,14 +3,14 @@ package business_objects.db.clickhouse.account_ib_relation;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.*;
 
 public class AccountIbRelationFactory {
     public static AccountIbRelationObject generateAccountIbRelationObjectByClient(ClientHelper client) {
         AccountIbRelationObject relation = new AccountIbRelationObject();
         relation.setUserId(client.getUserId());
         relation.setBrand(client.getBrand());
+        relation.setDirectIbRebateAccount(client.getIbId() + 1212);
         relation.setRegulator(client.getRegulator());
         relation.setUcid(client.getUcid());
         relation.setAccount(client.getTradingAccount().longValue());
@@ -21,6 +21,7 @@ public class AccountIbRelationFactory {
         relation.setCreateTime(getCurrentTimestampDbFormat());
         relation.setCreateTimeUtc(getCurrentTimestampDbFormat());
         relation.setLastUpdated(getCurrentTimestampDbFormat());
+        relation.setSalesId(getRandomIntPositive());
         return relation;
     }
 
@@ -28,6 +29,7 @@ public class AccountIbRelationFactory {
         AccountIbRelationObject relation = new AccountIbRelationObject();
         relation.setUserId(client.getUserId());
         relation.setBrand(client.getBrand());
+        relation.setDirectIbRebateAccount(client.getIbId() + 1212);
         relation.setRegulator(client.getRegulator());
         relation.setUcid(client.getUcid());
         relation.setAccount(client.getTradingAccount2().longValue());

@@ -17,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 
 import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
@@ -32,8 +33,7 @@ import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.BO;
 import static helpers.database.DbName.CLICKHOUSE;
 import static org.junit.jupiter.api.Assertions.fail;
-import static utils.Constants.BO_ALERT_TABLE_NAME;
-import static utils.Constants.CONNECTIONS_TABLE_NAME;
+import static utils.Constants.*;
 
 public class Utils {
 
@@ -526,5 +526,11 @@ public class Utils {
 
     public static void closeAllAlertsBo() {
         executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+    }
+
+    public static double convertToUsd(double amount, String symbol) throws Exception {
+        RatesUsdCurrentObject rate = (RatesUsdCurrentObject) getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
+        System.out.println("tate is " + rate.getRate());
+        return amount * rate.getRate();
     }
 }
