@@ -32,7 +32,7 @@ public class DeductionPage extends AbstractPage {
         super(page);
         this.abuseRegistryButton = page.locator("//a[@href='/abuse-registry']");
         this.deductionTabButton = page.locator("//input[@value='DEDUCTIONS']");
-        this.deductionTableHeaders = page.locator("//div[contains(@class,'v-header-cell')]");
+        this.deductionTableHeaders = page.locator("//div[contains(@class,'v-header-cell') and text()]");
         this.deductionTableRow = page.locator("//div[contains(@class,'v-body-row')]");
         this.deductionTableRowData = page.locator("//div[contains(@class,'v-body-cell')]/descendant::div[contains(@class,'g-text')]");
         this.tableBody = page.locator("//div[@class='v-table-body']");

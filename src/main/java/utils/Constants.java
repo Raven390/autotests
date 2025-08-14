@@ -107,6 +107,8 @@ public class Constants {
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
     public static final String KAFKA_TOPIC_MT_EVENTS = "mt-events";
     public static final String KAFKA_TOPIC_WITHDRAWAL_APPROVALS = "withdrawal.approvals";
+    public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
+    public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
@@ -123,6 +125,8 @@ public class Constants {
     public static final String AR_ABUSER_FRAUD_TYPE_TABLE_NAME = "postgres.ar.abuser_fraud_type";
     public static final String AR_ABUSER_HISTORY_TABLE_NAME = "postgres.ar.abuser_history";
     public static final String AR_ABUSER_TABLE_NAME = "postgres.ar.abuser";
+    public static final String AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME = "postgres.ar.deduction_kafka_request";
+    public static final String AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME = "postgres.ar.deduction_kafka_response";
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";

@@ -36,7 +36,7 @@ import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.BoHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.CleanTableHelper.cleanUserRestrictionGeneral;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;

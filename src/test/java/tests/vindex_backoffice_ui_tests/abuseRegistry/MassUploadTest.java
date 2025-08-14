@@ -8,6 +8,7 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
+import helpers.database.ArHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -60,7 +61,7 @@ public class MassUploadTest extends TestBaseWeb {
         cleanUserRestriction(client1.getUcid());
         cleanUserRestriction(client2.getUcid());
         cleanUserRestriction(client3.getUcid());
-        deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
+        ArHelper.deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
