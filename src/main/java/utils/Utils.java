@@ -533,4 +533,8 @@ public class Utils {
         System.out.println("tate is " + rate.getRate());
         return amount * rate.getRate();
     }
+
+    double roundDouble(double value) {
+        return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 }

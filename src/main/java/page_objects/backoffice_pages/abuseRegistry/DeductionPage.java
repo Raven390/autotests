@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class DeductionPage extends AbstractPage {
@@ -33,6 +34,21 @@ public class DeductionPage extends AbstractPage {
     private static final String DEDUCTION_FILTER_BY_ORDER_PATTERN = "//div[@class='v-deductions-filters']/div[%s]/descendant::button[contains(@class,'g-select-control__button')]";
     private static final String DEDUCTION_TABLE_LOCATOR = "//*[@data-qa='deductions__table']";
     private static final String DEDUCTION_TABLE_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
+    private static final String ILLEGAL_PROFIT_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[1]";
+    private static final String SUGGESTED_DEDUCTION_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[2]";
+    private static final String DEDUCTION_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[3]";
+    private static final String COMMENTARY_INPUT_LOCATOR = DEDUCTION_TABLE_DRAWER_LOCATOR + "//textarea";
+    private static final String DRAWER_CANCEL_BUTTON_LOCATOR = "//span[text()='Cancel']/ancestor::button";
+    private static final String DRAWER_SAVE_BUTTON_LOCATOR = "//span[text()='Save']/ancestor::button";
+    private static final String DRAWER_DEDUCT_BUTTON_LOCATOR = "//span[text()='Deduct']/ancestor::button";
+    private final Locator illegalProfitInput;
+    private final Locator suggesteedDeductionInput;
+    private final Locator deductionInput;
+    private final Locator cancelButton;
+    private final Locator commentaryInput;
+    private final Locator saveButton;
+    private final Locator deductButton;
+    private final Locator toast;
 
     public DeductionPage(Page page) {
         super(page);
@@ -49,6 +65,14 @@ public class DeductionPage extends AbstractPage {
         this.emailValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).first();
         this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
         this.singleEditButton = page.locator("//*[contains(@data-qa,'manage_deduction')]/button");
+        this.illegalProfitInput = page.locator(ILLEGAL_PROFIT_INPUT_LOCATOR);
+        this.suggesteedDeductionInput = page.locator(SUGGESTED_DEDUCTION_INPUT_LOCATOR);
+        this.deductionInput = page.locator(DEDUCTION_INPUT_LOCATOR);
+        this.commentaryInput = page.locator(COMMENTARY_INPUT_LOCATOR);
+        this.cancelButton = page.locator(DRAWER_CANCEL_BUTTON_LOCATOR);
+        this.saveButton = page.locator(DRAWER_SAVE_BUTTON_LOCATOR);
+        this.deductButton = page.locator(DRAWER_DEDUCT_BUTTON_LOCATOR);
+        this.toast = page.locator(".g-toaster .g-toast__content");
     }
 
     @Step("Click abuse registry button")
@@ -159,5 +183,54 @@ public class DeductionPage extends AbstractPage {
         singleEditButton.click();
         page.locator(DEDUCTION_TABLE_DRAWER_LOCATOR).waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
+
+    public void fillIllegalProfitInput(String value) {
+        Allure.step("fill illegal profit input with value");
+        illegalProfitInput.fill(value);
+    }
+
+    public void fillSuggestedDeductionInput(String value) {
+        Allure.step("fill suggested deduction input with value");
+        suggesteedDeductionInput.fill(value);
+    }
+
+    public void fillDeductionInput(String value) {
+        Allure.step("fill deduction input with value");
+        deductionInput.fill(value);
+    }
+
+    public void isSaveIsActive() {
+        Allure.step("check if save button is active");
+        Allure.step("check if save button is inactive");
+        assertNull(saveButton.getAttribute("disabled"));
+    }
+
+    public void isSaveIsInactive() {
+        Allure.step("check if save button is inactive");
+        assertNotNull(saveButton.getAttribute("disabled"));
+    }
+
+    public void saveDeduction() {
+        Allure.step("save deduction");
+        saveButton.click();
+        assertEquals("The value was changed successfully", toast.textContent());
+    }
+
+    public void isDeductIsActive() {
+        Allure.step("check if deduct button is active");
+        deductButton.isEnabled();
+    }
+
+    public void isDeductIsInactive() {
+        Allure.step("check if deduct button is inactive");
+        deductButton.isDisabled();
+    }
+
+    public void finishDeduction() {
+        Allure.step("save deduction");
+        deductButton.click();
+        assertEquals("The value was changed successfully", toast.textContent());
+    }
+
 }
 
