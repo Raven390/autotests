@@ -282,6 +282,7 @@ public class DbHelper {
     public static void executeQueryToDb(DbName dbName, String query) {
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
+                System.out.println("Executing query: " + query);
                 statement.executeUpdate();
             }
             return null;

@@ -21,6 +21,19 @@ public class MtMt4TradesCoercedObjectFactory {
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedBalance(ClientHelper client, double profit,
+            String comment) {
+        MtMt4TradesCoercedObject mtMt4TradesCoercedObject = generateMt4TradesCoerced(client);
+        mtMt4TradesCoercedObject.profit = profit;
+        mtMt4TradesCoercedObject.profitUsd = profit;
+        mtMt4TradesCoercedObject.comment = comment;
+        mtMt4TradesCoercedObject.ticketType = TicketType.BALANCE.getDisplayName();
+        mtMt4TradesCoercedObject.commission = 0.0;
+        mtMt4TradesCoercedObject.storage = 0.0;
+        return mtMt4TradesCoercedObject;
+    }
+
+    @Step("Generate mt___mt4_trades_coerced object by client object")
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
             double profitUsd, String closeTime) {
         MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(client);
