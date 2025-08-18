@@ -3,6 +3,8 @@ package business_objects.db.abuse_registry_db;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+import static utils.Utils.compareDoubles;
+
 public class AbuserDeduction {
     private Integer id;
     private String ucid;
@@ -383,7 +385,7 @@ public class AbuserDeduction {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AbuserDeduction deduction = (AbuserDeduction) o;
-        return Objects.equals(ucid, deduction.ucid) && Objects.equals(account, deduction.account) && Objects.equals(serverId, deduction.serverId) && Objects.equals(serverName, deduction.serverName) && Objects.equals(currency, deduction.currency) && Objects.equals(brandGroup, deduction.brandGroup) && Objects.equals(statusOpenPositions, deduction.statusOpenPositions) && Objects.equals(statusEmail, deduction.statusEmail) && Objects.equals(statusDeduction, deduction.statusDeduction) && Objects.equals(statusApproval, deduction.statusApproval) && Objects.equals(comment, deduction.comment) && Objects.equals(illegalProfit, deduction.illegalProfit) && Objects.equals(suggestedDeduction, deduction.suggestedDeduction) && Objects.equals(actualDeduction, deduction.actualDeduction) && Objects.equals(modifiedByUser, deduction.modifiedByUser) && Objects.equals(modifiedBySystem, deduction.modifiedBySystem) && Objects.equals(typeAccount, deduction.typeAccount) && Objects.equals(commentDeduction, deduction.commentDeduction) && Objects.equals(approvedDeduction, deduction.approvedDeduction) && Objects.equals(crmId, deduction.crmId) && Objects.equals(balanceAtResolution, deduction.balanceAtResolution) && Objects.equals(sendToLark, deduction.sendToLark);
+        return Objects.equals(ucid, deduction.ucid) && Objects.equals(account, deduction.account) && Objects.equals(serverId, deduction.serverId) && Objects.equals(serverName, deduction.serverName) && Objects.equals(currency, deduction.currency) && Objects.equals(brandGroup, deduction.brandGroup) && Objects.equals(statusOpenPositions, deduction.statusOpenPositions) && Objects.equals(statusEmail, deduction.statusEmail) && Objects.equals(statusDeduction, deduction.statusDeduction) && Objects.equals(statusApproval, deduction.statusApproval) && Objects.equals(comment, deduction.comment) && compareDoubles(illegalProfit, deduction.illegalProfit) && compareDoubles(suggestedDeduction, deduction.suggestedDeduction) && compareDoubles(actualDeduction, deduction.actualDeduction) && Objects.equals(modifiedByUser, deduction.modifiedByUser) && Objects.equals(modifiedBySystem, deduction.modifiedBySystem) && Objects.equals(typeAccount, deduction.typeAccount) && Objects.equals(commentDeduction, deduction.commentDeduction) && compareDoubles(approvedDeduction, deduction.approvedDeduction) && Objects.equals(crmId, deduction.crmId) && compareDoubles(balanceAtResolution, deduction.balanceAtResolution) && Objects.equals(sendToLark, deduction.sendToLark);
     }
 
     @Override

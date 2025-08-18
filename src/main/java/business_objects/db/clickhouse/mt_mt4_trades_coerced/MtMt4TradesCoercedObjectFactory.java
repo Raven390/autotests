@@ -1,5 +1,6 @@
 package business_objects.db.clickhouse.mt_mt4_trades_coerced;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.Reason;
@@ -10,6 +11,7 @@ import io.qameta.allure.Step;
 import java.util.ArrayList;
 import java.util.List;
 
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static utils.Utils.*;
 
 public class MtMt4TradesCoercedObjectFactory {
@@ -31,6 +33,24 @@ public class MtMt4TradesCoercedObjectFactory {
         mtMt4TradesCoercedObject.commission = 0.0;
         mtMt4TradesCoercedObject.storage = 0.0;
         return mtMt4TradesCoercedObject;
+    }
+
+    @Step("Generate mt___mt4_trades_coerced object by client object and profit")
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitComment(CrmTbAccountObject account,
+            Double profit, String comment) {
+        MtMt4TradesCoercedObject trade = generateMt4TradesCoerced(getRandomVantageClientAllFields());
+        trade.brand = account.brand;
+        trade.regulator = account.regulator;
+        trade.userId = account.userId.longValue();
+        trade.ucid = account.ucid;
+        trade.account = account.account.longValue();
+        trade.serverId = account.serverIdSt.longValue();
+        trade.ticketType = "Balance";
+        trade.profit = profit;
+        trade.storage = 0d;
+        trade.commission = 0d;
+        trade.comment = comment;
+        return trade;
     }
 
     @Step("Generate mt___mt4_trades_coerced object by client object")
