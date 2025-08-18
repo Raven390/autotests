@@ -22,7 +22,6 @@ import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOr
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -146,10 +145,5 @@ public class LatencyArbitrageRuleDataFactory {
 
         return map;
     }
-
-    public static void deleteLatencyArbitrageRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
-    }
-
 
 }

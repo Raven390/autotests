@@ -5,6 +5,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
+import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
@@ -50,6 +51,11 @@ public class TestBaseRule {
 
     @Step("Produce registration event to crm-events topic")
     public static void produceRegistrationEventToKafka(RegistrationEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
+    }
+
+    @Step("Produce login event to crm-events topic")
+    public static void produceLoginMessageToKafka(LoginEvent event) throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
     }
 

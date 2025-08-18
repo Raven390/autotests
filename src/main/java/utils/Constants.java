@@ -78,8 +78,9 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
-    public static final String STORY_RULE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
-    public static final String STORY_RULE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event in Rule Engine service";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -153,6 +154,7 @@ public class Constants {
     public static final String DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME = "data_science_test.bybit_feature_store";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science_test.feature_store_service";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME = "data_science_test.ucid_mirror_score";
+    public static final String DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME = "data_science_test.ucid_general_score";
     public static final String DEVICE_ID_TABLE_NAME = "data_science_test.device_id";
     public static final String DICT_ACCOUNT_TO_UCID = "vindex_test.dict_account_to_ucid";
     public static final String DICT_ACTIVE_TRADE_DAYS_BY_UCID = "vindex_test.dict_active_trade_days_by_ucid";

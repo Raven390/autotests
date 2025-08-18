@@ -28,7 +28,6 @@ import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedOb
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -657,10 +656,6 @@ public class RegistrationRuleDataFactory {
         setupRuleData(map);
 
         return map;
-    }
-
-    public static void deleteRegistrationRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
     }
 
     protected static void setupAttrConnection075(RuleDataHelper data, ClientHelper connectedClient) {

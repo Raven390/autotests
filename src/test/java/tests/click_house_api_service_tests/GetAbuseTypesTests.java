@@ -28,7 +28,6 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 
-@Disabled("Covered in clickhouse api repo")
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES)
 @Tag(TEAM_CORE)

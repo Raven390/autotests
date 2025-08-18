@@ -24,7 +24,6 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score.UcidMirrorScoreFactory.generateUcidMirrorScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
 import static utils.Utils.*;
@@ -165,9 +164,5 @@ public class MirrorTradingOpenTradeEventDataFactory {
         setupRuleData(map);
 
         return map;
-    }
-
-    public static void deleteMirrorTradingOpenTradeEventRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
     }
 }

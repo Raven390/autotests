@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
-@Story(STORY_RULE_NO_SLIPPAGE_RULE)
+@Story(STORY_RULE_ENGINE_NO_SLIPPAGE_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.mirror_trading_open_trade_event_rule.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventDataFactory.deleteMirrorTradingOpenTradeEventRuleData;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.mirror_trading_open_trade_event_rule.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventDataFactory.setupMirrorTradingOpenTradeEventRuleData;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
-@Story(STORY_RULE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE)
+@Story(STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
@@ -43,7 +43,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteMirrorTradingOpenTradeEventRuleData(dbDataMap);
+        deleteRuleData(dbDataMap);
         stopSshTunnel();
     }
 

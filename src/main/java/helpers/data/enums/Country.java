@@ -42,4 +42,13 @@ public enum Country {
         }
         return "Country code not found: " + code;
     }
+
+    public static String getCountryNameByCodeUppercase(String code) {
+        for (Country country : values()) {
+            if (country.getCountryCode().equalsIgnoreCase(code)) {
+                return country.getCountryName().toUpperCase();
+            }
+        }
+        return "Country code not found: " + code;
+    }
 }

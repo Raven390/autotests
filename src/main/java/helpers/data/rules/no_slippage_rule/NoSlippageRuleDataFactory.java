@@ -76,8 +76,8 @@ public class NoSlippageRuleDataFactory {
     public static RuleDataHelper getNoSlippageRuleTest3Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient3);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(400d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(400d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(200d);
         data.mt5DealsCoercedObjects.getFirst().setProfit(200d);
         data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
@@ -91,8 +91,8 @@ public class NoSlippageRuleDataFactory {
     public static RuleDataHelper getNoSlippageRuleTest4Data() {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient4);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(400d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(400d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(200d);
         data.mt5DealsCoercedObjects.getFirst().setProfit(200d);
         data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
@@ -104,8 +104,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient5);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         return data;
     }
 
@@ -113,8 +113,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient6);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = null;
         return data;
     }
@@ -123,8 +123,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient7);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         // Deal 1
         Mt5DealsCoercedObject deal1Open = generateTradeByClient(data.clientHelper);
         deal1Open.setEntry(0);
@@ -141,8 +141,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient8);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
@@ -153,8 +153,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient9);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper), generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
@@ -166,8 +166,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient10);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
@@ -182,8 +182,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient11);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
@@ -201,8 +201,8 @@ public class NoSlippageRuleDataFactory {
         RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient12);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.ozTradesTableObjets = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
-        data.ozTradesTableObjets.getFirst().setSlippage(395d);
+        data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
+        data.ozTradesTableObjects.getFirst().setSlippage(395d);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 31);
         data.mt5DealsCoercedObjects.get(1).setComment("so");
         data.mt5DealsCoercedObjects.get(1).setEntry(3);
