@@ -23,6 +23,7 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.EUR;
+import static helpers.data.enums.Currency.USD;
 import static helpers.data.enums.FraudSubtype.INTERNAL;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
@@ -41,7 +42,6 @@ class DeductionTableTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
     private static final CrmTbAccountObject account = generateCrmTbAccountDataForUi(client);
     private static final DecimalFormat formatter = new DecimalFormat("#,###.##");
-    private static final String CURRENCY_USD = "USD";
     private static AbuserDeduction deduction;
 
 
@@ -80,7 +80,7 @@ class DeductionTableTest extends TestBaseWeb {
         assertThat("Check table headers", deductionPage.getDeductionTableHeaders(), contains("CLIENT", "ACCOUNT", "BEHAVIOR", "STATUS", "EMAIL", "ILLEGAL PROFIT", "SUGGESTION", "DEDUCTION", "CREATED", "NOTE"));
         System.out.println(deductionPage.getDeductionTableDataByRows().getFirst());
         assertThat("Check table data", deductionPage.getDeductionTableDataByRows().getFirst(), contains(
-                String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), CURRENCY_USD), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), CURRENCY_USD), deduction.getCreatedAt().toLocalDateTime().toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment(), deduction.getCommentDeduction()
+                String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getCode()), deduction.getCreatedAt().toLocalDateTime().toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment(), deduction.getCommentDeduction()
         ));
     }
 

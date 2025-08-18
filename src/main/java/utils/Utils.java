@@ -333,6 +333,12 @@ public class Utils {
         return bd.doubleValue();
     }
 
+    public static boolean compareDoubles(Double a, Double b) {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return BigDecimal.valueOf(a).setScale(2, RoundingMode.HALF_UP).compareTo(BigDecimal.valueOf(b).setScale(2, RoundingMode.HALF_UP)) == 0;
+    }
+
     public static String timestampFromDbToIso(String timestampDb) {
         return timestampDb.replace(" ", "T") + "Z";
     }
