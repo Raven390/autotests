@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.deleteRegistrationRuleData;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -40,7 +40,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteRegistrationRuleData(dbDataMap);
+        deleteRuleData(dbDataMap);
     }
 
     @Test

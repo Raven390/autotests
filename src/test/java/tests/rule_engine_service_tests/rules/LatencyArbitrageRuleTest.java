@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.latency_arbitrage_rule.LatencyArbitrageRuleDataFactory.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -40,7 +41,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteLatencyArbitrageRuleData(dbDataMap);
+        deleteRuleData(dbDataMap);
         stopSshTunnel();
     }
 

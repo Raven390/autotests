@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -41,7 +40,7 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteRuleData(dbDataMap);
+//        deleteRuleData(dbDataMap);
     }
 
     @Test

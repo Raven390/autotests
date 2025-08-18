@@ -35,14 +35,7 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName()
-        );
-    }
-
-    public static ClientHelper getRandomVjpClientAllFields() {
-        Faker faker = new Faker();
-        return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VJP, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName()
+                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS"
         );
     }
 
@@ -67,7 +60,7 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Regulator.VFSC2, Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, "1990-01-01", faker.name().firstName(), faker.name().lastName()
+                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS"
         );
     }
 
@@ -79,5 +72,12 @@ public class ClientFactory {
             clients.add(client);
         }
         return clients;
+    }
+
+    public static ClientHelper getRandomClientByBrandAndCountry(Brand brand, String country) {
+        Faker faker = new Faker();
+        return new ClientHelper(
+                getRandomIntPositive(), getRandomUuidString(), brand, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CN", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName(), country
+        );
     }
 }

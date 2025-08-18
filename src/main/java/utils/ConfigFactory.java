@@ -80,6 +80,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_COUNT_CPA = CONFIG.clickhouseGetCountCpa();
     public static final String CLICKHOUSE_API_GET_CHARGEBACK_SCORE = CONFIG.clickhouseGetChargebackScore();
     public static final String CLICKHOUSE_API_GET_ALERTS = CONFIG.clickhouseGetAlerts();
+    public static final String CLICKHOUSE_API_GET_GENERAL_SCORE = CONFIG.clickhouseGetGeneralScore();
     // Rule engine
     public static final String RULE_ENGINE_PATH_TEST_ENV = CONFIG.ruleEngineBasePathTest();
     public static final String RULE_ENGINE_GET_BRANDS = CONFIG.ruleEngineGetBrands();
@@ -411,6 +412,10 @@ public class ConfigFactory {
 
         @Key("clickhouseGetAlerts")
         String clickhouseGetAlerts();
+
+        @Key("clickhouseGetGeneralScore")
+        String clickhouseGetGeneralScore();
+
 
         // Rule engine
 

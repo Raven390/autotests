@@ -29,20 +29,38 @@ import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
+import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
+import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
 import business_objects.kafka.mt_events.TradeEvent;
 import helpers.data.ClientHelper;
+import helpers.data.enums.FraudTypeOld;
+import helpers.data.enums.FraudTypeStatus;
 import helpers.database.DbName;
 import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
+import net.datafaker.Faker;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
+import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnection;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
+import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
@@ -51,6 +69,9 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class RuleDataHelper {
+
+    static Faker faker = new Faker();
+
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
     public DictAccountToUcidObject dictAccountToUcidObject;
@@ -84,6 +105,7 @@ public class RuleDataHelper {
     public List<MtMt5PositionsObject> mtMt5PositionsObjects;
     public LnSessionParsedObject lnSessionParsedObject;
     public RegistrationEvent registrationEvent;
+    public LoginEvent loginEvent;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
     public List<PhoneTableEntry> phoneTableEntries;
@@ -95,7 +117,8 @@ public class RuleDataHelper {
     public UcidMirrorScore ucidMirrorScore;
     public List<RuleAlert> ruleAlerts;
     public List<BoAlertsObject> boAlertsObjects;
-    public List<OzTradesTableEntry> ozTradesTableObjets;
+    public List<OzTradesTableEntry> ozTradesTableObjects;
+    public UcidGeneralScore ucidGeneralScore;
 
     public RuleDataHelper() {
     }
@@ -118,7 +141,8 @@ public class RuleDataHelper {
             List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
             List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScore ucidMirrorScore,
             List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects,
-            List<OzTradesTableEntry> ozTradesTableObjets) {
+            List<OzTradesTableEntry> ozTradesTableObjects, RegistrationEvent registrationEvent, LoginEvent loginEvent,
+            UcidGeneralScore ucidGeneralScore) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.dictAccountToUcidObject = dictAccountToUcidObject;
@@ -154,7 +178,10 @@ public class RuleDataHelper {
         this.ucidMirrorScore = ucidMirrorScore;
         this.ruleAlerts = ruleAlerts;
         this.boAlertsObjects = boAlertsObjects;
-        this.ozTradesTableObjets = ozTradesTableObjets;
+        this.ozTradesTableObjects = ozTradesTableObjects;
+        this.registrationEvent = registrationEvent;
+        this.loginEvent = loginEvent;
+        this.ucidGeneralScore = ucidGeneralScore;
     }
 
     static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
@@ -191,13 +218,13 @@ public class RuleDataHelper {
             if (data.dictActiveTradingDaysByUcidObject != null) {
                 data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> insertObjectToDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, tradingDays));
             }
-            insertObjectsToDb(CRM_USER_TABLE_NAME, data.connectedUsers);
+            if (data.connectedUsers != null) {
+                data.connectedUsers.forEach(user -> insertObjectToDb(CRM_USER_TABLE_NAME, user));
+            }
             if (data.lnSessionParsedObjectRegistration != null) {
-                logger.info("WE ARE INSERTING LN");
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObjectRegistration);
             }
             if (data.lnSessionParsedObject != null) {
-                logger.info("WE ARE INSERTING LN");
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
             }
             if (data.clientFraudTypes != null) {
@@ -278,8 +305,11 @@ public class RuleDataHelper {
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, alerts));
             }
-            if (data.ozTradesTableObjets != null) {
-                data.ozTradesTableObjets.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
+            if (data.ozTradesTableObjects != null) {
+                data.ozTradesTableObjects.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
+            }
+            if (data.ucidGeneralScore != null) {
+                insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);
             }
         }
     }
@@ -367,8 +397,11 @@ public class RuleDataHelper {
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
             }
-            if (data.ozTradesTableObjets != null) {
-                data.ozTradesTableObjets.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
+            if (data.ozTradesTableObjects != null) {
+                data.ozTradesTableObjects.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
+            }
+            if (data.ucidGeneralScore != null) {
+                deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.ucidGeneralScore.getUcid()));
             }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());
@@ -391,4 +424,107 @@ public class RuleDataHelper {
         }
         stopSshTunnel();
     }
+
+    public static RuleDataHelper createClient(RuleDataHelper ruleDataHelper, ClientHelper clientHelper) {
+
+        ruleDataHelper.clientHelper = clientHelper;
+        ruleDataHelper.crmTbUserObject = generateUserByClient(ruleDataHelper.clientHelper);
+        ruleDataHelper.crmTbAccountObject = generateAccountByClient(ruleDataHelper.clientHelper, false);
+        ruleDataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(ruleDataHelper.clientHelper, false);
+        ruleDataHelper.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(ruleDataHelper.clientHelper));
+        return ruleDataHelper;
+    }
+
+    private static class ConnectionAndConnectedUser {
+        public ConnectionTableEntry connectionTableEntry;
+        public CrmTbUserObject crmTbUserObject;
+        public ClientHelper clientHelper;
+
+        public ConnectionAndConnectedUser(ConnectionTableEntry connectionTableEntry,
+                CrmTbUserObject crmTbUserObject, ClientHelper clientHelper) {
+            this.connectionTableEntry = connectionTableEntry;
+            this.crmTbUserObject = crmTbUserObject;
+            this.clientHelper = clientHelper;
+        }
+    }
+
+    private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient,
+            ClientHelper toClient) {
+        ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(fromClient.getUcid(), toClient.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 1d, List.of(
+                new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat());
+        // Create connected user
+        CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
+        connectedCrmTbUserObject.isoCountryCode = fromClient.getCountryCode();
+        connectedCrmTbUserObject.rafReferrerId = 22;
+        connectedCrmTbUserObject.ibId = 33;
+        return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject, toClient);
+    }
+
+    protected static void setupAttrConnectionEmailPhoneWithCustomScore(RuleDataHelper data,
+            ClientHelper connectedClient, Double score) {
+
+        if (data.connections == null) {
+            data.connections = new ArrayList<>();
+        }
+        if (data.phoneTableEntries == null) {
+            data.phoneTableEntries = new ArrayList<>();
+        }
+        if (data.emailTableEntries == null) {
+            data.emailTableEntries = new ArrayList<>();
+        }
+        connectedClient.setEmail(data.clientHelper.getEmail());
+        connectedClient.setPhoneNumber(data.clientHelper.getPhoneNumber());
+        data.crmTbUserObject.email = faker.internet().emailAddress();
+        data.crmTbUserObject.phoneNum = faker.phoneNumber().cellPhone();
+
+        //add connection with connected client
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient, score);
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "email";
+        connectionInfo1.connectionAttributeValue = data.crmTbUserObject.email;
+        connectionInfo1.sourceAttributeValue = data.crmTbUserObject.email;
+        connectionInfo1.relationType = "exact";
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "phone";
+        connectionInfo2.connectionAttributeValue = data.crmTbUserObject.phoneNum;
+        connectionInfo2.sourceAttributeValue = data.crmTbUserObject.phoneNum;
+        connectionInfo2.relationType = "exact";
+        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1, connectionInfo2));
+        connection.connectionScore = score;
+        data.connections.add(connection);
+        //add email to LN record
+        data.lnSessionParsedObject.setEmail(data.crmTbUserObject.email);
+        data.lnSessionParsedObject.setMobile(data.crmTbUserObject.phoneNum);
+
+        //add to emails table records with same email for initial and connected clients
+
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.email));
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.email));
+
+        //add to phone table records with same email for initial and connected clients
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.phoneNum));
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.phoneNum));
+    }
+
+    public static void addConnectionByAttribute(RuleDataHelper data, ClientHelper clientTo, Double score) {
+        if (data.connectedUsers == null) {
+            data.connectedUsers = new ArrayList<>();
+        }
+        if (data.connectedClientHelpers == null) {
+            data.connectedClientHelpers = new ArrayList<>();
+        }
+        data.connectedUsers.add(generateUserByClient(clientTo));
+        data.connectedClientHelpers.add(clientTo);
+        setupAttrConnectionEmailPhoneWithCustomScore(data, clientTo, score);
+    }
+
+    public static RuleDataHelper addFraudTypeToConnectedUser(RuleDataHelper data, FraudTypeStatus status)
+            throws IOException, InterruptedException {
+        data.clientFraudTypes.add(createClientFraudTypeCh(data.connectedClientHelpers.getFirst().getUcid(), FraudTypeOld.HEDGING.getKey()));
+
+        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
+        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), status);
+        return data;
+    }
+
 }

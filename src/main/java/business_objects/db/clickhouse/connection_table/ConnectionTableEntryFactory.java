@@ -121,4 +121,14 @@ public class ConnectionTableEntryFactory {
                         )), getCurrentTimestampDbFormat()
         );
     }
+
+    public static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient,
+            Double connectionScore) {
+        return new ConnectionTableEntry(
+                fromClient.getUcid(), toClient.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, connectionScore, List.of(
+                        new ConnectionTableEntry.ConnectionInfo(
+                                CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT
+                        )), getCurrentTimestampDbFormat()
+        );
+    }
 }
