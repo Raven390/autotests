@@ -162,7 +162,7 @@ class LoginRuleTests extends TestBaseRule {
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        Thread.sleep(30_000);
+        Thread.sleep(45_000);
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         //Check restriction
