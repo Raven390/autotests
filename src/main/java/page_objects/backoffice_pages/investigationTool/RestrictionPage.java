@@ -38,45 +38,9 @@ import static utils.Constants.*;
 public class RestrictionPage extends AbstractPage {
 
     private final Locator restrictionTab;
-    private final Locator accountSwitch;
-    private final Locator transferSwitch;
-    private final Locator depositsSwitch;
-    private final Locator withdrawalsSwitch;
-    private final Locator loginSwitch;
-    private final Locator manualSwitch;
-    private final Locator creditAndBonusSwitch;
-    private final Locator closeSwitch;
-    private final Locator offQuotesSwitch;
-    private final Locator abBookSwitch;
-    private final Locator header1;
-    private final Locator header2;
-    private final Locator dialog;
-    private final Locator reasonInput;
-    private final Locator restrictionSetCancel;
-    private final Locator restrictionSetSet;
-    private final Locator setToast;
-    private final Locator restrictionCancelCancel;
-    private final Locator restrictionCancelSet;
-    private final Locator restrictionCancelSetTrade;
-    private final Locator cancelToast;
-    private final Locator checkedAccount;
-    private final Locator checkedTransfer;
-    private final Locator checkedDeposits;
-    private final Locator checkedWithdrawals;
-    private final Locator checkedLogin;
-    private final Locator checkedManual;
-    private final Locator checkedCreditAndBonus;
+
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
-    private final Locator selectAllAccCheckbox;
-    private final Locator checkedCloseOnlyMode;
-    private final Locator checkedOffQuotesMode;
-    private final Locator checkedAbBook;
-    private final Locator withdrawalList;
-    private final Locator approveAllwithdrawalsButton;
-    private final Locator rejectAllwithdrawalsButton;
-    private final Locator approveFirstButton;
-    private final Locator accountLabel;
     private final Locator activitySection;
     private final Locator tooltip;
     private final Locator openRestrictionsDrawerButton;
@@ -109,43 +73,6 @@ public class RestrictionPage extends AbstractPage {
         this.loaderAnimation = page.locator(".v-loader");
         this.loaderSpin = page.locator(".g-spin").first();
         this.restrictionTab = page.locator("[role=\"tab\"][title=\"Restrictions\"]");
-        this.accountSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.ACCOUNT_CREATION.getName());
-        this.transferSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.INTERNAL_TRANSFER.getName());
-        this.depositsSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.DEPOSITS.getName());
-        this.withdrawalsSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.WITHDRAWALS.getName(), new Locator.GetByTextOptions().setExact(true));
-        this.loginSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.LOGIN_CRM.getName());
-        this.manualSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
-        this.creditAndBonusSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.CREDIT_AND_BONUS.getName());
-        this.closeSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText(Restriction.CLOSE_ONLY_MODE.getName());
-        this.offQuotesSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText("Off quotes");
-        this.abBookSwitch = page.locator(RESTRICTIONS_TAB_ITEM_NAME).getByText("B-Book -> A-Book");
-        this.header1 = page.locator(".g-text_variant_header-1");
-        this.header2 = page.locator(".g-text_variant_header-2");
-        this.dialog = page.locator(".v-restriction-tab-general-modal");
-        this.reasonInput = page.locator("textarea[placeholder=\"Reason (discovered fraud type, etc.)\"]");
-        this.restrictionSetCancel = page.locator("v-common-modal__buttons").getByText("Cancel");
-        this.restrictionSetSet = page.locator(".v-common-modal__buttons").getByText("Set");
-        this.selectAllAccCheckbox = page.locator(".v-checkbox-list-with-select-all__select-all");
-        this.setToast = page.locator(".g-toast__title").getByText("Restriction was set");
-        this.restrictionCancelCancel = page.locator("v-common-modal__buttons").getByText("Cancel");
-        this.restrictionCancelSet = page.locator(".v-common-modal__buttons").getByText("Remove");
-        this.restrictionCancelSetTrade = page.locator(".v-common-modal__buttons").getByText("Apply changes");
-        this.cancelToast = page.locator(".g-toast__title").getByText("Restriction was removed");
-        this.checkedAccount = page.locator(CHECKED_RESTRICTION).getByText(Restriction.ACCOUNT_CREATION.getName());
-        this.checkedTransfer = page.locator(CHECKED_RESTRICTION).getByText(Restriction.INTERNAL_TRANSFER.getName());
-        this.checkedDeposits = page.locator(CHECKED_RESTRICTION).getByText(Restriction.DEPOSITS.getName());
-        this.checkedWithdrawals = page.locator(CHECKED_RESTRICTION).getByText(Restriction.WITHDRAWALS.getName());
-        this.checkedLogin = page.locator(CHECKED_RESTRICTION).getByText(Restriction.LOGIN_CRM.getName());
-        this.checkedManual = page.locator(CHECKED_RESTRICTION).getByText(Restriction.MANUAL_WITHDRAWAL_REVIEW.getName());
-        this.checkedCreditAndBonus = page.locator(CHECKED_RESTRICTION).getByText(Restriction.CREDIT_AND_BONUS.getName());
-        this.checkedCloseOnlyMode = page.locator(CHECKED_RESTRICTION).getByText(Restriction.CLOSE_ONLY_MODE.getName());
-        this.checkedOffQuotesMode = page.locator(CHECKED_RESTRICTION).getByText(Restriction.OFF_QUOTES.getName());
-        this.checkedAbBook = page.locator(CHECKED_RESTRICTION).getByText(Restriction.B_BOOK_TO_A_BOOK.getName());
-        this.withdrawalList = page.locator(".v-withdrawals-list");
-        this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
-        this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
-        this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
-        this.accountLabel = page.locator(".v-accounts-list-item__labels");
         this.activitySection = page.locator(".v-accounts-list-item__activity");
         this.tooltip = page.locator(".g-tooltip__content");
         this.openRestrictionsDrawerButton = page.locator("//span[text()='Apply restrictions' or text()=' Manage']");
@@ -344,15 +271,17 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(ucid, restriction.getUcid());
     }
 
+    @Deprecated
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'");
         Thread.sleep(200);
     }
 
+    @Deprecated
     public static void setRestrictionAPIGeneral(String ucid, String code, String applyReason, String updatedBySystem,
             String updatedByUser) throws IOException {
-        Allure.step("Set restriction though API GENERAL");
+        Allure.step("Set restriction through API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
         );
@@ -361,10 +290,11 @@ public class RestrictionPage extends AbstractPage {
         assertEquals(200, response.code());
     }
 
+    @Deprecated
     public static String setRestrictionAPIGeneralResponse(String ucid, String code, String applyReason,
             String updatedBySystem,
             String updatedByUser) throws IOException {
-        Allure.step("Set restriction though API GENERAL");
+        Allure.step("Set restriction through API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
         );
@@ -375,9 +305,9 @@ public class RestrictionPage extends AbstractPage {
         return response.body().string();
     }
 
-    @Step("Set restriction though API")
+    @Step("Set restriction through API")
     public static void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
-        Allure.step("Set restriction though API GENERAL");
+        Allure.step("Set restriction through API GENERAL");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("test", "automation")
         );
@@ -387,7 +317,7 @@ public class RestrictionPage extends AbstractPage {
 
     @Step
     public void setRestrictionAPITrade(String ucid, int accId, int serverId, String code) throws IOException {
-        Allure.step("Set restriction though API TRADE");
+        Allure.step("Set restriction through API TRADE");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "TRADING", accId, serverId, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
         );
@@ -399,7 +329,7 @@ public class RestrictionPage extends AbstractPage {
     public static String setRestrictionAPITradeResponse(String ucid, String code, int accId, int serverId,
             String applyReason,
             String updatedBySystem, String updatedByUser) throws IOException {
-        Allure.step("Set restriction though API TRADE");
+        Allure.step("Set restriction through API TRADE");
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
                 ucid, code, "TRADING", accId, serverId, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
         );
