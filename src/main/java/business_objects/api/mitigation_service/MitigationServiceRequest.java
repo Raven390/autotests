@@ -1,5 +1,7 @@
 package business_objects.api.mitigation_service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import helpers.data.ClientHelper;
 import helpers.http_helper.HttpHelper;
 import okhttp3.Response;
 
@@ -9,6 +11,7 @@ import java.util.Map;
 import static utils.ConfigFactory.*;
 
 public class MitigationServiceRequest {
+    public static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static Response getRestrictionCatalog() throws IOException {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_GET_RESTRICTION_CATALOG, null, null);
@@ -16,6 +19,14 @@ public class MitigationServiceRequest {
 
     public static Response postRestriction(PostRestrictionRequestBody postRestrictionRequestBody) throws IOException {
         return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, null, postRestrictionRequestBody);
+    }
+
+    public static PostRestrictionResponse postRestriction(ClientHelper client, String type, String code)
+            throws IOException {
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                client.getUcid(), code, type, client.getTradingAccount(), client.getServerId(), "Integration test", new PostRestrictionRequestBody.UpdatedBy("API", "QA")
+        );
+        return objectMapper.readValue(postRestriction(postRestrictionRequestBody).body().string(), PostRestrictionResponse.class);
     }
 
     public static Response putRestriction(PostRestrictionRequestBody putRestrictionRequestBody) throws IOException {
@@ -26,9 +37,9 @@ public class MitigationServiceRequest {
         return new HttpHelper().sendGetRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS, null, Map.of("ucid", ucid));
     }
 
-    public static Response cancelRestrictionById(Integer id, CancelRestrictionRequestBody cancelRestrictionRequestBody)
+    public static Response cancelRestriction(Integer restrictionId)
             throws IOException {
-        return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, id), null, null, cancelRestrictionRequestBody);
+        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION.replace("{restrictionId}", restrictionId.toString()), null, null, new CancelRestrictionRequestBody("Test", new CancelRestrictionRequestBody.UpdatedBy("API", "QA")));
     }
 
     public static Response enableCRMEmulator() throws IOException {

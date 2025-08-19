@@ -43,6 +43,8 @@ public class LoginRuleDataFactory {
     private static final ClientHelper loginRuleTest10Client = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
     private static final ClientHelper loginRuleTest11Client = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
     private static final ClientHelper loginRuleTest12Client = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+    private static final ClientHelper loginRuleTest13Client = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+    private static final ClientHelper loginRuleTest14Client = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
 
     @Step("Create base test data for Login rule")
     public static RuleDataHelper getLoginRuleData(ClientHelper client) {
@@ -287,6 +289,37 @@ public class LoginRuleDataFactory {
         return data;
     }
 
+    @DisplayName("Login rule. Strong connection with HEDGING fraud and has bonus restriction. Event.id end_hedge_ald_no_bonus")
+    public static RuleDataHelper getLoginRuleTest13Data() throws IOException, InterruptedException {
+        RuleDataHelper data = getLoginRuleData(loginRuleTest13Client);
+
+        //Add connection with abuse type equal to hedging
+        ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+        addConnectionByAttribute(data, connectedClient, 0.86);
+        //add abuse
+        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
+        addFraudsForClient(data.connectedClientHelpers.get(0), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+
+        //Add second connection with abuse type no equal to hedging
+        ClientHelper connectedClient2 = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
+        addConnectionByAttribute(data, connectedClient2, 1d);
+        //add abuse
+        insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
+        addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
+
+        // set general score
+        data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
+
+
+        return data;
+    }
+
+    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_wr_cooldown")
+    public static RuleDataHelper getLoginRuleTest14Data() {
+        RuleDataHelper data = getLoginRuleData(loginRuleTest14Client);
+        return data;
+    }
+
     public static Map<String, RuleDataHelper> setupLoginRuleData() throws IOException, InterruptedException {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
@@ -303,6 +336,8 @@ public class LoginRuleDataFactory {
         map.put("10", getLoginRuleTest10Data());
         map.put("11", getLoginRuleTest11Data());
         map.put("12", getLoginRuleTest12Data());
+        map.put("13", getLoginRuleTest13Data());
+        map.put("14", getLoginRuleTest14Data());
 
         setupRuleData(map);
 
