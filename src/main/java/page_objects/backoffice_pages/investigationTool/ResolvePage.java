@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ResolvePage extends AbstractPage {
 
     private static final String investigationCompleted = "Investigation completed";
+    private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
 
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
@@ -66,6 +67,10 @@ public class ResolvePage extends AbstractPage {
     private final Locator accountIllegalProfit;
     private final Locator useAsIllegalProfitButton;
     private final Locator suggestedDeductionSection;
+    private final Locator previouslyReportedFraudItem;
+    private final Locator previouslyReportedFraudTypes;
+    private final Locator previouslyReportedFraudSymbols;
+    private final Locator fraudSourceDropdown;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -75,9 +80,9 @@ public class ResolvePage extends AbstractPage {
     private static final String RESTRICTION_DELETION_POPUP_LOCATOR = "//*[contains(@class,'v-client-restrictions-list-item__popup') and contains(@class,'g-popup ')]";
     private static final String RESET_FRAUD_CHANGES_BUTTON_LOCATOR = "//*[@data-qa='fraud_type_selector_clear_button']";
     private static final String RESET_RESTRICTION_CHANGES_BUTTON_LOCATOR = "//*[@class='v-client-restrictions-selector']/button/*[text()='Reset changes']";
-    private static final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[@class='v-fraud-type-v2']";
+    private static final String FRAUD_CONTAINER_BY_NAME_PATTERN = "//span[text()='%s']/ancestor::div[contains(@data-qa,'client_report_fraud_drawer__reported_fraud_types_list__item')]";
     private static final String FRAUD_TIME_BY_NAME_PATTERN = String.format("%s/descendant::div[contains(@class,'g-color-text_color_secondary')]", FRAUD_CONTAINER_BY_NAME_PATTERN);
-    private static final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button[@data-qa='selected_fraud_type_item__remove_button']", FRAUD_CONTAINER_BY_NAME_PATTERN);
+    private static final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button", FRAUD_CONTAINER_BY_NAME_PATTERN);
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
     private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[text()='%s']";
@@ -90,7 +95,7 @@ public class ResolvePage extends AbstractPage {
         this.resolveButton = page.locator(".g-button__text").getByText("Resolve");
         this.reportFraudButton = page.locator("[data-qa=investigation_tools__report_fraud_button]");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
-        this.completeInvestigationButton = page.locator(".g-button__text").getByText("Complete investigation");
+        this.completeInvestigationButton = page.locator("//button[contains(@data-qa,'complete_investigation_button') or contains(@data-qa,'apply_changes_button')]");
         this.resolutionForm = page.locator("[data-qa='drawer_body']").getByText("Resolution");
         this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Fraud management");
         this.commentInput = page.locator(".v-drawer-section-layout textarea");
@@ -102,7 +107,7 @@ public class ResolvePage extends AbstractPage {
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
         this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type-v2']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
-        this.fraudListButton = page.locator("button[data-qa='client_resolving_drawer__fraud_type_selector__anchor']");
+        this.fraudListButton = page.locator("//button[contains(@data-qa,'fraud_type_selector__anchor')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.fraudSelectItem = page.locator("//div[@class='v-dropdown-select-item-base']");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
@@ -125,6 +130,10 @@ public class ResolvePage extends AbstractPage {
         this.accountIllegalProfit = page.locator("//span[contains(@class,'g-text')]");
         this.useAsIllegalProfitButton = page.locator("//div[@class='v-suggested-deduction-select__controls']/button[contains(@class,'g-button_view_action')]");
         this.suggestedDeductionSection = page.locator("//div[@class='v-suggested-deduction']");
+        this.previouslyReportedFraudItem = page.locator("//div[contains(@data-qa,'client_report_fraud_drawer__reported_fraud_types_list__item')]");
+        this.previouslyReportedFraudTypes = page.locator("//span[contains(@class,'g-color-text_color_primary')]");
+        this.previouslyReportedFraudSymbols = page.locator("//div[@class='v-reported-fraud-type-list__symbols']");
+        this.fraudSourceDropdown = page.locator("//button[@data-qa='source_select__select_control']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -224,10 +233,21 @@ public class ResolvePage extends AbstractPage {
     }
 
     @Step("Resolve without any actions")
-    public void resolveSimple(String comment) {
+    public void resolveNoActions(String comment) {
+        fillCommentAndApply(comment);
+        successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Apply fraud management")
+    public void applyFraudManagement(String comment) {
+        fillCommentAndApply(comment);
+        successToast.getByText(FRAUD_MANAGEMENT_COMPLETED).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Fill comment and apply")
+    public void fillCommentAndApply(String comment) {
         commentInput.fill(comment);
         completeInvestigationButton.click();
-        successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Resolve with adding fraud")
@@ -444,6 +464,11 @@ public class ResolvePage extends AbstractPage {
         submitFraudButton.click();
     }
 
+    @Step("Click delete fraud and confirm the popup")
+    public void deleteFraudByNameNoPopup(String fraudName) {
+        page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
+    }
+
     @Step("Click delete restriction ")
     public void clickDeleteRestrictionButtonByName(String restriction) {
         Allure.step("click delete restriction button");
@@ -537,5 +562,23 @@ public class ResolvePage extends AbstractPage {
     @Step("Is Suggested deduction section visible")
     public Boolean isSuggestedDeductionSectionVisible() {
         return suggestedDeductionSection.isVisible();
+    }
+
+    @Step("Get previously reported fraud items")
+    public List<List<String>> getPreviouslyReportedFraudItems() {
+        List<List<String>> list = new ArrayList<>();
+        for (int i = 0; i < previouslyReportedFraudItem.count(); i++) {
+            List<String> typesList = new ArrayList<>();
+            typesList.add(previouslyReportedFraudItem.nth(i).locator(previouslyReportedFraudTypes).textContent());
+            typesList.add(previouslyReportedFraudItem.nth(i).locator(previouslyReportedFraudSymbols).textContent());
+            list.add(typesList);
+        }
+        return list;
+    }
+
+    @Step("Select fraud source")
+    public void selectFraudSource(String fraudSource) {
+        fraudSourceDropdown.click();
+        page.getByText(fraudSource).click();
     }
 }

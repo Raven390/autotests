@@ -133,7 +133,7 @@ public class AuditTrailTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
         String comment = "Test investigation completed action type";
-        resolvePage.resolveSimple(comment);
+        resolvePage.resolveNoActions(comment);
         alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateToClient(crmTbUser.ucid);
