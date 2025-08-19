@@ -166,7 +166,7 @@ class DeductionTableTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @Tag(ABUSE_REGISTRY)
     @Feature("BMS-1667 Filter by brand group")
-    @AllureId("1370")
+    @AllureId("1460")
     @DisplayName("Verify Abuse registry deduction table filtration by brand group")
     void deductionTableFilterByBrandTest() {
         investigationPage.navigateEnterPage();

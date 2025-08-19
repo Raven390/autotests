@@ -11,21 +11,28 @@ public class AbuserFraudType {
     String modifiedBySystem;
     String updatedAt;
     String createdAt;
+    String fraudSubtypeCode;
+    String symbols;
+    String fraudSource;
 
     public AbuserFraudType() {
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbuserFraudType that = (AbuserFraudType) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(status, that.status) && Objects.equals(comment, that.comment) && Objects.equals(modifiedByUser, that.modifiedByUser) && Objects.equals(modifiedBySystem, that.modifiedBySystem) && Objects.equals(updatedAt, that.updatedAt) && Objects.equals(createdAt, that.createdAt);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(fraudTypeCode, that.fraudTypeCode) && Objects.equals(status, that.status) && Objects.equals(comment, that.comment) && Objects.equals(modifiedByUser, that.modifiedByUser) && Objects.equals(modifiedBySystem, that.modifiedBySystem) && Objects.equals(fraudSubtypeCode, that.fraudSubtypeCode) && Objects.equals(symbols, that.symbols) && Objects.equals(fraudSource, that.fraudSource);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, fraudTypeCode, status, comment, modifiedByUser, modifiedBySystem, updatedAt, createdAt);
+        return Objects.hash(ucid, fraudTypeCode, status, comment, modifiedByUser, modifiedBySystem, fraudSubtypeCode, symbols, fraudSource);
+    }
+
+    @Override
+    public String toString() {
+        return "AbuserFraudType{" + "ucid='" + ucid + '\'' + ", fraudTypeCode='" + fraudTypeCode + '\'' + ", status='" + status + '\'' + ", comment='" + comment + '\'' + ", modifiedByUser='" + modifiedByUser + '\'' + ", modifiedBySystem='" + modifiedBySystem + '\'' + ", updatedAt='" + updatedAt + '\'' + ", createdAt='" + createdAt + '\'' + ", fraudSubtypeCode='" + fraudSubtypeCode + '\'' + ", symbols='" + symbols + '\'' + ", fraudSource='" + fraudSource + '\'' + '}';
     }
 
     public String getUcid() {
@@ -90,5 +97,29 @@ public class AbuserFraudType {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getFraudSubtypeCode() {
+        return fraudSubtypeCode;
+    }
+
+    public void setFraudSubtypeCode(String fraudSubtypeCode) {
+        this.fraudSubtypeCode = fraudSubtypeCode;
+    }
+
+    public String getSymbols() {
+        return symbols;
+    }
+
+    public void setSymbols(String symbols) {
+        this.symbols = symbols;
+    }
+
+    public String getFraudSource() {
+        return fraudSource;
+    }
+
+    public void setFraudSource(String fraudSource) {
+        this.fraudSource = fraudSource;
     }
 }

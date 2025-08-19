@@ -58,7 +58,7 @@ class AlertHistoryTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("Test alerts history comment resolve");
+        resolvePage.resolveNoActions("Test alerts history comment resolve");
     }
 
     @Test

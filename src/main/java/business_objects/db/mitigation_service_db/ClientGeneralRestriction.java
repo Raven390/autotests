@@ -11,7 +11,6 @@ public class ClientGeneralRestriction {
     private String comment;
     private String status;
     private String cancellationReason;
-    private String applicationReason;
     private String failReason;
     private String createdAt;
     private String updatedAt;
@@ -132,15 +131,14 @@ public class ClientGeneralRestriction {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientGeneralRestriction that = (ClientGeneralRestriction) o;
-        return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(status, that.status);
+        return Objects.equals(ucid, that.ucid) && Objects.equals(regulator, that.regulator) && Objects.equals(restrictionId, that.restrictionId) && Objects.equals(comment, that.comment) && Objects.equals(status, that.status) && Objects.equals(cancellationReason, that.cancellationReason) && Objects.equals(failReason, that.failReason);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, regulator, restrictionId, status);
+        return Objects.hash(ucid, regulator, restrictionId, comment, status, cancellationReason, failReason);
     }
 
     @Override

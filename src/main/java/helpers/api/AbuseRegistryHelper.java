@@ -27,6 +27,7 @@ public class AbuseRegistryHelper {
     private static final String ACTOR = "Auto Test";
     private static final String SYSTEM = "BO";
     private static final String COMMENT = "Set by autotest";
+    private static final String ASSERT_REASON = "Check that request was successful";
 
     private AbuseRegistryHelper() {
     }
@@ -57,7 +58,16 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", fraudSubtype.getCode(), symbols)));
-        assertThat("Check that request was successful", postFraudTypesV2(client, requestBody).code(), is(200));
+        assertThat(ASSERT_REASON, postFraudTypesV2(client, requestBody).code(), is(200));
+        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
+    }
+
+    public static void addFraudForClient(ClientHelper client, FraudType fraudType,
+            FraudTypeStatus status, List<String> symbols)
+            throws IOException {
+        PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
+                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", null, symbols)));
+        assertThat(ASSERT_REASON, postFraudTypesV2(client, requestBody).code(), is(200));
         ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
@@ -66,7 +76,7 @@ public class AbuseRegistryHelper {
         assertThat("Check that fraudTypes list is not empty", fraudTypes.size(), greaterThan(0));
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 ACTOR, SYSTEM, COMMENT, fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
-        assertThat("Check that request was successful", postFraudTypes(ucid, requestBody).code(), is(200));
+        assertThat(ASSERT_REASON, postFraudTypes(ucid, requestBody).code(), is(200));
         ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, ucid));
     }
 
@@ -74,7 +84,7 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus("CONFIRMED", fraud.getFraudTypeCode())));
-        assertThat("Check that request was successful", postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
+        assertThat(ASSERT_REASON, postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
         ln.info("fraud " + fraud.getFraudTypeCode() + " successfully sent for client " + fraud.getUcid());
     }
 
@@ -88,7 +98,7 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus(status, fraud.getFraudTypeCode())));
-        assertThat("Check that request was successful", postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
+        assertThat(ASSERT_REASON, postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
     }
 
 
@@ -96,7 +106,7 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostAbuserStatusRequestBody requestBody = new PostAbuserStatusRequestBody(
                 ACTOR, SYSTEM, COMMENT, status.getStatus());
-        assertThat("Check that request was successful", postAbuserStatus(client, requestBody).code(), is(200));
+        assertThat(ASSERT_REASON, postAbuserStatus(client, requestBody).code(), is(200));
     }
 
     public static Response getClientStatus(ClientHelper client) throws IOException {

@@ -269,7 +269,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         resolvePage.openResolveSuspicious();
-        resolvePage.resolveSimple("Test log users actions resolve");
+        resolvePage.resolveNoActions("Test log users actions resolve");
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
