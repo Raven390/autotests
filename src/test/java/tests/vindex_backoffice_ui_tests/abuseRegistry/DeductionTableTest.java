@@ -61,6 +61,7 @@ class DeductionTableTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteUserAR(client.getUcid());
     }
 
@@ -158,6 +159,26 @@ class DeductionTableTest extends TestBaseWeb {
         deductionPage.clickFilterOptionByText(APPROVED.getDisplayName());
         deductionPage.waitForPageToLoad();
         assertThat("Check all email statuses in the table are as selected", deductionPage.getEmailValues(), everyItem(is(APPROVED.getDisplayName())));
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @Tag(ABUSE_REGISTRY)
+    @Feature("BMS-1667 Filter by brand group")
+    @AllureId("1370")
+    @DisplayName("Verify Abuse registry deduction table filtration by brand group")
+    void deductionTableFilterByBrandTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
+        alertsPage.waitForPageToLoad();
+        deductionPage.clickAbuseRegistryButton();
+        deductionPage.clickDeductionTabButton();
+        deductionPage.clickBrandsFilter();
+        deductionPage.clickFilterOptionByText(client.getBrand());
+        deductionPage.waitForPageToLoad();
+        assertThat("Check all brand groups in the table are as selected", deductionPage.getBrandValues(), everyItem(is(client.getBrand())));
     }
 
     @Test

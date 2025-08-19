@@ -23,15 +23,16 @@ public class DeductionPage extends AbstractPage {
     private final Locator tableBody;
     private final Locator statusFilter;
     private final Locator emailFilter;
+    private final Locator brandsFilter;
     private final Locator filterOptions;
     private final Locator statusValues;
     private final Locator emailValues;
+    private final Locator brandValues;
     private final Locator deductionTable;
     private final Locator singleEditButton;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN = "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
     private static final String COLUMN_VALUE_BY_ORDER_PATTERN = "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
-    private static final String DEDUCTION_FILTER_BY_ORDER_PATTERN = "//div[@class='v-deductions-filters']/div[%s]/descendant::button[contains(@class,'g-select-control__button')]";
     private static final String DEDUCTION_TABLE_LOCATOR = "//*[@data-qa='deductions__table']";
     private static final String DEDUCTION_TABLE_DRAWER_LOCATOR = "//*[@data-qa='drawer_body']";
     private static final String ILLEGAL_PROFIT_INPUT_LOCATOR = "(" + DEDUCTION_TABLE_DRAWER_LOCATOR + "//input)[1]";
@@ -56,13 +57,15 @@ public class DeductionPage extends AbstractPage {
         this.deductionTabButton = page.locator("//input[@value='DEDUCTIONS']");
         this.deductionTableHeaders = page.locator("//div[contains(@class,'v-header-cell') and text()]");
         this.deductionTableRow = page.locator("//div[contains(@class,'v-body-row')]");
-        this.deductionTableRowData = page.locator("//div[contains(@class,'v-body-cell')]/descendant::div[contains(@class,'g-text')]");
+        this.deductionTableRowData = page.locator("//div[contains(@class,'v-body-cell')]/descendant::*[contains(@class,'g-text')]");
         this.tableBody = page.locator("//div[@class='v-table-body']");
-        this.statusFilter = page.locator(String.format(DEDUCTION_FILTER_BY_ORDER_PATTERN, 1));
-        this.emailFilter = page.locator(String.format(DEDUCTION_FILTER_BY_ORDER_PATTERN, 2));
+        this.statusFilter = page.locator("//button[@data-qa='deductions__filters__statuses']");
+        this.emailFilter = page.locator("//button[@data-qa='deductions__filters__email_statuses']");
+        this.brandsFilter = page.locator("//button[@data-qa='deductions__filters__brands']");
         this.filterOptions = page.locator("//div[@data-qa='select-popup']/descendant::span[@class='g-select-list__option-default-label']");
         this.statusValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 5));
         this.emailValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).first();
+        this.brandValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).last();
         this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
         this.singleEditButton = page.locator("//*[contains(@data-qa,'manage_deduction')]/button");
         this.illegalProfitInput = page.locator(ILLEGAL_PROFIT_INPUT_LOCATOR);
@@ -120,6 +123,11 @@ public class DeductionPage extends AbstractPage {
         emailFilter.click();
     }
 
+    @Step("Click brands filter")
+    public void clickBrandsFilter() {
+        brandsFilter.click();
+    }
+
     @Step("Click filter option by text")
     public void clickFilterOptionByText(String text) {
         page.locator(String.format(FILTER_OPTION_BY_TEXT_PATTERN, text)).click();
@@ -148,6 +156,15 @@ public class DeductionPage extends AbstractPage {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < emailValues.count(); i++) {
             list.add(emailValues.nth(i).textContent());
+        }
+        return list;
+    }
+
+    @Step("Get brand values from the deduction table")
+    public List<String> getBrandValues() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < brandValues.count(); i++) {
+            list.add(brandValues.nth(i).textContent());
         }
         return list;
     }
