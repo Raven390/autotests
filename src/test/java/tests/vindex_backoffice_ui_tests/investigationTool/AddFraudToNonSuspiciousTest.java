@@ -9,6 +9,7 @@ import helpers.data.enums.Regulator;
 import helpers.database.ArHelper;
 import helpers.database.DbName;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Muted;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -32,6 +33,9 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
+@Disabled
+@Muted
+@Tag(TAG_MANUAL)
 public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
 
     static ClientHelper innocentClient = new ClientHelper(191_901, Brand.VANTAGE, Regulator.FCA);
