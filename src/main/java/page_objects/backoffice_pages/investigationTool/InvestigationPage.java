@@ -102,7 +102,7 @@ public class InvestigationPage extends AbstractPage {
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
     private static final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
-    private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'investigation_page__suspicious_client_card')]";
+    private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
     private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
 
     public InvestigationPage(Page page) {
@@ -166,7 +166,7 @@ public class InvestigationPage extends AbstractPage {
         this.clientCardAlertsCountElement = page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
         this.currentTabCardsCountElement = page.locator("//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
         this.suspiciousClientsFilterIcon = page.locator("//div[@class='v-investigation-tools-side-panel__filters']");
-        this.applyFilterButton = page.locator("//button[contains(@class,'g-button_width_max')]");
+        this.applyFilterButton = page.locator("//button[@data-qa='suspicious_clients__filters__apply']");
         this.showMoreRulesButton = page.locator("//span[text()='Show more']/..");
         this.ruleSearchInput = page.locator("//input[@placeholder='Search by rule']");
         this.resetBrandsButton = page.locator("//button[@data-qa='suspicious_clients__filters__brands__title__reset']/descendant::span[text()='Reset']");

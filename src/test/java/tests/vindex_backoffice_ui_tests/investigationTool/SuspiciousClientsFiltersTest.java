@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -19,8 +20,7 @@ import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static business_objects.ui.user.UserFactory.coreUser;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
@@ -38,8 +38,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         crmTbUser2.country = "Malaysia";
         crmTbUser2.countryCode = "MY";
         crmTbUser2.isoCountryCode = "MY";
-        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
-        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser1, crmTbUser2));
         RuleAlert alert1 = generateRuleAlertByUcid(crmTbUser1.ucid);
         RuleAlert alert2 = generateRuleAlertByUcid(crmTbUser2.ucid);
         alert2.rule.name = "Mirror Trading";
@@ -101,7 +100,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.navigateToMain();
         investigationPage.waitForPageToLoad();
         investigationPage.clickSuspiciousClientsFiltration();
-        investigationPage.selectCountryFilter("Cyprus");
+        investigationPage.selectCountryFilter("CYPRUS");
         investigationPage.clickApplyFiltrationButton();
         investigationPage.verifyAllCardsFilteredByCountry("CY");
         investigationPage.filterUnassigned();
@@ -153,7 +152,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.selectRuleWithName("Mirror Trading");
         investigationPage.resetRulesFilterAndVerify();
         // Countries
-        investigationPage.selectCountryFilter("Cyprus");
+        investigationPage.selectCountryFilter("CYPRUS");
         investigationPage.resetCountriesFilterAndVerify();
         // Assignees
         investigationPage.selectAssigneeFilter(coreUser());
@@ -161,7 +160,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
         // Reset all
         investigationPage.selectBrandFilterByText("Vantage");
         investigationPage.selectRuleWithName("Mirror Trading");
-        investigationPage.selectCountryFilter("Cyprus");
+        investigationPage.selectCountryFilter("CYPRUS");
         investigationPage.selectAssigneeFilter(coreUser());
         investigationPage.resetAllFiltersAndVerify();
     }

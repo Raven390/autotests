@@ -107,7 +107,7 @@ public class ConnectionPage extends AbstractPage {
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
     private static final String CONNECTION_GRAPH_SELECTOR = ".v-graph-canvas-v2";
-    private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
+    private static final String CONNECTION_TABLE_ROW_BY_CLIENT_ID_PATTERN = "//span[text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
     private static final String FILTER_CONTAINER_BY_TITLE_PATTERN = "//div[@class='v-text-with-icon__text' and text()='%s']/ancestor::div[@class='v-filter-container']";
     private static final String FILTER_CONTAINER = "//div[@class='v-drawer-content-wrapper__content']";
     private static final String PRESET_BY_LABEL_AND_VALUE_PATTERN = FILTER_CONTAINER_BY_TITLE_PATTERN + "/descendant::span[text()='%s']";
