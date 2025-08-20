@@ -28,7 +28,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class KafkaHelper {
 
     public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
-    public static final Integer MAX_ATTEMPTS = 150;
+    public static final Integer MAX_ATTEMPTS = 50;
 
     public static String getFreeConsumerId() {
         FileLock fileLock = null;

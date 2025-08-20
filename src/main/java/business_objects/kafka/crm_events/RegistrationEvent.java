@@ -36,14 +36,17 @@ public class RegistrationEvent {
     @JsonProperty("lastName")
     private String lastName;
 
-    @JsonProperty("nationalityCode")
-    private String nationalityCode;
-
     @JsonProperty("lexisNexis")
     private LexisNexis lexisNexis;
 
+    @JsonProperty("nationalityCode")
+    private String nationalityCode;
+
     @JsonProperty("phoneNumber")
     private String phoneNumber;
+
+    @JsonProperty("referrerId")
+    private String referrerId;
 
     @JsonProperty("regulator")
     private String regulator;
@@ -83,6 +86,9 @@ public class RegistrationEvent {
         @JsonProperty("trueIp")
         private String trueIp;
 
+        @JsonProperty("webSessionId")
+        private String webSessionId;
+
         public LexisNexis(
                 String device, String digitalId, Integer policyScore, String rawResponse, String riskRating,
                 Integer sessionId,
@@ -109,20 +115,20 @@ public class RegistrationEvent {
 
         @Override
         public int hashCode() {
-            return Objects.hash(device, digitalId, policyScore, rawResponse, riskRating, sessionId, trueIp);
+            return Objects.hash(device, digitalId, policyScore, rawResponse, riskRating, sessionId, trueIp, webSessionId);
         }
 
         @Override
         public String toString() {
-            return "LexisNexis{" + "device='" + device + '\'' + ", digitalId='" + digitalId + '\'' + ", policyScore='" + policyScore + '\'' + ", rawResponse='" + rawResponse + '\'' + ", riskRating='" + riskRating + '\'' + ", sessionId=" + sessionId + ", trueIp='" + trueIp + '\'' + '}';
+            return "LexisNexis{" + "device='" + device + '\'' + ", digitalId='" + digitalId + '\'' + ", policyScore=" + policyScore + ", rawResponse='" + rawResponse + '\'' + ", riskRating='" + riskRating + '\'' + ", sessionId=" + sessionId + ", trueIp='" + trueIp + '\'' + ", webSessionId='" + webSessionId + '\'' + '}';
         }
 
         public String getDevice() {
             return device;
         }
 
-        public String setDevice(String device) {
-            return device;
+        public void setDevice(String device) {
+            this.device = device;
         }
 
         public String getDigitalId() {
@@ -171,6 +177,14 @@ public class RegistrationEvent {
 
         public void setTrueIp(String trueIp) {
             this.trueIp = trueIp;
+        }
+
+        public String getWebSessionId() {
+            return webSessionId;
+        }
+
+        public void setWebSessionId(String webSessionId) {
+            this.webSessionId = webSessionId;
         }
     }
 
@@ -361,5 +375,13 @@ public class RegistrationEvent {
 
     public void setWebsiteUserType(String websiteUserType) {
         this.websiteUserType = websiteUserType;
+    }
+
+    public String getReferrerId() {
+        return referrerId;
+    }
+
+    public void setReferrerId(String referrerId) {
+        this.referrerId = referrerId;
     }
 }

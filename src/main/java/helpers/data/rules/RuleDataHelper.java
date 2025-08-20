@@ -56,6 +56,7 @@ import static business_objects.db.clickhouse.connection_table.ConnectionTableEnt
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
@@ -435,31 +436,6 @@ public class RuleDataHelper {
         return ruleDataHelper;
     }
 
-    private static class ConnectionAndConnectedUser {
-        public ConnectionTableEntry connectionTableEntry;
-        public CrmTbUserObject crmTbUserObject;
-        public ClientHelper clientHelper;
-
-        public ConnectionAndConnectedUser(ConnectionTableEntry connectionTableEntry,
-                CrmTbUserObject crmTbUserObject, ClientHelper clientHelper) {
-            this.connectionTableEntry = connectionTableEntry;
-            this.crmTbUserObject = crmTbUserObject;
-            this.clientHelper = clientHelper;
-        }
-    }
-
-    private static ConnectionAndConnectedUser getConnectionAndConnectedUser(ClientHelper fromClient,
-            ClientHelper toClient) {
-        ConnectionTableEntry connectionTableEntry = new ConnectionTableEntry(fromClient.getUcid(), toClient.getUcid(), CONNECTION_TYPE_SAME_IDENTITY, 1d, List.of(
-                new ConnectionTableEntry.ConnectionInfo(CONNECTION_ATTRIBUTE_NAME_PAYOUT, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)), getCurrentTimestampDbFormat());
-        // Create connected user
-        CrmTbUserObject connectedCrmTbUserObject = generateUserByClient(toClient);
-        connectedCrmTbUserObject.isoCountryCode = fromClient.getCountryCode();
-        connectedCrmTbUserObject.rafReferrerId = 22;
-        connectedCrmTbUserObject.ibId = 33;
-        return new ConnectionAndConnectedUser(connectionTableEntry, connectedCrmTbUserObject, toClient);
-    }
-
     protected static void setupAttrConnectionEmailPhoneWithCustomScore(RuleDataHelper data,
             ClientHelper connectedClient, Double score) {
 
@@ -474,39 +450,67 @@ public class RuleDataHelper {
         }
         connectedClient.setEmail(data.clientHelper.getEmail());
         connectedClient.setPhoneNumber(data.clientHelper.getPhoneNumber());
-        data.crmTbUserObject.email = faker.internet().emailAddress();
-        data.crmTbUserObject.phoneNum = faker.phoneNumber().cellPhone();
 
         //add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient, score);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo1.connectionAttributeName = "email";
-        connectionInfo1.connectionAttributeValue = data.crmTbUserObject.email;
-        connectionInfo1.sourceAttributeValue = data.crmTbUserObject.email;
+        connectionInfo1.connectionAttributeValue = data.clientHelper.getEmail();
+        connectionInfo1.sourceAttributeValue = data.clientHelper.getEmail();
         connectionInfo1.relationType = "exact";
         ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
         connectionInfo2.connectionAttributeName = "phone";
-        connectionInfo2.connectionAttributeValue = data.crmTbUserObject.phoneNum;
-        connectionInfo2.sourceAttributeValue = data.crmTbUserObject.phoneNum;
+        connectionInfo2.connectionAttributeValue = data.clientHelper.getPhoneNumber();
+        connectionInfo2.sourceAttributeValue = data.clientHelper.getPhoneNumber();
         connectionInfo2.relationType = "exact";
         connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1, connectionInfo2));
         connection.connectionScore = score;
         data.connections.add(connection);
         //add email to LN record
-        data.lnSessionParsedObject.setEmail(data.crmTbUserObject.email);
-        data.lnSessionParsedObject.setMobile(data.crmTbUserObject.phoneNum);
+        data.lnSessionParsedObject.setEmail(data.clientHelper.getEmail());
+        data.lnSessionParsedObject.setMobile(data.clientHelper.getPhoneNumber());
 
         //add to emails table records with same email for initial and connected clients
 
-        data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.email));
-        data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.email));
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getEmail()));
+        data.emailTableEntries.add(emailTableEntryForConnectionSearch(connectedClient, data.clientHelper.getEmail()));
 
         //add to phone table records with same email for initial and connected clients
-        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(data.clientHelper, data.crmTbUserObject.phoneNum));
-        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(connectedClient, data.crmTbUserObject.phoneNum));
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getPhoneNumber()));
+        data.phoneTableEntries.add(phoneTableEntryForConnectionSearch(connectedClient, data.clientHelper.getPhoneNumber()));
     }
 
-    public static void addConnectionByAttribute(RuleDataHelper data, ClientHelper clientTo, Double score) {
+    public static void setupAttrConnectionDevice(
+            RuleDataHelper data,
+            ClientHelper connectedClient) {
+
+        if (data.connections == null) {
+            data.connections = new ArrayList<>();
+        }
+        if (data.deviceIdTableEntries == null) {
+            data.deviceIdTableEntries = new ArrayList<>();
+        }
+        connectedClient.setDeviceId(data.clientHelper.getDeviceId());
+
+        //add connection with connected client
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "device";
+        connectionInfo1.connectionAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.sourceAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.relationType = "exact";
+        connection.connectionScore = 0.7;
+        data.connections.add(connection);
+        //add email to LN record
+        data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
+
+        //add to emails table records with same email for initial and connected clients
+
+        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getDeviceId()));
+        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
+    }
+
+    public static void addConnectionByEmailPhoneAttribute(RuleDataHelper data, ClientHelper clientTo, Double score) {
         if (data.connectedUsers == null) {
             data.connectedUsers = new ArrayList<>();
         }
@@ -516,6 +520,18 @@ public class RuleDataHelper {
         data.connectedUsers.add(generateUserByClient(clientTo));
         data.connectedClientHelpers.add(clientTo);
         setupAttrConnectionEmailPhoneWithCustomScore(data, clientTo, score);
+    }
+
+    public static void addConnectionByDeviceAttribute(RuleDataHelper data, ClientHelper clientTo) {
+        if (data.connectedUsers == null) {
+            data.connectedUsers = new ArrayList<>();
+        }
+        if (data.connectedClientHelpers == null) {
+            data.connectedClientHelpers = new ArrayList<>();
+        }
+        data.connectedUsers.add(generateUserByClient(clientTo));
+        data.connectedClientHelpers.add(clientTo);
+        setupAttrConnectionDevice(data, clientTo);
     }
 
     public static RuleDataHelper addFraudTypeToConnectedUser(RuleDataHelper data, FraudTypeStatus status)

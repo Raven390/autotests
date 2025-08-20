@@ -32,7 +32,7 @@ class RegistrationRuleTest extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setupData() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupRegistrationRuleData();

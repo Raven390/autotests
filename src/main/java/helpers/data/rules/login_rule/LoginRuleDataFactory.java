@@ -77,7 +77,7 @@ public class LoginRuleDataFactory {
         data.connectedUsers.add(generateUserByClient(connectedClient));
         data.connectedClientHelpers.add(connectedClient);
 
-        addConnectionByAttribute(data, connectedClient, 0.75);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.75);
         //
         return data;
     }
@@ -96,7 +96,7 @@ public class LoginRuleDataFactory {
         data.connectedClientHelpers.add(connectedClient);
         data.clientFraudTypes = new ArrayList<>();
         data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
-        addConnectionByAttribute(data, connectedClient, 0.76);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.76);
         //
         return data;
     }
@@ -118,7 +118,7 @@ public class LoginRuleDataFactory {
         data.clientFraudTypes = new ArrayList<>();
         data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
 
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
 
         return data;
     }
@@ -140,7 +140,7 @@ public class LoginRuleDataFactory {
         data.clientFraudTypes = new ArrayList<>();
         data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
 
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
 
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
@@ -166,7 +166,7 @@ public class LoginRuleDataFactory {
         data.clientFraudTypes = new ArrayList<>();
         data.clientFraudTypes.add(createClientFraudTypeCh(connectedClient.getUcid(), FraudTypeOld.CPA_ABUSE.getKey()));
 
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
 
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
@@ -183,7 +183,7 @@ public class LoginRuleDataFactory {
         RuleDataHelper data = getLoginRuleData(loginRuleTest7Client);
 
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
 
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
@@ -191,7 +191,7 @@ public class LoginRuleDataFactory {
 
         //Add second connection with abuse type no equal to hedging
         ClientHelper connectedClient2 = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient2, 1d);
+        addConnectionByEmailPhoneAttribute(data, connectedClient2, 1d);
 
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getLast());
@@ -208,14 +208,14 @@ public class LoginRuleDataFactory {
 
         //Add connection with abuse type equal to hedging
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
         //Add second connection with abuse type no equal to hedging
         ClientHelper connectedClient2 = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient2, 1d);
+        addConnectionByEmailPhoneAttribute(data, connectedClient2, 1d);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
         addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
@@ -231,7 +231,7 @@ public class LoginRuleDataFactory {
 
         //Add connection with abuse type equal to unknown
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MONEY_LAUNDRY_RECORD), FraudTypeStatus.CONFIRMED);
@@ -247,7 +247,7 @@ public class LoginRuleDataFactory {
 
         //Add connection with abuse type equal to uknown
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MARKET_MANIPULATION), FraudTypeStatus.CONFIRMED);
@@ -263,7 +263,7 @@ public class LoginRuleDataFactory {
 
         //Add connection with abuse type equal to uknown
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(CHARGEBACK), FraudTypeStatus.CONFIRMED);
@@ -277,9 +277,9 @@ public class LoginRuleDataFactory {
     public static RuleDataHelper getLoginRuleTest12Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest12Client);
 
-        //Add connection with abuse type equal to uknown
+        //Add connection with abuse type equal to unknown
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(CPA_ABUSE), FraudTypeStatus.CONFIRMED);
@@ -295,14 +295,14 @@ public class LoginRuleDataFactory {
 
         //Add connection with abuse type equal to hedging
         ClientHelper connectedClient = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient, 0.86);
+        addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
         //Add second connection with abuse type no equal to hedging
         ClientHelper connectedClient2 = getRandomClientByBrandAndCountry(Brand.VT, Country.getCountryNameByCodeUppercase("CN"));
-        addConnectionByAttribute(data, connectedClient2, 1d);
+        addConnectionByEmailPhoneAttribute(data, connectedClient2, 1d);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
         addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);

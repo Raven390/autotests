@@ -10,13 +10,11 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -32,7 +30,7 @@ class RegistrationRuleTest extends TestBaseRule {
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setupData() throws Exception {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupRegistrationRuleData();
@@ -40,13 +38,13 @@ class RegistrationRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteRuleData(dbDataMap);
+        //deleteRuleData(dbDataMap);
     }
 
     @Test
-    @DisplayName("Registration rule exit 'end_no_alert'")
+    @DisplayName("Registration rule: abusers < 10% and lexis score not high. EventId: end_no_alert")
     @AllureId("155")
-    void registrationRuleExitEventEnd1Test() throws Exception {
+    void registrationRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
@@ -61,9 +59,9 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule exit 'End_registration_rule_alert1'")
+    @DisplayName("Registration rule: abusers < 10% and lexis score is high. EventId: End_registration_rule_alert1")
     @AllureId("156")
-    void registrationRuleExitEventEnd2Test() throws Exception {
+    void registrationRuleTest2() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
 
         produceRegistrationEventToKafka(data.registrationEvent);
@@ -84,4 +82,46 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
+    @Test
+    @AllureId("1484")
+    @DisplayName("Registration rule. Connection search. Strong hedge confirmed. EventId: end_registration_rule_cs")
+    void registrationRuleTest3() throws Exception {
+        RuleDataHelper data = dbDataMap.get("3");
+
+        produceRegistrationEventToKafka(data.registrationEvent);
+
+        Thread.sleep(30_000);
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(9L));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertThat("", dbAlerts.getFirst().getRuleAttributes(), containsString("{\"Reason\": \"Linked hedging abuser\", \"Max Connection Score\": \"0.75\"}"));
+    }
+
+    @Test
+    @AllureId("1485")
+    @DisplayName("Registration rule. Connection search. Medium hedge potential, ln risk rating = low. EventId: end_no_alert")
+    void registrationRuleTest4() throws Exception {
+        RuleDataHelper data = dbDataMap.get("4");
+
+        produceRegistrationEventToKafka(data.registrationEvent);
+
+        Thread.sleep(30_000);
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(0));
+
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
 }
