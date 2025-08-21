@@ -132,11 +132,14 @@ public class PaymentsPage extends AbstractPage {
     }
 
     @Step("Open users operations tab")
-    public void navigateOperationsTab(String ucid) {
-        Allure.step("Navigate to user's operations tab");
-        page.navigate(BASE_URL_E2E + "investigation/" + ucid);
+    public void navigatePaymentsTab(String ucid) {
+        navigate(ucid);
+    }
+
+    public void navigate(String ucid) {
+        Allure.step("Navigate to payments tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "payments"));
         waitForPageToLoad();
-        paymentsTab.click();
     }
 
     @Step("Click payments tab")
@@ -724,5 +727,10 @@ public class PaymentsPage extends AbstractPage {
                 }
 
         return transformedType;
+    }
+
+    public void isPaymentsTabHidden() {
+        Allure.step("check is payment tab hidden");
+        paymentsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 }

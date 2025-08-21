@@ -38,6 +38,15 @@ public class AbuserDeduction {
     private Double balanceAtResolution;
     private Double balanceAtResolutionUsd;
     private Boolean sendToLark;
+    private String deductionType;
+
+    public String getDeductionType() {
+        return deductionType;
+    }
+
+    public void setDeductionType(String deductionType) {
+        this.deductionType = deductionType;
+    }
 
     public AbuserDeduction() {
     }

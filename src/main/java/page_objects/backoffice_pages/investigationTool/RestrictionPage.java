@@ -90,17 +90,15 @@ public class RestrictionPage extends AbstractPage {
         this.restrictionOptionsContainer = page.locator("//div[@class='v-list-select__list-container']");
     }
 
-    @Step("Open users restriction tab")
     public void navigate(String ucid) {
-        page.navigate(String.format("%sinvestigation/%s", BASE_URL_E2E, ucid));
-        isPageLoaded();
-        restrictionTab.click();
-        isPageLoaded();
+        Allure.step("Navigate to restrictions tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "restrictions"));
+        waitForPageToLoad();
     }
 
 
     public void openRestrictionsTab() {
-        Allure.step("Open restrictions tab bi click tab button in ui");
+        Allure.step("Open restrictions tab by click tab button in ui");
         restrictionTab.click();
         waitForPageToLoad();
     }
@@ -549,6 +547,16 @@ public class RestrictionPage extends AbstractPage {
             list.add(restrictionOption.nth(i).textContent());
         }
         return list;
+    }
+
+    public void isRestrictionTabHidden() {
+        Allure.step("check is restriction tab hidden");
+        restrictionTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    public void isRestrictionTabVisible() {
+        Allure.step("check is restriction tab visible");
+        restrictionTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 
 }

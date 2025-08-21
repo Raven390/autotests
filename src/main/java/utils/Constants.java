@@ -184,6 +184,7 @@ public class Constants {
     public static final String MITIGATION_KAFKA_RESPONSE_GENERAL = "postgres.mi.client_general_restriction_kafka_response";
     public static final String MITIGATION_KAFKA_RESPONSE_OLD = "postgres.mi.kafka_response";
     public static final String MITIGATION_KAFKA_RESPONSE_TRADING = "postgres.mi.client_trading_restriction_kafka_response";
+    public static final String MITIGATION_CLIENT_BYBIT_RESTRICTION = "postgres.mi.client_bybit_restriction";
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "vindex_test.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "vindex_test.mt___mt4_trades";
     public static final String MT5_DEALS_COERCED_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced";

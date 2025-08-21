@@ -1,35 +1,50 @@
 package tests.mitigation_service_api_tests;
 
-import business_objects.api.mitigation_service.*;
+import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
+import business_objects.api.lark.chatHistory.ByBitRestrictionCancellationMessage;
+import business_objects.api.lark.chatHistory.ChatHistoryResponse;
+import business_objects.api.mitigation_service.CancelRestrictionByBitRequest;
+import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.mitigation_service_db.ClientBybitRestriction;
 import business_objects.kafka.restriction_events.ClientRestrictionApply;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import helpers.data.enums.Restriction;
 import helpers.database.CleanTableHelper;
+import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
-import io.qameta.allure.*;
+import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Owner;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseApi;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import static business_objects.api.lark.LarkRequest.getMessagesChatLast10Minutes;
+import static business_objects.api.lark.LarkRequest.getTenantToken;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampSeconds;
+import static utils.Utils.*;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_API)
@@ -37,15 +52,19 @@ import static utils.Utils.getCurrentTimestampSeconds;
 class MitigationServiceApiTest extends TestBaseApi {
 
     static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
+    static ClientHelper byBitClient = getRandomBybitClient();
+    static CrmTbUserObject byBitUser = generateUserByClient(byBitClient);
+    static CrmTbAccountObject activeByBit = generateStaticCrmTbAccountActive(byBitClient);
 
     @BeforeAll
-    static void initialSetup() throws IOException {
+    static void initialSetup() throws IOException, InterruptedException {
         Response response = enableCRMEmulator();
         assertNotNull(response);
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
         CrmTbAccountObject active = generateStaticCrmTbAccountActive(restrictionClient);
-        insertObjectToDb(CRM_USER_TABLE_NAME, restrictionClientDB);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, active);
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, byBitUser));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(active, activeByBit));
+        Thread.sleep(5000);
     }
 
     @BeforeEach
@@ -53,6 +72,16 @@ class MitigationServiceApiTest extends TestBaseApi {
         CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
         CleanTableHelper.cleanUserRestrictionTrading(restrictionClient.getUcid());
         CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
+    }
+
+    @AfterAll
+    static void breakdown() throws Exception {
+        CleanTableHelper.cleanUserRestrictionGeneral(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionGeneral(byBitClient.getUcid());
+        CleanTableHelper.cleanUserRestrictionTrading(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserAudit(restrictionClient.getUcid());
+        CleanTableHelper.cleanUserAudit(byBitClient.getUcid());
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", byBitClient.getUcid()));
     }
 
     @Test
@@ -455,5 +484,44 @@ class MitigationServiceApiTest extends TestBaseApi {
         }
         assertThat("Verify internalReason was found in one of the kafka messages ", internalReasonFound, is(true));
     }
+
+    @AllureId("1486")
+    @DisplayName("cancellation message for byBit restrictions appears in Lark")
+    @Test
+    void byBitCancellationLarkTest() throws IOException {
+        String applyReason = "reason" + getCurrentTimestampSeconds();
+        String updatedBySystem = "system" + getCurrentTimestampSeconds();
+        String updatedByUser = "user" + getCurrentTimestampSeconds();
+        ClientBybitRestriction restrictionDb = new ClientBybitRestriction();
+        restrictionDb.setUcid(byBitClient.getUcid());
+        restrictionDb.setRestrictionId(1);
+        restrictionDb.setAccount(byBitClient.getTradingAccount().toString());
+        restrictionDb.setId(getRandomIntPositive() + 5000);
+        restrictionDb.setStatus("APPLIED");
+        restrictionDb.setTraceId(getRandomUuidString());
+        restrictionDb.setComment(applyReason);
+        restrictionDb.setUpdatedAt(LocalDateTime.now());
+        restrictionDb.setCreatedAt(LocalDateTime.now());
+        insertObjectToDb(DbName.POSTGRES, MITIGATION_CLIENT_BYBIT_RESTRICTION, restrictionDb);
+        CancelRestrictionByBitRequest.UpdatedBy cancelBy = new CancelRestrictionByBitRequest.UpdatedBy(updatedByUser, updatedBySystem);
+        CancelRestrictionByBitRequest cancelRequest = new CancelRestrictionByBitRequest(restrictionDb.getId(), applyReason, cancelBy);
+        Response responseCancel = cancelRestrictionByIdByBit(cancelRequest);
+        assertEquals(200, responseCancel.code());
+        Response tenant = getTenantToken("cli_a829a3882cb8902f", "x3Tu9aG8DBY8XOQXc0WZneu8lQdauXR2");
+        String token = objectMapper.readValue(tenant.body().string(), TenantAccessTokenResponse.class).getTenantAccessToken();
+        Response messageHistory = getMessagesChatLast10Minutes(token, "oc_dfeae72f51c406fadbc16c3890678895");
+        ChatHistoryResponse response = objectMapper.readValue(messageHistory.body().string(), ChatHistoryResponse.class);
+        List<ChatHistoryResponse.LarkApiDataItem> items = response.getData().getItems();
+        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered = items.stream().filter(i -> i.getBody().getContent().contains(applyReason)).toList();
+        String clearedContent = itemsFiltered.getFirst().getBody().getContent().replace("\\n", "").replace("\\", "");
+        ByBitRestrictionCancellationMessage message = objectMapper.readValue(clearedContent, ByBitRestrictionCancellationMessage.class);
+        Allure.step("check that message contains accountId");
+        assertEquals(": " + byBitClient.getTradingAccount(), message.getElements().getFirst().get(1).getText());
+        Allure.step("check that message contains userId");
+        assertEquals(": " + byBitClient.getUserId(), message.getElements().getFirst().get(3).getText());
+        Allure.step("check that message contains cancellation reason");
+        assertEquals(": " + applyReason, message.getElements().getFirst().get(5).getText());
+    }
+
 
 }

@@ -140,15 +140,13 @@ public class GeneralTab extends AbstractPage {
 
     @Step("Open users general tab")
     public void navigateGeneralTab(String ucid) {
-        page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/general");
-        waitForPageToLoad();
-
+        navigate(ucid);
     }
 
-    @Step("Open users general tab")
     public void navigate(String ucid) {
-        navigateGeneralTab(ucid);
-
+        Allure.step("Navigate to general tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "general"));
+        waitForPageToLoad();
     }
 
     @Step("Click general tab")
@@ -562,6 +560,11 @@ public class GeneralTab extends AbstractPage {
 
     public void clickCpaOverviewButton() {
         cpaOverviewButton.first().click();
+    }
+
+    public void isGeneralTabHidden() {
+        Allure.step("check is general tab hidden");
+        generalTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 }
 

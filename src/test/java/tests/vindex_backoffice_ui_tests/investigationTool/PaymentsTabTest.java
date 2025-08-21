@@ -67,7 +67,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserPaymentsDb(client.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkCashflowEmptyStateIsVisible();
     }
 
@@ -85,7 +85,7 @@ class PaymentsTabTest extends TestBaseWeb {
         withdrawal.statusId = 7;
         Allure.step("add record about withdrawal");
         insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkCashflowEmptyStateDepositIsVisible();
     }
 
@@ -102,7 +102,7 @@ class PaymentsTabTest extends TestBaseWeb {
         deposit.statusId = 5;
         Allure.step("add record about deposit");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkCashflowEmptyStateWithdrawalIsVisible();
     }
 
@@ -121,7 +121,7 @@ class PaymentsTabTest extends TestBaseWeb {
         transaction.paymentChannel = "CryptoCoino";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction.paymentType);
         paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentChannel, dfwholed.format(Math.round(transaction.amountUsd)));
         CrmTbDepositObject transaction2 = generateDepositByClient(client);
@@ -226,7 +226,7 @@ class PaymentsTabTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
         Allure.step("add record about deposit");
         page.waitForTimeout(1000);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.paymentType, transaction.amountUsd);
 
         CrmTbDepositObject transaction2 = generateDepositByClient(client);
@@ -323,7 +323,7 @@ class PaymentsTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
 
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
 
         double totalDeposits = deposit1.amountUsd + deposit2.amountUsd;
         double totalWithdrawals = withdrawal1.amountUsd + withdrawal2.amountUsd + withdrawal3.amountUsd;
@@ -380,7 +380,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 7 days");
         paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
@@ -419,7 +419,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkCashflowEmptyStateIsNotVisible();
         paymentsPage.clickOnAccountSelectionWindow();
         paymentsPage.selectTradingAccount(client.getTradingAccount2());
@@ -500,7 +500,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
         Allure.step("check that only data for the test date is displayed");
@@ -560,7 +560,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 1 year");
         Allure.step("check that only data for the test date is displayed");
@@ -619,7 +619,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 30 days");
         Allure.step("check that only data for the test date is displayed");
@@ -678,7 +678,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 6 months");
         Allure.step("check that only data for the test date is displayed");
@@ -738,7 +738,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 7 days");
         Allure.step("check that only data for the test date is displayed");
@@ -797,7 +797,7 @@ class PaymentsTabTest extends TestBaseWeb {
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 90 days");
         Allure.step("check that only data for the test date is displayed");
@@ -815,7 +815,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void manipulateTimelineByClickTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.clickOnPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
@@ -831,7 +831,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void manipulateTimelineByDragTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.shiftRightTimelineThumbToPreLastTimelineSection();
         paymentsPage.checkLastTimelineSectionInactive();
@@ -847,7 +847,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter6DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 6 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(5));
         paymentsPage.checkTimelineSectionInactive(6);
@@ -861,7 +861,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter5DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 5 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(4));
         paymentsPage.checkTimelineSectionInactive(6);
@@ -876,7 +876,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter4DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 4 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(3));
         paymentsPage.checkTimelineSectionInactive(6);
@@ -892,7 +892,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter3DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 3 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(2));
         paymentsPage.checkTimelineSectionInactive(6);
@@ -909,7 +909,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter2DaysTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 2 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(1));
         paymentsPage.checkTimelineSectionInactive(6);
@@ -927,7 +927,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void timelineInactiveDaysFilter1DayTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 1 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
         paymentsPage.checkTimelineSectionInactive(6);
@@ -950,7 +950,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 99 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthYear());
@@ -975,7 +975,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 10 months");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(10));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getPreviousDateMonthYearIntMonth(1));
@@ -1004,7 +1004,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 1 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(Utils.getCurrentDateMonthDay());
@@ -1027,7 +1027,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 15 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(14));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(2));
@@ -1051,7 +1051,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 20 months ");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(21));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(getCurrentYear());
@@ -1070,7 +1070,7 @@ class PaymentsTabTest extends TestBaseWeb {
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
         insertObjectToDb("vindex_test.payments_total", payments);
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 21 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(20));
         paymentsPage.checkFinancialTransactionSectionVisibleByDate(getPreviousDayMonthDayByIntDay(6));
@@ -1097,7 +1097,7 @@ class PaymentsTabTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter one day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
         paymentsPage.checkTimelineSectionVisibleByDate(getCurrentDateMonthDay());
@@ -1116,7 +1116,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void filterLegend8And31DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 8 day");
         Allure.step("filter 8 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(7));
@@ -1136,7 +1136,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void filterLegend31And98DaysTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 99 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_DAY);
@@ -1154,7 +1154,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void filterLegend98DaysAnd3YearTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 366 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(366));
         paymentsPage.checkTimelineAnnotationInFormat(MONTH_TEXT_AND_YEAR);
@@ -1172,7 +1172,7 @@ class PaymentsTabTest extends TestBaseWeb {
     void filterLegend3YearsTest() throws ParseException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 7 years");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousYearByIntYearMonthDay(7));
         paymentsPage.checkTimelineAnnotationInFormat(YEAR);
@@ -1188,7 +1188,7 @@ class PaymentsTabTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         cleanUserFinancialTransactionDbUcid(client.getUcid());
-        paymentsPage.navigateOperationsTab(client.getUcid());
+        paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.checkFinancialTransactionEmptyStateIsVisible();
     }
 

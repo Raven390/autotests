@@ -4,12 +4,15 @@ import business_objects.ui.audit_trail.AuditTrailItem;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -40,11 +43,9 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailClearFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button[@data-qa='select-clear']");
     }
 
-    @Step("Open users general tab")
-    public void navigateAuditTrailTab(String ucid) {
-        page.navigate(String.format("%sinvestigation/%s", BASE_URL_E2E, ucid));
-        waitForPageToLoad();
-        auditTrailTab.click();
+    public void navigate(String ucid) {
+        Allure.step("Navigate to audit tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "audit"));
         waitForPageToLoad();
     }
 
@@ -99,6 +100,16 @@ public class AuditTrailPage extends AbstractPage {
     @Step("Clear audit trail filter")
     public void clearAuditTrailFilter() {
         auditTrailClearFilterButton.click();
+    }
+
+    public void isAuditTabHidden() {
+        Allure.step("check is audit tab hidden");
+        auditTrailTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    public void isAuditTabVisible() {
+        Allure.step("check is audit tab hidden");
+        auditTrailTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 }
 
