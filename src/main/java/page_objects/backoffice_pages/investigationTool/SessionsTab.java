@@ -11,10 +11,11 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
-public class ActivityTab extends AbstractPage {
+public class SessionsTab extends AbstractPage {
 
     private final Locator columnDateHeader;
     private final Locator columnDateData;
@@ -30,7 +31,7 @@ public class ActivityTab extends AbstractPage {
     private final Locator columnScoreHeader;
     private final Locator columnPoliciesHeader;
     private final Locator columnPoliciesData;
-    private final Locator activityTab;
+    private final Locator sessionsTab;
     private final Locator columnDateDataPrimary;
     private final Locator columnDateDataSecodary;
     private final Locator columnRiskDataDanger;
@@ -111,7 +112,7 @@ public class ActivityTab extends AbstractPage {
     DecimalFormat df = new DecimalFormat("#.");
 
 
-    public ActivityTab(Page page) {
+    public SessionsTab(Page page) {
         super(page);
         this.columnDateHeader = page.locator(TABLE_HEADERS_LOCATOR + COLUMN_DATE_LOCATOR);
         this.columnDateData = page.locator(TABLE_BODY_LOCATOR + COLUMN_DATE_LOCATOR);
@@ -135,7 +136,7 @@ public class ActivityTab extends AbstractPage {
         this.columnScoreDataPositive = page.locator(TABLE_BODY_LOCATOR + COLUMN_SCORE_LOCATOR + POSITIVE_TEXT_LOCATOR);
         this.columnPoliciesHeader = page.locator(TABLE_HEADERS_LOCATOR + COLUMN_POLICIES_LOCATOR);
         this.columnPoliciesData = page.locator(TABLE_BODY_LOCATOR + COLUMN_POLICIES_LOCATOR);
-        this.activityTab = page.locator("[role=\"tab\"][title=\"Activity\"]");
+        this.sessionsTab = page.locator("[role=\"tab\"][title=\"Sessions\"]");
         this.emailageTab = page.locator("[role=\"tab\"][title=\"Emailage\"]");
         this.deviceTab = page.locator("[role=\"tab\"][title=\"Device\"]");
         this.ipAddressTab = page.locator("[role=\"tab\"][title=\"IP address\"]");
@@ -171,9 +172,8 @@ public class ActivityTab extends AbstractPage {
     }
 
     public void navigate(String ucid) {
-        Allure.step("Navigate to users activity tab");
-        page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/sessions");
-        waitForPageToLoad();
+        Allure.step("Navigate to sessions tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "sessions"));
         waitForPageToLoad();
     }
 
@@ -181,7 +181,7 @@ public class ActivityTab extends AbstractPage {
         Allure.step("Open users activity tab by click tab");
         page.navigate(BASE_URL_E2E + "investigation/" + ucid + "/");
         waitForPageToLoad();
-        activityTab.click();
+        sessionsTab.click();
         waitForPageToLoad();
     }
 
@@ -862,6 +862,11 @@ public class ActivityTab extends AbstractPage {
         page.waitForSelector(locator2);
         assertEquals(trueIpExpectedVal, page.locator(locator1).textContent(), "test true IP value");
         assertEquals(inputIpExpectedVal, page.locator(locator2).textContent(), "test input IP value");
+    }
+
+    public void isSessionTabHidden() {
+        Allure.step("check is session tab hidden");
+        sessionsTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
     }
 
 

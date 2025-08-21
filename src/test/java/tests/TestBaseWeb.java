@@ -48,7 +48,7 @@ public class TestBaseWeb {
     public AuditTrailPage auditTrailPage;
     public AlertsPage alertsPage;
     public PaymentsPage paymentsPage;
-    public ActivityTab activityTab;
+    public SessionsTab sessionsTab;
     public IbCpaOverviewPage ibCpaOverviewPage;
     public GeneralSearchElements generalSearch;
     public AlertHistoryPage alertHistoryPage;
@@ -101,7 +101,7 @@ public class TestBaseWeb {
         auditTrailPage = new AuditTrailPage(page);
         alertsPage = new AlertsPage(page);
         paymentsPage = new PaymentsPage(page);
-        activityTab = new ActivityTab(page);
+        sessionsTab = new SessionsTab(page);
         ibCpaOverviewPage = new IbCpaOverviewPage(page);
         generalSearch = new GeneralSearchElements(page);
         openPositions = new OpenPositions(page);

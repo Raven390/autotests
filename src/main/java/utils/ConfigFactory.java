@@ -108,6 +108,8 @@ public class ConfigFactory {
     public static final String MITIGATION_SERVICE_GET_RESTRICTION_CATALOG = CONFIG.mitigationServiceGetRestrictionCatalog();
     public static final String MITIGATION_SERVICE_RESTRICTIONS = CONFIG.mitigationServiceRestrictions();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
+    public static final String MITIGATION_SERVICE_RESTRICTIONS_BYBIT = CONFIG.mitigationServiceRestrictionsByBit();
+    public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT = CONFIG.mitigationServiceCancelRestrictionsByBit();
     // Mitigation service db
     public static final String MITIGATION_DB_SSH_HOST = CONFIG.mitigationDbSshHost();
     public static final String MITIGATION_DB_SSH_PORT = String.valueOf(CONFIG.mitigationDbSshPort());
@@ -179,6 +181,10 @@ public class ConfigFactory {
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
     public static final String ABUSE_REGISTRY_POST_FRAUD_TYPES = CONFIG.abuseRegistryPostFraudTypes();
     public static final String ABUSE_REGISTRY_POST_ABUSER_STATUS = CONFIG.abuseRegistryPostAbuserStatus();
+    // Lark
+    public static final String LARK_BASE_URL = CONFIG.larkBaseUrl();
+    public static final String LARK_GET_TENANT_TOKEN_PATH = CONFIG.larkGetTenantTokenPath();
+    public static final String LARK_GET_MESSAGE_HISTORY_PATH = CONFIG.larkGetMessageHistoryPath();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -490,6 +496,12 @@ public class ConfigFactory {
         @Key("mitigationServiceRestrictions")
         String mitigationServiceRestrictions();
 
+        @Key("mitigationServiceRestrictionsByBit")
+        String mitigationServiceRestrictionsByBit();
+
+        @Key("mitigationServiceCancelRestrictionsByBit")
+        String mitigationServiceCancelRestrictionsByBit();
+
         @Key("mitigationServiceCancelRestriction")
         String mitigationServiceCancelRestriction();
 
@@ -682,6 +694,17 @@ public class ConfigFactory {
 
         @Key("abuseRegistryPostAbuserStatus")
         String abuseRegistryPostAbuserStatus();
+
+        //Lark
+
+        @Key("larkBaseUrl")
+        String larkBaseUrl();
+
+        @Key("larkGetTenantTokenPath")
+        String larkGetTenantTokenPath();
+
+        @Key("larkGetMessageHistoryPath")
+        String larkGetMessageHistoryPath();
     }
 
     public static boolean isGitlab() {

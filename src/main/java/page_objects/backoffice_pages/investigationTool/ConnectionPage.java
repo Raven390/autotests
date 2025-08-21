@@ -12,8 +12,10 @@ import utils.Utils;
 import java.util.*;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Utils.*;
 
 public class ConnectionPage extends AbstractPage {
@@ -999,5 +1001,16 @@ public class ConnectionPage extends AbstractPage {
     @Step("Click IB in connection table")
     public void clickTableIb(String ibId) {
         page.locator(String.format(LINK_WITH_TEXT_PATTERN, "IB", ibId)).click();
+    }
+
+    public void isConnectionsTabHidden() {
+        Allure.step("check is connections tab hidden");
+        connectionTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    public void navigate(String ucid) {
+        Allure.step("Navigate to connections tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "connections"));
+        waitForPageToLoad();
     }
 }

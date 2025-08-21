@@ -28,7 +28,7 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 import static utils.Utils.*;
 
-public class ActivityTabTest extends TestBaseWeb {
+public class SessionsTabTest extends TestBaseWeb {
 
     public void deleteLexis(ClientHelper client) {
         deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
@@ -60,19 +60,19 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.setPolicyScore(-50);
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
+        sessionsTab.navigate(activityClient.getUcid());
         String[] dates = lexis.getEventDatetime().split(" ");
-        activityTab.checkDateColumnValue(dates[0], dates[1].substring(0, 5));
-        activityTab.checkEventColumnValue(lexis.getEventType());
-        activityTab.checkAgentColumnValue(lexis.getConditionAttrib5());
-        activityTab.checkOsColumnValue(lexis.getOs());
-        activityTab.checkRiskColumnValue(lexis.getRiskRating());
-        activityTab.checkRiskColumnColourDanger();
-        activityTab.checkScoreColumnValue(lexis.getPolicyScore());
-        activityTab.checkScoreColumnColourDanger();
-        activityTab.checkPoliciesColumnValue("testRule-10");
+        sessionsTab.checkDateColumnValue(dates[0], dates[1].substring(0, 5));
+        sessionsTab.checkEventColumnValue(lexis.getEventType());
+        sessionsTab.checkAgentColumnValue(lexis.getConditionAttrib5());
+        sessionsTab.checkOsColumnValue(lexis.getOs());
+        sessionsTab.checkRiskColumnValue(lexis.getRiskRating());
+        sessionsTab.checkRiskColumnColourDanger();
+        sessionsTab.checkScoreColumnValue(lexis.getPolicyScore());
+        sessionsTab.checkScoreColumnColourDanger();
+        sessionsTab.checkPoliciesColumnValue("testRule-10");
 
     }
 
@@ -115,21 +115,21 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(androidLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOsFilter();
-        activityTab.checkThatOptionPresented(androidLexis.getOs());
-        activityTab.checkThatOptionPresented(windowsLexis.getOs());
-        activityTab.checkThatOptionPresented(testLexis.getOs());
-        activityTab.clickFilterOption(testLexis.getOs());
-        activityTab.checkOsColumnValue(testLexis.getOs(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(androidLexis.getOs());
-        activityTab.checkOsColumnValue(androidLexis.getOs(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(windowsLexis.getOs());
-        activityTab.checkOsColumnValue(windowsLexis.getOs(), 0);
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOsFilter();
+        sessionsTab.checkThatOptionPresented(androidLexis.getOs());
+        sessionsTab.checkThatOptionPresented(windowsLexis.getOs());
+        sessionsTab.checkThatOptionPresented(testLexis.getOs());
+        sessionsTab.clickFilterOption(testLexis.getOs());
+        sessionsTab.checkOsColumnValue(testLexis.getOs(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(androidLexis.getOs());
+        sessionsTab.checkOsColumnValue(androidLexis.getOs(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(windowsLexis.getOs());
+        sessionsTab.checkOsColumnValue(windowsLexis.getOs(), 0);
     }
 
     @Test
@@ -189,29 +189,29 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(trusredlLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickRiskFilter();
-        activityTab.checkThatOptionPresented(highLexis.getRiskRating());
-        activityTab.checkThatOptionPresented(lowLexis.getRiskRating());
-        activityTab.checkThatOptionPresented(MediumLexis.getRiskRating());
-        activityTab.checkThatOptionPresented(neutralLexis.getRiskRating());
-        activityTab.checkThatOptionPresented(trusredlLexis.getRiskRating());
-        activityTab.clickFilterOption(highLexis.getRiskRating());
-        activityTab.checkRiskColumnValue(highLexis.getRiskRating(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(lowLexis.getRiskRating());
-        activityTab.checkRiskColumnValue(lowLexis.getRiskRating(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(MediumLexis.getRiskRating());
-        activityTab.checkRiskColumnValue(MediumLexis.getRiskRating(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(neutralLexis.getRiskRating());
-        activityTab.checkRiskColumnValue(neutralLexis.getRiskRating(), 0);
-        activityTab.clearFilterButton();
-        activityTab.clickFilterOption(trusredlLexis.getRiskRating());
-        activityTab.checkRiskColumnValue(trusredlLexis.getRiskRating(), 0);
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickRiskFilter();
+        sessionsTab.checkThatOptionPresented(highLexis.getRiskRating());
+        sessionsTab.checkThatOptionPresented(lowLexis.getRiskRating());
+        sessionsTab.checkThatOptionPresented(MediumLexis.getRiskRating());
+        sessionsTab.checkThatOptionPresented(neutralLexis.getRiskRating());
+        sessionsTab.checkThatOptionPresented(trusredlLexis.getRiskRating());
+        sessionsTab.clickFilterOption(highLexis.getRiskRating());
+        sessionsTab.checkRiskColumnValue(highLexis.getRiskRating(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(lowLexis.getRiskRating());
+        sessionsTab.checkRiskColumnValue(lowLexis.getRiskRating(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(MediumLexis.getRiskRating());
+        sessionsTab.checkRiskColumnValue(MediumLexis.getRiskRating(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(neutralLexis.getRiskRating());
+        sessionsTab.checkRiskColumnValue(neutralLexis.getRiskRating(), 0);
+        sessionsTab.clearFilterButton();
+        sessionsTab.clickFilterOption(trusredlLexis.getRiskRating());
+        sessionsTab.checkRiskColumnValue(trusredlLexis.getRiskRating(), 0);
     }
 
     @Test
@@ -244,13 +244,13 @@ public class ActivityTabTest extends TestBaseWeb {
         lexis.add(yesterdayLexis);
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickDateFilter();
-        activityTab.clickFilterOption("Today");
-        activityTab.checkDateColumnValue(todayLexis.getEventDatetime());
-        activityTab.checkDateColumnValueNotPresented(yesterdayLexis.getEventDatetime());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickDateFilter();
+        sessionsTab.clickFilterOption("Today");
+        sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime());
+        sessionsTab.checkDateColumnValueNotPresented(yesterdayLexis.getEventDatetime());
     }
 
     @Test
@@ -293,14 +293,14 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickDateFilter();
-        activityTab.clickFilterOption("Last 7 days");
-        activityTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
-        activityTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
-        activityTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickDateFilter();
+        sessionsTab.clickFilterOption("Last 7 days");
+        sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
+        sessionsTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
+        sessionsTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
     }
 
     @Test
@@ -343,14 +343,14 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickDateFilter();
-        activityTab.clickFilterOption("Last 30 days");
-        activityTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
-        activityTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
-        activityTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickDateFilter();
+        sessionsTab.clickFilterOption("Last 30 days");
+        sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
+        sessionsTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
+        sessionsTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
     }
 
     @Test
@@ -393,14 +393,14 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickDateFilter();
-        activityTab.clickFilterOption("Last 90 days");
-        activityTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
-        activityTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
-        activityTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickDateFilter();
+        sessionsTab.clickFilterOption("Last 90 days");
+        sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
+        sessionsTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
+        sessionsTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
     }
 
     @Test
@@ -443,14 +443,14 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickDateFilter();
-        activityTab.setCustomDates(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0), getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 98, 0, 0));
-        activityTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
-        activityTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
-        activityTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickDateFilter();
+        sessionsTab.setCustomDates(getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 5, 0, 0), getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 98, 0, 0));
+        sessionsTab.checkDateColumnValue(todayLexis.getEventDatetime(), 1);
+        sessionsTab.checkDateColumnValue(borderlineLexis.getEventDatetime(), 0);
+        sessionsTab.checkDateColumnValueNotPresented(outsideLexis.getEventDatetime());
     }
 
     @Test
@@ -502,13 +502,13 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.setSortByScoreDesc();
-        activityTab.checkScoreColumnIsDesc();
-        activityTab.setSortByScoreAsc();
-        activityTab.checkScoreColumnIsAsc();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.setSortByScoreDesc();
+        sessionsTab.checkScoreColumnIsDesc();
+        sessionsTab.setSortByScoreAsc();
+        sessionsTab.checkScoreColumnIsAsc();
     }
 
     @Test
@@ -560,13 +560,13 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.setSortByDateDesc();
-        activityTab.checkDateColumnIsDesc();
-        activityTab.setSortByDateAsc();
-        activityTab.checkDateColumnIsAsc();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.setSortByDateDesc();
+        sessionsTab.checkDateColumnIsDesc();
+        sessionsTab.setSortByDateAsc();
+        sessionsTab.checkDateColumnIsAsc();
     }
 
     @Test
@@ -594,16 +594,16 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
-        activityTab.positiveScoreMeterDisplayed();
-        activityTab.positiveScoreMeterDisplayed();
-        activityTab.setSuccessLabelDisplayed();
-        activityTab.checkTextInLabel(firstLexis.getRiskRating());
-        activityTab.checkPositionOfTheLineDivider("99.5");
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
+        sessionsTab.positiveScoreMeterDisplayed();
+        sessionsTab.positiveScoreMeterDisplayed();
+        sessionsTab.setSuccessLabelDisplayed();
+        sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
+        sessionsTab.checkPositionOfTheLineDivider("99.5");
 
         deleteLexis(activityClient);
 
@@ -615,13 +615,13 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         page.reload();
-        activityTab.clickOnDataRow();
-        activityTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
-        activityTab.positiveScoreMeterDisplayed();
-        activityTab.positiveScoreMeterDisplayed();
-        activityTab.setSuccessLabelDisplayed();
-        activityTab.checkTextInLabel(firstLexis.getRiskRating());
-        activityTab.checkPositionOfTheLineDivider("75");
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
+        sessionsTab.positiveScoreMeterDisplayed();
+        sessionsTab.positiveScoreMeterDisplayed();
+        sessionsTab.setSuccessLabelDisplayed();
+        sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
+        sessionsTab.checkPositionOfTheLineDivider("75");
 
         deleteLexis(activityClient);
 
@@ -633,11 +633,11 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         page.reload();
-        activityTab.clickOnDataRow();
-        activityTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
-        activityTab.checkNeutralLabelDisplayed();
-        activityTab.checkTextInLabel(firstLexis.getRiskRating());
-        activityTab.checkPositionOfTheLineDivider("50");
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
+        sessionsTab.checkNeutralLabelDisplayed();
+        sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
+        sessionsTab.checkPositionOfTheLineDivider("50");
 
         deleteLexis(activityClient);
 
@@ -649,11 +649,11 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         page.reload();
-        activityTab.clickOnDataRow();
-        activityTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
-        activityTab.checkDangerLabelDisplayed();
-        activityTab.checkTextInLabel(firstLexis.getRiskRating());
-        activityTab.checkPositionOfTheLineDivider("25");
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
+        sessionsTab.checkDangerLabelDisplayed();
+        sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
+        sessionsTab.checkPositionOfTheLineDivider("25");
 
         deleteLexis(activityClient);
 
@@ -665,11 +665,11 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
         page.reload();
-        activityTab.clickOnDataRow();
-        activityTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
-        activityTab.checkDangerLabelDisplayed();
-        activityTab.checkTextInLabel(firstLexis.getRiskRating());
-        activityTab.checkPositionOfTheLineDivider("0.5");
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkScoreHeaderValueScoreLine(firstLexis.getPolicyScore());
+        sessionsTab.checkDangerLabelDisplayed();
+        sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
+        sessionsTab.checkPositionOfTheLineDivider("0.5");
     }
 
     @Test
@@ -697,13 +697,13 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkTitleOfPoliciesSection("Applied policies");
-        activityTab.checkRuleName("testRule");
-        activityTab.checkRuleScore("-10", "testRule");
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkTitleOfPoliciesSection("Applied policies");
+        sessionsTab.checkRuleName("testRule");
+        sessionsTab.checkRuleScore("-10", "testRule");
     }
 
     @Test
@@ -730,12 +730,12 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkTitleOfTmxReasonSection("TMX reason codes");
-        activityTab.checkThatTmxReasonCodeIsDisplayed(firstLexis.getTmxSummaryReasonCode());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkTitleOfTmxReasonSection("TMX reason codes");
+        sessionsTab.checkThatTmxReasonCodeIsDisplayed(firstLexis.getTmxSummaryReasonCode());
     }
 
     @Test
@@ -766,19 +766,19 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
                 firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
@@ -793,17 +793,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(
                 firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
@@ -818,17 +818,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -840,17 +840,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -862,17 +862,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -884,17 +884,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -906,17 +906,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -928,17 +928,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
 
         deleteLexis(activityClient);
         //email
@@ -950,17 +950,17 @@ public class ActivityTabTest extends TestBaseWeb {
 
         Allure.step("Prepare data for DB with the new set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
-        activityTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
-        activityTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.checkIpScoreRiskLevelValue(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskLevelNumber(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkIpScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkEmailScoreAdvice(firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkEmailScoreValue(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkEmailScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkDigitalIdentityScoreNumber(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
+        sessionsTab.checkDigitalIdentityScoreTitle(firstLexis.getEmailageEmailriskscoreDisdescription());
+        sessionsTab.checkDigitalIdentityScoreRiskBarStyle(firstLexis.getEmailageEmailriskscoreOveralldigitalidentityscore());
     }
 
     @Test
@@ -1007,31 +1007,31 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabEmailage();
-        activityTab.checkValueOfSubTableRow("Email", "fraud risk", firstLexis.getEmailageEmailriskscoreEaadvice());
-        activityTab.checkValueOfSubTableRow("Email", "score", firstLexis.getEmailageEmailriskscoreEascore());
-        activityTab.checkValueOfSubTableRow("Email", "reason", firstLexis.getEmailageEmailriskscoreEareason());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabEmailage();
+        sessionsTab.checkValueOfSubTableRow("Email", "fraud risk", firstLexis.getEmailageEmailriskscoreEaadvice());
+        sessionsTab.checkValueOfSubTableRow("Email", "score", firstLexis.getEmailageEmailriskscoreEascore());
+        sessionsTab.checkValueOfSubTableRow("Email", "reason", firstLexis.getEmailageEmailriskscoreEareason());
 //        activityTab.checkValueOfSubTableRow("Email", "created",firstLexis.emailageEmailriskscoreEareason);
 
-        activityTab.checkValueOfSubTableRow("Phone", "type", firstLexis.getEmailageEmailriskscorePhonecarriertype());
-        activityTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
-        activityTab.checkValueOfSubTableRowNAmeConfidence("Phone", "full name", firstLexis.getEmailageEmailriskscorePhonetofullnameconfidence());
-        activityTab.checkValueOfSubTableRowNAmeConfidence("Phone", "last name", firstLexis.getEmailageEmailriskscorePhonetolastnameconfidence());
+        sessionsTab.checkValueOfSubTableRow("Phone", "type", firstLexis.getEmailageEmailriskscorePhonecarriertype());
+        sessionsTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
+        sessionsTab.checkValueOfSubTableRowNAmeConfidence("Phone", "full name", firstLexis.getEmailageEmailriskscorePhonetofullnameconfidence());
+        sessionsTab.checkValueOfSubTableRowNAmeConfidence("Phone", "last name", firstLexis.getEmailageEmailriskscorePhonetolastnameconfidence());
 
-        activityTab.checkValueOfSubTableRow("IP address", "risk level", firstLexis.getEmailageEmailriskscoreIpRisklevel());
-        activityTab.checkValueOfSubTableRow("IP address", "reason", firstLexis.getEmailageEmailriskscoreIpRiskreason());
+        sessionsTab.checkValueOfSubTableRow("IP address", "risk level", firstLexis.getEmailageEmailriskscoreIpRisklevel());
+        sessionsTab.checkValueOfSubTableRow("IP address", "reason", firstLexis.getEmailageEmailriskscoreIpRiskreason());
 
-        activityTab.checkValueOfSubTableRow("Domain", "risk level", firstLexis.getEmailageEmailriskscoreDomainrisklevel());
+        sessionsTab.checkValueOfSubTableRow("Domain", "risk level", firstLexis.getEmailageEmailriskscoreDomainrisklevel());
 //        activityTab.checkValueOfSubTableRow("Domain", "created",firstLexis.emailageEmailriskscoreDomainCreationDays);
-        activityTab.checkValueOfSubTableRow("Domain", "exists", firstLexis.getEmailageEmailriskscoreDomainexists());
-        activityTab.checkValueOfSubTableRow("Domain", "category", firstLexis.getEmailageEmailriskscoreDomaincategory());
-        activityTab.checkValueOfSubTableRow("Domain", "name", firstLexis.getEmailageEmailriskscoreDomainname());
-        activityTab.checkValueOfSubTableRow("Domain", "company", firstLexis.getEmailageEmailriskscoreDomaincompany());
-        activityTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
+        sessionsTab.checkValueOfSubTableRow("Domain", "exists", firstLexis.getEmailageEmailriskscoreDomainexists());
+        sessionsTab.checkValueOfSubTableRow("Domain", "category", firstLexis.getEmailageEmailriskscoreDomaincategory());
+        sessionsTab.checkValueOfSubTableRow("Domain", "name", firstLexis.getEmailageEmailriskscoreDomainname());
+        sessionsTab.checkValueOfSubTableRow("Domain", "company", firstLexis.getEmailageEmailriskscoreDomaincompany());
+        sessionsTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
 
         deleteLexis(activityClient);
 
@@ -1042,11 +1042,11 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabEmailage();
-        activityTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
-        activityTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabEmailage();
+        sessionsTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
+        sessionsTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
 
         deleteLexis(activityClient);
 
@@ -1057,11 +1057,11 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabEmailage();
-        activityTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
-        activityTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabEmailage();
+        sessionsTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
+        sessionsTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
 
         deleteLexis(activityClient);
 
@@ -1072,11 +1072,11 @@ public class ActivityTabTest extends TestBaseWeb {
 
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabEmailage();
-        activityTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
-        activityTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabEmailage();
+        sessionsTab.checkValueOfSubTableRowPhoneOwner(firstLexis.getEmailageEmailriskscorePhoneownermatch());
+        sessionsTab.checkValueOfSubTableRowDomainCountryByCode(firstLexis.getEmailageEmailriskscoreDomaincountry());
     }
 
     @Test
@@ -1107,20 +1107,20 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the first set of data. set conditionAttrib5 = \"agent_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
 
-        activityTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
-        activityTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
-        activityTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        activityTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
-        activityTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
-        activityTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
-        activityTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
-        activityTab.checkValueOfSubTableRow("Device", "language", "English (United States)");
+        sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
+        sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
+        sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
+        sessionsTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
+        sessionsTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
+        sessionsTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
+        sessionsTab.checkValueOfSubTableRow("Device", "language", "English (United States)");
 
         deleteLexis(activityClient);
 
@@ -1137,18 +1137,18 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_mobile\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
 
-        activityTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
-        activityTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
-        activityTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        activityTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
-        activityTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
-        activityTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
-        activityTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
-        activityTab.checkValueOfSubTableRow("Device", "language", "French (France)");
+        sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
+        sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
+        sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
+        sessionsTab.checkValueOfSubTableRow("Device", "screen", firstLexis.getScreenRes());
+        sessionsTab.checkValueOfSubTableRow("Device", "brand", startFromUpper(firstLexis.getAgentBrand()));
+        sessionsTab.checkValueOfSubTableRow("Device", "model", firstLexis.getAgentModel()); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkValueOfSubTableRow("Device", "name", firstLexis.getDeviceName());
+        sessionsTab.checkValueOfSubTableRow("Device", "language", "French (France)");
         deleteLexis(activityClient);
 
         firstLexis.setConditionAttrib5("browser_computer");
@@ -1165,16 +1165,16 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"browser_computer\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
 
-        activityTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
-        activityTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
-        activityTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        activityTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
-        activityTab.checkSubTableRowNotPresented("Device", "name");
-        activityTab.checkSubTableRowNotPresented("Device", "language");
+        sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
+        sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
+        sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
+        sessionsTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkSubTableRowNotPresented("Device", "name");
+        sessionsTab.checkSubTableRowNotPresented("Device", "language");
 
         deleteLexis(activityClient);
 
@@ -1192,16 +1192,16 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the another set of data. set conditionAttrib5 = \"Something\", so if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
 
-        activityTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
-        activityTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
-        activityTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
-        activityTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
-        activityTab.checkSubTableRowNotPresented("Device", "name");
-        activityTab.checkSubTableRowNotPresented("Device", "language");
+        sessionsTab.checkAgentColumnValueDeviceSubTab(firstLexis.getConditionAttrib5());
+        sessionsTab.checkValueOfSubTableRow("Device", "os", firstLexis.getOs());
+        sessionsTab.checkValueOfSubTableRow("Device", "os version", firstLexis.getOsVersion());
+        sessionsTab.checkSubTableRowNotPresented("Device", "model"); //if condition_attrib_5 in (‘browser_computer’, 'other') then take the value from device_model else from agent_model
+        sessionsTab.checkSubTableRowNotPresented("Device", "name");
+        sessionsTab.checkSubTableRowNotPresented("Device", "language");
     }
 
 
@@ -1233,19 +1233,19 @@ public class ActivityTabTest extends TestBaseWeb {
 
         String expectedLanguages = "100% English (United States)90% English80% Chinese (China)70% Chinese (Taiwan, Province of China)60% Chinese";
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
 
-        activityTab.checkValueOfSubTableRow("Browser", "name", firstLexis.getBrowser());
-        activityTab.checkValueOfSubTableRow("Browser", "version", firstLexis.getBrowserVersion());
-        activityTab.checkValueOfSubTableRow("Browser", "zoom", ((int) (firstLexis.getScreenResZoom() * 100)) + "%");
-        activityTab.checkValueOfBrowserLanguageRow(expectedLanguages);
-        activityTab.checkValueOfSubTableRow("Browser", "profiled URL", firstLexis.getProfiledUrl());
-        activityTab.checkValueOfSubTableRow("Browser", "string", firstLexis.getBrowserString());
-        activityTab.checkValueOfSubTableRow("Browser", "plugin number", firstLexis.getPluginNumber());
+        sessionsTab.checkValueOfSubTableRow("Browser", "name", firstLexis.getBrowser());
+        sessionsTab.checkValueOfSubTableRow("Browser", "version", firstLexis.getBrowserVersion());
+        sessionsTab.checkValueOfSubTableRow("Browser", "zoom", ((int) (firstLexis.getScreenResZoom() * 100)) + "%");
+        sessionsTab.checkValueOfBrowserLanguageRow(expectedLanguages);
+        sessionsTab.checkValueOfSubTableRow("Browser", "profiled URL", firstLexis.getProfiledUrl());
+        sessionsTab.checkValueOfSubTableRow("Browser", "string", firstLexis.getBrowserString());
+        sessionsTab.checkValueOfSubTableRow("Browser", "plugin number", firstLexis.getPluginNumber());
     }
 
     @Test
@@ -1269,13 +1269,13 @@ public class ActivityTabTest extends TestBaseWeb {
         Allure.step("Prepare data for DB with the set of the test data.");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabDevice();
-        activityTab.checkValueOfSubTableRow("ThreatMetrix", "smart id", firstLexis.getDeviceId());
-        activityTab.checkValueOfSubTableRow("ThreatMetrix", "exact id", firstLexis.getFuzzyDeviceId());
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabDevice();
+        sessionsTab.checkValueOfSubTableRow("ThreatMetrix", "smart id", firstLexis.getDeviceId());
+        sessionsTab.checkValueOfSubTableRow("ThreatMetrix", "exact id", firstLexis.getFuzzyDeviceId());
     }
 
     @Test
@@ -1318,20 +1318,20 @@ public class ActivityTabTest extends TestBaseWeb {
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
 
 
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        activityTab.navigate(activityClient.getUcid());
-        activityTab.clickOnDataRow();
-        activityTab.openTabIpAdress();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        sessionsTab.openTabIpAdress();
 
-        activityTab.checkIpSubTableRow("ip", firstLexis.getTrueIp(), firstLexis.getInputIpAddress());
-        activityTab.checkIpSubTableRow("isp", startFromUpper(firstLexis.getTrueIpIsp().toLowerCase()), startFromUpper(
+        sessionsTab.checkIpSubTableRow("ip", firstLexis.getTrueIp(), firstLexis.getInputIpAddress());
+        sessionsTab.checkIpSubTableRow("isp", startFromUpper(firstLexis.getTrueIpIsp().toLowerCase()), startFromUpper(
                 firstLexis.getInputIpIsp().toLowerCase()));
-        activityTab.checkIpSubTableRow("postcode", firstLexis.getTrueIpPostalCode(), "–");
-        activityTab.checkIpSubTableRow("city", firstLexis.getTrueIpCity(), firstLexis.getInputIpCity());
-        activityTab.checkIpSubTableRow("geo", testCountry.getCountryCode(), testCountry2.getCountryCode());
-        activityTab.checkIpSubTableRow("connection", startFromUpper(firstLexis.getTrueIpConnectionType().toLowerCase()), "–");
-        activityTab.checkIpSubTableRow("region", firstLexis.getTrueIpRegion(), firstLexis.getInputIpRegion());
-        activityTab.checkIpSubTableRow("country", testCountry.getCountryName(), testCountry2.getCountryName());
+        sessionsTab.checkIpSubTableRow("postcode", firstLexis.getTrueIpPostalCode(), "–");
+        sessionsTab.checkIpSubTableRow("city", firstLexis.getTrueIpCity(), firstLexis.getInputIpCity());
+        sessionsTab.checkIpSubTableRow("geo", testCountry.getCountryCode(), testCountry2.getCountryCode());
+        sessionsTab.checkIpSubTableRow("connection", startFromUpper(firstLexis.getTrueIpConnectionType().toLowerCase()), "–");
+        sessionsTab.checkIpSubTableRow("region", firstLexis.getTrueIpRegion(), firstLexis.getInputIpRegion());
+        sessionsTab.checkIpSubTableRow("country", testCountry.getCountryName(), testCountry2.getCountryName());
     }
 }

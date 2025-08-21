@@ -2,6 +2,7 @@ package page_objects.backoffice_pages.investigationTool;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.DETACHED;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class AlertsPage extends AbstractPage {
 
@@ -58,6 +60,12 @@ public class AlertsPage extends AbstractPage {
     @Step("Open Alerts tab")
     public void openAlertsTab() {
         alertsTab.click();
+        waitForPageToLoad();
+    }
+
+    public void navigate(String ucid) {
+        Allure.step("Navigate to Alerts tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "alerts"));
         waitForPageToLoad();
     }
 
@@ -140,6 +148,11 @@ public class AlertsPage extends AbstractPage {
 
     public void waitForAlertsCountToLoad() {
         loadedAlertsCount.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    public void isAlertTabVisible() {
+        Allure.step("check is alert tab visible");
+        alertsTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 }
 

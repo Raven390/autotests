@@ -70,7 +70,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search error screen")
     @AllureId("1109")
     void errorScreenTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -86,7 +86,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search find client by id two clients with same id")
     @AllureId("1094")
     void findClientByIdTwoClientsTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -102,7 +102,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , search by clientId renders all elements")
     @AllureId("1097")
     void clientSearchCardHaveAllElementsTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -118,7 +118,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search  Find account by account id two accounts with same id")
     @AllureId("1096")
     void findClientByAccountTwoClientsTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -134,7 +134,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , search by account renders all elements")
     @AllureId("1097")
     void clientSearchCardHaveAllElementsAccountTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -150,7 +150,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , click by trading button in card open Trading tab in a new tab")
     @AllureId("1100")
     void openTradingTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -171,7 +171,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , click by connection search button in card open connection search tab in a new tab")
     @AllureId("1101")
     void openConnectionSearchTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -192,7 +192,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , click by copy link button in card saves link to client page in buffer")
     @AllureId("1102")
     void copyLinkTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();
@@ -208,7 +208,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @DisplayName("General Search , click by connection search button in card open connection search tab in a new tab")
     @AllureId("1099")
     void openClientPageTest() {
-        activityTab.navigateEnterPage();
+        sessionsTab.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         alertsPage.navigateToMain();
         generalSearch.openSearch();

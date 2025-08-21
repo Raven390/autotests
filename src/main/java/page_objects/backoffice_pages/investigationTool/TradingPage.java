@@ -452,11 +452,16 @@ public class TradingPage extends AbstractPage {
         this.errorMessage = page.locator("//div[@class='v-error-view__error-text']");
     }
 
-    @Step("Navigate to users trading tab")
     public void navigate(String ucid) {
-        Allure.step("Navigate to users trading tab");
-        page.navigate(String.format("%sinvestigation/%s/trading", BASE_URL_E2E, ucid));
-        super.waitForPageToLoad();
+        Allure.step("Navigate to trading tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "trading"));
+        page.waitForTimeout(200);
+    }
+
+    public void navigateSummary(String ucid) {
+        Allure.step("Navigate to trading/summary tab");
+        page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "trading/summary"));
+        page.waitForTimeout(200);
     }
 
     @Step("Navigate to users restriction tab/operations")
@@ -2219,6 +2224,17 @@ public class TradingPage extends AbstractPage {
         super.waitForPageToLoad();
         page.waitForTimeout(500);
         assertFalse(errorMessage.isVisible());
+    }
+
+    public void isTradingTabVisible() {
+        Allure.step("check is trading tab visible");
+        tradingTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void isIBRebatesHidden() {
+        Allure.step("check is ib Rebates vidget hidden");
+        waitForPageToLoad();
+        ibRebatesWidget.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
 }

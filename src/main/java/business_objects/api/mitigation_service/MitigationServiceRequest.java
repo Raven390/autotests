@@ -69,4 +69,13 @@ public class MitigationServiceRequest {
             throws IOException {
         return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_INSIGHT_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION, id), Map.of("Authorization", String.format("Bearer %s", token)), null, cancelRestrictionRequestBody);
     }
+
+    public static Response postRestrictionByBit(PostRestrictionByBitRequest restrictionBody) throws IOException {
+        return new HttpHelper().sendPostRequest(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_RESTRICTIONS_BYBIT, null, null, restrictionBody);
+    }
+
+    public static Response cancelRestrictionByIdByBit(CancelRestrictionByBitRequest cancelRestrictionRequestBody)
+            throws IOException {
+        return new HttpHelper().sendPostRequest(String.format(MITIGATION_SERVICE_BASE_PATH + MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT), null, null, cancelRestrictionRequestBody);
+    }
 }

@@ -1,5 +1,8 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry;
 
+import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
+import business_objects.api.lark.chatHistory.ByBitRestrictionCancellationMessage;
+import business_objects.api.lark.chatHistory.ChatHistoryResponse;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -14,8 +17,10 @@ import helpers.data.ClientHelper;
 import helpers.database.ArHelper;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
+import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -24,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static business_objects.api.lark.LarkRequest.getMessagesChatLast10Minutes;
+import static business_objects.api.lark.LarkRequest.getTenantToken;
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -47,6 +54,7 @@ import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 
 
@@ -95,6 +103,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         holdingDeduction1.setActualDeductionUsd(null);
         holdingDeduction1.setBalanceAtResolution(coercedObject.profit);
         holdingDeduction1.setBalanceAtResolutionUsd(coercedObject.profitUsd);
+        holdingDeduction1.setDeductionType("FULL_DEDUCTION");
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, holdingDeduction1);
 
         account.currency = USD.getCode();
@@ -122,6 +131,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         holdingDeduction2.setActualDeductionUsd(null);
         holdingDeduction2.setBalanceAtResolution(coercedObject2.profit);
         holdingDeduction2.setBalanceAtResolutionUsd(coercedObject2.profitUsd);
+        holdingDeduction2.setDeductionType("FULL_DEDUCTION");
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, holdingDeduction2);
     }
 
@@ -192,7 +202,27 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
                 Instant.now().toString(), kafkaRequestId, "Success", ""
         );
         kafka.produceMessage(null, objectMapper.writeValueAsString(response), KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE);
+        AbuserDeduction finalizedDeduction = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("account = '%s'", account.account), AbuserDeduction.class).getFirst();
         //check that message is delivered
+
+        Response tenant = getTenantToken("cli_a829a3882cb8902f", "x3Tu9aG8DBY8XOQXc0WZneu8lQdauXR2");
+        String token = objectMapper.readValue(tenant.body().string(), TenantAccessTokenResponse.class).getTenantAccessToken();
+        Response messageHistory = getMessagesChatLast10Minutes(token, "oc_be10822c2c8879ccb8ed8e6b40f0326d");
+        ChatHistoryResponse responseLark = objectMapper.readValue(messageHistory.body().string(), ChatHistoryResponse.class);
+        List<ChatHistoryResponse.LarkApiDataItem> items = responseLark.getData().getItems();
+        List<ChatHistoryResponse.LarkApiDataItem> itemsFiltered = items.stream().filter(i -> i.getBody().getContent().contains(client.getUserId().toString())).toList();
+        String clearedContent = itemsFiltered.getFirst().getBody().getContent().toString().replace("\\n", "").replace("\\", "");
+        ByBitRestrictionCancellationMessage message = objectMapper.readValue(clearedContent, ByBitRestrictionCancellationMessage.class);
+        Allure.step("check that message contains accountId");
+        assertEquals(": " + client.getTradingAccount(), message.getElements().getFirst().get(1).getText());
+        Allure.step("check that message contains Server name");
+        assertEquals(": " + account.serverName, message.getElements().getFirst().get(3).getText());
+        Allure.step("check that message contains Client id");
+        assertEquals(": " + client.getUserId(), message.getElements().getFirst().get(5).getText());
+        Allure.step("check that message contains Client id");
+        assertEquals(": " + client.getBrand(), message.getElements().getFirst().get(7).getText());
+        Allure.step("check that message contains Client id");
+        assertEquals(": " + finalizedDeduction.getActualDeduction() + " " + account.currency, message.getElements().getFirst().get(9).getText());
 
     }
 
