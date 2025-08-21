@@ -17,6 +17,7 @@ import java.util.Map;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
@@ -26,7 +27,6 @@ import static helpers.data.rules.RuleDataHelper.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
-
 
 @RuleTestData("login-rule")
 public class LoginRuleDataFactory {
@@ -51,6 +51,7 @@ public class LoginRuleDataFactory {
         RuleDataHelper data = new RuleDataHelper();
 
         createClient(data, client);
+        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
 
         data.loginEvent = new LoginEvent(client.getBrand(), client.getUserId(), convertTimestampToIsoFormat(getCurrentTimestampMillis()), getRandomUuidString(), client.getIpAddress(), client.getUserId().toString(), "webAccount", client.getRegulator(), "1.0", CRM_LOGIN_EVENT);

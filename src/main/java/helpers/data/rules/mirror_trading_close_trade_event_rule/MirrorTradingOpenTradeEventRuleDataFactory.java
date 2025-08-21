@@ -5,6 +5,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.rules.RuleDataHelper;
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
@@ -70,6 +71,7 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         return data;
     }
 
+    @Description("Mirror trading. Scotland. Exit without alert if trades count > 5. Event_end_8")
     public static RuleDataHelper getMirrorTradingCloseTradeTest10Data() {
         RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest10Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -77,6 +79,7 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         return data;
     }
 
+    @Description("Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. Event_end_8")
     public static RuleDataHelper getMirrorTradingCloseTradeTest11Data() {
         RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest11Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -88,6 +91,7 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         return data;
     }
 
+    @Description("Mirror trading. Scotland. Exit without alert if Leverage < 200. Event_12inxex")
     public static RuleDataHelper getMirrorTradingCloseTradeTest12Data() {
         RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest12Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -103,6 +107,7 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         return data;
     }
 
+    @Description("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. Event_end_4")
     public static RuleDataHelper getMirrorTradingCloseTradeTest13Data() {
         RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest13Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));

@@ -36,7 +36,7 @@ public class TestBaseRule {
 
     @Step("Produce withdrawal event to crm-events topic")
     public static void produceWithdrawalMessageToKafka(CrmWithdrawalEvent event) throws JsonProcessingException {
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_MT_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
     }
 
     @Step("Produce close trade event to mt-events topic")

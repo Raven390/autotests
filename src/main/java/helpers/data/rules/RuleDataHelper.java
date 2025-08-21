@@ -58,7 +58,6 @@ import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_accoun
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudType.HEDGING;
@@ -427,12 +426,10 @@ public class RuleDataHelper {
     }
 
     public static RuleDataHelper createClient(RuleDataHelper ruleDataHelper, ClientHelper clientHelper) {
-
         ruleDataHelper.clientHelper = clientHelper;
         ruleDataHelper.crmTbUserObject = generateUserByClient(ruleDataHelper.clientHelper);
         ruleDataHelper.crmTbAccountObject = generateAccountByClient(ruleDataHelper.clientHelper, false);
         ruleDataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(ruleDataHelper.clientHelper, false);
-        ruleDataHelper.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(ruleDataHelper.clientHelper));
         return ruleDataHelper;
     }
 
