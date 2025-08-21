@@ -18,6 +18,11 @@ public class MtTbCreditsObjectFactory {
     }
 
     @Step("Generate credit object by client object")
+    public static MtTbCreditsObject generateCreditsByClient(ClientHelper client, Double amount) {
+        return new MtTbCreditsObject(client.getTradingAccount(), amount, amount, client.getBrand(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), "USD", "VFSC", client.getServerId(), "server1", getRandomIntPositive(), client.getUcid(), Utils.getRandomUuidString(), client.getUserId(), Utils.getRandomUuidString(), getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat());
+    }
+
+    @Step("Generate credit object by client object")
     public static MtTbCreditsObject generateCreditsByClientRandomized(ClientHelper client) {
         MtTbCreditsObject credit = new MtTbCreditsObject();
         credit.ticket = client.getTradingAccount() + getRandomIntPositive();

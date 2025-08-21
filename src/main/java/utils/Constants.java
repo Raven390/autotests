@@ -71,7 +71,8 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_CPA_ABUSE_RULE = "CPA abuse rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LOSS_VOUCHER_RULE = "Loss voucher rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MARKET_MANIPULATION_RULE = "Market manipulation rule in Rule Engine service";
-    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_RULE = "Mirror trading rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_RULE = "Mirror trading rule with close trade. in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_MIRROR_TRADING_CLOSE_TRADE_BYBIT_RULE = "Mirror trading rule with close trade, only for bybit clients. in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NDB_ABUSE_RULE = "No deposit bonus abuse rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NPB_LOSING_LEG_RULE = "NBP losing leg rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NPB_WINNING_LEG_RULE = "NBP winning leg rule in Rule Engine service";
