@@ -1,5 +1,7 @@
 package helpers.data.enums;
 
+import java.security.SecureRandom;
+
 public enum FraudSource {
     VINDEX("Vindex"), RA_RAISE("RA Raise"), ADDITIONAL_REVIEW("Additional Review"), INSIGHT("Insight"), FRONTEND("Frontend");
 
@@ -17,5 +19,13 @@ public enum FraudSource {
     public String toString() {
         return "FraudSource{" + "displayName='" + displayName + '\'' + '}';
     }
+
+
+    public static FraudSource getRandomFraudSource() {
+        FraudSource[] source = values();
+        SecureRandom random = new SecureRandom();
+        return source[random.nextInt(source.length)];
+    }
+
 }
 

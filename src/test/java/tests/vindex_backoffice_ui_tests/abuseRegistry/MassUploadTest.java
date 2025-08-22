@@ -4,14 +4,12 @@ import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.audit_service_db.Event;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
-import helpers.data.enums.Brand;
-import helpers.data.enums.FraudTypeOld;
-import helpers.data.enums.Regulator;
-import helpers.data.enums.Restriction;
+import helpers.data.enums.*;
 import helpers.database.ArHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -21,6 +19,7 @@ import tests.TestBaseWeb;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static helpers.data.enums.FraudSource.getRandomFraudSource;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
@@ -31,6 +30,9 @@ import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 import static utils.Utils.getCurrentTimestampSeconds;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
+@Tag(ABUSE_REGISTRY)
 public class MassUploadTest extends TestBaseWeb {
 
     static ClientHelper client1 = new ClientHelper(313_101, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_101_001, 42);
@@ -47,9 +49,6 @@ public class MassUploadTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @AllureId("1289")
     @DisplayName("Abuse registry full flow simple test")
     public void abuseRegistryMassUploadSimpleFullFlowTest() throws Exception {
@@ -85,7 +84,7 @@ public class MassUploadTest extends TestBaseWeb {
 
         List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
         Allure.step("Assert that there only one record in ar.abuser_fraud_type");
-        assertEquals(frauds.size(), 1);
+        assertEquals(1, frauds.size());
         AbuserFraudType fraud = frauds.getFirst();
         Allure.step("Assert that record in ar.abuser_fraud_type have right status");
         assertEquals("CONFIRMED", fraud.getStatus());
@@ -102,6 +101,52 @@ public class MassUploadTest extends TestBaseWeb {
 
         checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");
 
+    }
+
+    @Test
+    @AllureId("1499")
+    @Feature("BMS-1499 Add source to bulk uploading of fraudsters")
+    @DisplayName("Abuse registry on adding fraud user can select source")
+    public void sourceFieldTest() throws Exception {
+
+        cleanClientAudit(client1.getUcid(), client2.getUcid());
+        deleteUserBO(client1.getUcid());
+        deleteUserBO(client2.getUcid());
+        deleteUserBO(client3.getUcid());
+        cleanUserRestriction(client1.getUcid());
+        cleanUserRestriction(client2.getUcid());
+        cleanUserRestriction(client3.getUcid());
+        ArHelper.deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        fraudstersPage.navigateAbuseRegistryFraudsters();
+        fraudstersPage.openUploadDrawer();
+        fraudstersPage.selectBrandToUpload(Brand.VANTAGE.getDisplayName());
+        fraudstersPage.typeClientsID(client1.getUserId().toString());
+        fraudstersPage.clickAddFraudButton();
+        FraudTypeOld fraudTypeOld = FraudTypeOld.BONUS_ABUSE;
+        String source = getRandomFraudSource().getDisplayName();
+        fraudstersPage.addSelectedFraudAddWithSource(fraudTypeOld.getDisplayName(), "Confirmed", source);
+        String commentary = "test" + getCurrentTimestampSeconds();
+        fraudstersPage.fillCommentary(commentary);
+        fraudstersPage.clickApplyUpload();
+        fraudstersPage.verifySuccessMessageUpload();
+
+        page.waitForTimeout(1000);
+
+        List<AbuserFraudType> frauds = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid='" + client1.getUcid() + "'", AbuserFraudType.class);
+        Allure.step("Assert that there only one record in ar.abuser_fraud_type");
+        assertEquals(1, frauds.size());
+        AbuserFraudType fraud = frauds.getFirst();
+        Allure.step("Assert that record in ar.abuser_fraud_type have right status");
+        assertEquals("CONFIRMED", fraud.getStatus());
+        Allure.step("Assert that record in ar.abuser_fraud_type have right fraud");
+        assertEquals(fraudTypeOld.getKey(), fraud.getFraudTypeCode());
+        Allure.step("Assert that record in ar.abuser_fraud_type have commentary that you used in upload form");
+        assertEquals(commentary, fraud.getComment());
+        Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
+        assertEquals(source, fraud.getFraudSource());
     }
 
 

@@ -13,6 +13,7 @@ import java.util.*;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
@@ -138,7 +139,14 @@ public class ConnectionPage extends AbstractPage {
     private static final String CARD_COUNTRY_VALUE = String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Country");
     private static final String DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME = "//div[contains(text(),'%s')]/ancestor::div[@class='v-graph-node-details-connection-data-v2']/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
     private static final String LINK_WITH_TEXT_PATTERN = "//a[text()='%s' and text()='%s']";
+    private static final String FRAUD_SELECTION_OPTION_PATTERN = "//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item']//div[text()='%s']";
+    private static final String STATUS_SELECTION_OPTION_PATTERN = "//*[contains(@class, 'v-dropdown-select-item__sub-menu_isHovered')]//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item__submenu']//*[text()='%s']";
     private static final String FRAUD = "Fraud";
+    private final Locator addFraudRestrictionsButton;
+    private final Locator addFraudRestrictionsDrawer;
+    private final Locator fraudSelectButton;
+    private final Locator addFraudRestrictionsComment;
+    private final Locator addFraudRestrictionsSubmitButton;
 
     public ConnectionPage(Page page) {
         super(page);
@@ -227,6 +235,11 @@ public class ConnectionPage extends AbstractPage {
         this.cardAttributeClient = page.locator("//div[@class='v-graph-attribute-details-v2__header']/div[contains(@class,'g-color-text_color_secondary')]");
         this.cardAttributeValue = page.locator("//div[@class='v-graph-node-details-section-v2__title']");
         this.connectionTableRowData = page.locator("//div[@class='v-body-cell']/descendant::div[contains(@class,'g-text')]");
+        this.addFraudRestrictionsButton = page.locator("//button[@data-qa=\"connections__multiselect_panel__report_fraud\"]");
+        this.addFraudRestrictionsDrawer = page.locator("//*[@data-qa='drawer_container']//*[text() = 'Apply fraud and restrictions']");
+        this.addFraudRestrictionsComment = page.locator("//*[@data-qa=\"connections__report_fraud__comment_input\"]//textarea");
+        this.addFraudRestrictionsSubmitButton = page.locator("//button[@data-qa=\"connections__report_fraud__apply\"]");
+        this.fraudSelectButton = page.locator("[data-qa='connections__report_fraud__fraud_type_selector__add_button']");
     }
 
     @Step("Click connections tab")
@@ -1012,5 +1025,25 @@ public class ConnectionPage extends AbstractPage {
         Allure.step("Navigate to connections tab");
         page.navigate(String.format("%sinvestigation/%s/%s", BASE_URL_E2E, ucid, "connections"));
         waitForPageToLoad();
+    }
+
+    public void openFraudRestrictionsForm() {
+        Allure.step("Open fom for managing frauds and restriction");
+        addFraudRestrictionsButton.click();
+        addFraudRestrictionsDrawer.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    public void addFraud(String fraud, String status, String comment) {
+        Allure.step("Add and submit fraud");
+        fraudSelectButton.click();
+        page.locator(String.format(FRAUD_SELECTION_OPTION_PATTERN, fraud)).hover();
+        page.locator(String.format(FRAUD_SELECTION_OPTION_PATTERN, fraud)).hover();
+        page.locator(String.format(STATUS_SELECTION_OPTION_PATTERN, status)).click();
+        addFraudRestrictionsComment.fill(comment);
+        addFraudRestrictionsSubmitButton.click();
+    }
+
+    public void addFraud(String fraud) {
+        addFraud(fraud, "Confirmed", "comment" + getCurrentTimestampSeconds());
     }
 }

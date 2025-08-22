@@ -21,8 +21,10 @@ public class FraudstersPage extends AbstractPage {
     private final Locator clientIdInput;
     private final Locator addFraudButton;
     private final Locator fraudTypeInput;
-    private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
+    private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
     private final String restrictionPopupListElementLocatorPattern = "//*[@class='g-select-list__option-default-label'][text()='%s']";
+    private final String sourceSelectPattern = "//*[text()='%s']/ancestor::*[@class ='v-fraud-type']//*[@data-qa=\"source_select__select_control\"]";
+    private final String statusOptionPattern = "//*[@data-qa=\"select-list\"]//span[text()='%s']";
     private final Locator fraudDropoutListElement;
     private final Locator addRestrictionButton;
     private final Locator selectPopup;
@@ -44,7 +46,7 @@ public class FraudstersPage extends AbstractPage {
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
         this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
         this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons, or new lines']");
-        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_select_anchor_button']");
+        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='client_report_fraud_drawer__fraud_type_selector__anchor']");
         this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
         this.restrictionApplyButton = page.locator(restrictionSelectionSection + "//button/*[text()='Apply']");
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
@@ -118,9 +120,23 @@ public class FraudstersPage extends AbstractPage {
         String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
         page.locator(element).hover();
         page.locator(element).hover();
-        String subelement = element + "/../../..//div[@class='v-dropdown-select-item__sub-menu-content']//div[text()='" + status + "']";
+        String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
         page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         page.locator(subelement).click();
+    }
+
+    public void addSelectedFraudAddWithSource(String fraud, String status, String source) {
+        String element = String.format(fraudDropoutListElementLocatorPattern, fraud);
+        page.locator(element).hover();
+        page.locator(element).hover();
+        String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
+        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator(subelement).click();
+        String sourceElement = String.format(sourceSelectPattern, fraud);
+        page.locator(sourceElement).click();
+        String sourceOptionElement = String.format(statusOptionPattern, source);
+        page.locator(sourceOptionElement).click();
+
     }
 
     public void addSelectedFraudDelete(String fraud) {

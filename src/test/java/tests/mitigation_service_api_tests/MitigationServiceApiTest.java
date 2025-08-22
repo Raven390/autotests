@@ -88,8 +88,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @DisplayName("Restriction Set PUT request returns 200 if restriction already applied")
     @AllureId("920")
     @Owner("DMITRI KALACHEV")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void successIfRestrictionAlreadyApplied() throws Exception {
 
         PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
@@ -112,8 +110,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("922")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiOpenNewAccountTest() throws Exception {
         Restriction restriction = Restriction.ACCOUNT_CREATION_REVIEW;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -130,8 +126,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("923")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiInternalTransferTest() throws Exception {
         Restriction restriction = Restriction.INTERNAL_TRANSFER;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -148,8 +142,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("924")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiDepositsTest() throws Exception {
         Restriction restriction = Restriction.DEPOSITS;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -166,8 +158,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("925")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiWithdrawalsTest() throws Exception {
         Restriction restriction = Restriction.WITHDRAWALS;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -184,8 +174,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("925")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiLoginCrmTest() throws Exception {
         Restriction restriction = Restriction.LOGIN_CRM;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -202,8 +190,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("926")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiCloseOnlyModeTest() throws Exception {
         Restriction restriction = Restriction.CLOSE_ONLY_MODE;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -221,8 +207,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("926")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiBaBookTest() throws Exception {
         Restriction restriction = Restriction.B_BOOK_TO_A_BOOK;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -240,8 +224,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("927")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiManualWithdrawalReviewTest() throws Exception {
         Restriction restriction = Restriction.MANUAL_WITHDRAWAL_REVIEW;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -258,8 +240,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("928")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiCreditAndBonusTest() throws Exception {
         Restriction restriction = Restriction.CREDIT_AND_BONUS;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -276,8 +256,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("930")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiReadOnlyModeTest() throws Exception {
         Restriction restriction = Restriction.READ_ONLY_MODE;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -295,8 +273,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("931")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiOffQuotesTest() throws Exception {
         Restriction restriction = Restriction.OFF_QUOTES;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -314,8 +290,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("1148")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiTradingHoursTest() throws Exception {
         Restriction restriction = Restriction.TRADING_HOURS;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -333,8 +307,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("932")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiLoginMTTest() throws Exception {
         Restriction restriction = Restriction.LOGIN_MT;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -352,8 +324,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("933")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiNoteForWithdrawalsTest() throws Exception {
         Restriction restriction = Restriction.NOTE_FOR_WITHDRAWALS;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -370,8 +340,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("934")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiGroupChangeTest() throws Exception {
         Restriction restriction = Restriction.GROUP_CHANGE;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -389,8 +357,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("935")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiKYCTest() throws Exception {
         Restriction restriction = Restriction.KYC;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -407,8 +373,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("936")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiLeverageTest() throws Exception {
         Restriction restriction = Restriction.LEVERAGE;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -425,8 +389,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("937")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiWarningLetterTest() throws Exception {
         Restriction restriction = Restriction.WARNING_LETTER;
         String applyReason = "reason" + getCurrentTimestampSeconds();
@@ -443,8 +405,6 @@ class MitigationServiceApiTest extends TestBaseApi {
     @Feature("BMS-755 Add new restrictions")
     @Owner("DMITRI KALACHEV")
     @AllureId("938")
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_API)
     void setRestrictionApiRemoveSwapFreeOptionTest() throws Exception {
         Restriction restriction = Restriction.GROUP_CHANGE;
         String applyReason = "reason" + getCurrentTimestampSeconds();
