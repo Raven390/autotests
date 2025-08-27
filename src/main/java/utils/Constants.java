@@ -140,6 +140,7 @@ public class Constants {
     public static final String BO_USER_ACTION_AUDIT_TABLE_NAME = "postgres.bo.user_action_audit";
     public static final String BO_USER_SESSION_TABLE_NAME = "postgres.bo.user_session";
     public static final String BO_WD_REQUEST_TABLE_NAME = "postgres.bo.wd_request";
+    public static final String BO_ILLEGAL_TRADES_TABLE_NAME = "postgres.bo.illegal_trades";
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";
     public static final String CLIENT_METRICS_LIFETIME_TABLE_NAME = "vindex_test.client_metrics_lifetime";
     public static final String CONNECTIONS_TABLE_NAME = "data_science_test.connection_table";

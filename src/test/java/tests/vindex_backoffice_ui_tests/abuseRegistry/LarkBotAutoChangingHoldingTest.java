@@ -49,6 +49,7 @@ import static helpers.data.enums.deduction.DeductionStatusDeduction.*;
 import static helpers.data.enums.deduction.DeductionStatusEmail.NOT_SENT;
 import static helpers.data.enums.deduction.DeductionStatusEmail.SENT;
 import static helpers.data.enums.deduction.DeductionStatusOpenPositions.*;
+import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static helpers.database.ArHelper.deleteUserAR;
 import static helpers.database.DbHelper.*;
@@ -167,7 +168,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
             }
         }
         AbuserDeduction wasHoldingDeduction = deductionList.getFirst();
-        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), holdingDeduction1.getAbuserHistoryId(), account.account.toString(), account.serverIdSt, account.serverName, account.currency, client.getBrand(), WAS_HOLDING.getDisplayName(), SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), APPROVED.getDisplayName(), holdingDeduction1.getComment(), coercedObject.profit, null, coercedObject.profit, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, holdingDeduction1.getCommentDeduction(), coercedObject.profit, null, client.getUserId().toString(), coercedObject.profit, null, true);
+        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), holdingDeduction1.getAbuserHistoryId(), account.account.toString(), account.serverIdSt, account.serverName, account.currency, client.getBrand(), WAS_HOLDING.getDisplayName(), SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), APPROVED.getDisplayName(), holdingDeduction1.getComment(), coercedObject.profit, null, coercedObject.profit, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, holdingDeduction1.getCommentDeduction(), coercedObject.profit, null, client.getUserId().toString(), coercedObject.profit, null, true, FULL_DEDUCTION.getDisplayName());
 // Check important fields individually
         assertThat("Verify account", wasHoldingDeduction.getAccount(), is(expectedDeduction.getAccount()));
         assertThat("Verify ucid", wasHoldingDeduction.getUcid(), is(expectedDeduction.getUcid()));
@@ -250,7 +251,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
             }
         }
         AbuserDeduction wasHoldingDeduction = deductionList.getFirst();
-        AbuserDeduction expectedDeduction = new AbuserDeduction(client2.getUcid(), holdingDeduction2.getAbuserHistoryId(), account2.account.toString(), account2.serverIdSt, account2.serverName, account2.currency, client2.getBrand(), WAS_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), holdingDeduction2.getComment(), coercedObject2.profit, null, coercedObject2.profit, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, holdingDeduction2.getCommentDeduction(), coercedObject2.profit, null, client2.getUserId().toString(), 500.12, null, false);
+        AbuserDeduction expectedDeduction = new AbuserDeduction(client2.getUcid(), holdingDeduction2.getAbuserHistoryId(), account2.account.toString(), account2.serverIdSt, account2.serverName, account2.currency, client2.getBrand(), WAS_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), TO_BE_DEDUCTED.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), holdingDeduction2.getComment(), coercedObject2.profit, null, coercedObject2.profit, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, holdingDeduction2.getCommentDeduction(), coercedObject2.profit, null, client2.getUserId().toString(), 500.12, null, false, FULL_DEDUCTION.getDisplayName());
 
         assertThat("Verify deduction in abuser_deduction table is as expected", wasHoldingDeduction, is(expectedDeduction));
 
