@@ -53,6 +53,14 @@ public class MtMt4TradesCoercedObjectFactory {
         return trade;
     }
 
+    @Step("Generate mt___mt4_trades_coerced object by client object and profit")
+    public static MtMt4TradesCoercedObject generateMt4TradesCoercedAccountProfitCommentBuy(CrmTbAccountObject account,
+            Double profit, String comment) {
+        MtMt4TradesCoercedObject trade = generateMt4TradesCoercedAccountProfitComment(account, profit, comment);
+        trade.ticketType = "Buy";
+        return trade;
+    }
+
     @Step("Generate mt___mt4_trades_coerced object by client object")
     public static MtMt4TradesCoercedObject generateMt4TradesCoercedForConnectionSearch(ClientHelper client,
             double profitUsd, String closeTime) {

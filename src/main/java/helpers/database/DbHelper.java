@@ -1,6 +1,7 @@
 package helpers.database;
 
 import io.qameta.allure.Step;
+import org.postgresql.jdbc.PgArray;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -132,6 +133,13 @@ public class DbHelper {
         } else if (targetType.equals(String.class) && value instanceof org.postgresql.util.PGobject) {
             // Convert PGobject to String
             return ((org.postgresql.util.PGobject) value).getValue();
+        } else if (targetType.equals(String.class) && value instanceof PgArray) {
+            // Convert PGArray to String
+            try {
+                return Arrays.toString((String[]) ((PgArray) value).getArray());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         throw new IllegalArgumentException(String.format(

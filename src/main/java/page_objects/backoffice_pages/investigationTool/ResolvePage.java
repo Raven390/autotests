@@ -71,6 +71,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator previouslyReportedFraudTypes;
     private final Locator previouslyReportedFraudSymbols;
     private final Locator fraudSourceDropdown;
+    private final Locator illegalProfitPartialAmount;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -134,6 +135,7 @@ public class ResolvePage extends AbstractPage {
         this.previouslyReportedFraudTypes = page.locator("//span[contains(@class,'g-color-text_color_primary')]");
         this.previouslyReportedFraudSymbols = page.locator("//div[@class='v-reported-fraud-type-list__symbols']");
         this.fraudSourceDropdown = page.locator("//button[@data-qa='source_select__select_control']");
+        this.illegalProfitPartialAmount = suggestedDeductionHeader.locator("//div[@class='v-text-with-icon__text']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -580,5 +582,10 @@ public class ResolvePage extends AbstractPage {
     public void selectFraudSource(String fraudSource) {
         fraudSourceDropdown.click();
         page.getByText(fraudSource).click();
+    }
+
+    @Step("Get illegal profit partial amount")
+    public String getIllegalProfitPartialAmount() {
+        return illegalProfitPartialAmount.textContent();
     }
 }

@@ -192,6 +192,15 @@ public class TradingPage extends AbstractPage {
     private final Locator typeColumnCell;
     private final Locator volumeColumnCell;
     private final Locator lotsAmountSwitch;
+    private final Locator volumeLotFromInput;
+    private final Locator volumeLotToInput;
+    private final Locator errorMessage;
+    private final Locator illegalProfitButton;
+    private final Locator checkboxIllegalProfit;
+    private final Locator illegalProfitAmountLoaded;
+    private final Locator saveIllegalProfitButton;
+    private final Locator toastMessage;
+    private final Locator selectedTradesCounter;
 
     private static final String ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN = "//div[contains(@class,'v-trading-tab-accounts-card__column-title') and text()='%s']/following-sibling::div";
     private static final String POPUP_ELEMENT_XPATH = "//div[contains(@class,'g-popup__content')]";
@@ -265,8 +274,6 @@ public class TradingPage extends AbstractPage {
     private static final String HOLDING_TIME_TOOLTIP = "//div[@class='v-trading-summary-holding-time__tooltip']";
     private static final String ERROR_CONTAINER = "//div[@class='v-error-view__container']";
     private static final String RETRY_BUTTON = "//button/span[text()='Retry']";
-    private final String TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container')]";
-    private final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private static final String TOXICITY_AND_PROFIT_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Toxicity and profit", "USD");
     private static final String TOXICITY_AND_PROFIT_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
     private static final String TOXICITY_AND_PROFIT_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOXICITY_AND_PROFIT_CHART_CONTAINER);
@@ -279,9 +286,7 @@ public class TradingPage extends AbstractPage {
     private static final String ACCOUNT_ROW = "//tr[@class = 'g-table__row g-table__row_vertical-align_top']";
     private static final String TABLE_HEADER = "*[contains(@class,'header-cell')";
     private static final String LOTS_AMOUNT_SWITCH = "//span[text()='Volume in USD']//preceding-sibling::span/input";
-    private final Locator volumeLotFromInput;
-    private final Locator volumeLotToInput;
-    private final Locator errorMessage;
+    private static final String OPERATIONS_ROW_BY_TICKET_PATTERN = "//div[@data-qa='trading_deals__table__rows__%s']";
 
 
     public TradingPage(Page page) {
@@ -450,6 +455,12 @@ public class TradingPage extends AbstractPage {
         this.notHighlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
         this.lotsAmountSwitch = page.locator(LOTS_AMOUNT_SWITCH);
         this.errorMessage = page.locator("//div[@class='v-error-view__error-text']");
+        this.illegalProfitButton = page.locator("//button[@data-qa='trading_deals__controls__illegal_profit_button']");
+        this.checkboxIllegalProfit = page.locator("//input[@type='checkbox']");
+        this.illegalProfitAmountLoaded = page.locator("//div[@class='v-trading-tab-deals-multiselect-panel__illegal-profit']");
+        this.saveIllegalProfitButton = page.locator("//button[@data-qa='trading_deals__multiselect_panel__save_illegal_profit']");
+        this.toastMessage = page.locator("//div[contains(@class,'g-toast__container')]");
+        this.selectedTradesCounter = page.locator("//div[@data-qa='trading_deals__multiselect_panel__counter']");
     }
 
     public void navigate(String ucid) {
@@ -2237,5 +2248,40 @@ public class TradingPage extends AbstractPage {
         ibRebatesWidget.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    @Step("Click Illegal profit button")
+    public void clickIllegalProfitButton() {
+        illegalProfitButton.click();
+    }
+
+    @Step("Select trade for illegal profit by ticket")
+    public void selectIllegalTradeByTicket(Long ticket) {
+        page.locator(String.format(OPERATIONS_ROW_BY_TICKET_PATTERN, ticket)).locator(checkboxIllegalProfit).click();
+    }
+
+    @Step("Get illegal profit amount")
+    public String getIllegalProfitAmount() {
+        return illegalProfitAmountLoaded.locator("//span").first().textContent();
+    }
+
+    @Step("Get illegal profit accounts quantity")
+    public String getIllegalProfitAccountsQuantity() {
+        return illegalProfitAmountLoaded.locator("//span").last().textContent();
+    }
+
+    @Step("Get selected illegal trades counter")
+    public String getSelectedIllegalTradesCounter() {
+        return selectedTradesCounter.textContent();
+    }
+
+    @Step("Select trade for illegal profit by ticket")
+    public void clickSaveAsIllegalProfit() {
+        saveIllegalProfitButton.click();
+        MatcherAssert.assertThat("Verify success popup", getToastMessageText(), is("Illegal profit savedSuggested deduction will be calculated automatically after fraud confirmation"));
+    }
+
+    @Step("Get toast message text")
+    public String getToastMessageText() {
+        return toastMessage.textContent();
+    }
 }
 
