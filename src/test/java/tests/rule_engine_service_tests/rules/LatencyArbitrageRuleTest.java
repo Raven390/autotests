@@ -47,7 +47,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1372")
-    @DisplayName("Withdrawal notification rule. Exit without alert if platform is not MT5")
+    @DisplayName("Latency arbitrage rule rule. Exit without alert if platform is not MT5. ElementId: Event_0qxj50n")
     void latencyArbitrageRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
@@ -62,7 +62,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1373")
-    @DisplayName("Latency arbitrage. Exit without alert if user is test or social trader user")
+    @DisplayName("Latency arbitrage rule. Exit without alert if user is test or social trader user. ElementId: Event_end_1")
     void latencyArbitrageRuleTest2() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
 
@@ -77,7 +77,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1373")
-    @DisplayName("Latency arbitrage. Exit without alert if user has less that 10 trading days")
+    @DisplayName("Latency arbitrage rule. Exit without alert if user has less that 10 trading days. ElementId: Event_088xwgg")
     void latencyArbitrageRuleTest3() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
 
@@ -92,7 +92,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1374")
-    @DisplayName("Latency arbitrage. Exit without alert if user has less than 100 trades")
+    @DisplayName("Latency arbitrage rule. Exit without alert if user has less than 100 trades. ElementId: Event_002l07f")
     void latencyArbitrageRuleTest4() throws Exception {
         RuleDataHelper data = dbDataMap.get("4");
 
@@ -107,7 +107,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1375")
-    @DisplayName("Latency arbitrage. Exit without alert if netProfit + rebatesAmount not >= 500?")
+    @DisplayName("Latency arbitrage rule. Exit without alert if netProfit + rebatesAmount not >= 500. ElementId: Event_1mf0xpo")
     void latencyArbitrageRuleTest5() throws Exception {
         RuleDataHelper data = dbDataMap.get("5");
 
@@ -122,7 +122,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1375")
-    @DisplayName("Latency arbitrage. Exit without alert if Total Profit / Cumulative deposit not >= 0.3")
+    @DisplayName("Latency arbitrage rule. Exit without alert if Total Profit / Cumulative deposit not >= 0.3. ElementId: Event_10836lw")
     void latencyArbitrageRuleTest6() throws Exception {
         RuleDataHelper data = dbDataMap.get("6");
 
@@ -135,10 +135,10 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
-    @Disabled
+    @Disabled("Not implemented")
     @Test
     @AllureId("1376")
-    @DisplayName("Latency arbitrage. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80")
+    @DisplayName("Latency arbitrage rule. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80. ElementId: Event_0l87tr0")
     void latencyArbitrageRuleTest7() throws Exception {
         RuleDataHelper data = dbDataMap.get("7");
 

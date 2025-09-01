@@ -55,7 +55,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Withdrawal notification rule. Exit with empty check name")
+    @DisplayName("Withdrawal notification rule. Exit without alert if check name is empty. ElementId: Event_end_2")
     @AllureId("962")
     void withdrawalNotificationRule1Test() throws Exception {
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
@@ -94,7 +94,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("963")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-06-03T16:30:07")
+    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-06-03T16:30:07. ElementId:Event_1waht3m")
     void withdrawalNotificationRule2Test() throws Exception {
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
@@ -134,7 +134,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("964")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-07-29 10:54:48")
+    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-07-29 10:54:48 ElementId: Event_1waht3m")
     void withdrawalNotificationRule3Test() throws Exception {
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
@@ -174,7 +174,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1378")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-07-29T10:54:48Z")
+    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2025-07-29T10:54:48Z. ElementId: Event_1waht3m")
     void withdrawalNotificationRule4Test() throws Exception {
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType
@@ -214,7 +214,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1379")
-    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2024-07-29 12:34:56Z")
+    @DisplayName("Withdrawal notification rule. Exit with alert if withdrawal has not empty check name, withdrawalApplicationTime = 2024-07-29 12:34:56Z. ElementId: Event_1waht3m")
     void withdrawalNotificationRule5Test() throws Exception {
         CrmWithdrawalEvent withdrawalEvent = new CrmWithdrawalEvent(
                 "MT4",                   // accountType

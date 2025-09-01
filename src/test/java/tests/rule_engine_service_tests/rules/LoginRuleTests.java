@@ -54,7 +54,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1461")
-    @DisplayName("Login rule. Connection search sub-process. Exit without alert if user has no connections. end_connections_not_found")
+    @DisplayName("Login rule. Connection search sub-process. Exit without alert if user has no connections. ElementId: end_connections_not_found")
     void loginRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
@@ -69,7 +69,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1462")
-    @DisplayName("Login rule. Connection search sub-process. No toxic connections for non VT or PU users. Event.id end_cs_no_toxic")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest2() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
 
@@ -84,7 +84,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1463")
-    @DisplayName("Login rule. Connection search sub-process. No connections for VT or PU users. Event.id end_connections_not_found2")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if no connections for VT or PU users. ElementId: end_connections_not_found2")
     void loginRuleTest3() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
 
@@ -99,7 +99,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1464")
-    @DisplayName("Login rule. Connection search sub-process. No toxic connections for VT or PU users. Event.id end_cs_no_toxic")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if no toxic connections for VT or PU users. ElementId: end_cs_no_toxic")
     void loginRuleTest4() throws Exception {
         RuleDataHelper data = dbDataMap.get("4");
         produceLoginMessageToKafka(data.loginEvent);
@@ -113,7 +113,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1465")
-    @DisplayName("Login rule. Connection search sub-process. Exists toxic connections for VT or PU users, general score<0.7. Event.id Event_0qy8dcr")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if exists toxic connections for VT or PU users, general score < 0.7. ElementId: Event_0qy8dcr")
     void loginRuleTest5() throws Exception {
         RuleDataHelper data = dbDataMap.get("5");
         produceLoginMessageToKafka(data.loginEvent);
@@ -127,7 +127,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1466")
-    @DisplayName("Login rule. Connection search sub-process. General score>0.7, user is mirror trader without strong connections. Event.id end_no_str1_hedge")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score > 0.7 and is mirror trader without strong connections. ElementId: end_no_str1_hedge")
     void loginRuleTest6() throws Exception {
         RuleDataHelper data = dbDataMap.get("6");
         produceLoginMessageToKafka(data.loginEvent);
@@ -141,7 +141,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1467")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score> 0.7 and is mirror trader with strong connections. ElementId: Event_1o2qu8z")
     void loginRuleTest7() throws Exception {
         RuleDataHelper data = dbDataMap.get("7");
         produceLoginMessageToKafka(data.loginEvent);
@@ -155,7 +155,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1468")
-    @DisplayName("Login rule. Strong connection with HEDGING fraud and no bonus restriction. Event.id end_cs_abuse")
+    @DisplayName("Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and no bonus restriction. ElementId: end_cs_abuse")
     void loginRuleTest8() throws Exception {
         RuleDataHelper data = dbDataMap.get("8");
         produceLoginMessageToKafka(data.loginEvent);
@@ -189,7 +189,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1469")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
     void loginRuleTest9() throws Exception {
         RuleDataHelper data = dbDataMap.get("9");
         produceLoginMessageToKafka(data.loginEvent);
@@ -203,7 +203,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1470")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Market manipulation. Event.id end_cs_abuse")
+    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has general score > 0.7 and fraud type is Market manipulation. ElementId: end_cs_abuse")
     void loginRuleTest10() throws Exception {
         RuleDataHelper data = dbDataMap.get("10");
         produceLoginMessageToKafka(data.loginEvent);
@@ -244,7 +244,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1471")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
+    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has general score > 0.7 and fraud type is Chargeback. ElementId: end_cs_abuse")
     void loginRuleTest11() throws Exception {
         RuleDataHelper data = dbDataMap.get("11");
         produceLoginMessageToKafka(data.loginEvent);
@@ -285,7 +285,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1472")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is CPA. Event.id end_no_mitigation")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
     void loginRuleTest12() throws Exception {
         RuleDataHelper data = dbDataMap.get("12");
         produceLoginMessageToKafka(data.loginEvent);
@@ -310,7 +310,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1473")
-    @DisplayName("Login rule. Strong connection with HEDGING fraud and has bonus restriction. Event.id end_hedge_ald_no_bonus")
+    @DisplayName("Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and has bonus restriction. ElementId: end_hedge_ald_no_bonus")
     void loginRuleTest13() throws Exception {
         RuleDataHelper data = dbDataMap.get("13");
 

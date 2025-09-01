@@ -42,7 +42,7 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule: abusers < 10% and lexis score not high. EventId: end_no_alert")
+    @DisplayName("Registration rule: Exit without alert if amount of abusers in connections < 10% and lexis score is not high. ElementId: end_no_alert")
     @AllureId("155")
     void registrationRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
@@ -59,7 +59,7 @@ class RegistrationRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Registration rule: abusers < 10% and lexis score is high. EventId: End_registration_rule_alert1")
+    @DisplayName("Registration rule. Exit with alert if amount of abusers in connections < 10% and lexis score is high. ElementId: End_registration_rule_alert1")
     @AllureId("156")
     void registrationRuleTest2() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
@@ -84,7 +84,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1484")
-    @DisplayName("Registration rule. Connection search. Strong hedge confirmed. EventId: end_registration_rule_cs")
+    @DisplayName("Registration rule. Connection search. Strong hedge confirmed. ElementId: end_registration_rule_cs")
     void registrationRuleTest3() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
 
@@ -108,7 +108,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1485")
-    @DisplayName("Registration rule. Connection search. Medium hedge potential, ln risk rating = low. EventId: end_no_alert")
+    @DisplayName("Registration rule. Connection search. Medium hedge potential, ln risk rating = low. ElementId: end_no_alert")
     void registrationRuleTest4() throws Exception {
         RuleDataHelper data = dbDataMap.get("4");
 
