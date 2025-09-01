@@ -531,7 +531,7 @@ public class Utils {
     }
 
     public static void closeAllAlertsBo() {
-        executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+        executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
     }
 
     public static double convertToUsd(double amount, String symbol) throws Exception {
