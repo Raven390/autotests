@@ -49,7 +49,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1385")
-    @DisplayName("Mirror trading with open trade event. Exit without alert if user is test or social trader user")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert if user is test or social trader user. ElementId: endEvent1TestOrSocialTrader")
     void mirrorTradingOpenTradeEventRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
@@ -63,7 +63,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit without alert if user doesn't have a credit")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert if user doesn't have a credit. ElementId: endEvent2DoesNotHaveCredits")
     void mirrorTradingOpenTradeEventRuleTest2() throws Exception {
         RuleDataHelper data = dbDataMap.get("2");
 
@@ -77,7 +77,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit without alert if trades count < 5")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert if trades count < 5. ElementId: endEvent3DoesNotHaveEnoughTrades")
     void mirrorTradingOpenTradeEventRuleTest3() throws Exception {
         RuleDataHelper data = dbDataMap.get("3");
 
@@ -91,7 +91,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit without alert if trades count > 200")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert if trades count > 200. ElementId: endEvent3DoesNotHaveEnoughTrades")
     void mirrorTradingOpenTradeEventRuleTest4() throws Exception {
         RuleDataHelper data = dbDataMap.get("4");
 
@@ -105,7 +105,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit without alert if ucidScore < 0.9")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert if ucidScore < 0.9. ElementId: endEvent5MirrorScoreIsNotHigh")
     void mirrorTradingOpenTradeEventRuleTest5() throws Exception {
         RuleDataHelper data = dbDataMap.get("5");
 
@@ -119,7 +119,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit without alert user have at least 1 resolved alerts")
+    @DisplayName("Mirror trading rule with open trade event. Exit without alert user have at least 1 resolved alerts. ElementId: endEventFinishWithoutAlert")
     void mirrorTradingOpenTradeEventRuleTest6() throws Exception {
         RuleDataHelper data = dbDataMap.get("6");
 
@@ -133,7 +133,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
     }
 
     @Test
-    @DisplayName("Mirror trading with open trade event. Exit with alert and restriction if there was no previous alerts")
+    @DisplayName("Mirror trading rule with open trade event. Exit with alert and restriction if there was no previous alerts. ElementId: endEvent4SuspectsByMLModel")
     void mirrorTradingOpenTradeEventRuleTest7() throws Exception {
         RuleDataHelper data = dbDataMap.get("7");
 

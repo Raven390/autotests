@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -40,12 +41,12 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-//        deleteRuleData(dbDataMap);
+        deleteRuleData(dbDataMap);
     }
 
     @Test
     @AllureId("1431")
-    @DisplayName("Mirror trading. Exit without alert if user is test account. Event_end_1")
+    @DisplayName("Mirror trading. Exit without alert if user is test account. ElementId: Event_end_1")
     void mirrorTradeRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
@@ -61,63 +62,63 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Exit without alert if user has no credits. Event_end_3")
+    @DisplayName("Mirror trading. Exit without alert if user has no credits. ElementId: Event_end_3")
     void mirrorTradeRuleTest2() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Ml model. Exit without alert if tades < 5. Event_0vlh2iw")
+    @DisplayName("Mirror trading. Ml model. Exit without alert if tades < 5. ElementId: Event_0vlh2iw")
     void mirrorTradeRuleTest3() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Ml model. Exit without alert if tades > 200. Event_0vlh2iw")
+    @DisplayName("Mirror trading. Ml model. Exit without alert if tades > 200. ElementId: Event_0vlh2iw")
     void mirrorTradeRuleTest4() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Ml model. Exit without alert if ucid score < 0.9. Event_1n666vd")
+    @DisplayName("Mirror trading. Ml model. Exit without alert if ucid score < 0.9. ElementId: Event_1n666vd")
     void mirrorTradeRuleTest5() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. Event_1m3mqdr")
+    @DisplayName("Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. ElementId: Event_1m3mqdr")
     void mirrorTradeRuleTest6() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. Event_1m3mqdr")
+    @DisplayName("Mirror trading. Ml model. Post alert and restriction if no previously resolved alerts. ElementId: Event_1m3mqdr")
     void mirrorTradeRuleTest7() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Exit without alerts if deposits > 5000. Event_end_2")
+    @DisplayName("Mirror trading. Exit without alerts if deposits > 5000. ElementId:  Event_end_2")
     void mirrorTradeRuleTest8() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Exit without alerts if trades > 300. Event_end_2")
+    @DisplayName("Mirror trading. Exit without alerts if trades > 300. ElementId: Event_end_2")
     void mirrorTradeRuleTest9() throws Exception {
 
     }
 
     @Test
     @AllureId("1432")
-    @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. Event_end_8")
+    @DisplayName("Mirror trading. Scotland. Exit without alert if trades count > 5. ElementId: Event_end_8")
     void mirrorTradeRuleTest10() throws Exception {
         RuleDataHelper data = dbDataMap.get("10");
 
@@ -133,7 +134,7 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1433")
-    @DisplayName("Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. Event_end_8")
+    @DisplayName("Mirror trading. Scotland. Exit without alert if profit/(deposit+credit) < 0.6. ElementId: Event_end_8")
     void mirrorTradeRuleTest11() throws Exception {
         RuleDataHelper data = dbDataMap.get("11");
 
@@ -149,7 +150,7 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1434")
-    @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. Event_12inxex")
+    @DisplayName("Mirror trading. Scotland. Exit without alert if Leverage < 200. ElementId: Event_12inxex")
     void mirrorTradeRuleTest12() throws Exception {
         RuleDataHelper data = dbDataMap.get("12");
 
@@ -165,7 +166,7 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1435")
-    @DisplayName("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. Event_end_4")
+    @DisplayName("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_end_4")
     void mirrorTradeRuleTest13() throws Exception {
         RuleDataHelper data = dbDataMap.get("13");
 
@@ -192,21 +193,21 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. Event_end_9")
+    @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
     void mirrorTradeRuleTest14() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. Event_end_5")
+    @DisplayName("Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. ElementId: Event_end_5")
     void mirrorTradeRuleTest15() throws Exception {
 
     }
 
     @Disabled
     @Test
-    @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. Event_end_5")
+    @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")
     void mirrorTradeRuleTest16() throws Exception {
 
     }

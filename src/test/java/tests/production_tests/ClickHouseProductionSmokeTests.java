@@ -8,6 +8,7 @@ import business_objects.api.clickhouse_api_service.get_lexis_nexis.GetLexisNexis
 import business_objects.api.clickhouse_api_service.get_swap_free_volumes.GetSwapFreeVolumesResponse;
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.Disabled;
@@ -29,6 +30,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_SMOKE_PROD)
 @Story(STORY_PRODUCTION_TESTS)
+@Feature(FEATURE_PRODUCTION_TESTS_CLICKHOUSE_API)
 class ClickHouseProductionSmokeTests extends TestBaseApi {
 
     private final String userId = "3384621";

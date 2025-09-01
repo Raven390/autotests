@@ -30,6 +30,8 @@ public class Constants {
     public static final String FEATURE_LEXIS_NEXIS = "Lexis Nexis integration";
     public static final String FEATURE_MIRROR_TRADING_SCORE_API_SERVICE = "Mirror trading score api service";
     public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
+    public static final String FEATURE_PRODUCTION_TESTS_CLICKHOUSE_API = "Clickhouse Api. Production tests";
+    public static final String FEATURE_PRODUCTION_TESTS_CONNECTION_SEARCH = "Connection search. Production tests";
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";

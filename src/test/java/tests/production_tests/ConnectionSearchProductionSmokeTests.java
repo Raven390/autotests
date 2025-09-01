@@ -2,6 +2,7 @@ package tests.production_tests;
 
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.AllureId;
+import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_SMOKE_PROD)
 @Story(STORY_PRODUCTION_TESTS)
-
+@Feature(FEATURE_PRODUCTION_TESTS_CONNECTION_SEARCH)
 class ConnectionSearchProductionSmokeTests {
 
     @Test
