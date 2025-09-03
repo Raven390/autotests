@@ -40,7 +40,7 @@ import static helpers.data.enums.deduction.DeductionStatusApproval.APPROVED;
 import static helpers.data.enums.deduction.DeductionStatusApproval.AWAITING_APPROVAL;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.TO_BE_DEDUCTED;
 import static helpers.data.enums.deduction.DeductionStatusEmail.NOT_SENT;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
@@ -67,7 +67,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
 
     @AfterEach
     void teardown() throws Exception {
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(CRM_TB_USER_EXTENDS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {
             deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));

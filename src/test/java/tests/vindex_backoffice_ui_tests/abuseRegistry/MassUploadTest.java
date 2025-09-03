@@ -60,7 +60,7 @@ public class MassUploadTest extends TestBaseWeb {
         cleanUserRestriction(client1.getUcid());
         cleanUserRestriction(client2.getUcid());
         cleanUserRestriction(client3.getUcid());
-        ArHelper.deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -116,7 +116,7 @@ public class MassUploadTest extends TestBaseWeb {
         cleanUserRestriction(client1.getUcid());
         cleanUserRestriction(client2.getUcid());
         cleanUserRestriction(client3.getUcid());
-        ArHelper.deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

@@ -99,7 +99,8 @@ public class ConfigFactory {
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_CLIENT = CONFIG.connectionSearchGetConnectionsByClient();
     public static final String CONNECTION_SEARCH_GET_CONNECTIONS_BY_ATTRIBUTES = CONFIG.connectionSearchGetConnectionsByAttributes();
-    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT = CONFIG.connectionSearchGetAbuseTypesByClient();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1 = CONFIG.connectionSearchGetAbuseTypesByClientV1();
+    public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V2 = CONFIG.connectionSearchGetAbuseTypesByClientV2();
     public static final String CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES = CONFIG.connectionSearchGetAbuseTypesByAttributes();
     public static final String CONNECTION_SEARCH_GET_CHECK_CONNECTED_IB = CONFIG.connectionSearchGetCheckConnectedIb();
     // Mitigation service
@@ -473,8 +474,11 @@ public class ConfigFactory {
         @Key("connectionSearchGetConnectionsByAttributes")
         String connectionSearchGetConnectionsByAttributes();
 
-        @Key("connectionSearchGetAbuseTypesByClient")
-        String connectionSearchGetAbuseTypesByClient();
+        @Key("connectionSearchGetAbuseTypesByClientV1")
+        String connectionSearchGetAbuseTypesByClientV1();
+
+        @Key("connectionSearchGetAbuseTypesByClientV2")
+        String connectionSearchGetAbuseTypesByClientV2();
 
         @Key("connectionSearchGetAbuseTypesByAttributes")
         String connectionSearchGetAbuseTypesByAttributes();

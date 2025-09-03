@@ -41,7 +41,7 @@ class ConnectionSearchProductionSmokeTests {
     void testConnectionSearchProd2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", "vantage-123");
-        Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT, null, queryParams);
+        Response response = new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_PROD + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1, null, queryParams);
         assertThat("Check the response code is 200", response.code(), is(200));
     }
 

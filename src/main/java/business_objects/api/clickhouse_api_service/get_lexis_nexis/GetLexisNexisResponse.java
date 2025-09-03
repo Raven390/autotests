@@ -16,6 +16,12 @@ public class GetLexisNexisResponse {
     @JsonProperty("brand")
     public String brand;
 
+    @JsonProperty("browserLanguage")
+    public String browserLanguage;
+
+    @JsonProperty("browserStringHash")
+    public String browserStringHash;
+
     @JsonProperty("sessionId")
     public String sessionId;
 
@@ -187,6 +193,6 @@ public class GetLexisNexisResponse {
     @JsonProperty("fuzzyDeviceId")
     public String fuzzyDeviceId;
 
-    @JsonProperty("browserStringHash")
-    public String browserStringHash;
+    @JsonProperty("inputIpGeo")
+    public String inputIpGeo;
 }

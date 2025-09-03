@@ -19,7 +19,7 @@ public class ArHelper {
     private ArHelper() {
     }
 
-    public static void deleteUserAR(String... ucidList) throws Exception {
+    public static void deleteUserFromAbuseRegistry(String... ucidList) throws Exception {
         try {
             String ucids = Arrays.stream(ucidList).map(u -> "'" + u + "'").collect(Collectors.joining(", "));
             String condition = String.format(WHERE_CONDITION, ucids);

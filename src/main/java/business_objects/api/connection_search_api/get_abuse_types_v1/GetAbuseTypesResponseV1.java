@@ -1,10 +1,10 @@
-package business_objects.api.connection_search_api.get_abuse_types;
+package business_objects.api.connection_search_api.get_abuse_types_v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class GetAbuseTypesResponse {
+public class GetAbuseTypesResponseV1 {
 
     @JsonProperty("abuseType")
     public String abuseType;
@@ -26,7 +26,7 @@ public class GetAbuseTypesResponse {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        GetAbuseTypesResponse that = (GetAbuseTypesResponse) o;
+        GetAbuseTypesResponseV1 that = (GetAbuseTypesResponseV1) o;
         return Objects.equals(abuseType, that.abuseType) && Objects.equals(maxScoreToInitial, that.maxScoreToInitial) && Objects.equals(maxScoreClientId, that.maxScoreClientId);
     }
 

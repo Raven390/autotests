@@ -15,6 +15,9 @@ public class GetClientsResponse {
     @JsonProperty("tradingAccount")
     Integer tradingAccount;
 
+    @JsonProperty("tradingAccountCurrency")
+    String tradingAccountCurrency;
+
     @JsonProperty("serverId")
     Integer serverId;
 
@@ -22,31 +25,6 @@ public class GetClientsResponse {
     }
 
     public GetClientsResponse(String clientId) {
-        this.clientId = clientId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        GetClientsResponse that = (GetClientsResponse) o;
-        return Objects.equals(clientId, that.clientId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(clientId);
-    }
-
-    @Override
-    public String toString() {
-        return "GetClientsResponse{" + "clientId='" + clientId + '\'' + '}';
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
         this.clientId = clientId;
     }
 
@@ -58,6 +36,14 @@ public class GetClientsResponse {
         this.objectType = objectType;
     }
 
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
     public Integer getTradingAccount() {
         return tradingAccount;
     }
@@ -66,11 +52,37 @@ public class GetClientsResponse {
         this.tradingAccount = tradingAccount;
     }
 
+    public String getTradingAccountCurrency() {
+        return tradingAccountCurrency;
+    }
+
+    public void setTradingAccountCurrency(String tradingAccountCurrency) {
+        this.tradingAccountCurrency = tradingAccountCurrency;
+    }
+
     public Integer getServerId() {
         return serverId;
     }
 
     public void setServerId(Integer serverId) {
         this.serverId = serverId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof GetClientsResponse that)) return false;
+        return Objects.equals(objectType, that.objectType) && Objects.equals(clientId, that.clientId) && Objects.equals(
+                tradingAccount, that.tradingAccount) && Objects.equals(tradingAccountCurrency, that.tradingAccountCurrency) && Objects.equals(
+                        serverId, that.serverId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(objectType, clientId, tradingAccount, tradingAccountCurrency, serverId);
+    }
+
+    @Override
+    public String toString() {
+        return "GetClientsResponse{" + "objectType='" + objectType + '\'' + ", clientId='" + clientId + '\'' + ", tradingAccount=" + tradingAccount + ", tradingAccountCurrency=" + tradingAccountCurrency + ", serverId=" + serverId + '}';
     }
 }

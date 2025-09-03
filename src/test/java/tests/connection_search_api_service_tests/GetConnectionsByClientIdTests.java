@@ -37,7 +37,7 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-class GetConnectionsByClientTest extends TestBaseApi {
+class GetConnectionsByClientIdTests extends TestBaseApi {
 
     static final ClientHelper userFrom1 = getRandomVantageClient();
     static final ClientHelper userTo1_1 = getRandomVantageClient();

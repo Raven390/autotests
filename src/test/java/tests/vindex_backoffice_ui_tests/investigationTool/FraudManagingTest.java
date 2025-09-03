@@ -17,7 +17,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -42,7 +42,7 @@ class FraudManagingTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteUserBO(client.getUcid());
         cleanUserRestriction(client.getUcid());
     }
