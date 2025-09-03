@@ -21,10 +21,14 @@ public class LnSessionParsedObjectFactory {
 
     @Step("Generate lexis nexis object by Client")
     public static LnSessionParsedObject generateLexisNexisDataByClient(ClientHelper client) {
-        LnSessionParsedObject lN = new LnSessionParsedObject(
+        LnSessionParsedObject ln = new LnSessionParsedObject(
                 client.getUcid(), getRandomIntPositive(), client.getBrand(), getRandomUuidString(), client.getUserId(), "email@email.com", 60, "123456", "account_creation", true, "1970-01-01 00:00:00", 0, "12", client.getDeviceId(), "12345", "1971-01-01 00:00:00", 123, "127.0.0.1", "proxyIpActivities", new String[]{"String_1", "String_2"}, "proxyIpCity", "proxyIpConnection", "1972-01-01", "proxyIpGeo", "proxyIpHome", "proxyIpIsp", 30.30, 40.40, "proxyIpOrganization", "proxyIpOrganizationType", "proxyIpPostalCode", "proxyIpRegion", "proxyIpResult", "proxyIpRoutingType", 2, 2, "proxyIpV6", "proxyName", 3d, "proxyType", "192.168.0.1", "trueIpActivities", new String[]{"String_1", "String_2"}, "trueIpCity", 4, "1973-01-01", "trueIpGeo", "trueIpIsp", "1973-01-01", "trueIpOrganization", "trueIpOrganizationType", "trueIpPostalCode", "trueIpRegion", "trueIpResult", "trueIpRoutingType", 100, 1, "1", 1, summaryReasonCodeString, "Windows", Arrays.toString(new String[]{"\"Identity_Negative_History\"", "\"Identity_Spoofing\""})
         );
-        lN.setLastUpdated(getCurrentTimestampDbFormat());
-        return lN;
+        ln.setLastUpdated(getCurrentTimestampDbFormat());
+        ln.setBrowserLanguage("EN");
+        ln.setBrowserStringHash("string_hash");
+        ln.setInputIpGeo("input_ip_geo");
+        ln.setFuzzyDeviceId("fuzzy_device_id");
+        return ln;
     }
 }

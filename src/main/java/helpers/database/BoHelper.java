@@ -53,7 +53,7 @@ public class BoHelper {
     }
 
     public static void cleanUserAR(String ucid) throws Exception {
-        ArHelper.deleteUserAR(ucid);
+        ArHelper.deleteUserFromAbuseRegistry(ucid);
     }
 
     @Step("Delete user's frauds from BO")

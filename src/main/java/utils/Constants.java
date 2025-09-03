@@ -57,6 +57,9 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_WITHDRAWALS = "Clickhouse api. Get withdrawals";
     public static final String STORY_CONNECTION_SEARCH_BY_ATTRIBUTES = "Get connections by attribute";
     public static final String STORY_CONNECTION_SEARCH_BY_CLIENT_ID = "Get connections by client id";
+    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1 = "Get abuse types by client id V1";
+    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V2 = "Get abuse types by client id V2";
+    public static final String STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES = "Get abuse types by attribute";
     public static final String STORY_DATA_DUMPER_CLOSE_TRADE_EVENT = "Data dumper. Close trade event";
     public static final String STORY_DATA_DUMPER_LOSS_COMPENSATION_EVENT = "Data dumper. Trade loss compensation event";
     public static final String STORY_DATA_DUMPER_OPEN_TRADE_EVENT = "Data dumper. Open trade event";

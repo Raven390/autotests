@@ -18,7 +18,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudType.CPA_ABUSE;
 import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.AuHelper.cleanClientAudit;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -58,7 +58,7 @@ public class MassDeleteTest extends TestBaseWeb {
         cleanUserRestriction(client1.getUcid());
         cleanUserRestriction(client2.getUcid());
         cleanUserRestriction(client3.getUcid());
-        deleteUserAR(client1.getUcid(), client2.getUcid(), client3.getUcid());
+        deleteUserFromAbuseRegistry(client1.getUcid(), client2.getUcid(), client3.getUcid());
 
         addFraudsForClient(client1, List.of(HEDGING, CPA_ABUSE), FraudTypeStatus.POTENTIAL);
         addFraudsForClient(client2, List.of(HEDGING), FraudTypeStatus.POTENTIAL);
@@ -112,7 +112,7 @@ public class MassDeleteTest extends TestBaseWeb {
         cleanClientAudit(client1.getUcid(), client2.getUcid());
         deleteUserBO(client1.getUcid());
         cleanUserRestriction(client1.getUcid());
-        deleteUserAR(client1.getUcid());
+        deleteUserFromAbuseRegistry(client1.getUcid());
 
         addFraudsForClient(client1, List.of(HEDGING), FraudTypeStatus.POTENTIAL);
         addFraudsForClient(client1, List.of(CPA_ABUSE), FraudTypeStatus.CONFIRMED);

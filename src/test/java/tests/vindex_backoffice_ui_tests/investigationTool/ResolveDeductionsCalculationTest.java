@@ -44,7 +44,7 @@ import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static helpers.data.enums.deduction.DeductionTypeAccount.NO_ILLEGAL_PROFIT;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -128,7 +128,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         closeAlert(crmTbUser.ucid);
     }
 
@@ -248,7 +248,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
     @AllureId("1386")
     @DisplayName("Verify deductions when No deduction is selected")
     void deductionsNoDeductionTest() throws Exception {
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
         alert.rule.attributes.account = mtAccount1.account.toString();
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);

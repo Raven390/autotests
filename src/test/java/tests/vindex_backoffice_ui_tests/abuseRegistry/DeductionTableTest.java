@@ -29,7 +29,7 @@ import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.deduction.DeductionEmailUi.*;
 import static helpers.data.enums.deduction.DeductionStatusUi.*;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -62,7 +62,7 @@ class DeductionTableTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws Exception {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
     }
 
     @Test

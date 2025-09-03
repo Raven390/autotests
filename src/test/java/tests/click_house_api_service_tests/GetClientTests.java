@@ -15,8 +15,6 @@ import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.*;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -32,20 +30,21 @@ import tests.TestBaseApi;
 class GetClientTests extends TestBaseApi {
 
     @Test
-    @DisplayName("Clickhouse Api. Get client success(200)")
+    @DisplayName("Clickhouse Api. Get client by ucid success(200)")
     @AllureId("59")
-    void getClientSuccessTest() throws IOException {
+    void getClientSuccessTest() throws IOException, InterruptedException {
         // Create an instance of ClientHelper
         ClientHelper client = getRandomVantageClient();
+        client.setCountry("Cyprus");
+        client.setCountryCode("CY");
+        client.setIbId(3);
+        client.setCpaId(4);
+        client.setReferrerId(5);
         CrmTbUserObject userObject = generateUserByClient(client);
-        userObject.ibId = 3;
-        userObject.cpaId = 4;
-        userObject.rafReferrerId = 5;
         insertObjectToDb(CRM_USER_TABLE_NAME, userObject);
         // Execute request
-        Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("userId", client.getUcid());
         Response response = getClient(client.getUcid());
+        Thread.sleep(2000);
 
         // Assert response
         assert response.body() != null;

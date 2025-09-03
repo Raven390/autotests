@@ -730,9 +730,9 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
     @DisplayName("Production smoke test. Get general score (200)")
     void testClickHouseApiProd51() throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
-        queryParamsMap.put("clientIds", ucid);
+        queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_GENERAL_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[]"));
+        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.026685204,\"ucidScore\":0.07802434}"));
     }
 }

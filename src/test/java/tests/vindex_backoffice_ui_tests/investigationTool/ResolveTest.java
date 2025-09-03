@@ -84,7 +84,7 @@ public class ResolveTest extends TestBaseWeb {
     void cleanData() throws Exception {
         deleteUserBO(resolveClient.getUcid());
         cleanUserAudit(resolveClient.getUcid());
-        ArHelper.deleteUserAR(resolveClient.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(resolveClient.getUcid());
     }
 
     @Test

@@ -43,7 +43,7 @@ import static helpers.data.enums.deduction.DeductionStatusOpenPositions.NOT_HOLD
 import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static helpers.data.enums.deduction.DeductionTypeAccount.NO_ILLEGAL_PROFIT;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -124,7 +124,7 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         cleanUserRestriction(client.getUcid());
     }
 

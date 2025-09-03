@@ -51,7 +51,7 @@ import static helpers.data.enums.deduction.DeductionStatusEmail.SENT;
 import static helpers.data.enums.deduction.DeductionStatusOpenPositions.*;
 import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -138,10 +138,10 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client2.getUcid());
+        deleteUserFromAbuseRegistry(client2.getUcid());
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
     }

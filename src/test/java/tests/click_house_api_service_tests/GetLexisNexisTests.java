@@ -44,7 +44,6 @@ class GetLexisNexisTests extends TestBaseApi {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
-    @Disabled("covered in clickhouse api repo")
     @Test
     @DisplayName("Clickhouse Api. Get lexisNexis success response(200)")
     @AllureId("141")
@@ -115,7 +114,10 @@ class GetLexisNexisTests extends TestBaseApi {
         assertThat("Check response trueIpWorstScore", lexisNexisResponse.trueIpWorstScore, is(1));
         assertThat("Check response trueIpv6", lexisNexisResponse.trueIpv6, is("1"));
         assertThat("Check response vpnScore", lexisNexisResponse.vpnScore, is(1));
-        assertThat("Check response browserStringHash", lexisNexisResponse.browserStringHash, is(1));
+        assertThat("Check response browserStringHash", lexisNexisResponse.browserStringHash, is("string_hash"));
+        assertThat("Check response browserLanguage", lexisNexisResponse.browserLanguage, is("EN"));
+        assertThat("Check response inputIpGeo", lexisNexisResponse.inputIpGeo, is("input_ip_geo"));
+        assertThat("Check response fuzzyDeviceId", lexisNexisResponse.fuzzyDeviceId, is("fuzzy_device_id"));
     }
 
     @Test

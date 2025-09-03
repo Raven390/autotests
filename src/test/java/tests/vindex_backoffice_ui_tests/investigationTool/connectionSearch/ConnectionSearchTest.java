@@ -36,7 +36,7 @@ import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.cleanUserRestrictionGeneral;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -123,7 +123,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid IN ('%s', '%s', '%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid()));
         deleteEntryFromDb(CONNECTIONS_TABLE_NAME, String.format("user_from IN ('%s', '%s', '%s', '%s')", client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid(), connectedClient3.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid IN ('%s')", connectedClient3.getUcid()));
-        deleteUserAR(connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid());
+        deleteUserFromAbuseRegistry(connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient5.getUcid());
         cleanUserRestrictionGeneral(connectedClient1.getUcid());
         closeAlert(client.getUcid());
         closeAlert(connectedClient2.getUcid());

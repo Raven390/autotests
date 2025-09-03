@@ -1,10 +1,10 @@
-package business_objects.api.connection_search_api.get_abuse_types;
+package business_objects.api.connection_search_api.get_abuse_types_v1;
 
 
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 
-public class GetAbuseTypesResponseFactory {
+public class GetAbuseTypesResponseFactoryV1 {
 
     public static ConnectionSearchResponseError getConnectionsResponseErrorConnectionScoreToBadRequest() {
         return new ConnectionSearchResponseError(
@@ -36,8 +36,8 @@ public class GetAbuseTypesResponseFactory {
         );
     }
 
-    public static GetAbuseTypesResponse getAbuseTypesResponseByFraud(ClientFraudTypes fraud, String status) {
-        GetAbuseTypesResponse response = new GetAbuseTypesResponse();
+    public static GetAbuseTypesResponseV1 getAbuseTypesResponseByFraud(ClientFraudTypes fraud, String status) {
+        GetAbuseTypesResponseV1 response = new GetAbuseTypesResponseV1();
         response.abuseType = fraud.getFraudTypeCode();
         response.fraudTypeStatus = status;
         response.maxScoreToInitial = 1.0;

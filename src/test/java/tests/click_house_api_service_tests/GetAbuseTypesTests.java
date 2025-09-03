@@ -20,7 +20,7 @@ import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbu
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,9 +59,9 @@ class GetAbuseTypesTests extends TestBaseApi {
     @AfterAll
     static void deleteData() throws Exception {
         cleanFraudTypeTableByClient(fraud1.getUcid(), fraud2.getUcid(), fraud3.getUcid());
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteUserAR(client2.getUcid());
+        deleteUserFromAbuseRegistry(client2.getUcid());
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
     }
 

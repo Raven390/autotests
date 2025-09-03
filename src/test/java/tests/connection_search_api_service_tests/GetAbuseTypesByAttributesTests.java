@@ -1,7 +1,7 @@
 package tests.connection_search_api_service_tests;
 
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
-import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
+import business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseV1;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -27,7 +27,7 @@ import tests.TestBaseApi;
 import java.io.IOException;
 import java.util.*;
 
-import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByAttributes;
+import static business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesRequestV1.getAbuseTypesByAttributes;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
 import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
@@ -44,7 +44,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -54,11 +54,11 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-@Story(STORY_CONNECTION_SEARCH_BY_ATTRIBUTES)
+@Story(STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_ATTRIBUTES)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-class GetAbuseTypesByAttributesTest extends TestBaseApi {
+class GetAbuseTypesByAttributesTests extends TestBaseApi {
 
     // Users
     static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
@@ -239,7 +239,7 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
             clientUcids.add(client.ucid);
         }
         cleanCrmUserTableByClient(String.valueOf(clientUcids));
-        deleteUserAR(String.valueOf(clientUcids));
+        deleteUserFromAbuseRegistry(String.valueOf(clientUcids));
     }
 
     @Test
@@ -251,8 +251,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -270,8 +270,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -289,8 +289,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -308,8 +308,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -327,8 +327,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -346,8 +346,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -365,8 +365,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -385,8 +385,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -403,8 +403,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -422,8 +422,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -557,8 +557,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -574,8 +574,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -593,8 +593,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -610,8 +610,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -645,8 +645,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -658,8 +658,8 @@ class GetAbuseTypesByAttributesTest extends TestBaseApi {
 
         Response response2 = getAbuseTypesByAttributes(queryParams2);
         assert response2.body() != null;
-        GetAbuseTypesResponse[] responseBody2 = (objectMapper.readValue(
-                response2.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody2 = (objectMapper.readValue(
+                response2.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response2.code(), is(200));

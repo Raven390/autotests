@@ -45,7 +45,7 @@ import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static helpers.data.enums.deduction.DeductionTypeAccount.NO_ILLEGAL_PROFIT;
 import static helpers.database.ArHelper.deleteDeductions;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -122,7 +122,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }

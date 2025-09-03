@@ -17,7 +17,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
 import static helpers.data.ClientFactory.getRandomBybitClient;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +47,7 @@ class ByBitUiDifferencesTest extends TestBaseWeb {
 
     @AfterAll
     static void teardown() throws Exception {
-        deleteUserAR(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         try {

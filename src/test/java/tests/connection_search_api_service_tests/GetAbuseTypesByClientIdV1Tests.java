@@ -1,6 +1,6 @@
 package tests.connection_search_api_service_tests;
 
-import business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponse;
+import business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseV1;
 import business_objects.api.connection_search_api.ConnectionSearchResponseError;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesRequest.getAbuseTypesByClientId;
-import static business_objects.api.connection_search_api.get_abuse_types.GetAbuseTypesResponseFactory.*;
+import static business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesRequestV1.getAbuseTypesByClientId;
+import static business_objects.api.connection_search_api.get_abuse_types_v1.GetAbuseTypesResponseFactoryV1.*;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
@@ -28,7 +28,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.database.ArHelper.deleteUserAR;
+import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,11 +37,11 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 @Feature(FEATURE_CONNECTION_SEARCH_API_SERVICE)
-@Story(STORY_CONNECTION_SEARCH_BY_CLIENT_ID)
+@Story(STORY_CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_ID_V1)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
-class GetAbuseTypesByClientTest extends TestBaseApi {
+class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
     //Data 1
     static final ClientHelper userFrom1 = getRandomVantageClient();
@@ -130,11 +130,11 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
             clientUcids.add(client.ucid);
         }
         cleanCrmUserTableByClient(String.valueOf(clientUcids));
-        deleteUserAR(String.valueOf(clientUcids));
+        deleteUserFromAbuseRegistry(String.valueOf(clientUcids));
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId success(200)")
+    @DisplayName("Connection search. Get abuse types by clientId success(200)")
     @AllureId("745")
     void getAbuseTypesByClientTest1() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -142,8 +142,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -153,7 +153,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types for non existing client(200)")
+    @DisplayName("Connection search. Get abuse types for non existing client(200)")
     @AllureId("746")
     void getAbuseTypesByClientTest2() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -161,8 +161,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -170,7 +170,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId without params(400)")
+    @DisplayName("Connection search. Get abuse types by clientId without params(400)")
     @AllureId("747")
     void getAbuseTypesByClientTest3() throws IOException {
         Response response = getAbuseTypesByClientId(new HashMap<>());
@@ -184,7 +184,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with abuseTypes success(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with abuseTypes success(200)")
     @AllureId("748")
     void getAbuseTypesByClientTest4() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -193,8 +193,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -203,7 +203,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with abuseTypes empty response(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with abuseTypes empty response(200)")
     @AllureId("749")
     void getAbuseTypesByClientTest5() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -212,8 +212,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -221,7 +221,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionDepth=-99(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionDepth=-99(200)")
     @AllureId("750")
     void getAbuseTypesByClientTest6() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -239,7 +239,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionDepth=2(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionDepth=2(200)")
     @AllureId("751")
     void getAbuseTypesByClientTest7() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -248,8 +248,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -257,7 +257,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreFrom=0.9(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreFrom=0.9(200)")
     @AllureId("752")
     void getAbuseTypesByClientTest8() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -266,8 +266,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -275,7 +275,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreFrom=1.1(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreFrom=1.1(200)")
     @AllureId("753")
     void getAbuseTypesByClientTest9() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -284,8 +284,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -293,7 +293,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreTo=0.9(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreTo=0.9(200)")
     @AllureId("754")
     void getAbuseTypesByClientTest10() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -302,8 +302,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -311,7 +311,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreFrom=1.1(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreFrom=1.1(200)")
     @AllureId("755")
     void getAbuseTypesByClientTest11() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -320,8 +320,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -329,7 +329,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with unknown connection attribute(400)")
+    @DisplayName("Connection search. Get abuse types by clientId with unknown connection attribute(400)")
     @AllureId("756")
     void getAbuseTypesByClientTest12() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -347,7 +347,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connection attribute(200)")
+    @DisplayName("Connection search. Get abuse types by clientId with connection attribute(200)")
     @AllureId("757")
     void getAbuseTypesByClientTest13() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -356,8 +356,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -365,7 +365,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreTo wrong value(400)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreTo wrong value(400)")
     @AllureId("758")
     void getAbuseTypesByClientTest14() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -383,7 +383,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId with connectionScoreFrom wrong value(400)")
+    @DisplayName("Connection search. Get abuse types by clientId with connectionScoreFrom wrong value(400)")
     @AllureId("759")
     void getAbuseTypesByClientTest15() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -401,7 +401,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by wrong clientId (400)")
+    @DisplayName("Connection search. Get abuse types by wrong clientId (400)")
     @AllureId("760")
     void getAbuseTypesByClientTest16() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -418,7 +418,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by all params(200)")
+    @DisplayName("Connection search. Get abuse types by all params(200)")
     @AllureId("761")
     void getAbuseTypesByClientTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -431,8 +431,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -440,7 +440,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types only by ip, empty response(200)")
+    @DisplayName("Connection search. Get abuse types only by ip, empty response(200)")
     @AllureId("1145")
     void getAbuseTypesByClientTest18() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -448,8 +448,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -457,7 +457,7 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Connection search by clientId. Get abuse types by clientId contains abuse status")
+    @DisplayName("Connection search. Get abuse types by clientId contains abuse status")
     @AllureId("1364")
     void getAbuseTypesByClientAbuseStatusTest() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
@@ -465,8 +465,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response = getAbuseTypesByClientId(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponse[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
+                response.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
@@ -478,8 +478,8 @@ class GetAbuseTypesByClientTest extends TestBaseApi {
 
         Response response2 = getAbuseTypesByClientId(queryParams2);
         assert response2.body() != null;
-        GetAbuseTypesResponse[] responseBody2 = (objectMapper.readValue(
-                response2.body().string(), GetAbuseTypesResponse[].class
+        GetAbuseTypesResponseV1[] responseBody2 = (objectMapper.readValue(
+                response2.body().string(), GetAbuseTypesResponseV1[].class
         ));
 
         assertThat("Check the response code is 200", response2.code(), is(200));

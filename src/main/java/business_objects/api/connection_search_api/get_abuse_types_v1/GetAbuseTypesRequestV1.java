@@ -1,4 +1,4 @@
-package business_objects.api.connection_search_api.get_abuse_types;
+package business_objects.api.connection_search_api.get_abuse_types_v1;
 
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.Step;
@@ -9,11 +9,11 @@ import java.util.Map;
 
 import static utils.ConfigFactory.*;
 
-public class GetAbuseTypesRequest {
+public class GetAbuseTypesRequestV1 {
 
     @Step("Get abuse types by ClientId")
     public static Response getAbuseTypesByClientId(Map<String, Object> paramsMap) throws IOException {
-        return new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_TEST + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT, null, paramsMap);
+        return new HttpHelper().sendGetRequest(CONNECTION_SEARCH_BASE_PATH_TEST + CONNECTION_SEARCH_GET_ABUSE_TYPES_BY_CLIENT_V1, null, paramsMap);
     }
 
     @Step("Get abuse types by attributes")

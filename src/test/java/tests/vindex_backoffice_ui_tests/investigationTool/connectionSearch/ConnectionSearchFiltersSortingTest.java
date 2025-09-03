@@ -404,7 +404,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         closeAlert(connectedClient6.getUcid());
         cleanUserRestrictionGeneral(connectedClient2.getUcid());
         cleanUserRestrictionGeneral(connectedClient5.getUcid());
-        ArHelper.deleteUserAR(connectedClient1.getUcid());
-        ArHelper.deleteUserAR(connectedClient6.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(connectedClient1.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(connectedClient6.getUcid());
     }
 }

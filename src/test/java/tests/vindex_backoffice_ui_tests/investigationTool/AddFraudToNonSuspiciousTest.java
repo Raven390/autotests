@@ -55,7 +55,7 @@ public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
         cleanUserAudit(innocentClient.getUcid());
         cleanUserRestrictionGeneral(innocentClient.getUcid());
         cleanUserRestrictionTrading(innocentClient.getUcid());
-        ArHelper.deleteUserAR(innocentClient.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(innocentClient.getUcid());
     }
 
     @Test

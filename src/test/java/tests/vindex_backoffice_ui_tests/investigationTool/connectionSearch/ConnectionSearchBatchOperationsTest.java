@@ -131,7 +131,7 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         deleteUserBO(client.getUcid());
         deleteUserBO(connectedClient1.getUcid());
         deleteUserBO(connectedClient2.getUcid());
-        ArHelper.deleteUserAR(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
+        ArHelper.deleteUserFromAbuseRegistry(client.getUcid(), connectedClient1.getUcid(), connectedClient2.getUcid());
 
     }
 }
