@@ -208,7 +208,7 @@ class LoginRuleTests extends TestBaseRule {
         RuleDataHelper data = dbDataMap.get("10");
         produceLoginMessageToKafka(data.loginEvent);
 
-        Thread.sleep(30_000);
+        Thread.sleep(45_000);
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
@@ -233,11 +233,63 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getCreatedAt(), notNullValue());
         assertThat(abuserStatus.getUpdatedAt(), notNullValue());
         assertThat(abuserStatus.getComment(), is("Linked market manipulator"));
+        assertThat(abuserStatus.getPendingProcessing(), is("false"));
         assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
         assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("MARKET_MANIPULATION"));
         assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Market manipulation"));
         assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked market manipulator"));
         assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.MARKET_MANIPULATION.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
+    }
+
+    @Test
+    @AllureId("1532")
+    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Bonus abuser and toxic account linked. ElementId: end_cs_abuse.id")
+    void loginRuleTest15() throws Exception {
+        RuleDataHelper data = dbDataMap.get("15");
+        produceLoginMessageToKafka(data.loginEvent);
+
+        Thread.sleep(45_000);
+        // Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        // Verify restrictions
+        Allure.step("Get client restrictions");
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is 2 restrictions", clientGeneralRestrictions.size(), equalTo(2));
+
+        //Check restriction
+        assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getRegulator(), equalTo(data.clientHelper.getRegulator()));
+        assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getRestrictionId(), equalTo(9L));
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getComment(), equalTo("Linked Bonus Abuser"));
+        assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getStatus(), equalTo("APPLIED"));
+
+        //Check restriction
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getUcid(), equalTo(data.clientHelper.getUcid()));
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getRegulator(), equalTo(data.clientHelper.getRegulator()));
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getRestrictionId(), equalTo(8L));
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getComment(), equalTo("Linked Bonus Abuser"));
+        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getStatus(), equalTo("APPLIED"));
+
+        //add check for bonus
+        GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
+        assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
+        assertThat(abuserStatus.getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getCreatedAt(), notNullValue());
+        assertThat(abuserStatus.getUpdatedAt(), notNullValue());
+        assertThat(abuserStatus.getComment(), is("Linked bonus abuser"));
+        assertThat(abuserStatus.getPendingProcessing(), is("false"));
+        assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("BONUS_ABUSE"));
+        assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Bonus abuse"));
+        assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked bonus abuser"));
+        assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.BONUS_ABUSE.getDescription()));
         assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
         assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
     }
