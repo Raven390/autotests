@@ -3,6 +3,7 @@ package helpers.data.rules;
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
+import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
@@ -120,6 +121,7 @@ public class RuleDataHelper {
     public List<BoAlertsObject> boAlertsObjects;
     public List<OzTradesTableEntry> ozTradesTableObjects;
     public UcidGeneralScore ucidGeneralScore;
+    public List<AppTbFinindexData> AppTbFinindexData;
 
     public RuleDataHelper() {
     }
@@ -312,6 +314,9 @@ public class RuleDataHelper {
             if (data.ucidGeneralScore != null) {
                 insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);
             }
+            if (data.AppTbFinindexData != null) {
+                insertObjectsToDb(APP_TB_FININDEX_DATA, data.AppTbFinindexData);
+            }
         }
     }
 
@@ -388,6 +393,9 @@ public class RuleDataHelper {
             }
             if (data.aggrCreditEquityRate != null) {
                 data.loyaltyObjects.forEach(loyaltyObjects -> deleteEntryFromDb(CRM_TB_LOYALTY_REDEMPTION, String.format("ucid = '%s'", loyaltyObjects.ucid)));
+            }
+            if (data.AppTbFinindexData != null) {
+                data.AppTbFinindexData.forEach(AppTbFinindexData -> deleteEntryFromDb(APP_TB_FININDEX_DATA, String.format("id = '%s'", AppTbFinindexData.getId())));
             }
             if (data.s3FactIbSalesCommissionsObject != null) {
                 data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm.getUcid())));
