@@ -3,7 +3,6 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.ui.user.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.enums.Brand;
 import helpers.kafka.KafkaHelper;
@@ -11,7 +10,6 @@ import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -24,7 +22,7 @@ import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
-public class SuspiciousClientsFiltersTest extends TestBaseWeb {
+class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -32,7 +30,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser2 = generateUserByClient(getRandomVantageClientAllFields());
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+    static void setup() throws Exception {
         closeAllAlertsBo();
         crmTbUser2.brand = Brand.INFINOX.getDisplayName();
         crmTbUser2.country = "Malaysia";
@@ -52,7 +50,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("549")
     @DisplayName("Verify filtration by brand for suspicious clients")
-    public void verifyBrandFiltrationTest() {
+    void verifyBrandFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -74,7 +72,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("550")
     @DisplayName("Verify filtration by rule for suspicious clients")
-    public void verifyRuleFiltrationTest() {
+    void verifyRuleFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -94,7 +92,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("551")
     @DisplayName("Verify filtration by country for suspicious clients")
-    public void verifyCountryFiltrationTest() {
+    void verifyCountryFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -116,7 +114,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
-    public void verifyAssigneeFiltrationTest() {
+    void verifyAssigneeFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -139,7 +137,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("553")
     @DisplayName("Verify reset filtration functionality for suspicious clients")
-    public void verifyResetFiltrationTest() {
+    void verifyResetFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -166,7 +164,7 @@ public class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @AfterAll
-    public static void teardown() throws SQLException {
+    static void teardown() {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
         closeAlert(crmTbUser1.ucid);

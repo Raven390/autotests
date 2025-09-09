@@ -2,14 +2,11 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-
-import java.sql.SQLException;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
@@ -20,7 +17,7 @@ import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
-public class SuspiciousClientsTest extends TestBaseWeb {
+class SuspiciousClientsTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -28,7 +25,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser2 = generateUserByClient(getRandomVantageClientAllFields());
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
+    static void setup() throws Exception {
         closeAllAlertsBo();
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
@@ -43,7 +40,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("525")
     @DisplayName("Verify that all elements are present for all suspicious clients")
-    public void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
+    void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToMain();
@@ -87,7 +84,7 @@ public class SuspiciousClientsTest extends TestBaseWeb {
     }
 
     @AfterAll
-    public static void teardown() throws SQLException {
+    static void teardown() {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser1.ucid));
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser2.ucid));
         closeAlert(crmTbUser1.ucid);

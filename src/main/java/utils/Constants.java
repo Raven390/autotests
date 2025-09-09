@@ -135,8 +135,11 @@ public class Constants {
     public static final String AR_ABUSER_TABLE_NAME = "postgres.ar.abuser";
     public static final String AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME = "postgres.ar.deduction_kafka_request";
     public static final String AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME = "postgres.ar.deduction_kafka_response";
+    public static final String AR_PENDING_PROCESSING_TABLE_NAME = "postgres.ar.pending_processing";
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
+    public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
+    public static final String BO_INVESTIGATION_HISTORY_TABLE_NAME = "postgres.bo.investigation_history";
     public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";
     public static final String CLICKHOUSE_OZ_TRADES_TABLE_NAME = "vindex_test.oz___trades";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";

@@ -72,6 +72,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator previouslyReportedFraudSymbols;
     private final Locator fraudSourceDropdown;
     private final Locator illegalProfitPartialAmount;
+    private final Locator selectedFraud;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -87,6 +88,7 @@ public class ResolvePage extends AbstractPage {
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
     private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[text()='%s']";
+    private static final String FRAUD_STATUS_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[contains(@data-qa,'fraud_type_selector__item_%s__%s')]";
     private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
 
     public ResolvePage(Page page) {
@@ -136,6 +138,7 @@ public class ResolvePage extends AbstractPage {
         this.previouslyReportedFraudSymbols = page.locator("//div[@class='v-reported-fraud-type-list__symbols']");
         this.fraudSourceDropdown = page.locator("//button[@data-qa='source_select__select_control']");
         this.illegalProfitPartialAmount = suggestedDeductionHeader.locator("//div[@class='v-text-with-icon__text']");
+        this.selectedFraud = page.locator("//div[contains(@data-qa,'detected_fraud_types_list__item')]/descendant::span[contains(@class,'g-color-text_color_primary')]");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -270,7 +273,7 @@ public class ResolvePage extends AbstractPage {
         fraudListButton.click();
         page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
         page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, status.getDisplayName())).click();
+        page.locator(String.format(FRAUD_STATUS_PATTERN, fraud.getCode(), status.getDisplayName().toLowerCase())).click();
     }
 
     public void addFraud(FraudType fraud) {
@@ -416,10 +419,7 @@ public class ResolvePage extends AbstractPage {
     @Step("Add new fraud in report fraud drawer")
     public void reportAddFraud(String comment, FraudType addedFraud, FraudTypeStatus fraudStatus) {
         commentInput.fill(comment);
-        fraudListButton.click();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, addedFraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, addedFraud.getCode())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, String.format("%s:%s", addedFraud.getCode(), fraudStatus.getStatus()))).click();
+        addFraud(addedFraud, fraudStatus);
         submitFraudButton.click();
         successToast.getByText("Fraud management completed").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.getByText("Fraud management completed").isVisible());
@@ -587,5 +587,10 @@ public class ResolvePage extends AbstractPage {
     @Step("Get illegal profit partial amount")
     public String getIllegalProfitPartialAmount() {
         return illegalProfitPartialAmount.textContent();
+    }
+
+    @Step("Get selected fraud")
+    public String getSelectedFraud() {
+        return selectedFraud.textContent();
     }
 }

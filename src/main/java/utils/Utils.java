@@ -22,13 +22,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
 import helpers.data.enums.DateTimeFormat;
+import helpers.database.DbName;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.database.BoHelper.getUserIdByUser;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.BO;
 import static helpers.database.DbName.CLICKHOUSE;
@@ -530,8 +533,13 @@ public class Utils {
         }
     }
 
-    public static void closeAllAlertsBo() {
+    public static void closeAllAlertsBo() throws Exception {
         executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+        String userId = getUserIdByUser(autotestUserOne());
+        executeQueryToDb(
+                DbName.BO, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
+                )
+        );
     }
 
     public static double convertToUsd(double amount, String symbol) throws Exception {

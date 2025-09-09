@@ -1,5 +1,6 @@
 package helpers.database;
 
+import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.backoffice_db.backoffice_user.BackofficeUser;
 import business_objects.db.backoffice_db.client.Client;
@@ -9,10 +10,9 @@ import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
+import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,32 +22,43 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 public class BoHelper {
 
     @Step("Close alerts for user {ucid}")
-    public static void closeAlert(String ucid) throws SQLException {
-        executeQueryToDb(
-                DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid
-                )
-        );
+    public static void closeAlert(String ucid) {
+        try {
+            executeQueryToDb(
+                    DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid
+                    )
+            );
+            String userId = getUserIdByUser(autotestUserOne());
+            executeQueryToDb(
+                    DbName.BO, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE client_ucid = '%s'", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), ucid
+                    )
+            );
+        } catch (Exception e) {
+            System.out.println("Error closing alert");
+        }
+
     }
 
     @Step("Close alerts for client")
-    public static void closeAlert(ClientHelper client) throws SQLException {
-        executeQueryToDb(
-                DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", client.getUcid()
-                )
-        );
+    public static void closeAlert(ClientHelper client) {
+        closeAlert(client.getUcid());
     }
 
     @Step("Delete user from BO")
-    public static void deleteUserBO(String ucid) throws Exception {
+    public static void deleteUserBO(String ucid) {
         try {
             Allure.step("delete user from BO");
-            List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
-            int boId = client.getFirst().id;
-            deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'");
+            List<Investigation> investigations = getObjectsFromDB(DbName.BO, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
+            int investigationId = investigations.getFirst().getId();
+            deleteEntryFromDb(DbName.BO, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.BO, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            Thread.sleep(100);
+            deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
             deleteEntryFromDb(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
             Thread.sleep(100);
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             System.out.println("no such client in BO");
         }
     }

@@ -171,7 +171,7 @@ public class ConfigFactory {
     public static final String EMAIL_DEV = CONFIG.emailDev();
     public static final String ID_AUTOTEST_ONE = CONFIG.idAutotestOne();
     public static final String USERNAME_AUTOTEST_ONE = CONFIG.usernameAutotestOne();
-    public static final String PASSWORD_AUTOTEST_ONE = CONFIG.passwordAutotestOne();
+    public static final String PASSWORD_BACKOFFICE_USERS = CONFIG.passwordBackofficeUsers();
     public static final String USERNAME_AUTOTEST_AF = CONFIG.usernameAutotestAF();
     public static final String PASSWORD_AUTOTEST_AF = CONFIG.passwordAutotestAF();
     public static final String FIRST_NAME_AUTOTEST_ONE = CONFIG.firstNameAutotestOne();
@@ -669,8 +669,8 @@ public class ConfigFactory {
         @Key("usernameAutotestOne")
         String usernameAutotestOne();
 
-        @Key("passwordAutotestOne")
-        String passwordAutotestOne();
+        @Key("passwordBackofficeUsers")
+        String passwordBackofficeUsers();
 
         @Key("usernameAutotestAF")
         String usernameAutotestAF();
