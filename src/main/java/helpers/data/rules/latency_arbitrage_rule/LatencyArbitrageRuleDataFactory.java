@@ -18,7 +18,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictIsTestDictActiveTradingDaysByUcidObjectFactory.generateTradingDaysByClient;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -122,7 +122,8 @@ public class LatencyArbitrageRuleDataFactory {
         data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
         data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(300d);
         // Generate cumulative deposit data
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;

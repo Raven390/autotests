@@ -15,7 +15,7 @@ import java.util.Map;
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score.UcidMirrorScoreFactory.generateUcidMirrorScoreObject;
@@ -130,7 +130,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient7);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 1);
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 5001d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 5001d;
@@ -142,7 +143,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 301);
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 500d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 500d;
@@ -178,7 +180,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
@@ -196,7 +199,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
@@ -215,7 +219,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrders(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 1000d, 1000d, getCurrentTimestampDbFormat()));
         // leverage
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(data.clientHelper));
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);

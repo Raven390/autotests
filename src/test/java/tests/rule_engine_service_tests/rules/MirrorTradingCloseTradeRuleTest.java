@@ -67,6 +67,110 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     }
 
+    @Test
+    @AllureId("1524")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_1t7mktu")
+    void mirrorTradeRuleTest18() throws Exception {
+        RuleDataHelper data = dbDataMap.get("18");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1525")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
+    void mirrorTradeRuleTest19() throws Exception {
+        RuleDataHelper data = dbDataMap.get("19");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1526")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_06qi81c")
+    void mirrorTradeRuleTest20() throws Exception {
+        RuleDataHelper data = dbDataMap.get("20");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1527")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_06qi81c")
+    void mirrorTradeRuleTest21() throws Exception {
+        RuleDataHelper data = dbDataMap.get("21");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1528")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_06qi81c")
+    void mirrorTradeRuleTest22() throws Exception {
+        RuleDataHelper data = dbDataMap.get("22");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    }
+
+    @Test
+    @AllureId("1529")
+    @DisplayName("Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_06qi81c")
+    void mirrorTradeRuleTest23() throws Exception {
+        RuleDataHelper data = dbDataMap.get("23");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        Thread.sleep(30_000);
+        // Verify restriction is bonus restriction with code 13
+        Allure.step("Get client restrictions");
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is only restriction", clientGeneralRestrictions.size(), equalTo(1));
+        assertThat("Verify restriction id ", clientGeneralRestrictions.getFirst().getRestrictionId(), equalTo(8L));
+    }
+
+
     @Disabled
     @Test
     @DisplayName("Mirror trading. Ml model. Exit without alert if tades < 5. ElementId: Event_0vlh2iw")
@@ -211,4 +315,6 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
     void mirrorTradeRuleTest16() throws Exception {
 
     }
+
+
 }

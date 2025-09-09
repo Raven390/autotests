@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntry.ConnectionInfo.connectionInfoToString;
 import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnection;
@@ -579,6 +580,13 @@ public class RuleDataHelper {
 
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
         addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), status);
+        return data;
+    }
+
+    public static RuleDataHelper addAlert(RuleDataHelper data, String ruleName, String status) {
+        data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
+        data.boAlertsObjects.getFirst().setRule(ruleName);
+        data.boAlertsObjects.getFirst().setStatus(status);
         return data;
     }
 
