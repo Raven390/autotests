@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataBybit;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrders;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
@@ -29,10 +29,10 @@ class ByBitUiDifferencesTest extends TestBaseWeb {
     static ClientHelper client = getRandomBybitClient();
     static CrmTbUserObject user = generateUserByClient(client);
     static CrmTbAccountObject account = generateCrmTbAccountDataBybit(client);
-    static MtBalanceOrdersObject deposit1 = generateMtBalanceOrders(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject withdrawal1 = generateMtBalanceOrders(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject deposit2 = generateMtBalanceOrders(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
-    static MtBalanceOrdersObject withdrawal2 = generateMtBalanceOrders(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject withdrawal1 = generateMtBalanceOrder(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+    static MtBalanceOrdersObject withdrawal2 = generateMtBalanceOrder(client, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
 
     @BeforeAll
     static void setup() {

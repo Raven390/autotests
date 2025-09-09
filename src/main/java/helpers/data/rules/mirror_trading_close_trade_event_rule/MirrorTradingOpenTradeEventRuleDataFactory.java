@@ -7,6 +7,7 @@ import helpers.data.ClientHelper;
 import helpers.data.rules.RuleDataHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.DisplayName;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -19,13 +20,15 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositOb
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
+import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.ClientFactory.*;
+import static helpers.data.rules.RuleDataHelper.addAlert;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
-import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -47,6 +50,12 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
     private static final ClientHelper getMirrorTradingCloseTradeTest14Data = getRandomVantageClientAllFields();
     private static final ClientHelper getMirrorTradingCloseTradeTest15Data = getRandomVantageClientAllFields();
     private static final ClientHelper getMirrorTradingCloseTradeTest16Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest18Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest19Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest20Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest21Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest22Data = getRandomVantageClientAllFields();
+    private static final ClientHelper getMirrorTradingCloseTradeTest23Data = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
     private static RuleDataHelper getMirrorTradingRuleData(ClientHelper client) {
@@ -124,6 +133,89 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         return data;
     }
 
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_1t7mktu")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest18Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest18Data);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        return data;
+    }
+
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has no crypto deposits. ElementId: Event_06qi81c")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest19Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest19Data);
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.lnSessionParsedObject.setInputIpGeo("vn");
+        data.lnSessionParsedObject.setTrueIpGeo("vn");
+        data.lnSessionParsedObject.setBrowserLanguage("vn");
+        return data;
+    }
+
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_06qi81c")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest20Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest20Data);
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.lnSessionParsedObject.setInputIpGeo("vn");
+        data.lnSessionParsedObject.setTrueIpGeo("vn");
+        data.lnSessionParsedObject.setBrowserLanguage("vn");
+        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
+        return data;
+    }
+
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_06qi81c")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest21Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest21Data);
+        data.crmTbUserObject.isoCountryCode = "vn";
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.lnSessionParsedObject.setInputIpGeo("vn");
+        data.lnSessionParsedObject.setTrueIpGeo("vn");
+        data.lnSessionParsedObject.setBrowserLanguage("vn");
+        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
+        data.crmTbUserObject.country = "vn";
+        data.mt5DealsCoercedObjects.getFirst().setReason(2);
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        return data;
+    }
+
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_06qi81c")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest22Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest22Data);
+        data.crmTbUserObject.isoCountryCode = "vn";
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.lnSessionParsedObject.setInputIpGeo("vn");
+        data.lnSessionParsedObject.setTrueIpGeo("vn");
+        data.lnSessionParsedObject.setBrowserLanguage("vn");
+        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
+        data.crmTbUserObject.country = "vn";
+        data.mt5DealsCoercedObjects.getFirst().setReason(2);
+
+        addAlert(data, "Mirror Trading", "CLOSED");
+
+        return data;
+    }
+
+    @DisplayName("Mirror trading. Web hedge. Exit with restriction and alert if user doesn't has resolved alerts. ElementId: Event_06qi81c")
+    public static RuleDataHelper getMirrorTradingCloseTradeTest23Data() {
+        RuleDataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest23Data);
+        data.crmTbUserObject.isoCountryCode = "vn";
+        data.lnSessionParsedObject = generateLexisNexisDataByClient(data.clientHelper);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.lnSessionParsedObject.setInputIpGeo("vn");
+        data.lnSessionParsedObject.setTrueIpGeo("vn");
+        data.lnSessionParsedObject.setBrowserLanguage("vn");
+        data.mtBalanceOrdersObjects = List.of(generateMtBalanceOrder(data.clientHelper, 1d, 1d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects.getFirst().comment = "crypto";
+        data.crmTbUserObject.country = "vn";
+        data.mt5DealsCoercedObjects.getFirst().setReason(2);
+        return data;
+    }
+
     public static Map<String, RuleDataHelper> setupMirrorTradingCloseTradeRuleData() {
         startSshTunnel();
         Map<String, RuleDataHelper> map = new HashMap<>();
@@ -133,6 +225,12 @@ public class MirrorTradingOpenTradeEventRuleDataFactory {
         map.put("11", getMirrorTradingCloseTradeTest11Data());
         map.put("12", getMirrorTradingCloseTradeTest12Data());
         map.put("13", getMirrorTradingCloseTradeTest13Data());
+        map.put("18", getMirrorTradingCloseTradeTest18Data());
+        map.put("19", getMirrorTradingCloseTradeTest19Data());
+        map.put("20", getMirrorTradingCloseTradeTest20Data());
+        map.put("21", getMirrorTradingCloseTradeTest21Data());
+        map.put("22", getMirrorTradingCloseTradeTest22Data());
+        map.put("23", getMirrorTradingCloseTradeTest23Data());
 
         setupRuleData(map);
 
