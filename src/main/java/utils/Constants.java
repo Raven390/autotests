@@ -161,6 +161,7 @@ public class Constants {
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm___tb_withdrawal";
     public static final String DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME = "data_science_test.bybit_feature_store";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science_test.feature_store_service";
+    public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON = "data_science_test.ucid_mirror_score_python";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME = "data_science_test.ucid_mirror_score";
     public static final String DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME = "data_science_test.ucid_general_score";
     public static final String DEVICE_ID_TABLE_NAME = "data_science_test.device_id";
@@ -324,7 +325,7 @@ public class Constants {
     public static final String CONNECTION_SEARCH_DATA_PHONE_HIDDEN = "+1*********3";
     public static final String ENCODED_EMAIL = "paRP/scRJ89KbGWkZOrJVF/FbLaXR1jx";
     public static final String ENCODED_PHONE = "OlIoGyRiWyMgmlKyQZkW6w==";
-    public static final String FRAUD_TYPE_MOREUNKNOWN = "MOREUNKNOWN";
+    public static final String FRAUD_TYPE_MORE_UNKNOWN = "MOREUNKNOWN";
     public static final String FRAUD_TYPE_SOURCE_INSIGHT = "INSIGHT";
     public static final String FRAUD_TYPE_SOURCE_VINDEX = "VINDEX";
     public static final String FRAUD_TYPE_UNKNOWN = "UNKNOWN";

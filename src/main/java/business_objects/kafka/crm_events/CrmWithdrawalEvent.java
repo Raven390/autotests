@@ -39,7 +39,7 @@ public class CrmWithdrawalEvent {
     public String merchantOrderId;
 
     @JsonProperty("mt4Account")
-    public long mt4Account;
+    public Integer mt4Account;
 
     @JsonProperty("paymentChannelCode")
     public String paymentChannelCode;
@@ -79,7 +79,7 @@ public class CrmWithdrawalEvent {
 
     public CrmWithdrawalEvent(
             String accountType, String binNumber, String brand, String checkName, long clientId, String eventDate,
-            String expMonth, String expYear, String fullName, String id, String merchantOrderId, long mt4Account,
+            String expMonth, String expYear, String fullName, String id, String merchantOrderId, Integer mt4Account,
             String paymentChannelCode, String paymentChannelName, String paymentMethodCode, String platform,
             String regulator, String schemaVersion, String type, double withdrawalAmount,
             String withdrawalApplicationTime,
@@ -197,11 +197,11 @@ public class CrmWithdrawalEvent {
         this.merchantOrderId = merchantOrderId;
     }
 
-    public long getMt4Account() {
+    public Integer getMt4Account() {
         return mt4Account;
     }
 
-    public void setMt4Account(long mt4Account) {
+    public void setMt4Account(Integer mt4Account) {
         this.mt4Account = mt4Account;
     }
 

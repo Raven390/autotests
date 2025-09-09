@@ -33,7 +33,7 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 @RuleTestData("mirror-trading")
-public class MirrorTradingOpenTradeEventRuleDataFactory {
+public class MirrorTradingCloseTradeEventRuleDataFactory {
     private static final ClientHelper getMirrorTradingCloseTradeTest1Data = getRandomVantageClientAllFields();
     private static final ClientHelper getMirrorTradingCloseTradeTest2Data = getRandomVantageClientAllFields();
     private static final ClientHelper getMirrorTradingCloseTradeTest3Data = getRandomVantageClientAllFields();

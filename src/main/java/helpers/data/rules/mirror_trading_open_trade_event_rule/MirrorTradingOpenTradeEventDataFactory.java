@@ -1,4 +1,4 @@
-package helpers.data.rules.mirror_trading_open_trade_event_rule.mirror_trading_close_trade_event_rule;
+package helpers.data.rules.mirror_trading_open_trade_event_rule;
 
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;

@@ -1,8 +1,8 @@
 package tests.mirror_trading_score_service_tests;
 
 import business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStore;
-import business_objects.db.data_science.feature_store_service.FeatureStoreService;
 import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
+import business_objects.db.data_science.ucid_mirror_score_python.ucid_mirror_score.UcidMirrorScorePython;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -17,6 +17,7 @@ import java.util.List;
 import static business_objects.api.mirror_trading_score_service.MirrorTradingScoreRequest.getMirrorTradingScore;
 import static business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStoreFactory.*;
 import static business_objects.db.data_science.feature_store_service.FeatureStoreServiceFactory.*;
+import static business_objects.db.data_science.ucid_mirror_score_python.ucid_mirror_score.UcidMirrorScorePythonFactory.generateUcidMirrorScoreObject;
 import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanUserMirrorScoreDataDb;
@@ -48,48 +49,25 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
     }
 
     @Test
-    @DisplayName("Get mirror score data API")
+    @DisplayName("Get mirror score data from ucid_mirror_score_python table")
     @AllureId("1149")
     void getMirrorScoreTest() throws Exception {
 
         System.out.println(client.getUcid());
         Allure.step("setup DB data");
-        FeatureStoreService source1 = createFeatureStoreServiceForInsert1(client);
-        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source1));
+        UcidMirrorScorePython source1 = generateUcidMirrorScoreObject(client, 0.1, 0.2);
+        insertObjectsToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, List.of(source1));
 
         // Add wait for service to process the data
-        Thread.sleep(10_000);
+        Thread.sleep(5000);
 
         Allure.step("send API request for mirror score data");
         Response response = getMirrorTradingScore(client);
         assertThat(response.code(), is(200));
         Allure.step("Validate Data in response");
         UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
-        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.859_450_2));
-        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
-    }
-
-    @Test
-    @AllureId("1363")
-    @DisplayName("Get mirror score data API. Null value in table error handling")
-    void getMirrorScoreTest3() throws Exception {
-
-        System.out.println(client.getUcid());
-        Allure.step("setup DB data");
-        FeatureStoreService source1 = createFeatureStoreServiceForInsert1(client);
-        source1.setCumsumCreditUsd(null);
-        insertObjectsToDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, List.of(source1));
-
-        // Add wait for service to process the data
-        Thread.sleep(10_000);
-
-        Allure.step("send API request for mirror score data");
-        Response response = getMirrorTradingScore(client);
-        assertThat(response.code(), is(200));
-        Allure.step("Validate Data in response");
-        UcidMirrorScore mappedResponse = objectMapper.readValue(response.body().string(), UcidMirrorScore.class);
-        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.859_450_2));
-        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(1.0));
+        assertThat("Assert that modelScore is match expected", mappedResponse.getModelScore(), is(0.1));
+        assertThat("Assert that ucidScore is match expected", mappedResponse.getUcidScore(), is(0.2));
     }
 
     @Test

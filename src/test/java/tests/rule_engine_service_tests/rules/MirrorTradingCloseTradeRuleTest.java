@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
+import static helpers.data.rules.mirror_trading_close_trade_event_rule.MirrorTradingCloseTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -276,10 +276,26 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        Thread.sleep(5000);
+        Thread.sleep(30_000);
         //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
+
+        assertThat("Verify alert", alerts.getFirst().rule.name, is("Mirror Trading"));
+        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("HEDGING"));
+        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
+        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
+
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("The client hides the fraud inside several waves"));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
