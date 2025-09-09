@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
+import helpers.kafka.KafkaHelper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ public class TestBaseWeb {
     static int n = 1;
     static Playwright playwright;
     static Browser browser;
+    public KafkaHelper kafka = new KafkaHelper();
 
     // New instance for each test method.
     protected static BrowserContext context;

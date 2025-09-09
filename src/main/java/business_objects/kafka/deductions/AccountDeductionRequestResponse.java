@@ -76,4 +76,8 @@ public class AccountDeductionRequestResponse {
     public String toString() {
         return "AccountDeductionRequestResponse{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId + '\'' + ", status='" + status + '\'' + ", failReason='" + failReason + '\'' + '}';
     }
+
+    public String messageString() {
+        return "{" + "processedAt='" + processedAt + '\'' + ", messageId='" + messageId + '\'' + ", status='" + status + '\'' + ", failReason='" + failReason + '\'' + '}';
+    }
 }

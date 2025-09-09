@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.abuseRegistry;
+package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.audit_service_db.Event;
