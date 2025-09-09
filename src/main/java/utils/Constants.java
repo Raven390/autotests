@@ -85,6 +85,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE = "News Trader with close trade event rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event in Rule Engine service";
     // PAYMENT TYPES
@@ -216,6 +217,7 @@ public class Constants {
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     public static final String WEB_SESSION_TABLE_NAME = "data_science_test.web_session_id";
     public static final String RATES_USD_CURRENT = "ticks.rates_usd_current";
+    public static final String APP_TB_FININDEX_DATA = "vindex_test.app___tb_finindex_data";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

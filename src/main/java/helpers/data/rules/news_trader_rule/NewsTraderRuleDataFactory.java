@@ -1,0 +1,147 @@
+package helpers.data.rules.news_trader_rule;
+
+import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
+import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.kafka.mt_events.CloseTradeMtEvent;
+import business_objects.kafka.mt_events.TradeEventMetadata;
+import helpers.data.ClientHelper;
+import helpers.data.rules.RuleDataHelper;
+import io.qameta.allure.Description;
+import io.qameta.allure.Step;
+
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+import static business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexDataFactory.generateAppFinindexData;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
+import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
+import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
+import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.database.DbHelper.startSshTunnel;
+import static utils.Constants.MT_CLOSE_TRADE_EVENT;
+import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.getRandomUuidString;
+
+public class NewsTraderRuleDataFactory {
+    private static final ClientHelper client1 = getRandomVantageClientAllFields();
+    private static final ClientHelper client2 = getRandomVantageClientAllFields();
+    private static final ClientHelper client3 = getRandomVantageClientAllFields();
+    private static final ClientHelper client4 = getRandomVantageClientAllFields();
+    private static final ClientHelper client5 = getRandomVantageClientAllFields();
+
+    static Logger logger = Logger.getLogger(NewsTraderRuleDataFactory.class.getName());
+
+
+    @Step("Create data for News Trader rule is test account=true")
+    private static RuleDataHelper getNewsTraderRuleData(ClientHelper client) {
+        RuleDataHelper data = new RuleDataHelper();
+        client.setServerId(10);
+        data.clientHelper = client;
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.crmTbUserObject = generateUserByClient(client);
+        data.crmTbAccountObject = generateAccountByClient(client, false);
+        data.crmTbAccountForMtObject = generateAccountForMtByClient(client, false);
+        data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
+        TradeEventMetadata metadata = new TradeEventMetadata("MT5");
+        data.closeTradeMtEvent = new CloseTradeMtEvent(
+                getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
+        return data;
+    }
+
+    @Description("News Trader. Exit without alert if account is test . Event_end_1")
+    public static RuleDataHelper getNewsTraderCloseTradeTest1Data() {
+        RuleDataHelper data = getNewsTraderRuleData(client1);
+        data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
+        return data;
+    }
+
+    @Description("News Trader. Scotland. Exit without alert if news deals < 0.7. Event_end_2")
+    public static RuleDataHelper getNewsTraderCloseTradeTest2Data() {
+        RuleDataHelper data = getNewsTraderRuleData(client2);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        newsDeals.forEach(deal -> deal.setTime(time));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        return data;
+    }
+
+    @Description("News trader on close trade. Exit without alert if user have profit USD <350. Event_end_3")
+    public static RuleDataHelper getNewsTraderCloseTradeTest3Data() {
+        RuleDataHelper data = getNewsTraderRuleData(client3);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
+        newsDeals.forEach(deal -> deal.setTime(time));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
+        return data;
+    }
+
+    @Description("News Trader. Exit without alert if profit/deposit < 0.5. Event_4")
+    public static RuleDataHelper getNewsTraderCloseTradeTest4Data() {
+        RuleDataHelper data = getNewsTraderRuleData(client4);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
+        newsDeals.forEach(deal -> deal.setTime(time));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+        logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
+        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.4);
+        return data;
+    }
+
+    @Description("News Trader. Exit with alert if profit/deposit > 0.5. Event_end_5")
+    public static RuleDataHelper getNewsTraderCloseTradeTest5Data() {
+        RuleDataHelper data = getNewsTraderRuleData(client5);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        String time = getCurrentTimestampDbFormat();
+        AppTbFinindexData news = generateAppFinindexData(time);
+        data.AppTbFinindexData = List.of(news);
+        List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
+        newsDeals.forEach(deal -> deal.setTime(time));
+        data.mt5DealsCoercedObjects.addAll(newsDeals);
+        logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
+        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.6);
+        return data;
+    }
+
+    public static Map<String, RuleDataHelper> setupNewsTraderCloseTradeRuleData() {
+        startSshTunnel();
+        Map<String, RuleDataHelper> map = new HashMap<>();
+        // Put all the db data for setup in a map
+        map.put("1", getNewsTraderCloseTradeTest1Data());
+        map.put("2", getNewsTraderCloseTradeTest2Data());
+        map.put("3", getNewsTraderCloseTradeTest3Data());
+        map.put("4", getNewsTraderCloseTradeTest4Data());
+        map.put("5", getNewsTraderCloseTradeTest5Data());
+
+        setupRuleData(map);
+
+        return map;
+    }
+}

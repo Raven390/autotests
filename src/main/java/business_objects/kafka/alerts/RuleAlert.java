@@ -17,6 +17,12 @@ public class RuleAlert {
     @JsonProperty("rule")
     public Rule rule;
 
+    @JsonProperty("triggerCreatedTime")
+    public String triggerCreatedTime;
+
+    @JsonProperty("type")
+    public String type;
+
     public static class Rule {
 
         @JsonProperty("ver")
