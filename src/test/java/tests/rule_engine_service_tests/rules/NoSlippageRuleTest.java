@@ -110,6 +110,8 @@ class NoSlippageRuleTest extends TestBaseRule {
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
         Logger.getAnonymousLogger().info("client ucid: " + data.clientHelper.getUcid());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));

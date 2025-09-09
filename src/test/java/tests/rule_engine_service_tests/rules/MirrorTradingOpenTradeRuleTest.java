@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.mirror_trading_open_trade_event_rule.mirror_trading_close_trade_event_rule.MirrorTradingOpenTradeEventDataFactory.setupMirrorTradingOpenTradeEventRuleData;
+import static helpers.data.rules.mirror_trading_open_trade_event_rule.MirrorTradingOpenTradeEventDataFactory.setupMirrorTradingOpenTradeEventRuleData;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -149,6 +149,8 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
         assertThat("Verify ticker id in alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.tradeEvent.tradeId)));
         assertThat("Verify trading account in alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.clientHelper.getTradingAccount())));
         assertThat("Verify ucid in alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));

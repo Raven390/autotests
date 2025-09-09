@@ -65,6 +65,13 @@ public class TestBaseRule {
         return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
     }
 
+    @Step("Get User Alerts from Kafka topic 'alerts'")
+    public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client, String ruleName)
+            throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
+    }
+
     @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
         return getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class);

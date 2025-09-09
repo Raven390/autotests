@@ -18,7 +18,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.e
 import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.mirror_trading_close_trade_event_bybit_rule.MirrorTradingCloseTradeEventBybitRuleDataFactory.setupMirrorTradingCloseTradeBybitRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -129,10 +129,10 @@ class MirrorTradingCloseTradeBybitRuleTest extends TestBaseRule {
         RuleDataHelper data = dbDataMap.get("6");
 
         produceTradeMessageToKafka(data.tradeEvent);
-        Thread.sleep(10_000);
+        Thread.sleep(20_000);
 
         //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify rule name in alert", alerts.getFirst().rule.name, is("Mirror Trading"));
         assertThat("Verify rule reason in alert", alerts.getFirst().rule.attributes.reason, is("ML Model suspects the client of Mirror Trading"));
@@ -141,6 +141,8 @@ class MirrorTradingCloseTradeBybitRuleTest extends TestBaseRule {
         assertThat("Verify ticker id in alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.tradeEvent.tradeId)));
         assertThat("Verify trading account in alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.clientHelper.getTradingAccount())));
         assertThat("Verify ucid in alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
@@ -317,5 +319,4 @@ class MirrorTradingCloseTradeBybitRuleTest extends TestBaseRule {
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
     }
-
 }
