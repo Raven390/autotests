@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.abuseRegistry;
+package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
 import business_objects.api.lark.TenantAccessToken.TenantAccessTokenResponse;
 import business_objects.api.lark.chatHistory.ByBitRestrictionCancellationMessage;

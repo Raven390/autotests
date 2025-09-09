@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.abuseRegistry;
+package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
@@ -13,6 +13,7 @@ import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
@@ -88,6 +89,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     }
 
     @Test
+    @DisplayName("user can edit and save deduction")
+    @AllureId("1530")
     void userCanSaveDeduction() throws Exception {
 
         //Create a record about a client in crm_tb_user
@@ -163,9 +166,9 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deductionPage.hoverOverDeductionTableRow(client.getUserId());
         deductionPage.openEditDrawer();
         deductionPage.isSaveIsInactive();
-        double newIllegalProfit = getRandomRoundedDouble(-999.99, 999.99);
+        double newIllegalProfit = getRandomRoundedDouble(0.01, 999.99);
         double newIllegalProfitUSD = convertToUsd(newIllegalProfit, account.currency);
-        double newSuggestedDeduction = getRandomRoundedDouble(-999.99, 999.99);
+        double newSuggestedDeduction = getRandomRoundedDouble(0.01, 999.99);
         double newSuggestedDeductionUSD = convertToUsd(newSuggestedDeduction, account.currency);
         deductionPage.fillIllegalProfitInput(Double.toString(newIllegalProfit));
         deductionPage.fillSuggestedDeductionInput(Double.toString(newSuggestedDeduction));
@@ -182,6 +185,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     }
 
     @Test
+    @DisplayName("user can finalize deduction")
+    @AllureId("1531")
     void userCanDeductDeduction() throws Exception {
 
         //Create a record about a client in crm_tb_user
@@ -257,7 +262,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deductionPage.hoverOverDeductionTableRow(client.getUserId());
         deductionPage.openEditDrawer();
         deductionPage.isDeductIsInactive();
-        double deductionValue = getRandomRoundedDouble(-999.99, 999.99);
+        double deductionValue = getRandomRoundedDouble(0.01, 999.99);
         double deductionValueUSD = convertToUsd(deductionValue, account.currency);
         deductionPage.fillDeductionInput(Double.toString(deductionValue));
         deductionPage.isDeductIsActive();

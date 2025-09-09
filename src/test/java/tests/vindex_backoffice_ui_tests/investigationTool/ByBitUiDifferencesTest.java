@@ -8,7 +8,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-import tests.vindex_backoffice_ui_tests.abuseRegistry.ManageSingleDeductionTest;
+import tests.vindex_backoffice_ui_tests.abuseRegistry.deduction.ManageSingleDeductionTest;
 
 import java.util.List;
 import java.util.logging.Logger;

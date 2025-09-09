@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.abuseRegistry;
+package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;

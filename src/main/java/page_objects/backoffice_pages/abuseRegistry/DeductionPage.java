@@ -67,7 +67,7 @@ public class DeductionPage extends AbstractPage {
         this.emailValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).first();
         this.brandValues = deductionTableRow.locator(String.format(COLUMN_VALUE_BY_ORDER_PATTERN, 6)).last();
         this.deductionTable = page.locator(DEDUCTION_TABLE_LOCATOR);
-        this.singleEditButton = page.locator("//*[contains(@data-qa,'manage_deduction')]/button");
+        this.singleEditButton = page.locator("//button/span[text() = 'Edit']");
         this.illegalProfitInput = page.locator(ILLEGAL_PROFIT_INPUT_LOCATOR);
         this.suggesteedDeductionInput = page.locator(SUGGESTED_DEDUCTION_INPUT_LOCATOR);
         this.deductionInput = page.locator(DEDUCTION_INPUT_LOCATOR);
@@ -244,9 +244,9 @@ public class DeductionPage extends AbstractPage {
     }
 
     public void finishDeduction() {
-        Allure.step("save deduction");
+        Allure.step("finish deduction");
         deductButton.click();
-        assertEquals("The value was changed successfully", toast.textContent());
+        assertEquals("Deduction request has been successfully submitted", toast.textContent());
     }
 
 }
