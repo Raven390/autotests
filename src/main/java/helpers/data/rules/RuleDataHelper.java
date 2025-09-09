@@ -519,6 +519,36 @@ public class RuleDataHelper {
         setupAttrConnectionEmailPhoneWithCustomScore(data, clientTo, score);
     }
 
+    public static void setupAttrConnectionPayoutId(
+            RuleDataHelper data,
+            ClientHelper connectedClient) {
+
+        if (data.connections == null) {
+            data.connections = new ArrayList<>();
+        }
+        if (data.deviceIdTableEntries == null) {
+            data.deviceIdTableEntries = new ArrayList<>();
+        }
+        connectedClient.setDeviceId(data.clientHelper.getDeviceId());
+
+        //add connection with connected client
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "payoutId";
+        connectionInfo1.connectionAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.sourceAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.relationType = "exact";
+        connection.connectionScore = 1d;
+        data.connections.add(connection);
+        //add email to LN record
+        data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
+
+        //add to emails table records with same email for initial and connected clients
+
+        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(data.clientHelper, data.clientHelper.getDeviceId()));
+        data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
+    }
+
     public static void addConnectionByDeviceAttribute(RuleDataHelper data, ClientHelper clientTo) {
         if (data.connectedUsers == null) {
             data.connectedUsers = new ArrayList<>();
@@ -529,6 +559,18 @@ public class RuleDataHelper {
         data.connectedUsers.add(generateUserByClient(clientTo));
         data.connectedClientHelpers.add(clientTo);
         setupAttrConnectionDevice(data, clientTo);
+    }
+
+    public static void addConnectionByPayoutIdAttribute(RuleDataHelper data, ClientHelper clientTo) {
+        if (data.connectedUsers == null) {
+            data.connectedUsers = new ArrayList<>();
+        }
+        if (data.connectedClientHelpers == null) {
+            data.connectedClientHelpers = new ArrayList<>();
+        }
+        data.connectedUsers.add(generateUserByClient(clientTo));
+        data.connectedClientHelpers.add(clientTo);
+        setupAttrConnectionPayoutId(data, clientTo);
     }
 
     public static RuleDataHelper addFraudTypeToConnectedUser(RuleDataHelper data, FraudTypeStatus status)
