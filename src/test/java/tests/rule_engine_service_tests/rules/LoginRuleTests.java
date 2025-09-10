@@ -127,7 +127,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1466")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score > 0.7 and is mirror trader without strong connections. ElementId: end_no_str1_hedge")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and is mirror trader without strong connections. ElementId: end_no_str1_hedge")
     void loginRuleTest6() throws Exception {
         RuleDataHelper data = dbDataMap.get("6");
         produceLoginMessageToKafka(data.loginEvent);
@@ -141,7 +141,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1467")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score> 0.7 and is mirror trader with strong connections. ElementId: Event_1o2qu8z")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and is mirror trader with strong connections. ElementId: Event_1o2qu8z")
     void loginRuleTest7() throws Exception {
         RuleDataHelper data = dbDataMap.get("7");
         produceLoginMessageToKafka(data.loginEvent);
@@ -169,7 +169,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked abuser"));
+        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked Hedging Abuser"));
         assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
         //add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -189,7 +189,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1469")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has model score > 0.7 and fraud type is unknown. ElementId: end_unknown_fraud_type")
     void loginRuleTest9() throws Exception {
         RuleDataHelper data = dbDataMap.get("9");
         produceLoginMessageToKafka(data.loginEvent);
@@ -203,7 +203,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1470")
-    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has general score > 0.7 and fraud type is Market manipulation. ElementId: end_cs_abuse")
+    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has model score > 0.7 and fraud type is Market manipulation. ElementId: end_cs_abuse")
     void loginRuleTest10() throws Exception {
         RuleDataHelper data = dbDataMap.get("10");
         produceLoginMessageToKafka(data.loginEvent);
@@ -224,7 +224,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked abuser"));
+        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked MM Abuser"));
         assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
         //add check for MARKET_MANIPULATION
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -296,7 +296,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1471")
-    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has general score > 0.7 and fraud type is Chargeback. ElementId: end_cs_abuse")
+    @DisplayName("Login rule. Connection search sub-process. Exit with restriction if user has model score > 0.7 and fraud type is Chargeback. ElementId: end_cs_abuse")
     void loginRuleTest11() throws Exception {
         RuleDataHelper data = dbDataMap.get("11");
         produceLoginMessageToKafka(data.loginEvent);
@@ -317,7 +317,7 @@ class LoginRuleTests extends TestBaseRule {
         assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked abuser"));
+        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked Chargeback Abuser"));
         assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
         //add check for CHARGEBACK
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -337,7 +337,7 @@ class LoginRuleTests extends TestBaseRule {
 
     @Test
     @AllureId("1472")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has general score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
+    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
     void loginRuleTest12() throws Exception {
         RuleDataHelper data = dbDataMap.get("12");
         produceLoginMessageToKafka(data.loginEvent);

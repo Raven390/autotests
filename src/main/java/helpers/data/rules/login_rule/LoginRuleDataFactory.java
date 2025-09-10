@@ -151,7 +151,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score<0.7, user is mirror trader without connections. Event.id end_no_str1_hedge")
+    @DisplayName("Login rule. Connection search sub-process. Model score<0.7, user is mirror trader without connections. Event.id end_no_str1_hedge")
     public static RuleDataHelper getLoginRuleTest6Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest6Client);
         //Add connection
@@ -174,13 +174,13 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
         addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
-        //add general score
+        //add model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
 
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
     public static RuleDataHelper getLoginRuleTest7Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest7Client);
 
@@ -199,7 +199,7 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getLast());
         addFraudsForClient(data.connectedClientHelpers.getLast(), List.of(CPA_ABUSE), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
@@ -222,12 +222,12 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
         addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
     public static RuleDataHelper getLoginRuleTest9Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest9Client);
 
@@ -238,12 +238,12 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MONEY_LAUNDRY_RECORD), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Market manipulation. end_cs_abuse.id end_unknown_fraud_type")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Market manipulation. end_cs_abuse.id end_unknown_fraud_type")
     public static RuleDataHelper getLoginRuleTest10Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest10Client);
 
@@ -254,12 +254,12 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MARKET_MANIPULATION), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Bonus abuser and toxic account linked. end_cs_abuse.id")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Bonus abuser and toxic account linked. end_cs_abuse.id")
     public static RuleDataHelper getLoginRuleTest15Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest15Client);
 
@@ -270,12 +270,12 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(BONUS_ABUSE), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
     public static RuleDataHelper getLoginRuleTest11Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest11Client);
 
@@ -286,12 +286,12 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(CHARGEBACK), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_no_mitigation")
+    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_no_mitigation")
     public static RuleDataHelper getLoginRuleTest12Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest12Client);
 
@@ -302,7 +302,7 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
         addFraudsForClient(data.connectedClientHelpers.get(0), List.of(CPA_ABUSE), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
         return data;
     }
@@ -325,7 +325,7 @@ public class LoginRuleDataFactory {
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(1));
         addFraudsForClient(data.connectedClientHelpers.get(1), List.of(HEDGING), FraudTypeStatus.CONFIRMED);
 
-        // set general score
+        // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);
 
 
