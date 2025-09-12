@@ -4,6 +4,9 @@ import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.UUID;
 
 import static utils.Utils.*;
 
@@ -68,5 +71,11 @@ public class RuleAlertFactory {
         alert.rule.attributes.regulator = client.getRegulator();
         alert.rule.attributes.date = getCurrentTimestampDbFormat().replace(" ", "T") + "+03:00";
         return alert;
+    }
+
+    @Step("Generate payment alert for client with ucid '{ucid}'")
+    public static PaymentAlertMessage generatePaymentAlertByUcid(String ucid) {
+        return new PaymentAlertMessage(UUID.randomUUID(), AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now(), ucid, new PaymentAlertMessage.Rule(
+                "Payment Fraud Detection", "MARKET_MANIPULATION", "1.0", "Payment Initiated", Collections.emptyMap()), "123456", "server1", "CRYPTO", "1000.00", "USD", UUID.randomUUID().toString());
     }
 }

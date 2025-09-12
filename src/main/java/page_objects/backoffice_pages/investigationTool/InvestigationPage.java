@@ -1,16 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
-import static helpers.database.DbHelper.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.ConfigFactory.BASE_URL_E2E;
-import static utils.ConfigFactory.ENTER_PAGE_E2E;
-import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
-import static utils.TestUtils.comparePageScreenshotWithBaseline;
-
 import business_objects.db.audit_service_db.Event;
 import business_objects.ui.user.User;
 import com.microsoft.playwright.*;
@@ -20,9 +9,22 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.microsoft.playwright.options.WaitUntilState.DOMCONTENTLOADED;
+import static helpers.database.DbHelper.getObjectsFromDB;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.ConfigFactory.ENTER_PAGE_E2E;
+import static utils.Constants.VANTAGE_BRAND_IMAGE_SRC;
+import static utils.TestUtils.comparePageScreenshotWithBaseline;
 
 public class InvestigationPage extends AbstractPage {
     private final Locator pageLogo;
@@ -98,12 +100,14 @@ public class InvestigationPage extends AbstractPage {
     private final Locator assignButton;
     private final Locator commentButton;
     private final Locator closeToastButtom;
+    private final Locator selectInvestigationTypeDropDown;
 
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
     private static final String CHECKBOX_BY_VALUE_PATTERN = "//input[@value='%s' and @type='checkbox']";
     private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
     private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
+    private static final String INVESTIGATION_TYPE_LOCATOR_TEMPLATE = "//span[@class='g-select-list__option-default-label' and text()='%s']";
 
     public InvestigationPage(Page page) {
         super(page);
@@ -165,7 +169,7 @@ public class InvestigationPage extends AbstractPage {
         this.clientCardTimerElement = page.locator("//div[contains(@class,'v-suspicious-client-card__timer')]");
         this.clientCardAlertsCountElement = page.locator("//div[contains(@class,'v-suspicious-client-card__alerts-count')]");
         this.currentTabCardsCountElement = page.locator("//label[contains(@class,'g-radio-button__option_checked')]/descendant::span[contains(@class,'g-color-text_color_hint')]");
-        this.suspiciousClientsFilterIcon = page.locator("//div[@class='v-investigation-tools-side-panel__filters']");
+        this.suspiciousClientsFilterIcon = page.locator("//button[@data-qa='suspicious_clients__filters_toggle']");
         this.applyFilterButton = page.locator("//button[@data-qa='suspicious_clients__filters__apply']");
         this.showMoreRulesButton = page.locator("//span[text()='Show more']/..");
         this.ruleSearchInput = page.locator("//input[@placeholder='Search by rule']");
@@ -180,6 +184,7 @@ public class InvestigationPage extends AbstractPage {
         this.assignButton = page.locator("//button[@data-qa='investigation_tools__client_card_assign_button']");
         this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
+        this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
     }
 
     @Step("Open the autotest login page main page")
@@ -767,5 +772,20 @@ public class InvestigationPage extends AbstractPage {
             }
             assert false : "The client card has not appeared after the scroll";
         }
+    }
+
+    private void clickSelectInvestigationType(String investigationType) {
+        selectInvestigationTypeDropDown.click();
+        page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType)).click();
+    }
+
+    @Step("Select 'Trading' investigation type from the dropdown")
+    public void clickSelectTradingInvestigationType() {
+        this.clickSelectInvestigationType("Trading");
+    }
+
+    @Step("Select 'Payment' investigation type from the dropdown")
+    public void clickSelectPaymentInvestigationType() {
+        this.clickSelectInvestigationType("Payments");
     }
 }
