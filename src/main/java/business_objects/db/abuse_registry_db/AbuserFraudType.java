@@ -1,5 +1,6 @@
 package business_objects.db.abuse_registry_db;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class AbuserFraudType {
@@ -9,13 +10,29 @@ public class AbuserFraudType {
     String comment;
     String modifiedByUser;
     String modifiedBySystem;
-    String updatedAt;
-    String createdAt;
+    OffsetDateTime updatedAt;
+    OffsetDateTime createdAt;
     String fraudSubtypeCode;
     String symbols;
     String fraudSource;
 
     public AbuserFraudType() {
+    }
+
+    public AbuserFraudType(String ucid, String fraudTypeCode, String status, String comment, String modifiedByUser,
+            String modifiedBySystem, OffsetDateTime updatedAt, OffsetDateTime createdAt, String fraudSubtypeCode,
+            String symbols, String fraudSource) {
+        this.ucid = ucid;
+        this.fraudTypeCode = fraudTypeCode;
+        this.status = status;
+        this.comment = comment;
+        this.modifiedByUser = modifiedByUser;
+        this.modifiedBySystem = modifiedBySystem;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
+        this.fraudSubtypeCode = fraudSubtypeCode;
+        this.symbols = symbols;
+        this.fraudSource = fraudSource;
     }
 
     @Override
@@ -83,19 +100,19 @@ public class AbuserFraudType {
         this.modifiedBySystem = modifiedBySystem;
     }
 
-    public String getUpdatedAt() {
+    public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
