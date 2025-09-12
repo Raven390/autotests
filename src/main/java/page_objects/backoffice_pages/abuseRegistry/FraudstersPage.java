@@ -7,6 +7,9 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import io.qameta.allure.Allure;
 import page_objects.backoffice_pages.AbstractPage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -37,6 +40,8 @@ public class FraudstersPage extends AbstractPage {
     private final Locator deleteUploadButton;
     private final Locator removeListButton;
     private final Locator removeDrawer;
+    private final Locator pendingProcessingToggleLocator;
+    private final Locator pendingProcessingCells;
 
 
     public FraudstersPage(Page page) {
@@ -58,7 +63,8 @@ public class FraudstersPage extends AbstractPage {
         this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Remove']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
-
+        this.pendingProcessingToggleLocator = page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
+        this.pendingProcessingCells = page.locator("//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
     }
 
     public void navigateAbuseRegistry() {
@@ -153,6 +159,11 @@ public class FraudstersPage extends AbstractPage {
         selectPopup.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
+    public void clickPendingProcessingToggle() {
+        Allure.step("click to toggle pending processing");
+        pendingProcessingToggleLocator.click();
+    }
+
     public void selectRestriction(String restriction) {
         String locator = String.format(restrictionPopupListElementLocatorPattern, restriction);
         page.locator(locator).click();
@@ -185,6 +196,18 @@ public class FraudstersPage extends AbstractPage {
     public void verifySuccessMessageDelete() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertTrue(successToast.textContent().contains("Selected actions are now being processed"));
+    }
+
+    public String getClientInPendingProcessingContent(String ucid) {
+        return page.locator(String.format("//*[@data-qa='virtualized_table__rows__%s__pending_processing']", ucid)).textContent();
+    }
+
+    public List<String> getPendingProcessingCellsContent() {
+        var list = new ArrayList<String>();
+        for (int i = 0; i < pendingProcessingCells.count(); i++) {
+            list.add(pendingProcessingCells.nth(i).textContent());
+        }
+        return list;
     }
 
     public void addRestriction(String... addedRestriction) {
