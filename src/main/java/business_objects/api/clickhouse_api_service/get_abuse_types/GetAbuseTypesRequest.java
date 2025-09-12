@@ -13,7 +13,7 @@ import static utils.ConfigFactory.*;
 
 public class GetAbuseTypesRequest {
 
-    @Step("Post abuse types")
+    @Step("Get abuse types")
     public static Response getAbuseTypes(List<String> clientIds) throws IOException {
         Map<String, Object> queryParamsMap = new HashMap<>();
         queryParamsMap.put("clientIds", clientIds);

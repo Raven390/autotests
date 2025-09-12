@@ -25,12 +25,12 @@ public class BoHelper {
     public static void closeAlert(String ucid) {
         try {
             executeQueryToDb(
-                    DbName.BO, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid
+                    DbName.BACKOFFICE, String.format("UPDATE %s SET closed_at ='%s', status = '%s', alert_resolution = 'CONFIRMED' WHERE client_ucid = '%s'", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat(), "CLOSED", ucid
                     )
             );
             String userId = getUserIdByUser(autotestUserOne());
             executeQueryToDb(
-                    DbName.BO, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE client_ucid = '%s'", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), ucid
+                    DbName.BACKOFFICE, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE client_ucid = '%s'", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat(), ucid
                     )
             );
         } catch (Exception e) {
@@ -48,15 +48,15 @@ public class BoHelper {
     public static void deleteUserBO(String ucid) {
         try {
             Allure.step("delete user from BO");
-            List<Investigation> investigations = getObjectsFromDB(DbName.BO, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
+            List<Investigation> investigations = getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
             int investigationId = investigations.getFirst().getId();
-            deleteEntryFromDb(DbName.BO, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
+            deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.BO, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.BO, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
+            deleteEntryFromDb(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
+            deleteEntryFromDb(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
             Thread.sleep(100);
         } catch (Exception e) {
             System.out.println("no such client in BO");
@@ -70,9 +70,9 @@ public class BoHelper {
     @Step("Delete user's frauds from BO")
     public static void cleanUserFraudsBo(String ucid) throws Exception {
 
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
+        List<Client> client = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
-        deleteEntryFromDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
         Thread.sleep(100);
     }
 
@@ -82,10 +82,10 @@ public class BoHelper {
         Thread.sleep(2000);
         long fraud = 0;
 
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
+        List<Client> client = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
         fraud = clientsFraudTypes.getFirst().getFraudTypeId();
@@ -99,10 +99,10 @@ public class BoHelper {
         Allure.step("Check that user not have records about frauds in db");
         Thread.sleep(2000);
 
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
+        List<Client> client = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
+        List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
         assertEquals(clientsFraudTypes.size(), 0);
@@ -114,7 +114,7 @@ public class BoHelper {
     public static void createUserFraudsBo(String ucid, long... fraudIds) throws Exception {
         Thread.sleep(2000);
         for (long fraudId : fraudIds) {
-            insertObjectToDb(DbName.BO, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(fraudId, ucid));
+            insertObjectToDb(DbName.BACKOFFICE, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, new ClientsFraudTypes(fraudId, ucid));
         }
         Thread.sleep(100);
     }
@@ -125,10 +125,10 @@ public class BoHelper {
         Allure.step("Check confirmation status of alert in DB");
         Thread.sleep(2000);
 
-        List<Client> client = getObjectsFromDB(DbName.BO, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
+        List<Client> client = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         System.out.println("CLIENT ID IN BO " + boId);
-        List<Alert> alert = getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'", Alert.class);
+        List<Alert> alert = getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'", Alert.class);
         Thread.sleep(100);
 
         assertEquals(expectedConfirmation, alert.getFirst().getAlertResolution());
@@ -137,7 +137,7 @@ public class BoHelper {
     @Step("Get user_id from bo db by user")
     public static String getUserIdByUser(User user) throws Exception {
         return getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, String.format("first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()), BackofficeUser.class
+                DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, String.format("first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()), BackofficeUser.class
         ).getFirst().id;
     }
 

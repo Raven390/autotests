@@ -94,6 +94,10 @@ public class ConfigFactory {
     public static final String RULE_ENGINE_DB_NAME = CONFIG.ruleEngineDbName();
     public static final String RULE_ENGINE_DB_USER = CONFIG.ruleEngineDbUser();
     public static final String RULE_ENGINE_DB_PASSWORD = CONFIG.ruleEngineDbPassword();
+    // Rule engine database
+    public static final String PAYMENT_GATE_DB_NAME = CONFIG.paymentGateDbName();
+    public static final String PAYMENT_GATE_DB_USER = CONFIG.paymentGateDbUser();
+    public static final String PAYMENT_GATE_DB_PASSWORD = CONFIG.paymentGateDbPassword();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
@@ -111,6 +115,13 @@ public class ConfigFactory {
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION = CONFIG.mitigationServiceCancelRestriction();
     public static final String MITIGATION_SERVICE_RESTRICTIONS_BYBIT = CONFIG.mitigationServiceRestrictionsByBit();
     public static final String MITIGATION_SERVICE_CANCEL_RESTRICTION_BYBIT = CONFIG.mitigationServiceCancelRestrictionsByBit();
+    // Mitigation service
+    public static final String PAYMENT_GATE_SERVICE_BASE_PATH = CONFIG.paymentGateServiceBasePath();
+    public static final String PAYMENT_GATE_PAYMENTS_PATH = CONFIG.paymentGatePaymentsPath();
+    public static final String PAYMENT_GATE_DECISIONS_PATH = CONFIG.paymentGateDecisionsPath();
+    public static final String PAYMENT_GATE_TEMP_DECISIONS_PATH = CONFIG.paymentGateTempDecisionsPath();
+    public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
+    public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
     // Mitigation service db
     public static final String MITIGATION_DB_SSH_HOST = CONFIG.mitigationDbSshHost();
     public static final String MITIGATION_DB_SSH_PORT = String.valueOf(CONFIG.mitigationDbSshPort());
@@ -460,6 +471,17 @@ public class ConfigFactory {
         @Key("ruleEngineDbPassword")
         String ruleEngineDbPassword();
 
+        // Payment gate database
+
+        @Key("paymentGateDbName")
+        String paymentGateDbName();
+
+        @Key("paymentGateDbUser")
+        String paymentGateDbUser();
+
+        @Key("paymentGateDbPassword")
+        String paymentGateDbPassword();
+
         // Connection search
 
         @Key("connectionSearchBasePathTest")
@@ -508,6 +530,26 @@ public class ConfigFactory {
 
         @Key("mitigationServiceCancelRestriction")
         String mitigationServiceCancelRestriction();
+
+        // Payment gate service
+
+        @Key("paymentGateServiceBasePath")
+        String paymentGateServiceBasePath();
+
+        @Key("paymentGatePaymentsPath")
+        String paymentGatePaymentsPath();
+
+        @Key("paymentGateDecisionsPath")
+        String paymentGateDecisionsPath();
+
+        @Key("paymentGateTempDecisionsPath")
+        String paymentGateTempDecisionsPath();
+
+        @Key("paymentGateRuleExecutionsPath")
+        String paymentGateRuleExecutionsPath();
+
+        @Key("paymentGateAggrByUcidPath")
+        String paymentGateAggrByUcidPath();
 
         // Mitigation service db
 

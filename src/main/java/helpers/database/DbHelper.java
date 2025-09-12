@@ -39,8 +39,7 @@ public class DbHelper {
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
-    public static <T> List<T> getObjectsFromDBFinal(DbName dbName, String tableName, String where, Class<T> className)
-            throws Exception {
+    public static <T> List<T> getObjectsFromDBFinal(DbName dbName, String tableName, String where, Class<T> className) {
         return executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
                 return fetchFinal(connection, tableName, where, className);
@@ -123,8 +122,8 @@ public class DbHelper {
             // Convert LocalDate to String
             return ((LocalDate) value).format(DateTimeFormatter.ISO_LOCAL_DATE);
         } else if (targetType.equals(String.class) && value instanceof Timestamp) {
-            // Convert Timestamp to String
-            return ((Timestamp) value).toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+            // Convert Timestamp to ISO-8601 UTC String with 'Z' to avoid timezone shifts
+            return ((Timestamp) value).toInstant().toString();
         } else if (targetType.equals(String.class) && value instanceof String[]) {
             return String.join(",", (String[]) value); // Convert String array to single String
         } else if (targetType.equals(String.class) && value instanceof InetAddress) {
@@ -304,26 +303,23 @@ public class DbHelper {
             return createPostgresConnection();
         } else if (dbName == DbName.AUDIT) {
             return createPostgresConnectionAudit();
-        } else if (dbName == DbName.BO) {
+        } else if (dbName == DbName.BACKOFFICE) {
             return createPostgresConnectionBO();
         } else if (dbName == DbName.RULE_ENGINE) {
             return createPostgresConnectionRuleEngine();
+        } else if (dbName == DbName.PAYMENT_GATE) {
+            return createPostgresConnectionPaymentGate();
         } else {
             return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
         }
     }
 
-    public static Connection createConnectionRuleEngineDb() throws SQLException {
-        return createPostgresConnectionRuleEngine();
-    }
-
-    private static Connection createPostgresConnectionRuleEngine() throws SQLException {
+    public static Connection createPostgresConnectionRuleEngine() throws SQLException {
         String jdbcUrl;
         if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
             jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         } else {
-            //jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
 
         }
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
@@ -331,6 +327,23 @@ public class DbHelper {
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", RULE_ENGINE_DB_USER);
         connectionProps.setProperty("password", RULE_ENGINE_DB_PASSWORD);
+
+        return DriverManager.getConnection(jdbcUrl, connectionProps);
+    }
+
+    private static Connection createPostgresConnectionPaymentGate() throws SQLException {
+        String jdbcUrl;
+        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
+            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
+        } else {
+            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
+
+        }
+        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
+
+        Properties connectionProps = new Properties();
+        connectionProps.setProperty("user", PAYMENT_GATE_DB_USER);
+        connectionProps.setProperty("password", PAYMENT_GATE_DB_PASSWORD);
 
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }

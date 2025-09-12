@@ -14,6 +14,7 @@ public class Constants {
     public static final String SUITE_REGRESSION = "suite_regression";
     public static final String SUITE_RULE_ENGINE_API_TESTS = "suite_rule_engine_api_tests";
     public static final String SUITE_RULE_ENGINE_RULES_TESTS = "suite_rule_engine_rules_tests";
+    public static final String SUITE_PAYMENT_GATE_TESTS = "suite_payment_gate_tests";
     public static final String SUITE_SMOKE = "suite_smoke";
     public static final String SUITE_SMOKE_PROD = "suite_smoke_production";
     // TEST LAYERS
@@ -32,6 +33,7 @@ public class Constants {
     public static final String FEATURE_RULE_ENGINE_SERVICE = "Rule engine service";
     public static final String FEATURE_PRODUCTION_TESTS_CLICKHOUSE_API = "Clickhouse Api. Production tests";
     public static final String FEATURE_PRODUCTION_TESTS_CONNECTION_SEARCH = "Connection search. Production tests";
+    public static final String FEATURE_PAYMENT_GATE = "Payment gate";
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
@@ -88,6 +90,15 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE = "News Trader with close trade event rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event in Rule Engine service";
+    public static final String STORY_PAYMENT_GATE_GET_DECISIONS = "Get decisions request";
+    public static final String STORY_PAYMENT_GATE_POST_DECISIONS = "Post decisions request";
+    public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";
+    public static final String STORY_PAYMENT_GATE_POST_PAYMENTS = "Post payments request";
+    public static final String STORY_PAYMENT_GATE_POST_RULE_EXECUTIONS = "Post rule executions request";
+    public static final String STORY_PAYMENT_GATE_PUT_RULE_EXECUTIONS = "Put rule executions request";
+    public static final String STORY_PAYMENT_GATE_PUT_DECISIONS = "Put decisions request";
+    public static final String STORY_PAYMENT_GATE_GET_PAYMENTS_AGGR_BY_CLIENT = "Get payments aggr by client request";
+    public static final String STORY_PAYMENT_GATE_GET_PAYMENTS = "Get payments request";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -222,6 +233,17 @@ public class Constants {
     public static final String WEB_SESSION_TABLE_NAME = "data_science_test.web_session_id";
     public static final String RATES_USD_CURRENT = "ticks.rates_usd_current";
     public static final String APP_TB_FININDEX_DATA = "vindex_test.app___tb_finindex_data";
+    public static final String PAYMENT_GATEWAY_D_DECISIONS_TABLE = "postgres.paymentgate.d_decisions";
+    public static final String PAYMENT_GATEWAY_D_PAYMENT_RULE_OUTCOME_TABLE = "postgres.paymentgate.d_payment_rule_outcomes";
+    public static final String PAYMENT_GATEWAY_D_PAYMENT_RULES_TABLE = "postgres.paymentgate.d_payment_rules";
+    public static final String PAYMENT_GATEWAY_D_PAYMENT_TYPES_TABLE = "postgres.paymentgate.d_payment_types";
+    public static final String PAYMENT_GATEWAY_D_REJECTION_TABLE = "postgres.paymentgate.d_rejection";
+    public static final String PAYMENT_GATEWAY_D_STATUS_TABLE = "postgres.paymentgate.d_status";
+    public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE = "postgres.paymentgate.payment_decisions";
+    public static final String PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE = "postgres.paymentgate.payment_details";
+    public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
+    public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";
+    public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE = "postgres.paymentgate.tmp_rule_decisions";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files

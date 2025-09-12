@@ -24,11 +24,11 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @BeforeAll
     public static void setup() throws Exception {
-        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
         List<BackofficeUser> usersList = getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
+                DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
         );
         assertThat(usersList, empty());
     }
@@ -44,7 +44,7 @@ public class FirstLoginTest extends TestBaseWeb {
         investigationPage.navigateBase();
         investigationPage.waitForPageToLoad();
         List<BackofficeUser> usersList = getObjectsFromDB(
-                DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
+                DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT, BackofficeUser.class
         );
         assertThat(usersList, hasSize(1));
         BackofficeUser expectedUser = new BackofficeUser(uiUser.getFirstName(), uiUser.getLastName(), uiUser.getRole());
@@ -53,8 +53,8 @@ public class FirstLoginTest extends TestBaseWeb {
 
     @AfterAll
     public static void teardown() throws Exception {
-        deleteEntryFromDb(DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(DbName.BO, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
-        deleteEntryFromDb(DbName.BO, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_USER_SESSION_TABLE_NAME, USER_ID_WHERE_STATEMENT);
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, BO_USER_WHERE_STATEMENT);
     }
 }

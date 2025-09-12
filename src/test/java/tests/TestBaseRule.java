@@ -74,7 +74,7 @@ public class TestBaseRule {
 
     @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
-        return getObjectsFromDB(DbName.BO, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class);
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class);
     }
 
     @Step("Get User restrictions from mitigation DB")
