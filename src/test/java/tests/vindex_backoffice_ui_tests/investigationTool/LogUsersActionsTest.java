@@ -73,7 +73,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "LOGIN", "AUTH", null);
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
@@ -99,7 +99,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         connectionPage.openConnectionTable();
         connectionPage.clickUnmaskConnectionTableDataButton();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s' AND entity = 'SENSITIVE_DATA' ORDER BY created_at DESC LIMIT 100", userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format("user_id = '%s' AND entity = 'SENSITIVE_DATA' ORDER BY created_at DESC LIMIT 100", userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAuditGeneral = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
         UserActionAudit expectedUserActionAuditConnection = new UserActionAudit(null, userId, null, "VIEW", "SENSITIVE_DATA", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUserConnected.ucid));
@@ -120,7 +120,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         generalTab.clickGeneralTabButton();
         generalTab.kycDetailsOpen("Proof of identity");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "VIEW", "KYC_DATA", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "fileName", FILE_KYC_NAME.substring(1)));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
@@ -150,7 +150,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         auditTrailPage.openAuditTrailTab();
         connectionPage.clickConnectionTabButton();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAuditInvestigation = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s\"}", "path", "/investigation"));
         UserActionAudit expectedUserActionAuditAlerts = new UserActionAudit(null, userId, null, "VIEW", "ROUTING", String.format("{\"%s\": \"%s%s%s\", \"%s\": \"%s\"}", "path", "/investigation/", crmTbUser.ucid, "/alerts", "ucid", crmTbUser.ucid));
@@ -179,7 +179,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         investigationPage.investigateClientCard();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ASSIGN", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
@@ -200,7 +200,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         investigationPage.fillCommentForm("Test log users actions comment");
         investigationPage.submitCommentForm();
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "COMMENT", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
@@ -221,7 +221,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         restrictionPage.addNewRestriction(LOGIN_CRM, "Test log users actions restriction apply");
         restrictionPage.removeRestriction(LOGIN_CRM, "Test log users actions restriction cancel");
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAuditApply = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "APPLY"));
         UserActionAudit expectedUserActionAuditCancel = new UserActionAudit(null, userId, null, "RESTRICTION", "CLIENT", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "action", "CANCEL"));
@@ -251,7 +251,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         paymentsPage.clickApproveButton();
         page.waitForTimeout(2000);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "ACCEPT", "WD_REQUEST", String.format("{\"%s\": \"%s\", \"%s\": \"%s\"}", "ucid", crmTbUser.ucid, "transferId", alert.rule.attributes.withdrawalId));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));
@@ -273,7 +273,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         List<UserActionAudit> userActionAudits = getObjectsFromDB(
-                DbName.BO, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
+                DbName.BACKOFFICE, BO_USER_ACTION_AUDIT_TABLE_NAME, String.format(QUERY_WHERE, userId), UserActionAudit.class
         );
         UserActionAudit expectedUserActionAudit = new UserActionAudit(null, userId, null, "RESOLVE", "CLIENT", String.format("{\"%s\": \"%s\"}", "ucid", crmTbUser.ucid));
         assertThat("Assert that user_action_audit table contains expected data", userActionAudits, hasItem(expectedUserActionAudit));

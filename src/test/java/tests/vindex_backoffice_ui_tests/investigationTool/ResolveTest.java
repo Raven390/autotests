@@ -94,7 +94,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Resolve client with withdrawal transactions approve all")
     public void resolveWithWithdrawalsApproveAllTest() throws Exception {
         cleanUserAudit(withdrawalClient.getUcid());
-        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
         cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
@@ -115,7 +115,7 @@ public class ResolveTest extends TestBaseWeb {
     @AllureId("432")
     @DisplayName("Resolve client with withdrawal transactions reject all")
     public void resolveWithWithdrawalsRejectAllTest() throws Exception {
-        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
         cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
@@ -136,7 +136,7 @@ public class ResolveTest extends TestBaseWeb {
     @DisplayName("Resolve client with withdrawal transactions approve one")
     public void resolveWithWithdrawalsApproveOneTest() throws Exception {
         //first run
-        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
         cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));
@@ -150,7 +150,7 @@ public class ResolveTest extends TestBaseWeb {
         restrictionPage.checkKafkaRequestWithdrawal("14140201", "Approve");
         //second run
         cleanUserAudit(withdrawalClient.getUcid());
-        deleteEntryFromDb(DbName.BO, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
+        deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, String.format("ucid = '%s'", withdrawalClient.getUcid()));
         cleanUserRestrictionGeneral(withdrawalClient.getUcid());
         RestrictionPage.setRestrictionAPIGeneral(withdrawalClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         kafka.produceMessages(alert1.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert1), objectMapper.writeValueAsString(alert2), objectMapper.writeValueAsString(alert3));

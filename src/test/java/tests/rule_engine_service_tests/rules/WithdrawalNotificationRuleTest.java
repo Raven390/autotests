@@ -1,6 +1,8 @@
 package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
@@ -17,11 +19,12 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
+import static helpers.database.PaymentGateHelper.getPaymentDetailsByClientId;
+import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
+import static utils.Utils.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
@@ -130,6 +133,14 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(client2);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        //Check that payment is written to payment gate tables
+        Allure.step("Validate Data in paymentEvent table");
+        PaymentEventsObject paymentEventsObject = getPaymentEventByUcid(client2.getUcid());
+        assertThat("Assert paymentId", paymentEventsObject.getCrmId(), is(String.valueOf(withdrawalEvent.getWithdrawalId())));
+        Allure.step("Validate Data in paymentDetails table");
+        PaymentDetailsObject paymentDetailsObject = getPaymentDetailsByClientId(client2.getUserId());
+        assertThat("Assert brand", paymentDetailsObject.getClientId(), is(client2.getUserId().toString()));
     }
 
     @Test

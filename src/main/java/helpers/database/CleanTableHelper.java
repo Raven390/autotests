@@ -202,4 +202,16 @@ public class CleanTableHelper {
         //deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_V2_TABLE_NAME, "ucid = '" + ucid + "'");
         Thread.sleep(100);
     }
+
+    // Payment gate db
+    @Step("Clean payment data (details then events) by ucid '{ucid}' and client_id '{clientId}'")
+    public static void cleanPaymentData(String ucid, Integer clientId) throws Exception {
+        // Delete child rows first to satisfy FK: payment_details.payment_id -> payment_events.payment_id
+        Allure.step("delete payment_details by client_id from DB");
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, "client_id = '" + clientId + "'");
+        Thread.sleep(100);
+        Allure.step("delete payment_events by ucid from DB");
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        Thread.sleep(100);
+    }
 }

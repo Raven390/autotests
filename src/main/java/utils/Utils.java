@@ -3,7 +3,6 @@ package utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +32,7 @@ import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.BoHelper.getUserIdByUser;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbName.BO;
+import static helpers.database.DbName.BACKOFFICE;
 import static helpers.database.DbName.CLICKHOUSE;
 import static org.junit.jupiter.api.Assertions.fail;
 import static utils.Constants.*;
@@ -260,10 +259,6 @@ public class Utils {
         return getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, step, 0, 0, 0, 0);
     }
 
-    public static Double getRandomDouble(double min, double max) {
-        return random.nextDouble(min, max);
-    }
-
     public static Double getRandomRoundedDouble(double min, double max) {
         double random = ThreadLocalRandom.current().nextDouble(min, max);
         double rounded = roundDouble(random, 2);
@@ -412,54 +407,6 @@ public class Utils {
         }
     }
 
-    public static String transformDateMinusOffset(String dateTimeString, DateTimeFormat formatFrom,
-            DateTimeFormat formatTo, int years, int months, int days,
-            int hours, int minutes) {
-        try {
-            DateTimeFormatter sourceFormatter = DateTimeFormatter.ofPattern(formatFrom.getDisplayName(), Locale.US);
-            DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern(formatTo.getDisplayName(), Locale.US);
-            // Determine if the input format is for a date or date-time
-            if (DateTimeFormat.DATE.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_DAY.equals(formatFrom) || DateTimeFormat.MONTH_TEXT_AND_YEAR.equals(formatFrom) || DateTimeFormat.YEAR.equals(formatFrom)) {
-                // Parse as LocalDate if only a date is present
-                LocalDate date = LocalDate.parse(dateTimeString, sourceFormatter).minusYears(years).minusMonths(months).minusDays(days);
-                return date.format(targetFormatter);
-            } else {
-                // Parse as LocalDateTime if time is present
-                LocalDateTime dateTime = LocalDateTime.parse(dateTimeString, sourceFormatter).minusYears(years).minusMonths(months).minusDays(days).minusHours(hours).minusMinutes(minutes);
-                return dateTime.format(targetFormatter);
-            }
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Date string, formatFrom or formatTo is incorrect!");
-        }
-    }
-
-    public static String calculatePercentageFromList(List<Long> numerators, List<Long> denominators) {
-        if (numerators.size() != denominators.size()) {
-            throw new IllegalArgumentException("Lists must have the same size"); // Handle mismatch in list sizes
-        }
-        double totalNumerator = 0;
-        double totalDenominator = 0;
-        // Calculate the sum of numerators and denominators
-        for (int i = 0; i < numerators.size(); i++) {
-            totalNumerator += numerators.get(i);
-            totalDenominator += denominators.get(i);
-        }
-
-        // Check for division by zero
-        if (totalDenominator == 0) {
-            throw new IllegalArgumentException("Division by zero!"); // Handle division by zero
-        }
-
-        // Perform the division, multiply by 100, round to 1 decimal place
-        double result = (totalNumerator / totalDenominator) * 100;
-        result = Math.round(result * 10.0) / 10.0; // Round to 1 decimal place
-
-        // Use DecimalFormat to format the result without decimals when unnecessary
-        DecimalFormat formatter = new DecimalFormat(result % 1 == 0 ? "#,###" : "#,###.0");
-
-        // Return the formatted result as a percentage string
-        return formatter.format(result) + "%";
-    }
 
     public static void waitForConnectionSearchToUpdate() throws Exception {
         ClientHelper userFrom1 = getRandomVantageClient();
@@ -501,22 +448,6 @@ public class Utils {
         }
     }
 
-    public static String ucidListDbFormat(ClientHelper... clients) {
-        StringBuilder sb = new StringBuilder();
-        int count = clients.length;
-        for (ClientHelper client : clients) {
-            sb.append("'");
-            sb.append(client.getUcid());
-            sb.append("'");
-            if (count > 1) {
-                sb.append(",");
-            }
-            count -= 1;
-        }
-        return sb.toString();
-
-    }
-
     public static void insertConnectionToDb(ConnectionTableEntry... connections) throws Exception {
         for (ConnectionTableEntry connection : connections) {
             connection.datetime = getCurrentTimestampDbFormat();
@@ -526,29 +457,22 @@ public class Utils {
         waitForConnectionSearchToUpdate(connections[connections.length - 1].userFrom);
     }
 
-    public static void deleteConnectionFromDb(String... ucids) throws Exception {
-        for (String ucid : ucids) {
-            String query = "ALTER TABLE  " + CONNECTIONS_TABLE_NAME + "\n" + "update  status ='deleted',  datetime = now()\n" + "where user_from = '" + ucid + "'\n" + "or user_to = '" + ucid + "';";
-            executeQueryToDb(CLICKHOUSE, query);
-        }
-    }
-
     public static void closeAllAlertsBo() throws Exception {
-        executeQueryToDb(BO, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+        executeQueryToDb(BACKOFFICE, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
         String userId = getUserIdByUser(autotestUserOne());
         executeQueryToDb(
-                DbName.BO, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
+                DbName.BACKOFFICE, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
                 )
         );
     }
 
-    public static double convertToUsd(double amount, String symbol) throws Exception {
-        RatesUsdCurrentObject rate = (RatesUsdCurrentObject) getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
+    public static double convertToUsd(double amount, String symbol) {
+        RatesUsdCurrentObject rate = getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
         System.out.println("tate is " + rate.getRate());
         return amount * rate.getRate();
     }
 
-    double roundDouble(double value) {
-        return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    public static String buildUcid(String brand, Integer clientId) {
+        return brand + "-" + clientId.toString();
     }
 }

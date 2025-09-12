@@ -8,12 +8,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static helpers.database.DbHelper.createConnectionRuleEngineDb;
+import static helpers.database.DbHelper.createPostgresConnectionRuleEngine;
 
 
 public class RuleDbObjectFactory {
     public static RuleDbObjectPgArray generateRuleDbObjectByRulePgArray(RuleObject rule) throws SQLException {
-        Connection connection = createConnectionRuleEngineDb();
+        Connection connection = createPostgresConnectionRuleEngine();
         // Convert Java List to SQL Array
         List<String> brands = List.of(rule.getValue().getBrands().getFirst(), rule.getValue().getBrands().getLast());
         Array sqlArray = connection.createArrayOf("text", brands.toArray());
