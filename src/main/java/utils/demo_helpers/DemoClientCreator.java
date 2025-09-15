@@ -1,7 +1,7 @@
 package utils.demo_helpers;
 
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
-import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntry;
@@ -21,8 +21,8 @@ import net.datafaker.Faker;
 import java.util.List;
 
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryLvl2;
 import static business_objects.db.clickhouse.crm_id_proof.CrmTbIdProofFactory.generateIdProofObject;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;

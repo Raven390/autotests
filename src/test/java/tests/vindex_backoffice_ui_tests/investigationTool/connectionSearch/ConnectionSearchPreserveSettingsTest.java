@@ -1,6 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
-import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -9,8 +9,8 @@ import tests.TestBaseWeb;
 
 import java.util.List;
 
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;

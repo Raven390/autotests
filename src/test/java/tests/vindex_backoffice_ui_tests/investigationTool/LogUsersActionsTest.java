@@ -16,7 +16,7 @@ import tests.TestBaseWeb;
 import java.sql.SQLException;
 import java.util.List;
 
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_kyc_files.KycFilesTableEntryFactory.getKycFile;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;

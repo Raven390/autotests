@@ -2,17 +2,18 @@ package tests.connection_search_api_service_tests;
 
 import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
 import business_objects.api.connection_search_api.get_connections.GetConnectionsResponseError;
-import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.device_id_table.DeviceIdTableEntry;
-import business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntry;
-import business_objects.db.clickhouse.document_table.DocumentTableEntry;
-import business_objects.db.clickhouse.email_table.EmailTableEntry;
-import business_objects.db.clickhouse.ip_table.IpTableEntry;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntry;
+import business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntry;
+import business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntry;
+import business_objects.db.clickhouse.data_science_test.mt_cid.MtCidTableEntry;
 import business_objects.db.clickhouse.name_birth.NameBirthTableEntry;
-import business_objects.db.clickhouse.payout.PayoutTableEntry;
-import business_objects.db.clickhouse.phone.PhoneTableEntry;
-import business_objects.db.clickhouse.session_id.SessionIdTableEntry;
-import business_objects.db.clickhouse.web_session.WebSessionTableEntry;
+import business_objects.db.clickhouse.data_science_test.payout.PayoutTableEntry;
+import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
+import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.web_session.WebSessionTableEntry;
 import helpers.data.ClientHelper;
 import helpers.data.enums.ConnectionAttributes;
 import io.qameta.allure.Allure;
@@ -28,19 +29,19 @@ import java.util.*;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByAttributes;
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsResponseFactory.*;
-import static business_objects.db.clickhouse.connection_table.ConnectionTableEntryFactory.*;
-import static business_objects.db.clickhouse.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearchFiltration;
-import static business_objects.db.clickhouse.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearchRandomized;
-import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearchFiltration;
-import static business_objects.db.clickhouse.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.*;
+import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.digital_id_table.DigitalIdTableEntryFactory.digitalIdTableEntryForConnectionSearchFiltration;
+import static business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearchRandomized;
+import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.*;
+import static business_objects.db.clickhouse.data_science_test.ip_table.IpTableEntryFactory.ipTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.mt_cid.MtCidEntryFactory.mtCidTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.name_birth.NameBirthTableEntryFactory.nameBirthTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.payout.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
-import static business_objects.db.clickhouse.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.payout.PayoutTableEntryFactory.payoutTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntryFactory.sessionIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.web_session.WebSessionTableEntryFactory.webSessionTableEntryForConnectionSearch;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.ConnectionAttributes.*;
 import static helpers.database.CleanTableHelper.cleanConnectionsTableByClient;
@@ -87,6 +88,10 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
     static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
     static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
     static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
+    static final ClientHelper userFromMtCid = getRandomVantageClientAllFields();
+    static final ClientHelper userFromMtCid2 = getRandomVantageClientAllFields();
+    static final ClientHelper userToMtCid = getRandomVantageClientAllFields();
+    static final ClientHelper userToMtCid2 = getRandomVantageClientAllFields();
     // Expected responses
     static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccessInitial = getConnectionsByAttributesResponseSuccessDocumentInitial(userFromDocument);
     static GetConnectionsResponse getConnectionsByAttributesDocumentResponseSuccess = getConnectionsByAttributesResponseSuccessDocumentLvl2(userFromDocument, userToDocument);
@@ -121,6 +126,12 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
     static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToIp3);
     static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
     static final EmailTableEntry emailTableEntryFiltration = emailTableEntryForConnectionSearchFiltration(userFromFiltration);
+    static final IpTableEntry ipTableEntry3 = ipTableEntryForConnectionSearch(userFromMtCid);
+    static final IpTableEntry ipTableEntry4 = ipTableEntryForConnectionSearch(userToMtCid, userFromMtCid.getIpAddress());
+
+    static final EmailTableEntry emailTableEntry2 = getEmailTableEntryByClient(userFromMtCid2);
+    static final EmailTableEntry emailTableEntry3 = emailTableEntryForConnectionSearch(userToMtCid2, userFromMtCid2.getEmail());
+
     static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
     static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
     static final DigitalIdTableEntry digitalIdTableEntryFiltration = digitalIdTableEntryForConnectionSearchFiltration(userFromFiltration);
@@ -128,6 +139,11 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
     static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
     static final WebSessionTableEntry webSessionTableEntryFrom = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
     static final WebSessionTableEntry webSessionTableEntryTo = webSessionTableEntryForConnectionSearch(userToWebSessionId);
+    static final MtCidTableEntry mtCidTableEntryFrom = mtCidTableEntryForConnectionSearch(userFromMtCid);
+    static final MtCidTableEntry mtCidTableEntryTo = mtCidTableEntryForConnectionSearch(userToMtCid, userFromMtCid.getMtCid());
+
+    static final MtCidTableEntry mtCidTableEntryFrom2 = mtCidTableEntryForConnectionSearch(userFromMtCid2);
+    static final MtCidTableEntry mtCidTableEntryTo2 = mtCidTableEntryForConnectionSearch(userToMtCid2, userFromMtCid2.getMtCid());
 
     // Objects to insert to connections table
     static final ConnectionTableEntry connectionTableEntryByDocument = getConnectionTableEntry(userFromDocument, userToDocument, DOCUMENT);
@@ -156,9 +172,8 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionScoreToInitial = getConnectionsByAttributesNameBirthResponseSuccessInitial.connectionStrengthToInitial;
         // Insert data to attributes tables
         insertObjectToDb(DOCUMENT_TABLE_NAME, documentTableEntry);
-        insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry);
-        insertObjectToDb(IP_TABLE_NAME, ipTableEntry);
-        insertObjectToDb(IP_TABLE_NAME, ipTableEntry2);
+        insertObjectsToDb(EMAIL_TABLE_NAME, List.of(emailTableEntry, emailTableEntry3, emailTableEntry2));
+        insertObjectsToDb(IP_TABLE_NAME, List.of(ipTableEntry, ipTableEntry2, ipTableEntry3, ipTableEntry4));
         insertObjectsToDb(PHONE_TABLE_NAME, List.of(phoneTableEntry, phoneTableEntry2));
         insertObjectToDb(PAYOUT_TABLE_NAME, payoutTableEntry);
         insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntryFiltration);
@@ -166,18 +181,19 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         insertObjectToDb(DEVICE_ID_TABLE_NAME, deviceIdTableEntry);
         insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry);
         insertObjectToDb(NAME_BIRTH_TABLE_NAME, nameBirthTableEntry);
-        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryFrom);
-        insertObjectToDb(WEB_SESSION_TABLE_NAME, webSessionTableEntryTo);
+        insertObjectsToDb(WEB_SESSION_TABLE_NAME, List.of(webSessionTableEntryFrom, webSessionTableEntryTo));
+        insertObjectsToDb(MT_CID_TABLE_NAME, List.of(mtCidTableEntryFrom, mtCidTableEntryTo, mtCidTableEntryFrom2, mtCidTableEntryTo2));
         // Insert data to connections table
         insertConnectionToDb(connectionTableEntryByDocument, connectionTableEntryByEmail, connectionTableEntryByIp, connectionTableEntryByIp2, connectionTableEntryByIp3, connectionTableEntryByPhone, connectionTableEntryByPayout, connectionTableEntryForDepth1, connectionTableEntryForDepth2, connectionTableEntryFiltration1, connectionTableEntryFiltration2, connectionTableEntryByDeviceId, connectionTableEntryByDigitalId, connectionTableEntryByNameBirth, connectionTableEntryBySessionId, connectionTableEntryByWebSessionId);
         waitForConnectionSearchToUpdate();
-        Thread.sleep(15_000);//pause for asinc services like CS and AR alvays set up connections last and use waitForConnectionSearchToUpdate() before this wait.
+        //pause for async services like CS and AR always set up connections last and use waitForConnectionSearchToUpdate() before this wait.
+        Thread.sleep(60_000);
     }
 
     @AfterAll
     static void deleteConnectionTableEntry() throws Exception {
         // Delete data from connections table
-        cleanConnectionsTableByClient(connectionTableEntryByDocument.userFrom, connectionTableEntryByEmail.userFrom, connectionTableEntryByIp.userFrom, connectionTableEntryByPhone.userFrom, connectionTableEntryByPayout.userFrom, connectionTableEntryForDepth1.userFrom, connectionTableEntryForDepth2.userFrom, connectionTableEntryFiltration1.userFrom, connectionTableEntryFiltration2.userFrom, connectionTableEntryByDeviceId.userFrom, connectionTableEntryByDigitalId.userFrom, connectionTableEntryByNameBirth.userFrom, connectionTableEntryBySessionId.userFrom, connectionTableEntryByWebSessionId.userFrom);
+        cleanConnectionsTableByClient(connectionTableEntryByDocument.userFrom, connectionTableEntryByEmail.userFrom, connectionTableEntryByIp.userFrom, connectionTableEntryByPhone.userFrom, connectionTableEntryByPayout.userFrom, connectionTableEntryForDepth1.userFrom, connectionTableEntryForDepth2.userFrom, connectionTableEntryFiltration1.userFrom, connectionTableEntryFiltration2.userFrom, connectionTableEntryByDeviceId.userFrom, connectionTableEntryByDigitalId.userFrom, connectionTableEntryByNameBirth.userFrom, connectionTableEntryBySessionId.userFrom);
         // Delete data from attributes tables
         deleteEntryFromDb(DOCUMENT_TABLE_NAME, String.format("acc_id_num = '%s'", documentTableEntry.accIdNum));
         deleteEntryFromDb(EMAIL_TABLE_NAME, String.format("email = '%s'", emailTableEntry.email));
@@ -191,6 +207,7 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         deleteEntryFromDb(NAME_BIRTH_TABLE_NAME, String.format("ucid = '%s'", nameBirthTableEntry.ucid));
         deleteEntryFromDb(SESSION_ID_TABLE_NAME, String.format("session_id = '%s'", sessionIdTableEntry.sessionId));
         deleteEntryFromDb(WEB_SESSION_TABLE_NAME, String.format("web_session_id = '%s'", webSessionTableEntryFrom.webSessionId));
+        deleteEntryFromDb(MT_CID_TABLE_NAME, String.format("mt_cid = '%s'", mtCidTableEntryFrom.getMtCid()));
     }
 
     @Test
@@ -714,5 +731,46 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
 
         assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesWebSessionIdResponseSuccess));
         assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesWebSessionIdResponseSuccessInitial));
+    }
+
+    @Test
+    @AllureId("1552")
+    @DisplayName("Connection search by attributes Api. Get connection by mt cid and ip success(200)")
+    void getConnectionsTest24() throws IOException, InterruptedException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("ipAddress", userFromMtCid.getIpAddress());
+        queryParams.put("mtCid", userFromMtCid.getMtCid());
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(1));
+
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesResponseSuccessMtCidLvl1(userFromMtCid, userToMtCid.getUcid())));
+    }
+
+    @Test
+    @AllureId("1552")
+    @DisplayName("Connection search by attributes Api. Get connection by mt cid and email success(200)")
+    void getConnectionsTest25() throws IOException, InterruptedException {
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("emailAddress", userFromMtCid2.getEmail());
+        queryParams.put("mtCid", userFromMtCid2.getMtCid());
+
+        Response response = getConnectionsByAttributes(queryParams);
+        GetConnectionsResponse[] responseBody = objectMapper.readValue(
+                response.body().string(), GetConnectionsResponse[].class
+        );
+
+        assertThat("Check the response code is 200", response.code(), is(200));
+
+        assertThat("Check the response body is not empty", responseBody.length, equalTo(2));
+
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesResponseSuccessMtCidEmailLvl1(userFromMtCid2, userToMtCid2.getUcid())));
+        assertThat("Check the response body", responseBody, hasItemInArray(getConnectionsByAttributesResponseSuccessMtCidEmailLvl1(userFromMtCid2, userFromMtCid2.getUcid())));
     }
 }
