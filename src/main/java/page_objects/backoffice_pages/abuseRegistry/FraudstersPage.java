@@ -10,6 +10,8 @@ import page_objects.backoffice_pages.AbstractPage;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -35,6 +37,7 @@ public class FraudstersPage extends AbstractPage {
     private final Locator commentaryField;
     private final Locator applyUploadButton;
     private final Locator successToast;
+    private final Locator warningToast;
     private final Locator restrictionListButton;
     private final Locator restrictionApplyButton;
     private final Locator deleteUploadButton;
@@ -51,7 +54,7 @@ public class FraudstersPage extends AbstractPage {
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
         this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
         this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons, or new lines']");
-        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='client_report_fraud_drawer__fraud_type_selector__anchor']");
+        this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__anchor']");
         this.addRestrictionButton = page.locator(restrictionSelectionSection + "//button");
         this.restrictionApplyButton = page.locator(restrictionSelectionSection + "//button/*[text()='Apply']");
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
@@ -62,6 +65,7 @@ public class FraudstersPage extends AbstractPage {
         this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
         this.deleteUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Remove']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
+        this.warningToast = page.locator("//*[contains(@class, 'g-toast_theme_warning')]");
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.pendingProcessingToggleLocator = page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
         this.pendingProcessingCells = page.locator("//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
@@ -190,7 +194,29 @@ public class FraudstersPage extends AbstractPage {
 
     public void verifySuccessMessageUpload() {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        assertTrue(successToast.textContent().contains("Selected actions are now being processed"));
+        assertThat(successToast.textContent(), containsString("Request received"));
+    }
+
+    public void verifySuccessMessageUpload(int deductionsCount) {
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        String s = successToast.textContent();
+        assertThat(s, containsString("Request received"));
+        if (deductionsCount > 1) {
+            assertThat(s, containsString(String.format("%d deductions were created automatically", deductionsCount)));
+        } else if (deductionsCount == 1) {
+            assertThat(s, containsString(String.format("%d deduction was created automatically", deductionsCount)));
+        }
+    }
+
+    public void verifyWarningMessageUpload(int pendingProcessingCount) {
+        warningToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        String s = warningToast.textContent();
+        assertThat(s, containsString("illegal profit and suggested deduction need to be processed manually"));
+        if (pendingProcessingCount > 1) {
+            assertThat(s, containsString(String.format("%d deductions require calculation", pendingProcessingCount)));
+        } else if (pendingProcessingCount == 1) {
+            assertThat(s, containsString(String.format("%d deduction requires calculation", pendingProcessingCount)));
+        }
     }
 
     public void verifySuccessMessageDelete() {

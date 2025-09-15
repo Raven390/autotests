@@ -106,6 +106,7 @@ public class ConnectionPage extends AbstractPage {
     private final Locator cardAttributeClient;
     private final Locator cardAttributeValue;
     private final Locator connectionTableRowData;
+    private final Locator successToast;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
@@ -139,7 +140,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String CARD_COUNTRY_VALUE = String.format(CARD_CLIENT_ATTRIBUTE_VALUE_BY_NAME, "Country");
     private static final String DIRECT_CONNECTION_ATTRIBUTE_BY_CLIENT_AND_ATTRIBUTE_NAME = "//div[contains(text(),'%s')]/ancestor::div[@class='v-graph-node-details-connection-data-v2']/descendant::span[text()='%s']/ancestor::tr/descendant::div[@class='v-graph-node-details-attributes-table-v2__value']";
     private static final String LINK_WITH_TEXT_PATTERN = "//a[text()='%s' and text()='%s']";
-    private static final String FRAUD_SELECTION_OPTION_PATTERN = "//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item']//div[text()='%s']";
+    private static final String FRAUD_SELECTION_OPTION_PATTERN = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
     private static final String STATUS_SELECTION_OPTION_PATTERN = "//*[contains(@class, 'v-dropdown-select-item__sub-menu_isHovered')]//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item__submenu']//*[text()='%s']";
     private static final String FRAUD = "Fraud";
     private final Locator addFraudRestrictionsButton;
@@ -239,7 +240,8 @@ public class ConnectionPage extends AbstractPage {
         this.addFraudRestrictionsDrawer = page.locator("//*[@data-qa='drawer_container']//*[text() = 'Apply fraud and restrictions']");
         this.addFraudRestrictionsComment = page.locator("//*[@data-qa=\"connections__report_fraud__comment_input\"]//textarea");
         this.addFraudRestrictionsSubmitButton = page.locator("//button[@data-qa=\"connections__report_fraud__apply\"]");
-        this.fraudSelectButton = page.locator("[data-qa='connections__report_fraud__fraud_type_selector__add_button']");
+        this.fraudSelectButton = page.locator("[data-qa='connection_search_report_fraud_drawer__fraud_type_selector__anchor']");
+        this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
     }
 
     @Step("Click connections tab")
@@ -1036,11 +1038,21 @@ public class ConnectionPage extends AbstractPage {
     public void addFraud(String fraud, String status, String comment) {
         Allure.step("Add and submit fraud");
         fraudSelectButton.click();
-        page.locator(String.format(FRAUD_SELECTION_OPTION_PATTERN, fraud)).hover();
-        page.locator(String.format(FRAUD_SELECTION_OPTION_PATTERN, fraud)).hover();
-        page.locator(String.format(STATUS_SELECTION_OPTION_PATTERN, status)).click();
+        String element = String.format(FRAUD_SELECTION_OPTION_PATTERN, fraud);
+        page.locator(element).hover();
+        page.locator(element).hover();
+        String subelement = "//*[contains(@class, 'v-sub-menu__content')]//div[text()='" + status + "']";
+        page.locator(subelement).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        page.locator(subelement).click();
         addFraudRestrictionsComment.fill(comment);
         addFraudRestrictionsSubmitButton.click();
+    }
+
+    public void verifySuccessMessageUpload(int deductionsCount) {
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        String s = successToast.textContent();
+        MatcherAssert.assertThat(s, containsString("Request received"));
+        MatcherAssert.assertThat(s, containsString(String.format("%d deductions were created automatically", deductionsCount)));
     }
 
     public void addFraud(String fraud) {
