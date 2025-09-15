@@ -1,9 +1,11 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
+import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.audit_service_db.Event;
-import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
@@ -17,6 +19,8 @@ import tests.TestBaseWeb;
 
 import java.util.List;
 
+
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUiFiltration1;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUiFiltration2;
@@ -41,6 +45,9 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient2 = getRandomVantageClientAllFields();
+    private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(connectedClient1);
+    private static final CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(connectedClient2);
+
 
     @BeforeAll
     static void setup() throws Exception {
@@ -51,6 +58,8 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntryForUiFiltration1(client, connectedClient1);
         ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntryForUiFiltration2(client, connectedClient2);
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2));
+
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         waitForConnectionSearchToUpdate(client);
     }
 
@@ -121,6 +130,25 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         assertEquals(commentary, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type is default value: Vindex");
         assertEquals("Vindex", fraud.getFraudSource());
+    }
+
+    @Test
+    @AllureId("1554")
+    @DisplayName("CS add fraud with deduction")
+    void addFraudWithDeductionTest() throws Exception {
+        connectionPage.openConnectionTable();
+        connectionPage.clickMultiselectButton();
+        connectionPage.clickMultiselectSelectAllCheckbox();
+        connectionPage.openFraudRestrictionsForm();
+        FraudType fraudType = FraudType.TLS_ABUSE;
+        String commentary = "Commentary";
+        FraudTypeStatus statusUi = getRandomFraudStatusUi();
+        connectionPage.addFraud(fraudType.getName(), statusUi.getDisplayName(), commentary);
+        connectionPage.verifySuccessMessageUpload(2);
+        page.waitForTimeout(1000);
+
+        List<AbuserDeduction> deductionList = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", connectedClient1.getUcid()), AbuserDeduction.class);
+        assertThat(deductionList.size(), is(1));
     }
 
 

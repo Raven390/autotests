@@ -212,7 +212,7 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         String potentialMarketManipulation = String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName());
-        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems(), contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD, GBPUSD"), List.of(potentialMarketManipulation, "")));
+        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems2(), contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD, GBPUSD"), List.of(potentialMarketManipulation, "")));
         resolvePage.deleteFraudByNameNoPopup(potentialMarketManipulation);
         resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
         resolvePage.selectFraudSource(INSIGHT.getDisplayName());

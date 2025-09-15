@@ -32,6 +32,8 @@ public class ArHelper {
             Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, condition);
             Thread.sleep(100);
+            deleteEntryFromDb(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, condition);
+            Thread.sleep(100);
 
         } catch (NoSuchElementException e) {
             System.out.println("No such client(s) in AR");

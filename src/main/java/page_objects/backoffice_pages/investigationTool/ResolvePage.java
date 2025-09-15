@@ -73,6 +73,7 @@ public class ResolvePage extends AbstractPage {
     private final Locator fraudSourceDropdown;
     private final Locator illegalProfitPartialAmount;
     private final Locator selectedFraud;
+    private final Locator addDeductionButton;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -90,6 +91,7 @@ public class ResolvePage extends AbstractPage {
     private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[text()='%s']";
     private static final String FRAUD_STATUS_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[contains(@data-qa,'fraud_type_selector__item_%s__%s')]";
     private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
+
 
     public ResolvePage(Page page) {
         super(page);
@@ -139,6 +141,7 @@ public class ResolvePage extends AbstractPage {
         this.fraudSourceDropdown = page.locator("//button[@data-qa='source_select__select_control']");
         this.illegalProfitPartialAmount = suggestedDeductionHeader.locator("//div[@class='v-text-with-icon__text']");
         this.selectedFraud = page.locator("//div[contains(@data-qa,'detected_fraud_types_list__item')]/descendant::span[contains(@class,'g-color-text_color_primary')]");
+        this.addDeductionButton = page.locator("button[data-qa='client_report_fraud_drawer__add_deduction']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -287,6 +290,11 @@ public class ResolvePage extends AbstractPage {
             page.getByRole(AriaRole.OPTION).getByText(i).click();
         }
         applyButton.click();
+    }
+
+    public void previouslyReportedFraudAddDeduction() {
+        Allure.step("Click add deduction button");
+        addDeductionButton.click();
     }
 
     public void resetFraudsChanges() {
@@ -574,6 +582,15 @@ public class ResolvePage extends AbstractPage {
             typesList.add(previouslyReportedFraudItem.nth(i).locator(previouslyReportedFraudTypes).textContent());
             typesList.add(previouslyReportedFraudItem.nth(i).locator(previouslyReportedFraudSymbols).textContent());
             list.add(typesList);
+        }
+        return list;
+    }
+
+    @Step("Get previously reported fraud items")
+    public List<String> getPreviouslyReportedFraudItems2() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < previouslyReportedFraudItem.count(); i++) {
+            list.add(previouslyReportedFraudItem.nth(i).locator(previouslyReportedFraudTypes).textContent());
         }
         return list;
     }
