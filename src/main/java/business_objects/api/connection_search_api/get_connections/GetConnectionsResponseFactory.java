@@ -281,4 +281,16 @@ public class GetConnectionsResponseFactory {
                         CONNECTION_ATTRIBUTE_NAME_WEB_SESSION, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 2, null, 1.0, 1d, 1.0
         );
     }
+
+    public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessMtCidLvl1(
+            ClientHelper userFrom, String ucid) {
+        return new GetConnectionsResponse(
+                null, ucid, 0.360_000_014_305_114_75, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS, userFrom.getIpAddress(), userFrom.getIpAddress(), CONNECTION_TYPE_RELATION_TYPE_EXACT), new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_MT_CID, userFrom.getMtCid(), userFrom.getMtCid(), CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_NETWORK, 1, null, 0.360_000_014_305_114_75, 0.360_000_014_305_114_75, 0.360_000_014_305_114_75);
+    }
+
+    public static GetConnectionsResponse getConnectionsByAttributesResponseSuccessMtCidEmailLvl1(
+            ClientHelper userFrom, String ucid) {
+        return new GetConnectionsResponse(
+                null, ucid, 0.600_000_023_841_857_9, new GetConnectionsResponse.ConnectionDetail[]{new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_EMAIL_ADDRESS, userFrom.getEmail(), userFrom.getEmail(), CONNECTION_TYPE_RELATION_TYPE_EXACT), new GetConnectionsResponse.ConnectionDetail(CONNECTION_ATTRIBUTE_NAME_MT_CID, userFrom.getMtCid(), userFrom.getMtCid(), CONNECTION_TYPE_RELATION_TYPE_EXACT)}, CONNECTION_TYPE_SAME_PERSON, 1, null, 0.600_000_023_841_857_9, 0.600_000_023_841_857_9, 0.600_000_023_841_857_9);
+    }
 }

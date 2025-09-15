@@ -32,6 +32,7 @@ public class ClientHelper {
     private String firstName;
     private String lastName;
     private String country;
+    private String mtCid;
 
     public ClientHelper() {
     }
@@ -41,7 +42,7 @@ public class ClientHelper {
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode, Integer cpaId,
             Integer ibId, Integer referrerId, String deviceId, String webSessionId, String sessionId, String digitalId,
-            String dateOfBirth, String firstName, String lastName, String country) {
+            String dateOfBirth, String firstName, String lastName, String country, String mtCid) {
         this.userId = userId;
         this.uid = uid;
         this.brand = brand;
@@ -64,6 +65,7 @@ public class ClientHelper {
         this.firstName = firstName;
         this.lastName = lastName;
         this.country = country;
+        this.mtCid = mtCid;
     }
 
     public ClientHelper(Integer userId, String uid, Brand brand, Integer tradingAccount, Integer serverId) {
@@ -344,6 +346,14 @@ public class ClientHelper {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getMtCid() {
+        return mtCid;
+    }
+
+    public void setMtCid(String mtCid) {
+        this.mtCid = mtCid;
     }
 
     @Override

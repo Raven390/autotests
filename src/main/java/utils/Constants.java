@@ -231,6 +231,7 @@ public class Constants {
     public static final String SESSION_ID_TABLE_NAME = "data_science_test.session_id";
     public static final String TS_BY_SYMBOL_DAILY_TABLE_NAME = "vindex_test.ts_by_symbol_daily";
     public static final String WEB_SESSION_TABLE_NAME = "data_science_test.web_session_id";
+    public static final String MT_CID_TABLE_NAME = "data_science_test.mt_cid";
     public static final String RATES_USD_CURRENT = "ticks.rates_usd_current";
     public static final String APP_TB_FININDEX_DATA = "vindex_test.app___tb_finindex_data";
     public static final String PAYMENT_GATEWAY_D_DECISIONS_TABLE = "postgres.paymentgate.d_decisions";
@@ -267,6 +268,7 @@ public class Constants {
     public static final String CONNECTION_ATTRIBUTE_NAME_PHONE_NUMBER = "phoneNumber";
     public static final String CONNECTION_ATTRIBUTE_NAME_SESSION = "session";
     public static final String CONNECTION_ATTRIBUTE_NAME_WEB_SESSION = "webSession";
+    public static final String CONNECTION_ATTRIBUTE_NAME_MT_CID = "mtCid";
     public static final String CONNECTION_SEARCH_DATA_CARD_NUMBER = "535456**** **0344";
     public static final String CONNECTION_SEARCH_DATA_DEVICE = "4a25971ab724427eb8fc24a257c5b2df";
     public static final String CONNECTION_SEARCH_DATA_DEVICE2 = "5a25971ab724427eb8fc24a257c5b2df";

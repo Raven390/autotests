@@ -1,7 +1,7 @@
 package utils.demo_helpers;
 
 
-import business_objects.db.clickhouse.connection_table.ConnectionTableEntry;
+import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import io.qameta.allure.Allure;
 import org.junit.jupiter.api.Test;
 
