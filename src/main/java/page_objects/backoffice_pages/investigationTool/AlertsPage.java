@@ -46,12 +46,12 @@ public class AlertsPage extends AbstractPage {
         this.alertDate = page.locator("//div[contains(@class,'v-timeline__date')]");
         this.alertTime = page.locator("//div[@class='v-timeline-item__time']/span");
         this.alertCount = page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div");
-        this.refreshButton = page.locator("//button[@data-qa='investigation_tools_client_alerts_refresher']");
+        this.refreshButton = page.locator("//button[@data-qa='client_alerts__refresher']");
         this.alertStatusDropdown = page.locator("//button[@role='combobox']");
         this.alertStatusDropdownActive = page.locator("//*[text()='Active alerts']");
         this.alertStatusDropdownClosed = page.locator("//*[text()='Closed alerts']");
         this.alertStatusDropdownAll = page.locator("//*[text()='All alerts']");
-        this.refreshButtonDisabled = page.locator("//button[@data-qa='investigation_tools_client_alerts_refresher' and contains(@class,'g-button_disabled')]");
+        this.refreshButtonDisabled = page.locator("//button[@data-qa='client_alerts__refresher' and contains(@class,'g-button_disabled')]");
         this.alertsLoading = page.locator("//div[contains(@class,'v-investigation-tools-alert-card-skeleton__item-body')]").first();
         this.loadedAlertsCount = page.locator("//div[@class='v-investigation-tools-client-alerts-tab__refresher']/div[text()!='']");
         this.alertsTab = page.locator("[role=\"tab\"][title=\"Alerts\"]");
@@ -131,6 +131,7 @@ public class AlertsPage extends AbstractPage {
         alertStatusDropdown.click();
         alertStatusDropdownClosed.click();
         waitForPageToLoad();
+        refreshButtonDisabled.waitFor(new Locator.WaitForOptions().setState(DETACHED));
     }
 
     @Step("Filter all alerts")

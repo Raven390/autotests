@@ -192,7 +192,7 @@ public class ConnectionPage extends AbstractPage {
         this.graphNodesUnhidden = page.locator("//div[contains(@class,'v-graph-node-v2__title-text')]");
         this.applyFiltersButton = page.locator("//div[@data-qa='drawer_body']/div/button");
         this.connectionTableRow = page.locator(CONNECTION_TABLE_ROW);
-        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'client')]/descendant::div[contains(@class,'g-color-text_color_secondary')]"));
+        this.connectionTableUserIds = page.locator(String.format("%s%s", CONNECTION_TABLE_ROW, "/descendant::a[contains(@class,'client')]/descendant::span[contains(@class,'g-color-text_color_secondary')]"));
         this.appliedFilters = page.locator("//div[@class='v-collapsible-horizontal-list__item']/descendant::div[@class='g-label__content']");
         this.filtersCounter = page.locator("//div[@class='v-connection-search-filter-button-v2__filters']/div");
         this.zoomInButton = page.locator(String.format("%s/button", ZOOM_CONTROLS)).first();
@@ -234,7 +234,7 @@ public class ConnectionPage extends AbstractPage {
         this.cardAttributeName = page.locator("//div[@class='v-graph-attribute-details-v2__attribute-name']");
         this.cardAttributeClient = page.locator("//div[@class='v-graph-attribute-details-v2__header']/div[contains(@class,'g-color-text_color_secondary')]");
         this.cardAttributeValue = page.locator("//div[@class='v-graph-node-details-section-v2__title']");
-        this.connectionTableRowData = page.locator("//div[@class='v-body-cell']/descendant::div[contains(@class,'g-text')]");
+        this.connectionTableRowData = page.locator("//div[@class='v-body-cell']/descendant::*[contains(@class,'g-text')]");
         this.addFraudRestrictionsButton = page.locator("//button[@data-qa=\"connections__multiselect_panel__report_fraud\"]");
         this.addFraudRestrictionsDrawer = page.locator("//*[@data-qa='drawer_container']//*[text() = 'Apply fraud and restrictions']");
         this.addFraudRestrictionsComment = page.locator("//*[@data-qa=\"connections__report_fraud__comment_input\"]//textarea");

@@ -18,6 +18,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesPattern;
 import static utils.Constants.*;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 public class ClientsAlertsTest extends TestBaseWeb {
 
     private static final CrmTbUserObject crmTbUser = generateUserByClient(getRandomVantageClientAllFields());
@@ -36,8 +38,6 @@ public class ClientsAlertsTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("558")
     @DisplayName("Verify clients alerts functionality, elements, filtration, refresh, sorting")
     public void clientsAlertsTest() throws Exception {

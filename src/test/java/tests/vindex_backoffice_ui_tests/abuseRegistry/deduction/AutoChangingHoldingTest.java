@@ -55,6 +55,9 @@ import static utils.Utils.*;
 
 
 @Feature("BMS-1549 Auto changing holding")
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
+@Tag(ABUSE_REGISTRY)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class AutoChangingHoldingTest extends TestBaseWeb {
 
@@ -128,9 +131,6 @@ class AutoChangingHoldingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Order(1)
     @AllureId("1436")
     @DisplayName("Holding scheduler deduction with additional accounts test")
@@ -145,6 +145,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
         holdingDeduction1.setSuggestedDeductionUsd(0d);
         holdingDeduction1.setActualDeduction(null);
         holdingDeduction1.setBalanceAtResolution(trade1.profit + tradeWithdrawal.profit);
+        holdingDeduction1.setBalanceAtResolution(holdingDeduction1.getBalanceAtResolution());
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, holdingDeduction1);
         executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount1.account));
         List<AbuserDeduction> deductionList = new ArrayList<>();
@@ -175,9 +176,6 @@ class AutoChangingHoldingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Order(2)
     @AllureId("1437")
     @DisplayName("Holding scheduler deduction for linked deduction test")
@@ -212,9 +210,6 @@ class AutoChangingHoldingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @Tag(ABUSE_REGISTRY)
     @Order(3)
     @AllureId("1438")
     @DisplayName("Holding scheduler deduction keeps approved status when no major changes in balance or illegal profit and rest of the flow")
@@ -231,6 +226,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
         holdingDeduction2.setActualDeduction(null);
         holdingDeduction2.setActualDeductionUsd(null);
         holdingDeduction2.setBalanceAtResolution(trade2.profit);
+        holdingDeduction2.setBalanceAtResolutionUsd(holdingDeduction2.getBalanceAtResolution());
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, holdingDeduction2);
 
         // Verify the deduction after positions are closed
@@ -260,7 +256,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
         // Verify the deduction after deduction is picked up for sending to kafka
         for (int i = 0; i < 7; i++) {
             deductionList = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("account = '%s'", mtAccount2.account), AbuserDeduction.class);
-            if (!Objects.equals(deductionList.getFirst().getStatusDeduction(), FAILED.getDisplayName())) {
+            if (!Objects.equals(deductionList.getFirst().getStatusDeduction(), PROCESSING.getDisplayName())) {
                 Thread.sleep(2000);
                 if (i == 6) {
                     assertThat("The processing scheduler did not recalculate deductions in 10 sec", deductionList.getFirst().getStatusOpenPositions(), is(WAS_HOLDING.getDisplayName()));
@@ -269,8 +265,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
                 break;
             }
         }
-        expectedDeduction1.setStatusDeduction(FAILED.getDisplayName());
-        expectedDeduction1.setActualDeduction(trade2.profit);
+        expectedDeduction1.setStatusDeduction(PROCESSING.getDisplayName());
         assertThat("Verify deduction in abuser_deduction table is as expected", deductionList.getFirst(), is(expectedDeduction1));
         AccountDeductionRequest kafkaDeductionRequest = objectMapper.readValue(kafka.consumeMessage(KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST, mtAccount2.account.toString()), AccountDeductionRequest.class);
         AccountDeductionRequest expectedKafkaDeductionRequest = new AccountDeductionRequest(null, null, mtAccount2.sourceIdSt, mtAccount2.account, "BALANCE", mtAccount2.currency, trade2.profit * -1, "Cash Adjustment-PNL");

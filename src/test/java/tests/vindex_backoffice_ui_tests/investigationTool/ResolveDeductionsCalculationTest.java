@@ -35,6 +35,7 @@ import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.data.enums.FraudTypeStatus.POTENTIAL;
 import static helpers.data.enums.deduction.DeductionStatusApproval.AWAITING_APPROVAL;
+import static helpers.data.enums.deduction.DeductionStatusApproval.NOT_REQUIRED;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.NO_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.TO_BE_DEDUCTED;
 import static helpers.data.enums.deduction.DeductionStatusEmail.NOT_SENT;
@@ -269,7 +270,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         assertThat("Verify created deduction has suggested_deduction not null", deduction.getSuggestedDeduction(), notNullValue());
         assertThat("Verify created deduction has created_at not null", deduction.getCreatedAt(), notNullValue());
         assertThat("Verify created deduction has updated_at not null", deduction.getUpdatedAt(), notNullValue());
-        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), NO_DEDUCTION.getDisplayName(), AWAITING_APPROVAL.getDisplayName(), COMMENT, 0d, null, 0d, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, null, 0d, null, client.getUserId().toString(), trade1.profit + tradeWithdrawal.profit, null, false, FULL_DEDUCTION.getDisplayName());
+        AbuserDeduction expectedDeduction = new AbuserDeduction(client.getUcid(), null, mtAccount1.account.toString(), mtAccount1.sourceIdSt, mtAccount1.server, mtAccount1.currency, client.getBrand(), NOT_HOLDING.getDisplayName(), NOT_SENT.getDisplayName(), NO_DEDUCTION.getDisplayName(), NOT_REQUIRED.getDisplayName(), COMMENT, 0d, null, 0d, null, null, null, null, null, String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()), VINDEX_BO_SYSTEM, ILLEGAL_PROFIT.getDisplayName(), null, null, 0d, null, client.getUserId().toString(), trade1.profit + tradeWithdrawal.profit, null, false, NO_DEDUCTION.getDisplayName());
         assertThat("Verify deductions in abuser_deduction table are as expected", deduction, is(expectedDeduction));
     }
 }

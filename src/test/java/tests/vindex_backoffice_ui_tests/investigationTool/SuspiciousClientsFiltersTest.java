@@ -15,13 +15,14 @@ import java.util.List;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
-import static business_objects.ui.user.UserFactory.coreUser;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 class SuspiciousClientsFiltersTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -46,8 +47,6 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("549")
     @DisplayName("Verify filtration by brand for suspicious clients")
     void verifyBrandFiltrationTest() {
@@ -68,8 +67,6 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("550")
     @DisplayName("Verify filtration by rule for suspicious clients")
     void verifyRuleFiltrationTest() {
@@ -88,8 +85,6 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("551")
     @DisplayName("Verify filtration by country for suspicious clients")
     void verifyCountryFiltrationTest() {
@@ -110,8 +105,6 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("552")
     @DisplayName("Verify filtration by assignee for suspicious clients")
     void verifyAssigneeFiltrationTest() {
@@ -133,15 +126,14 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("553")
     @DisplayName("Verify reset filtration functionality for suspicious clients")
     void verifyResetFiltrationTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToMain();
+        investigationPage.navigateToClient(crmTbUser1.ucid);
         investigationPage.waitForPageToLoad();
+        investigationPage.investigateClientCard();
         investigationPage.clickSuspiciousClientsFiltration();
         // Brand
         investigationPage.selectBrandFilterByText("Vantage");
@@ -153,13 +145,13 @@ class SuspiciousClientsFiltersTest extends TestBaseWeb {
         investigationPage.selectCountryFilter("CYPRUS");
         investigationPage.resetCountriesFilterAndVerify();
         // Assignees
-        investigationPage.selectAssigneeFilter(coreUser());
+        investigationPage.selectAssigneeFilter(autotestUserOne());
         investigationPage.resetAssigneeFilterAndVerify();
         // Reset all
         investigationPage.selectBrandFilterByText("Vantage");
         investigationPage.selectRuleWithName("Mirror Trading");
         investigationPage.selectCountryFilter("CYPRUS");
-        investigationPage.selectAssigneeFilter(coreUser());
+        investigationPage.selectAssigneeFilter(autotestUserOne());
         investigationPage.resetAllFiltersAndVerify();
     }
 
