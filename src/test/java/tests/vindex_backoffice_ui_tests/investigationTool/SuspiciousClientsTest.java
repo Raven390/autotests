@@ -20,6 +20,8 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static utils.Constants.*;
 import static utils.Utils.closeAllAlertsBo;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 class SuspiciousClientsTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -48,8 +50,6 @@ class SuspiciousClientsTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("525")
     @DisplayName("Verify that all elements are present for all suspicious clients")
     void verifyAllElementsArePresentForSuspiciousClientsTest() throws InterruptedException {
@@ -96,8 +96,6 @@ class SuspiciousClientsTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1550")
     @DisplayName("Verify that all elements are present for PAYMENT suspicious clients")
     void verifyAllElementsArePresentForPaymentSuspiciousClientsTest() {

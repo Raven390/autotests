@@ -45,8 +45,9 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 class ConnectionSearchTest extends TestBaseWeb {
-
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -143,8 +144,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("315")
     @DisplayName("Verify connection search ucids, statuses, order")
     void connectionSearchTest1() {
@@ -167,8 +166,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("311")
     @DisplayName("Verify connection attributes in node")
     void connectionSearchTest2() {
@@ -177,8 +174,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("311")
     @DisplayName("Verify data in card")
     void connectionSearchTest3() {
@@ -193,7 +188,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         assertThat(connectionPage.isCardBrandIconVisible(), is(true));
         assertThat(connectionPage.getCardBrand(), is(connectedClient3.getBrand()));
         assertThat(connectionPage.isCardCountryIconVisible(), is(true));
-        assertThat(connectionPage.getCardCountry(), is("Cyprus"));
+        assertThat(connectionPage.getCardCountry(), is(client.getCountry()));
         assertThat(connectionPage.getCardEmail(), is("t***4@example.com"));
         assertThat(connectionPage.getCardCpa().trim(), is(connectedCrmTbUser3.cpaId.toString()));
         assertThat(connectionPage.getCardIb().trim(), is(relation.getDirectIbRebateAccount().toString()));
@@ -223,8 +218,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("518")
     @DisplayName("Verify CPA and IB overview can be opened from the card")
     void connectionSearchTest4() {
@@ -237,8 +230,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("526")
     @DisplayName("Verify zoom functionality")
     void connectionSearchTest5() {
@@ -250,8 +241,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("520")
     @DisplayName("Verify connection attribute card")
     void connectionSearchTest6() {
@@ -268,8 +257,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("521")
     @DisplayName("Verify connection table")
     void connectionSearchTest7() {
@@ -286,8 +273,6 @@ class ConnectionSearchTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("527")
     @DisplayName("Verify CPA and IB overview can be opened from the table")
     void connectionSearchTest8() {

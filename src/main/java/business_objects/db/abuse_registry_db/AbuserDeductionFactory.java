@@ -9,6 +9,7 @@ import static helpers.data.enums.deduction.DeductionStatusApproval.APPROVED;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.FAILED;
 import static helpers.data.enums.deduction.DeductionStatusEmail.SENT;
 import static helpers.data.enums.deduction.DeductionStatusOpenPositions.NOT_HOLDING;
+import static helpers.data.enums.deduction.DeductionType.FULL_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionTypeAccount.ILLEGAL_PROFIT;
 import static utils.ConfigFactory.FIRST_NAME_AUTOTEST_ONE;
 import static utils.ConfigFactory.LAST_NAME_AUTOTEST_ONE;
@@ -51,6 +52,7 @@ public class AbuserDeductionFactory {
         deduction.setCrmId(account.userId.toString());
         deduction.setSendToLark(false);
         deduction.setCommentDeduction("Automation deduction comment batch");
+        deduction.setDeductionType(FULL_DEDUCTION.getDisplayName());
         return deduction;
     }
 }

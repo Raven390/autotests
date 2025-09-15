@@ -37,6 +37,8 @@ import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+@Tag(TEAM_BACKOFFICE)
+@Tag(LAYER_WEB)
 public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
@@ -112,8 +114,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("726")
     @DisplayName("Verify connection search filtration. Filter options")
     public void verifyConnectionSearchFiltration1Test() {
@@ -134,8 +134,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("727")
     @DisplayName("Verify connection search filtration. Reset all filters")
     public void verifyConnectionSearchFiltration2Test() {
@@ -154,8 +152,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("728")
     @DisplayName("Verify connection search filtration. Reset individual filters")
     public void verifyConnectionSearchFiltration3Test() {
@@ -185,8 +181,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("729")
     @DisplayName("Verify connection search filtration. Level filter")
     public void verifyConnectionSearchFiltration4Test() {
@@ -201,8 +195,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("730")
     @DisplayName("Verify connection search filtration. Connection type filter")
     public void verifyConnectionSearchFiltration5Test() {
@@ -217,8 +209,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("731")
     @DisplayName("Verify connection search filtration. Connection score to initial filter")
     public void verifyConnectionSearchFiltration6Test() {
@@ -233,8 +223,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("732")
     @DisplayName("Verify connection search filtration. Attribute filter")
     public void verifyConnectionSearchFiltration7Test() {
@@ -249,8 +237,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("733")
     @DisplayName("Verify connection search filtration. Behavior filter")
     public void verifyConnectionSearchFiltration8Test() {
@@ -266,8 +252,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("734")
     @DisplayName("Verify connection search filtration. Active restrictions filter")
     public void verifyConnectionSearchFiltration9Test() {
@@ -282,8 +266,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("735")
     @DisplayName("Verify connection search filtration. PNL filter")
     public void verifyConnectionSearchFiltration10Test() {
@@ -292,7 +274,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         connectionPage.fillPnlToInput("568.95");
         connectionPage.clickApplyFiltersButton();
         List<String> unhiddenNodesNames = connectionPage.getAllUnhiddenNodesNames();
-        System.out.println(unhiddenNodesNames);
         assertThat("Verify all expected unhidden nodes are present", unhiddenNodesNames, containsInAnyOrder(client.getUcid(), connectedClient3.getUcid(), connectedClient4.getUcid(), connectedClient6.getUcid()));
         connectionPage.openConnectionTable();
         assertThat("Verify amount of displayed rows", connectionPage.getConnectionTableRowCount(), equalTo(3));
@@ -300,8 +281,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("736")
     @DisplayName("Verify connection search filtration. Last login filter")
     public void verifyConnectionSearchFiltration11Test() {
@@ -316,8 +295,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("737")
     @DisplayName("Verify connection search filtration. Applied filters and counter")
     public void verifyConnectionSearchFiltration12Test() {
@@ -332,8 +309,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1071")
     @DisplayName("Verify connection table default sorting")
     public void verifyConnectionSearchTableDefaultSortingTest() {
@@ -343,8 +318,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1072")
     @DisplayName("Verify connection table total pnl sorting")
     public void verifyConnectionSearchTableTotalPnlSortingTest() {
@@ -361,8 +334,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1073")
     @DisplayName("Verify connection table last login sorting")
     public void verifyConnectionSearchTableLastLoginSortingTest() {
@@ -379,8 +350,6 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1146")
     @DisplayName("Verify connection score filter presets")
     public void verifyConnectionSearchFilterScorePresetsTest() {
