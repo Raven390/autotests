@@ -69,7 +69,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -83,7 +83,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -97,7 +97,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -111,7 +111,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -125,7 +125,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -139,8 +139,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        Thread.sleep(5000);
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify rule name in alert", alerts.getFirst().rule.name, is("Mirror Trading"));
         assertThat("Verify rule reason in alert", alerts.getFirst().rule.attributes.reason, is("ML Model suspects the client of Mirror Trading"));

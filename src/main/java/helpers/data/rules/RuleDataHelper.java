@@ -31,12 +31,12 @@ import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
+import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
-import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
 import business_objects.kafka.mt_events.TradeEvent;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
@@ -116,7 +116,7 @@ public class RuleDataHelper {
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject;
-    public UcidMirrorScore ucidMirrorScore;
+    public UcidMirrorScorePython ucidMirrorScore;
     public List<RuleAlert> ruleAlerts;
     public List<BoAlertsObject> boAlertsObjects;
     public List<OzTradesTableEntry> ozTradesTableObjects;
@@ -142,7 +142,7 @@ public class RuleDataHelper {
             List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
             List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
             List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
-            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScore ucidMirrorScore,
+            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScorePython ucidMirrorScore,
             List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects,
             List<OzTradesTableEntry> ozTradesTableObjects, RegistrationEvent registrationEvent, LoginEvent loginEvent,
             UcidGeneralScore ucidGeneralScore) {
@@ -303,7 +303,7 @@ public class RuleDataHelper {
                 data.s3FactIbSalesCommissionsObject.forEach(salesComm -> insertObjectToDb(S3_FACT_IB_SALES_COMMISSIONS, salesComm));
             }
             if (data.ucidMirrorScore != null) {
-                insertObjectToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, data.ucidMirrorScore);
+                insertObjectToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, data.ucidMirrorScore);
             }
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, alerts));

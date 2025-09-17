@@ -70,11 +70,14 @@ public class RuleAlert {
             @JsonProperty("ibId")
             public Integer ibId;
 
-            @JsonProperty("tradingAccount")
+            @JsonProperty("Trading account")
             public Integer tradingAccount;
 
             @JsonProperty("serverId")
             public Integer serverId;
+
+            @JsonProperty("Server Id")
+            public Integer serverId2;
 
             @JsonProperty("clones")
             public String clones;
@@ -166,6 +169,12 @@ public class RuleAlert {
 
             @JsonProperty("Ticket id")
             public String ticketId;
+
+            @JsonProperty("Toxicity Score")
+            public String toxicityScore;
+
+            @JsonProperty("MM counter")
+            public String mmCounter;
         }
     }
 }

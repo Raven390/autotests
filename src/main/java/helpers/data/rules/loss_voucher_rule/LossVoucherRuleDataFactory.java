@@ -78,7 +78,6 @@ public class LossVoucherRuleDataFactory {
         System.out.println(data.clientHelper.getUcid());
         System.out.println(data.mtAccountObject.account);
 
-//        data.loyaltyObjects.add(loyalty);
         data.crmTbBonusObjects.add(bonus);
         return data;
     }

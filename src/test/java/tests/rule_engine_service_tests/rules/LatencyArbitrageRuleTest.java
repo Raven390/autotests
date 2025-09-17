@@ -53,7 +53,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -68,7 +68,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -83,7 +83,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -98,7 +98,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -113,7 +113,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -128,7 +128,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -144,7 +144,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);

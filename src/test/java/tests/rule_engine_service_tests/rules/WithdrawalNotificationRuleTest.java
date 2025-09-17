@@ -15,6 +15,7 @@ import java.util.List;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
+import static helpers.asserts.AlertsAssertsHelper.assertAlertsWithdrawalNotificationRule;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
@@ -88,10 +89,9 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         );
         produceWithdrawalMessageToKafka(withdrawalEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(client1);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
+        List<RuleAlert> alerts = getUserAlertsFromKafka(client1, "Withdrawal Review");
         List<Alert> dbAlerts = getUserAlertsFromDb(client1);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
@@ -126,13 +126,11 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         );
         produceWithdrawalMessageToKafka(withdrawalEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(client2);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().rule.name, is("Withdrawal Review"));
-        assertThat("Verify alert ucid", alerts.getFirst().ucid, is(client2.getUcid()));
-
+        List<RuleAlert> alerts = getUserAlertsFromKafka(client2, "Withdrawal Review");
         List<Alert> dbAlerts = getUserAlertsFromDb(client2);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client2);
 
         //Check that payment is written to payment gate tables
         Allure.step("Validate Data in paymentEvent table");
@@ -174,13 +172,11 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         );
         produceWithdrawalMessageToKafka(withdrawalEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(client3);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().rule.name, is("Withdrawal Review"));
-        assertThat("Verify alert ucid", alerts.getFirst().ucid, is(client3.getUcid()));
-
+        List<RuleAlert> alerts = getUserAlertsFromKafka(client3, "Withdrawal Review");
         List<Alert> dbAlerts = getUserAlertsFromDb(client3);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client3);
     }
 
     @Test
@@ -214,13 +210,11 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         );
         produceWithdrawalMessageToKafka(withdrawalEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(client4);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().rule.name, is("Withdrawal Review"));
-        assertThat("Verify alert ucid", alerts.getFirst().ucid, is(client4.getUcid()));
-
+        List<RuleAlert> alerts = getUserAlertsFromKafka(client4, "Withdrawal Review");
         List<Alert> dbAlerts = getUserAlertsFromDb(client4);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client4);
     }
 
     @Test
@@ -254,34 +248,11 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         );
         produceWithdrawalMessageToKafka(withdrawalEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(client5);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().alertId, is(withdrawalEvent.id));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().ucid, is(client5.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(withdrawalEvent.eventDate));
-
-        assertThat("Verify alert", alerts.getFirst().rule.name, is("Withdrawal Review"));
-        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("POTENTIAL_ABUSE"));
-        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Withdrawal"));
-        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
-
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.platform, is(withdrawalEvent.platform));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.currency, is(withdrawalEvent.withdrawalCurrency));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.createTime, is(withdrawalEvent.withdrawalApplicationTime));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.paymentType, is(withdrawalEvent.paymentMethodCode));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.check, is(withdrawalEvent.checkName));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(withdrawalEvent.mt4Account)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.paymentChannel, is(withdrawalEvent.paymentChannelName));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.amount, is("1"));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.date, is(withdrawalEvent.eventDate));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.withdrawalId, is(String.valueOf(withdrawalEvent.withdrawalId)));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.orderId, is(withdrawalEvent.merchantOrderId));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.regulator, is(withdrawalEvent.regulator));
-        assertThat("Verify alert", alerts.getFirst().rule.attributes.brand, is(withdrawalEvent.brand));
-
+        List<RuleAlert> alerts = getUserAlertsFromKafka(client5, "Withdrawal Review");
         List<Alert> dbAlerts = getUserAlertsFromDb(client5);
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client5);
+
     }
 }

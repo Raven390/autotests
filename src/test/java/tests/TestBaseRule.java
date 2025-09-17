@@ -2,6 +2,8 @@ package tests;
 
 import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.backoffice_db.alert.Alert;
+import business_objects.db.clickhouse.reporting_test.ZeebeRulesElements;
+import business_objects.db.clickhouse.reporting_test.ZeebeRulesStarted;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
@@ -21,10 +23,13 @@ import utils.TestResultWatcher;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static helpers.api.AbuseRegistryHelper.getClientStatus;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 
@@ -72,16 +77,17 @@ public class TestBaseRule {
         return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
-    @Step("Get User Alerts from postgres.bo.alert table")
+    @Step("Get User Alerts from postgres.bo.alert table with retries")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
-        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class);
+        List<Alert> result = getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class, 60);
+        return result != null ? result : List.of(); // empty if no alerts found after retries
     }
 
     @Step("Get User restrictions from mitigation DB")
     public static List<ClientGeneralRestriction> getUserRestrictionsFromDb(ClientHelper client) throws Exception {
-        return getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class
-        );
+        List<ClientGeneralRestriction> result = getObjectsFromDB(
+                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class, 30);
+        return result != null ? result : List.of(); // empty if no alerts found after retries
     }
 
     @Step("Get abuser status by ucid")
@@ -94,4 +100,38 @@ public class TestBaseRule {
 
         return mappedResponse;
     }
+
+    @Step("Get abuser status by ucid")
+    public static void checkElementId(String elementId, String event_id, String ruleName) throws Exception {
+        List<ZeebeRulesStarted> startedList = null;
+        for (int i = 0; i < 60; i++) {
+            startedList = getObjectsFromDB(
+                    DbName.CLICKHOUSE, ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", ZEEBE_RULES_STARTED, event_id, ruleName), ZeebeRulesStarted.class);
+            if (startedList != null && !startedList.isEmpty()) {
+                break;
+            }
+            Thread.sleep(1000);
+        }
+        System.out.println("List" + startedList);
+        assert !startedList.isEmpty();
+        String runId = startedList.getFirst().getRunId();
+
+        List<ZeebeRulesElements> elementsList = null;
+        for (int i = 0; i < 60; i++) {
+            elementsList = getObjectsFromDB(
+                    DbName.CLICKHOUSE, ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
+            if (elementsList != null && !elementsList.isEmpty()) {
+                break;
+            }
+            Thread.sleep(1000);
+        }
+        System.out.println("Elements List: " + elementsList);
+
+        assert !elementsList.isEmpty();
+        String elementIdsDb = elementsList.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
+        System.out.println("Element IDs: " + elementIdsDb);
+
+        assertThat(elementIdsDb, containsString(elementId));
+    }
+
 }

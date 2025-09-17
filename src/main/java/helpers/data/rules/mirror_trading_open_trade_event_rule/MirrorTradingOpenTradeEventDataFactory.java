@@ -22,7 +22,7 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static business_objects.db.data_science.ucid_mirror_score.UcidMirrorScoreFactory.generateUcidMirrorScoreObject;
+import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
 import static helpers.database.DbHelper.*;
@@ -114,8 +114,7 @@ public class MirrorTradingOpenTradeEventDataFactory {
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
                 DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.89d);
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.89d, 0.89d);
 
         return data;
     }
@@ -128,8 +127,7 @@ public class MirrorTradingOpenTradeEventDataFactory {
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
                 DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.91d);
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
         data.boAlertsObjects.getFirst().setRule("Mirror Trading");
         data.boAlertsObjects.getFirst().setStatus("CLOSED");
@@ -144,8 +142,7 @@ public class MirrorTradingOpenTradeEventDataFactory {
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
                 DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.91d);
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         return data;
     }
 

@@ -29,7 +29,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
-public class NewsTraderRuleTest extends TestBaseRule {
+class NewsTraderRuleTest extends TestBaseRule {
 
     static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
 
@@ -131,7 +131,7 @@ public class NewsTraderRuleTest extends TestBaseRule {
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
         Allure.step("Verify there is alert in kafka");
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "News Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
         Allure.step("Verify there is alert in BO DB");

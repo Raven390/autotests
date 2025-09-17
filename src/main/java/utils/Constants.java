@@ -234,6 +234,8 @@ public class Constants {
     public static final String MT_CID_TABLE_NAME = "data_science_test.mt_cid";
     public static final String RATES_USD_CURRENT = "ticks.rates_usd_current";
     public static final String APP_TB_FININDEX_DATA = "vindex_test.app___tb_finindex_data";
+    public static final String ZEEBE_RULE_ELEMENTS = "reporting_test.zeebe_rules_elements";
+    public static final String ZEEBE_RULES_STARTED = "reporting_test.zeebe_rules_started";
     public static final String PAYMENT_GATEWAY_D_DECISIONS_TABLE = "postgres.paymentgate.d_decisions";
     public static final String PAYMENT_GATEWAY_D_PAYMENT_RULE_OUTCOME_TABLE = "postgres.paymentgate.d_payment_rule_outcomes";
     public static final String PAYMENT_GATEWAY_D_PAYMENT_RULES_TABLE = "postgres.paymentgate.d_payment_rules";
