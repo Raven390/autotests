@@ -5,12 +5,15 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.reporting_test.ZeebeRulesElements;
 import business_objects.db.clickhouse.reporting_test.ZeebeRulesStarted;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.tmp_rule_decisions.TmpRuleDecisionsObject;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
+import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -77,10 +80,39 @@ public class TestBaseRule {
         return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
-    @Step("Get User Alerts from postgres.bo.alert table with retries")
+
+    @Step("Get Withdrawal from Kafka topic 'approvals'")
+    public static List<WithdrawalApprovals> getWithdrawalApprovalsFromKafka(String withdrawalId)
+            throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalId).toString(), WithdrawalApprovals[].class)).toList();
+    }
+
+    @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
         List<Alert> result = getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class, 60);
         return result != null ? result : List.of(); // empty if no alerts found after retries
+    }
+
+    @Step("Get User Alerts from postgres.bo.alert table")
+    public static List<Alert> getUserAlertsFromDb(ClientHelper client, String ruleName) throws Exception {
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class).stream().filter(alert -> alert.getRule().equals(ruleName)).toList();
+    }
+
+    @Step("Get UTempRuleDecision from BD")
+    public static List<TmpRuleDecisionsObject> getTempRuleDecisionByWithdrawalIdFromDb(String paymentId)
+            throws Exception {
+        return getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId), TmpRuleDecisionsObject.class);
+    }
+
+    public static List<TmpRuleDecisionsObject> getTempRuleDecisionByWithdrawalIdFromDb(Long withdrawalId)
+            throws Exception {
+        return getTempRuleDecisionByWithdrawalIdFromDb(String.valueOf(withdrawalId));
+    }
+
+    @Step("Get User Payment event from postgres.paymentgate.payment_events table")
+    public static List<PaymentEventsObject> getUserPaymentEventsFromDb(ClientHelper client) throws Exception {
+        return getObjectsFromDB(DbName.POSTGRES, PAYMENT_EVENT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), PaymentEventsObject.class);
     }
 
     @Step("Get User restrictions from mitigation DB")
