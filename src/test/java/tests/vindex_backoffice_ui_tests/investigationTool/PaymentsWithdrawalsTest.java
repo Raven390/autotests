@@ -239,21 +239,21 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
         WithdrawalApprovals approval2 = objectMapper.readValue(messagesMap.get(withdrawalAlert2.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
         WithdrawalApprovals approval3 = objectMapper.readValue(messagesMap.get(withdrawalAlert3.rule.attributes.withdrawalId).getLast(), WithdrawalApprovals.class);
         for (WithdrawalApprovals approval : List.of(approval1, approval2, approval3)) {
-            assertThat("Verify kafka withdrawal message id", approval.messageId, notNullValue());
-            assertThat("Verify kafka withdrawal timestamp", approval.timestamp, notNullValue());
-            assertThat("Verify kafka withdrawal brand", approval.brand, is(client.getBrand()));
-            assertThat("Verify kafka withdrawal regulator", approval.regulator, is(client.getRegulator()));
-            assertThat("Verify kafka withdrawal internal reason", approval.internalReason, is(""));
-            assertThat("Verify kafka withdrawal status", approval.status, is("Refuse"));
-            assertThat("Verify kafka withdrawal orderNumber", approval.orderNumber, is(withdrawalAlert1.rule.attributes.orderId));
-            assertThat("Verify kafka withdrawal checkName", approval.checkName, notNullValue());
+            assertThat("Verify kafka withdrawal message id", approval.getMessageId(), notNullValue());
+            assertThat("Verify kafka withdrawal timestamp", approval.getTimestamp(), notNullValue());
+            assertThat("Verify kafka withdrawal brand", approval.getBrand(), is(client.getBrand()));
+            assertThat("Verify kafka withdrawal regulator", approval.getRegulator(), is(client.getRegulator()));
+            assertThat("Verify kafka withdrawal internal reason", approval.getInternalReason(), is(""));
+            assertThat("Verify kafka withdrawal status", approval.getStatus(), is("Refuse"));
+            assertThat("Verify kafka withdrawal orderNumber", approval.getOrderNumber(), is(withdrawalAlert1.rule.attributes.orderId));
+            assertThat("Verify kafka withdrawal checkName", approval.getCheckName(), notNullValue());
         }
-        assertThat("Verify kafka withdrawal transfer id", approval1.transferId, is(Long.valueOf(withdrawalAlert1.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval1.checkName, is(withdrawalAlert1.rule.attributes.check));
-        assertThat("Verify kafka withdrawal transfer id", approval2.transferId, is(Long.valueOf(withdrawalAlert2.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval2.checkName, is(withdrawalAlert2.rule.attributes.check));
-        assertThat("Verify kafka withdrawal transfer id", approval3.transferId, is(Long.valueOf(withdrawalAlert3.rule.attributes.withdrawalId)));
-        assertThat("Verify kafka withdrawal checkName", approval3.checkName, is(withdrawalAlert3.rule.attributes.check));
+        assertThat("Verify kafka withdrawal transfer id", approval1.getTransferId(), is(Long.valueOf(withdrawalAlert1.rule.attributes.withdrawalId)));
+        assertThat("Verify kafka withdrawal checkName", approval1.getCheckName(), is(withdrawalAlert1.rule.attributes.check));
+        assertThat("Verify kafka withdrawal transfer id", approval2.getTransferId(), is(Long.valueOf(withdrawalAlert2.rule.attributes.withdrawalId)));
+        assertThat("Verify kafka withdrawal checkName", approval2.getCheckName(), is(withdrawalAlert2.rule.attributes.check));
+        assertThat("Verify kafka withdrawal transfer id", approval3.getTransferId(), is(Long.valueOf(withdrawalAlert3.rule.attributes.withdrawalId)));
+        assertThat("Verify kafka withdrawal checkName", approval3.getCheckName(), is(withdrawalAlert3.rule.attributes.check));
     }
 
     @AfterAll

@@ -1,6 +1,6 @@
 package business_objects.db.abuse_registry_db;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 
 public class Abuser {
     private String ucid;
@@ -8,12 +8,15 @@ public class Abuser {
     private String comment;
     private String modifiedByUser;
     private String modifiedBySystem;
-    private OffsetDateTime updatedAt;
-    private OffsetDateTime createdAt;
-    private boolean pendingProcessing;
+    private Timestamp updatedAt;
+    private Timestamp createdAt;
+    private Boolean pendingProcessing;
+
+    public Abuser() {
+    }
 
     public Abuser(String ucid, String status, String comment, String modifiedByUser, String modifiedBySystem,
-            OffsetDateTime updatedAt, OffsetDateTime createdAt, boolean pendingProcessing) {
+            Timestamp updatedAt, Timestamp createdAt, Boolean pendingProcessing) {
         this.ucid = ucid;
         this.status = status;
         this.comment = comment;
@@ -64,27 +67,27 @@ public class Abuser {
         this.modifiedBySystem = modifiedBySystem;
     }
 
-    public OffsetDateTime getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(OffsetDateTime createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 
-    public boolean isPendingProcessing() {
+    public Boolean isPendingProcessing() {
         return pendingProcessing;
     }
 
-    public void setPendingProcessing(boolean pendingProcessing) {
+    public void setPendingProcessing(Boolean pendingProcessing) {
         this.pendingProcessing = pendingProcessing;
     }
 }

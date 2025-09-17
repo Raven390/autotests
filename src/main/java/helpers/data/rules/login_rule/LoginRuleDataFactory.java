@@ -236,7 +236,7 @@ public class LoginRuleDataFactory {
         addConnectionByEmailPhoneAttribute(data, connectedClient, 0.86);
         //add abuse
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.get(0));
-        addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MONEY_LAUNDRY_RECORD), FraudTypeStatus.CONFIRMED);
+        addFraudsForClient(data.connectedClientHelpers.get(0), List.of(MONEY_LAUNDRY), FraudTypeStatus.CONFIRMED);
 
         // set model score
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.71, 0.71);

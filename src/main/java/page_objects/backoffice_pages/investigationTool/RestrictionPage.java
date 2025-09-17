@@ -227,12 +227,12 @@ public class RestrictionPage extends AbstractPage {
         System.out.println("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
-        assertEquals(apply.transferId.toString(), (transactionID));
-        assertNotNull((apply.regulator));
-        assertNotNull((apply.brand));
-        assertNotNull((apply.timestamp));
-        assertNotNull((apply.status));
-        assertEquals(expectedStatus, (apply.status));
+        assertEquals(apply.getTransferId().toString(), (transactionID));
+        assertNotNull((apply.getRegulator()));
+        assertNotNull((apply.getBrand()));
+        assertNotNull((apply.getTimestamp()));
+        assertNotNull((apply.getStatus()));
+        assertEquals(expectedStatus, (apply.getStatus()));
     }
 
     @Step("Clean users restriction history")

@@ -1,6 +1,6 @@
 package business_objects.db.abuse_registry_db;
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 public class AbuserFraudType {
@@ -10,8 +10,8 @@ public class AbuserFraudType {
     String comment;
     String modifiedByUser;
     String modifiedBySystem;
-    OffsetDateTime updatedAt;
-    OffsetDateTime createdAt;
+    Timestamp updatedAt;
+    Timestamp createdAt;
     String fraudSubtypeCode;
     String symbols;
     String fraudSource;
@@ -20,7 +20,7 @@ public class AbuserFraudType {
     }
 
     public AbuserFraudType(String ucid, String fraudTypeCode, String status, String comment, String modifiedByUser,
-            String modifiedBySystem, OffsetDateTime updatedAt, OffsetDateTime createdAt, String fraudSubtypeCode,
+            String modifiedBySystem, Timestamp updatedAt, Timestamp createdAt, String fraudSubtypeCode,
             String symbols, String fraudSource) {
         this.ucid = ucid;
         this.fraudTypeCode = fraudTypeCode;
@@ -100,19 +100,19 @@ public class AbuserFraudType {
         this.modifiedBySystem = modifiedBySystem;
     }
 
-    public OffsetDateTime getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(OffsetDateTime createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

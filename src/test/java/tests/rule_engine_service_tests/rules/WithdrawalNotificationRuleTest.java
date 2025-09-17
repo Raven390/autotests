@@ -264,10 +264,10 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         List<WithdrawalApprovals> approval = getWithdrawalApprovalsFromKafka(String.valueOf(withdrawalEvent.getWithdrawalId()));
 
         assertThat("Verify amount of aproovals in Kafka topic", approval.size(), is(1));
-        assertThat("Verify status of aprooval in Kafka topic", approval.getFirst().status, is("Approve"));
-        assertThat("Verify status of checkName in Kafka topic", approval.getFirst().checkName, is("Crypto_Risk"));
-        assertThat("Verify checkName in Kafka topic", approval.getFirst().checkName, is("Crypto_Risk"));
-        assertThat("Verify orderNumber in Kafka topic", approval.getFirst().orderNumber, is(withdrawalEvent.merchantOrderId));
+        assertThat("Verify status of aprooval in Kafka topic", approval.getFirst().getStatus(), is("Approve"));
+        assertThat("Verify status of checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
+        assertThat("Verify checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
+        assertThat("Verify orderNumber in Kafka topic", approval.getFirst().getOrderNumber(), is(withdrawalEvent.merchantOrderId));
 
     }
 

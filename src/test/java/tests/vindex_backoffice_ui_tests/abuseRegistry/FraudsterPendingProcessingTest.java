@@ -12,7 +12,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.Timestamp;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -33,13 +33,12 @@ class FraudsterPendingProcessingTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() {
-        var nowTimestamp = new Timestamp(System.currentTimeMillis());
-        var nowOffsetDateTime = OffsetDateTime.now();
+        var nowTimestamp = Timestamp.from(Instant.now());
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", OffsetDateTime.now(), OffsetDateTime.now(), true));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
-        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowOffsetDateTime, nowOffsetDateTime, "INTERNAL", null, "Vindex"));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
         insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
     }
 

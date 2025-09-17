@@ -54,6 +54,8 @@ public class BoHelper {
             Thread.sleep(100);
             deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
+            deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
+            Thread.sleep(100);
             deleteEntryFromDb(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
             deleteEntryFromDb(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
