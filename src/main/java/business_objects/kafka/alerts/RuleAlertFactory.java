@@ -1,6 +1,7 @@
 package business_objects.kafka.alerts;
 
 import helpers.data.ClientHelper;
+import helpers.data.enums.FraudType;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
@@ -39,7 +40,7 @@ public class RuleAlertFactory {
         alert.rule.ver = "01";
         alert.rule.name = "Mirror Trading";
         alert.rule.trigger = "openTrade";
-        alert.rule.fraudType = "HEDGING";
+        alert.rule.fraudType = FraudType.HEDGING.getCode();
         alert.rule.attributes = new RuleAlert.Rule.Attribute();
         alert.rule.attributes.stepName = "Linked hedging abuser";
         return alert;
