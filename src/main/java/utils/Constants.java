@@ -149,6 +149,7 @@ public class Constants {
     public static final String AR_PENDING_PROCESSING_TABLE_NAME = "postgres.ar.pending_processing";
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
+    public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
     public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
     public static final String BO_INVESTIGATION_HISTORY_TABLE_NAME = "postgres.bo.investigation_history";
     public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";
@@ -170,6 +171,7 @@ public class Constants {
     public static final String CRM_TB_ACCOUNT_TABLE_NAME = "vindex_test.crm___tb_account";
     public static final String CRM_TB_LOYALTY_REDEMPTION = "vindex_test.crm___tb_loyalty_redemption";
     public static final String CRM_TB_USER_EXTENDS_TABLE_NAME = "vindex_test.crm___tb_user_extends";
+    public static final String CRM_TB_USER = "vindex_test.crm___tb_user";
     public static final String CRM_TRANSFERS_TABLE_NAME = "vindex_test.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm___tb_withdrawal";
@@ -247,6 +249,7 @@ public class Constants {
     public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
     public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";
     public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE = "postgres.paymentgate.tmp_rule_decisions";
+    public static final String EQUITY_HISTORY_TABLE = "vindex_test.mt___equity_history";
     // UI
     public static final String VANTAGE_BRAND_IMAGE_SRC = "data:image/svg+xml,%3csvg%20width='33'%20height='32'%20viewBox='0%200%2033%2032'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3crect%20width='32'%20height='32'%20transform='translate(0.5)'%20fill='%23034854'/%3e%3cpath%20d='M12.617%208.98231H8.34277L16.9316%2024.9503L19.0687%2020.9986L12.617%208.98231Z'%20fill='white'/%3e%3cpath%20d='M14.1896%208.9823H25.5608L19.9155%2019.426V12.5711L14.1896%208.9823Z'%20fill='%23E35728'/%3e%3c/svg%3e";
     // KYC files
