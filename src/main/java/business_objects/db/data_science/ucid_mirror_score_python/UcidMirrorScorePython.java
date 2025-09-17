@@ -1,4 +1,4 @@
-package business_objects.db.data_science.ucid_mirror_score_python.ucid_mirror_score;
+package business_objects.db.data_science.ucid_mirror_score_python;
 
 
 public class UcidMirrorScorePython {

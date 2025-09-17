@@ -18,7 +18,7 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
-import static business_objects.db.data_science.ucid_mirror_score.UcidMirrorScoreFactory.generateUcidMirrorScoreObject;
+import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.rules.RuleDataHelper.createClient;
 import static helpers.data.rules.RuleDataHelper.setupRuleData;
@@ -98,9 +98,7 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient4);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.89);
-
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.89d, 0.89d);
         return data;
     }
 
@@ -108,12 +106,10 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient5);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.91d);
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
         data.boAlertsObjects.getFirst().setRule("Mirror Trading");
         data.boAlertsObjects.getFirst().setStatus("CLOSED");
-
         return data;
     }
 
@@ -121,8 +117,7 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient6);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
-        data.ucidMirrorScore = generateUcidMirrorScoreObject(data.clientHelper);
-        data.ucidMirrorScore.setUcidScore(0.91d);
+        data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         return data;
     }
 

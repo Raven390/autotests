@@ -5,8 +5,8 @@ import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.*;
 import helpers.data.rules.RuleDataHelper;
+import io.qameta.allure.Description;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.DisplayName;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. No toxic connections for non VT or PU users. Event.id end_cs_no_toxic")
+    @Description("Login rule. Connection search sub-process. No toxic connections for non VT or PU users. Event.id end_cs_no_toxic")
     public static RuleDataHelper getLoginRuleTest2Data() {
         RuleDataHelper data = getLoginRuleData(loginRuleTest2Client);
         //Add connection
@@ -84,7 +84,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. No connections for VT or PU users. Event.id end_connections_not_found2")
+    @Description("Login rule. Connection search sub-process. No connections for VT or PU users. Event.id end_connections_not_found2")
     public static RuleDataHelper getLoginRuleTest3Data() {
         RuleDataHelper data = getLoginRuleData(loginRuleTest3Client);
         //Add connection
@@ -103,7 +103,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. No toxic connections for VT or PU users. Event.id end_cs_no_toxic")
+    @Description("Login rule. Connection search sub-process. No toxic connections for VT or PU users. Event.id end_cs_no_toxic")
     public static RuleDataHelper getLoginRuleTest4Data() throws IOException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest4Client);
         //Add connection
@@ -125,7 +125,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Exists toxic connections for VT or PU users, general score<0.7. Event.id Event_0qy8dcr")
+    @Description("Login rule. Connection search sub-process. Exists toxic connections for VT or PU users, general score<0.7. Event.id Event_0qy8dcr")
     public static RuleDataHelper getLoginRuleTest5Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest5Client);
         //Add connection
@@ -151,7 +151,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score<0.7, user is mirror trader without connections. Event.id end_no_str1_hedge")
+    @Description("Login rule. Connection search sub-process. Model score<0.7, user is mirror trader without connections. Event.id end_no_str1_hedge")
     public static RuleDataHelper getLoginRuleTest6Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest6Client);
         //Add connection
@@ -180,7 +180,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, user is mirror trader with strong connections. Event.id Event_1o2qu8z")
     public static RuleDataHelper getLoginRuleTest7Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest7Client);
 
@@ -204,7 +204,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Strong connection with HEDGING fraud. Event.id end_cs_abuse")
+    @Description("Login rule. Strong connection with HEDGING fraud. Event.id end_cs_abuse")
     public static RuleDataHelper getLoginRuleTest8Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest8Client);
 
@@ -227,7 +227,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, fraud type is uknown. Event.id end_unknown_fraud_type")
     public static RuleDataHelper getLoginRuleTest9Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest9Client);
 
@@ -243,7 +243,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Market manipulation. end_cs_abuse.id end_unknown_fraud_type")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Market manipulation. end_cs_abuse.id end_unknown_fraud_type")
     public static RuleDataHelper getLoginRuleTest10Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest10Client);
 
@@ -259,7 +259,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Bonus abuser and toxic account linked. end_cs_abuse.id")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Bonus abuser and toxic account linked. end_cs_abuse.id")
     public static RuleDataHelper getLoginRuleTest15Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest15Client);
 
@@ -275,7 +275,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_cs_abuse")
     public static RuleDataHelper getLoginRuleTest11Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest11Client);
 
@@ -291,7 +291,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_no_mitigation")
+    @Description("Login rule. Connection search sub-process. Model score> 0.7, fraud type is Chargeback. Event.id end_no_mitigation")
     public static RuleDataHelper getLoginRuleTest12Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest12Client);
 
@@ -307,7 +307,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Strong connection with HEDGING fraud and has bonus restriction. Event.id end_hedge_ald_no_bonus")
+    @Description("Login rule. Strong connection with HEDGING fraud and has bonus restriction. Event.id end_hedge_ald_no_bonus")
     public static RuleDataHelper getLoginRuleTest13Data() throws IOException, InterruptedException {
         RuleDataHelper data = getLoginRuleData(loginRuleTest13Client);
 
@@ -332,7 +332,7 @@ public class LoginRuleDataFactory {
         return data;
     }
 
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_wr_cooldown")
+    @Description("Login rule. Connection search sub-process. General score> 0.7, fraud type is Chargeback. Event.id end_wr_cooldown")
     public static RuleDataHelper getLoginRuleTest14Data() {
         RuleDataHelper data = getLoginRuleData(loginRuleTest14Client);
         return data;

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.registration_rule.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,7 +39,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        //deleteRuleData(dbDataMap);
+        deleteRuleData(dbDataMap);
     }
 
     @Test
@@ -47,11 +48,9 @@ class RegistrationRuleTest extends TestBaseRule {
     void registrationRuleTest1() throws Exception {
         RuleDataHelper data = dbDataMap.get("1");
 
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(data.registrationEvent), KAFKA_TOPIC_CRM_EVENTS);
-
         produceRegistrationEventToKafka(data.registrationEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -75,7 +74,7 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("No alert. High Lexis score"));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -98,7 +97,7 @@ class RegistrationRuleTest extends TestBaseRule {
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(9L));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
@@ -118,7 +117,7 @@ class RegistrationRuleTest extends TestBaseRule {
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(0));
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);

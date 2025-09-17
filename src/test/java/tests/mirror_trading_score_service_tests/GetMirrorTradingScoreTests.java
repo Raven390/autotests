@@ -2,7 +2,7 @@ package tests.mirror_trading_score_service_tests;
 
 import business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStore;
 import business_objects.db.data_science.ucid_mirror_score.UcidMirrorScore;
-import business_objects.db.data_science.ucid_mirror_score_python.ucid_mirror_score.UcidMirrorScorePython;
+import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
@@ -16,8 +16,7 @@ import java.util.List;
 
 import static business_objects.api.mirror_trading_score_service.MirrorTradingScoreRequest.getMirrorTradingScore;
 import static business_objects.db.data_science.bybit_feature_store.feature_store_service.BybitFeatureStoreFactory.*;
-import static business_objects.db.data_science.feature_store_service.FeatureStoreServiceFactory.*;
-import static business_objects.db.data_science.ucid_mirror_score_python.ucid_mirror_score.UcidMirrorScorePythonFactory.generateUcidMirrorScoreObject;
+import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomBybitClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanUserMirrorScoreDataDb;
@@ -55,7 +54,7 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
 
         System.out.println(client.getUcid());
         Allure.step("setup DB data");
-        UcidMirrorScorePython source1 = generateUcidMirrorScoreObject(client, 0.1, 0.2);
+        UcidMirrorScorePython source1 = generateUcidMirrorScorePythonObject(client, 0.1, 0.2);
         insertObjectsToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, List.of(source1));
 
         // Add wait for service to process the data

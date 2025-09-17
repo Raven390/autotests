@@ -250,7 +250,6 @@ class LoginRuleTests extends TestBaseRule {
         RuleDataHelper data = dbDataMap.get("15");
         produceLoginMessageToKafka(data.loginEvent);
 
-        Thread.sleep(45_000);
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
@@ -301,7 +300,6 @@ class LoginRuleTests extends TestBaseRule {
         RuleDataHelper data = dbDataMap.get("11");
         produceLoginMessageToKafka(data.loginEvent);
 
-        Thread.sleep(30_000);
         // Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
@@ -342,8 +340,8 @@ class LoginRuleTests extends TestBaseRule {
         RuleDataHelper data = dbDataMap.get("12");
         produceLoginMessageToKafka(data.loginEvent);
 
-        Thread.sleep(30_000);
         // Verify alerts
+
         assertThat("Verify amount of user alerts in kafka", getUserAlertsFromKafka(data.clientHelper).size(), is(0));
         assertThat("Verify amount of alerts in BO DB", getUserAlertsFromDb(data.clientHelper).size(), is(0));
 
@@ -368,7 +366,6 @@ class LoginRuleTests extends TestBaseRule {
 
         //add  bonus restriction
         Integer restrictionId = postRestriction(data.clientHelper, "GENERAL", "14").id;
-        //
 
         produceLoginMessageToKafka(data.loginEvent);
 

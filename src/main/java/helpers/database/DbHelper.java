@@ -39,6 +39,17 @@ public class DbHelper {
     }
 
     @Step("Get objects from {dbName}, table {tableName} with condition {where}")
+    public static <T> List<T> getObjectsFromDB(DbName dbName, String tableName, String where, Class<T> className,
+            int retries)
+            throws Exception {
+        return executeWithRetry(() -> {
+            try (Connection connection = createConnection(dbName)) {
+                return fetchObjects(connection, tableName, where, className);
+            }
+        }, retries);
+    }
+
+    @Step("Get objects from {dbName}, table {tableName} with condition {where}")
     public static <T> List<T> getObjectsFromDBFinal(DbName dbName, String tableName, String where, Class<T> className) {
         return executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName)) {
@@ -52,6 +63,8 @@ public class DbHelper {
         String query;
         if (where == null || where.isEmpty()) {
             query = String.format("SELECT * FROM %s", tableName);
+        } else if (where.contains("SELECT")) {
+            query = String.format(where);
         } else {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
         }
@@ -103,17 +116,52 @@ public class DbHelper {
             return value; // No conversion needed
         }
 
+        // Handle blank String inputs gracefully
+        if (value instanceof String) {
+            String trimmed = ((String) value).trim();
+            if (trimmed.isEmpty()) {
+                // For String targets keep empty string, for others return null to avoid NumberFormatException
+                return targetType.equals(String.class) ? "" : null;
+            }
+        }
+
+        // Numeric targets from Number
         if (targetType.equals(Integer.class) && value instanceof Number) {
             return ((Number) value).intValue();
         } else if (targetType.equals(Double.class) && value instanceof Number) {
             return ((Number) value).doubleValue();
         } else if (targetType.equals(Long.class) && value instanceof Number) {
             return ((Number) value).longValue();
-        } else if (targetType.equals(LocalDate.class) && value instanceof Date) {
+        }
+
+        // Numeric targets from numeric Strings (non-blank handled above)
+        if (targetType.equals(Integer.class) && value instanceof String) {
+            return Integer.parseInt(((String) value).trim());
+        } else if (targetType.equals(Double.class) && value instanceof String) {
+            return Double.parseDouble(((String) value).trim());
+        } else if (targetType.equals(Long.class) && value instanceof String) {
+            return Long.parseLong(((String) value).trim());
+        }
+
+        // Date/time targets
+        if (targetType.equals(LocalDate.class) && value instanceof Date) {
             return ((Date) value).toLocalDate();
         } else if (targetType.equals(LocalDateTime.class) && value instanceof Timestamp) {
             return ((Timestamp) value).toLocalDateTime();
-        } else if (targetType.equals(String.class) && value instanceof UUID) {
+        }
+
+        // UUID target from String
+        if (targetType.equals(UUID.class) && value instanceof String) {
+            String s = ((String) value).trim();
+            if (s.isEmpty()) {
+                return null;
+            } else {
+                return UUID.fromString(s);
+            }
+        }
+
+        // String targets
+        if (targetType.equals(String.class) && value instanceof UUID) {
             return value.toString(); // Convert UUID to String
         } else if (targetType.equals(String.class) && value instanceof LocalDateTime) {
             // Convert LocalDateTime to String
@@ -139,6 +187,9 @@ public class DbHelper {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        } else if (targetType.equals(String.class)) {
+            // Generic fallback: convert any value to String
+            return String.valueOf(value);
         }
 
         throw new IllegalArgumentException(String.format(
@@ -572,6 +623,29 @@ public class DbHelper {
             }
         }
         throw new RuntimeException("Operation failed after " + MAX_RETRIES + " attempts");
+    }
+
+    private static <T> T executeWithRetry(DatabaseOperation<T> operation, int retries) {
+        int attempt = 0;
+        while (attempt < retries) {
+            try {
+                return operation.execute();
+            } catch (SQLException | ReflectiveOperationException e) {
+                attempt++;
+                System.err.println("Database operation failed (attempt " + attempt + "): " + e.getMessage());
+                if (attempt >= retries) {
+                    throw new RuntimeException("Operation failed after " + retries + " attempts"); // Give up after 5 attempts
+                }
+                try {
+                    Thread.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RuntimeException("Operation failed after " + retries + " attempts");
     }
 
     // Functional interface for retry logic
