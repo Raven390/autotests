@@ -118,4 +118,5 @@ public class Investigation {
     public String toString() {
         return "Investigation{" + "id=" + id + ", type='" + type + '\'' + ", assignedUserId='" + assignedUserId + '\'' + ", completedByUserId='" + completedByUserId + '\'' + ", createdAt='" + createdAt + '\'' + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", status='" + status + '\'' + ", clientUcid='" + clientUcid + '\'' + '}';
     }
+
 }

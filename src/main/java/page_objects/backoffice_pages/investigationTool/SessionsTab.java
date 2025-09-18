@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
+import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
@@ -866,7 +867,14 @@ public class SessionsTab extends AbstractPage {
 
     public void isSessionTabHidden() {
         Allure.step("check is session tab hidden");
+        waitForPageToLoad();
         sessionsTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    public void isSessionTabVisible() {
+        Allure.step("check is session tab visible");
+        waitForPageToLoad();
+        sessionsTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
     }
 
 

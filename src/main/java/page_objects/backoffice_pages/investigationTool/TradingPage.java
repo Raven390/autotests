@@ -2283,5 +2283,11 @@ public class TradingPage extends AbstractPage {
     public String getToastMessageText() {
         return toastMessage.textContent();
     }
+
+    public void isIllegalProfitButtonHidden() {
+        Allure.step("check is illegal profit button hidden");
+        super.waitForPageToLoad();
+        illegalProfitButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
 }
 

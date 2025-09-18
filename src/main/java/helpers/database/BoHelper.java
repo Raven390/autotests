@@ -7,6 +7,7 @@ import business_objects.db.backoffice_db.client.Client;
 import business_objects.db.backoffice_db.clients_fraud_types.ClientsFraudTypes;
 import business_objects.ui.user.User;
 import helpers.data.ClientHelper;
+import helpers.data.enums.AlertType;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -49,9 +50,11 @@ public class BoHelper {
         try {
             Allure.step("delete user from BO");
             List<Investigation> investigations = getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
-            int investigationId = investigations.getFirst().getId();
-            deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
-            Thread.sleep(100);
+            for (Investigation investigation : investigations) {
+                int investigationId = investigation.getId();
+                deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
+                Thread.sleep(100);
+            }
             deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
             Thread.sleep(100);
             deleteEntryFromDb(DbName.BACKOFFICE, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
@@ -141,6 +144,22 @@ public class BoHelper {
         return getObjectsFromDB(
                 DbName.BACKOFFICE, BO_BACKOFFICE_USER_TABLE_NAME, String.format("first_name = '%s' and last_name = '%s'", user.getFirstName(), user.getLastName()), BackofficeUser.class
         ).getFirst().id;
+    }
+
+    public static List<Investigation> getClientsInvestigationsDb(String ucid) throws Exception {
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
+    }
+
+    public static List<Investigation> getClientsInvestigationsDb(String ucid, AlertType type) throws Exception {
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Investigation.class);
+    }
+
+    public static List<Alert> getClientsAlertsDb(String ucid) throws Exception {
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'", Alert.class);
+    }
+
+    public static List<Alert> getClientsAlertsDb(String ucid, AlertType type) throws Exception {
+        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Alert.class);
     }
 
 }

@@ -17,7 +17,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.CleanTableHelper.cleanUserAudit;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static utils.Constants.*;
 
 @Tag(TEAM_BACKOFFICE)
@@ -42,7 +42,7 @@ public class ActionsByAfTeamTest extends TestBaseWeb {
 
         deleteUserBO(client.getUcid());
         cleanUserAudit(client.getUcid());
-        createSimpleAlert(client.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
+        sendSimpleAlert(client.getUcid(), FraudTypeOld.CPA_ABUSE.getKey());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAFUser();
         investigationPage.navigateToClient(client.getUcid());
