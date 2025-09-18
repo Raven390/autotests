@@ -28,7 +28,7 @@ import static helpers.database.CleanTableHelper.cleanUserAudit;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
-import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleTradeAlert;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static utils.Constants.*;
@@ -68,7 +68,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @AllureId("1565")
     @DisplayName("BO user with Payment Team role can assign suspicious client with the active alert to himself to perform investigation from the alert list")
     void assignAlertListTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.navigateInvestigationTool();
@@ -88,7 +88,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @AllureId("1566")
     @DisplayName("BO user with Payment Team role can assign suspicious client with the active alert to himself to perform investigation from the client card")
     void assignClientCardTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.navigateToClient(client.getUcid());
@@ -107,7 +107,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @AllureId("1572")
     @DisplayName("BO user with Payment Team role can assign suspicious client with the active payment alert to himself to perform investigation from the client card without affecting trading alert")
     void assignClientCardBothTypesAlertsTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
@@ -135,7 +135,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @AllureId("1574")
     @DisplayName("BO user with general role can assign suspicious client with the active payment alert to himself to perform investigation from the alert list and not affecting active trading alert")
     void assignClientCardBothTypesAlertsGeneralRolePaymentTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -165,7 +165,7 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     @AllureId("1573")
     @DisplayName("BO user with general role can assign suspicious client with the active trading alert to himself to perform investigation from the alert list and not affecting active payment alert")
     void assignClientCardBothTypesAlertsGeneralRoleTradingTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

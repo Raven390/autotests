@@ -30,7 +30,7 @@ import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleTradeAlert;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.waitForConnectionSearchToUpdate;
@@ -122,7 +122,7 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
     @AllureId("1567")
     @DisplayName("BO user with Payment Team role can see tabs")
     void assignClientCardTest() throws Exception {
-        sendSimpleTradeAlert(client.getUcid());
+        sendSimplePaymentAlert(client.getUcid());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         investigationPage.navigateToClient(client.getUcid());

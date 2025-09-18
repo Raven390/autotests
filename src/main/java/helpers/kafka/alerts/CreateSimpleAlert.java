@@ -25,7 +25,7 @@ public class CreateSimpleAlert {
     }
 
 
-    public static void sendSimpleTradeAlert(String ucid) throws JsonProcessingException {
+    public static void sendSimplePaymentAlert(String ucid) throws JsonProcessingException {
         objectMapper.findAndRegisterModules();
         PaymentAlertMessage alert = generatePaymentAlertByUcid(ucid);
         kafka.produceMessage(alert.getId().toString(), objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);

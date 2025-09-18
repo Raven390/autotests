@@ -8,6 +8,7 @@ import business_objects.db.backoffice_db.clients_fraud_types.ClientsFraudTypes;
 import business_objects.ui.user.User;
 import helpers.data.ClientHelper;
 import helpers.data.enums.AlertType;
+import helpers.data.enums.InvestigationStatus;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -177,4 +178,13 @@ public class BoHelper {
         return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "' and type ='" + type + "'", Alert.class);
     }
 
+    public static Long countInvestigationsDb(AlertType type, InvestigationStatus status) throws Exception {
+        List<Investigation> investigations = getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "status = '" + status + "'  and type = '" + type + "'", Investigation.class);
+        return investigations.stream().map(Investigation::getClientUcid).distinct().count();
+    }
+
+    public static Long countUsersInvestigationsDb(AlertType type, String boUserId) throws Exception {
+        List<Investigation> investigations = getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "status = 'ACTIVE'  and type = '" + type + "' and assigned_user_id ='" + boUserId + "'", Investigation.class);
+        return investigations.stream().map(Investigation::getClientUcid).distinct().count();
+    }
 }
