@@ -566,5 +566,10 @@ public class GeneralTab extends AbstractPage {
         Allure.step("check is general tab hidden");
         generalTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
+
+    public void isGeneralTabVisible() {
+        Allure.step("check is general tab visible");
+        generalTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
 }
 

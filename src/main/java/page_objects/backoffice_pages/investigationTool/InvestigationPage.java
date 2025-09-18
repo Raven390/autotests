@@ -158,7 +158,7 @@ public class InvestigationPage extends AbstractPage {
         this.successToast = page.locator(".g-toast_theme_success");
         this.infoToast = page.locator(".g-toast_theme_info");
         this.investigateButtonList = page.locator("[data-qa='investigation_tools__client_card_assign_button']");
-        this.suspiciousClientsList = page.locator("[data-qa='investigation_page__suspicious_clients_list']");
+        this.suspiciousClientsList = page.locator("[data-qa='suspicious_clients__list']");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.clientContainer = page.locator("//*[@data-qa='data_item_wrapper_container']");
         this.brandImage = page.locator("//img[@class='g-avatar__image']");
@@ -196,6 +196,12 @@ public class InvestigationPage extends AbstractPage {
     @Step("Open the BackOffice main page")
     public void navigateBase() {
         page.navigate(BASE_URL_E2E);
+        super.waitForPageToLoad();
+    }
+
+    @Step("Open the BackOffice main page")
+    public void navigateInvestigationTool() {
+        page.navigate(BASE_URL_E2E + "investigation");
         super.waitForPageToLoad();
     }
 
@@ -350,6 +356,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("Filter unassigned")
     public void filterUnassigned() {
+        waitForPageToLoad();
         unassignedFilter.click();
         unassignedFilter.locator("[aria-checked='true']").isVisible();
     }
@@ -416,15 +423,17 @@ public class InvestigationPage extends AbstractPage {
     @Step("take client to investigation from the alert list")
     public void investigateUserAlertList(String userId) {
         Allure.step("take client to investigation from the alert list");
+        page.waitForTimeout(500);
+        waitForPageToLoad();
         int attempts = 0;
-        while ((!page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 5000) {
+        while ((!page.locator("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 5000) {
             suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
-//            page.waitForTimeout(500);
+            page.waitForTimeout(500);
             attempts++;
         }
-        page.locator("//*[@data-qa='investigation_page__suspicious_client_card']/descendant::div[text()='" + userId + "']").hover();
-        page.locator("//div[text()='" + userId + "']/ancestor::div[@data-qa='investigation_page__suspicious_client_card']/descendant::button[@data-qa='investigation_tools__client_card_assign_button']").nth(0).click();
+        page.locator("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='" + userId + "']").hover();
+        page.locator("//div[text()='" + userId + "']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button").nth(0).click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
     }
@@ -435,6 +444,7 @@ public class InvestigationPage extends AbstractPage {
 
     @Step("take client to investigation from the client card")
     public void investigateClientCard() {
+        page.waitForTimeout(500);
         waitForPageToLoad();
         Allure.step("take client to investigation from the from the client card");
         investigateButton.click();
@@ -774,7 +784,7 @@ public class InvestigationPage extends AbstractPage {
         }
     }
 
-    private void clickSelectInvestigationType(String investigationType) {
+    public void clickSelectInvestigationType(String investigationType) {
         selectInvestigationTypeDropDown.click();
         page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType)).click();
     }
@@ -788,4 +798,5 @@ public class InvestigationPage extends AbstractPage {
     public void clickSelectPaymentInvestigationType() {
         this.clickSelectInvestigationType("Payments");
     }
+
 }

@@ -8,8 +8,7 @@ import page_objects.backoffice_pages.AbstractPage;
 
 import java.util.List;
 
-import static com.microsoft.playwright.options.WaitForSelectorState.DETACHED;
-import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
+import static com.microsoft.playwright.options.WaitForSelectorState.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 
 public class AlertsPage extends AbstractPage {
@@ -154,6 +153,12 @@ public class AlertsPage extends AbstractPage {
     public void isAlertTabVisible() {
         Allure.step("check is alert tab visible");
         alertsTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    public void isAlertTabHidden() {
+        Allure.step("check is alert tab hidden");
+        waitForPageToLoad();
+        alertsTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
     }
 }
 

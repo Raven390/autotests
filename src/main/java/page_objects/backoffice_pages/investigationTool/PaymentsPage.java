@@ -38,6 +38,7 @@ public class PaymentsPage extends AbstractPage {
     private final Locator activeTimelineSection;
     private final Locator financialTransactionGraphSection;
     private final Locator withdrawalsTab;
+    private final Locator summaryTab;
     private final Locator withdrawalTabButtonContent;
     private final Locator filterOptions;
     private final Locator createTimeFilter;
@@ -105,6 +106,7 @@ public class PaymentsPage extends AbstractPage {
         this.inactiveTimelineSection = page.locator(".v-range-timeline-section_isTransparent");
         this.activeTimelineSection = page.locator(ACTIVE_TIMELINE_SECTION_SELECTOR);
         this.withdrawalsTab = page.locator("//input[@value='WITHDRAWALS']");
+        this.summaryTab = page.locator("//input[@value='SUMMARY']");
         this.filterOptions = page.locator("//div[@role='option']");
         this.createTimeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "Lifetime"));
         this.typeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "All types"));
@@ -732,5 +734,23 @@ public class PaymentsPage extends AbstractPage {
     public void isPaymentsTabHidden() {
         Allure.step("check is payment tab hidden");
         paymentsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    public void isPaymentsTabVisible() {
+        Allure.step("check is payment tab visible");
+        waitForPageToLoad();
+        paymentsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void isWithdrawalsSubtabHidden() {
+        Allure.step("check is payment tab have only summary subtab");
+        waitForPageToLoad();
+        withdrawalsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    public void isSummarySubtabVisible() {
+        Allure.step("check is payment tab have only summary subtab");
+        waitForPageToLoad();
+        summaryTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 }

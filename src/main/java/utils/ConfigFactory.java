@@ -175,6 +175,10 @@ public class ConfigFactory {
     public static final String LAST_NAME_CORE = CONFIG.lastNameCore();
     public static final String EMAIL_CORE = CONFIG.emailCore();
     public static final String ID_DEV = CONFIG.idDev();
+    public static final String ID_PAYMENT_TEAM_USER = CONFIG.idPaymentUser();
+    public static final String USERNAME_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
+    public static final String EMAIL_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
+    public static final String PASSWORD_PAYMENT_TEAM_USER = CONFIG.passwordPaymentUser();
     public static final String USERNAME_DEV = CONFIG.usernameDev();
     public static final String PASSWORD_DEV = CONFIG.passwordDev();
     public static final String FIRST_NAME_DEV = CONFIG.firstNameDev();
@@ -650,6 +654,15 @@ public class ConfigFactory {
         String crmIntegrationUserId();
 
         // Backoffice UI users
+
+        @Key("passwordAutotestPT")
+        String passwordPaymentUser();
+
+        @Key("emailPaymentUser")
+        String emailPaymentUser();
+
+        @Key("idPaymentUser")
+        String idPaymentUser();
 
         @Key("idFirstLogin")
         String idFirstLogin();

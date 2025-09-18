@@ -46,6 +46,30 @@ public class PaymentAlertMessage extends BaseAlertMessage {
         this.paymentEventId = paymentEventId;
     }
 
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setPaymentEventId(String paymentEventId) {
+        this.paymentEventId = paymentEventId;
+    }
+
     public String getAccount() {
         return account;
     }

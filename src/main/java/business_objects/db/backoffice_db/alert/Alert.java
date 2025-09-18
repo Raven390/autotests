@@ -19,6 +19,15 @@ public class Alert {
     private String alertResolution;
     private Boolean isHighPriority;
     private String investigatorId;
+    private String investigationId;
+
+    public String getInvestigationId() {
+        return investigationId;
+    }
+
+    public void setInvestigationId(String investigationId) {
+        this.investigationId = investigationId;
+    }
 
     public Long getId() {
         return id;

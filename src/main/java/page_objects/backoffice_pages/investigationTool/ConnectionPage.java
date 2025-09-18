@@ -1020,7 +1020,20 @@ public class ConnectionPage extends AbstractPage {
 
     public void isConnectionsTabHidden() {
         Allure.step("check is connections tab hidden");
+        waitForPageToLoad();
         connectionTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+    }
+
+    public void isConnectionsTabVisible() {
+        Allure.step("check is connections tab visible");
+        waitForPageToLoad();
+        connectionTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    public void isMultiselectButtonHidden() {
+        Allure.step("check is connections tab hidden");
+        waitForPageToLoad();
+        multiselectButton.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
     }
 
     public void navigate(String ucid) {

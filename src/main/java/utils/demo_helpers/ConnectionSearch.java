@@ -11,7 +11,7 @@ import java.util.List;
 import static helpers.database.BoHelper.cleanUserFraudsBo;
 import static helpers.database.BoHelper.createUserFraudsBo;
 import static helpers.database.DbHelper.*;
-import static helpers.kafka.alerts.CreateSimpleAlert.createSimpleAlert;
+import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.getRandomIntPositive;
@@ -83,22 +83,22 @@ public class ConnectionSearch {
         startSshTunnel();
 
         //first floor
-        createSimpleAlert(ucid2, "MARKET_MANIPULATION");
+        sendSimpleAlert(ucid2, "MARKET_MANIPULATION");
         createUserFraudsBo(ucid2, 3);
 
         //second floor
-        createSimpleAlert(ucid5, "CPA");
+        sendSimpleAlert(ucid5, "CPA");
         createUserFraudsBo(ucid5, 7);
 //        setGeneralRestrictionApi(ucid5, "03"); todo implement for trade
 
-        createSimpleAlert(ucid7, "HEDGING");
+        sendSimpleAlert(ucid7, "HEDGING");
         createUserFraudsBo(ucid7, 1);
 //        setGeneralRestrictionApi(ucid7, "03"); todo implement for trade
 
-        createSimpleAlert(ucid8, "HEDGING");
+        sendSimpleAlert(ucid8, "HEDGING");
 
         //third floor
-        createSimpleAlert(ucid9, "POTENTIAL_ABUSE");
+        sendSimpleAlert(ucid9, "POTENTIAL_ABUSE");
         createUserFraudsBo(ucid9, 14);
 //        setGeneralRestrictionApi(ucid5, "03"); todo implement for trade
 
