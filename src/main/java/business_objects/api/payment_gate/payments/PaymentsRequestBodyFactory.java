@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
-public class PostPaymentsRequestBodyFactory {
+public class PaymentsRequestBodyFactory {
 
     public static PostPaymentsRequestBody createPostPaymentsRequestBody() {
         PostPaymentsRequestBody body = new PostPaymentsRequestBody();

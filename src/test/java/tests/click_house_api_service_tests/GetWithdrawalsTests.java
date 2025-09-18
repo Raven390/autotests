@@ -17,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_withdrawals.GetWithdrawalsRequest.getWithdrawals;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
-import static helpers.database.CleanTableHelper.cleanWithdrawalsTableByUcid;
+import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -40,16 +40,16 @@ class GetWithdrawalsTests extends TestBaseApi {
     @BeforeAll
     static void setupWithdrawals() {
         ClientHelper client = getRandomVantageClient();
-        withdrawal1 = generateWithdrawalByClient(client);
-        withdrawal2 = generateWithdrawalByClient(client);
+        withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal2 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawal2.createTime = getTomorrowTimestampDbFormat();
         withdrawal2.amountUsd = 3.0;
-        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawal1, withdrawal2));
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2));
     }
 
     @AfterAll
     static void teardownWithdrawals() throws Exception {
-        cleanWithdrawalsTableByUcid(withdrawal1.ucid, withdrawal2.ucid);
+        cleanCrmTbWithdrawalTableByUcid(withdrawal1.ucid, withdrawal2.ucid);
     }
 
     @Test

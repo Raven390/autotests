@@ -1,19 +1,21 @@
 package business_objects.db.payment_gate.tmp_rule_decisions;
 
+import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class TmpRuleDecisionsObject {
 
     public Integer id;
-    public String paymentId;
+    public UUID paymentId;
     public String decision;
-    public String dateCreated;
+    public Timestamp dateCreated;
 
     public TmpRuleDecisionsObject() {
     }
 
-    public TmpRuleDecisionsObject(Integer id, String paymentId, String decision, String dateCreated) {
+    public TmpRuleDecisionsObject(Integer id, UUID paymentId, String decision, Timestamp dateCreated) {
         this.id = id;
         this.paymentId = paymentId;
         this.decision = decision;
@@ -28,11 +30,11 @@ public class TmpRuleDecisionsObject {
         this.id = id;
     }
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -44,11 +46,11 @@ public class TmpRuleDecisionsObject {
         this.decision = decision;
     }
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 

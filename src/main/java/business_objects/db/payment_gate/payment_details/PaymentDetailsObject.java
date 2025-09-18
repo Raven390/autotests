@@ -1,34 +1,36 @@
 package business_objects.db.payment_gate.payment_details;
 
+import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class PaymentDetailsObject {
 
     private Integer id;
-    private String paymentId;
+    private UUID paymentId;
     private String brand;
     private String regulator;
     private String type;
     private String clientId;
     private String merchantOrderId;
-    private String eventDate;
+    private Timestamp eventDate;
     private String status;
     private String platform;
     private String payload;
     private String sourceSystem;
     private String sourceEnv;
-    private String dateCreated;
+    private Timestamp dateCreated;
 
 
     public PaymentDetailsObject() {
     }
 
     public PaymentDetailsObject(
-            Integer id, String paymentId, String brand, String regulator, String type, String clientId,
-            String merchantOrderId, String eventDate, String status, String platform, String payload,
+            Integer id, UUID paymentId, String brand, String regulator, String type, String clientId,
+            String merchantOrderId, Timestamp eventDate, String status, String platform, String payload,
             String sourceSystem,
-            String sourceEnv, String dateCreated) {
+            String sourceEnv, Timestamp dateCreated) {
         this.id = id;
         this.paymentId = paymentId;
         this.brand = brand;
@@ -53,11 +55,11 @@ public class PaymentDetailsObject {
         this.id = id;
     }
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -101,11 +103,11 @@ public class PaymentDetailsObject {
         this.merchantOrderId = merchantOrderId;
     }
 
-    public String getEventDate() {
+    public Timestamp getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(String eventDate) {
+    public void setEventDate(Timestamp eventDate) {
         this.eventDate = eventDate;
     }
 
@@ -149,11 +151,11 @@ public class PaymentDetailsObject {
         this.sourceEnv = sourceEnv;
     }
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 

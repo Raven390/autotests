@@ -366,13 +366,13 @@ public class DbHelper {
     }
 
     public static Connection createPostgresConnectionRuleEngine() throws SQLException {
-        String jdbcUrl;
-        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, MITIGATION_DB_NAME);
+        String host;
+        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
+            host = POSTGRES_DB_HOST;
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
-
+            host = "localhost";
         }
+        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, MITIGATION_DB_NAME);
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
@@ -383,13 +383,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnectionPaymentGate() throws SQLException {
-        String jdbcUrl;
-        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
+        String host;
+        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
+            host = POSTGRES_DB_HOST;
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
-
+            host = "localhost";
         }
+        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, POSTGRES_DB_PORT, POSTGRES_DB_NAME);
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
@@ -400,12 +400,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnection() throws SQLException {
-        String jdbcUrl;
-        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
+        String host;
+        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
+            host = POSTGRES_DB_HOST;
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", POSTGRES_DB_PORT, POSTGRES_DB_NAME);
+            host = "localhost";
         }
+        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, POSTGRES_DB_PORT, POSTGRES_DB_NAME);
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
@@ -416,12 +417,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnectionAudit() throws SQLException {
-        String jdbcUrl;
-        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+        String host;
+        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
+            host = POSTGRES_DB_HOST;
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, AUDIT_DB_NAME);
+            host = "localhost";
         }
+        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, AUDIT_DB_NAME);
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", AUDIT_DB_USER);
@@ -431,12 +433,13 @@ public class DbHelper {
     }
 
     private static Connection createPostgresConnectionBO() throws SQLException {
-        String jdbcUrl;
-        if ("GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            jdbcUrl = String.format("jdbc:postgresql://" + POSTGRES_DB_HOST + ":%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
+        String host;
+        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
+            host = POSTGRES_DB_HOST;
         } else {
-            jdbcUrl = String.format("jdbc:postgresql://localhost:%s/%s", MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
+            host = "localhost";
         }
+        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
         System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
@@ -522,14 +525,24 @@ public class DbHelper {
                     filledQuery.replace(questionMarkPos, questionMarkPos + 1, replacement);
                     placeholderIndex = questionMarkPos + replacement.length();
 
-                    // Set value in the PreparedStatement
+                    // Determine the mapped column name for this field
+                    String columnName = fieldMappings.getOrDefault(field.getName(), camelToSnake(field.getName()));
+
+                    // Set value in the PreparedStatement (with special handling for jsonb)
                     if (value instanceof LocalDate) {
                         statement.setDate(parameterIndex++, Date.valueOf((LocalDate) value));
                     } else if (value instanceof LocalDateTime) {
                         statement.setTimestamp(parameterIndex++, Timestamp.valueOf((LocalDateTime) value));
-                    } else {
-                        statement.setObject(parameterIndex++, value);
-                    }
+                    } else
+                        if ("payload".equalsIgnoreCase(columnName) && tableName.toLowerCase().endsWith("payment_details")) {
+                            // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
+                            org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
+                            jsonbObject.setType("jsonb");
+                            jsonbObject.setValue(value.toString());
+                            statement.setObject(parameterIndex++, jsonbObject);
+                        } else {
+                            statement.setObject(parameterIndex++, value);
+                        }
                 }
             }
 

@@ -261,7 +261,7 @@ public class RuleDataHelper {
                 data.deviceIdTableEntries.forEach(payout -> insertObjectToDb(DEVICE_ID_TABLE_NAME, payout));
             }
             if (data.crmTbWithdrawalObjects != null) {
-                data.crmTbWithdrawalObjects.forEach(withdrawal -> insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal));
+                data.crmTbWithdrawalObjects.forEach(withdrawal -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal));
             }
             if (data.crmTbDepositObjects != null) {
                 data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
@@ -350,7 +350,7 @@ public class RuleDataHelper {
                 data.mtTbCreditsObjects.forEach(credit -> deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid)));
             }
             if (data.crmTbWithdrawalObjects != null) {
-                data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.ucid)));
+                data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.ucid)));
             }
             if (data.crmTbDepositObjects != null) {
                 data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid)));

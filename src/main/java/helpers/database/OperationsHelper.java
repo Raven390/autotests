@@ -15,7 +15,7 @@ public class OperationsHelper {
     public static void cleanUserPaymentsDb(String ucid) throws Exception {
         Allure.step("delete user's cashflow transactions from DB");
 
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid = '" + ucid + "'");
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, "ucid = '" + ucid + "'");
         logger.info("withdrawals deleted");
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid = '" + ucid + "'");
         logger.info("deposits deleted");

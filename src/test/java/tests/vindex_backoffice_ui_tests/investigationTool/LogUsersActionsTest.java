@@ -284,7 +284,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(KYC_FILES_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
         deleteEntryFromDb(ID_PROOF_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid));
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", crmTbUser.ucid));
         closeAlert(crmTbUser.ucid);
     }
 }

@@ -110,6 +110,11 @@ public class TestBaseRule {
         return getTempRuleDecisionByWithdrawalIdFromDb(String.valueOf(withdrawalId));
     }
 
+    public static List<TmpRuleDecisionsObject> getTempRuleDecisionByWithdrawalIdFromDb(java.util.UUID withdrawalId)
+            throws Exception {
+        return getTempRuleDecisionByWithdrawalIdFromDb(withdrawalId.toString());
+    }
+
     @Step("Get User Payment event from postgres.paymentgate.payment_events table")
     public static List<PaymentEventsObject> getUserPaymentEventsFromDb(ClientHelper client) throws Exception {
         return getObjectsFromDB(DbName.POSTGRES, PAYMENT_EVENT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), PaymentEventsObject.class);
@@ -133,7 +138,7 @@ public class TestBaseRule {
         return mappedResponse;
     }
 
-    @Step("Get abuser status by ucid")
+    @Step("Check %elementId presented in rule path")
     public static void checkElementId(String elementId, String event_id, String ruleName) throws Exception {
         List<ZeebeRulesStarted> startedList = null;
         for (int i = 0; i < 60; i++) {

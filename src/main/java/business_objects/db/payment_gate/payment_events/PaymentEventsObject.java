@@ -1,25 +1,29 @@
 package business_objects.db.payment_gate.payment_events;
 
+
+import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class PaymentEventsObject {
 
-    private String paymentId;
+    private UUID paymentId;
     private String crmId;
     private String type;
     private Integer finalDecisionId;
     private String ucid;
-    private String dateCreated;
-    private String dateUpdated;
-    private String dateDecided;
+    private Timestamp dateCreated;
+    private Timestamp dateUpdated;
+    private Timestamp dateDecided;
+    private String deliveryStatus;
 
     public PaymentEventsObject() {
     }
 
     public PaymentEventsObject(
-            String paymentId, String crmId, String type, Integer finalDecisionId, String ucid, String dateCreated,
-            String dateUpdated, String dateDecided) {
+            UUID paymentId, String crmId, String type, Integer finalDecisionId, String ucid, Timestamp dateCreated,
+            Timestamp dateUpdated, Timestamp dateDecided, String deliveryStatus) {
         this.paymentId = paymentId;
         this.crmId = crmId;
         this.type = type;
@@ -28,13 +32,14 @@ public class PaymentEventsObject {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.dateDecided = dateDecided;
+        this.deliveryStatus = deliveryStatus;
     }
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -70,28 +75,36 @@ public class PaymentEventsObject {
         this.ucid = ucid;
     }
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public String getDateUpdated() {
+    public Timestamp getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(String dateUpdated) {
+    public void setDateUpdated(Timestamp dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 
-    public String getDateDecided() {
+    public Timestamp getDateDecided() {
         return dateDecided;
     }
 
-    public void setDateDecided(String dateDecided) {
+    public void setDateDecided(Timestamp dateDecided) {
         this.dateDecided = dateDecided;
+    }
+
+    public String getDeliveryStatus() {
+        return deliveryStatus;
+    }
+
+    public void setDeliveryStatus(String deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
     }
 
     @Override
@@ -100,16 +113,16 @@ public class PaymentEventsObject {
         return Objects.equals(paymentId, that.paymentId) && Objects.equals(crmId, that.crmId) && Objects.equals(
                 type, that.type) && Objects.equals(finalDecisionId, that.finalDecisionId) && Objects.equals(ucid, that.ucid) && Objects.equals(
                         dateCreated, that.dateCreated) && Objects.equals(dateUpdated, that.dateUpdated) && Objects.equals(
-                                dateDecided, that.dateDecided);
+                                dateDecided, that.dateDecided) && Objects.equals(deliveryStatus, that.deliveryStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(paymentId, crmId, type, finalDecisionId, ucid, dateCreated, dateUpdated, dateDecided);
+        return Objects.hash(paymentId, crmId, type, finalDecisionId, ucid, dateCreated, dateUpdated, dateDecided, deliveryStatus);
     }
 
     @Override
     public String toString() {
-        return "PaymentEventsObject{" + "paymentId='" + paymentId + '\'' + ", crmId='" + crmId + '\'' + ", type='" + type + '\'' + ", finalDecisionId=" + finalDecisionId + ", ucid='" + ucid + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + ", dateDecided='" + dateDecided + '\'' + '}';
+        return "PaymentEventsObject{" + "paymentId=" + paymentId + ", crmId='" + crmId + '\'' + ", type='" + type + '\'' + ", finalDecisionId=" + finalDecisionId + ", ucid='" + ucid + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided=" + dateDecided + ", deliveryStatus='" + deliveryStatus + '\'' + '}';
     }
 }

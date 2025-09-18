@@ -1,28 +1,29 @@
 package business_objects.db.payment_gate.payment_rule_executions;
 
+import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class PaymentRuleExecutionsObject {
 
-    public Integer id;
-    public String paymentId;
-    public Integer runId;
-    public Integer ruleId;
-    public String ruleVersion;
-    public Integer ruleEndId;
-    public String dateCreated;
-    public String dateUpdated;
-    public String dateStarted;
-    public String dateCompleted;
-
+    private Integer id;
+    private UUID paymentId;
+    private Integer runId;
+    private Integer ruleId;
+    private String ruleVersion;
+    private Integer ruleEndId;
+    private Timestamp dateCreated;
+    private Timestamp dateUpdated;
+    private Timestamp dateStarted;
+    private Timestamp dateCompleted;
 
     public PaymentRuleExecutionsObject() {
     }
 
     public PaymentRuleExecutionsObject(
-            Integer id, String paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId,
-            String dateCreated, String dateUpdated, String dateStarted, String dateCompleted) {
+            Integer id, UUID paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId,
+            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateStarted, Timestamp dateCompleted) {
         this.id = id;
         this.paymentId = paymentId;
         this.runId = runId;
@@ -43,11 +44,11 @@ public class PaymentRuleExecutionsObject {
         this.id = id;
     }
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -83,35 +84,35 @@ public class PaymentRuleExecutionsObject {
         this.ruleEndId = ruleEndId;
     }
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public String getDateUpdated() {
+    public Timestamp getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(String dateUpdated) {
+    public void setDateUpdated(Timestamp dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 
-    public String getDateStarted() {
+    public Timestamp getDateStarted() {
         return dateStarted;
     }
 
-    public void setDateStarted(String dateStarted) {
+    public void setDateStarted(Timestamp dateStarted) {
         this.dateStarted = dateStarted;
     }
 
-    public String getDateCompleted() {
+    public Timestamp getDateCompleted() {
         return dateCompleted;
     }
 
-    public void setDateCompleted(String dateCompleted) {
+    public void setDateCompleted(Timestamp dateCompleted) {
         this.dateCompleted = dateCompleted;
     }
 

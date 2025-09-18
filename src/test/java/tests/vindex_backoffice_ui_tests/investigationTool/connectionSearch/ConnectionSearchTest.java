@@ -24,7 +24,7 @@ import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelati
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserWithUcidFirstName;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -115,8 +115,8 @@ class ConnectionSearchTest extends TestBaseWeb {
         // Withdrawal, Deposit
         deposit = generateDepositByClient(connectedClient3);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-        withdrawal = generateWithdrawalByClient(connectedClient3);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        withdrawal = generateCrmTbWithdrawalObjectByClient(connectedClient3);
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
         waitForConnectionSearchToUpdate(client);
     }
 
@@ -131,7 +131,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         closeAlert(connectedClient2.getUcid());
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", connectedClient3.getUcid()));
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", connectedClient3.getUcid()));
     }
 
     @BeforeEach
