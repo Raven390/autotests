@@ -12,6 +12,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.database.DbHelper.*;
@@ -45,14 +46,28 @@ public class BoHelper {
         closeAlert(client.getUcid());
     }
 
+    @Step("Wait for alerts to close for user {ucid}")
+    public static void waitForAlertsToClose(String ucid) throws Exception {
+        List<Alert> openAlertList = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid ='%s' and status = 'OPEN'", ucid), Alert.class);
+        for (int i = 0; i < 5; i++) {
+            if (openAlertList.isEmpty()) {
+                break;
+            } else {
+                Thread.sleep(1000);
+                openAlertList = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid ='%s' and status = 'OPEN'", ucid), Alert.class);
+            }
+        }
+
+    }
+
     @Step("Delete user from BO")
     public static void deleteUserBO(String ucid) {
         try {
             Allure.step("delete user from BO");
             List<Investigation> investigations = getObjectsFromDB(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'", Investigation.class);
-            for (Investigation investigation : investigations) {
-                int investigationId = investigation.getId();
-                deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id = '" + investigationId + "'");
+            if (!investigations.isEmpty()) {
+                String investigationIds = investigations.stream().map(inv -> String.valueOf(inv.getId())).collect(Collectors.joining(","));
+                deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id IN (" + investigationIds + ")");
                 Thread.sleep(100);
             }
             deleteEntryFromDb(DbName.BACKOFFICE, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");

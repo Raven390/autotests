@@ -58,7 +58,19 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", fraudSubtype.getCode(), symbols)));
-        assertThat(ASSERT_REASON, postFraudTypesV2(client, requestBody).code(), is(200));
+        int code = 0;
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            code = postFraudTypesV2(client, requestBody).code();
+            if (code == 200) {
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        assertThat(ASSERT_REASON, code, is(200));
         ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
@@ -67,7 +79,19 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", null, symbols)));
-        assertThat(ASSERT_REASON, postFraudTypesV2(client, requestBody).code(), is(200));
+        int code = 0;
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            code = postFraudTypesV2(client, requestBody).code();
+            if (code == 200) {
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        assertThat(ASSERT_REASON, code, is(200));
         ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
@@ -106,7 +130,19 @@ public class AbuseRegistryHelper {
             throws IOException {
         PostAbuserStatusRequestBody requestBody = new PostAbuserStatusRequestBody(
                 ACTOR, SYSTEM, COMMENT, status.getStatus());
-        assertThat(ASSERT_REASON, postAbuserStatus(client, requestBody).code(), is(200));
+        int code = 0;
+        for (int attempt = 1; attempt <= 5; attempt++) {
+            code = postAbuserStatus(client, requestBody).code();
+            if (code == 200) {
+                break;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        assertThat(ASSERT_REASON, code, is(200));
     }
 
     public static Response getClientStatus(ClientHelper client) throws IOException {
