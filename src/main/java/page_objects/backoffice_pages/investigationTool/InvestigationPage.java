@@ -108,6 +108,9 @@ public class InvestigationPage extends AbstractPage {
     private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
     private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
     private static final String INVESTIGATION_TYPE_LOCATOR_TEMPLATE = "//span[@class='g-select-list__option-default-label' and text()='%s']";
+    private final Locator unassignedSuspiciousClientsCounter;
+    private final Locator mySuspiciousClientsCounter;
+    private final Locator allSuspiciousClientsCounter;
 
     public InvestigationPage(Page page) {
         super(page);
@@ -148,6 +151,9 @@ public class InvestigationPage extends AbstractPage {
         this.assignToMeFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='MY']");
         this.unassignedFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='UNASSIGNED']");
         this.allSusClientsFilter = page.locator("[data-qa='suspicious_clients__tabs'] [value='ALL']");
+        this.allSuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='ALL']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
+        this.mySuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='MY']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
+        this.unassignedSuspiciousClientsCounter = page.locator("//*[@data-qa='suspicious_clients__tabs']//*[@value='UNASSIGNED']/ancestor::label/descendant::*[contains(@class,'g-color-text_color_hint')]");
         this.susClientSectionFoldButton = page.locator("[data-qa='suspicious_clients__list_toggle']");
         this.susClientSectionFoldButtonFolded = page.locator(".v-investigation-tools-side-panel__toggler_collapsed [data-qa='suspicious_clients__list_toggle']");
         this.addCommentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
@@ -797,6 +803,63 @@ public class InvestigationPage extends AbstractPage {
     @Step("Select 'Payment' investigation type from the dropdown")
     public void clickSelectPaymentInvestigationType() {
         this.clickSelectInvestigationType("Payments");
+    }
+
+    public void checkSuspiciousCounterValueALL(Long expectedCount) {
+        Allure.step("Check suspicious counter value ALL");
+        int i = 0;
+        while ((!allSuspiciousClientsCounter.isVisible()) && i < 50) {
+            page.waitForTimeout(500);
+            i++;
+        }
+        String actualValue;
+        if (allSuspiciousClientsCounter.isVisible()) {
+            actualValue = allSuspiciousClientsCounter.textContent();
+        } else {
+            actualValue = "0";
+        }
+        if (actualValue == null || actualValue.isEmpty()) {
+            actualValue = "0";
+        }
+        assertEquals(expectedCount, Long.parseLong(actualValue));
+    }
+
+    public void checkSuspiciousCounterValueMY(Long expectedCount) {
+        Allure.step("Check suspicious counter value MY");
+        int i = 0;
+        while ((!mySuspiciousClientsCounter.isVisible()) && i < 50) {
+            page.waitForTimeout(500);
+            i++;
+        }
+        String actualValue;
+        if (mySuspiciousClientsCounter.isVisible()) {
+            actualValue = mySuspiciousClientsCounter.textContent();
+        } else {
+            actualValue = "0";
+        }
+        if (actualValue == null || actualValue.isEmpty()) {
+            actualValue = "0";
+        }
+        assertEquals(expectedCount, Long.parseLong(actualValue));
+    }
+
+    public void checkSuspiciousCounterValueUNASSIGNED(Long expectedCount) {
+        Allure.step("Check suspicious counter value UNASSIGNED");
+        int i = 0;
+        while ((!unassignedSuspiciousClientsCounter.isVisible()) && i < 50) {
+            page.waitForTimeout(500);
+            i++;
+        }
+        String actualValue;
+        if (unassignedSuspiciousClientsCounter.isVisible()) {
+            actualValue = unassignedSuspiciousClientsCounter.textContent();
+        } else {
+            actualValue = "0";
+        }
+        if (actualValue == null || actualValue.isEmpty()) {
+            actualValue = "0";
+        }
+        assertEquals(expectedCount, Long.parseLong(actualValue));
     }
 
 }
