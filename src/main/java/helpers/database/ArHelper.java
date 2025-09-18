@@ -1,7 +1,9 @@
 package helpers.database;
 
+import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.DeductionKafkaRequest;
+import helpers.data.enums.FraudTypeStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,5 +80,15 @@ public class ArHelper {
             System.out.println("No such client(s) in AR");
         }
         return List.of();
+    }
+
+    public static void waitForClientToChangeStatus(String ucid, FraudTypeStatus status) throws Exception {
+        for (int i = 0; i < 5; i++) {
+            if (!getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format("ucid = '%s' AND status = '%s'", ucid, status.getStatus()), Abuser.class).isEmpty()) {
+                return;
+            } else {
+                Thread.sleep(1000);
+            }
+        }
     }
 }

@@ -33,12 +33,14 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudTypeStatus.*;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
+import static helpers.database.ArHelper.waitForClientToChangeStatus;
 import static helpers.database.CleanTableHelper.*;
 import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
@@ -70,17 +72,20 @@ public class ResolveTest extends TestBaseWeb {
         trade2.symbol = "JPYCZK";
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2));
         alert.rule.attributes.account = client.getTradingAccount().toString();
-        Thread.sleep(2000);
     }
 
     @AfterAll
     static void teardown() throws Exception {
         cleanCrmUserTableByClient(client.getUcid());
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteUserBO(client.getUcid());
+        cleanUserAudit(client.getUcid());
+        deleteUserFromAbuseRegistry(client.getUcid());
+        cleanUserRestrictionGeneral(client.getUcid());
     }
 
-    @AfterEach
-    void teardownEach() throws Exception {
+    @BeforeEach
+    void setupEach() throws Exception {
         deleteUserBO(client.getUcid());
         cleanUserAudit(client.getUcid());
         deleteUserFromAbuseRegistry(client.getUcid());
@@ -337,6 +342,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
     }
@@ -352,6 +358,7 @@ public class ResolveTest extends TestBaseWeb {
         investigationPage.investigateClientCard();
         resolvePage.openResolveSuspicious();
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
@@ -370,6 +377,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.CPA_ABUSE);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForAlertsToClose(client.getUcid());
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FRAUD_TYPE_MISMATCH", dbAlert.getAlertResolution(), is(AlertResolution.FRAUD_TYPE_MISMATCH.getDisplayName()));
     }
@@ -386,6 +394,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
@@ -404,6 +413,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, POTENTIAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(POTENTIAL.getStatus()));
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
@@ -424,6 +434,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, POTENTIAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(POTENTIAL.getStatus()));
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
@@ -443,8 +454,10 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client remained confirmed", abuser.getStatus(), is(CONFIRMED.getStatus()));
+        Thread.sleep(2000);
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
         assertThat("Verify client has confirmed fraud", fraud.getStatus(), is(CONFIRMED.getStatus()));
     }
@@ -462,6 +475,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
@@ -481,6 +495,7 @@ public class ResolveTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         resolvePage.addFraud(FraudType.HEDGING, FraudSubtype.EXTERNAL);
         resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), CONFIRMED);
         Abuser abuser = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), Abuser.class).getFirst();
         assertThat("Verify client changed status", abuser.getStatus(), is(CONFIRMED.getStatus()));
         AbuserFraudType fraud = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, String.format(UCID_AND_FRAUD_WHERE, client.getUcid(), FraudType.HEDGING.getCode()), AbuserFraudType.class).getFirst();
