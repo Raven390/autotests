@@ -1,21 +1,22 @@
 package business_objects.db.payment_gate.tmp_rule_decisions;
 
 
-import helpers.data.ClientHelper;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 import static utils.Utils.getRandomIntPositive;
 
 public class TmpRuleDecisionsObjectFactory {
 
-    public static TmpRuleDecisionsObject generateTmpRuleDecisionsObject(ClientHelper client) {
+    public static TmpRuleDecisionsObject generateTmpRuleDecisionsObject(PaymentEventsObject paymentEventsObject)
+            throws Exception {
         return new TmpRuleDecisionsObject(
                 getRandomIntPositive(),                                           // id
-                client != null ? client.getUcid() : null,       // paymentId
-                "UNKNOWN",                                     // decision
-                getCurrentTimestampDbFormat()                   // dateCreated
+                paymentEventsObject.getPaymentId(),    // paymentId
+                "AUTO_APPROVE",                                     // decision
+                Timestamp.from(Instant.now())                 // dateCreated
         );
     }
-
-
 }

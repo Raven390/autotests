@@ -1,25 +1,28 @@
 package business_objects.db.payment_gate.payment_rule_executions;
 
 
-import helpers.data.ClientHelper;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import utils.Utils;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 import static utils.Utils.getRandomIntPositive;
 
 public class PaymentRuleExecutionsObjectFactory {
 
-    public static PaymentRuleExecutionsObject generatePaymentRuleExecutionsObject(ClientHelper client) {
+    public static PaymentRuleExecutionsObject generatePaymentRuleExecutionsObject(PaymentEventsObject event) {
         return new PaymentRuleExecutionsObject(
                 getRandomIntPositive(),                         // id
-                client != null ? client.getUcid() : null, // paymentId
-                0,                            // runId
-                0,                            // ruleId
-                "0",                         // ruleVersion
-                0,                            // ruleEndId
-                getCurrentTimestampDbFormat(),// dateCreated
-                getCurrentTimestampDbFormat(),// dateUpdated
-                getCurrentTimestampDbFormat(),// dateStarted
-                getCurrentTimestampDbFormat() // dateCompleted
+                event.getPaymentId(), // paymentId
+                Utils.getRandomIntPositive(),                            // runId
+                Utils.getRandomIntPositive(),                            // ruleId
+                "1",                         // ruleVersion
+                Utils.getRandomIntPositive(),                            // ruleEndId
+                Timestamp.from(Instant.now()),// dateCreated
+                Timestamp.from(Instant.now()),// dateUpdated
+                Timestamp.from(Instant.now()),// dateStarted
+                Timestamp.from(Instant.now()) // dateCompleted
         );
     }
 

@@ -259,7 +259,7 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
     @AfterAll
     static void teardown() throws SQLException {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client.getUcid()));
         closeAlert(crmTbUser.ucid);
     }
 }

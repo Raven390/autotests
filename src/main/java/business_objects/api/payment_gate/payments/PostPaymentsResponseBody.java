@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PostPaymentsResponseBody {
 
     @JsonProperty("paymentId")
-    private String paymentId;
+    private UUID paymentId;
 
     @JsonProperty("type")
     private String type;
@@ -38,11 +39,11 @@ public class PostPaymentsResponseBody {
     @JsonProperty("violations")
     private List<Violation> violations;
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 

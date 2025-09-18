@@ -111,8 +111,8 @@ public class CleanTableHelper {
     }
 
     @Step("Clean withdrawals table by account")
-    public static void cleanWithdrawalsTableByUcid(String... values) throws Exception {
-        deleteObjectsFromDb(CLICKHOUSE, CRM_WITHDRAWAL_TABLE_NAME, "ucid", List.of(Arrays.toString(values)));
+    public static void cleanCrmTbWithdrawalTableByUcid(String... values) throws Exception {
+        deleteObjectsFromDb(CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, "ucid", List.of(Arrays.toString(values)));
     }
 
     @Step("Clean lexisNexis table by ucid")
@@ -205,13 +205,19 @@ public class CleanTableHelper {
 
     // Payment gate db
     @Step("Clean payment data (details then events) by ucid '{ucid}' and client_id '{clientId}'")
-    public static void cleanPaymentData(String ucid, Integer clientId) throws Exception {
-        // Delete child rows first to satisfy FK: payment_details.payment_id -> payment_events.payment_id
-        Allure.step("delete payment_details by client_id from DB");
+    public static void cleanPaymentGateData(String ucid, Integer clientId) throws Exception {
+        // Delete child records first to avoid FK violations
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, "payment_id IN (SELECT payment_id FROM " + PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE + " WHERE ucid = '" + ucid + "')");
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, "client_id = '" + clientId + "'");
-        Thread.sleep(100);
-        Allure.step("delete payment_events by ucid from DB");
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
-        Thread.sleep(100);
+    }
+
+    @Step("Clean payment data (details then events) by ucid '{ucid}' and client_id '{clientId}'")
+    public static void cleanPaymentGateData(String ucid, Integer clientId, String paymentId) throws Exception {
+        // Delete child records first to avoid FK violations
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", clientId));
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
     }
 }

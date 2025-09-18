@@ -26,7 +26,7 @@ import java.util.List;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
@@ -126,15 +126,15 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Withdrawals")
     public void clientSummaryWithdrawalsTest() {
-        deleteObjectFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, "ucid ='" + client.getUcid() + "'");
         Allure.step("Prepare DB data for test user");
-        CrmTbWithdrawalObject withdrawalObject1 = generateWithdrawalByClient(client);
+        CrmTbWithdrawalObject withdrawalObject1 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawalObject1.amountUsd = getRandomRoundedDouble(0.00, 500_000);
         withdrawalObject1.statusId = 16;
-        CrmTbWithdrawalObject withdrawalObject2 = generateWithdrawalByClient(client);
+        CrmTbWithdrawalObject withdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawalObject2.amountUsd = getRandomRoundedDouble(0.00, 500_000);
         withdrawalObject2.statusId = 7;
-        insertObjectsToDb(CRM_WITHDRAWAL_TABLE_NAME, List.of(withdrawalObject1, withdrawalObject2));
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawalObject1, withdrawalObject2));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

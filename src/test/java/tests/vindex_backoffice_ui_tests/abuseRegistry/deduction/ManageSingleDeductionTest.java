@@ -28,7 +28,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateWithdrawalByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.db.clickhouse.s3___dim_client.S3DimClientFactory.generateS3DimClientObject;
@@ -80,7 +80,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         deleteEntryFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, String.format("ucid = '%s'", ibRelation.getUcid()));
         deleteEntryFromDb(S3_DIM_CLIENT, String.format("ucid = '%s'", s3Dim.getUcid()));
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid()));
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", withdrawal.getUcid()));
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position1.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", position2.getUcid()));
         deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", deduction.getUcid()));
@@ -139,8 +139,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
         //set withdrawal
-        withdrawal = generateWithdrawalByClient(client);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        withdrawal = generateCrmTbWithdrawalObjectByClient(client);
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
         //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd
         position1 = generateMtMt5PositionsObject(client);//
@@ -235,8 +235,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
         //set withdrawal
-        withdrawal = generateWithdrawalByClient(client);
-        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, withdrawal);
+        withdrawal = generateCrmTbWithdrawalObjectByClient(client);
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
         //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd
         position1 = generateMtMt5PositionsObject(client);//

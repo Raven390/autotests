@@ -95,7 +95,10 @@ public class Constants {
     public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";
     public static final String STORY_PAYMENT_GATE_POST_PAYMENTS = "Post payments request";
     public static final String STORY_PAYMENT_GATE_POST_RULE_EXECUTIONS = "Post rule executions request";
+    public static final String STORY_PAYMENT_GATE_GET_RULE_EXECUTIONS = "Get rule executions request";
     public static final String STORY_PAYMENT_GATE_PUT_RULE_EXECUTIONS = "Put rule executions request";
+    public static final String STORY_PAYMENT_GATE_RECONCILIATION = "Payment gate reconciliation job";
+    public static final String STORY_PAYMENT_GATE_DECISION_MONITORING = "Payment gate temp decision monitoring job";
     public static final String STORY_PAYMENT_GATE_PUT_DECISIONS = "Put decisions request";
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS_AGGR_BY_CLIENT = "Get payments aggr by client request";
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS = "Get payments request";
@@ -174,7 +177,7 @@ public class Constants {
     public static final String CRM_TB_USER = "vindex_test.crm___tb_user";
     public static final String CRM_TRANSFERS_TABLE_NAME = "vindex_test.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
-    public static final String CRM_WITHDRAWAL_TABLE_NAME = "vindex_test.crm___tb_withdrawal";
+    public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "vindex_test.crm___tb_withdrawal";
     public static final String DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME = "data_science_test.bybit_feature_store";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science_test.feature_store_service";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON = "data_science_test.ucid_mirror_score_python";

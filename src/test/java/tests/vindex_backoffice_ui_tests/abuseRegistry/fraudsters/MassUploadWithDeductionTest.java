@@ -82,7 +82,7 @@ public class MassUploadWithDeductionTest extends TestBaseWeb {
     static void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
-        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client1.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
     }
 
