@@ -226,7 +226,6 @@ public class ResolveTest extends TestBaseWeb {
         // Check for potential frauds
         resolvePage.addFraud(FraudType.ATO, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.BONUS_ABUSE, POTENTIAL);
@@ -241,7 +240,6 @@ public class ResolveTest extends TestBaseWeb {
 
         resolvePage.addFraud(FraudType.CLAIMER, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.CPA_ABUSE, POTENTIAL);
@@ -251,7 +249,6 @@ public class ResolveTest extends TestBaseWeb {
 
         resolvePage.addFraud(FraudType.EXCHANGER, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.GAP_TRADING, POTENTIAL);
@@ -286,7 +283,6 @@ public class ResolveTest extends TestBaseWeb {
 
         resolvePage.addFraud(FraudType.MONEY_LAUNDRY, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
 
         resolvePage.addFraud(FraudType.NBP_ABUSE, POTENTIAL);
@@ -326,7 +322,6 @@ public class ResolveTest extends TestBaseWeb {
 
         resolvePage.addFraud(FraudType.UPGRADER, POTENTIAL);
         assertThat(resolvePage.getSelectedRestrictionsList(), empty());
-        resolvePage.resetRestrictionChanges();
         resolvePage.resetFraudsChanges();
     }
 
