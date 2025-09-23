@@ -3,14 +3,12 @@ package business_objects.api.payment_gate.decisions;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PutDecisionsRequestBody {
-    @JsonProperty("paymentId")
-    private String paymentId;
 
     @JsonProperty("decisionType")
     private String decisionType;
 
     @JsonProperty("decisionCode")
-    private String decisionCode;
+    private Integer decisionCode;
 
     @JsonProperty("decidedAt")
     private String decidedAt; // ISO-8601 timestamp
@@ -18,19 +16,10 @@ public class PutDecisionsRequestBody {
     public PutDecisionsRequestBody() {
     }
 
-    public PutDecisionsRequestBody(String paymentId, String decisionType, String decisionCode, String decidedAt) {
-        this.paymentId = paymentId;
+    public PutDecisionsRequestBody(String decisionType, Integer decisionCode, String decidedAt) {
         this.decisionType = decisionType;
         this.decisionCode = decisionCode;
         this.decidedAt = decidedAt;
-    }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
     }
 
     public String getDecisionType() {
@@ -41,11 +30,11 @@ public class PutDecisionsRequestBody {
         this.decisionType = decisionType;
     }
 
-    public String getDecisionCode() {
+    public Integer getDecisionCode() {
         return decisionCode;
     }
 
-    public void setDecisionCode(String decisionCode) {
+    public void setDecisionCode(Integer decisionCode) {
         this.decisionCode = decisionCode;
     }
 

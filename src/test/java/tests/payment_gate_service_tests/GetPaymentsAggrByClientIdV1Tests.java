@@ -15,5 +15,5 @@ import static utils.Constants.SUITE_PAYMENT_GATE_TESTS;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
-public class GetPaymentsAggrByClientIdV1Tests extends TestBaseApi {
+class GetPaymentsAggrByClientIdV1Tests extends TestBaseApi {
 }

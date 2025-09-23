@@ -1,4 +1,4 @@
-package helpers.data.rules;
+package helpers.data;
 
 import business_objects.db.clickhouse.aggr_credit_equity_rate.AggrCreditEquityRateObject;
 import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloatingTradesGroupBy;
@@ -38,12 +38,10 @@ import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
-import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.database.DbName;
 import businessObjects.db.clickhouse.ozTrades.OzTradesTableEntry;
-import net.datafaker.Faker;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,9 +68,7 @@ import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
-public class RuleDataHelper {
-
-    static Faker faker = new Faker();
+public class DataHelper {
 
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
@@ -123,10 +119,10 @@ public class RuleDataHelper {
     public UcidGeneralScore ucidGeneralScore;
     public List<AppTbFinindexData> AppTbFinindexData;
 
-    public RuleDataHelper() {
+    public DataHelper() {
     }
 
-    public RuleDataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
+    public DataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
             DictAccountToUcidObject dictAccountToUcidObject, DictIsTestObject dictIsTestObject,
             List<DictActiveTradingDaysByUcidObject> dictActiveTradingDaysByUcidObjects,
             LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
@@ -187,16 +183,16 @@ public class RuleDataHelper {
         this.ucidGeneralScore = ucidGeneralScore;
     }
 
-    static Logger logger = Logger.getLogger(RuleDataHelper.class.getName());
+    static Logger logger = Logger.getLogger(DataHelper.class.getName());
 
     @Override
     public String toString() {
-        return "RuleDataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", dictAccountToUcidObject=" + dictAccountToUcidObject + ", dictIsTestObject=" + dictIsTestObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + ", lnSessionParsedObject=" + lnSessionParsedObject + ", registrationEvent=" + registrationEvent + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", phoneTableEntries=" + phoneTableEntries + ", ipTableEntries=" + ipTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + ", closeTradeMtEvent=" + closeTradeMtEvent + ", mt5DealsObjects=" + mt5DealsObjects + '}';
+        return "DataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", dictAccountToUcidObject=" + dictAccountToUcidObject + ", dictIsTestObject=" + dictIsTestObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + ", lnSessionParsedObject=" + lnSessionParsedObject + ", registrationEvent=" + registrationEvent + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", phoneTableEntries=" + phoneTableEntries + ", ipTableEntries=" + ipTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + ", closeTradeMtEvent=" + closeTradeMtEvent + ", mt5DealsObjects=" + mt5DealsObjects + '}';
     }
 
-    public static void setupRuleData(Map<String, RuleDataHelper> map) {
+    public static void setupData(Map<String, DataHelper> map) {
         startSshTunnel();
-        for (RuleDataHelper data : map.values()) {
+        for (DataHelper data : map.values()) {
             logger.info("WE ARE IN SETUP");
             if (data.connections != null && (!data.connections.isEmpty())) try {
                 for (ConnectionTableEntry i : data.connections) {
@@ -320,8 +316,8 @@ public class RuleDataHelper {
         }
     }
 
-    public static void deleteRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        for (RuleDataHelper data : map.values()) {
+    public static void deleteData(Map<String, DataHelper> map) throws Exception {
+        for (DataHelper data : map.values()) {
             if (data.crmTbUserObject != null) {
                 deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("user_id = %s", data.crmTbUserObject.userId));
             }
@@ -434,15 +430,16 @@ public class RuleDataHelper {
         stopSshTunnel();
     }
 
-    public static RuleDataHelper createClient(RuleDataHelper ruleDataHelper, ClientHelper clientHelper) {
-        ruleDataHelper.clientHelper = clientHelper;
-        ruleDataHelper.crmTbUserObject = generateUserByClient(ruleDataHelper.clientHelper);
-        ruleDataHelper.crmTbAccountObject = generateAccountByClient(ruleDataHelper.clientHelper, false);
-        ruleDataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(ruleDataHelper.clientHelper, false);
-        return ruleDataHelper;
+    public static DataHelper createClient(DataHelper dataHelper, ClientHelper clientHelper) {
+        dataHelper.clientHelper = clientHelper;
+        dataHelper.crmTbUserObject = generateUserByClient(dataHelper.clientHelper);
+        dataHelper.crmTbAccountObject = generateAccountByClient(dataHelper.clientHelper, false);
+        dataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(dataHelper.clientHelper, false);
+        return dataHelper;
     }
 
-    protected static void setupAttrConnectionEmailPhoneWithCustomScore(RuleDataHelper data,
+    protected static void setupAttrConnectionEmailPhoneWithCustomScore(
+            DataHelper data,
             ClientHelper connectedClient, Double score) {
 
         if (data.connections == null) {
@@ -487,7 +484,7 @@ public class RuleDataHelper {
     }
 
     public static void setupAttrConnectionDevice(
-            RuleDataHelper data,
+            DataHelper data,
             ClientHelper connectedClient) {
 
         if (data.connections == null) {
@@ -516,7 +513,7 @@ public class RuleDataHelper {
         data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
     }
 
-    public static void addConnectionByEmailPhoneAttribute(RuleDataHelper data, ClientHelper clientTo, Double score) {
+    public static void addConnectionByEmailPhoneAttribute(DataHelper data, ClientHelper clientTo, Double score) {
         if (data.connectedUsers == null) {
             data.connectedUsers = new ArrayList<>();
         }
@@ -529,7 +526,7 @@ public class RuleDataHelper {
     }
 
     public static void setupAttrConnectionPayoutId(
-            RuleDataHelper data,
+            DataHelper data,
             ClientHelper connectedClient) {
 
         if (data.connections == null) {
@@ -558,7 +555,7 @@ public class RuleDataHelper {
         data.deviceIdTableEntries.add(deviceIdTableEntryForConnectionSearch(connectedClient, data.clientHelper.getDeviceId()));
     }
 
-    public static void addConnectionByDeviceAttribute(RuleDataHelper data, ClientHelper clientTo) {
+    public static void addConnectionByDeviceAttribute(DataHelper data, ClientHelper clientTo) {
         if (data.connectedUsers == null) {
             data.connectedUsers = new ArrayList<>();
         }
@@ -570,7 +567,7 @@ public class RuleDataHelper {
         setupAttrConnectionDevice(data, clientTo);
     }
 
-    public static void addConnectionByPayoutIdAttribute(RuleDataHelper data, ClientHelper clientTo) {
+    public static void addConnectionByPayoutIdAttribute(DataHelper data, ClientHelper clientTo) {
         if (data.connectedUsers == null) {
             data.connectedUsers = new ArrayList<>();
         }
@@ -582,7 +579,7 @@ public class RuleDataHelper {
         setupAttrConnectionPayoutId(data, clientTo);
     }
 
-    public static RuleDataHelper addFraudTypeToConnectedUser(RuleDataHelper data, FraudTypeStatus status)
+    public static DataHelper addFraudTypeToConnectedUser(DataHelper data, FraudTypeStatus status)
             throws IOException, InterruptedException {
         data.clientFraudTypes.add(createClientFraudTypeCh(data.connectedClientHelpers.getFirst().getUcid(), FraudTypeOld.HEDGING.getKey()));
 
@@ -591,7 +588,7 @@ public class RuleDataHelper {
         return data;
     }
 
-    public static RuleDataHelper addAlert(RuleDataHelper data, String ruleName, String status) {
+    public static DataHelper addAlert(DataHelper data, String ruleName, String status) {
         data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
         data.boAlertsObjects.getFirst().setRule(ruleName);
         data.boAlertsObjects.getFirst().setStatus(status);

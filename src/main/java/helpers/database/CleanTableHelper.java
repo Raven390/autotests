@@ -216,6 +216,7 @@ public class CleanTableHelper {
     public static void cleanPaymentGateData(String ucid, Integer clientId, String paymentId) throws Exception {
         // Delete child records first to avoid FK violations
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId));
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", clientId));
         deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));

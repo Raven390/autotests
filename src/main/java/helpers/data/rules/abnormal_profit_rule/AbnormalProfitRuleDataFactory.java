@@ -5,7 +5,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -18,8 +18,8 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositOb
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -30,17 +30,17 @@ public class AbnormalProfitRuleDataFactory {
     private static final ClientHelper abnormalProfitRuleExitEventEnd2Client = getRandomVantageClientNoCpaIbRef();
 
     @Step("Create data for Mirror trading rule")
-    private static RuleDataHelper getAbnormalProfitRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    private static DataHelper getAbnormalProfitRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
         ruleData.crmTbUserObject = generateUserByClient(client);
         ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
         ruleData.closeTradeEvent = new CloseTradeMtEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive().longValue(), ruleData.crmTbAccountObject.account, 100d, "EURUSD", ruleData.crmTbAccountObject.serverIdSt, "closeTrade");
         return ruleData;
     }
 
-    public static RuleDataHelper getAbnormalProfitRuleExitEventEnd1Data() {
+    public static DataHelper getAbnormalProfitRuleExitEventEnd1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd1Client);
+        DataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd1Client);
         CrmTbDepositObject deposit = generateDepositByClient(abnormalProfitRuleExitEventEnd1Client);
         deposit.setAmountUsd(10d);
 
@@ -52,9 +52,9 @@ public class AbnormalProfitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getAbnormalProfitRuleExitEventEnd2Data() {
+    public static DataHelper getAbnormalProfitRuleExitEventEnd2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd2Client);
+        DataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd2Client);
         CrmTbDepositObject deposit = generateDepositByClient(abnormalProfitRuleExitEventEnd2Client);
         deposit.setAmountUsd(10d);
         Mt5DealsCoercedObject trade = generateTradeByClient(abnormalProfitRuleExitEventEnd2Client);
@@ -65,19 +65,19 @@ public class AbnormalProfitRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupAbnormalProfitRuleData() {
+    public static Map<String, DataHelper> setupAbnormalProfitRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getAbnormalProfitRuleExitEventEnd1Data());
         map.put("2", getAbnormalProfitRuleExitEventEnd2Data());
 
         // Loop through the list with data and insert all the data into the according tables
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteAbnormalProfitRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteAbnormalProfitRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

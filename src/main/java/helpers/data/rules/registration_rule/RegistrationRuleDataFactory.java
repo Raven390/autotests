@@ -8,7 +8,7 @@ import helpers.data.enums.Brand;
 import generator.annotations.RuleTestData;
 import helpers.data.enums.Country;
 import helpers.data.enums.FraudTypeStatus;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +21,7 @@ import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudType.HEDGING;
-import static helpers.data.rules.RuleDataHelper.*;
+import static helpers.data.DataHelper.*;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -35,8 +35,8 @@ public class RegistrationRuleDataFactory {
     private static final ClientHelper registrationRuleClient3 = getRandomVantageClientAllFields();
     private static final ClientHelper registrationRuleClient4 = getRandomVantageClientAllFields();
 
-    private static RuleDataHelper getRegistrationRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getRegistrationRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(data.clientHelper);
         data.crmTbAccountObject = generateAccountByClient(data.clientHelper, false);
@@ -60,8 +60,8 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleData1() {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient1);
+    public static DataHelper getRegistrationRuleData1() {
+        DataHelper data = getRegistrationRuleData(registrationRuleClient1);
         //No toxic accounts linked
         data.connections = null;
         //client have low risk in LN
@@ -69,8 +69,8 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleData2() {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient2);
+    public static DataHelper getRegistrationRuleData2() {
+        DataHelper data = getRegistrationRuleData(registrationRuleClient2);
         //No toxic accounts linked
         data.connections = null;
         //client have high in LN
@@ -78,8 +78,8 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleData3() throws Exception {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient3);
+    public static DataHelper getRegistrationRuleData3() throws Exception {
+        DataHelper data = getRegistrationRuleData(registrationRuleClient3);
         //set true ip and device id
         data.registrationEvent.getLexisNexis().setTrueIp("");
         data.registrationEvent.getLexisNexis().setDevice("");
@@ -94,8 +94,8 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getRegistrationRuleData4() throws Exception {
-        RuleDataHelper data = getRegistrationRuleData(registrationRuleClient4);
+    public static DataHelper getRegistrationRuleData4() throws Exception {
+        DataHelper data = getRegistrationRuleData(registrationRuleClient4);
         //set true ip and device id
         data.registrationEvent.getLexisNexis().setTrueIp("123");
         data.registrationEvent.getLexisNexis().setDevice(data.clientHelper.getDeviceId());
@@ -109,16 +109,16 @@ public class RegistrationRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupRegistrationRuleData() throws Exception {
+    public static Map<String, DataHelper> setupRegistrationRuleData() throws Exception {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getRegistrationRuleData1());
         map.put("2", getRegistrationRuleData2());
         map.put("3", getRegistrationRuleData3());
         map.put("4", getRegistrationRuleData4());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }

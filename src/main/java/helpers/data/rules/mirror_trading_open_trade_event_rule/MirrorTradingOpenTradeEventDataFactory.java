@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Step;
 
@@ -24,7 +24,7 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Utils.*;
 
@@ -42,8 +42,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
 
 
     @Step("Create base test data for Latency arbitrage rule")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    public static DataHelper getMirrorTradingOpenTradeEventRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
         ruleData.clientHelper = client;
         ruleData.crmTbUserObject = generateUserByClient(ruleData.clientHelper);
         ruleData.crmTbAccountObject = generateAccountByClient(ruleData.clientHelper, false);
@@ -71,22 +71,22 @@ public class MirrorTradingOpenTradeEventDataFactory {
     }
 
     @Step("Exit from rule without alert if user is test or social trader user")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest1Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest1Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest1Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest1Client);
         data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
         return data;
     }
 
     @Step("Exit from rule without alert if user has no credits")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest2Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest2Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest2Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest2Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         return data;
     }
 
     @Step("Mirror trading with open trade event. Exit without alert if trades count < 5")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest3Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest3Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest3Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest3Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
@@ -96,8 +96,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
     }
 
     @Step("Mirror trading with open trade event. Exit without alert if trades count > 200")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest4Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest4Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest4Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest4Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
@@ -107,8 +107,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
     }
 
     @Step("Mirror trading with open trade event. Exit without alert if ucidScore < 0.9")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest5Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest5Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest5Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest5Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
@@ -120,8 +120,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
     }
 
     @Step("Mirror trading with open trade event. Exit without alert user have at least 1 resolved alerts")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest6Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest6Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest6Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest6Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
@@ -135,8 +135,8 @@ public class MirrorTradingOpenTradeEventDataFactory {
     }
 
     @Step("")
-    public static RuleDataHelper getMirrorTradingOpenTradeEventRuleTest7Data() {
-        RuleDataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest7Client);
+    public static DataHelper getMirrorTradingOpenTradeEventRuleTest7Data() {
+        DataHelper data = getMirrorTradingOpenTradeEventRuleData(mirrorTradingOpenTradeEventTest7Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().createTime = getCurrentTimestampMinusOffsetFormatted(
@@ -146,9 +146,9 @@ public class MirrorTradingOpenTradeEventDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupMirrorTradingOpenTradeEventRuleData() {
+    public static Map<String, DataHelper> setupMirrorTradingOpenTradeEventRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
         map.put("1", getMirrorTradingOpenTradeEventRuleTest1Data());
         map.put("2", getMirrorTradingOpenTradeEventRuleTest2Data());
@@ -158,7 +158,7 @@ public class MirrorTradingOpenTradeEventDataFactory {
         map.put("6", getMirrorTradingOpenTradeEventRuleTest6Data());
         map.put("7", getMirrorTradingOpenTradeEventRuleTest7Data());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }

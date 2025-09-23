@@ -5,7 +5,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositOb
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static utils.Utils.*;
 
 @RuleTestData("nbp-winning-leg")
@@ -28,8 +28,8 @@ public class NbpWinningLegRuleDataFactory {
     private static final ClientHelper nbpLosingLegExit2Client = getRandomVantageClientAllFields();
     private static final ClientHelper nbpLosingLegExit3Client = getRandomVantageClientAllFields();
 
-    private static RuleDataHelper getNbpWinningLegRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getNbpWinningLegRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
@@ -39,20 +39,20 @@ public class NbpWinningLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpWinningLegExit1Data() {
+    private static DataHelper getNbpWinningLegExit1Data() {
         return getNbpWinningLegRuleData(nbpWinningLegExit1Client);
     }
 
-    private static RuleDataHelper getNbpWinningLegExit2Data() {
-        RuleDataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit2Client);
+    private static DataHelper getNbpWinningLegExit2Data() {
+        DataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit2Client);
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 200.0;
         data.crmTbDepositObjects.add(deposit);
         return data;
     }
 
-    private static RuleDataHelper getNbpWinningLegExit3Data() {
-        RuleDataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit3Client);
+    private static DataHelper getNbpWinningLegExit3Data() {
+        DataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit3Client);
         CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
         deposit.amountUsd = 200.0;
         deposit.status = "Success";
@@ -64,17 +64,17 @@ public class NbpWinningLegRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNbpWinningLegRuleData() {
-        Map<String, RuleDataHelper> map = new HashMap<>();
+    public static Map<String, DataHelper> setupNbpWinningLegRuleData() {
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNbpWinningLegExit1Data());
         map.put("2", getNbpWinningLegExit2Data());
         map.put("3", getNbpWinningLegExit3Data());
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteNbpWinningLegRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteNbpWinningLegRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

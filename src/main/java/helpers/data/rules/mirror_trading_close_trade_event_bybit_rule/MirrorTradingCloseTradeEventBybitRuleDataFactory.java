@@ -5,7 +5,7 @@ import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.Brand;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Step;
 
 import java.util.HashMap;
@@ -20,8 +20,8 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePythonFactory.generateUcidMirrorScorePythonObject;
 import static helpers.data.ClientFactory.getRandomClientByBrandAndCountry;
-import static helpers.data.rules.RuleDataHelper.createClient;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.createClient;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -45,8 +45,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
     private static final ClientHelper mirrorTradingCloseTradeBybitClient16 = getRandomClientByBrandAndCountry(Brand.BYBIT, "CYPRUS");
 
     @Step("Create data for Mirror trading rule")
-    private static RuleDataHelper getMirrorTradingBybitRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getMirrorTradingBybitRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         client.setServerId(64);
         createClient(data, client);
 
@@ -73,37 +73,37 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest1Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient1);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest1Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient1);
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest2Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient2);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest2Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient2);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 1);
 
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest3Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient3);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest3Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient3);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 201);
 
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest4Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient4);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest4Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient4);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.89d, 0.89d);
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest5Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient5);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest5Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient5);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
@@ -113,16 +113,16 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest6Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient6);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest6Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient6);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 11);
         data.ucidMirrorScore = generateUcidMirrorScorePythonObject(data.clientHelper, 0.91d, 0.91d);
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest7Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient7);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest7Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient7);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 1);
         data.mtBalanceOrdersObjects = List.of(
@@ -133,8 +133,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest8Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient8);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest8Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient8);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper, 1d));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 301);
@@ -147,8 +147,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest9Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient9);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest9Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient9);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
@@ -156,8 +156,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest10Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient10);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest10Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient10);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
@@ -169,8 +169,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest11Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient11);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest11Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient11);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
@@ -188,8 +188,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest12Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient12);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest12Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient12);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
@@ -208,8 +208,8 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest13Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient13);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest13Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient13);
 
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
@@ -233,27 +233,27 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest14Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient14);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest14Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient14);
 
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest15Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient15);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest15Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient15);
 
         return data;
     }
 
-    public static RuleDataHelper getMirrorTradingCloseTradeBybitTest16Data() {
-        RuleDataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient16);
+    public static DataHelper getMirrorTradingCloseTradeBybitTest16Data() {
+        DataHelper data = getMirrorTradingBybitRuleData(mirrorTradingCloseTradeBybitClient16);
 
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupMirrorTradingCloseTradeBybitRuleData() {
+    public static Map<String, DataHelper> setupMirrorTradingCloseTradeBybitRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
         map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
@@ -272,7 +272,7 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         map.put("15", getMirrorTradingCloseTradeBybitTest15Data());
         map.put("16", getMirrorTradingCloseTradeBybitTest16Data());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }

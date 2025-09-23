@@ -4,7 +4,7 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Step;
 
 import java.time.Instant;
@@ -22,7 +22,7 @@ import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOr
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -40,8 +40,8 @@ public class LatencyArbitrageRuleDataFactory {
     private static final ClientHelper latencyArbitrageTest7Client = getRandomVantageClientAllFields();
 
     @Step("Create base test data for Latency arbitrage rule")
-    public static RuleDataHelper getLatencyArbitrageRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    public static DataHelper getLatencyArbitrageRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
 
         ruleData.clientHelper = client;
         ruleData.crmTbUserObject = generateUserByClient(client);
@@ -56,30 +56,30 @@ public class LatencyArbitrageRuleDataFactory {
 
 
     @Step("Exit from rule without alert if Platform is not MT5")
-    public static RuleDataHelper getLatencyArbitrageRuleTest1Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest1Client);
+    public static DataHelper getLatencyArbitrageRuleTest1Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest1Client);
         data.closeTradeMtEvent.metadata = new TradeEventMetadata("MT4");
         return data;
     }
 
     @Step("Exit from rule without alert if user is test or social trader user")
-    public static RuleDataHelper getLatencyArbitrageRuleTest2Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest2Client);
+    public static DataHelper getLatencyArbitrageRuleTest2Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest2Client);
         data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
         return data;
     }
 
     @Step("Latency arbitrage. Exit without alert if user has less that 10 trading days")
-    public static RuleDataHelper getLatencyArbitrageRuleTest3Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest3Client);
+    public static DataHelper getLatencyArbitrageRuleTest3Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest3Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 11);
         return data;
     }
 
     @Step("Latency arbitrage. Exit without alert if user has less that 100 trades")
-    public static RuleDataHelper getLatencyArbitrageRuleTest4Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest4Client);
+    public static DataHelper getLatencyArbitrageRuleTest4Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest4Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 9);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
@@ -87,8 +87,8 @@ public class LatencyArbitrageRuleDataFactory {
     }
 
     @Step("Latency arbitrage. Exit without alert if netProfit + rebatesAmount not >= 500?")
-    public static RuleDataHelper getLatencyArbitrageRuleTest5Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest5Client);
+    public static DataHelper getLatencyArbitrageRuleTest5Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest5Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 9);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 100, getCurrentTimestampDbFormat());
@@ -99,8 +99,8 @@ public class LatencyArbitrageRuleDataFactory {
     }
 
     @Step("Latency arbitrage. Exit without alert if Total Profit / Cumulative deposit not >= 0.3")
-    public static RuleDataHelper getLatencyArbitrageRuleTest6Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest6Client);
+    public static DataHelper getLatencyArbitrageRuleTest6Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest6Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
@@ -111,8 +111,8 @@ public class LatencyArbitrageRuleDataFactory {
     }
 
     @Step("Latency arbitrage. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80")
-    public static RuleDataHelper getLatencyArbitrageRuleTest7Data() {
-        RuleDataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest7Client);
+    public static DataHelper getLatencyArbitrageRuleTest7Data() {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest7Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
         // Generate deals
@@ -130,9 +130,9 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupLatencyArbitrageData() {
+    public static Map<String, DataHelper> setupLatencyArbitrageData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
         map.put("1", getLatencyArbitrageRuleTest1Data());
         map.put("2", getLatencyArbitrageRuleTest2Data());
@@ -142,7 +142,7 @@ public class LatencyArbitrageRuleDataFactory {
         map.put("6", getLatencyArbitrageRuleTest6Data());
         map.put("7", getLatencyArbitrageRuleTest7Data());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }

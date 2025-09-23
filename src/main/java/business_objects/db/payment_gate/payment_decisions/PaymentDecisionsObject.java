@@ -1,27 +1,29 @@
 package business_objects.db.payment_gate.payment_decisions;
 
+import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class PaymentDecisionsObject {
 
     public Integer id;
-    public String paymentId;
+    public UUID paymentId;
     public String decisionType;
     public Integer decisionCode;
     public Integer rejectionCode;
     public String actor;
-    public String dateCreated;
-    public String dateUpdated;
-    public String dateDecided;
+    public Timestamp dateCreated;
+    public Timestamp dateUpdated;
+    public Timestamp dateDecided;
 
     public PaymentDecisionsObject() {
     }
 
     public PaymentDecisionsObject(
-            Integer id, String paymentId, String decisionType, Integer decisionCode, Integer rejectionCode,
+            Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode,
             String actor,
-            String dateCreated, String dateUpdated, String dateDecided) {
+            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided) {
         this.id = id;
         this.paymentId = paymentId;
         this.decisionType = decisionType;
@@ -41,11 +43,11 @@ public class PaymentDecisionsObject {
         this.id = id;
     }
 
-    public String getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(String paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
@@ -81,27 +83,27 @@ public class PaymentDecisionsObject {
         this.actor = actor;
     }
 
-    public String getDateCreated() {
+    public Timestamp getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public String getDateUpdated() {
+    public Timestamp getDateUpdated() {
         return dateUpdated;
     }
 
-    public void setDateUpdated(String dateUpdated) {
+    public void setDateUpdated(Timestamp dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 
-    public String getDateDecided() {
+    public Timestamp getDateDecided() {
         return dateDecided;
     }
 
-    public void setDateDecided(String dateDecided) {
+    public void setDateDecided(Timestamp dateDecided) {
         this.dateDecided = dateDecided;
     }
 

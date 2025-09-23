@@ -5,7 +5,7 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -23,8 +23,8 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.oz_trades.OzTradesTableEntryFactory.generateOzTradesTableEntryByClient;
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.EURUSD;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
@@ -46,8 +46,8 @@ public class NoSlippageRuleDataFactory {
     private static final ClientHelper noSlippageRuleClient11 = getRandomVantageClientAllFields();
     private static final ClientHelper noSlippageRuleClient12 = getRandomVantageClientAllFields();
 
-    private static RuleDataHelper getNoSlippageRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    private static DataHelper getNoSlippageRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
 
         ruleData.clientHelper = client;
         ruleData.crmTbUserObject = generateUserByClient(client);
@@ -60,21 +60,21 @@ public class NoSlippageRuleDataFactory {
         return ruleData;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest1Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient1);
+    public static DataHelper getNoSlippageRuleTest1Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient1);
         data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest2Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient2);
+    public static DataHelper getNoSlippageRuleTest2Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient2);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.crmTbAccountForMtObject.currency = "USC";
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest3Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient3);
+    public static DataHelper getNoSlippageRuleTest3Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient3);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
         data.ozTradesTableObjects.getFirst().setSlippage(400d);
@@ -88,8 +88,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest4Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient4);
+    public static DataHelper getNoSlippageRuleTest4Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient4);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
         data.ozTradesTableObjects.getFirst().setSlippage(400d);
@@ -100,8 +100,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest5Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient5);
+    public static DataHelper getNoSlippageRuleTest5Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient5);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -109,8 +109,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest6Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient6);
+    public static DataHelper getNoSlippageRuleTest6Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient6);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -119,8 +119,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest7Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient7);
+    public static DataHelper getNoSlippageRuleTest7Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient7);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -137,8 +137,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest8Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient8);
+    public static DataHelper getNoSlippageRuleTest8Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient8);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -149,8 +149,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest9Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient9);
+    public static DataHelper getNoSlippageRuleTest9Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient9);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -162,8 +162,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest10Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient10);
+    public static DataHelper getNoSlippageRuleTest10Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient10);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -178,8 +178,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest11Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient11);
+    public static DataHelper getNoSlippageRuleTest11Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient11);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -197,8 +197,8 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNoSlippageRuleTest12Data() {
-        RuleDataHelper data = getNoSlippageRuleData(noSlippageRuleClient12);
+    public static DataHelper getNoSlippageRuleTest12Data() {
+        DataHelper data = getNoSlippageRuleData(noSlippageRuleClient12);
         data.closeTradeMtEvent.symbol = EURUSD;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.ozTradesTableObjects = List.of(generateOzTradesTableEntryByClient(data.clientHelper));
@@ -213,9 +213,9 @@ public class NoSlippageRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNoSlippageRuleData() {
+    public static Map<String, DataHelper> setupNoSlippageRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNoSlippageRuleTest1Data());
         map.put("2", getNoSlippageRuleTest2Data());
@@ -230,12 +230,12 @@ public class NoSlippageRuleDataFactory {
         map.put("11", getNoSlippageRuleTest11Data());
         map.put("12", getNoSlippageRuleTest12Data());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }
 
-    public static void deleteNoSlippageRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteNoSlippageRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

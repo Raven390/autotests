@@ -98,6 +98,17 @@ public class Utils {
         return Instant.ofEpochMilli(timestampMillis).toString();
     }
 
+    /**
+     * Returns a random ISO 8601 UTC date-time string between now minus 365 days and now.
+     * Example: 2025-05-20T14:30:00Z
+     */
+    public static String getRandomDateTimeIsoUtc() {
+        long now = Instant.now().toEpochMilli();
+        long yearAgo = Instant.now().minus(365, ChronoUnit.DAYS).toEpochMilli();
+        long randomMillis = ThreadLocalRandom.current().nextLong(yearAgo, now);
+        return Instant.ofEpochMilli(randomMillis).truncatedTo(ChronoUnit.SECONDS).toString();
+    }
+
     public static String getCurrentTimestampMinusOffsetFormatted(String format, int years, int months, int days,
             int hours, int minutes) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, Locale.US);
@@ -406,7 +417,6 @@ public class Utils {
             throw new IllegalArgumentException("Date string, formatFrom or formatTo is incorrect!");
         }
     }
-
 
     public static void waitForConnectionSearchToUpdate() throws Exception {
         ClientHelper userFrom1 = getRandomVantageClient();

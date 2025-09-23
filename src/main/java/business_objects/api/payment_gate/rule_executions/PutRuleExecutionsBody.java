@@ -1,5 +1,6 @@
 package business_objects.api.payment_gate.rule_executions;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 public class PutRuleExecutionsBody {
@@ -8,8 +9,8 @@ public class PutRuleExecutionsBody {
     private Integer ruleId;
     private String ruleVersion;
     private String ruleEndId;
-    private String startedAt;
-    private String completedAt;
+    private Timestamp startedAt;
+    private Timestamp completedAt;
 
     public String getRunId() {
         return runId;
@@ -51,19 +52,19 @@ public class PutRuleExecutionsBody {
         this.ruleEndId = ruleEndId;
     }
 
-    public String getStartedAt() {
+    public Timestamp getStartedAt() {
         return startedAt;
     }
 
-    public void setStartedAt(String startedAt) {
+    public void setStartedAt(Timestamp startedAt) {
         this.startedAt = startedAt;
     }
 
-    public String getCompletedAt() {
+    public Timestamp getCompletedAt() {
         return completedAt;
     }
 
-    public void setCompletedAt(String completedAt) {
+    public void setCompletedAt(Timestamp completedAt) {
         this.completedAt = completedAt;
     }
 }

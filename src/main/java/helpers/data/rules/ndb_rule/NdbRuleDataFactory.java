@@ -9,7 +9,7 @@ import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.FraudTypeOld;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -26,8 +26,8 @@ import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFact
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
 import static helpers.data.enums.NbdComment.getRandomNbdComment;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.CleanTableHelper.cleanBoFraudTypesTableByUcid;
 import static helpers.database.CleanTableHelper.cleanFraudTypeTableByClient;
 import static helpers.database.DbHelper.startSshTunnel;
@@ -54,8 +54,8 @@ public class NdbRuleDataFactory {
     private static final int secondIb = 6669;
 
     @Step("Create data for Mirror trading rule")
-    private static RuleDataHelper getNdbRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    private static DataHelper getNdbRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
         CrmTbUserObject userObject = generateUserByClient(client);
         userObject.ibId = 1;
         ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
@@ -77,15 +77,15 @@ public class NdbRuleDataFactory {
         );
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd1Data() {
+    public static DataHelper getNdbRuleExitEventEnd1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd1Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd1Client);
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd2Data() {
+    public static DataHelper getNdbRuleExitEventEnd2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd2Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd2Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd2Client);
         credit.comment = "Promo-NDB-Credit In";
@@ -99,9 +99,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd3Data() {
+    public static DataHelper getNdbRuleExitEventEnd3Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd3Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd3Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd3Client);
         credit.comment = "Promo-NDB-Credit In";
@@ -114,9 +114,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd41Data() {
+    public static DataHelper getNdbRuleExitEventEnd41Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_1Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_1Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd4_1Client);
         credit.comment = "Credit In - No Deposit Bonus";
@@ -135,9 +135,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd42Data() {
+    public static DataHelper getNdbRuleExitEventEnd42Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_2Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd4_2Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd4_2Client);
         credit.comment = "credit in-JP NDB";
@@ -156,9 +156,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd5Data() {
+    public static DataHelper getNdbRuleExitEventEnd5Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd5Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd5Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd5Client);
         credit.comment = "Promo-NDB-Credit In";
@@ -182,9 +182,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd6Data() {
+    public static DataHelper getNdbRuleExitEventEnd6Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd6Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd6Client);
         Allure.step("Get credits with ndb comment");
         MtTbCreditsObject credit = generateCreditsByClient(ndbRuleExitEventEnd6Client);
         credit.comment = "Promo-NDB-Credit In";
@@ -196,9 +196,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd7Data() throws Exception {
+    public static DataHelper getNdbRuleExitEventEnd7Data() throws Exception {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd7Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd7Client);
 
         Allure.step("Setup client data in DB");
         Allure.step("set IB id that will be the same for connected user");
@@ -236,9 +236,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd8Data() {
+    public static DataHelper getNdbRuleExitEventEnd8Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd8Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd8Client);
 
         Allure.step("Client and connected client have same email");
         Allure.step("Client and connected client have different IB");
@@ -283,9 +283,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getNdbRuleExitEventEnd9Data() {
+    public static DataHelper getNdbRuleExitEventEnd9Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getNdbRuleData(ndbRuleExitEventEnd9Client);
+        DataHelper data = getNdbRuleData(ndbRuleExitEventEnd9Client);
 
         Allure.step("Client and connected client have same email");
         Allure.step("Client and connected client have different IB");
@@ -330,9 +330,9 @@ public class NdbRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNdbRuleData() throws Exception {
+    public static Map<String, DataHelper> setupNdbRuleData() throws Exception {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNdbRuleExitEventEnd1Data());
         map.put("2", getNdbRuleExitEventEnd2Data());
@@ -346,11 +346,11 @@ public class NdbRuleDataFactory {
         map.put("9", getNdbRuleExitEventEnd9Data());
 
         // Loop through the list with data and insert all the data into the according tables
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteNdbRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteNdbRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

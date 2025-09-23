@@ -6,7 +6,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -21,8 +21,8 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Utils.*;
 
@@ -34,8 +34,8 @@ public class LossVoucherRuleDataFactory {
     private static final ClientHelper lossVoucherRuleExitEventEnd3Client = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
-    private static RuleDataHelper getLossVoucherProfitRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    private static DataHelper getLossVoucherProfitRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
         ruleData.crmTbUserObject = generateUserByClient(client);
         ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
         ruleData.mtAccountObject = generateMtAccountByClient(client);
@@ -43,16 +43,16 @@ public class LossVoucherRuleDataFactory {
         return ruleData;
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd11Data() {
+    public static DataHelper getLossVoucherRuleExitEventEnd11Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_1Client);
+        DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_1Client);
 
         return data;
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd12Data() {
+    public static DataHelper getLossVoucherRuleExitEventEnd12Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
+        DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd1_2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd1_2Client);
         MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd1_2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
@@ -82,9 +82,9 @@ public class LossVoucherRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd2Data() {
+    public static DataHelper getLossVoucherRuleExitEventEnd2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd2Client);
+        DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd2Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd2Client);
         MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd2Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
@@ -113,9 +113,9 @@ public class LossVoucherRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getLossVoucherRuleExitEventEnd3Data() {
+    public static DataHelper getLossVoucherRuleExitEventEnd3Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd3Client);
+        DataHelper data = getLossVoucherProfitRuleData(lossVoucherRuleExitEventEnd3Client);
         CrmTbBonusObject bonus = generateBonusByClient(lossVoucherRuleExitEventEnd3Client);
         MtBalanceOrdersObject balanceOrder = generateMtBalanceOrder(lossVoucherRuleExitEventEnd3Client, 100d, 100d, getCurrentTimestampDbFormat());
         balanceOrder.comment = "Trade Loss";
@@ -144,9 +144,9 @@ public class LossVoucherRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupLossVoucherRuleData() {
+    public static Map<String, DataHelper> setupLossVoucherRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("11", getLossVoucherRuleExitEventEnd11Data());
         map.put("12", getLossVoucherRuleExitEventEnd12Data());
@@ -154,11 +154,11 @@ public class LossVoucherRuleDataFactory {
         map.put("3", getLossVoucherRuleExitEventEnd3Data());
 
         // Loop through the list with data and insert all the data into the according tables
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteLossVoucherRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteLossVoucherRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

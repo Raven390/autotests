@@ -3,7 +3,7 @@ package tests.rule_engine_service_tests.rules;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.no_slippage_rule.NoSlippageRuleDataFactory.setupNoSlippageRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -34,7 +33,7 @@ import static utils.Constants.*;
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class NoSlippageRuleTest extends TestBaseRule {
 
-    static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
+    static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
     static void setupData() throws IOException {
@@ -47,14 +46,14 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AfterAll
     static void deleteData() throws Exception {
         stopSshTunnel();
-        deleteRuleData(dbDataMap);
+        DataHelper.deleteData(dbDataMap);
     }
 
     @Test
     @AllureId("1419")
     @DisplayName("No slippage rule. If User is test user -> Exit without alert. ElementId: Event_end_1")
     void noSlippageRuleTest1() throws Exception {
-        RuleDataHelper data = dbDataMap.get("1");
+        DataHelper data = dbDataMap.get("1");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -70,7 +69,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1420")
     @DisplayName("No slippage rule. If account currency is USC -> Exit without alert. ElementId: Event_197txjh")
     void noSlippageRuleTest2() throws Exception {
-        RuleDataHelper data = dbDataMap.get("2");
+        DataHelper data = dbDataMap.get("2");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -86,7 +85,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1421")
     @DisplayName("No slippage rule. Exit without alert if at least 1 resolved alert for user. ElementId: Event_end_12")
     void noSlippageRuleTest3() throws Exception {
-        RuleDataHelper data = dbDataMap.get("3");
+        DataHelper data = dbDataMap.get("3");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -102,7 +101,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1422")
     @DisplayName("No slippage rule. Exit with alert and restriction if user has 0 resolved alerts. ElementId: Event_0oa6zyc")
     void noSlippageRuleTest4() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4");
+        DataHelper data = dbDataMap.get("4");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -131,7 +130,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1423")
     @DisplayName("No slippage rule. Exit without alert if traded symbol not in the list. ElementId: Event_1u9lc7r")
     void noSlippageRuleTest5() throws Exception {
-        RuleDataHelper data = dbDataMap.get("5");
+        DataHelper data = dbDataMap.get("5");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -147,7 +146,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1424")
     @DisplayName("No slippage rule. Exit without alert if deals/fast deals ratio < 0.7. ElementId: Event_034y6nl")
     void noSlippageRuleTest6() throws Exception {
-        RuleDataHelper data = dbDataMap.get("6");
+        DataHelper data = dbDataMap.get("6");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -163,7 +162,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1425")
     @DisplayName("No slippage rule. Exit without alert if stopout ratio < 0.75. ElementId: Event_12inxex")
     void noSlippageRuleTest7() throws Exception {
-        RuleDataHelper data = dbDataMap.get("7");
+        DataHelper data = dbDataMap.get("7");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -179,7 +178,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1426")
     @DisplayName("No slippage rule. Exit without alert if notional value < 3mln. ElementId: Event_0n07x4l")
     void noSlippageRuleTest8() throws Exception {
-        RuleDataHelper data = dbDataMap.get("8");
+        DataHelper data = dbDataMap.get("8");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -195,7 +194,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1427")
     @DisplayName("No slippage rule. Exit without alert if count trades < 30. ElementId: Event_13p6x81")
     void noSlippageRuleTest9() throws Exception {
-        RuleDataHelper data = dbDataMap.get("9");
+        DataHelper data = dbDataMap.get("9");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -211,7 +210,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1428")
     @DisplayName("No slippage rule. Exit without alert if profit(acc) + rebates(acc) < -10 000$?. ElementId: Event_0jy5i8k")
     void noSlippageRuleTest10() throws Exception {
-        RuleDataHelper data = dbDataMap.get("10");
+        DataHelper data = dbDataMap.get("10");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -227,7 +226,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1429")
     @DisplayName("No slippage rule. Exit without alert if resolved alerts amount > 0. ElementId: Event_1rm136r")
     void noSlippageRuleTest11() throws Exception {
-        RuleDataHelper data = dbDataMap.get("11");
+        DataHelper data = dbDataMap.get("11");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -243,7 +242,7 @@ class NoSlippageRuleTest extends TestBaseRule {
     @AllureId("1430")
     @DisplayName("No slippage rule. Exit with alert and restriction if resolved alerts amount = 0. ElementId: Event_1k86ppo")
     void noSlippageRuleTest12() throws Exception {
-        RuleDataHelper data = dbDataMap.get("12");
+        DataHelper data = dbDataMap.get("12");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 

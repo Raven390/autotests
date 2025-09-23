@@ -2,7 +2,7 @@ package tests.rule_engine_service_tests.rules;
 
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlert;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
 import static helpers.data.rules.latency_arbitrage_rule.LatencyArbitrageRuleDataFactory.*;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -30,7 +29,7 @@ import static utils.Constants.*;
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class LatencyArbitrageRuleTest extends TestBaseRule {
 
-    static Map<String, RuleDataHelper> dbDataMap = new HashMap<>();
+    static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
     static void setupData() throws IOException {
@@ -41,7 +40,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
 
     @AfterAll
     static void deleteData() throws Exception {
-        deleteRuleData(dbDataMap);
+        DataHelper.deleteData(dbDataMap);
         stopSshTunnel();
     }
 
@@ -49,7 +48,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1372")
     @DisplayName("Latency arbitrage rule rule. Exit without alert if platform is not MT5. ElementId: Event_0qxj50n")
     void latencyArbitrageRuleTest1() throws Exception {
-        RuleDataHelper data = dbDataMap.get("1");
+        DataHelper data = dbDataMap.get("1");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -64,7 +63,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1373")
     @DisplayName("Latency arbitrage rule. Exit without alert if user is test or social trader user. ElementId: Event_end_1")
     void latencyArbitrageRuleTest2() throws Exception {
-        RuleDataHelper data = dbDataMap.get("2");
+        DataHelper data = dbDataMap.get("2");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -79,7 +78,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1373")
     @DisplayName("Latency arbitrage rule. Exit without alert if user has less that 10 trading days. ElementId: Event_088xwgg")
     void latencyArbitrageRuleTest3() throws Exception {
-        RuleDataHelper data = dbDataMap.get("3");
+        DataHelper data = dbDataMap.get("3");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -94,7 +93,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1374")
     @DisplayName("Latency arbitrage rule. Exit without alert if user has less than 100 trades. ElementId: Event_002l07f")
     void latencyArbitrageRuleTest4() throws Exception {
-        RuleDataHelper data = dbDataMap.get("4");
+        DataHelper data = dbDataMap.get("4");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -109,7 +108,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1375")
     @DisplayName("Latency arbitrage rule. Exit without alert if netProfit + rebatesAmount not >= 500. ElementId: Event_1mf0xpo")
     void latencyArbitrageRuleTest5() throws Exception {
-        RuleDataHelper data = dbDataMap.get("5");
+        DataHelper data = dbDataMap.get("5");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -124,7 +123,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1375")
     @DisplayName("Latency arbitrage rule. Exit without alert if Total Profit / Cumulative deposit not >= 0.3. ElementId: Event_10836lw")
     void latencyArbitrageRuleTest6() throws Exception {
-        RuleDataHelper data = dbDataMap.get("6");
+        DataHelper data = dbDataMap.get("6");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
@@ -140,7 +139,7 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
     @AllureId("1376")
     @DisplayName("Latency arbitrage rule. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80. ElementId: Event_0l87tr0")
     void latencyArbitrageRuleTest7() throws Exception {
-        RuleDataHelper data = dbDataMap.get("7");
+        DataHelper data = dbDataMap.get("7");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
