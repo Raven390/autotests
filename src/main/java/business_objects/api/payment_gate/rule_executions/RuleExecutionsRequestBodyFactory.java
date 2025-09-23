@@ -2,6 +2,7 @@ package business_objects.api.payment_gate.rule_executions;
 
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import static utils.Utils.getRandomIntPositive;
@@ -29,8 +30,8 @@ public class RuleExecutionsRequestBodyFactory {
         body.setRuleId(101);
         body.setRuleVersion("1.0." + getRandomIntPositive());
         body.setRuleEndId("2");
-        body.setStartedAt(Instant.now().toString());
-        body.setCompletedAt(Instant.now().plusSeconds(2).toString());
+        body.setStartedAt(Timestamp.from(Instant.now()));
+        body.setCompletedAt(Timestamp.from(Instant.now().plusSeconds(2)));
         return body;
     }
 

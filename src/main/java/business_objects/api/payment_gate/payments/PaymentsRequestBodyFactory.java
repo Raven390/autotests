@@ -3,8 +3,7 @@ package business_objects.api.payment_gate.payments;
 
 import java.math.BigDecimal;
 
-import static utils.Utils.getRandomIntPositive;
-import static utils.Utils.getRandomUuidString;
+import static utils.Utils.*;
 
 public class PaymentsRequestBodyFactory {
 
@@ -26,7 +25,7 @@ public class PaymentsRequestBodyFactory {
         body.setCheckName("WR_Blacklist");
         body.setStatusId(1);
         body.setStatus("Success");
-        body.setEventDate("2025-05-20T14:30:00Z");
+        body.setEventDate(getRandomDateTimeIsoUtc());
         body.setWithdrawalApplicationTime("2025-07-15 07:38:05");
         body.setWithdrawalCurrency("USD");
         body.setWithdrawalAmount(new BigDecimal("1500.00"));

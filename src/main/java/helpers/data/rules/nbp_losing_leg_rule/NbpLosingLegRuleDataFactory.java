@@ -6,7 +6,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -20,8 +20,8 @@ import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectF
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static utils.Utils.*;
 
 @RuleTestData("nbp-losing-leg")
@@ -34,8 +34,8 @@ public class NbpLosingLegRuleDataFactory {
     private static final ClientHelper nbpLosingLegExit3v2Client = getRandomVantageClientAllFields();
     private static final ClientHelper nbpLosingLegExit4Client = getRandomVantageClientAllFields();
 
-    private static RuleDataHelper getNbpLosingLegRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getNbpLosingLegRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.closeTradeEvent = new CloseTradeMtEvent(
@@ -57,8 +57,8 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpLosingLegExit1Data() {
-        RuleDataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit1Client);
+    private static DataHelper getNbpLosingLegExit1Data() {
+        DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit1Client);
         Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
         stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 1, 0, 0, 0));
         stopoutTrade.setTimeUtc(stopoutTrade.getTime());
@@ -67,8 +67,8 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpLosingLegExit2Data() {
-        RuleDataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit2Client);
+    private static DataHelper getNbpLosingLegExit2Data() {
+        DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit2Client);
         for (int i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
@@ -82,8 +82,8 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpLosingLegExit3v1Data() {
-        RuleDataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v1Client);
+    private static DataHelper getNbpLosingLegExit3v1Data() {
+        DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v1Client);
         for (int i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
@@ -97,8 +97,8 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpLosingLegExit3v2Data() {
-        RuleDataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v2Client);
+    private static DataHelper getNbpLosingLegExit3v2Data() {
+        DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v2Client);
         for (int i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
@@ -114,8 +114,8 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    private static RuleDataHelper getNbpLosingLegExit4Data() {
-        RuleDataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit4Client);
+    private static DataHelper getNbpLosingLegExit4Data() {
+        DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit4Client);
         for (int i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
@@ -141,19 +141,19 @@ public class NbpLosingLegRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNbpLosingLegRuleData() {
-        Map<String, RuleDataHelper> map = new HashMap<>();
+    public static Map<String, DataHelper> setupNbpLosingLegRuleData() {
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNbpLosingLegExit1Data());
         map.put("2", getNbpLosingLegExit2Data());
         map.put("3v1", getNbpLosingLegExit3v1Data());
         map.put("3v2", getNbpLosingLegExit3v2Data());
         map.put("4", getNbpLosingLegExit4Data());
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteNbpLosingLegRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteNbpLosingLegRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

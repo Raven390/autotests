@@ -1,24 +1,26 @@
 package business_objects.db.payment_gate.payment_decisions;
 
 
-import helpers.data.ClientHelper;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
+import java.sql.Timestamp;
+import java.time.Instant;
+
 import static utils.Utils.getRandomIntPositive;
 
 public class PaymentDecisionsObjectFactory {
 
-    public static PaymentDecisionsObject generatePaymentDecisionObject(ClientHelper client) {
+    public static PaymentDecisionsObject generatePaymentDecisionObject(PaymentEventsObject event) {
         return new PaymentDecisionsObject(
                 getRandomIntPositive(),                         // id
-                client != null ? client.getUcid() : null,       // paymentId
-                "UNKNOWN",                                     // decisionType
-                0,                                              // decisionCode
+                event.getPaymentId(),       // paymentId
+                "final",                                     // decisionType
+                1,                                              // decisionCode
                 0,                                              // rejectionCode
-                "SYSTEM",                                      // actor
-                getCurrentTimestampDbFormat(),                  // dateCreated
-                getCurrentTimestampDbFormat(),                  // dateUpdated
-                getCurrentTimestampDbFormat()                   // dateDecided
+                "QA",                                      // actor
+                Timestamp.from(Instant.now()),                  // dateCreated
+                Timestamp.from(Instant.now()),                // dateUpdated
+                Timestamp.from(Instant.now())                   // dateDecided
         );
     }
 

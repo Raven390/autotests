@@ -7,10 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PutDecisionsResponseBody {
+
     // Single-item creation response fields
     @JsonProperty("decisionId")
-    private String decisionId;
+    private Integer decisionId;
 
     @JsonProperty("paymentId")
     private String paymentId;
@@ -20,14 +23,14 @@ public class PutDecisionsResponseBody {
 
     // Represent as String to be consistent with request bodies and avoid number/string ambiguity in examples
     @JsonProperty("decisionCode")
-    private String decisionCode;
+    private Integer decisionCode;
 
     @JsonProperty("decidedAt")
     private String decidedAt; // ISO-8601 timestamp
 
     // Batch creation response
     @JsonProperty("created")
-    private List<PostDecisionsResponseBody.CreatedItem> created;
+    private List<CreatedItem> created;
 
     // Error response fields
     @JsonProperty("error")
@@ -40,11 +43,11 @@ public class PutDecisionsResponseBody {
     }
 
     // Getters and setters
-    public String getDecisionId() {
+    public Integer getDecisionId() {
         return decisionId;
     }
 
-    public void setDecisionId(String decisionId) {
+    public void setDecisionId(Integer decisionId) {
         this.decisionId = decisionId;
     }
 
@@ -64,11 +67,11 @@ public class PutDecisionsResponseBody {
         this.decisionType = decisionType;
     }
 
-    public String getDecisionCode() {
+    public Integer getDecisionCode() {
         return decisionCode;
     }
 
-    public void setDecisionCode(String decisionCode) {
+    public void setDecisionCode(Integer decisionCode) {
         this.decisionCode = decisionCode;
     }
 
@@ -80,11 +83,11 @@ public class PutDecisionsResponseBody {
         this.decidedAt = decidedAt;
     }
 
-    public List<PostDecisionsResponseBody.CreatedItem> getCreated() {
+    public List<CreatedItem> getCreated() {
         return created;
     }
 
-    public void setCreated(List<PostDecisionsResponseBody.CreatedItem> created) {
+    public void setCreated(List<CreatedItem> created) {
         this.created = created;
     }
 
@@ -188,7 +191,7 @@ public class PutDecisionsResponseBody {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            PutDecisionsResponseBody.CreatedItem that = (PutDecisionsResponseBody.CreatedItem) o;
+            CreatedItem that = (CreatedItem) o;
             return Objects.equals(decisionId, that.decisionId) && Objects.equals(paymentId, that.paymentId) && Objects.equals(decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(decidedAt, that.decidedAt);
         }
 

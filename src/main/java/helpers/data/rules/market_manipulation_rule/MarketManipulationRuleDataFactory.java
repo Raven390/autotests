@@ -5,7 +5,7 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.g
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.setupData;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -30,8 +30,8 @@ public class MarketManipulationRuleDataFactory {
     // Clients
     private static final ClientHelper marketManipulationTest1Client = getRandomVantageClientAllFields();
 
-    private static RuleDataHelper getMarketManipulatorRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getMarketManipulatorRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         client.setServerId(4);
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
@@ -46,8 +46,8 @@ public class MarketManipulationRuleDataFactory {
     }
 
 
-    private static RuleDataHelper getMarketManipulationRuleTest1Data() {
-        RuleDataHelper data = getMarketManipulatorRuleData(marketManipulationTest1Client);
+    private static DataHelper getMarketManipulationRuleTest1Data() {
+        DataHelper data = getMarketManipulatorRuleData(marketManipulationTest1Client);
         data.mt5DealsCoercedObjects.getFirst().setProfit(3400d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(3400d);
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
@@ -61,11 +61,11 @@ public class MarketManipulationRuleDataFactory {
     }
 
 
-    public static Map<String, RuleDataHelper> setupMarketManipulationRuleData() {
-        Map<String, RuleDataHelper> map = new HashMap<>();
+    public static Map<String, DataHelper> setupMarketManipulationRuleData() {
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getMarketManipulationRuleTest1Data());
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 }

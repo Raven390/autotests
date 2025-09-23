@@ -38,6 +38,72 @@ public class GetDecisionsResponseBody {
     @JsonProperty("actor")
     private String actor;
 
+    @JsonProperty("error")
+    private String error;
+
+    @JsonProperty("message")
+    private String message;
+
+    @JsonProperty("type")
+    private String type;
+
+    @JsonProperty("title")
+    private String title;
+
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("detail")
+    private String detail;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getDecisionId() {
         return decisionId;
     }

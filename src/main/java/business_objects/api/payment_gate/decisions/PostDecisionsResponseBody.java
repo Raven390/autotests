@@ -13,7 +13,7 @@ public class PostDecisionsResponseBody {
 
     // Single-item creation response fields
     @JsonProperty("decisionId")
-    private String decisionId;
+    private Integer decisionId;
 
     @JsonProperty("paymentId")
     private String paymentId;
@@ -23,7 +23,7 @@ public class PostDecisionsResponseBody {
 
     // Represent as String to be consistent with request bodies and avoid number/string ambiguity in examples
     @JsonProperty("decisionCode")
-    private String decisionCode;
+    private Integer decisionCode;
 
     @JsonProperty("decidedAt")
     private String decidedAt; // ISO-8601 timestamp
@@ -43,11 +43,11 @@ public class PostDecisionsResponseBody {
     }
 
     // Getters and setters
-    public String getDecisionId() {
+    public Integer getDecisionId() {
         return decisionId;
     }
 
-    public void setDecisionId(String decisionId) {
+    public void setDecisionId(Integer decisionId) {
         this.decisionId = decisionId;
     }
 
@@ -67,11 +67,11 @@ public class PostDecisionsResponseBody {
         this.decisionType = decisionType;
     }
 
-    public String getDecisionCode() {
+    public Integer getDecisionCode() {
         return decisionCode;
     }
 
-    public void setDecisionCode(String decisionCode) {
+    public void setDecisionCode(Integer decisionCode) {
         this.decisionCode = decisionCode;
     }
 

@@ -5,7 +5,7 @@ import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
@@ -25,7 +25,7 @@ import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactor
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
 import static utils.Utils.getCurrentTimestampDbFormat;
@@ -42,8 +42,8 @@ public class NewsTraderRuleDataFactory {
 
 
     @Step("Create data for News Trader rule is test account=true")
-    private static RuleDataHelper getNewsTraderRuleData(ClientHelper client) {
-        RuleDataHelper data = new RuleDataHelper();
+    private static DataHelper getNewsTraderRuleData(ClientHelper client) {
+        DataHelper data = new DataHelper();
         client.setServerId(10);
         data.clientHelper = client;
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
@@ -58,15 +58,15 @@ public class NewsTraderRuleDataFactory {
     }
 
     @Description("News Trader. Exit without alert if account is test . Event_end_1")
-    public static RuleDataHelper getNewsTraderCloseTradeTest1Data() {
-        RuleDataHelper data = getNewsTraderRuleData(client1);
+    public static DataHelper getNewsTraderCloseTradeTest1Data() {
+        DataHelper data = getNewsTraderRuleData(client1);
         data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
         return data;
     }
 
     @Description("News Trader. Scotland. Exit without alert if news deals < 0.7. Event_end_2")
-    public static RuleDataHelper getNewsTraderCloseTradeTest2Data() {
-        RuleDataHelper data = getNewsTraderRuleData(client2);
+    public static DataHelper getNewsTraderCloseTradeTest2Data() {
+        DataHelper data = getNewsTraderRuleData(client2);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
         String time = getCurrentTimestampDbFormat();
@@ -80,8 +80,8 @@ public class NewsTraderRuleDataFactory {
     }
 
     @Description("News trader on close trade. Exit without alert if user have profit USD <350. Event_end_3")
-    public static RuleDataHelper getNewsTraderCloseTradeTest3Data() {
-        RuleDataHelper data = getNewsTraderRuleData(client3);
+    public static DataHelper getNewsTraderCloseTradeTest3Data() {
+        DataHelper data = getNewsTraderRuleData(client3);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
         String time = getCurrentTimestampDbFormat();
@@ -95,8 +95,8 @@ public class NewsTraderRuleDataFactory {
     }
 
     @Description("News Trader. Exit without alert if profit/deposit < 0.5. Event_4")
-    public static RuleDataHelper getNewsTraderCloseTradeTest4Data() {
-        RuleDataHelper data = getNewsTraderRuleData(client4);
+    public static DataHelper getNewsTraderCloseTradeTest4Data() {
+        DataHelper data = getNewsTraderRuleData(client4);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
         String time = getCurrentTimestampDbFormat();
@@ -113,8 +113,8 @@ public class NewsTraderRuleDataFactory {
     }
 
     @Description("News Trader. Exit with alert if profit/deposit > 0.5. Event_end_5")
-    public static RuleDataHelper getNewsTraderCloseTradeTest5Data() {
-        RuleDataHelper data = getNewsTraderRuleData(client5);
+    public static DataHelper getNewsTraderCloseTradeTest5Data() {
+        DataHelper data = getNewsTraderRuleData(client5);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
         String time = getCurrentTimestampDbFormat();
@@ -130,9 +130,9 @@ public class NewsTraderRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupNewsTraderCloseTradeRuleData() {
+    public static Map<String, DataHelper> setupNewsTraderCloseTradeRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getNewsTraderCloseTradeTest1Data());
         map.put("2", getNewsTraderCloseTradeTest2Data());
@@ -140,7 +140,7 @@ public class NewsTraderRuleDataFactory {
         map.put("4", getNewsTraderCloseTradeTest4Data());
         map.put("5", getNewsTraderCloseTradeTest5Data());
 
-        setupRuleData(map);
+        setupData(map);
 
         return map;
     }

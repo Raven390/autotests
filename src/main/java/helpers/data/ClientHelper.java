@@ -68,6 +68,7 @@ public class ClientHelper {
         this.mtCid = mtCid;
     }
 
+    @Deprecated
     public ClientHelper(Integer userId, String uid, Brand brand, Integer tradingAccount, Integer serverId) {
         this.userId = userId;
         this.uid = uid;
@@ -76,6 +77,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
+    @Deprecated
     public ClientHelper(Integer userId, String uid, Brand brand, Regulator regulator, Integer tradingAccount,
             Integer serverId) {
         this.userId = userId;
@@ -86,6 +88,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
+    @Deprecated
     public ClientHelper(Integer userId, String uid, Brand brand, Regulator regulator, Integer tradingAccount,
             Integer tradingAccount2,
             Integer serverId) {
@@ -98,12 +101,14 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
+    @Deprecated
     public ClientHelper(Integer userId, Brand brand, Regulator regulator) {
         this.userId = userId;
         this.brand = brand;
         this.regulator = regulator;
     }
 
+    @Deprecated
     public ClientHelper(
             Integer userId, String uid, Brand brand, Integer tradingAccount, Integer tradingAccount2,
             Integer serverId) {
@@ -115,6 +120,7 @@ public class ClientHelper {
         this.serverId = serverId;
     }
 
+    @Deprecated
     public ClientHelper(Integer userId, String uid, Regulator regulator, Brand brand, Integer tradingAccount,
             Integer tradingAccount2,
             Integer serverId, String email, String phoneNumber, String ipAddress, String countryCode) {

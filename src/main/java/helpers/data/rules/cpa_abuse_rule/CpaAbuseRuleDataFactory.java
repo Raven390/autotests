@@ -11,7 +11,7 @@ import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
-import helpers.data.rules.RuleDataHelper;
+import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
@@ -28,8 +28,8 @@ import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectF
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.*;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
-import static helpers.data.rules.RuleDataHelper.deleteRuleData;
-import static helpers.data.rules.RuleDataHelper.setupRuleData;
+import static helpers.data.DataHelper.deleteData;
+import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -51,8 +51,8 @@ public class CpaAbuseRuleDataFactory {
     private static final ClientHelper cpaAbuseRuleExitEventEnd9p2Client = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
-    private static RuleDataHelper getCpaAbuseRuleData(ClientHelper client) {
-        RuleDataHelper ruleData = new RuleDataHelper();
+    private static DataHelper getCpaAbuseRuleData(ClientHelper client) {
+        DataHelper ruleData = new DataHelper();
         ruleData.crmTbUserObject = generateUserByClient(client);
         ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
         ruleData.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
@@ -68,18 +68,18 @@ public class CpaAbuseRuleDataFactory {
         );
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd1Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd1Client);
         Allure.step("Create user object with no CPA");
         data.clientHelper.setCpaId(null);
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd2Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd2Data() {
         Allure.step("Get client data");
         cpaAbuseRuleExitEventEnd2Client.setCpaId(8888);
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2Client);
         Allure.step("Create user object with no CPA");
 
         Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd2Client);
@@ -96,11 +96,11 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd3Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd3Data() {
         Allure.step("Get client data");
         int cpa = 8888;
         cpaAbuseRuleExitEventEnd3Client.setCpaId(cpa);
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd3Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd3Client);
         Allure.step("Create user object with no CPA");
 
 
@@ -120,9 +120,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd4Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd4Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4Client);
 
         Allure.step("Client has cpa abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -151,9 +151,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd5p1Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd5p1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p1Client);
         Allure.step("Send alert");
 
         //MT5 trade with current time
@@ -170,9 +170,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd5p2Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd5p2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p2Client);
         Allure.step("Send alert");
 
         //MT5 trade with current time
@@ -189,9 +189,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd6Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd6Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd6Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd6Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("At least 70% have any CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -232,9 +232,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd7p1Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd7p1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p1Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -276,9 +276,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd7p2Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd7p2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p2Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -325,9 +325,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd8p1Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd8p1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p1Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -374,9 +374,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd8p2Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd8p2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p2Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -436,9 +436,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd9p1Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd9p1Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p1Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -497,9 +497,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static RuleDataHelper getCpaAbuseRuleExitEventEnd9p2Data() {
+    public static DataHelper getCpaAbuseRuleExitEventEnd9p2Data() {
         Allure.step("Get client data");
-        RuleDataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p2Client);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -558,9 +558,9 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    public static Map<String, RuleDataHelper> setupCpaAbuseRuleData() {
+    public static Map<String, DataHelper> setupCpaAbuseRuleData() {
         startSshTunnel();
-        Map<String, RuleDataHelper> map = new HashMap<>();
+        Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
         map.put("2", getCpaAbuseRuleExitEventEnd2Data());
@@ -577,11 +577,11 @@ public class CpaAbuseRuleDataFactory {
         map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
 
         // Loop through the list with data and insert all the data into the according tables
-        setupRuleData(map);
+        setupData(map);
         return map;
     }
 
-    public static void deleteCpaAbuseRuleData(Map<String, RuleDataHelper> map) throws Exception {
-        deleteRuleData(map);
+    public static void deleteCpaAbuseRuleData(Map<String, DataHelper> map) throws Exception {
+        deleteData(map);
     }
 }

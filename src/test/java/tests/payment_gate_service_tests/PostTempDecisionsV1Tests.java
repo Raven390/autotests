@@ -13,5 +13,5 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
-public class PostTempDecisionsV1Tests extends TestBaseApi {
+class PostTempDecisionsV1Tests extends TestBaseApi {
 }
