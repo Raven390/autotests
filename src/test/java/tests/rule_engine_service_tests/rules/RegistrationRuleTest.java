@@ -27,7 +27,7 @@ import static utils.Constants.*;
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
 class RegistrationRuleTest extends TestBaseRule {
 
-    static Map<String, DataHelper> dbDataMap = new HashMap<>();
+    private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
     static void setupData() throws Exception {

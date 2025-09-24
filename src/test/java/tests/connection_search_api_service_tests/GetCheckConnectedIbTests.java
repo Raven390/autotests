@@ -52,97 +52,96 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 class GetCheckConnectedIbTests extends TestBaseApi {
 
-    static final ClientHelper userFrom1 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo1 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom2 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo2 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom3 = getRandomVantageClientNoCpaIbRef();
-    static final ClientHelper userTo3 = getRandomVantageClientNoCpaIbRef();
-    static final ClientHelper userFrom4 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo4 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo5 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom6 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo6 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom7 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo71 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo72 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom8 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo81 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo82 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo83 = getRandomVantageClientAllFields();
-    static final ClientHelper userFrom9 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo91 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom1 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo1 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom2 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo2 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom3 = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper userTo3 = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper userFrom4 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo4 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo5 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom6 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo6 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom7 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo71 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo72 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom8 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo81 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo82 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo83 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom9 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo91 = getRandomVantageClientAllFields();
 
-    static CrmTbUserObject user1;
-    static CrmTbUserObject user2;
-    static CrmTbUserObject user3;
-    static CrmTbUserObject user4;
-    static CrmTbUserObject user5;
-    static CrmTbUserObject user6;
-    static CrmTbUserObject user7;
-    static CrmTbUserObject user8;
-    static CrmTbUserObject user9;
-    static CrmTbUserObject user91;
-    static CrmTbUserObject user92;
-    static CrmTbUserObject user10;
-    static CrmTbUserObject user101;
-    static CrmTbUserObject user102;
-    static CrmTbUserObject user103;
+    private static CrmTbUserObject user1;
+    private static CrmTbUserObject user2;
+    private static CrmTbUserObject user3;
+    private static CrmTbUserObject user4;
+    private static CrmTbUserObject user5;
+    private static CrmTbUserObject user6;
+    private static CrmTbUserObject user7;
+    private static CrmTbUserObject user8;
+    private static CrmTbUserObject user9;
+    private static CrmTbUserObject user91;
+    private static CrmTbUserObject user92;
+    private static CrmTbUserObject user10;
+    private static CrmTbUserObject user101;
+    private static CrmTbUserObject user102;
+    private static CrmTbUserObject user103;
 
-    static ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntry(userFrom1, userTo1);
-    static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom2, userTo2);
-    static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3);
-    static ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(userFrom7, userTo71);
-    static ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntry(userTo71, userTo72);
-    static ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntry(userFrom8, userTo81);
-    static ConnectionTableEntry connectionTableEntry7 = getConnectionTableEntry(userTo81, userTo82);
-    static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
-    static ConnectionTableEntry connectionTableEntry9 = getConnectionTableEntry(userFrom9, userTo91);
+    private static ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntry(userFrom1, userTo1);
+    private static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom2, userTo2);
+    private static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3);
+    private static ConnectionTableEntry connectionTableEntry4 = getConnectionTableEntry(userFrom7, userTo71);
+    private static ConnectionTableEntry connectionTableEntry5 = getConnectionTableEntry(userTo71, userTo72);
+    private static ConnectionTableEntry connectionTableEntry6 = getConnectionTableEntry(userFrom8, userTo81);
+    private static ConnectionTableEntry connectionTableEntry7 = getConnectionTableEntry(userTo81, userTo82);
+    private static ConnectionTableEntry connectionTableEntry8 = getConnectionTableEntry(userTo82, userTo83);
 
-    static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
-    static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
-    static final EmailTableEntry emailTableEntry41 = emailTableEntryForConnectionSearch(userFrom4);
-    static final EmailTableEntry emailTableEntry42 = emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
-    static final EmailTableEntry emailTableEntry51 = emailTableEntryForConnectionSearch(userFrom5);
-    static final EmailTableEntry emailTableEntry52 = emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
-    static final EmailTableEntry emailTableEntry61 = emailTableEntryForConnectionSearch(userFrom6);
-    static final EmailTableEntry emailTableEntry62 = emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
-    static final EmailTableEntry emailTableEntry71 = emailTableEntryForConnectionSearch(userFrom7);
-    static final EmailTableEntry emailTableEntry72 = emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
-    static final EmailTableEntry emailTableEntry73 = emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
-    static final EmailTableEntry emailTableEntry8 = emailTableEntryForConnectionSearch(userFrom8);
-    static final EmailTableEntry emailTableEntry81 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    static final EmailTableEntry emailTableEntry82 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
-    static final EmailTableEntry emailTableEntry83 = emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry11 = emailTableEntryForConnectionSearch(userFrom1);
+    private static final EmailTableEntry emailTableEntry12 = emailTableEntryForConnectionSearch(userTo1, userFrom1.getEmail());
+    private static final EmailTableEntry emailTableEntry41 = emailTableEntryForConnectionSearch(userFrom4);
+    private static final EmailTableEntry emailTableEntry42 = emailTableEntryForConnectionSearch(userTo4, userFrom4.getEmail());
+    private static final EmailTableEntry emailTableEntry51 = emailTableEntryForConnectionSearch(userFrom5);
+    private static final EmailTableEntry emailTableEntry52 = emailTableEntryForConnectionSearch(userTo5, userFrom5.getEmail());
+    private static final EmailTableEntry emailTableEntry61 = emailTableEntryForConnectionSearch(userFrom6);
+    private static final EmailTableEntry emailTableEntry62 = emailTableEntryForConnectionSearch(userTo6, userFrom6.getEmail());
+    private static final EmailTableEntry emailTableEntry71 = emailTableEntryForConnectionSearch(userFrom7);
+    private static final EmailTableEntry emailTableEntry72 = emailTableEntryForConnectionSearch(userTo71, userFrom7.getEmail());
+    private static final EmailTableEntry emailTableEntry73 = emailTableEntryForConnectionSearch(userTo72, userFrom7.getEmail());
+    private static final EmailTableEntry emailTableEntry8 = emailTableEntryForConnectionSearch(userFrom8);
+    private static final EmailTableEntry emailTableEntry81 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry82 = emailTableEntryForConnectionSearch(userTo81, userFrom8.getEmail());
+    private static final EmailTableEntry emailTableEntry83 = emailTableEntryForConnectionSearch(userTo82, userFrom8.getEmail());
 
-    static final DigitalIdTableEntry digitalTableEntry11 = digitalIdTableEntryForConnectionSearch(userFrom1);
-    static final DigitalIdTableEntry digitalTableEntry12 = digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
+    private static final DigitalIdTableEntry digitalTableEntry11 = digitalIdTableEntryForConnectionSearch(userFrom1);
+    private static final DigitalIdTableEntry digitalTableEntry12 = digitalIdTableEntryForConnectionSearch(userTo1, userFrom1.getDigitalId());
 
-    static final DeviceIdTableEntry deviceTableEntry11 = deviceIdTableEntryForConnectionSearch(userFrom1);
-    static final DeviceIdTableEntry deviceTableEntry12 = deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
+    private static final DeviceIdTableEntry deviceTableEntry11 = deviceIdTableEntryForConnectionSearch(userFrom1);
+    private static final DeviceIdTableEntry deviceTableEntry12 = deviceIdTableEntryForConnectionSearch(userTo1, userFrom1.getDeviceId());
 
-    static final SessionIdTableEntry sessionTableEntry11 = sessionIdTableEntryForConnectionSearch(userFrom1);
-    static final SessionIdTableEntry sessionTableEntry12 = sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
+    private static final SessionIdTableEntry sessionTableEntry11 = sessionIdTableEntryForConnectionSearch(userFrom1);
+    private static final SessionIdTableEntry sessionTableEntry12 = sessionIdTableEntryForConnectionSearch(userTo1, userFrom1.getSessionId());
 
-    static NameBirthTableEntry nameTableEntry11 = nameBirthTableEntryForConnectionSearch(userFrom1);
-    static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
+    private static NameBirthTableEntry nameTableEntry11 = nameBirthTableEntryForConnectionSearch(userFrom1);
+    private static NameBirthTableEntry nameTableEntry12 = nameBirthTableEntryForConnectionSearch(userTo1, userFrom1.getFirstName(), userFrom1.getLastName(), userFrom1.getDateOfBirth());
 
-    static final WebSessionTableEntry webSessionTableEntry11 = webSessionTableEntryForConnectionSearch(userFrom1);
-    static final WebSessionTableEntry webSessionTableEntry12 = webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
+    private static final WebSessionTableEntry webSessionTableEntry11 = webSessionTableEntryForConnectionSearch(userFrom1);
+    private static final WebSessionTableEntry webSessionTableEntry12 = webSessionTableEntryForConnectionSearch(userTo1, userFrom1.getWebSessionId());
 
-    static final PhoneTableEntry phoneTableEntry11 = phoneTableEntryForConnectionSearch(userFrom1);
-    static final PhoneTableEntry phoneTableEntry12 = phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
+    private static final PhoneTableEntry phoneTableEntry11 = phoneTableEntryForConnectionSearch(userFrom1);
+    private static final PhoneTableEntry phoneTableEntry12 = phoneTableEntryForConnectionSearch(userTo1, userFrom1.getPhoneNumber());
 
-    static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
-    static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
-    static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userTo91, userFrom9.getIpAddress());
+    private static final IpTableEntry ipTableEntry11 = ipTableEntryForConnectionSearch(userFrom1);
+    private static final IpTableEntry ipTableEntry12 = ipTableEntryForConnectionSearch(userTo1, userFrom1.getIpAddress());
+    private static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userTo91, userFrom9.getIpAddress());
 
-    static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
-    static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
+    private static final EmailTableEntry emailTableEntry21 = getEmailTableEntryByClient(userFrom2);
+    private static final EmailTableEntry emailTableEntry22 = getEmailTableEntryByClient(userTo2);
 
-    static final EmailTableEntry emailTableEntry31 = getEmailTableEntryByClient(userFrom3);
-    static final EmailTableEntry emailTableEntry32 = getEmailTableEntryByClient(userTo3);
+    private static final EmailTableEntry emailTableEntry31 = getEmailTableEntryByClient(userFrom3);
+    private static final EmailTableEntry emailTableEntry32 = getEmailTableEntryByClient(userTo3);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {

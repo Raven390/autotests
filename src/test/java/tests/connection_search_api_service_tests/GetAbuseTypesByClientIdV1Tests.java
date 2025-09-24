@@ -45,25 +45,25 @@ import static utils.Utils.*;
 class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
 
     //Data 1
-    static final ClientHelper userFrom1 = getRandomVantageClient();
-    static final ClientHelper userTo1_1 = getRandomVantageClient();
-    static final ClientHelper userTo1_2 = getRandomVantageClient();
-    static final ClientHelper userTo1_3 = getRandomVantageClient();
-    static final ClientHelper userPotential = getRandomVantageClient();
-    static final ClientHelper userConfirmed = getRandomVantageClient();
+    private static final ClientHelper userFrom1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_2 = getRandomVantageClient();
+    private static final ClientHelper userTo1_3 = getRandomVantageClient();
+    private static final ClientHelper userPotential = getRandomVantageClient();
+    private static final ClientHelper userConfirmed = getRandomVantageClient();
 
-    static ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1_1);
-    static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
-    static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userTo1_1, userTo1_3);
+    private static ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1_1);
+    private static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
+    private static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userTo1_1, userTo1_3);
 
     private static ClientFraudTypes fraud11;
     private static ClientFraudTypes fraud12;
 
     //Data 2
-    static final ClientHelper userFrom2 = getRandomVantageClient();
-    static final ClientHelper userTo2_1 = getRandomVantageClient();
-    static final ClientHelper userTo2_2 = getRandomVantageClient();
-    static final ClientHelper userTo2_3 = getRandomVantageClient();
+    private static final ClientHelper userFrom2 = getRandomVantageClient();
+    private static final ClientHelper userTo2_1 = getRandomVantageClient();
+    private static final ClientHelper userTo2_2 = getRandomVantageClient();
+    private static final ClientHelper userTo2_3 = getRandomVantageClient();
 
     static ConnectionTableEntry connectionTableEntry21 = getConnectionTableEntry(userFrom2, userTo2_1);
     static ConnectionTableEntry connectionTableEntry22 = getConnectionTableEntry(userFrom2, userTo2_2);
@@ -74,16 +74,16 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
     private static ClientFraudTypes fraud2_2;
 
     //Data 3
-    static final ClientHelper userFrom3 = getRandomVantageClient();
-    static final ClientHelper userTo3 = getRandomVantageClient();
-    static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
+    private static final ClientHelper userFrom3 = getRandomVantageClient();
+    private static final ClientHelper userTo3 = getRandomVantageClient();
+    private static ConnectionTableEntry connectionTableEntry3 = getConnectionTableEntry(userFrom3, userTo3, userTo3.getIpAddress());
 
     private static ClientFraudTypes fraud3;
     private static ClientFraudTypes fraudPotential;
     private static ClientFraudTypes fraudConfirmed;
 
-    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo2_1, userTo2_2, userTo2_3, userTo3, userConfirmed, userPotential));
-    static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
+    private static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo2_1, userTo2_2, userTo2_3, userTo3, userConfirmed, userPotential));
+    private static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
 
 
     @BeforeAll

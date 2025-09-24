@@ -39,39 +39,39 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 @Tag(SUITE_CONNECTION_SEARCH_SERVICE)
 class GetConnectionsByClientIdTests extends TestBaseApi {
 
-    static final ClientHelper userFrom1 = getRandomVantageClient();
-    static final ClientHelper userTo1_1 = getRandomVantageClient();
-    static final ClientHelper userTo1_2 = getRandomVantageClient();
-    static final ClientHelper userFrom2 = getRandomVantageClient();
-    static final ClientHelper userTo2_1 = getRandomVantageClient();
-    static final ClientHelper userTo2_2 = getRandomVantageClient();
-    static final ClientHelper userFrom3 = getRandomVantageClient();
-    static final ClientHelper userTo3_1 = getRandomVantageClient();
-    static final ClientHelper userTo3_2 = getRandomVantageClient();
-    static final ClientHelper userFrom4 = getRandomVantageClient();
-    static final ClientHelper userTo4_1 = getRandomVantageClient();
-    static final ClientHelper userTo4_2 = getRandomVantageClient();
-    static final ClientHelper userTo4_3 = getRandomVantageClient();
-    static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo5 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_2 = getRandomVantageClient();
+    private static final ClientHelper userFrom2 = getRandomVantageClient();
+    private static final ClientHelper userTo2_1 = getRandomVantageClient();
+    private static final ClientHelper userTo2_2 = getRandomVantageClient();
+    private static final ClientHelper userFrom3 = getRandomVantageClient();
+    private static final ClientHelper userTo3_1 = getRandomVantageClient();
+    private static final ClientHelper userTo3_2 = getRandomVantageClient();
+    private static final ClientHelper userFrom4 = getRandomVantageClient();
+    private static final ClientHelper userTo4_1 = getRandomVantageClient();
+    private static final ClientHelper userTo4_2 = getRandomVantageClient();
+    private static final ClientHelper userTo4_3 = getRandomVantageClient();
+    private static final ClientHelper userFrom5 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo5 = getRandomVantageClientAllFields();
 
-    final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
-    final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
-    final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
-    final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
+    private final GetConnectionsResponse getConnectionsResponseSuccess = getConnectionsResponseSuccess(userFrom1, userTo1_1);
+    private final GetConnectionsResponse getConnectionsLvl2ResponseSuccess = getConnectionsByClientLvl2ResponseSuccess(userTo1_1, userTo1_2);
+    private final GetConnectionsResponse[] getConnectionsResponsesForFiltration = getConnectionsByClientForFiltrationByParams(userFrom2, userTo2_1, userTo2_2);
+    private final GetConnectionsResponseError getConnectionsResponseErrorIncorrectConnectionAttributes = getConnectionsResponseErrorIncorrectConnectionAttributes();
 
-    static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
-    static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom5, userTo5, userTo5.getIpAddress());
-    static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
-    static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
+    private static ConnectionTableEntry connectionTableEntry = getConnectionTableEntry(userFrom1, userTo1_1);
+    private static ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntry(userFrom5, userTo5, userTo5.getIpAddress());
+    private static ConnectionTableEntry connectionTableEntryLvl2 = getConnectionTableEntryLvl2(userTo1_1, userTo1_2);
+    private static ConnectionTableEntry connectionTableEntryForFiltration1 = getConnectionTableEntry(userFrom2, userTo2_1);
     //static ConnectionTableEntry connectionTableEntryForFiltration2 = getConnectionTableEntryForFiltration(userTo2_1, userTo2_2);
-    static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
-    static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
-    static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
-    static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
-    static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
-    static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
-    static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
+    private static ConnectionTableEntry connectionTableEntry1And2Level1 = getConnectionTableEntry(userFrom3, userTo3_1);
+    private static ConnectionTableEntry connectionTableEntry1And2Level2 = getConnectionTableEntry(userFrom3, userTo3_2);
+    private static ConnectionTableEntry connectionTableEntry1And2Level3 = getConnectionTableEntryLvl2(userTo3_1, userTo3_2);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore1 = getConnectionTableEntry(userFrom4, userTo4_1);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore2 = getConnectionTableEntry(userFrom4, userTo4_2);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore3 = getConnectionTableEntryLvl2(userTo4_1, userTo4_3);
+    private static ConnectionTableEntry connectionTableEntrySameLevelScore4 = getConnectionTableEntry(userTo4_2, userTo4_3);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {

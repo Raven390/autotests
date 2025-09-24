@@ -33,12 +33,12 @@ import static utils.Constants.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetLexisNexisDataTests extends TestBaseApi {
 
-    static ClientHelper client = getRandomVantageClientAllFields();
-    static LnSessionParsedObject object1 = generateLexisNexisDataByClient(client);
-    static LnSessionParsedObject object2 = generateLexisNexisDataByClient(client);
+    private static ClientHelper client = getRandomVantageClientAllFields();
+    private static LnSessionParsedObject object1 = generateLexisNexisDataByClient(client);
+    private static LnSessionParsedObject object2 = generateLexisNexisDataByClient(client);
 
-    static String ucid1 = object1.getUcid();
-    static String ucid2 = object2.getUcid();
+    private static String ucid1 = object1.getUcid();
+    private static String ucid2 = object2.getUcid();
 
     @BeforeAll
     static void setupData() {

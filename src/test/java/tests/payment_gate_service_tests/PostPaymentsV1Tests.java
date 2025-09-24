@@ -16,7 +16,7 @@ import tests.TestBaseApi;
 
 import java.util.UUID;
 
-import static business_objects.api.payment_gate.payments.PaymentsRequests.postPaymentsRequest;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
 import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPostPaymentsRequestBody;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.PaymentGateHelper.getPaymentDetailsByClientId;
@@ -35,13 +35,13 @@ import static utils.Utils.buildUcid;
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class PostPaymentsV1Tests extends TestBaseApi {
 
-    public static PostPaymentsRequestBody postPaymentsRequestBody1;
-    public static PostPaymentsRequestBody postPaymentsRequestBody2;
-    public static PostPaymentsRequestBody postPaymentsRequestBody3;
-    public static PostPaymentsRequestBody postPaymentsRequestBody4;
-    public static String ucid1;
-    public static String ucid2;
-    public static String ucid4;
+    private static PostPaymentsRequestBody postPaymentsRequestBody1;
+    private static PostPaymentsRequestBody postPaymentsRequestBody2;
+    private static PostPaymentsRequestBody postPaymentsRequestBody3;
+    private static PostPaymentsRequestBody postPaymentsRequestBody4;
+    private static String ucid1;
+    private static String ucid2;
+    private static String ucid4;
 
 
     @BeforeAll
@@ -68,7 +68,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
     void postPaymentTest1() throws Exception {
 
         Allure.step("send post payment request with valid data");
-        Response response = postPaymentsRequest(postPaymentsRequestBody1);
+        Response response = postPayments(postPaymentsRequestBody1);
         assertThat(response.code(), is(201));
 
         Allure.step("Validate Data in response");
@@ -117,8 +117,8 @@ class PostPaymentsV1Tests extends TestBaseApi {
     void postPaymentTest2() throws Exception {
 
         Allure.step("send post payment request with valid data");
-        Response response = postPaymentsRequest(postPaymentsRequestBody2);
-        Response response1 = postPaymentsRequest(postPaymentsRequestBody2);
+        Response response = postPayments(postPaymentsRequestBody2);
+        Response response1 = postPayments(postPaymentsRequestBody2);
         assertThat(response.code(), is(201));
         assertThat(response1.code(), is(200));
 
@@ -176,7 +176,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
     void postPaymentTest3() throws Exception {
 
         Allure.step("send post payment request with valid data");
-        Response response = postPaymentsRequest(postPaymentsRequestBody3);
+        Response response = postPayments(postPaymentsRequestBody3);
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
@@ -191,7 +191,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
     void postPaymentTest4() throws Exception {
 
         Allure.step("send post payment request with valid data");
-        Response response = postPaymentsRequest("{asdad}", 400);
+        Response response = postPayments("{asdad}", 400);
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");

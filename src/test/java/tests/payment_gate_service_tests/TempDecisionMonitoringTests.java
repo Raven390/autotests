@@ -37,18 +37,18 @@ import static utils.Constants.CLICKHOUSE_CRM_TB_WITHDRAWAL;
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class TempDecisionMonitoringTests {
-    static ClientHelper client1;
-    static CrmTbWithdrawalObject crmTbWithdrawalObject1;
-    static PutRuleExecutionsBody putRuleExecutionsBody1;
-    static PaymentEventsObject paymentEventsObject1;
-    static PaymentDetailsObject paymentDetailsObject1;
+    private static ClientHelper client1;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject1;
+    private static PutRuleExecutionsBody putRuleExecutionsBody1;
+    private static PaymentEventsObject paymentEventsObject1;
+    private static PaymentDetailsObject paymentDetailsObject1;
 
-    static ClientHelper client2;
-    static CrmTbWithdrawalObject crmTbWithdrawalObject2;
-    static PutRuleExecutionsBody putRuleExecutionsBody2;
-    static PaymentEventsObject paymentEventsObject2;
-    static PaymentDetailsObject paymentDetailsObject2;
-    static TmpRuleDecisionsObject tmpRuleDecisionsObject2;
+    private static ClientHelper client2;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject2;
+    private static PutRuleExecutionsBody putRuleExecutionsBody2;
+    private static PaymentEventsObject paymentEventsObject2;
+    private static PaymentDetailsObject paymentDetailsObject2;
+    private static TmpRuleDecisionsObject tmpRuleDecisionsObject2;
 
     @BeforeAll
     static void setupData() throws Exception {

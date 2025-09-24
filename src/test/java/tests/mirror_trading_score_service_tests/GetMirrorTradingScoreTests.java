@@ -32,8 +32,8 @@ import static utils.Constants.*;
 @Tag(SUITE_MIRROR_TRADING_SCORE_API_TESTS)
 class GetMirrorTradingScoreTests extends TestBaseApi {
 
-    static ClientHelper client;
-    static ClientHelper client2;
+    private static ClientHelper client;
+    private static ClientHelper client2;
 
     @BeforeAll
     static void setupData() {

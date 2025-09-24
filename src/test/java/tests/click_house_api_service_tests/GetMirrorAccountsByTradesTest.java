@@ -36,8 +36,8 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     private static MirrorLoginObject data1;
     private static final ClientHelper client1 = getRandomVantageClient();
     private static final String symbol = "EURUSD";
-    static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
-    static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
+    private static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
+    private static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
 
 
     @BeforeAll

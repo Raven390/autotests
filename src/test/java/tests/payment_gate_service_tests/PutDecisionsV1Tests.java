@@ -38,26 +38,26 @@ import static utils.Constants.SUITE_PAYMENT_GATE_TESTS;
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class PutDecisionsV1Tests extends TestBaseApi {
-    static ClientHelper client1;
-    static ClientHelper client2;
-    static ClientHelper client3;
-    static ClientHelper client4;
-    static ClientHelper client5;
-    static PutDecisionsRequestBody putPaymentDecisionBody1;
-    static PutDecisionsRequestBody putPaymentDecisionBody2;
-    static PutDecisionsRequestBody putPaymentDecisionBody3;
-    static PutDecisionsRequestBody putPaymentDecisionBody4;
-    static PutDecisionsRequestBody putPaymentDecisionBody5;
-    static PaymentEventsObject paymentEventsObject1;
-    static PaymentEventsObject paymentEventsObject2;
-    static PaymentEventsObject paymentEventsObject3;
-    static PaymentEventsObject paymentEventsObject4;
-    static PaymentEventsObject paymentEventsObject5;
-    static PaymentDetailsObject paymentDetailsObject1;
-    static PaymentDetailsObject paymentDetailsObject2;
-    static PaymentDetailsObject paymentDetailsObject3;
-    static PaymentDetailsObject paymentDetailsObject4;
-    static PaymentDetailsObject paymentDetailsObject5;
+    private static ClientHelper client1;
+    private static ClientHelper client2;
+    private static ClientHelper client3;
+    private static ClientHelper client4;
+    private static ClientHelper client5;
+    private static PutDecisionsRequestBody putPaymentDecisionBody1;
+    private static PutDecisionsRequestBody putPaymentDecisionBody2;
+    private static PutDecisionsRequestBody putPaymentDecisionBody3;
+    private static PutDecisionsRequestBody putPaymentDecisionBody4;
+    private static PutDecisionsRequestBody putPaymentDecisionBody5;
+    private static PaymentEventsObject paymentEventsObject1;
+    private static PaymentEventsObject paymentEventsObject2;
+    private static PaymentEventsObject paymentEventsObject3;
+    private static PaymentEventsObject paymentEventsObject4;
+    private static PaymentEventsObject paymentEventsObject5;
+    private static PaymentDetailsObject paymentDetailsObject1;
+    private static PaymentDetailsObject paymentDetailsObject2;
+    private static PaymentDetailsObject paymentDetailsObject3;
+    private static PaymentDetailsObject paymentDetailsObject4;
+    private static PaymentDetailsObject paymentDetailsObject5;
 
 
     @BeforeAll

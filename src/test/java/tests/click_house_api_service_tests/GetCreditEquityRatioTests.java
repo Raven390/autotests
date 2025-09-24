@@ -31,10 +31,10 @@ import static utils.Constants.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetCreditEquityRatioTests extends TestBaseApi {
 
-    static final String DATE_TIME = TIME_2024_12_31_00_00_00.replace(" ", "T");
+    private static final String DATE_TIME = TIME_2024_12_31_00_00_00.replace(" ", "T");
 
-    static MtAccountObject data1;
-    static final ClientHelper client1 = getRandomVantageClient();
+    private static MtAccountObject data1;
+    private static final ClientHelper client1 = getRandomVantageClient();
 
     @BeforeAll
     static void setupData() {

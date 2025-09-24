@@ -62,102 +62,102 @@ import static utils.Utils.*;
 class GetAbuseTypesByAttributesTests extends TestBaseApi {
 
     // Users
-    static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
-    static final ClientHelper userToDocument = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromDocument = getRandomVantageClientAllFields();
+    private static final ClientHelper userToDocument = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
-    static final ClientHelper userToEmail = getRandomVantageClientAllFields();
-    static final ClientHelper userToEmail2 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromEmail = getRandomVantageClientAllFields();
+    private static final ClientHelper userToEmail = getRandomVantageClientAllFields();
+    private static final ClientHelper userToEmail2 = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromIp = getRandomVantageClientAllFields();
-    static final ClientHelper userToIp = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromIp = getRandomVantageClientAllFields();
+    private static final ClientHelper userToIp = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromIp2 = getRandomVantageClientAllFields();
-    static final ClientHelper userToIp2 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromIp2 = getRandomVantageClientAllFields();
+    private static final ClientHelper userToIp2 = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFrom3 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo31 = getRandomVantageClientAllFields();
-    static final ClientHelper userTo32 = getRandomVantageClientAllFields();
+    private static final ClientHelper userFrom3 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo31 = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo32 = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
-    static final ClientHelper userToPhone = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromPhone = getRandomVantageClientAllFields();
+    private static final ClientHelper userToPhone = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
-    static final ClientHelper userToPayout = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromPayout = getRandomVantageClientAllFields();
+    private static final ClientHelper userToPayout = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
-    static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromDeviceId = getRandomVantageClientAllFields();
+    private static final ClientHelper userToDeviceId = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
-    static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromDigitalId = getRandomVantageClientAllFields();
+    private static final ClientHelper userToDigitalId = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
-    static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromNameBirth = getRandomVantageClientAllFields();
+    private static final ClientHelper userToNameBirth = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
-    static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromSessionId = getRandomVantageClientAllFields();
+    private static final ClientHelper userToSessionId = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
-    static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromWebSessionId = getRandomVantageClientAllFields();
+    private static final ClientHelper userToWebSessionId = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
-    static final ClientHelper userToDepth = getRandomVantageClientAllFields();
-    static final ClientHelper userTo2Depth = getRandomVantageClientAllFields();
-    static final ClientHelper userTo3Depth = getRandomVantageClientAllFields();
+    private static final ClientHelper userFromDepth = getRandomVantageClientAllFields();
+    private static final ClientHelper userToDepth = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo2Depth = getRandomVantageClientAllFields();
+    private static final ClientHelper userTo3Depth = getRandomVantageClientAllFields();
 
-    static final ClientHelper userFraudConfirmed = getRandomVantageClientAllFields();
-    static final ClientHelper userFraudPotential = getRandomVantageClientAllFields();
+    private static final ClientHelper userFraudConfirmed = getRandomVantageClientAllFields();
+    private static final ClientHelper userFraudPotential = getRandomVantageClientAllFields();
 
     // Objects to insert to attributes tables
-    static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
-    static final DocumentTableEntry documentTableEntry2 = documentTableEntryForConnectionSearch(userToDocument);
+    private static final DocumentTableEntry documentTableEntry = documentTableEntryForConnectionSearch(userFromDocument);
+    private static final DocumentTableEntry documentTableEntry2 = documentTableEntryForConnectionSearch(userToDocument);
 
-    static final EmailTableEntry emailTableEntry = getEmailTableEntryByClient(userFromEmail);
-    static final EmailTableEntry emailTableEntry2 = emailTableEntryForConnectionSearch(userToEmail, userFromEmail.getEmail());
+    private static final EmailTableEntry emailTableEntry = getEmailTableEntryByClient(userFromEmail);
+    private static final EmailTableEntry emailTableEntry2 = emailTableEntryForConnectionSearch(userToEmail, userFromEmail.getEmail());
 
-    static final EmailTableEntry emailTableEntryForDepth1 = emailTableEntryForConnectionSearch(userFromDepth);
+    private static final EmailTableEntry emailTableEntryForDepth1 = emailTableEntryForConnectionSearch(userFromDepth);
 
-    static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
-    static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userToIp);
+    private static final IpTableEntry ipTableEntry = ipTableEntryForConnectionSearch(userFromIp);
+    private static final IpTableEntry ipTableEntry2 = ipTableEntryForConnectionSearch(userToIp);
 
-    static final IpTableEntry ipTableEntry3 = ipTableEntryForConnectionSearch(userFromIp2);
-    static final IpTableEntry ipTableEntry4 = ipTableEntryForConnectionSearch(userToIp2);
-    static final IpTableEntry ipTableEntry5 = ipTableEntryForConnectionSearch(userTo31);
-    static final IpTableEntry ipTableEntry6 = ipTableEntryForConnectionSearch(userToEmail2);
+    private static final IpTableEntry ipTableEntry3 = ipTableEntryForConnectionSearch(userFromIp2);
+    private static final IpTableEntry ipTableEntry4 = ipTableEntryForConnectionSearch(userToIp2);
+    private static final IpTableEntry ipTableEntry5 = ipTableEntryForConnectionSearch(userTo31);
+    private static final IpTableEntry ipTableEntry6 = ipTableEntryForConnectionSearch(userToEmail2);
 
-    static final PhoneTableEntry phoneTableEntryStatusConfirmed = phoneTableEntryForConnectionSearch(userFraudConfirmed);
-    static final PhoneTableEntry phoneTableEntryStatusPotential = phoneTableEntryForConnectionSearch(userFraudPotential);
+    private static final PhoneTableEntry phoneTableEntryStatusConfirmed = phoneTableEntryForConnectionSearch(userFraudConfirmed);
+    private static final PhoneTableEntry phoneTableEntryStatusPotential = phoneTableEntryForConnectionSearch(userFraudPotential);
 
-    static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
-    static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
+    private static final PhoneTableEntry phoneTableEntry = phoneTableEntryForConnectionSearch(userFromPhone);
+    private static final PhoneTableEntry phoneTableEntry2 = phoneTableEntryForConnectionSearch(userToPhone);
 
-    static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
-    static final PayoutTableEntry payoutTableEntry2 = payoutTableEntryForConnectionSearch(userToPayout);
+    private static final PayoutTableEntry payoutTableEntry = payoutTableEntryForConnectionSearch(userFromPayout);
+    private static final PayoutTableEntry payoutTableEntry2 = payoutTableEntryForConnectionSearch(userToPayout);
 
-    static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
-    static final DeviceIdTableEntry deviceIdTableEntry2 = deviceIdTableEntryForConnectionSearch(userToDeviceId, userFromDeviceId.getDeviceId());
-    static final DeviceIdTableEntry deviceIdTableEntry3 = deviceIdTableEntryForConnectionSearch(userToEmail);
+    private static final DeviceIdTableEntry deviceIdTableEntry = deviceIdTableEntryForConnectionSearch(userFromDeviceId);
+    private static final DeviceIdTableEntry deviceIdTableEntry2 = deviceIdTableEntryForConnectionSearch(userToDeviceId, userFromDeviceId.getDeviceId());
+    private static final DeviceIdTableEntry deviceIdTableEntry3 = deviceIdTableEntryForConnectionSearch(userToEmail);
 
-    static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
-    static final DigitalIdTableEntry digitalIdTableEntry2 = digitalIdTableEntryForConnectionSearch(userToDigitalId, userFromDigitalId.getDigitalId());
+    private static final DigitalIdTableEntry digitalIdTableEntry = digitalIdTableEntryForConnectionSearch(userFromDigitalId);
+    private static final DigitalIdTableEntry digitalIdTableEntry2 = digitalIdTableEntryForConnectionSearch(userToDigitalId, userFromDigitalId.getDigitalId());
 
-    static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
-    static final NameBirthTableEntry nameBirthTableEntry2 = nameBirthTableEntryForConnectionSearch(userToNameBirth, userFromNameBirth.getFirstName(), userFromNameBirth.getLastName(), userFromNameBirth.getDateOfBirth());
+    private static final NameBirthTableEntry nameBirthTableEntry = nameBirthTableEntryForConnectionSearch(userFromNameBirth);
+    private static final NameBirthTableEntry nameBirthTableEntry2 = nameBirthTableEntryForConnectionSearch(userToNameBirth, userFromNameBirth.getFirstName(), userFromNameBirth.getLastName(), userFromNameBirth.getDateOfBirth());
 
-    static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
-    static final SessionIdTableEntry sessionIdTableEntry2 = sessionIdTableEntryForConnectionSearch(userToSessionId, userFromSessionId.getSessionId());
+    private static final SessionIdTableEntry sessionIdTableEntry = sessionIdTableEntryForConnectionSearch(userFromSessionId);
+    private static final SessionIdTableEntry sessionIdTableEntry2 = sessionIdTableEntryForConnectionSearch(userToSessionId, userFromSessionId.getSessionId());
 
-    static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
-    static final WebSessionTableEntry webSessionTableEntry2 = webSessionTableEntryForConnectionSearch(userToWebSessionId, userFromWebSessionId.getWebSessionId());
+    private static final WebSessionTableEntry webSessionTableEntry = webSessionTableEntryForConnectionSearch(userFromWebSessionId);
+    private static final WebSessionTableEntry webSessionTableEntry2 = webSessionTableEntryForConnectionSearch(userToWebSessionId, userFromWebSessionId.getWebSessionId());
 
     // Objects to insert to connections table
-    static final ConnectionTableEntry connectionTableEntryByEmail1 = getConnectionTableEntry(userFromDepth, userToDepth);
-    static final ConnectionTableEntry connectionTableEntryByEmail2 = getConnectionTableEntry(userToDepth, userTo2Depth);
-    static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
-    static final ConnectionTableEntry connectionTableEntryByEmail4 = getConnectionTableEntry(userFromDepth, userToEmail2);
-    static final ConnectionTableEntry connectionTableEntryByIp1 = getConnectionTableEntry(userFromIp2, userToIp2);
-    static final ConnectionTableEntry connectionTableEntryByIp2 = getConnectionTableEntry(userFrom3, userTo31);
-    static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFrom3, userTo32);
+    private static final ConnectionTableEntry connectionTableEntryByEmail1 = getConnectionTableEntry(userFromDepth, userToDepth);
+    private static final ConnectionTableEntry connectionTableEntryByEmail2 = getConnectionTableEntry(userToDepth, userTo2Depth);
+    private static final ConnectionTableEntry connectionTableEntryByEmail3 = getConnectionTableEntry(userTo2Depth, userTo3Depth);
+    private static final ConnectionTableEntry connectionTableEntryByEmail4 = getConnectionTableEntry(userFromDepth, userToEmail2);
+    private static final ConnectionTableEntry connectionTableEntryByIp1 = getConnectionTableEntry(userFromIp2, userToIp2);
+    private static final ConnectionTableEntry connectionTableEntryByIp2 = getConnectionTableEntry(userFrom3, userTo31);
+    private static final ConnectionTableEntry connectionTableEntryByIp3 = getConnectionTableEntry(userFrom3, userTo32);
 
     // Frauds
     private static final ClientFraudTypes fraudEmailTo = new ClientFraudTypes(userToEmail.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
@@ -182,7 +182,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
     private static final ClientFraudTypes fraudPotential = new ClientFraudTypes(userFraudPotential.getUcid(), HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
 
     static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userFromDocument, userToDocument, userToEmail, userFromDepth, userTo2Depth, userTo3Depth, userToEmail2, userToIp, userToIp2, userToPhone, userFromPhone, userToPayout, userToDeviceId, userToDigitalId, userToNameBirth, userToSessionId, userToWebSessionId, userTo31, userTo32, userFraudConfirmed, userFraudPotential));
-    static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
+    private static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
 
 
     @BeforeAll

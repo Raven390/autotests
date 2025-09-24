@@ -38,23 +38,23 @@ import static utils.Constants.*;
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class GetRuleExecutionsV1Tests extends TestBaseApi {
-    static ClientHelper client1;
-    static ClientHelper client2;
-    static ClientHelper client3;
-    static ClientHelper client4;
-    static PostRuleExecutionsBody postRuleExecutionsBody1;
-    static PostRuleExecutionsBody postRuleExecutionsBody2;
-    static PostRuleExecutionsBody postRuleExecutionsBody3;
-    static PostRuleExecutionsBody postRuleExecutionsBody4;
-    static PaymentEventsObject paymentEventsObject1;
-    static PaymentEventsObject paymentEventsObject2;
-    static PaymentEventsObject paymentEventsObject3;
-    static PaymentEventsObject paymentEventsObject4;
-    static PaymentDetailsObject paymentDetailsObject1;
-    static PaymentDetailsObject paymentDetailsObject2;
-    static PaymentDetailsObject paymentDetailsObject3;
-    static PaymentDetailsObject paymentDetailsObject4;
-    static PaymentRuleExecutionsObject paymentRuleExecutionsObject1;
+    private static ClientHelper client1;
+    private static ClientHelper client2;
+    private static ClientHelper client3;
+    private static ClientHelper client4;
+    private static PostRuleExecutionsBody postRuleExecutionsBody1;
+    private static PostRuleExecutionsBody postRuleExecutionsBody2;
+    private static PostRuleExecutionsBody postRuleExecutionsBody3;
+    private static PostRuleExecutionsBody postRuleExecutionsBody4;
+    private static PaymentEventsObject paymentEventsObject1;
+    private static PaymentEventsObject paymentEventsObject2;
+    private static PaymentEventsObject paymentEventsObject3;
+    private static PaymentEventsObject paymentEventsObject4;
+    private static PaymentDetailsObject paymentDetailsObject1;
+    private static PaymentDetailsObject paymentDetailsObject2;
+    private static PaymentDetailsObject paymentDetailsObject3;
+    private static PaymentDetailsObject paymentDetailsObject4;
+    private static PaymentRuleExecutionsObject paymentRuleExecutionsObject1;
 
     @BeforeAll
     static void setupData() {

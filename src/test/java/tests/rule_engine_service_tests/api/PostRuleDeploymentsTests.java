@@ -27,8 +27,8 @@ import static utils.Constants.*;
 @Tag(SUITE_RULE_ENGINE_API_TESTS)
 class PostRuleDeploymentsTests extends TestBaseApi {
 
-    static String processId = "Process" + Utils.getRandomIntPositive();
-    static String xmlData = EMPTY_RULE_XML.replace("process_id", processId);
+    private static String processId = "Process" + Utils.getRandomIntPositive();
+    private static String xmlData = EMPTY_RULE_XML.replace("process_id", processId);
 
     @BeforeAll
     static void setupData() {
