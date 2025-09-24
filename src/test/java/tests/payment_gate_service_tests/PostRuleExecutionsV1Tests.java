@@ -39,45 +39,35 @@ import static utils.Constants.SUITE_PAYMENT_GATE_TESTS;
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class PostRuleExecutionsV1Tests extends TestBaseApi {
 
-    static ClientHelper client1;
-    static ClientHelper client2;
-    static ClientHelper client3;
-    static ClientHelper client4;
-    static PostRuleExecutionsBody postRuleExecutionsBody1;
-    static PostRuleExecutionsBody postRuleExecutionsBody2;
-    static PostRuleExecutionsBody postRuleExecutionsBody3;
-    static PostRuleExecutionsBody postRuleExecutionsBody4;
-    static PaymentEventsObject paymentEventsObject1;
-    static PaymentEventsObject paymentEventsObject2;
-    static PaymentEventsObject paymentEventsObject3;
-    static PaymentEventsObject paymentEventsObject4;
-    static PaymentDetailsObject paymentDetailsObject1;
-    static PaymentDetailsObject paymentDetailsObject2;
-    static PaymentDetailsObject paymentDetailsObject3;
-    static PaymentDetailsObject paymentDetailsObject4;
+    private static ClientHelper client1;
+    private static ClientHelper client2;
+    private static ClientHelper client3;
+    private static ClientHelper client4;
+    private static PostRuleExecutionsBody postRuleExecutionsBody1;
+    private static PostRuleExecutionsBody postRuleExecutionsBody2;
+    private static PostRuleExecutionsBody postRuleExecutionsBody3;
+    private static PostRuleExecutionsBody postRuleExecutionsBody4;
 
 
     @BeforeAll
     static void setupData() {
 
         client1 = getRandomVantageClientAllFields();
-        paymentEventsObject1 = generatePaymentEventsObject(client1);
-        paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
+        PaymentEventsObject paymentEventsObject1 = generatePaymentEventsObject(client1);
+        PaymentDetailsObject paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         postRuleExecutionsBody1 = generatePostRuleExecutionsBody(paymentEventsObject1);
 
         client2 = getRandomVantageClientAllFields();
-        paymentEventsObject2 = generatePaymentEventsObject(client2);
-        paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
+        PaymentEventsObject paymentEventsObject2 = generatePaymentEventsObject(client2);
         postRuleExecutionsBody2 = generatePostRuleExecutionsBody(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
-        paymentEventsObject3 = generatePaymentEventsObject(client3);
-        paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
+        PaymentEventsObject paymentEventsObject3 = generatePaymentEventsObject(client3);
+        PaymentDetailsObject paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
         postRuleExecutionsBody3 = generatePostRuleExecutionsBody(paymentEventsObject3);
 
         client4 = getRandomVantageClientAllFields();
-        paymentEventsObject4 = generatePaymentEventsObject(client4);
-        paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
+        PaymentEventsObject paymentEventsObject4 = generatePaymentEventsObject(client4);
         postRuleExecutionsBody4 = generatePostRuleExecutionsBody(paymentEventsObject4, true);
 
         insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject3));

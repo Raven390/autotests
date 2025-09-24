@@ -37,11 +37,11 @@ class GetBalanceOrdersTests extends TestBaseApi {
     private static MtBalanceOrdersObject data1;
     private static MtBalanceOrdersObject data2;
     private static final ClientHelper client1 = getRandomVantageClient();
-    static final String dateTo = formatTimeToUtc(getNextYearTimestampDbFormat());
-    static final String dateFrom = formatTimeToUtc(getPreviousYearTimestampDbFormat());
-    static String tradeDate1 = "2024-12-10 17:59:14";
-    static String tradeDate2 = "2024-12-10 17:59:15";
-    static String comment = "Administration Fee Automation test";
+    private static final String dateTo = formatTimeToUtc(getNextYearTimestampDbFormat());
+    private static final String dateFrom = formatTimeToUtc(getPreviousYearTimestampDbFormat());
+    private static String tradeDate1 = "2024-12-10 17:59:14";
+    private static String tradeDate2 = "2024-12-10 17:59:15";
+    private static String comment = "Administration Fee Automation test";
 
     @BeforeAll
     static void setupData() {

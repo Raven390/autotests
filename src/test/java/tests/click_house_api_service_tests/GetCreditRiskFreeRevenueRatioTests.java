@@ -39,9 +39,9 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
 
     private static final String date = formatTimeToUtc("2026-12-31 00:00:00");
 
-    static AggrCreditRiskFreeRevenueRatioObject data1;
-    static S3FactLoginMetricsObject s3Metrics;
-    static MtTbCreditsObject credit;
+    private static AggrCreditRiskFreeRevenueRatioObject data1;
+    private static S3FactLoginMetricsObject s3Metrics;
+    private static MtTbCreditsObject credit;
 
     static final ClientHelper client1 = getRandomVantageClient();
 

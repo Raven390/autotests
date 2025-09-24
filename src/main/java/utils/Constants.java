@@ -94,6 +94,7 @@ public class Constants {
     public static final String STORY_PAYMENT_GATE_POST_DECISIONS = "Post decisions request";
     public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";
     public static final String STORY_PAYMENT_GATE_POST_PAYMENTS = "Post payments request";
+    public static final String STORY_PAYMENT_GATE_PUT_PAYMENTS = "PUT payments request";
     public static final String STORY_PAYMENT_GATE_POST_RULE_EXECUTIONS = "Post rule executions request";
     public static final String STORY_PAYMENT_GATE_GET_RULE_EXECUTIONS = "Get rule executions request";
     public static final String STORY_PAYMENT_GATE_PUT_RULE_EXECUTIONS = "Put rule executions request";

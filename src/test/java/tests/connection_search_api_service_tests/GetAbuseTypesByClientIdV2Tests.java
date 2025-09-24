@@ -44,24 +44,24 @@ import static utils.Utils.*;
 class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
 
     //Data 1
-    static final ClientHelper userFrom1 = getRandomVantageClient();
-    static final ClientHelper userTo1_1 = getRandomVantageClient();
-    static final ClientHelper userTo1_2 = getRandomVantageClient();
-    static final ClientHelper userTo1_3 = getRandomVantageClient();
-    static final ClientHelper userTo1_4 = getRandomVantageClient();
+    private static final ClientHelper userFrom1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_1 = getRandomVantageClient();
+    private static final ClientHelper userTo1_2 = getRandomVantageClient();
+    private static final ClientHelper userTo1_3 = getRandomVantageClient();
+    private static final ClientHelper userTo1_4 = getRandomVantageClient();
 
-    static ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1_1);
-    static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
-    static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userFrom1, userTo1_3);
-    static ConnectionTableEntry connectionTableEntry14 = getConnectionTableEntry(userFrom1, userTo1_4);
+    private static ConnectionTableEntry connectionTableEntry11 = getConnectionTableEntry(userFrom1, userTo1_1);
+    private static ConnectionTableEntry connectionTableEntry12 = getConnectionTableEntry(userFrom1, userTo1_2);
+    private static ConnectionTableEntry connectionTableEntry13 = getConnectionTableEntry(userFrom1, userTo1_3);
+    private static ConnectionTableEntry connectionTableEntry14 = getConnectionTableEntry(userFrom1, userTo1_4);
 
-    static ClientFraudTypes fraud11;
-    static ClientFraudTypes fraud12;
-    static ClientFraudTypes fraud13;
-    static ClientFraudTypes fraud14;
+    private static ClientFraudTypes fraud11;
+    private static ClientFraudTypes fraud12;
+    private static ClientFraudTypes fraud13;
+    private static ClientFraudTypes fraud14;
 
-    static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo1_4));
-    static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
+    private static List<ClientHelper> fraudsters = new ArrayList<>(List.of(userTo1_1, userTo1_2, userTo1_3, userTo1_4));
+    private static final List<CrmTbUserObject> clientsDB = generateUserByClients(fraudsters);
 
     @BeforeAll
     static void setupConnectionTableEntry() throws Exception {

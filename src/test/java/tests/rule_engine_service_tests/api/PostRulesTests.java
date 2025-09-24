@@ -29,7 +29,7 @@ import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
 @Tag(SUITE_RULE_ENGINE_API_TESTS)
 class PostRulesTests extends TestBaseApi {
 
-    static RuleObject rule;
+    private static RuleObject rule;
 
     @BeforeAll
     static void setupData() {

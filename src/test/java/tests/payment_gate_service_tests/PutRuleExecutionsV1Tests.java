@@ -40,23 +40,20 @@ import static utils.Constants.*;
 @Tag(SUITE_PAYMENT_GATE_TESTS)
 class PutRuleExecutionsV1Tests extends TestBaseApi {
 
-    static ClientHelper client1;
-    static ClientHelper client2;
-    static ClientHelper client3;
-    static ClientHelper client4;
-    static PutRuleExecutionsBody putRuleExecutionsBody1;
-    static PutRuleExecutionsBody putRuleExecutionsBody2;
-    static PutRuleExecutionsBody putRuleExecutionsBody3;
-    static PutRuleExecutionsBody putRuleExecutionsBody4;
-    static PaymentEventsObject paymentEventsObject1;
-    static PaymentEventsObject paymentEventsObject2;
-    static PaymentEventsObject paymentEventsObject3;
-    static PaymentEventsObject paymentEventsObject4;
-    static PaymentDetailsObject paymentDetailsObject1;
-    static PaymentDetailsObject paymentDetailsObject2;
-    static PaymentDetailsObject paymentDetailsObject3;
-    static PaymentDetailsObject paymentDetailsObject4;
-
+    private static ClientHelper client1;
+    private static ClientHelper client2;
+    private static ClientHelper client3;
+    private static ClientHelper client4;
+    private static PutRuleExecutionsBody putRuleExecutionsBody1;
+    private static PutRuleExecutionsBody putRuleExecutionsBody2;
+    private static PutRuleExecutionsBody putRuleExecutionsBody3;
+    private static PutRuleExecutionsBody putRuleExecutionsBody4;
+    private static PaymentEventsObject paymentEventsObject1;
+    private static PaymentEventsObject paymentEventsObject2;
+    private static PaymentEventsObject paymentEventsObject3;
+    private static PaymentEventsObject paymentEventsObject4;
+    private static PaymentDetailsObject paymentDetailsObject1;
+    private static PaymentDetailsObject paymentDetailsObject3;
 
     @BeforeAll
     static void setupData() {
@@ -68,7 +65,6 @@ class PutRuleExecutionsV1Tests extends TestBaseApi {
 
         client2 = getRandomVantageClientAllFields();
         paymentEventsObject2 = generatePaymentEventsObject(client2);
-        paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
         putRuleExecutionsBody2 = generatePutRuleExecutionsBody(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
@@ -78,7 +74,6 @@ class PutRuleExecutionsV1Tests extends TestBaseApi {
 
         client4 = getRandomVantageClientAllFields();
         paymentEventsObject4 = generatePaymentEventsObject(client4);
-        paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
         putRuleExecutionsBody4 = generatePutRuleExecutionsBody(paymentEventsObject4, true);
 
         insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject3));

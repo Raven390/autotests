@@ -54,7 +54,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     //Client 3 data
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
 
-    static final String dateTo = getCurrentTimestampDbFormat();
+    private static final String dateTo = getCurrentTimestampDbFormat();
 
     @BeforeAll
     static void setupData() {

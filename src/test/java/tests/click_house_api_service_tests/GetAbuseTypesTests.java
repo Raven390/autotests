@@ -38,8 +38,8 @@ class GetAbuseTypesTests extends TestBaseApi {
     private static ClientFraudTypes fraud1;
     private static ClientFraudTypes fraud2;
     private static ClientFraudTypes fraud3;
-    static ClientHelper client = getRandomVantageClient();
-    static ClientHelper client2 = getRandomVantageClient();
+    private static ClientHelper client = getRandomVantageClient();
+    private static ClientHelper client2 = getRandomVantageClient();
 
     @BeforeAll
     static void setupData() throws IOException, InterruptedException {

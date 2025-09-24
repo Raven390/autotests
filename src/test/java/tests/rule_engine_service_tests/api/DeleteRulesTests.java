@@ -29,8 +29,8 @@ import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
 @Tag(SUITE_RULE_ENGINE_API_TESTS)
 class DeleteRulesTests extends TestBaseApi {
 
-    static RuleDbObjectPgArray ruleDbPgArray;
-    static RuleObject rule;
+    private static RuleDbObjectPgArray ruleDbPgArray;
+    private static RuleObject rule;
 
     @BeforeAll
     static void setupData() throws Exception {

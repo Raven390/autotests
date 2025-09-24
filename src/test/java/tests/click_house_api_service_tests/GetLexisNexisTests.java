@@ -29,15 +29,15 @@ import static utils.Constants.*;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetLexisNexisTests extends TestBaseApi {
 
-    static String eventTypeRegistration = "registration";
-    static ClientHelper client = getRandomVantageClientAllFields();
-    static ClientHelper client2 = getRandomVantageClient();
-    static ClientHelper client3 = getRandomVantageClient();
-    static ClientHelper client4 = getRandomVantageClient();
-    static LnSessionParsedObject event = generateLexisNexisDataByClient(client);
-    static LnSessionParsedObject event2 = generateLexisNexisDataByClient(client2);
-    static LnSessionParsedObject event3 = generateLexisNexisDataByClient(client3);
-    static LnSessionParsedObject event4 = generateLexisNexisDataByClient(client4);
+    private static String eventTypeRegistration = "registration";
+    private static ClientHelper client = getRandomVantageClientAllFields();
+    private static ClientHelper client2 = getRandomVantageClient();
+    private static ClientHelper client3 = getRandomVantageClient();
+    private static ClientHelper client4 = getRandomVantageClient();
+    private static LnSessionParsedObject event = generateLexisNexisDataByClient(client);
+    private static LnSessionParsedObject event2 = generateLexisNexisDataByClient(client2);
+    private static LnSessionParsedObject event3 = generateLexisNexisDataByClient(client3);
+    private static LnSessionParsedObject event4 = generateLexisNexisDataByClient(client4);
 
     @BeforeAll
     static void setupData() {

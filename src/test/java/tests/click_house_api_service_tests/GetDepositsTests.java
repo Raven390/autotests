@@ -36,7 +36,7 @@ class GetDepositsTests extends TestBaseApi {
 
     private static CrmTbDepositObject deposit1;
     private static CrmTbDepositObject deposit2;
-    static ClientHelper client;
+    private static ClientHelper client;
 
     @BeforeAll
     static void setupDeposits() {

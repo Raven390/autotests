@@ -22,7 +22,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 class MarketManipulationRuleTests extends TestBaseRule {
-    static Map<String, DataHelper> dbDataMap = new HashMap<>();
+
+    private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
     static void setupData() throws IOException {

@@ -2,6 +2,7 @@ package business_objects.api.payment_gate.payments;
 
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static utils.Utils.*;
 
@@ -55,6 +56,15 @@ public class PaymentsRequestBodyFactory {
             throw new RuntimeException("Failed to construct Card for PostPaymentsRequestBody", e);
         }
 
+        return body;
+    }
+
+    public static PutPaymentsRequestBody createPutPaymentsRequestBody(UUID paymentId, Integer decisionId) {
+        PutPaymentsRequestBody body = new PutPaymentsRequestBody();
+
+        // Map fields from the provided issue description JSON to the request body via setters
+        body.setPaymentId(paymentId);
+        body.setDecisionId(decisionId);
         return body;
     }
 
