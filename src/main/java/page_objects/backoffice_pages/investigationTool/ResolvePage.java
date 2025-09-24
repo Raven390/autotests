@@ -166,6 +166,16 @@ public class ResolvePage extends AbstractPage {
         }
     }
 
+    @Step("Get Withdrawal list")
+    public List<String> getWithdrawalList() {
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < withdrawalList.count(); i++) {
+            list.add(withdrawalList.nth(i).textContent());
+        }
+        return list;
+    }
+
     @Step("Open resolve form in suspicious client")
     public void openResolveSuspicious() {
         isPageLoaded();
@@ -192,6 +202,18 @@ public class ResolvePage extends AbstractPage {
         commentInput.fill("autotest to withdrawals");
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("approve all withdrawals")
+    public void clickWithdrawalApprove() {
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        approveAllwithdrawalsButton.click();
+    }
+
+    @Step("reject all withdrawals")
+    public void clickWithdrawalReject() {
+        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        rejectAllwithdrawalsButton.click();
     }
 
     @Step("Resolve and approve all withdrawals")
