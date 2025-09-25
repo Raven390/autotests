@@ -49,7 +49,7 @@ public class AssignmentTest extends TestBaseWeb {
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
         investigationPage.verifyClientCardWithClientIdVisible(String.valueOf(crmTbUser.userId));
-        List<Client> clientList = getObjectsFromDB(DbName.BACKOFFICE, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid), Client.class);
+        List<Client> clientList = getObjectsFromDB(DbName.POSTGRES, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid), Client.class);
         assertThat("Assert that client is assigned to current user in db table", clientList.getFirst().assignedUserId, equalTo(autotestUserOne().getId()));
     }
 

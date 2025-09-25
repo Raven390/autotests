@@ -348,58 +348,14 @@ public class DbHelper {
     }
 
     private static Connection createConnection(DbName dbName) throws SQLException {
-        if (dbName == DbName.MITIGATION_POSTGRES) {
+        if (dbName == DbName.POSTGRES) {
             return createPostgresConnection();
-        } else if (dbName == DbName.POSTGRES) {
-            return createPostgresConnection();
-        } else if (dbName == DbName.AUDIT) {
-            return createPostgresConnectionAudit();
-        } else if (dbName == DbName.BACKOFFICE) {
-            return createPostgresConnectionBO();
-        } else if (dbName == DbName.RULE_ENGINE) {
-            return createPostgresConnectionRuleEngine();
-        } else if (dbName == DbName.PAYMENT_GATE) {
-            return createPostgresConnectionPaymentGate();
         } else {
             return DriverManager.getConnection(CLICKHOUSE_HOST, CLICKHOUSE_USER, CLICKHOUSE_PASSWORD);
         }
     }
 
-    public static Connection createPostgresConnectionRuleEngine() throws SQLException {
-        String host;
-        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
-            host = POSTGRES_DB_HOST;
-        } else {
-            host = "localhost";
-        }
-        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, MITIGATION_DB_NAME);
-        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
-
-        Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", RULE_ENGINE_DB_USER);
-        connectionProps.setProperty("password", RULE_ENGINE_DB_PASSWORD);
-
-        return DriverManager.getConnection(jdbcUrl, connectionProps);
-    }
-
-    private static Connection createPostgresConnectionPaymentGate() throws SQLException {
-        String host;
-        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
-            host = POSTGRES_DB_HOST;
-        } else {
-            host = "localhost";
-        }
-        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, POSTGRES_DB_PORT, POSTGRES_DB_NAME);
-        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
-
-        Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", PAYMENT_GATE_DB_USER);
-        connectionProps.setProperty("password", PAYMENT_GATE_DB_PASSWORD);
-
-        return DriverManager.getConnection(jdbcUrl, connectionProps);
-    }
-
-    private static Connection createPostgresConnection() throws SQLException {
+    public static Connection createPostgresConnection() throws SQLException {
         String host;
         if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
             host = POSTGRES_DB_HOST;
@@ -416,51 +372,18 @@ public class DbHelper {
         return DriverManager.getConnection(jdbcUrl, connectionProps);
     }
 
-    private static Connection createPostgresConnectionAudit() throws SQLException {
-        String host;
-        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
-            host = POSTGRES_DB_HOST;
-        } else {
-            host = "localhost";
-        }
-        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, AUDIT_DB_NAME);
-        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
-        Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", AUDIT_DB_USER);
-        connectionProps.setProperty("password", AUDIT_DB_PASSWORD);
-
-        return DriverManager.getConnection(jdbcUrl, connectionProps);
-    }
-
-    private static Connection createPostgresConnectionBO() throws SQLException {
-        String host;
-        if (POSTGRES_DB_HOST != null && !POSTGRES_DB_HOST.isBlank()) {
-            host = POSTGRES_DB_HOST;
-        } else {
-            host = "localhost";
-        }
-        String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, MITIGATION_DB_PORT, BACKOFFICE_DB_NAME);
-        System.out.println("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
-
-        Properties connectionProps = new Properties();
-        connectionProps.setProperty("user", BACKOFFICE_BO_DB_USER);
-        connectionProps.setProperty("password", BACKOFFICE_DB_PASSWORD);
-
-        return DriverManager.getConnection(jdbcUrl, connectionProps);
-    }
-
     public static void startSshTunnel() {
         if (sshTunnelProcess != null && sshTunnelProcess.isAlive()) {
             return; // Tunnel is already running
         }
 
         if (!"GITLAB_CI".equals(System.getenv("RUNNER"))) {
-            String sshCommand = String.join("", "ssh -i ", MITIGATION_DB_SSH_PRIVATE_KEY, " -L ", MITIGATION_DB_PORT, ":", MITIGATION_DB_HOST, ":", MITIGATION_DB_PORT, " ", MITIGATION_DB_SSH_USER, "@", MITIGATION_DB_SSH_HOST
+            String sshCommand = String.join("", "ssh -i ", POSTGRES_DB_SSH_PRIVATE_KEY, " -L ", POSTGRES_DB_PORT, ":", POSTGRES_DB_HOST, ":", POSTGRES_DB_PORT, " ", POSTGRES_DB_SSH_USER, "@", POSTGRES_DB_SSH_HOST
             );
             System.out.println(sshCommand);
 
             try {
-                new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + MITIGATION_DB_SSH_PRIVATE_KEY).start();
+                new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY).start();
                 Thread.sleep(500);
                 sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand).start();
                 Thread.sleep(2000); // Wait for the tunnel to establish

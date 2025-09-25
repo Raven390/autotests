@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbName.CLICKHOUSE;
-import static helpers.database.DbName.RULE_ENGINE;
+import static helpers.database.DbName.POSTGRES;
 import static utils.Constants.*;
 
 public class CleanTableHelper {
@@ -139,48 +139,48 @@ public class CleanTableHelper {
 
     @Step("Clean rule table by rule id")
     public static void cleanRuleTableByRuleId(String... values) throws SQLException {
-        deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, "id", List.of(Arrays.toString(values)));
+        deleteObjectsFromDb(POSTGRES, RULE_ENGINE_RULE_TABLE, "id", List.of(Arrays.toString(values)));
     }
 
     @Step("Clean rule_deployment table by uuid")
     public static void cleanRuleDeploymentTableByUuId(String... values) throws SQLException {
-        deleteObjectsFromDb(RULE_ENGINE, RULE_ENGINE_RULE_DEPLOYMENT_TABLE, "process_id", List.of(Arrays.toString(values)));
+        deleteObjectsFromDb(POSTGRES, RULE_ENGINE_RULE_DEPLOYMENT_TABLE, "process_id", List.of(Arrays.toString(values)));
     }
 
     // Mitigation db
 
     @Step("Clean users general restriction history for ucid '{ucid}'")
     public static void cleanUserRestrictionGeneral(String ucid) throws Exception {
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format(WHERE_STATEMENT_BY_UCID, ucid), ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format(WHERE_STATEMENT_BY_UCID, ucid), ClientGeneralRestriction.class);
         if (!restrictionList.isEmpty()) {
             List<String> restrictionIdList = restrictionList.stream().map(restriction -> restriction.getId().toString()).toList();
             String inClause = "IN (" + restrictionIdList.stream().map(id -> "'" + id + "'").collect(Collectors.joining(", ")) + ")";
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id " + inClause);
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id " + inClause);
             Thread.sleep(100);
         }
     }
 
     @Step("Clean users trading restriction history for ucid '{ucid}'")
     public static void cleanUserRestrictionTrading(String ucid) throws Exception {
-        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, String.format(WHERE_STATEMENT_BY_UCID, ucid), ClientTradingRestriction.class);
+        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, String.format(WHERE_STATEMENT_BY_UCID, ucid), ClientTradingRestriction.class);
         if (!restrictionList.isEmpty()) {
             List<String> restrictionIdList = restrictionList.stream().map(restriction -> restriction.getId().toString()).toList();
             String inClause = "IN (" + restrictionIdList.stream().map(id -> "'" + id + "'").collect(Collectors.joining(", ")) + ")";
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_REQUEST_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_RESPONSE_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
             Thread.sleep(100);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "id " + inClause);
+            deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "id " + inClause);
             Thread.sleep(100);
         }
     }
@@ -189,7 +189,7 @@ public class CleanTableHelper {
 
     @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.AUDIT, "event", String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        deleteEntryFromDb(DbName.POSTGRES, "event", String.format(WHERE_STATEMENT_BY_UCID, ucid));
         Thread.sleep(100);
     }
 
@@ -207,18 +207,18 @@ public class CleanTableHelper {
     @Step("Clean payment data (details then events) by ucid '{ucid}' and client_id '{clientId}'")
     public static void cleanPaymentGateData(String ucid, Integer clientId) throws Exception {
         // Delete child records first to avoid FK violations
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, "payment_id IN (SELECT payment_id FROM " + PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE + " WHERE ucid = '" + ucid + "')");
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, "client_id = '" + clientId + "'");
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, "payment_id IN (SELECT payment_id FROM " + PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE + " WHERE ucid = '" + ucid + "')");
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, "client_id = '" + clientId + "'");
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
     }
 
     @Step("Clean payment data (details then events) by ucid '{ucid}' and client_id '{clientId}'")
     public static void cleanPaymentGateData(String ucid, Integer clientId, String paymentId) throws Exception {
         // Delete child records first to avoid FK violations
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId));
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", clientId));
-        deleteEntryFromDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", clientId));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
     }
 }

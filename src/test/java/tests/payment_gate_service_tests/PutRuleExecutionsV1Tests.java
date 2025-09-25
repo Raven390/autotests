@@ -76,8 +76,8 @@ class PutRuleExecutionsV1Tests extends TestBaseApi {
         paymentEventsObject4 = generatePaymentEventsObject(client4);
         putRuleExecutionsBody4 = generatePutRuleExecutionsBody(paymentEventsObject4, true);
 
-        insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject3));
-        insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject3));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject3));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject3));
     }
 
     @AfterAll

@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import helpers.data.enums.Restriction;
-import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
@@ -27,6 +26,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.p
 import static com.microsoft.playwright.options.WaitForSelectorState.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
+import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.Matchers.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -238,16 +238,16 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users restriction history")
     public static void cleanUserRestriction(String ucid) throws Exception {
         Allure.step("Clean user restriction history of client " + ucid);
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "'", ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "'", ClientGeneralRestriction.class);
         for (ClientGeneralRestriction i : restrictionList) {
             String idString = i.getId().toString();
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
+            deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
+            deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
+            deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
             Thread.sleep(200);
-            deleteEntryFromDb(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
+            deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
             Thread.sleep(200);
         }
     }
@@ -255,7 +255,7 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionGeneral(String ucid, int restrictionId, String expectedStatus)
             throws Exception {
         Allure.step("check user have general restriction in Mitigation DataBase");
-        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientGeneralRestriction.class);
+        List<ClientGeneralRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientGeneralRestriction.class);
         ClientGeneralRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
         assertEquals(expectedStatus, restriction.getStatus());
@@ -264,7 +264,7 @@ public class RestrictionPage extends AbstractPage {
     public static void checkUserHaveRestrictionTrading(String ucid, int restrictionId)
             throws Exception {
         Allure.step("check user have trading restriction in Mitigation DataBase");
-        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientTradingRestriction.class);
+        List<ClientTradingRestriction> restrictionList = getObjectsFromDB(POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "ucid = '" + ucid + "' and restriction_id = " + restrictionId, ClientTradingRestriction.class);
         ClientTradingRestriction restriction = restrictionList.getLast();
         assertEquals(ucid, restriction.getUcid());
     }
@@ -272,7 +272,7 @@ public class RestrictionPage extends AbstractPage {
     @Deprecated
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'");
+        deleteEntryFromDb(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'");
         Thread.sleep(200);
     }
 
@@ -339,7 +339,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
         String details = event.get(2).getDetails();
@@ -351,7 +351,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
+        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
         assertNotNull(event);
         assertNotNull(event.getLast().getKafkaMessageId());
         assertNotNull(event.getLast().getId());
@@ -365,7 +365,7 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> event = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
         String type1 = event.get(event.size() - 2).getType();
         assertEquals(RESTRICTION_REQUESTED_STATUS, type1);
         String details = event.get(event.size() - 2).getDetails();
@@ -381,7 +381,7 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
+            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
@@ -423,7 +423,7 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<Event> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
+            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {

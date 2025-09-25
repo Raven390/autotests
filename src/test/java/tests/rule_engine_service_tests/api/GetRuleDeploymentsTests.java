@@ -20,7 +20,7 @@ import static business_objects.api.rule_engine_api.rule_deployments.RuleDeployme
 import static business_objects.db.rule_engine_db.rule_deployment.RuleDeploymentObjectFactory.generateRuleDeploymentObject;
 import static helpers.database.CleanTableHelper.cleanRuleDeploymentTableByUuId;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.DbName.RULE_ENGINE;
+import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -40,7 +40,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
     static void setupData() {
         ruleUuid = getRandomUuid();
         rule = generateRuleDeploymentObject(ruleUuid);
-        insertObjectsToDb(RULE_ENGINE, RULE_ENGINE_RULE_DEPLOYMENT_TABLE, List.of(rule));
+        insertObjectsToDb(POSTGRES, RULE_ENGINE_RULE_DEPLOYMENT_TABLE, List.of(rule));
     }
 
     @AfterAll

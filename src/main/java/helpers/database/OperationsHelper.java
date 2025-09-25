@@ -55,7 +55,7 @@ public class OperationsHelper {
     public static void cleanUserCashflowDbWithdrawal(String ucid) throws Exception {
         Allure.step("delete user's cashflow Withdrawal  transactions from DB");
         try {
-            deleteEntryFromDb(DbName.BACKOFFICE, "vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Withdrawal'");
+            deleteEntryFromDb(DbName.POSTGRES, "vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Withdrawal'");
             Thread.sleep(100);
         } catch (Exception NoSuchElementException) {
             logger.info("No such Withdrawal records with provided ucid");
