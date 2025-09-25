@@ -33,6 +33,16 @@ public class PaymentGateHelper {
         }
     }
 
+    public static PaymentEventsObject getPaymentEventByUcid(UUID paymentId) throws Exception {
+        List<PaymentEventsObject> objects = getObjectsFromDB(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, "payment_id='%s'".replace("%s", paymentId.toString()), PaymentEventsObject.class);
+        System.out.println(objects);
+        if (objects.isEmpty()) {
+            return null;
+        } else {
+            return objects.get(0);
+        }
+    }
+
     public static PaymentEventsObject getFailedPaymentEventByCrmId(String crmId) throws Exception {
         List<PaymentEventsObject> objects = getObjectsFromDB(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, "crm_id='%s' AND delivery_status='FAILED'".replace("%s", crmId), PaymentEventsObject.class);
         System.out.println(objects);

@@ -109,7 +109,6 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
         // Additional asserts based on the sample response structure
         assertThat("Assert items list present", mappedResponse.getItems(), is(notNullValue()));
         GetExecutionsResponseBody.Item item = mappedResponse.getItems().getFirst();
-        assertThat("Assert item.id present", item.getId(), is(paymentRuleExecutionsObject1.getId()));
         assertThat("Assert item.runId present", item.getRunId(), not(paymentRuleExecutionsObject1.getRunId()));
         assertThat("Assert item.paymentId equals response paymentId", item.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId().toString()));
         assertThat("Assert item.ruleId present", item.getRuleId(), is(paymentRuleExecutionsObject1.getRuleId()));

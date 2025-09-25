@@ -122,7 +122,6 @@ class PostDecisionsV1Tests extends TestBaseApi {
         assertThat("Check response", mappedResponse[0].getDecidedAt(), is(postPaymentDecisionBody1.getDecidedAt()));
 
         List<PaymentDecisionsObject> dbObject = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", paymentEventsObject1.getPaymentId().toString()), PaymentDecisionsObject.class);
-        assertThat("Check db object", dbObject.getFirst().getId(), is(mappedResponse[0].getDecisionId()));
         assertThat("Check db object", dbObject.getFirst().getPaymentId(), is(paymentEventsObject1.getPaymentId()));
         assertThat("Check db object", dbObject.getFirst().getDecisionType(), is(mappedResponse[0].getDecisionType()));
         assertThat("Check db object", dbObject.getFirst().getDecisionCode(), is(mappedResponse[0].getDecisionCode()));

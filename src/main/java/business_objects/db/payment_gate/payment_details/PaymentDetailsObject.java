@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class PaymentDetailsObject {
 
-    private Integer id;
     private UUID paymentId;
     private String brand;
     private String regulator;
@@ -27,11 +26,10 @@ public class PaymentDetailsObject {
     }
 
     public PaymentDetailsObject(
-            Integer id, UUID paymentId, String brand, String regulator, String type, String clientId,
+            UUID paymentId, String brand, String regulator, String type, String clientId,
             String merchantOrderId, Timestamp eventDate, String status, String platform, String payload,
             String sourceSystem,
             String sourceEnv, Timestamp dateCreated) {
-        this.id = id;
         this.paymentId = paymentId;
         this.brand = brand;
         this.regulator = regulator;
@@ -45,14 +43,6 @@ public class PaymentDetailsObject {
         this.sourceSystem = sourceSystem;
         this.sourceEnv = sourceEnv;
         this.dateCreated = dateCreated;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public UUID getPaymentId() {
@@ -162,7 +152,7 @@ public class PaymentDetailsObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PaymentDetailsObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(paymentId, that.paymentId) && Objects.equals(
+        return Objects.equals(paymentId, that.paymentId) && Objects.equals(
                 brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(type, that.type) && Objects.equals(
                         clientId, that.clientId) && Objects.equals(merchantOrderId, that.merchantOrderId) && Objects.equals(
                                 eventDate, that.eventDate) && Objects.equals(status, that.status) && Objects.equals(
@@ -173,11 +163,11 @@ public class PaymentDetailsObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, paymentId, brand, regulator, type, clientId, merchantOrderId, eventDate, status, platform, payload, sourceSystem, sourceEnv, dateCreated);
+        return Objects.hash(paymentId, brand, regulator, type, clientId, merchantOrderId, eventDate, status, platform, payload, sourceSystem, sourceEnv, dateCreated);
     }
 
     @Override
     public String toString() {
-        return "PaymentDetailsObject{" + "id=" + id + ", paymentId='" + paymentId + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", type='" + type + '\'' + ", clientId='" + clientId + '\'' + ", merchantOrderId='" + merchantOrderId + '\'' + ", eventDate='" + eventDate + '\'' + ", status='" + status + '\'' + ", platform='" + platform + '\'' + ", payload='" + payload + '\'' + ", sourceSystem='" + sourceSystem + '\'' + ", sourceEnv='" + sourceEnv + '\'' + ", dateCreated='" + dateCreated + '\'' + '}';
+        return "PaymentDetailsObject{" + "paymentId='" + paymentId + '\'' + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", type='" + type + '\'' + ", clientId='" + clientId + '\'' + ", merchantOrderId='" + merchantOrderId + '\'' + ", eventDate='" + eventDate + '\'' + ", status='" + status + '\'' + ", platform='" + platform + '\'' + ", payload='" + payload + '\'' + ", sourceSystem='" + sourceSystem + '\'' + ", sourceEnv='" + sourceEnv + '\'' + ", dateCreated='" + dateCreated + '\'' + '}';
     }
 }
