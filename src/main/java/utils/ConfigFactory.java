@@ -90,14 +90,6 @@ public class ConfigFactory {
     public static final String RULE_ENGINE_RULE_DEPLOYMENT_BY_UUID = CONFIG.ruleEngineRuleDeploymentsByUuid();
     // Mirror trading score service
     public static final String MIRROR_TRADING_SCORE_SERVICE_GET_SCORE = CONFIG.mirrorTradingScoreGetScore();
-    // Rule engine database
-    public static final String RULE_ENGINE_DB_NAME = CONFIG.ruleEngineDbName();
-    public static final String RULE_ENGINE_DB_USER = CONFIG.ruleEngineDbUser();
-    public static final String RULE_ENGINE_DB_PASSWORD = CONFIG.ruleEngineDbPassword();
-    // Rule engine database
-    public static final String PAYMENT_GATE_DB_NAME = CONFIG.paymentGateDbName();
-    public static final String PAYMENT_GATE_DB_USER = CONFIG.paymentGateDbUser();
-    public static final String PAYMENT_GATE_DB_PASSWORD = CONFIG.paymentGateDbPassword();
     // Connection search
     public static final String CONNECTION_SEARCH_BASE_PATH_TEST = CONFIG.connectionSearchBasePathTest();
     public static final String CONNECTION_SEARCH_BASE_PATH_PROD = CONFIG.connectionSearchBasePathTest();
@@ -122,16 +114,6 @@ public class ConfigFactory {
     public static final String PAYMENT_GATE_TEMP_DECISIONS_PATH = CONFIG.paymentGateTempDecisionsPath();
     public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
     public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
-    // Mitigation service db
-    public static final String MITIGATION_DB_SSH_HOST = CONFIG.mitigationDbSshHost();
-    public static final String MITIGATION_DB_SSH_PORT = String.valueOf(CONFIG.mitigationDbSshPort());
-    public static final String MITIGATION_DB_SSH_USER = CONFIG.mitigationDbSshUser();
-    public static final String MITIGATION_DB_SSH_PRIVATE_KEY = CONFIG.mitigationDbSshPrivateKey();
-    public static final String MITIGATION_DB_HOST = CONFIG.mitigationDbHost(); // As seen from the SSH server
-    public static final String MITIGATION_DB_PORT = String.valueOf(CONFIG.mitigationDbPort());
-    public static final String MITIGATION_DB_USER = CONFIG.mitigationDbUser();
-    public static final String MITIGATION_DB_PASSWORD = CONFIG.mitigationDbPassword();
-    public static final String MITIGATION_DB_NAME = CONFIG.mitigationDbName();
     // Postrgres db
     public static final String POSTGRES_DB_SSH_HOST = CONFIG.postgresDbSshHost();
     public static final String POSTGRES_DB_SSH_PORT = String.valueOf(CONFIG.postgresDbSshPort());
@@ -142,16 +124,6 @@ public class ConfigFactory {
     public static final String POSTGRES_DB_USER = CONFIG.postgresDbUser();
     public static final String POSTGRES_DB_PASSWORD = CONFIG.postgresDbPassword();
     public static final String POSTGRES_DB_NAME = CONFIG.postgresDbName();
-    // Data science db
-    public static final String DATA_SCIENCE_MIRROR_LOGIN = CONFIG.mitigationDbName();
-    // Audit service db
-    public static final String AUDIT_DB_USER = CONFIG.auditDbUser();
-    public static final String AUDIT_DB_PASSWORD = CONFIG.auditDbPassword();
-    public static final String AUDIT_DB_NAME = CONFIG.auditDbName();
-    // Backoffice service db
-    public static final String BACKOFFICE_BO_DB_USER = CONFIG.backofficeDbUser();
-    public static final String BACKOFFICE_DB_PASSWORD = CONFIG.backofficeDbPassword();
-    public static final String BACKOFFICE_DB_NAME = CONFIG.backofficeDbName();
     // Clickhouse database
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
@@ -464,28 +436,6 @@ public class ConfigFactory {
         @Key("mirrorTradingScoreGetScore")
         String mirrorTradingScoreGetScore();
 
-        // Rule engine database
-
-        @Key("ruleEngineDbName")
-        String ruleEngineDbName();
-
-        @Key("ruleEngineDbUser")
-        String ruleEngineDbUser();
-
-        @Key("ruleEngineDbPassword")
-        String ruleEngineDbPassword();
-
-        // Payment gate database
-
-        @Key("paymentGateDbName")
-        String paymentGateDbName();
-
-        @Key("paymentGateDbUser")
-        String paymentGateDbUser();
-
-        @Key("paymentGateDbPassword")
-        String paymentGateDbPassword();
-
         // Connection search
 
         @Key("connectionSearchBasePathTest")
@@ -555,35 +505,6 @@ public class ConfigFactory {
         @Key("paymentGateAggrByUcidPath")
         String paymentGateAggrByUcidPath();
 
-        // Mitigation service db
-
-        @Key("mitigationDbSshHost")
-        String mitigationDbSshHost();
-
-        @Key("mitigationDbSshPort")
-        int mitigationDbSshPort();
-
-        @Key("mitigationDbSshUser")
-        String mitigationDbSshUser();
-
-        @Key("mitigationDbSshPrivateKey")
-        String mitigationDbSshPrivateKey();
-
-        @Key("mitigationDbHost")
-        String mitigationDbHost();
-
-        @Key("mitigationDbPort")
-        int mitigationDbPort();
-
-        @Key("mitigationDbUser")
-        String mitigationDbUser();
-
-        @Key("mitigationDbPassword")
-        String mitigationDbPassword();
-
-        @Key("mitigationDbName")
-        String mitigationDbName();
-
         // Postgres db
 
         @Key("postgresDbSshHost")
@@ -612,33 +533,6 @@ public class ConfigFactory {
 
         @Key("postgresDbName")
         String postgresDbName();
-
-        // Audit service db
-
-        @Key("auditDbUser")
-        String auditDbUser();
-
-        @Key("auditDbPassword")
-        String auditDbPassword();
-
-        @Key("auditDbName")
-        String auditDbName();
-
-        // Backoffice service db
-
-        @Key("backofficeDbUser")
-        String backofficeDbUser();
-
-        @Key("backofficeDbPassword")
-        String backofficeDbPassword();
-
-        @Key("backofficeDbName")
-        String backofficeDbName();
-
-        // Backoffice DB general?
-
-        @Key("postgresDBHost")
-        String postgresDBHost();
 
         // Other
 

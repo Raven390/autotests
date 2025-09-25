@@ -90,13 +90,13 @@ public class TestBaseRule {
 
     @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client) throws Exception {
-        List<Alert> result = getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class, 60);
+        List<Alert> result = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class, 60);
         return result != null ? result : List.of(); // empty if no alerts found after retries
     }
 
     @Step("Get User Alerts from postgres.bo.alert table")
     public static List<Alert> getUserAlertsFromDb(ClientHelper client, String ruleName) throws Exception {
-        return getObjectsFromDB(DbName.BACKOFFICE, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class).stream().filter(alert -> alert.getRule().equals(ruleName)).toList();
+        return getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid = '%s' AND status = 'OPEN'", client.getUcid()), Alert.class).stream().filter(alert -> alert.getRule().equals(ruleName)).toList();
     }
 
     @Step("Get UTempRuleDecision from BD")
@@ -123,7 +123,7 @@ public class TestBaseRule {
     @Step("Get User restrictions from mitigation DB")
     public static List<ClientGeneralRestriction> getUserRestrictionsFromDb(ClientHelper client) throws Exception {
         List<ClientGeneralRestriction> result = getObjectsFromDB(
-                DbName.MITIGATION_POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class, 30);
+                DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class, 30);
         return result != null ? result : List.of(); // empty if no alerts found after retries
     }
 

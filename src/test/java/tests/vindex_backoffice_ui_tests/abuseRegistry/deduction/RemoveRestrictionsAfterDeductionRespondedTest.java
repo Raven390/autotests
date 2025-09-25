@@ -151,7 +151,7 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
         deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, String.format("message_id = '%s'", request.getMessageId()));
         Allure.step("send your response to Kafka");
         kafka.produceMessage(request.getMessageId(), objectMapper.writeValueAsString(response), KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE);
-        List<Event> cancellationEvents = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, "ucid = '" + client.getUcid() + "' and type = 'RESTRICTION_CANCELLED'", Event.class);
+        List<Event> cancellationEvents = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, "ucid = '" + client.getUcid() + "' and type = 'RESTRICTION_CANCELLED'", Event.class);
         Allure.step("check that there is 2 cancellation events in audit for our test client");
         assertEquals(2, cancellationEvents.size());
         Allure.step("check that there is cancellation event for Withdrawals restriction");

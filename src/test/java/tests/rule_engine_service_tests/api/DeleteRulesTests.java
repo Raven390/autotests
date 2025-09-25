@@ -17,7 +17,7 @@ import static business_objects.db.rule_engine_db.rule.RuleDbObjectFactory.genera
 import static helpers.database.CleanTableHelper.cleanRuleTableByRuleId;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.DbName.RULE_ENGINE;
+import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -36,7 +36,7 @@ class DeleteRulesTests extends TestBaseApi {
     static void setupData() throws Exception {
         rule = generateRule();
         ruleDbPgArray = generateRuleDbObjectByRulePgArray(rule);
-        insertObjectsToDb(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, List.of(ruleDbPgArray));
+        insertObjectsToDb(POSTGRES, RULE_ENGINE_RULE_TABLE, List.of(ruleDbPgArray));
     }
 
     @AfterAll
@@ -51,7 +51,7 @@ class DeleteRulesTests extends TestBaseApi {
         Response response = deleteRules(rule.getId());
 
         assert response.body() != null;
-        List<RuleDbObjectPgArray> ruleFromDb = getObjectsFromDB(RULE_ENGINE, RULE_ENGINE_RULE_TABLE, "id = '" + rule.getId() + "'", RuleDbObjectPgArray.class);
+        List<RuleDbObjectPgArray> ruleFromDb = getObjectsFromDB(POSTGRES, RULE_ENGINE_RULE_TABLE, "id = '" + rule.getId() + "'", RuleDbObjectPgArray.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Check that no element in the list has the specific id", ruleFromDb.stream()  // Convert the list to a stream
                 .map(RuleDbObjectPgArray::getId)  // Extract the 'id' field from each element

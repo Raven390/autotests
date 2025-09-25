@@ -91,8 +91,8 @@ class PostDecisionsV1Tests extends TestBaseApi {
         paymentDetailsObject5 = generatePaymentDetailsObject(paymentEventsObject5, client5);
         postPaymentDecisionBody5 = createPostDecisionsRequestBody();
 
-        insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4, paymentEventsObject5));
-        insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4, paymentDetailsObject5));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4, paymentEventsObject5));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4, paymentDetailsObject5));
     }
 
     @AfterAll

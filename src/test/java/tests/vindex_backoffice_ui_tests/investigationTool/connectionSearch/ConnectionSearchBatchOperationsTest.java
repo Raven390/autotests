@@ -85,7 +85,7 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         String comment = "Connection batch comment";
         connectionPage.fillMultiselectComment(comment);
         connectionPage.clickMultiselectAddCommentButton();
-        List<Event> events = getObjectsFromDB(DbName.AUDIT, AUDIT_EVENT, String.format("ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC", connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE), Event.class);
+        List<Event> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, String.format("ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC", connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE), Event.class);
         assertThat("Verify comments amount", events.size(), is(2));
         Event commentEvent1 = new Event();
         commentEvent1.setUcid(connectedClient1.getUcid());

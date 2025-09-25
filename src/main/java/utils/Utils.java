@@ -32,8 +32,8 @@ import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.BoHelper.getUserIdByUser;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbName.BACKOFFICE;
 import static helpers.database.DbName.CLICKHOUSE;
+import static helpers.database.DbName.POSTGRES;
 import static org.junit.jupiter.api.Assertions.fail;
 import static utils.Constants.*;
 
@@ -468,10 +468,10 @@ public class Utils {
     }
 
     public static void closeAllAlertsBo() throws Exception {
-        executeQueryToDb(BACKOFFICE, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
+        executeQueryToDb(POSTGRES, String.format("UPDATE %s SET closed_at ='%s', status = 'CLOSED', alert_resolution = 'CONFIRMED' WHERE status = 'OPEN';", BO_ALERT_TABLE_NAME, getCurrentTimestampDbFormat()));
         String userId = getUserIdByUser(autotestUserOne());
         executeQueryToDb(
-                DbName.BACKOFFICE, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
+                DbName.POSTGRES, String.format("UPDATE %s SET assigned_user_id ='%s', completed_by_user_id = '%s', started_at = '%s', completed_at = '%s', status = 'COMPLETED' WHERE status IN ('NEW', 'ACTIVE')", BO_INVESTIGATION_TABLE_NAME, userId, userId, getCurrentTimestampDbFormat(), getCurrentTimestampDbFormat()
                 )
         );
     }
