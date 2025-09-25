@@ -13,7 +13,6 @@ public class PaymentDetailsObjectFactory {
 
     public static PaymentDetailsObject generatePaymentDetailsObject(ClientHelper client) {
         return new PaymentDetailsObject(
-                getRandomIntPositive(),                         // id
                 getRandomUuid(),                               // paymentId
                 client != null ? client.getBrand() : null,      // brand
                 client != null ? client.getRegulator() : null,  // regulator
@@ -32,7 +31,6 @@ public class PaymentDetailsObjectFactory {
 
     public static PaymentDetailsObject generatePaymentDetailsObject(PaymentEventsObject event, ClientHelper client) {
         return new PaymentDetailsObject(
-                getRandomIntPositive(),                          // id
                 event.getPaymentId(),                            // paymentId
                 client != null ? client.getBrand() : null,       // brand
                 client != null ? client.getRegulator() : null,   // regulator

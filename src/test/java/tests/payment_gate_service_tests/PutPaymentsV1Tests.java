@@ -27,6 +27,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 
+import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -55,9 +56,6 @@ class PutPaymentsV1Tests extends TestBaseApi {
     private static PutPaymentsRequestBody putPaymentsRequestBody2;
     private static PutPaymentsRequestBody putPaymentsRequestBody3;
     private static PutPaymentsRequestBody putPaymentsRequestBody4;
-    private static String ucid1;
-    private static String ucid2;
-    private static String ucid4;
 
 
     @BeforeAll
@@ -91,9 +89,9 @@ class PutPaymentsV1Tests extends TestBaseApi {
 
     @AfterAll
     static void deleteData() throws Exception {
-        cleanPaymentGateData(ucid1, client1.getUserId());
-        cleanPaymentGateData(ucid2, client2.getUserId());
-        cleanPaymentGateData(ucid4, client4.getUserId());
+        cleanPaymentGateData(client1.getUcid(), client1.getUserId());
+        cleanPaymentGateData(client2.getUcid(), client2.getUserId());
+        cleanPaymentGateData(client4.getUcid(), client4.getUserId());
     }
 
     @Test
@@ -113,6 +111,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat("Check response", mappedResponse.getDecisionId(), is(2));
         assertThat("Check response", mappedResponse.getDecidedAt(), is(notNullValue()));
         assertThat("Check response", mappedResponse.getLinks().getSelf(), is(String.format("/v1/payments/%s", paymentEventsObject1.getPaymentId())));
+        assertThat("Check id in db", getPaymentEventByUcid(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(), is(putPaymentsRequestBody1.getDecisionId()));
     }
 
     @Test

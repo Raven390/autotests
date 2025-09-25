@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public class PaymentRuleExecutionsObject {
 
-    private Integer id;
     private UUID paymentId;
     private Integer runId;
     private Integer ruleId;
@@ -22,9 +21,8 @@ public class PaymentRuleExecutionsObject {
     }
 
     public PaymentRuleExecutionsObject(
-            Integer id, UUID paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId,
+            UUID paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId,
             Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateStarted, Timestamp dateCompleted) {
-        this.id = id;
         this.paymentId = paymentId;
         this.runId = runId;
         this.ruleId = ruleId;
@@ -34,14 +32,6 @@ public class PaymentRuleExecutionsObject {
         this.dateUpdated = dateUpdated;
         this.dateStarted = dateStarted;
         this.dateCompleted = dateCompleted;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public UUID getPaymentId() {
@@ -119,7 +109,7 @@ public class PaymentRuleExecutionsObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PaymentRuleExecutionsObject that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(paymentId, that.paymentId) && Objects.equals(
+        return Objects.equals(paymentId, that.paymentId) && Objects.equals(
                 runId, that.runId) && Objects.equals(ruleId, that.ruleId) && Objects.equals(ruleVersion, that.ruleVersion) && Objects.equals(
                         ruleEndId, that.ruleEndId) && Objects.equals(dateCreated, that.dateCreated) && Objects.equals(
                                 dateUpdated, that.dateUpdated) && Objects.equals(dateStarted, that.dateStarted) && Objects.equals(
@@ -128,11 +118,11 @@ public class PaymentRuleExecutionsObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, paymentId, runId, ruleId, ruleVersion, ruleEndId, dateCreated, dateUpdated, dateStarted, dateCompleted);
+        return Objects.hash(paymentId, runId, ruleId, ruleVersion, ruleEndId, dateCreated, dateUpdated, dateStarted, dateCompleted);
     }
 
     @Override
     public String toString() {
-        return "PaymentRuleExecutionsObject{" + "id=" + id + ", paymentId='" + paymentId + '\'' + ", runId=" + runId + ", ruleId=" + ruleId + ", ruleVersion='" + ruleVersion + '\'' + ", ruleEndId=" + ruleEndId + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + ", dateStarted='" + dateStarted + '\'' + ", dateCompleted='" + dateCompleted + '\'' + '}';
+        return "PaymentRuleExecutionsObject{" + "paymentId='" + paymentId + '\'' + ", runId=" + runId + ", ruleId=" + ruleId + ", ruleVersion='" + ruleVersion + '\'' + ", ruleEndId=" + ruleEndId + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + ", dateStarted='" + dateStarted + '\'' + ", dateCompleted='" + dateCompleted + '\'' + '}';
     }
 }

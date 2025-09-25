@@ -79,7 +79,6 @@ class GetDecisionsV1Tests extends TestBaseApi {
         assertThat("Assert one decision returned", mappedResponse.length, is(1));
         GetDecisionsResponseBody item = mappedResponse[0];
         // Basic field presence and values
-        assertThat("Assert decisionId equals DB id", item.getDecisionId(), is(String.valueOf(paymentDecisionsObject1.getId())));
         assertThat("Assert paymentType equals event type", item.getPaymentType(), is(paymentEventsObject1.getType()));
         assertThat("Assert decisionType equals DB decisionType", item.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
         assertThat("Assert decisionCode equals DB decisionCode", item.getDecisionCode(), is(String.valueOf(paymentDecisionsObject1.getDecisionCode())));
@@ -107,7 +106,6 @@ class GetDecisionsV1Tests extends TestBaseApi {
         assertThat("Assert one decision returned", mappedResponse.length, is(1));
         GetDecisionsResponseBody item = mappedResponse[0];
         // Basic field presence and values
-        assertThat("Assert decisionId equals DB id", item.getDecisionId(), is(String.valueOf(paymentDecisionsObject1.getId())));
         assertThat("Assert paymentType equals event type", item.getPaymentType(), is(paymentEventsObject1.getType()));
         assertThat("Assert decisionType equals DB decisionType", item.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
         assertThat("Assert decisionCode equals DB decisionCode", item.getDecisionCode(), is(String.valueOf(paymentDecisionsObject1.getDecisionCode())));

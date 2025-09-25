@@ -7,13 +7,11 @@ import utils.Utils;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-import static utils.Utils.getRandomIntPositive;
 
 public class PaymentRuleExecutionsObjectFactory {
 
     public static PaymentRuleExecutionsObject generatePaymentRuleExecutionsObject(PaymentEventsObject event) {
         return new PaymentRuleExecutionsObject(
-                getRandomIntPositive(),                         // id
                 event.getPaymentId(), // paymentId
                 Utils.getRandomIntPositive(),                            // runId
                 Utils.getRandomIntPositive(),                            // ruleId

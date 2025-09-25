@@ -24,7 +24,6 @@ import static business_objects.db.payment_gate.payment_decisions.PaymentDecision
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
-import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -78,13 +77,13 @@ class GetPaymentsV1Tests extends TestBaseApi {
         insertObjectsToDb(DbName.PAYMENT_GATE, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1, paymentDecisionsObject2, paymentDecisionsObject3, paymentDecisionsObject4));
     }
 
-    @AfterAll
-    static void deleteData() throws Exception {
-        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
-        cleanPaymentGateData(client2.getUcid(), client2.getUserId(), paymentEventsObject2.getPaymentId().toString());
-        cleanPaymentGateData(client3.getUcid(), client3.getUserId(), paymentEventsObject3.getPaymentId().toString());
-        cleanPaymentGateData(client4.getUcid(), client4.getUserId(), paymentEventsObject4.getPaymentId().toString());
-    }
+//    @AfterAll
+//    static void deleteData() throws Exception {
+//        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
+//        cleanPaymentGateData(client2.getUcid(), client2.getUserId(), paymentEventsObject2.getPaymentId().toString());
+//        cleanPaymentGateData(client3.getUcid(), client3.getUserId(), paymentEventsObject3.getPaymentId().toString());
+//        cleanPaymentGateData(client4.getUcid(), client4.getUserId(), paymentEventsObject4.getPaymentId().toString());
+//    }
 
     @Test
     @AllureId("1602")
@@ -171,15 +170,15 @@ class GetPaymentsV1Tests extends TestBaseApi {
         Allure.step("send get payment request with valid data");
         Map<String, Object> paramsMap = new HashMap<>();
         paramsMap.put("ucid", client1.getUcid());
-        paramsMap.put("paymentId", "");
-        paramsMap.put("merchantOrderId", "");
-        paramsMap.put("withdrawalId", "");
-        paramsMap.put("type", "");
-        paramsMap.put("decisionType", "");
-        paramsMap.put("decisionCode", "");
-        paramsMap.put("finalDecisionCode", "");
-        paramsMap.put("createdDateFrom", "");
-        paramsMap.put("createdDateTo", "");
+//        paramsMap.put("paymentId", "");
+//        paramsMap.put("merchantOrderId", "");
+//        paramsMap.put("withdrawalId", "");
+//        paramsMap.put("type", "");
+//        paramsMap.put("decisionType", "");
+//        paramsMap.put("decisionCode", "");
+//        paramsMap.put("finalDecisionCode", "");
+//        paramsMap.put("createdDateFrom", "");
+//        paramsMap.put("createdDateTo", "");
         Response response = getPayments(paramsMap);
         assertThat(response.code(), is(200));
 
