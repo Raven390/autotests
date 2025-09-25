@@ -1,6 +1,10 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import business_objects.db.abuse_registry_db.Abuser;
+import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.abuse_registry_db.AbuserHistory;
 import business_objects.db.backoffice_db.Investigation;
+import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
@@ -17,6 +21,7 @@ import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.data.enums.AlertResolution;
 import helpers.data.enums.AlertType;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
@@ -25,7 +30,9 @@ import io.qameta.allure.Feature;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +45,7 @@ import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAler
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
-import static helpers.data.enums.FraudType.MARKET_MANIPULATION;
+import static helpers.data.enums.FraudType.*;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.BoHelper.closeAlert;
@@ -65,6 +72,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     private static final String PAYMENT_METHOD_CODE = "Brazil Bank Transfer";
     public static final double WD_USD = 20_000.12;
     public static final double WD_EUR = 14_654.76;
+    private static final String ALERT_WHERE = "client_ucid = '%s' and type='%s' ORDER BY happened_at DESC";
     public static final String PAYLOAD = "{\"id\": \"361564a9-2404-4dd6-aafb-31ce12af19e8\", \"iban\": \"\", \"type\": \"withdrawal\", \"brand\": \"vantage\", \"bankName\": \"testvv\", \"clientId\": \"99887766\", \"platform\": \"WEB\", \"checkName\": \"Little_Amount\", \"eventDate\": \"2025-09-18T06:15:50+03:00\", \"regulator\": \"VFSC2\", \"mt4Account\": 1398842009, \"accountType\": \"MT4\", \"withdrawalId\": \"41000779\", \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VU856068920250918061547\", \"paymentTypeName\": \"Bank Transfers\", \"withdrawalAmount\": %f, \"paymentMethodCode\": \"%s\", \"paymentChannelCode\": \"642\", \"paymentChannelName\": \"Brazil-CPS\", \"withdrawalCurrency\": \"EUR\", \"withdrawalAmountUSD\": %f, \"bankAccountHolderName\": \"testvv\", \"withdrawalApplicationTime\": \"2025-09-18T06:15:46.379Z\"}".formatted(WD_EUR, PAYMENT_METHOD_CODE, WD_USD);
     private static MtAccountObject mtAccount1;
     private static MtAccountObject mtAccount2;
@@ -126,6 +134,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     @AfterEach
     void teardownInPGS() throws Exception {
         cleanPaymentGateData(client.getUcid(), client.getUserId(), event.getPaymentId().toString());
+        deleteUserFromAbuseRegistry(client.getUcid());
+        closeAlert(crmTbUser.ucid);
     }
 
     @AfterAll
@@ -158,7 +168,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
         resolvePage.clickWithdrawalApprove();
         resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
-        resolvePage.fillCommentAndApply("test comment");
+        resolvePage.resolveNoActions("test comment");
 
         //check investigation in db
         List<Investigation> clientsInvestigationsDb = getClientsInvestigationsDb(client.getUcid(), AlertType.PAYMENT);
@@ -176,6 +186,11 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is approved", actualDecision.getDecisionCode(), is(1));
+
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+
 
     }
 
@@ -196,7 +211,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
         resolvePage.clickWithdrawalReject();
         resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
-        resolvePage.fillCommentAndApply("test comment");
+        resolvePage.resolveNoActions("test comment");
 
         //PGS decision check in db
         List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
@@ -205,6 +220,163 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
         assertThat("Verify that rejectionCode is 0", actualDecision.getRejectionCode(), is(0));
 
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+
     }
+
+
+    @Order(3)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1612")
+    @DisplayName("Verify alert resolution FALSE_POSITIVE on approve and no fraud for payment team")
+    void alertResolutionTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalApprove();
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+
+    }
+
+    @Order(4)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1613")
+    @DisplayName("Verify alert resolution FALSE_POSITIVE withdrawals on approve and different fraud for payment team")
+    void alertResolutionTest2() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalApprove();
+        resolvePage.addFraud(CPA_ABUSE, CONFIRMED);
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+
+    }
+
+
+    @Order(5)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1614")
+    @DisplayName("Verify alert resolution FALSE_POSITIVE withdrawals on approve and already has different fraud for payment team")
+    void alertResolutionTest3() throws Exception {
+        var nowTimestamp = Timestamp.from(Instant.now());
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalApprove();
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
+
+    }
+
+    @Order(6)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1615")
+    @DisplayName("Verify alert resolution CONFIRMED withdrawals on reject and already has different fraud for payment team")
+    void alertResolutionTest4() throws Exception {
+        var nowTimestamp = Timestamp.from(Instant.now());
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalReject();
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+
+    }
+
+    @Order(7)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1616")
+    @DisplayName("Verify alert resolution CONFIRMED withdrawals on reject with different fraud for payment team")
+    void alertResolutionTest5() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalReject();
+        resolvePage.addFraud(CPA_ABUSE, CONFIRMED);
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+
+    }
+
+    @Order(8)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1617")
+    @DisplayName("Verify alert resolution CONFIRMED withdrawals on reject with no fraud for payment team")
+    void alertResolutionTest6() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        resolvePage.clickWithdrawalReject();
+        resolvePage.resolveNoActions("test comment");
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+
+    }
+
 
 }
