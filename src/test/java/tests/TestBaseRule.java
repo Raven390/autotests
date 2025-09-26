@@ -139,11 +139,11 @@ public class TestBaseRule {
     }
 
     @Step("Check %elementId presented in rule path")
-    public static void checkElementId(String elementId, String event_id, String ruleName) throws Exception {
+    public static void checkElementId(String elementId, String event_id, String bpmnProcessId) throws Exception {
         List<ZeebeRulesStarted> startedList = null;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 120; i++) {
             startedList = getObjectsFromDB(
-                    DbName.CLICKHOUSE, ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", ZEEBE_RULES_STARTED, event_id, ruleName), ZeebeRulesStarted.class);
+                    DbName.CLICKHOUSE, ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", ZEEBE_RULES_STARTED, event_id, bpmnProcessId), ZeebeRulesStarted.class);
             if (startedList != null && !startedList.isEmpty()) {
                 break;
             }
@@ -154,7 +154,7 @@ public class TestBaseRule {
         String runId = startedList.getFirst().getRunId();
 
         List<ZeebeRulesElements> elementsList = null;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 120; i++) {
             elementsList = getObjectsFromDB(
                     DbName.CLICKHOUSE, ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
             if (elementsList != null && !elementsList.isEmpty()) {

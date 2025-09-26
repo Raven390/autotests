@@ -145,6 +145,50 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
+    @Description("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
+    public static DataHelper getMirrorTradingCloseTradeTest14Data() {
+        DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest14Data);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        data.mtTbCreditsObjects.getFirst().amount = 1d;
+        data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
+        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().amount = 1d;
+        data.crmTbDepositObjects.getFirst().amountUsd = 1d;
+        // leverage
+        data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
+        data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
+        data.mtAccountObject.equityUsd = 3d;
+        data.mtAccountObject.equity = 3d;
+        return data;
+    }
+
+    @Description("Mirror trading. Waves. Exit without alert if pattern matched and at least 1 resolved alerts. ElementId: Event_end_9")
+    public static DataHelper getMirrorTradingCloseTradeTest15Data() {
+        DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest15Data);
+        data.mtTbCreditsObjects = null;
+        data.crmTbDepositObjects = null;
+        // leverage
+        data.mt5DealsCoercedObjects = null;
+        data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
+        data.mtAccountObject.equityUsd = 3d;
+        data.mtAccountObject.equity = 3d;
+        addAlert(data, "Mirror Trading", "CLOSED");
+        return data;
+    }
+
+    @Description("Mirror trading. Waves. Exit with alert and MWR if pattern matched and at no resolved alerts. ElementId: Event_end_9")
+    public static DataHelper getMirrorTradingCloseTradeTest16Data() {
+        DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest16Data);
+        data.mtTbCreditsObjects = null;
+        data.crmTbDepositObjects = null;
+        // leverage
+        data.mt5DealsCoercedObjects = null;
+        data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
+        data.mtAccountObject.equityUsd = 3d;
+        data.mtAccountObject.equity = 3d;
+        return data;
+    }
+
     @Description("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_1t7mktu")
     public static DataHelper getMirrorTradingCloseTradeTest18Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest18Data);
@@ -238,6 +282,9 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         map.put("11", getMirrorTradingCloseTradeTest11Data());
         map.put("12", getMirrorTradingCloseTradeTest12Data());
         map.put("13", getMirrorTradingCloseTradeTest13Data());
+        map.put("14", getMirrorTradingCloseTradeTest14Data());
+        map.put("15", getMirrorTradingCloseTradeTest15Data());
+        map.put("16", getMirrorTradingCloseTradeTest16Data());
         map.put("18", getMirrorTradingCloseTradeTest18Data());
         map.put("19", getMirrorTradingCloseTradeTest19Data());
         map.put("20", getMirrorTradingCloseTradeTest20Data());

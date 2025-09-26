@@ -595,4 +595,12 @@ public class DataHelper {
         return data;
     }
 
+    public void addAlert(String ruleName, String status) {
+        DataHelper data = this;
+        List<BoAlertsObject> alerts = List.of(generateAlert(data.clientHelper));
+        alerts.getFirst().setRule(ruleName);
+        alerts.getFirst().setStatus(status);
+        this.boAlertsObjects = alerts;
+    }
+
 }
