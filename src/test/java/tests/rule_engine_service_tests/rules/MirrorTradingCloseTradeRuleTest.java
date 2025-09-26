@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.data.rules.WaveFlagInserter.deleteWaveFlagData;
+import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.data.rules.mirror_trading_close_trade_event_rule.MirrorTradingCloseTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -32,15 +34,19 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setupData() throws IOException, InterruptedException {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingCloseTradeRuleData();
+        insertWaveFlagData(dbDataMap.get("15").clientHelper);
+        insertWaveFlagData(dbDataMap.get("16").clientHelper);
     }
 
     @AfterAll
     static void deleteData() throws Exception {
         DataHelper.deleteData(dbDataMap);
+        deleteWaveFlagData(dbDataMap.get("15").clientHelper);
+        deleteWaveFlagData(dbDataMap.get("16").clientHelper);
     }
 
     @Test
@@ -57,6 +63,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_end_1", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Disabled
@@ -68,7 +76,7 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
     @Test
     @AllureId("1524")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_1t7mktu")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user geo is not vietnam. ElementId: Event_10k041u")
     void mirrorTradeRuleTest18() throws Exception {
         DataHelper data = dbDataMap.get("18");
 
@@ -80,6 +88,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_10k041u", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -96,11 +106,13 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_06qi81c", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
     @AllureId("1526")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_06qi81c")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has country != vietnam. ElementId: Event_1ya7o9a")
     void mirrorTradeRuleTest20() throws Exception {
         DataHelper data = dbDataMap.get("20");
 
@@ -112,11 +124,13 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_1ya7o9a", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
     @AllureId("1527")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_06qi81c")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has not all trades from web trader. ElementId: Event_1q3hzii")
     void mirrorTradeRuleTest21() throws Exception {
         DataHelper data = dbDataMap.get("21");
 
@@ -128,11 +142,13 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_1q3hzii", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
     @AllureId("1528")
-    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_06qi81c")
+    @DisplayName("Mirror trading. Web hedge. Exit without alert if user has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest22() throws Exception {
         DataHelper data = dbDataMap.get("22");
 
@@ -144,11 +160,13 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_1ss67m1", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
     @AllureId("1529")
-    @DisplayName("Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_06qi81c")
+    @DisplayName("Mirror trading. Web hedge. Exit with restriction alert if user doesn't has resolved alerts. ElementId: Event_1ss67m1")
     void mirrorTradeRuleTest23() throws Exception {
         DataHelper data = dbDataMap.get("23");
 
@@ -167,6 +185,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Verify restriction id ", clientGeneralRestrictions.getFirst().getRestrictionId(), equalTo(8L));
+
+        checkElementId("Event_1ss67m1", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
 
@@ -238,6 +258,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        checkElementId("Event_1m3mqdr", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Disabled
@@ -268,6 +290,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -284,6 +308,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -300,6 +326,8 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+
+        checkElementId("Event_12inxex", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -311,6 +339,81 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
         Thread.sleep(30_000);
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
+
+        assertThat("Verify alert", alerts.getFirst().rule.name, is("Mirror Trading"));
+        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("HEDGING"));
+        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
+        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
+
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("Mirror trade pattern"));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        // Verify restriction
+        Allure.step("Get client restrictions");
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Mirror trade pattern"));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+
+        checkElementId("Event_end_4", data.closeTradeMtEvent.id, "mirror_trade");
+    }
+
+    @Test
+    @AllureId("1620")
+    @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
+    void mirrorTradeRuleTest14() throws Exception {
+        DataHelper data = dbDataMap.get("14");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_end_9", data.closeTradeMtEvent.id, "mirror_trade");
+    }
+
+    @Test
+    @AllureId("1619")
+    @DisplayName("Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. ElementId: Event_end_5")
+    void mirrorTradeRuleTest15() throws Exception {
+
+        DataHelper data = dbDataMap.get("15");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        //Verify alerts
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+
+        checkElementId("Event_end_5", data.closeTradeMtEvent.id, "mirror_trade");
+
+    }
+
+    @Test
+    @AllureId("1618")
+    @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")
+    void mirrorTradeRuleTest16() throws Exception {
+
+        DataHelper data = dbDataMap.get("16");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        Thread.sleep(30_000);
+
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -341,30 +444,11 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
         assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
         assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Mirror trade pattern"));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("The client hides the fraud inside several waves"));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
-    }
 
-    @Disabled
-    @Test
-    @DisplayName("Mirror trading. Waves. Exit without alerts if pattern not matched. ElementId: Event_end_9")
-    void mirrorTradeRuleTest14() throws Exception {
+        checkElementId("Event_end_5", data.closeTradeMtEvent.id, "mirror_trade");
 
     }
-
-    @Disabled
-    @Test
-    @DisplayName("Mirror trading. Waves. Exit without alerts if previously at least 1 resolved alert. ElementId: Event_end_5")
-    void mirrorTradeRuleTest15() throws Exception {
-
-    }
-
-    @Disabled
-    @Test
-    @DisplayName("Mirror trading. Waves. Exit with alerts if previously 0 resolved alerts. ElementId: Event_end_5")
-    void mirrorTradeRuleTest16() throws Exception {
-
-    }
-
 
 }

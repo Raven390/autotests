@@ -148,7 +148,6 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
         assertEquals(withdrawalEvent.withdrawalId, Long.valueOf(events.getFirst().getCrmId()));
 
-
         List<Alert> dbAlerts = getUserAlertsFromDb(client2);
         assertThat("Verify amount of alerts in DB", dbAlerts.size(), is(1));
 
@@ -202,7 +201,6 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
 
         List<Alert> dbAlerts = getUserAlertsFromDb(client3, "Withdrawal Review");
         assertThat("Verify amount of alerts in DB", dbAlerts.size(), is(1));
-
 
         List<TmpRuleDecisionsObject> decision = getTempRuleDecisionByWithdrawalIdFromDb((events.getFirst().getPaymentId()));
         assertThat("Verify amount of decisions in DB", decision.size(), is(1));
