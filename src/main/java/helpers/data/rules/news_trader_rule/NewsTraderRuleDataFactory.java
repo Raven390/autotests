@@ -6,6 +6,7 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
+import helpers.data.enums.DateTimeFormat;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
@@ -28,8 +29,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.MT_CLOSE_TRADE_EVENT;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getRandomUuidString;
+import static utils.Utils.*;
 
 public class NewsTraderRuleDataFactory {
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
@@ -37,6 +37,7 @@ public class NewsTraderRuleDataFactory {
     private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client4 = getRandomVantageClientAllFields();
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
+    private static final String oldTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1);
 
     static Logger logger = Logger.getLogger(NewsTraderRuleDataFactory.class.getName());
 
@@ -51,6 +52,7 @@ public class NewsTraderRuleDataFactory {
         data.crmTbAccountObject = generateAccountByClient(client, false);
         data.crmTbAccountForMtObject = generateAccountForMtByClient(client, false);
         data.mt5DealsCoercedObjects = List.of(generateMt5DealsCoercedObject(client));
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         TradeEventMetadata metadata = new TradeEventMetadata("MT5");
         data.closeTradeMtEvent = new CloseTradeMtEvent(
                 getRandomUuidString(), Instant.now().toString(), data.mt5DealsCoercedObjects.getFirst().getPositionId(), client.getTradingAccount(), data.mt5DealsCoercedObjects.getFirst().getVolumeLots(), data.mt5DealsCoercedObjects.getFirst().getSymbol(), data.clientHelper.getServerId(), MT_CLOSE_TRADE_EVENT, Instant.now().toString(), metadata, Instant.now().toString());
@@ -69,11 +71,13 @@ public class NewsTraderRuleDataFactory {
         DataHelper data = getNewsTraderRuleData(client2);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 5);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         String time = getCurrentTimestampDbFormat();
         AppTbFinindexData news = generateAppFinindexData(time);
         data.AppTbFinindexData = List.of(news);
         List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 5);
-        newsDeals.forEach(deal -> deal.setTime(time));
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
         return data;
@@ -84,11 +88,13 @@ public class NewsTraderRuleDataFactory {
         DataHelper data = getNewsTraderRuleData(client3);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         String time = getCurrentTimestampDbFormat();
         AppTbFinindexData news = generateAppFinindexData(time);
         data.AppTbFinindexData = List.of(news);
         List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
-        newsDeals.forEach(deal -> deal.setTime(time));
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(4.0));
         return data;
@@ -99,11 +105,13 @@ public class NewsTraderRuleDataFactory {
         DataHelper data = getNewsTraderRuleData(client4);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         String time = getCurrentTimestampDbFormat();
         AppTbFinindexData news = generateAppFinindexData(time);
         data.AppTbFinindexData = List.of(news);
         List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
-        newsDeals.forEach(deal -> deal.setTime(time));
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
@@ -117,11 +125,13 @@ public class NewsTraderRuleDataFactory {
         DataHelper data = getNewsTraderRuleData(client5);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 2);
+        data.mt5DealsCoercedObjects.forEach(deal -> deal.setTimeUtc(oldTime));
         String time = getCurrentTimestampDbFormat();
         AppTbFinindexData news = generateAppFinindexData(time);
         data.AppTbFinindexData = List.of(news);
         List<Mt5DealsCoercedObject> newsDeals = generateMt5DealsCoercedObject(data.clientHelper, 9);
-        newsDeals.forEach(deal -> deal.setTime(time));
+        newsDeals.forEach(deal -> deal.setTimeUtc(time));
+        newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
