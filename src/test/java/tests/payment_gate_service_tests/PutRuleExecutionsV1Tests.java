@@ -25,7 +25,7 @@ import static business_objects.db.payment_gate.payment_details.PaymentDetailsObj
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.PaymentGateHelper.getPaymentRuleExecutionById;
+import static helpers.database.PaymentGateHelper.getPaymentRuleExecution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -101,7 +101,7 @@ class PutRuleExecutionsV1Tests extends TestBaseApi {
         PutExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutExecutionsResponseBody.class);
         assertThat("Assert id", mappedResponse.getId(), is(instanceOf(Integer.class)));
 
-        PaymentRuleExecutionsObject paymentExecutionObject = getPaymentRuleExecutionById(mappedResponse.getId());
+        PaymentRuleExecutionsObject paymentExecutionObject = getPaymentRuleExecution(mappedResponse.getId());
 
         Allure.step("Validate object saved in DB");
         assertThat("DB record should exist", paymentExecutionObject, notNullValue());
@@ -148,7 +148,7 @@ class PutRuleExecutionsV1Tests extends TestBaseApi {
         PutExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutExecutionsResponseBody.class);
         assertThat("Assert id", mappedResponse.getId(), is(instanceOf(Integer.class)));
 
-        PaymentRuleExecutionsObject paymentExecutionObject = getPaymentRuleExecutionById(mappedResponse.getId());
+        PaymentRuleExecutionsObject paymentExecutionObject = getPaymentRuleExecution(mappedResponse.getId());
 
         Allure.step("Validate object saved in DB");
         assertThat("DB record should exist", paymentExecutionObject, notNullValue());

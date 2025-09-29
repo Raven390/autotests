@@ -111,6 +111,8 @@ dependencies {
     //Logger
     implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
 
+    //Waits
+    implementation 'org.awaitility:awaitility:4.3.0'
 }
 
 spotless {

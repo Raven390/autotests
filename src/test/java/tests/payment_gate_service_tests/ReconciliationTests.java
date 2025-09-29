@@ -7,6 +7,7 @@ import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.tmp_rule_decisions.TmpRuleDecisionsObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
+import helpers.database.PaymentGateHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -26,7 +27,6 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -112,7 +112,7 @@ class ReconciliationTests {
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject1));
 
         Thread.sleep(125_000);
-        PaymentEventsObject event = getPaymentEventByUcid(client1.getUcid());
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client1.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("DELIVERED"));
     }
 
@@ -129,7 +129,7 @@ class ReconciliationTests {
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject2));
 
         Thread.sleep(125_000);
-        PaymentEventsObject event = getPaymentEventByUcid(client2.getUcid());
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client2.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("DELIVERED"));
     }
 
@@ -146,7 +146,7 @@ class ReconciliationTests {
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject3));
 
         Thread.sleep(125_000);
-        PaymentEventsObject event = getPaymentEventByUcid(client3.getUcid());
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client3.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
     }
 

@@ -23,13 +23,6 @@ public class OperationsHelper {
         logger.info("transfers deleted");
         deleteEntryFromDb(MT_CREDITS_TABLE_NAME, "ucid = '" + ucid + "'");
         logger.info("credits deleted");
-//        ClientHelper dummy = new ClientHelper(1, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 1001, 1002, 1);
-//        deleteEntryFromDb(CRM_WITHDRAWAL_TABLE_NAME, "ucid = '" + dummy.getUcid() + "'");
-//        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid = '" + dummy.getUcid() + "'");
-//        CrmTbWithdrawalObject dummyW = generateWithdrawalByClient(dummy);
-//        CrmTbDepositObject dummyD = generateDepositByClient(dummy);
-//        insertObjectToDb(CRM_WITHDRAWAL_TABLE_NAME, dummyW);
-//        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, dummyD);
         executeQueryToDb(DbName.CLICKHOUSE, "ALTER TABLE vindex_test.dp_and_wd_by_channel\n" + "DELETE WHERE ucid='" + ucid + "'");
         logger.info("aggregation table cleared");
         Thread.sleep(100);

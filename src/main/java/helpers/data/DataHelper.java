@@ -33,6 +33,7 @@ import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTabl
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
@@ -69,6 +70,8 @@ import static utils.Utils.getCurrentTimestampDbFormat;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
 public class DataHelper {
+
+    static Logger logger = Logger.getLogger(DataHelper.class.getName());
 
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
@@ -118,6 +121,7 @@ public class DataHelper {
     public List<OzTradesTableEntry> ozTradesTableObjects;
     public UcidGeneralScore ucidGeneralScore;
     public List<AppTbFinindexData> AppTbFinindexData;
+    public CrmWithdrawalEvent crmWithdrawalEvent;
 
     public DataHelper() {
     }
@@ -141,7 +145,7 @@ public class DataHelper {
             List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScorePython ucidMirrorScore,
             List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects,
             List<OzTradesTableEntry> ozTradesTableObjects, RegistrationEvent registrationEvent, LoginEvent loginEvent,
-            UcidGeneralScore ucidGeneralScore) {
+            UcidGeneralScore ucidGeneralScore, CrmWithdrawalEvent crmWithdrawalEvent) {
         this.clientHelper = clientHelper;
         this.crmTbUserObject = crmTbUserObject;
         this.dictAccountToUcidObject = dictAccountToUcidObject;
@@ -181,13 +185,12 @@ public class DataHelper {
         this.registrationEvent = registrationEvent;
         this.loginEvent = loginEvent;
         this.ucidGeneralScore = ucidGeneralScore;
+        this.crmWithdrawalEvent = crmWithdrawalEvent;
     }
-
-    static Logger logger = Logger.getLogger(DataHelper.class.getName());
 
     @Override
     public String toString() {
-        return "DataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", dictAccountToUcidObject=" + dictAccountToUcidObject + ", dictIsTestObject=" + dictIsTestObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + ", lnSessionParsedObject=" + lnSessionParsedObject + ", registrationEvent=" + registrationEvent + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", phoneTableEntries=" + phoneTableEntries + ", ipTableEntries=" + ipTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + ", closeTradeMtEvent=" + closeTradeMtEvent + ", mt5DealsObjects=" + mt5DealsObjects + '}';
+        return "DataHelper{" + "clientHelper=" + clientHelper + ", crmTbUserObject=" + crmTbUserObject + ", dictAccountToUcidObject=" + dictAccountToUcidObject + ", dictIsTestObject=" + dictIsTestObject + ", dictActiveTradingDaysByUcidObject=" + dictActiveTradingDaysByUcidObject + ", lnSessionParsedObjectRegistration=" + lnSessionParsedObjectRegistration + ", lnSessionParsedObjectLogin=" + lnSessionParsedObjectLogin + ", connections=" + connections + ", connectedUsers=" + connectedUsers + ", withdrawalEvent=" + withdrawalEvent + ", closeTradeEvent=" + closeTradeEvent + ", tradeEvent=" + tradeEvent + ", clientFraudTypes=" + clientFraudTypes + ", crmTbAccountObject=" + crmTbAccountObject + ", crmTbAccountForMtObject=" + crmTbAccountForMtObject + ", crmTbAccountObjectConnections=" + crmTbAccountObjectConnections + ", mtTbCreditsObjects=" + mtTbCreditsObjects + ", crmTbWithdrawalObjects=" + crmTbWithdrawalObjects + ", crmTbDepositObjects=" + crmTbDepositObjects + ", crmTbBonusObjects=" + crmTbBonusObjects + ", mt5DealsCoercedObjects=" + mt5DealsCoercedObjects + ", aggrCreditEquityRate=" + aggrCreditEquityRate + ", aggrMirrorAccountsByTrades=" + aggrMirrorAccountsByTrades + ", mtBalanceOrdersObjects=" + mtBalanceOrdersObjects + ", mirrorLoginObjects=" + mirrorLoginObjects + ", floatingTrades=" + floatingTrades + ", connectedClientHelpers=" + connectedClientHelpers + ", mirrorUcidObjects=" + mirrorUcidObjects + ", mtAccountObject=" + mtAccountObject + ", loyaltyObjects=" + loyaltyObjects + ", mtMt5PositionsObjects=" + mtMt5PositionsObjects + ", lnSessionParsedObject=" + lnSessionParsedObject + ", registrationEvent=" + registrationEvent + ", loginEvent=" + loginEvent + ", sessionIdTableEntries=" + sessionIdTableEntries + ", emailTableEntries=" + emailTableEntries + ", phoneTableEntries=" + phoneTableEntries + ", ipTableEntries=" + ipTableEntries + ", deviceIdTableEntries=" + deviceIdTableEntries + ", closeTradeMtEvent=" + closeTradeMtEvent + ", mt5DealsObjects=" + mt5DealsObjects + ", s3FactIbSalesCommissionsObject=" + s3FactIbSalesCommissionsObject + ", ucidMirrorScore=" + ucidMirrorScore + ", ruleAlerts=" + ruleAlerts + ", boAlertsObjects=" + boAlertsObjects + ", ozTradesTableObjects=" + ozTradesTableObjects + ", ucidGeneralScore=" + ucidGeneralScore + ", AppTbFinindexData=" + AppTbFinindexData + ", crmWithdrawalEvent=" + crmWithdrawalEvent + '}';
     }
 
     public static void setupData(Map<String, DataHelper> map) {
