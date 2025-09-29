@@ -189,7 +189,7 @@ public class CleanTableHelper {
 
     @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(DbName.POSTGRES, "event", String.format(WHERE_STATEMENT_BY_UCID, ucid));
+        deleteEntryFromDb(DbName.POSTGRES, AUDIT_EVENT_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
         Thread.sleep(100);
     }
 
