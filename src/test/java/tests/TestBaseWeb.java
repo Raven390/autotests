@@ -75,7 +75,7 @@ public class TestBaseWeb {
     }
 
     @AfterAll
-    static void closeBrowser() throws IOException {
+    static void closeBrowser() {
         if (playwright != null) {
             playwright.close();
         }

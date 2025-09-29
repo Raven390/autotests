@@ -8,6 +8,7 @@ import business_objects.db.payment_gate.tmp_rule_decisions.TmpRuleDecisionsObjec
 import helpers.data.ClientHelper;
 import helpers.database.CleanTableHelper;
 import helpers.database.DbName;
+import helpers.database.PaymentGateHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -25,7 +26,6 @@ import static business_objects.db.payment_gate.tmp_rule_decisions.TmpRuleDecisio
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
-import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
@@ -89,7 +89,7 @@ class TempDecisionMonitoringTests {
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject1));
 
         Thread.sleep(125_000);
-        PaymentEventsObject event = getPaymentEventByUcid(client1.getUcid());
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client1.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
     }
 
@@ -103,7 +103,7 @@ class TempDecisionMonitoringTests {
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject2));
 
         Thread.sleep(125_000);
-        PaymentEventsObject event = getPaymentEventByUcid(client2.getUcid());
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client2.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("DELIVERED"));
     }
 }

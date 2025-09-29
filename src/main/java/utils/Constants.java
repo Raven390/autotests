@@ -85,6 +85,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_NPB_WINNING_LEG_RULE = "NBP winning leg rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE = "Router rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE = "News Trader with close trade event rule in Rule Engine service";
@@ -132,6 +133,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_WITHDRAWAL_APPROVALS = "withdrawal.approvals";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
+    public static final String KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE = "payment.acknowledge";
     // PARAMS
     public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
     public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
@@ -240,8 +242,8 @@ public class Constants {
     public static final String MT_CID_TABLE_NAME = "data_science_test.mt_cid";
     public static final String RATES_USD_CURRENT = "ticks.rates_usd_current";
     public static final String APP_TB_FININDEX_DATA = "vindex_test.app___tb_finindex_data";
-    public static final String ZEEBE_RULE_ELEMENTS = "reporting_test.zeebe_rules_elements";
-    public static final String ZEEBE_RULES_STARTED = "reporting_test.zeebe_rules_started";
+    public static final String REPORTING_DB_ZEEBE_RULE_ELEMENTS = "reporting_test.zeebe_rules_elements";
+    public static final String REPORTING_DB_ZEEBE_RULES_STARTED = "reporting_test.zeebe_rules_started";
     public static final String PAYMENT_GATEWAY_D_DECISIONS_TABLE = "postgres.paymentgate.d_decisions";
     public static final String PAYMENT_GATEWAY_D_PAYMENT_RULE_OUTCOME_TABLE = "postgres.paymentgate.d_payment_rule_outcomes";
     public static final String PAYMENT_GATEWAY_D_PAYMENT_RULES_TABLE = "postgres.paymentgate.d_payment_rules";

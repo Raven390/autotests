@@ -5,6 +5,7 @@ import business_objects.api.payment_gate.payments.PostPaymentsRequestBody;
 import business_objects.api.payment_gate.payments.PostPaymentsResponseBody;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import helpers.database.PaymentGateHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -19,8 +20,7 @@ import java.util.UUID;
 import static business_objects.api.payment_gate.payments.PaymentsRequests.postPayments;
 import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPostPaymentsRequestBody;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
-import static helpers.database.PaymentGateHelper.getPaymentDetailsByClientId;
-import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
+import static helpers.database.PaymentGateHelper.getPaymentDetails;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -83,7 +83,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
 
         Allure.step("Validate Data in paymentEvent table");
         String expectedUcid = buildUcid(postPaymentsRequestBody1.getBrand(), postPaymentsRequestBody1.getClientId());
-        PaymentEventsObject paymentEventsObject = getPaymentEventByUcid(expectedUcid);
+        PaymentEventsObject paymentEventsObject = PaymentGateHelper.getPaymentEvent(expectedUcid);
         assertThat("Assert record should be found for UCID", paymentEventsObject, is(notNullValue()));
         assertThat("Assert paymentId", paymentEventsObject.getPaymentId(), is(mappedResponse.getPaymentId()));
         assertThat("Assert crmId", paymentEventsObject.getCrmId(), is(postPaymentsRequestBody1.getWithdrawalId().toString()));
@@ -97,7 +97,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
         //assertThat("Assert dateDecided",paymentEventsObject.getDateDecided(), is(mappedResponse.getPaymentId()));
 
         Allure.step("Validate Data in paymentDetails table");
-        PaymentDetailsObject paymentDetailsObject = getPaymentDetailsByClientId(postPaymentsRequestBody1.getClientId());
+        PaymentDetailsObject paymentDetailsObject = getPaymentDetails(postPaymentsRequestBody1.getClientId());
         assertThat("Assert brand", paymentDetailsObject.getBrand(), is(postPaymentsRequestBody1.getBrand()));
         assertThat("Assert regulator", paymentDetailsObject.getRegulator(), is(postPaymentsRequestBody1.getRegulator()));
         assertThat("Assert type", paymentDetailsObject.getType(), is(postPaymentsRequestBody1.getType()));
@@ -134,7 +134,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
 
         Allure.step("Validate Data in paymentEvent table");
         String expectedUcid = buildUcid(postPaymentsRequestBody2.getBrand(), postPaymentsRequestBody2.getClientId());
-        PaymentEventsObject paymentEventsObject = getPaymentEventByUcid(expectedUcid);
+        PaymentEventsObject paymentEventsObject = PaymentGateHelper.getPaymentEvent(expectedUcid);
         assertThat("Assert record should be found for UCID", paymentEventsObject, is(notNullValue()));
         assertThat("Assert paymentId", paymentEventsObject.getPaymentId(), is(mappedResponse.getPaymentId()));
         assertThat("Assert crmId", paymentEventsObject.getCrmId(), is(postPaymentsRequestBody2.getWithdrawalId().toString()));
@@ -147,7 +147,7 @@ class PostPaymentsV1Tests extends TestBaseApi {
         //assertThat("Assert dateDecided",paymentEventsObject.getDateDecided(), is(mappedResponse.getPaymentId()));
 
         Allure.step("Validate Data in paymentDetails table");
-        PaymentDetailsObject paymentDetailsObject = getPaymentDetailsByClientId(postPaymentsRequestBody2.getClientId());
+        PaymentDetailsObject paymentDetailsObject = getPaymentDetails(postPaymentsRequestBody2.getClientId());
         assertThat("Assert brand", paymentDetailsObject.getBrand(), is(postPaymentsRequestBody2.getBrand()));
         assertThat("Assert regulator", paymentDetailsObject.getRegulator(), is(postPaymentsRequestBody2.getRegulator()));
         assertThat("Assert type", paymentDetailsObject.getType(), is(postPaymentsRequestBody2.getType()));

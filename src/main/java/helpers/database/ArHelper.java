@@ -9,12 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static utils.Constants.*;
 
 public class ArHelper {
+
+    private static final Logger logger = Logger.getLogger(ArHelper.class.getName());
 
     private static final String WHERE_CONDITION = "ucid IN (%s)";
 
@@ -38,7 +41,7 @@ public class ArHelper {
             Thread.sleep(100);
 
         } catch (NoSuchElementException e) {
-            System.out.println("No such client(s) in AR");
+            logger.info("No such client(s) in AR");
         }
     }
 
@@ -58,7 +61,7 @@ public class ArHelper {
             }
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, condition);
         } catch (NoSuchElementException e) {
-            System.out.println("No such client(s) in AR");
+            logger.info("No such client(s) in AR");
         }
     }
 
@@ -77,7 +80,7 @@ public class ArHelper {
                 }
             }
         } catch (NoSuchElementException e) {
-            System.out.println("No such client(s) in AR");
+            logger.info("No such client(s) in AR");
         }
         return List.of();
     }

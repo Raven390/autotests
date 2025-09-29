@@ -27,7 +27,7 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 
-import static helpers.database.PaymentGateHelper.getPaymentEventByUcid;
+import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
@@ -111,7 +111,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat("Check response", mappedResponse.getDecisionId(), is(2));
         assertThat("Check response", mappedResponse.getDecidedAt(), is(notNullValue()));
         assertThat("Check response", mappedResponse.getLinks().getSelf(), is(String.format("/v1/payments/%s", paymentEventsObject1.getPaymentId())));
-        assertThat("Check id in db", getPaymentEventByUcid(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(), is(putPaymentsRequestBody1.getDecisionId()));
+        assertThat("Check id in db", getPaymentEvent(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(), is(putPaymentsRequestBody1.getDecisionId()));
     }
 
     @Test

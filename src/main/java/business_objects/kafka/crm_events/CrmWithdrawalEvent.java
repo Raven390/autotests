@@ -6,73 +6,73 @@ import java.util.Objects;
 
 public class CrmWithdrawalEvent {
     @JsonProperty("accountType")
-    public String accountType;
+    private String accountType;
 
     @JsonProperty("binNumber")
-    public String binNumber;
+    private String binNumber;
 
     @JsonProperty("brand")
-    public String brand;
+    private String brand;
 
     @JsonProperty("checkName")
-    public String checkName;
+    private String checkName;
 
     @JsonProperty("clientId")
-    public long clientId;
+    private long clientId;
 
     @JsonProperty("eventDate")
-    public String eventDate;
+    private String eventDate;
 
     @JsonProperty("expMonth")
-    public String expMonth;
+    private String expMonth;
 
     @JsonProperty("expYear")
-    public String expYear;
+    private String expYear;
 
     @JsonProperty("fullName")
-    public String fullName;
+    private String fullName;
 
     @JsonProperty("id")
-    public String id;
+    private String id;
 
     @JsonProperty("merchantOrderId")
-    public String merchantOrderId;
+    private String merchantOrderId;
 
     @JsonProperty("mt4Account")
-    public Integer mt4Account;
+    private Integer mt4Account;
 
     @JsonProperty("paymentChannelCode")
-    public String paymentChannelCode;
+    private String paymentChannelCode;
 
     @JsonProperty("paymentChannelName")
-    public String paymentChannelName;
+    private String paymentChannelName;
 
     @JsonProperty("paymentMethodCode")
-    public String paymentMethodCode;
+    private String paymentMethodCode;
 
     @JsonProperty("platform")
-    public String platform;
+    private String platform;
 
     @JsonProperty("regulator")
-    public String regulator;
+    private String regulator;
 
     @JsonProperty("schemaVersion")
-    public String schemaVersion;
+    private String schemaVersion;
 
     @JsonProperty("type")
-    public String type;
+    private String type;
 
     @JsonProperty("withdrawalAmount")
-    public double withdrawalAmount;
+    private Double withdrawalAmount;
 
     @JsonProperty("withdrawalApplicationTime")
-    public String withdrawalApplicationTime;
+    private String withdrawalApplicationTime;
 
     @JsonProperty("withdrawalCurrency")
-    public String withdrawalCurrency;
+    private String withdrawalCurrency;
 
     @JsonProperty("withdrawalId")
-    public long withdrawalId;
+    private Long withdrawalId;
 
     public CrmWithdrawalEvent() {
     }

@@ -1,5 +1,6 @@
 package tests;
 
+import static org.awaitility.Awaitility.await;
 import business_objects.api.abuse_registry.GetStatusResponseBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.reporting_test.ZeebeRulesElements;
@@ -13,6 +14,7 @@ import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
+import business_objects.kafka.payment.acknowledgement.Acknowledgement;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +29,7 @@ import utils.TestResultWatcher;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static helpers.api.AbuseRegistryHelper.getClientStatus;
@@ -138,37 +141,42 @@ public class TestBaseRule {
         return mappedResponse;
     }
 
-    @Step("Check %elementId presented in rule path")
-    public static void checkElementId(String elementId, String event_id, String bpmnProcessId) throws Exception {
-        List<ZeebeRulesStarted> startedList = null;
-        for (int i = 0; i < 120; i++) {
-            startedList = getObjectsFromDB(
-                    DbName.CLICKHOUSE, ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", ZEEBE_RULES_STARTED, event_id, bpmnProcessId), ZeebeRulesStarted.class);
+    @Step("Check {elementId} presented in rule path")
+    public static void checkElementId(String elementId, String eventId, String ruleName) {
+
+        // Wait until runId appears in zeebe_rules_started
+        ZeebeRulesStarted started = await().atMost(120, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+            List<ZeebeRulesStarted> startedList = getObjectsFromDB(
+                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", REPORTING_DB_ZEEBE_RULES_STARTED, eventId, ruleName), ZeebeRulesStarted.class);
+
             if (startedList != null && !startedList.isEmpty()) {
-                break;
+                return startedList.getFirst();
+            } else {
+                return null;
             }
-            Thread.sleep(1000);
-        }
-        System.out.println("List" + startedList);
-        assert !startedList.isEmpty();
-        String runId = startedList.getFirst().getRunId();
+        }, Objects::nonNull);
 
-        List<ZeebeRulesElements> elementsList = null;
-        for (int i = 0; i < 120; i++) {
-            elementsList = getObjectsFromDB(
-                    DbName.CLICKHOUSE, ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
-            if (elementsList != null && !elementsList.isEmpty()) {
-                break;
+        String runId = started.getRunId();
+
+        // Wait until the elementId appears in the elements string for the runId
+        String elementIdsDb = await().atMost(120, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+            List<ZeebeRulesElements> list = getObjectsFromDB(
+                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
+            String joined;
+            if (list == null || list.isEmpty()) {
+                joined = "";
+            } else {
+                joined = list.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
             }
-            Thread.sleep(1000);
-        }
-        System.out.println("Elements List: " + elementsList);
-
-        assert !elementsList.isEmpty();
-        String elementIdsDb = elementsList.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
-        System.out.println("Element IDs: " + elementIdsDb);
+            System.out.println("Looking for Element ID: " + elementId + " in list: " + joined);
+            return joined;
+        }, ids -> ids != null && ids.contains(elementId));
 
         assertThat(elementIdsDb, containsString(elementId));
+    }
+
+    public static List<Acknowledgement> getPaymentAcknowledgementFromKafka(String paymentId) throws Exception {
+        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId).toString(), Acknowledgement[].class)).toList();
     }
 
 }

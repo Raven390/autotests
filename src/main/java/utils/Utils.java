@@ -25,6 +25,7 @@ import helpers.database.DbName;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.util.logging.Logger;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
@@ -38,6 +39,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static utils.Constants.*;
 
 public class Utils {
+
+    private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     static SecureRandom random = new SecureRandom();
 
@@ -75,7 +78,7 @@ public class Utils {
 
     public static String getRandomEmail() {
         String email = "testmail" + getRandomInt() + "@mail.com";
-        System.out.println("Generated email: " + email);
+        logger.info("Generated email: " + email);
         return email;
     }
 
@@ -364,7 +367,7 @@ public class Utils {
 
         long time = ChronoUnit.MINUTES.between(dateTime, dateTime2);
 
-        System.out.println("TIME DIFFERENCE IN MINUTES IS " + time);
+        logger.info("TIME DIFFERENCE IN MINUTES IS " + time);
 
         return time;
     }
@@ -478,7 +481,7 @@ public class Utils {
 
     public static double convertToUsd(double amount, String symbol) {
         RatesUsdCurrentObject rate = getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
-        System.out.println("tate is " + rate.getRate());
+        logger.info("rate is " + rate.getRate());
         return amount * rate.getRate();
     }
 
