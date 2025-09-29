@@ -175,6 +175,15 @@ public class RuleAlert {
 
             @JsonProperty("MM counter")
             public String mmCounter;
+
+            @JsonProperty("Rate USD")
+            public String rateUSD;
+
+            @JsonProperty("Amount USD")
+            public String amountUSD;
+
+            @JsonProperty("Payment ID")
+            public String paymentId;
         }
     }
 }

@@ -42,6 +42,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_TRADES = CONFIG.clickhouseGetTradesPath();
     public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES = CONFIG.clickhouseGetUnclosedTradesPath();
     public static final String CLICKHOUSE_API_GET_DEPOSITS = CONFIG.clickhouseGetDepositsPath();
+    public static final String CLICKHOUSE_API_GET_RATE_USD = CONFIG.clickhouseGetRateUsd();
     public static final String CLICKHOUSE_API_GET_WITHDRAWALS = CONFIG.clickhouseGetWithdrawalsPath();
     public static final String CLICKHOUSE_API_GET_CREDITS = CONFIG.clickhouseGetCreditsPath();
     public static final String CLICKHOUSE_API_GET_BONUSES = CONFIG.clickhouseGetBonusesPath();
@@ -282,6 +283,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetDepositsPath")
         String clickhouseGetDepositsPath();
+
+        @Key("clickhouseGetRateUsd")
+        String clickhouseGetRateUsd();
 
         @Key("clickhouseGetWithdrawalsPath")
         String clickhouseGetWithdrawalsPath();

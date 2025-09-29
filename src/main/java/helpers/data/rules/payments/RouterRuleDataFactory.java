@@ -12,6 +12,7 @@ import java.util.Map;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
 import static helpers.data.DataHelper.setupData;
+import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static utils.Constants.CRM_WITHDRAWAL_EVENT;
 import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
@@ -22,6 +23,8 @@ public class RouterRuleDataFactory {
     private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper routerRuleClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper routerRuleClient3 = getRandomVantageClientAllFields();
+    private static final ClientHelper routerRuleClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper routerRuleClient5 = getRandomVantageClientAllFields();
 
 
     @Description("Create data for Router rule")
@@ -77,6 +80,21 @@ public class RouterRuleDataFactory {
         return data;
     }
 
+    private static DataHelper getMirrorTradingCloseTradeBybitTest4Data() {
+        DataHelper data = getRouterRuleData(routerRuleClient4);
+        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
+        insertMirrorFlagData(data.clientHelper);
+
+        return data;
+    }
+
+    private static DataHelper getMirrorTradingCloseTradeBybitTest5Data() {
+        DataHelper data = getRouterRuleData(routerRuleClient5);
+        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
+
+        return data;
+    }
+
     public static Map<String, DataHelper> setupRouterRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -84,6 +102,8 @@ public class RouterRuleDataFactory {
         map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
         map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
         map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
+        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
+        map.put("5", getMirrorTradingCloseTradeBybitTest5Data());
 
         setupData(map);
 
