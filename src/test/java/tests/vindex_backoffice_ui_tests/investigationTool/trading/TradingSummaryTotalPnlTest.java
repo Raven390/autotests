@@ -99,7 +99,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), is("PNLtotal, USD"));
+        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), is("Realized PNLUSD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), is("9K"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
@@ -132,7 +132,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
+        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("Realized PNLUSD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9K"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
@@ -165,7 +165,7 @@ public class TradingSummaryTotalPnlTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         tradingPage.openTradingTab();
         tradingPage.openSummaryTab();
-        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("PNLtotal, USD"));
+        assertThat("Verify Total PNL chart title", tradingPage.getTotalPnlChartTitle(), equalTo("Realized PNLUSD"));
         assertThat("Verify Total PNL Y axis label", tradingPage.getTotalPnlYAxisLabel(), equalTo("9K"));
         String maxProfitDate = transformDate(trade3.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);
         String maxLossDate = transformDate(trade2.closeTime, DATE_AND_TIME, DAY_SHORT_MONTH_YEAR);

@@ -205,7 +205,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         tradingPage.openSummaryTab();
         tradingPage.enableViewAmount();
         assertThat("Verify Volume chart title", tradingPage.getVolumeChartTitle(), is("VolumeUSD"));
-        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("75K"));
+        assertThat("Verify Volume Y axis label", tradingPage.getVolumeYAxisLabel(), is("150K"));
         String maxVolumeDate = transformDate(trade11.closeTime, DATE_AND_TIME, YEAR);
         String maxVolume = formatter.format(Stream.of(trade11, trade12).mapToDouble(t -> t.notionalValueUsd).sum());
         String totalVolume = formatter.format(Stream.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10, trade11, trade12, trade13, trade14).mapToDouble(t -> t.notionalValueUsd).sum());
