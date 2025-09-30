@@ -219,6 +219,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
         assertThat("Verify that rejectionCode is 0", actualDecision.getRejectionCode(), is(0));
+        assertThat("Verify that actor is Vindex BO", actualDecision.getActor(), is("Vindex BO"));
 
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
