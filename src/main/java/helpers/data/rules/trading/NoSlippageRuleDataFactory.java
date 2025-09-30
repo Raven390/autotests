@@ -68,7 +68,7 @@ public class NoSlippageRuleDataFactory {
     private static DataHelper getNoSlippageRuleTest2Data() {
         DataHelper data = getNoSlippageRuleData(noSlippageRuleClient2);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.crmTbAccountForMtObject.currency = "USC";
+        data.crmTbAccountForMtObject.setCurrency("USC");
         return data;
     }
 

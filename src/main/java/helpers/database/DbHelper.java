@@ -22,7 +22,7 @@ public class DbHelper {
 
     private static final Logger logger = Logger.getLogger(DbHelper.class.getName());
 
-    private static final int MAX_RETRIES = 60;
+    private static final int MAX_RETRIES = 5;
     private static Process sshTunnelProcess;
 
     @Step("Get objects from table {tableName} with condition {where}")

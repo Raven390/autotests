@@ -218,7 +218,7 @@ public class TradingPage extends AbstractPage {
     private static final String CHECKBOX_LABEL_BY_TITLE_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-checkbox-list']/descendant::span[@class='g-control-label__text']";
     private static final String WIDGET_CONTAINER_PATTERN = "//div[text()='%s']/ancestor::div[@class='v-trading-summary__chart']";
     private static final String CHART_CONTAINER_PATTERN = "//div[text()='%s']/following-sibling::span[text()='%s']/ancestor::div[contains(@class,'v-trading-summary__chart') and not(contains(@class,'v-trading-summary__charts'))]";
-    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "PNL", "total, USD");
+    private static final String TOTAL_PNL_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Realized PNL", "USD");
     private static final String TOTAL_PNL_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", TOTAL_PNL_CHART_CONTAINER);
     private static final String TOTAL_PNL_CHART = String.format("%s/descendant::div[@class='v-chart-wrapper__content']", TOTAL_PNL_CHART_CONTAINER);
     private static final String TOTAL_PNL_X_AXIS_LABEL_BY_TEXT_PATTERN = TOTAL_PNL_CHART + "/descendant::div[@class='v-line-chart__ticks-container']/descendant::div[contains(@class,'g-text') and text()='%s']";
@@ -233,7 +233,7 @@ public class TradingPage extends AbstractPage {
     private static final String VOLUME_CHART_CONTAINER = String.format(CHART_CONTAINER_PATTERN, "Volume", "USD");
     private static final String VOLUME_CHART_FEATURES = String.format("%s/descendant::div[@class='v-chart-wrapper__feature']", VOLUME_CHART_CONTAINER);
     private static final String VOLUME_CHART = String.format("%s/descendant::div[@class='v-trading-summary-volume__chart-container']", VOLUME_CHART_CONTAINER);
-    private static final String PNL_BY_DURATION = "//div[text()='PNL']/following-sibling::span[text()='by trade duration, USD']/ancestor::div[@class='v-trading-summary__chart']";
+    private static final String PNL_BY_DURATION = "//div[text()='Realized PNL']/following-sibling::span[text()='by trade duration, USD']/ancestor::div[@class='v-trading-summary__chart']";
     private static final String PNL_BY_DURATION_0_10_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 94.9px), 196px);']";
     private static final String PNL_BY_DURATION_10_30_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 284.7px), 196px);']";
     private static final String PNL_BY_DURATION_05_6_ANNOTATION = "//*[@style='position: absolute; transform: translate(calc(-50% + 474.5px), 196px);']";

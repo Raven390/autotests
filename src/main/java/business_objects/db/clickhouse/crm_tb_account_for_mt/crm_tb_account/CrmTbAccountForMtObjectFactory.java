@@ -1,12 +1,12 @@
 package business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.Step;
 
 import java.util.Currency;
 
 import static utils.Constants.*;
-import static utils.Utils.*;
 
 public class CrmTbAccountForMtObjectFactory {
 
@@ -64,7 +64,56 @@ public class CrmTbAccountForMtObjectFactory {
                 0,// isDel
                 0,// isDelete
                 "2024-07-09 02:21:39",// lastUpdated
-                COMMENT_AUTOMATION_TESTS// internalComment
+                COMMENT_AUTOMATION_TESTS,// internalComment
+                0// isTest
         );
+    }
+
+    @Step("Generate crm account for mt table data")
+    public static CrmTbAccountForMtObject generateAccountForMtByAccount(CrmTbAccountObject account) {
+        CrmTbAccountForMtObject accountForMtObject = new CrmTbAccountForMtObject();
+        accountForMtObject.setSourceIdSt(account.sourceIdSt);
+        accountForMtObject.setBrandUid(account.brandUid);
+        accountForMtObject.setBrand(account.brand);
+        accountForMtObject.setRegulator(account.regulator);
+        accountForMtObject.setUserId(account.userId);
+        accountForMtObject.setUcid(account.ucid);
+        accountForMtObject.setAccount(account.account);
+        accountForMtObject.setServerIdSt(account.serverIdSt);
+        accountForMtObject.setServerName(account.serverName);
+        accountForMtObject.setAccountTypeId(account.accountTypeId);
+        accountForMtObject.setAccountType(account.accountType);
+        accountForMtObject.setAccountGroup(account.accountGroup);
+        accountForMtObject.setPlatform(account.platform);
+        accountForMtObject.setCreateTime(account.createTime);
+        accountForMtObject.setCreateTimeUtc(account.createTimeUtc);
+        accountForMtObject.setAccountStatus(account.accountStatus);
+        accountForMtObject.setLastLogin(account.lastLogin);
+        accountForMtObject.setLastLoginUtc(account.lastLoginUtc);
+        accountForMtObject.setLastOrder(account.lastOrder);
+        accountForMtObject.setLastOrderUtc(account.lastOrderUtc);
+        accountForMtObject.setBalance(account.balance);
+        accountForMtObject.setCurrency(account.currency);
+        accountForMtObject.setBalanceUsd(account.balanceUsd);
+        accountForMtObject.setEquity(account.equity);
+        accountForMtObject.setCredit(account.credit);
+        accountForMtObject.setPnl(account.pnl);
+        accountForMtObject.setLeverage(account.leverage);
+        accountForMtObject.setMarginFree(account.marginFree);
+        accountForMtObject.setIsRebateAccount(account.isRebateAccount);
+        accountForMtObject.setRebateAccountNr(account.rebateAccountNr);
+        accountForMtObject.setIbId(account.ibId);
+        accountForMtObject.setpId(account.pId);
+        accountForMtObject.setIsSwapFree(account.isSwapFree);
+        accountForMtObject.setIsPamm(account.isPamm);
+        accountForMtObject.setIsCent(account.isCent);
+        accountForMtObject.setIsArchive(account.isArchive);
+        accountForMtObject.setIsHidden(account.isHidden);
+        accountForMtObject.setIsDel(account.isDel);
+        accountForMtObject.setIsDeleted(account.isDeleted);
+        accountForMtObject.setInternalComment(account.internalComment);
+        accountForMtObject.setLastUpdated(account.lastUpdated);
+        accountForMtObject.setIsTest(0);
+        return accountForMtObject;
     }
 }
