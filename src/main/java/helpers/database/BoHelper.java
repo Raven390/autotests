@@ -14,7 +14,6 @@ import io.qameta.allure.Step;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.logging.Logger;
 
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.database.DbHelper.*;
@@ -23,10 +22,12 @@ import static helpers.database.DbName.POSTGRES;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.writeLog;
 
 public class BoHelper {
 
-    private static final Logger logger = Logger.getLogger(BoHelper.class.getName());
+    private static final String NO_SUCH_CLIENT_IN_BO = "No such client in BO";
+    private static final String CLIENT_ID_IN_BO = "Client ID in BO ";
 
     @Step("Close alerts for user {ucid}")
     public static void closeAlert(String ucid) {
@@ -41,7 +42,7 @@ public class BoHelper {
                     )
             );
         } catch (Exception e) {
-            logger.info("Error closing alert");
+            writeLog("Error closing alert");
         }
 
     }
@@ -84,7 +85,7 @@ public class BoHelper {
             deleteEntryFromDb(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
             Thread.sleep(100);
         } catch (Exception e) {
-            logger.info("no such client in BO");
+            writeLog(NO_SUCH_CLIENT_IN_BO);
         }
     }
 
@@ -96,7 +97,6 @@ public class BoHelper {
     public static void cleanUserFraudsBo(String ucid) throws Exception {
 
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
-        int boId = client.getFirst().id;
         deleteEntryFromDb(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
         Thread.sleep(100);
     }
@@ -109,12 +109,12 @@ public class BoHelper {
 
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
-        logger.info("CLIENT ID IN BO " + boId);
+        writeLog(CLIENT_ID_IN_BO + boId);
         List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
         fraud = clientsFraudTypes.getFirst().getFraudTypeId();
-        logger.info("FRAUD ID " + fraud);
+        writeLog("FRAUD ID " + fraud);
 
         assertEquals(expectedFraud, fraud);
     }
@@ -126,7 +126,7 @@ public class BoHelper {
 
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
-        logger.info("CLIENT ID IN BO " + boId);
+        writeLog(CLIENT_ID_IN_BO + boId);
         List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
         Thread.sleep(100);
 
@@ -152,7 +152,7 @@ public class BoHelper {
 
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
-        logger.info("CLIENT ID IN BO " + boId);
+        writeLog(CLIENT_ID_IN_BO + boId);
         List<Alert> alert = getObjectsFromDB(POSTGRES, BO_ALERT_TABLE_NAME, "client_id = '" + boId + "'", Alert.class);
         Thread.sleep(100);
 

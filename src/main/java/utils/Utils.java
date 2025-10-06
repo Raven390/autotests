@@ -46,8 +46,36 @@ public class Utils {
 
     static SecureRandom random = new SecureRandom();
 
-    public static void writeLog(String message) {
-        logger.log(Level.INFO, message);
+    public static void writeLog(Object message) {
+        String text;
+        if (message == null) {
+            text = "null";
+        } else if (message.getClass().isArray()) {
+            if (message instanceof Object[]) {
+                text = Arrays.deepToString((Object[]) message);
+            } else if (message instanceof int[]) {
+                text = Arrays.toString((int[]) message);
+            } else if (message instanceof long[]) {
+                text = Arrays.toString((long[]) message);
+            } else if (message instanceof double[]) {
+                text = Arrays.toString((double[]) message);
+            } else if (message instanceof float[]) {
+                text = Arrays.toString((float[]) message);
+            } else if (message instanceof boolean[]) {
+                text = Arrays.toString((boolean[]) message);
+            } else if (message instanceof byte[]) {
+                text = Arrays.toString((byte[]) message);
+            } else if (message instanceof char[]) {
+                text = Arrays.toString((char[]) message);
+            } else if (message instanceof short[]) {
+                text = Arrays.toString((short[]) message);
+            } else {
+                text = String.valueOf(message);
+            }
+        } else {
+            text = String.valueOf(message);
+        }
+        logger.log(Level.INFO, text);
     }
 
     public static Integer getRandomInt() {

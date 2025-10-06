@@ -4,6 +4,7 @@ import static business_objects.kafka.crm_db_events.registration.RegistrationDbEv
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.kafka.MatchResultWithMessage;
@@ -70,7 +71,7 @@ class EventGeneratorRegistrationTests extends TestBaseKafka {
         Allure.step("Write messages to crm-db-events topic");
         kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent1));
         kafka.produceMessages(KAFKA_MESSAGE_KEY, KAFKA_TOPIC_CRM_DB_EVENTS, objectMapper.writeValueAsString(registrationDbEvent2));
-        System.out.println(registrationDbEvent2.metadata.timestamp);
+        writeLog(registrationDbEvent2.metadata.timestamp);
         Allure.step("Wait for event generator do some magic and consume message from crm-events topic");
         MatchResultWithMessage isAnyMatchPresentInMessages = kafka.isAnyMatchPresentInMessages(KAFKA_TOPIC_CRM_EVENTS, registrationDbEvent2.metadata.timestamp);
 

@@ -313,7 +313,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
     @DisplayName("Verify connection table default sorting")
     public void verifyConnectionSearchTableDefaultSortingTest() {
         connectionPage.openConnectionTable();
-        System.out.println(connectionPage.getConnectionTableUserIdsList());
+        writeLog(connectionPage.getConnectionTableUserIdsList());
         assertThat("Verify sorting", connectionPage.getConnectionTableUserIdsList(), contains(connectedClient1.getUserId().toString(), connectedClient6.getUserId().toString(), connectedClient2.getUserId().toString(), connectedClient4.getUserId().toString(), connectedClient3.getUserId().toString(), connectedClient5.getUserId().toString()));
     }
 

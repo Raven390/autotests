@@ -15,6 +15,7 @@ import static com.microsoft.playwright.options.WaitForSelectorState.HIDDEN;
 import static com.microsoft.playwright.options.WaitForSelectorState.VISIBLE;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Utils.writeLog;
 
 public class SessionsTab extends AbstractPage {
 
@@ -217,8 +218,8 @@ public class SessionsTab extends AbstractPage {
         String[] dates = dateTime.split(" ");
         String expectedDate = dates[0];
         String expectedTime = dates[1].substring(0, 5);
-        System.out.println("Expected date: " + expectedDate);
-        System.out.println("Expected time: " + expectedTime);
+        writeLog("Expected date: " + expectedDate);
+        writeLog("Expected time: " + expectedTime);
         String actualDate = columnDateDataPrimary.textContent();
         assertEquals(expectedDate, actualDate);
         String actualTime = columnDateDataSecodary.textContent();
@@ -229,9 +230,9 @@ public class SessionsTab extends AbstractPage {
         Allure.step("Check that expected values in the dates column are presented");
         String[] dates = dateTime.split(" ");
         String expectedDate = dates[0];
-        System.out.println("Expected date: " + expectedDate);
+        writeLog("Expected date: " + expectedDate);
         String expectedTime = dates[1].substring(0, 5);
-        System.out.println("Expected time: " + expectedTime);
+        writeLog("Expected time: " + expectedTime);
         String actualDate = columnDateDataPrimary.nth(index).textContent();
         assertEquals(expectedDate, actualDate);
         String actualTime = columnDateDataSecodary.nth(index).textContent();
@@ -351,7 +352,7 @@ public class SessionsTab extends AbstractPage {
         assertTrue(columnScoreData.count() > 1);
         int firstScore = Integer.parseInt(columnScoreData.first().textContent());
         int lastScore = Integer.parseInt(columnScoreData.last().textContent());
-        System.out.println("firstScore: " + firstScore + " and lastScore" + lastScore);
+        writeLog("firstScore: " + firstScore + " and lastScore" + lastScore);
         assertTrue(firstScore > lastScore);
     }
 
@@ -474,7 +475,7 @@ public class SessionsTab extends AbstractPage {
         String lastDate = columnDateDataPrimary.last().textContent() + " " + columnDateDataSecodary.last().textContent();
         LocalDateTime firstDateTime = LocalDateTime.parse(firstDate, formatter);
         LocalDateTime lastDateTime = LocalDateTime.parse(lastDate, formatter);
-        System.out.println("firstDate: " + firstDate + " and lastDate" + lastDate);
+        writeLog("firstDate: " + firstDate + " and lastDate" + lastDate);
         assertTrue(firstDateTime.isAfter(lastDateTime));
     }
 
@@ -487,7 +488,7 @@ public class SessionsTab extends AbstractPage {
         String lastDate = columnDateDataPrimary.last().textContent() + " " + columnDateDataSecodary.last().textContent();
         LocalDateTime firstDateTime = LocalDateTime.parse(firstDate, formatter);
         LocalDateTime lastDateTime = LocalDateTime.parse(lastDate, formatter);
-        System.out.println("firstDate: " + firstDate + " and lastDate" + lastDate);
+        writeLog("firstDate: " + firstDate + " and lastDate" + lastDate);
         assertTrue(firstDateTime.isBefore(lastDateTime));
     }
 
@@ -544,8 +545,8 @@ public class SessionsTab extends AbstractPage {
     public void checkPositionOfTheLineDivider(String positionVal) {
         Allure.step("Check position of line divider in score-meter section");
         String attr = lineDivider.getAttribute("style");
-        System.out.println(attr);
-        System.out.println("left: calc(" + positionVal + "%");
+        writeLog(attr);
+        writeLog("left: calc(" + positionVal + "%");
         assertTrue(attr.contains("left: calc(" + positionVal + "%"));
     }
 
@@ -668,7 +669,7 @@ public class SessionsTab extends AbstractPage {
                 assertEquals(page.locator(IP_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style"), "width: 0%;");
                 break;
             default:
-                System.out.println("unhandled value");
+                writeLog("unhandled value");
                 assertTrue(false);
         }
     }
@@ -691,32 +692,32 @@ public class SessionsTab extends AbstractPage {
 
         if ((0 < expectedValue) && (expectedValue < 301)) {
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if (0 == expectedValue) {
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((300 < expectedValue) && (expectedValue < 601)) {
             page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((600 < expectedValue) && (expectedValue < 1000)) {
             page.waitForSelector(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 999));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(EMAIL_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else {
-            System.out.println("UNHANDLED VALUE");
+            writeLog("UNHANDLED VALUE");
             assertTrue(false);
         }
     }
@@ -750,32 +751,32 @@ public class SessionsTab extends AbstractPage {
         if ((expectedValue < 101) && (expectedValue > 59)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_SUCCESS_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((expectedValue < 60) && (expectedValue > 39)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_WARNING_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if ((expectedValue < 40) && (expectedValue > 0)) {
             page.waitForSelector(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR);
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else if (expectedValue == 0) {
             String expectedWidth = String.valueOf(((expectedValue * 100) / 99));
-            System.out.println("expected width is " + expectedWidth);
+            writeLog("expected width is " + expectedWidth);
             String widthStyle = page.locator(DIGITAL_IDENTITY_SCORE_BAR_LOCATOR + SCORE_BAR_DANGER_LOCATOR).getAttribute("style");
-            System.out.println("width style is " + widthStyle);
+            writeLog("width style is " + widthStyle);
             assertTrue(widthStyle.contains(expectedWidth), "expectedValue is " + expectedValue + "expectedWidth is " + expectedWidth);
         } else {
-            System.out.println("UNHANDLED VALUE");
+            writeLog("UNHANDLED VALUE");
             assertTrue(false, "UNHANDLED VALUE");
         }
     }
@@ -857,8 +858,8 @@ public class SessionsTab extends AbstractPage {
     public void checkIpSubTableRow(String rowTitle, String trueIpExpectedVal, String inputIpExpectedVal) {
         String locator1 = "//div[(@class='v-drawer-tab-ip-address__row')]/div[(text() = '" + rowTitle + "')]/following-sibling::div[1]";
         String locator2 = "//div[(@class='v-drawer-tab-ip-address__row')]/div[(text() = '" + rowTitle + "')]/following-sibling::div[2]";
-        System.out.println("locator1: " + locator1);
-        System.out.println("locator2: " + locator2);
+        writeLog("locator1: " + locator1);
+        writeLog("locator2: " + locator2);
         page.waitForSelector(locator1);
         page.waitForSelector(locator2);
         assertEquals(trueIpExpectedVal, page.locator(locator1).textContent(), "test true IP value");

@@ -48,7 +48,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.client_fraud_types.ClientFraudTypesFactory.createClientFraudTypeCh;
@@ -66,12 +65,9 @@ import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.waitForConnectionSearchToUpdate;
+import static utils.Utils.*;
 
 public class DataHelper {
-
-    static Logger logger = Logger.getLogger(DataHelper.class.getName());
 
     public ClientHelper clientHelper;
     public CrmTbUserObject crmTbUserObject;
@@ -196,17 +192,17 @@ public class DataHelper {
     public static void setupData(Map<String, DataHelper> map) {
         startSshTunnel();
         for (DataHelper data : map.values()) {
-            logger.info("WE ARE IN SETUP");
+            writeLog("WE ARE IN SETUP");
             if (data.connections != null && (!data.connections.isEmpty())) try {
                 for (ConnectionTableEntry i : data.connections) {
                     i.datetime = getCurrentTimestampDbFormat();
-                    logger.info("WE ARE INSERTING connections");
+                    writeLog("WE ARE INSERTING connections");
 
                     executeQueryToDb(DbName.CLICKHOUSE, " INSERT INTO " + CONNECTIONS_TABLE_NAME + " (user_from, user_to, degree_connection, connection_score, connection_info, `datetime`, ver, status) VALUES('" + i.userFrom + "','" + i.userTo + "','" + i.degreeConnection + "','" + i.connectionScore + "','" + i.connectionInfo + "', NOW(), '1','new');");
                 }
                 waitForConnectionSearchToUpdate(data.connections.getFirst().userFrom);
             } catch (Exception e) {
-                logger.info("Error while inserting connections into table: " + e.getMessage());
+                writeLog("Error while inserting connections into table: " + e.getMessage());
             }
             if (data.crmTbUserObject != null) {
                 insertObjectToDb(CRM_USER_TABLE_NAME, data.crmTbUserObject);

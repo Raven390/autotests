@@ -6,6 +6,7 @@ import helpers.database.DbName;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 public class WaveFlagInserter {
     public static void insertWaveFlagData(ClientHelper client) throws InterruptedException {
@@ -85,7 +86,7 @@ public class WaveFlagInserter {
         try {
             deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            writeLog(e.getMessage());
         }
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));

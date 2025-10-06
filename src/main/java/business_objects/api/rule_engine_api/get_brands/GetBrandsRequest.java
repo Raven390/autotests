@@ -7,12 +7,13 @@ import okhttp3.Response;
 import java.io.IOException;
 
 import static utils.ConfigFactory.*;
+import static utils.Utils.writeLog;
 
 public class GetBrandsRequest {
     @Step("Get brands")
     public static Response getBrands() throws IOException {
         String url = RULE_ENGINE_PATH_TEST_ENV + RULE_ENGINE_GET_BRANDS;
-        System.out.println(url);
+        writeLog(url);
         return new HttpHelper().sendGetRequest(url, null, null);
     }
 }

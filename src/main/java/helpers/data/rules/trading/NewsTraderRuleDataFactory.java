@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexDataFactory.generateAppFinindexData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
@@ -38,9 +37,6 @@ public class NewsTraderRuleDataFactory {
     private static final ClientHelper client4 = getRandomVantageClientAllFields();
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
     private static final String oldTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1);
-
-    static Logger logger = Logger.getLogger(NewsTraderRuleDataFactory.class.getName());
-
 
     @Step("Create data for News Trader rule is test account=true")
     private static DataHelper getNewsTraderRuleData(ClientHelper client) {
@@ -113,7 +109,7 @@ public class NewsTraderRuleDataFactory {
         newsDeals.forEach(deal -> deal.setTimeUtc(time));
         newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
-        logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
+        writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
         data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.4);
@@ -133,7 +129,7 @@ public class NewsTraderRuleDataFactory {
         newsDeals.forEach(deal -> deal.setTimeUtc(time));
         newsDeals.forEach(deal -> deal.setTime(oldTime));
         data.mt5DealsCoercedObjects.addAll(newsDeals);
-        logger.info("count of deals is: " + data.mt5DealsCoercedObjects.size());
+        writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
         data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
         data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.6);

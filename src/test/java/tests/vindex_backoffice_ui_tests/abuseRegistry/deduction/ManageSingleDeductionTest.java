@@ -20,7 +20,6 @@ import tests.TestBaseWeb;
 
 import java.util.Currency;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
@@ -73,7 +72,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         try {
             deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
-            Logger.getLogger(ManageSingleDeductionTest.class.getName()).info("Account deletion failed");
+            writeLog("Account deletion failed");
         }
         deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account.account));
         deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", account2.account));
@@ -158,7 +157,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position1));
         page.waitForTimeout(1000);
 
-        System.out.println("client ucid is " + client.getUcid());
+        writeLog("client ucid is " + client.getUcid());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -254,7 +253,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position1));
         page.waitForTimeout(1000);
 
-        System.out.println("client ucid is " + client.getUcid());
+        writeLog("client ucid is " + client.getUcid());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

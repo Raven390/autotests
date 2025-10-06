@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.trading.NoSlippageRuleDataFactory.setupNoSlippageRuleData;
@@ -25,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_NO_SLIPPAGE_RULE)
@@ -107,7 +107,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        Logger.getAnonymousLogger().info("client ucid: " + data.clientHelper.getUcid());
+        writeLog("client ucid: " + data.clientHelper.getUcid());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));

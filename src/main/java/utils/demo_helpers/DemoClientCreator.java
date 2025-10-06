@@ -158,7 +158,7 @@ public class DemoClientCreator {
         deal2.setCommissionUsd(getRandomRoundedDouble(0, 555_555));
         deal2.setStorageUsd(getRandomDouble());
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2));
-        System.out.println("Client " + client1.getUcid() + " created");
+        writeLog("Client " + client1.getUcid() + " created");
     }
 
 //    @Test

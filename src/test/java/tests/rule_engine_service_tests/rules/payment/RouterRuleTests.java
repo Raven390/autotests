@@ -89,7 +89,7 @@ class RouterRuleTests extends TestBaseRule {
         assertThat("Assert final_decision_id", paymentEventsObject.getFinalDecisionId(), is(2));
 
         List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
-        System.out.println(withdrawalApprovals);
+        writeLog(withdrawalApprovals);
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
@@ -133,7 +133,7 @@ class RouterRuleTests extends TestBaseRule {
         putDecisions(paymentId.toString(), List.of(putPaymentDecisionBody1));
 
         List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
-        System.out.println(withdrawalApprovals);
+        writeLog(withdrawalApprovals);
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
@@ -177,7 +177,7 @@ class RouterRuleTests extends TestBaseRule {
         putDecisions(paymentId.toString(), List.of(putPaymentDecisionBody1));
 
         List<WithdrawalApprovals> withdrawalApprovals = getWithdrawalApprovalsFromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
-        System.out.println(withdrawalApprovals);
+        writeLog(withdrawalApprovals);
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMessageId(), is(data.crmWithdrawalEvent.getId()));
         assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));

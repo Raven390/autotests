@@ -667,8 +667,8 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
         String firstCell = volumeUsdValue.first().textContent().replace(" USD", "");
         String lastCell = volumeUsdValue.last().textContent().replace(" USD", "");
-        System.out.println(Integer.parseInt(firstCell));
-        System.out.println(Integer.parseInt(lastCell));
+        writeLog(Integer.parseInt(firstCell));
+        writeLog(Integer.parseInt(lastCell));
         assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
         assertTrue(from <= Integer.parseInt(lastCell) && Integer.parseInt(lastCell) <= to);
     }
@@ -678,8 +678,8 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
         String firstCell = volumeLotsValue.first().textContent().replace(" lots", "");
         String lastCell = volumeLotsValue.last().textContent().replace(" lots", "");
-        System.out.println(Integer.parseInt(firstCell));
-        System.out.println(Integer.parseInt(lastCell));
+        writeLog(Integer.parseInt(firstCell));
+        writeLog(Integer.parseInt(lastCell));
         assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
         assertTrue(from <= Integer.parseInt(lastCell) && Integer.parseInt(lastCell) <= to);
     }
@@ -689,8 +689,8 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first and last profit cells on page is in interval");
         String firstCell = (profitColumnCell.first().textContent()).replace(" USD", "");
         String lastCell = profitColumnCell.last().textContent().replace(" USD", "");
-        System.out.println(Double.parseDouble(firstCell));
-        System.out.println(Double.parseDouble(lastCell));
+        writeLog(Double.parseDouble(firstCell));
+        writeLog(Double.parseDouble(lastCell));
 
         double profit1 = Double.parseDouble(firstCell);
         double profit2 = Double.parseDouble(lastCell);
@@ -712,7 +712,7 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first profit cell");
         String firstCell = profitColumnCell.first().textContent().replace(" USD", "");
 
-        System.out.println(Double.parseDouble(firstCell));
+        writeLog(Double.parseDouble(firstCell));
 
         double profit1 = Double.parseDouble(firstCell);
 
@@ -724,8 +724,8 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first and last Dates in cells on page is in interval");
         String openDate = openColumnCellDate.first().textContent();
         String closeDate = closeColumnCellDate.first().textContent();
-        System.out.println(openDate);
-        System.out.println(closeDate);
+        writeLog(openDate);
+        writeLog(closeDate);
         long difference = Utils.getDifferenceTimeMinutes(openDate, closeDate);
         assertTrue(from <= difference && difference <= to);
     }
@@ -1788,13 +1788,13 @@ public class TradingPage extends AbstractPage {
         page.waitForSelector(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE).waitForElementState(ElementState.VISIBLE);
         if (position == 2) {
             assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(1).textContent());
-            System.out.println(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR);
+            writeLog(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR);
             assertEquals("2nd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(2).textContent());
         } else if (position == 3) {
             assertEquals(expectedSymbol, page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + TRADING_CHART_FEATURE_VALUE).nth(2).textContent());
             assertEquals("3rd", page.locator(SYMBOL_TRADED_SECTION + TRADING_CHART_FEATURE + "//" + VARIANT_CAPTION_2_SELECTOR).nth(4).textContent());
         } else {
-            System.out.println("unexpected position " + position);
+            writeLog("unexpected position " + position);
             assertTrue(false);
         }
     }

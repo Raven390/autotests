@@ -13,13 +13,13 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static business_objects.api.abuse_registry.AbuseRegistryRequest.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static utils.ConfigFactory.ABUSE_REGISTRY_BASE_PATH;
+import static utils.Utils.writeLog;
 
 public class AbuseRegistryHelper {
 
@@ -31,8 +31,6 @@ public class AbuseRegistryHelper {
 
     private AbuseRegistryHelper() {
     }
-
-    static Logger ln = Logger.getLogger(AbuseRegistryHelper.class.getName());
 
     public static void addFraudsForClient(ClientHelper client, List<FraudType> fraudTypes, FraudTypeStatus status)
             throws IOException, InterruptedException {
@@ -50,7 +48,7 @@ public class AbuseRegistryHelper {
         }
 
         assertThat("Check that request was successful after retries", code, is(200));
-        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
+        writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
     public static void addFraudForClient(ClientHelper client, FraudType fraudType, FraudSubtype fraudSubtype,
@@ -71,7 +69,7 @@ public class AbuseRegistryHelper {
             }
         }
         assertThat(ASSERT_REASON, code, is(200));
-        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
+        writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
     public static void addFraudForClient(ClientHelper client, FraudType fraudType,
@@ -92,7 +90,7 @@ public class AbuseRegistryHelper {
             }
         }
         assertThat(ASSERT_REASON, code, is(200));
-        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
+        writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
     public static void addFraudsForClient(String ucid, List<FraudType> fraudTypes, FraudTypeStatus status)
@@ -101,7 +99,7 @@ public class AbuseRegistryHelper {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 ACTOR, SYSTEM, COMMENT, fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
         assertThat(ASSERT_REASON, postFraudTypes(ucid, requestBody).code(), is(200));
-        ln.info(String.format(FRAUDS_ADDED_SUCCESSFULLY, ucid));
+        writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, ucid));
     }
 
     public static void addFraudForClient(ClientFraudTypes fraud)
@@ -109,7 +107,7 @@ public class AbuseRegistryHelper {
         PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
                 ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesRequestBody.FraudTypeWithStatus("CONFIRMED", fraud.getFraudTypeCode())));
         assertThat(ASSERT_REASON, postFraudTypes(fraud.getUcid(), requestBody).code(), is(200));
-        ln.info("fraud " + fraud.getFraudTypeCode() + " successfully sent for client " + fraud.getUcid());
+        writeLog("fraud " + fraud.getFraudTypeCode() + " successfully sent for client " + fraud.getUcid());
     }
 
     public static void addFraudsForClient(ClientFraudTypes... frauds) throws IOException {
