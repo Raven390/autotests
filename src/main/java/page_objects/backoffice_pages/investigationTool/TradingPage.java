@@ -287,6 +287,8 @@ public class TradingPage extends AbstractPage {
     private static final String TABLE_HEADER = "*[contains(@class,'header-cell')";
     private static final String LOTS_AMOUNT_SWITCH = "//span[text()='Volume in USD']//preceding-sibling::span/input";
     private static final String OPERATIONS_ROW_BY_TICKET_PATTERN = "//div[@data-qa='trading_deals__table__rows__%s']";
+    private final Locator scrollOperationsListDownButton;
+    private final Locator scrollOperationsListUpButton;
 
 
     public TradingPage(Page page) {
@@ -461,6 +463,8 @@ public class TradingPage extends AbstractPage {
         this.saveIllegalProfitButton = page.locator("//button[@data-qa='trading_deals__multiselect_panel__save_illegal_profit']");
         this.toastMessage = page.locator("//div[contains(@class,'g-toast__container')]");
         this.selectedTradesCounter = page.locator("//div[@data-qa='trading_deals__multiselect_panel__counter']");
+        this.scrollOperationsListUpButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[1]");
+        this.scrollOperationsListDownButton = page.locator("//*[@class='v-trading-tab-deals-controls__button-group']/button[2]");
     }
 
     public void navigate(String ucid) {
@@ -486,6 +490,18 @@ public class TradingPage extends AbstractPage {
     @Step("Open users trading tab")
     public void openTradingTab() {
         tradingTab.click();
+        waitForPageToLoadTrading();
+    }
+
+    public void clickScrollOperationsListUpButton() {
+        Allure.step("Click scroll operations list up button");
+        scrollOperationsListUpButton.click();
+        waitForPageToLoad();
+    }
+
+    public void clickScrollOperationsListDownButton() {
+        Allure.step("Click scroll operations list down button");
+        scrollOperationsListDownButton.click();
         waitForPageToLoad();
     }
 
@@ -714,8 +730,22 @@ public class TradingPage extends AbstractPage {
         assertTrue(from <= difference && difference <= to);
     }
 
+    @Step("Check that operation with provided date is displayed")
+    public void checkDealPresentedByDate(String date) {
+        Allure.step("Check that operation with provided date is displayed");
+        Locator target = openColumnCellDate.getByText(date);
+        target.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Check that operation with provided date is not displayed")
+    public void checkDealHiddenByDate(String date) {
+        Allure.step("Check that operation with provided date is not displayed");
+        Locator target = openColumnCellDate.getByText(date);
+        target.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
     @Step("Wait for page to load")
-    public void waitForPageToLoad() {
+    public void waitForPageToLoadTrading() {
         page.waitForSelector(TOTAL_PNL_CHART_CONTAINER, new Page.WaitForSelectorOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
@@ -2244,7 +2274,7 @@ public class TradingPage extends AbstractPage {
 
     public void isIBRebatesHidden() {
         Allure.step("check is ib Rebates vidget hidden");
-        waitForPageToLoad();
+        waitForPageToLoadTrading();
         ibRebatesWidget.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
