@@ -38,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 
 @ExtendWith(TestResultWatcher.class)
@@ -168,7 +169,7 @@ public class TestBaseRule {
             } else {
                 joined = list.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
             }
-            System.out.println("Looking for Element ID: " + elementId + " in list: " + joined);
+            writeLog("Looking for Element ID: " + elementId + " in list: " + joined);
             return joined;
         }, ids -> ids != null && ids.contains(elementId));
 

@@ -21,6 +21,7 @@ import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS)
@@ -221,9 +222,9 @@ class GetLexisNexisTests extends TestBaseApi {
         Response response = getLexisNexis(queryParams);
         String responseBody = response.body().string();
         GetLexisNexisResponse lexisNexisResponse = objectMapper.readValue(responseBody, GetLexisNexisResponse.class);
-        System.out.println(lexisNexisResponse.eventId);
-        System.out.println(event3.getEventId());
-        System.out.println(event3.getId());
+        writeLog(lexisNexisResponse.eventId);
+        writeLog(event3.getEventId());
+        writeLog(event3.getId());
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check response code", lexisNexisResponse.eventId, is(event3.getEventId()));
     }

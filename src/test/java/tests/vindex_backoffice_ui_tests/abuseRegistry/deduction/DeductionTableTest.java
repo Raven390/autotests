@@ -34,6 +34,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 
 class DeductionTableTest extends TestBaseWeb {
@@ -79,7 +80,7 @@ class DeductionTableTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         deductionPage.clickAbuseRegistryButton();
         assertThat("Check table headers", deductionPage.getDeductionTableHeaders(), contains("CLIENT", "ACCOUNT", "BEHAVIOR", "STATUS", "EMAIL", "ILLEGAL PROFIT", "SUGGESTION", "DEDUCTION", "CREATED", "NOTE"));
-        System.out.println(deductionPage.getDeductionTableDataByRows().getFirst());
+        writeLog(deductionPage.getDeductionTableDataByRows().getFirst());
         assertThat("Check table data", deductionPage.getDeductionTableDataByRows().getFirst(), contains(
                 String.format("%s %s", crmTbUser.firstName, crmTbUser.lastName), client.getUserId().toString(), account.account.toString(), account.serverName, "", String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "Deduction failed", "Approved", client.getBrand(), String.format("%s %s", formatter.format(deduction.getIllegalProfit()), account.currency), String.format("%s %s", formatter.format(deduction.getIllegalProfitUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getSuggestedDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getSuggestedDeductionUsd()), USD.getCode()), String.format("%s %s", formatter.format(deduction.getActualDeduction()), account.currency), String.format("%s %s", formatter.format(deduction.getActualDeductionUsd()), USD.getCode()), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalDate().toString(), deduction.getCreatedAt().toLocalDateTime().plusHours(3).toLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")), deduction.getComment(), deduction.getCommentDeduction()
         ));

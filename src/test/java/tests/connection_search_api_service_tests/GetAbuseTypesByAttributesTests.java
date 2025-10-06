@@ -551,16 +551,13 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
     @AllureId("785")
     void getAbuseTypesByAttributesTest17() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        System.out.println(userFromDepth.getUcid());
+        writeLog(userFromDepth.getUcid());
 
         queryParams.put("emailAddress", userFromDepth.getEmail());
         queryParams.put("connectionDepth", 1);
 
         Response response = getAbuseTypesByAttributes(queryParams);
         assert response.body() != null;
-        GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
-                response.body().string(), GetAbuseTypesResponseV1[].class
-        ));
 
         assertThat("Check the response code is 200", response.code(), is(200));
     }
@@ -587,7 +584,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
     @AllureId("787")
     void getAbuseTypesByAttributesTest19() throws IOException {
         Map<String, Object> queryParams = new HashMap<>();
-        System.out.println(userFromDepth.getUcid());
+        writeLog(userFromDepth.getUcid());
 
         queryParams.put("emailAddress", userFromDepth.getEmail());
         queryParams.put("connectionScoreFrom", 1);

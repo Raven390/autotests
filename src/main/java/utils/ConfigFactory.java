@@ -3,10 +3,10 @@ package utils;
 import java.util.Objects;
 
 import org.aeonbits.owner.Config;
-import java.util.logging.Logger;
+
+import static utils.Utils.writeLog;
 
 public class ConfigFactory {
-    private static final Logger logger = Logger.getLogger(ConfigFactory.class.getName());
     private static final UserConfig CONFIG = org.aeonbits.owner.ConfigFactory.create(UserConfig.class, System.getProperties());
 
     // URLs
@@ -672,10 +672,10 @@ public class ConfigFactory {
 
     public static Boolean getHeadless() {
         if (isGitlab()) {
-            logger.info("Set Headless mode to 'true'");
+            writeLog("Set Headless mode to 'true'");
             return true;
         } else {
-            logger.info("Set Headless mode to local value in config.properties");
+            writeLog("Set Headless mode to local value in config.properties");
             return CONFIG.headlessMode();
         }
     }

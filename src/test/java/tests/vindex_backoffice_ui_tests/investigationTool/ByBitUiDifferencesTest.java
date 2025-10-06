@@ -8,10 +8,8 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
-import tests.vindex_backoffice_ui_tests.abuseRegistry.deduction.ManageSingleDeductionTest;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataBybit;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -22,8 +20,7 @@ import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getRandomRoundedDouble;
+import static utils.Utils.*;
 
 class ByBitUiDifferencesTest extends TestBaseWeb {
     static ClientHelper client = getRandomBybitClient();
@@ -53,7 +50,7 @@ class ByBitUiDifferencesTest extends TestBaseWeb {
         try {
             deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {
-            Logger.getLogger(ManageSingleDeductionTest.class.getName()).info("Account deletion failed");
+            writeLog("Account deletion failed");
         }
     }
 

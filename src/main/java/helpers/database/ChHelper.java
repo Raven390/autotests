@@ -3,11 +3,8 @@ package helpers.database;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 
-import java.util.logging.Logger;
 
 public class ChHelper {
-
-    private static final Logger logger = Logger.getLogger(ChHelper.class.getName());
 
     public static double calculateWithdrawalsValue(CrmTbWithdrawalObject... withdrawal) {
         double result = 0;

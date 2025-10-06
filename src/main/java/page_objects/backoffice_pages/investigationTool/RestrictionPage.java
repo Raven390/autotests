@@ -34,6 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 public class RestrictionPage extends AbstractPage {
 
@@ -108,14 +109,14 @@ public class RestrictionPage extends AbstractPage {
         Allure.step("Check request message for apply cancellation for client in kafka");
         String userId = String.valueOf(userIdInt);
         Thread.sleep(7000);
-        System.out.println("we search user " + userId);
+        writeLog("we search user " + userId);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("client.restrictions.apply", userId);
         for (String response : kafkaResponses) {
-            System.out.println(response);
+            writeLog(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("tested message is " + kafkaResponse);
+        writeLog("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         ClientRestrictionApply apply = objectMapper.readValue(kafkaResponse, ClientRestrictionApply.class);
         apply.clientId.toString().equals(userId);
@@ -132,7 +133,7 @@ public class RestrictionPage extends AbstractPage {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL, userId);
         for (String response : kafkaResponses) {
-            System.out.println(response);
+            writeLog(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -156,10 +157,10 @@ public class RestrictionPage extends AbstractPage {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, accoundId);
         for (String response : kafkaResponses) {
-            System.out.println(response);
+            writeLog(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("tested message is " + kafkaResponse);
+        writeLog("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
         assertEquals(accountIdInt, apply.accountId);
@@ -180,7 +181,7 @@ public class RestrictionPage extends AbstractPage {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_APPLY, String.valueOf(restrictionId));
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("Tested message is " + kafkaResponse);
+        writeLog("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionApply apply = objectMapper.readValue(kafkaResponse, AccountRestrictionApply.class);
         assertEquals(accountIdInt, apply.accountId);
@@ -202,7 +203,7 @@ public class RestrictionPage extends AbstractPage {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages(KAFKA_TOPIC_ACCOUNT_RESTRICTIONS_CANCEL, accoundId);
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("Tested message is " + kafkaResponse);
+        writeLog("Tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         AccountRestrictionCancel cancel = objectMapper.readValue(kafkaResponse, AccountRestrictionCancel.class);
         assertNotNull((cancel.getAccountId()));
@@ -217,14 +218,14 @@ public class RestrictionPage extends AbstractPage {
     public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
             JsonProcessingException {
         Allure.step("Check withdrawal approval message");
-        System.out.println("we search transaction " + transactionID);
+        writeLog("we search transaction " + transactionID);
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         for (String response : kafkaResponses) {
-            System.out.println(response);
+            writeLog(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
-        System.out.println("tested message is " + kafkaResponse);
+        writeLog("tested message is " + kafkaResponse);
         ObjectMapper objectMapper = new ObjectMapper();
         WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
         assertEquals(apply.getTransferId().toString(), (transactionID));

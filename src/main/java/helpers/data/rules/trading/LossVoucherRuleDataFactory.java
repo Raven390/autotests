@@ -73,9 +73,9 @@ public class LossVoucherRuleDataFactory {
         deal.setCommissionUsd(1d);
         data.mt5DealsCoercedObjects.add(deal);
 
-        System.out.println(data.clientHelper.getServerId());
-        System.out.println(data.clientHelper.getUcid());
-        System.out.println(data.mtAccountObject.account);
+        writeLog(data.clientHelper.getServerId());
+        writeLog(data.clientHelper.getUcid());
+        writeLog(data.mtAccountObject.account);
 
         data.crmTbBonusObjects.add(bonus);
         return data;

@@ -117,8 +117,7 @@ class KafkaParserTest extends TestBaseRule {
         registrationEvent.lexisNexis.rawResponse = lexis.toStringRawResponse();
         registrationEvent.eventDate = getCurrentTimestampDbFormat();
 
-        System.out.println("event is : \n" + registrationEvent);
-
+        writeLog("event is : \n" + registrationEvent);
 
         Allure.step("Produce registration event to crm-events topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(registrationEvent), KAFKA_TOPIC_CRM_EVENTS);

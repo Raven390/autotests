@@ -13,14 +13,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.net.InetAddress;
 import java.util.stream.Collectors;
-import java.util.logging.Logger;
+
 
 import static utils.ConfigFactory.*;
 import static utils.ConfigFactory.POSTGRES_DB_USER;
+import static utils.Utils.writeLog;
 
 public class DbHelper {
-
-    private static final Logger logger = Logger.getLogger(DbHelper.class.getName());
 
     private static final int MAX_RETRIES = 5;
     private static Process sshTunnelProcess;
@@ -71,7 +70,7 @@ public class DbHelper {
             query = String.format("SELECT * FROM %s WHERE %s", tableName, where);
         }
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
-            logger.info(query);
+            writeLog(query);
             return mapResultSetToObjects(resultSet, className);
         }
     }
@@ -85,7 +84,7 @@ public class DbHelper {
             query = String.format("SELECT * FROM %s FINAL WHERE %s", tableName, where);
         }
         try (PreparedStatement statement = connection.prepareStatement(query); ResultSet resultSet = statement.executeQuery()) {
-            logger.info(query);
+            writeLog(query);
             return mapResultSetToObjects(resultSet, className);
         }
     }
@@ -317,7 +316,7 @@ public class DbHelper {
 
         // Execute the query
         try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
-            logger.info("Executing query: " + query);
+            writeLog("Executing query: " + query);
             statement.executeUpdate();
         }
     }
@@ -331,7 +330,7 @@ public class DbHelper {
         String query = String.format("DELETE FROM %s WHERE %s", tableName, where);
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
-                logger.info(query);
+                writeLog(query);
                 statement.executeUpdate();
             }
             return null;
@@ -342,7 +341,7 @@ public class DbHelper {
     public static void executeQueryToDb(DbName dbName, String query) {
         executeWithRetry(() -> {
             try (Connection connection = createConnection(dbName); PreparedStatement statement = connection.prepareStatement(query)) {
-                logger.info("Executing query: " + query);
+                writeLog("Executing query: " + query);
                 statement.executeUpdate();
             }
             return null;
@@ -365,7 +364,7 @@ public class DbHelper {
             host = "localhost";
         }
         String jdbcUrl = String.format("jdbc:postgresql://%s:%s/%s", host, POSTGRES_DB_PORT, POSTGRES_DB_NAME);
-        logger.info("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
+        writeLog("++++++++++++++++" + jdbcUrl + "+++++++++++++++++++++");
 
         Properties connectionProps = new Properties();
         connectionProps.setProperty("user", POSTGRES_DB_USER);
@@ -382,7 +381,7 @@ public class DbHelper {
         if (!"GITLAB_CI".equals(System.getenv("RUNNER"))) {
             String sshCommand = String.join("", "ssh -i ", POSTGRES_DB_SSH_PRIVATE_KEY, " -L ", POSTGRES_DB_PORT, ":", POSTGRES_DB_HOST, ":", POSTGRES_DB_PORT, " ", POSTGRES_DB_SSH_USER, "@", POSTGRES_DB_SSH_HOST
             );
-            logger.info(sshCommand);
+            writeLog(sshCommand);
 
             try {
                 new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY).start();
@@ -472,7 +471,7 @@ public class DbHelper {
             }
 
             // Print the query with filled values
-            logger.info("Executing Query: " + filledQuery);
+            writeLog("Executing Query: " + filledQuery);
 
             // Execute the query
             statement.executeUpdate();
@@ -547,7 +546,7 @@ public class DbHelper {
                 return operation.execute();
             } catch (SQLException | ReflectiveOperationException e) {
                 attempt++;
-                logger.info("Database operation failed (attempt " + attempt + "): " + e.getMessage());
+                writeLog("Database operation failed (attempt " + attempt + "): " + e.getMessage());
                 if (attempt >= MAX_RETRIES) {
                     throw new RuntimeException("Operation failed after " + MAX_RETRIES + " attempts"); // Give up after 5 attempts
                 }
@@ -570,7 +569,7 @@ public class DbHelper {
                 return operation.execute();
             } catch (SQLException | ReflectiveOperationException e) {
                 attempt++;
-                logger.info("Database operation failed (attempt " + attempt + "): " + e.getMessage());
+                writeLog("Database operation failed (attempt " + attempt + "): " + e.getMessage());
                 if (attempt >= retries) {
                     throw new RuntimeException("Operation failed after " + retries + " attempts"); // Give up after 5 attempts
                 }

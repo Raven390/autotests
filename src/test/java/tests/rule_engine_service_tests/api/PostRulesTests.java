@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Constants.SUITE_RULE_ENGINE_API_TESTS;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Tag(TEAM_CORE)
@@ -57,6 +58,6 @@ class PostRulesTests extends TestBaseApi {
         assertThat("Check rule_name", rule.getValue().getName(), is(equalTo(ruleFromDb.getFirst().getRuleName())));
         assertThat("Check brands", ruleFromDb.getFirst().getBrands().toString(), containsString(rule.getValue().getBrands().getLast()));
         assertThat("Check brands", ruleFromDb.getFirst().getBrands().toString(), containsString(rule.getValue().getBrands().getFirst()));
-        System.out.println(ruleFromDb);
+        writeLog(ruleFromDb);
     }
 }

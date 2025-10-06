@@ -1,6 +1,7 @@
 package page_objects.vantage_user_account_pages;
 
 import static utils.ConfigFactory.BASE_URL_VANTAGE_ACCOUNT;
+import static utils.Utils.writeLog;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -71,9 +72,9 @@ public class VantageUserAccountPage {
     @Step("Check that page present")
     public void checkPagePresent() {
         String url = BASE_URL_VANTAGE_ACCOUNT + "/register";
-        System.out.println("URL to check: " + url);
+        writeLog("URL to check: " + url);
         page.waitForURL(url);
-        System.out.println("URL: " + url + " PRESENTED");
+        writeLog("URL: " + url + " PRESENTED");
     }
 
     @Step("Check cookie banner present")
@@ -86,7 +87,7 @@ public class VantageUserAccountPage {
         if (checkCookieBanner()) {
             declineCookies.click();
         } else {
-            System.out.println("Cookies banner wasn't presented");
+            writeLog("Cookies banner wasn't presented");
         }
     }
 

@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import static utils.Utils.writeLog;
 
 public class HttpHelper {
 
-    private static final Logger logger = Logger.getLogger(HttpHelper.class.getName());
     private final OkHttpClient client;
     private final ObjectMapper objectMapper;
 
@@ -66,10 +66,10 @@ public class HttpHelper {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         Request request = buildRequestWithHeaders(httpUrl, headersMap).get().build();
 
-        logger.info("Request to execute: " + request);
+        writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
-        logger.info("Response : " + response);
-        logger.info("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        writeLog("Response : " + response);
+        writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
         return response;
     }
 
@@ -78,15 +78,15 @@ public class HttpHelper {
             Object requestBody) throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
-        logger.info("Body: " + jsonBody);
+        writeLog("Body: " + jsonBody);
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
         Request request = buildRequestWithHeaders(httpUrl, headersMap).post(body).build();
 
-        logger.info("Request to execute: " + request);
+        writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
-        logger.info("Response : " + response);
-        logger.info("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        writeLog("Response : " + response);
+        writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
 
         return response;
     }
@@ -94,13 +94,13 @@ public class HttpHelper {
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
     public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
             RequestBody requestBody) throws IOException {
-        logger.info("Request Body: " + bodyToString(requestBody));
+        writeLog("Request Body: " + bodyToString(requestBody));
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         Request request = buildRequestWithHeaders(httpUrl, headersMap).post(requestBody).build();
-        logger.info("Request to execute: " + request);
+        writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
-        logger.info("Response : " + response);
-        logger.info("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        writeLog("Response : " + response);
+        writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
         return response;
     }
 
@@ -119,15 +119,15 @@ public class HttpHelper {
             Object requestBody) throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
-        logger.info("Body: " + jsonBody);
+        writeLog("Body: " + jsonBody);
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
         Request request = buildRequestWithHeaders(httpUrl, headersMap).put(body).build();
 
-        logger.info("Request to execute: " + request);
+        writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
-        logger.info("Response : " + response);
-        logger.info("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        writeLog("Response : " + response);
+        writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
 
         return response;
     }
@@ -137,15 +137,15 @@ public class HttpHelper {
             Object requestBody) throws IOException {
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         String jsonBody = convertObjectToJson(requestBody);
-        logger.info("Body: " + jsonBody);
+        writeLog("Body: " + jsonBody);
         RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
 
         Request request = buildRequestWithHeaders(httpUrl, headersMap).delete(body).build();
 
-        logger.info("Request to execute: " + request);
+        writeLog("Request to execute: " + request);
         Response response = client.newCall(request).execute();
-        logger.info("Response : " + response);
-        logger.info("Response body: " + response.peekBody(Long.MAX_VALUE).string());
+        writeLog("Response : " + response);
+        writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
 
         return response;
     }

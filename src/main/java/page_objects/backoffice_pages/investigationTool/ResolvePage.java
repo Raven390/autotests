@@ -22,6 +22,7 @@ import java.util.List;
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.Utils.writeLog;
 
 public class ResolvePage extends AbstractPage {
 
@@ -432,7 +433,7 @@ public class ResolvePage extends AbstractPage {
         KafkaHelper helper = new KafkaHelper();
         List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
         for (String response : kafkaResponses) {
-            System.out.println(response);
+            writeLog(response);
         }
         String kafkaResponse = kafkaResponses.getLast();
         ObjectMapper objectMapper = new ObjectMapper();

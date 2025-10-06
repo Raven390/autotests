@@ -29,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME)
@@ -76,7 +77,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     @AllureId("590")
     void getSwapFreeVolumeTest1() throws IOException {
         //Send request
-        System.out.println(client1.getTradingAccount());
+        writeLog(client1.getTradingAccount());
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         queryParams.put("serverId", client1.getServerId()); // Required

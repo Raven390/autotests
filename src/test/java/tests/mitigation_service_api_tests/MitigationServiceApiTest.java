@@ -437,7 +437,7 @@ class MitigationServiceApiTest extends TestBaseApi {
                 Connection Score is 0.75""";
         for (String message : consumedMessages) {
             ClientRestrictionApply kafkaMessage = objectMapper.readValue(message, ClientRestrictionApply.class);
-            System.out.println((kafkaMessage.restrictions[0].internalReason));
+            writeLog((kafkaMessage.restrictions[0].internalReason));
             if ((kafkaMessage.restrictions.length == 1) && Objects.equals(kafkaMessage.restrictions[0].internalReason, expectedInternalReason)) {
                 internalReasonFound = true;
             }

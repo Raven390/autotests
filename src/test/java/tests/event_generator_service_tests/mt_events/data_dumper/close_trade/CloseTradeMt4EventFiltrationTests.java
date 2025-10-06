@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_API;
 import static utils.Constants.SUITE_EVENT_GENERATOR_SERVICE;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_DATA_DUMPER_CLOSE_TRADE_EVENT)
@@ -100,7 +101,7 @@ class CloseTradeMt4EventFiltrationTests extends TestBaseKafka {
         closeTradeMt4.getPayload().setCloseTime(1L);
         closeTradeMt4.getPayload().setCmd(1);
 
-        System.out.println(closeTradeMt4);
+        writeLog(closeTradeMt4);
 
         Allure.step("Write message to mt4_trade_record topic");
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(closeTradeMt4), KAFKA_TOPIC_MT_4_TRADE_RECORD);

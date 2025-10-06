@@ -17,8 +17,11 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
+import static utils.Utils.writeLog;
 
 public class PaymentsPage extends AbstractPage {
+
+    private static final String NUMBER_OF_CONTAINERS = "Number of containers is: ";
 
     private final Locator loaderAnimation;
     private final Locator paymentsTab;
@@ -248,7 +251,7 @@ public class PaymentsPage extends AbstractPage {
         String actualValue = page.locator(baseLocator + "/../div[1]").textContent();
         String actualOperations = page.locator(baseLocator + "/../div[2]").textContent();
         assertEquals(expectedTotalValue, actualValue);
-        logger.info("actualOperations is " + actualOperations);
+        writeLog("actualOperations is " + actualOperations);
         assertTrue(actualOperations.contains(expectedTotalOperations));
     }
 
@@ -264,12 +267,12 @@ public class PaymentsPage extends AbstractPage {
         String topCatLocator = topCatTileLocator + "/following-sibling::div[2]";
         page.waitForSelector(topCatLocator);
         String topCategory = page.locator(topCatLocator).textContent();
-        logger.info("Top category in Deposit: " + topCategory);
+        writeLog("Top category in Deposit: " + topCategory);
         assertTrue(topCategory.contains(expectedCategory));
         String topSumLocator = (topCatTileLocator + "/following-sibling::div[1]");
         page.waitForSelector(topSumLocator);
         String totalAmount = page.locator(topSumLocator).textContent();
-        logger.info("totalAmount in Deposit: " + totalAmount);
+        writeLog("totalAmount in Deposit: " + totalAmount);
         assertEquals(expectedAmount, totalAmount);
     }
 
@@ -285,12 +288,12 @@ public class PaymentsPage extends AbstractPage {
         page.waitForSelector(topCatLocator);
         String expectedCategory = getPaymentType(expectedCategorySource);
         String topCategory = page.locator(topCatLocator).textContent();
-        logger.info("Top category in Withdrawal: " + topCategory);
+        writeLog("Top category in Withdrawal: " + topCategory);
         assertEquals(expectedCategory, topCategory);
         String topSumLocator = (topCatTileLocator + "/following-sibling::div[1]");
         page.waitForSelector(topSumLocator);
         String totalAmount = page.locator(topSumLocator).textContent();
-        logger.info("totalAmount in Withdrawal: " + totalAmount);
+        writeLog("totalAmount in Withdrawal: " + totalAmount);
         assertEquals(expectedAmount, totalAmount);
     }
 
@@ -302,24 +305,24 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        logger.info("number of containers is " + count);
+        writeLog(NUMBER_OF_CONTAINERS + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
             page.waitForTimeout(200);
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
-                logger.info("interval is " + interval);
+                writeLog("interval is " + interval);
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM dd");
                 Date date1 = formatter.parse(dateString);
                 String[] dateIntervals = interval.split(" - ");
-                logger.info("interval 1 is " + dateIntervals[0]);
-                logger.info("interval 2 is " + dateIntervals[1]);
+                writeLog("interval 1 is " + dateIntervals[0]);
+                writeLog("interval 2 is " + dateIntervals[1]);
                 Date date2 = formatter.parse(dateIntervals[0]);
                 Date date3 = formatter.parse(dateIntervals[1]);
 
                 if ((date1.after(date2) || date1.equals(date2)) && (date1.before(date3) || date1.equals(date3))) {
-                    logger.info("SUCCESS date " + date1 + " is found");
+                    writeLog("SUCCESS date " + date1 + " is found");
                     found = true;
                 }
             }
@@ -330,24 +333,24 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        logger.info("number of containers is " + count);
+        writeLog(NUMBER_OF_CONTAINERS + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
             page.waitForTimeout(200);
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
-                logger.info("interval is " + interval);
+                writeLog("interval is " + interval);
                 SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy");
                 Date date1 = formatter.parse(dateString);
                 String[] dateIntervals = interval.split(" - ");
-                logger.info("interval 1 is " + dateIntervals[0]);
-                logger.info("interval 2 is " + dateIntervals[1]);
+                writeLog("interval 1 is " + dateIntervals[0]);
+                writeLog("interval 2 is " + dateIntervals[1]);
                 Date date2 = formatter.parse(dateIntervals[0]);
                 Date date3 = formatter.parse(dateIntervals[1]);
 
                 if ((date1.after(date2) || date1.equals(date2)) && (date1.before(date3) || date1.equals(date3))) {
-                    logger.info("SUCCESS date " + date1 + " is found");
+                    writeLog("SUCCESS date " + date1 + " is found");
                     found = true;
                 }
             }
@@ -356,10 +359,10 @@ public class PaymentsPage extends AbstractPage {
 
     public void hoverOverFinancialTransactionsGraphByDateSingleDay(String dateString) throws ParseException {
         Allure.step("Hover over financial transactions graph by date");
-        logger.info("searched date is " + dateString);
+        writeLog("searched date is " + dateString);
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        logger.info("number of containers is " + count);
+        writeLog(NUMBER_OF_CONTAINERS + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
@@ -367,7 +370,7 @@ public class PaymentsPage extends AbstractPage {
             if (financialDateGraphContainerTooltipTitle.isVisible()) {
                 String interval = financialDateGraphContainerTooltipTitle.textContent();
                 if (interval.contains(dateString)) {
-                    logger.info("SUCCESS date " + dateString + " is found");
+                    writeLog("SUCCESS date " + dateString + " is found");
                     found = true;
                 }
             }
@@ -378,7 +381,7 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("Hover over financial transactions graph by date");
         page.waitForTimeout(1000);
         int count = financialDateGraphContainer.count();
-        logger.info("number of containers is " + count);
+        writeLog(NUMBER_OF_CONTAINERS + count);
         boolean found = false;
         for (int i = 0; i < count && found == false; i++) {
             financialDateGraphContainer.nth(i).hover();
@@ -413,7 +416,7 @@ public class PaymentsPage extends AbstractPage {
         if (clearSelectedAccountsButton.isVisible()) {
             clearSelectedAccountsButton.click();
         } else {
-            logger.info("There is no selected accounts");
+            writeLog("There is no selected accounts");
         }
     }
 
@@ -487,7 +490,7 @@ public class PaymentsPage extends AbstractPage {
         int count = timelineSection.count();
         page.waitForTimeout(500);
         int filterCount = timelineSection.nth(count - 1).and(inactiveTimelineSection).count();
-        logger.info("count of filters is" + filterCount);
+        writeLog("count of filters is" + filterCount);
         timelineSection.nth(count - 1).and(inactiveTimelineSection).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
@@ -532,14 +535,14 @@ public class PaymentsPage extends AbstractPage {
             page.waitForTimeout(1000);
             i++;
         }
-        logger.info("the searched section is have date text " + date);
+        writeLog("the searched section is have date text " + date);
         Allure.step("check that timeline section, for exaple with date " + date + " inactive");
         page.waitForTimeout(500);
         assertTrue(inactiveTimelineSection.getByText(date).isVisible());
     }
 
     public void checkTimelineSectionVisibleByDate(String date) {
-        logger.info("the searched section is have date text " + date);
+        writeLog("the searched section is have date text " + date);
         Allure.step("check that timeline section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(timelineSection.getByText(date).last().isVisible());
@@ -551,12 +554,12 @@ public class PaymentsPage extends AbstractPage {
         String annotation = timelineAnnotation.nth(1).textContent();
         assertDoesNotThrow(() -> {
             Date date = formatter.parse(annotation);
-            logger.info("annotation is successfully parsed to: " + date.toString());
+            writeLog("annotation is successfully parsed to: " + date.toString());
         });
     }
 
     public void checkFinancialTransactionSectionVisibleByDate(String date) {
-        logger.info("the searched section is have date text " + date);
+        writeLog("the searched section is have date text " + date);
         Allure.step("check that financial transaction graph section, for example with date " + date + " is visible");
         page.waitForTimeout(500);
         assertTrue(financialTransactionGraphSection.getByText(date).isVisible());

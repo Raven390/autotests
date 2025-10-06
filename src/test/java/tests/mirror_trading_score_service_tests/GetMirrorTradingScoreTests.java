@@ -24,6 +24,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_MIRROR_TRADING_SCORE_API_SERVICE)
 @Story(STORY_GET_MIRROR_TRADING_SCORE)
@@ -52,7 +53,7 @@ class GetMirrorTradingScoreTests extends TestBaseApi {
     @AllureId("1149")
     void getMirrorScoreTest() throws Exception {
 
-        System.out.println(client.getUcid());
+        writeLog(client.getUcid());
         Allure.step("setup DB data");
         UcidMirrorScorePython source1 = generateUcidMirrorScorePythonObject(client, 0.1, 0.2);
         insertObjectsToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, List.of(source1));

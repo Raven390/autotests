@@ -2,6 +2,7 @@ package helpers.kafka;
 
 import static utils.ConfigFactory.*;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -24,11 +25,8 @@ import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import java.util.logging.Logger;
 
 public class KafkaHelper {
-
-    private static final Logger logger = Logger.getLogger(KafkaHelper.class.getName());
 
     public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
     public static final Integer MAX_ATTEMPTS = 50;
@@ -50,13 +48,13 @@ public class KafkaHelper {
                     fileLock = fileChannel.tryLock();
                     isLocked = (fileLock != null);
                 } catch (Exception e) {
-                    logger.info("File is locked by another JVM. Retrying...");
+                    writeLog("File is locked by another JVM. Retrying...");
                     Thread.sleep(1000); // Wait 1 second before retrying
                 }
             }
 
             if (!isLocked) {
-                logger.info("Failed to acquire file lock within timeout.");
+                writeLog("Failed to acquire file lock within timeout.");
                 return null; // Could not acquire the lock
             }
 
@@ -73,9 +71,9 @@ public class KafkaHelper {
                     lines.set(i, "Used - " + line);
                     Files.write(filePath, lines);
 
-                    logger.info("getFreeConsumerId, consumerId = " + line);
+                    writeLog("getFreeConsumerId, consumerId = " + line);
                     System.setProperty("consumerGroup", line);
-                    logger.info("getFreeConsumerId, consumerGroup = " + line);
+                    writeLog("getFreeConsumerId, consumerGroup = " + line);
 
                     return line; // Return the original line without "Used - "
                 }
@@ -91,9 +89,9 @@ public class KafkaHelper {
             if (fileLock != null) {
                 try {
                     fileLock.release();
-                    logger.info("File lock released.");
+                    writeLog("File lock released.");
                 } catch (IOException e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Exception releasing file lock", e);
+                    writeLog("Exception releasing file lock");
                 }
             }
 
@@ -102,7 +100,7 @@ public class KafkaHelper {
                 try {
                     fileChannel.close();
                 } catch (IOException e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Exception closing file channel", e);
+                    writeLog("Exception closing file channel");
                 }
             }
         }
@@ -125,13 +123,13 @@ public class KafkaHelper {
                     fileLock = fileChannel.tryLock();
                     isLocked = (fileLock != null);
                 } catch (Exception e) {
-                    logger.info("File is locked by another JVM. Retrying...");
+                    writeLog("File is locked by another JVM. Retrying...");
                     Thread.sleep(1000); // Wait 1 second before retrying
                 }
             }
 
             if (!isLocked) {
-                logger.info("Failed to acquire file lock within timeout.");
+                writeLog("Failed to acquire file lock within timeout.");
                 return null; // Could not acquire the lock
             }
 
@@ -140,20 +138,20 @@ public class KafkaHelper {
 
             // Prepare the target string to search for
             String targetToReplace = "Used - " + target;
-            logger.info(targetToReplace);
+            writeLog(targetToReplace);
 
             // Loop through each line and replace if it matches the target string
             for (int i = 0; i < lines.size(); i++) {
                 if (lines.get(i).equals(targetToReplace)) {
                     lines.set(i, replacement);
-                    logger.info("cleanConsumerIdAfterUse LINE " + i + " replacement success");
+                    writeLog("cleanConsumerIdAfterUse LINE " + i + " replacement success");
                 }
             }
 
             // Write the modified lines back to the file
             Files.write(filePath, lines);
-            logger.info("File updated successfully.");
-            logger.info(Files.readAllLines(filePath).toString());
+            writeLog("File updated successfully.");
+            writeLog(Files.readAllLines(filePath).toString());
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -162,9 +160,9 @@ public class KafkaHelper {
             if (fileLock != null) {
                 try {
                     fileLock.release();
-                    logger.info("File lock released.");
+                    writeLog("File lock released.");
                 } catch (IOException e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Exception releasing file lock", e);
+                    writeLog("Exception releasing file lock");
                 }
             }
 
@@ -173,7 +171,7 @@ public class KafkaHelper {
                 try {
                     fileChannel.close();
                 } catch (IOException e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Exception closing file channel", e);
+                    writeLog("Exception closing file channel");
                 }
             }
         }
@@ -266,7 +264,7 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    logger.info(String.format(
+                    writeLog(String.format(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, return it
@@ -323,7 +321,7 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    logger.info(String.format(
+                    writeLog(String.format(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, add it to the list
@@ -385,7 +383,7 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    logger.info(String.format(
+                    writeLog(String.format(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // If the record contains the specified id, add it to the list
@@ -434,7 +432,7 @@ public class KafkaHelper {
 
                     // Process each record
                     for (ConsumerRecord<String, String> record : records) {
-                        logger.info(String.format(
+                        writeLog(String.format(
                                 "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
 
                         // If the record contains the specified id, return it
@@ -500,7 +498,7 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    logger.info(String.format(
+                    writeLog(String.format(
                             "Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
 
                     // Check each id in the idList for a match in the record value
@@ -541,10 +539,10 @@ public class KafkaHelper {
             // Send the record and get the metadata about the sent record
             Future<RecordMetadata> future = producer.send(record);
             metadata = future.get();
-            logger.info(String.format(
+            writeLog(String.format(
                     "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), metadata.offset()));
         } catch (Exception e) {
-            logger.log(java.util.logging.Level.SEVERE, "Error producing message", e);
+            writeLog("Error producing message");
         }
         return metadata;
     }
@@ -562,14 +560,14 @@ public class KafkaHelper {
                     // Send the record and print metadata about the sent record
                     Future<RecordMetadata> future = producer.send(record);
                     RecordMetadata metadata = future.get();
-                    logger.info(String.format(
+                    writeLog(String.format(
                             "Produced message to %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), metadata.partition(), metadata.offset()));
                 } catch (Exception e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Error producing message in loop", e);
+                    writeLog("Error producing message in loop");
                 }
             }
         } catch (Exception e) {
-            logger.log(java.util.logging.Level.SEVERE, "Error producing messages", e);
+            writeLog("Error producing messages");
         }
     }
 
@@ -580,7 +578,7 @@ public class KafkaHelper {
         Properties properties = getKafkaConsumerProperties(consumerId);
         String consumerGroupId = properties.get(ConsumerConfig.GROUP_ID_CONFIG).toString();
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        logger.info("Check that " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
+        writeLog("Check that " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
 
         // Subscribe to the topic
         try (consumer) {
@@ -632,7 +630,7 @@ public class KafkaHelper {
         String consumerId = getFreeConsumerId();
         Properties properties = getKafkaConsumerProperties(consumerId);
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
-        logger.info("Check that all params " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
+        writeLog("Check that all params " + Arrays.toString(textToSearchList) + " presented in topic=" + topic);
         // Subscribe to the topic
 
         try (consumer) {
@@ -649,13 +647,13 @@ public class KafkaHelper {
 
                 // Process each record
                 for (ConsumerRecord<String, String> record : records) {
-                    logger.info(String.format("Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
+                    writeLog(String.format("Consumed message from %s: key = %s, value = %s, partition = %d, offset = %d", topic, record.key(), record.value(), record.partition(), record.offset()));
                     // Check if each textToSearch is present in the message value
                     for (String text : textToSearchList) {
                         if (record.value() != null && record.value().contains(text)) {
                             foundTexts.add(text); // Mark this text as found
-                            logger.info("Text size: " + foundTexts.size());
-                            logger.info("Search length: " + textToSearchList.length);
+                            writeLog("Text size: " + foundTexts.size());
+                            writeLog("Search length: " + textToSearchList.length);
                         }
                     }
                     // If all texts are found, we can stop searching

@@ -32,6 +32,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_CLIENTS)
@@ -101,7 +102,7 @@ class GetClientsTests extends TestBaseApi {
         Response response = getClientsIdByTradingAccountServerId(queryParams);
 
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        System.out.println(response);
+        writeLog(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
@@ -134,7 +135,7 @@ class GetClientsTests extends TestBaseApi {
         queryParams.put("serverId", 1);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        System.out.println(response);
+        writeLog(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
@@ -151,7 +152,7 @@ class GetClientsTests extends TestBaseApi {
         queryParams.put("brand", "1");
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        System.out.println(response);
+        writeLog(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));
@@ -168,7 +169,7 @@ class GetClientsTests extends TestBaseApi {
         queryParams.put("userId", 1);
         Response response = getClientsIdByTradingAccountServerId(queryParams);
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
-        System.out.println(response);
+        writeLog(response);
 
         // Assert response
         assertThat("Check response code", response.code(), is(400));

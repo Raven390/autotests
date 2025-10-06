@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -45,8 +44,6 @@ public abstract class AbstractPage {
     protected static final String BODY_SHORT_LOCATOR = "*[contains(@class, 'g-text_variant_body-short')]";
     protected static final String VARIANT_BODY_1_SELECTOR = "*[contains(@class, 'g-text_variant_body-1')]";
     protected static final String VARIANT_CAPTION_2_SELECTOR = "*[contains(@class, 'g-text_variant_caption-2')]";
-
-    public Logger logger = Logger.getLogger("TestPageLogger");
 
     public AbstractPage(Page page) {
         this.page = page;
