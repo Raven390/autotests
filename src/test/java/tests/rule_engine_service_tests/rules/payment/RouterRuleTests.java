@@ -1,6 +1,6 @@
 package tests.rule_engine_service_tests.rules.payment;
 
-import business_objects.api.clickhouse_api_service.get_rate_usd.GetRaterUsdResponse;
+import business_objects.api.clickhouse_api_service.get_rates_usd.GetRatesUsdResponse;
 import business_objects.api.payment_gate.decisions.PutDecisionsRequestBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
@@ -24,7 +24,7 @@ import tests.TestBaseRule;
 import java.io.IOException;
 import java.util.*;
 
-import static business_objects.api.clickhouse_api_service.get_rate_usd.GetRaterUsdRequest.getRateUsd;
+import static business_objects.api.clickhouse_api_service.get_rates_usd.GetRatesUsdRequest.getRateUsd;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.payment_gate.decisions.DecisionsRequests.putDecisions;
 import static helpers.data.rules.payments.RouterRuleDataFactory.setupRouterRuleData;
@@ -83,7 +83,7 @@ class RouterRuleTests extends TestBaseRule {
         assertThat("Assert rule execution", paymentRuleExecutionsObject.getRuleId(), is(5));
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
-        assertThat("Assert decisionType", paymentDecisionsObject.getFirst().getDecisionType(), is("payment"));
+        assertThat("Assert decisionType", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
         assertThat("Assert decisionId", paymentDecisionsObject.getFirst().getDecisionCode(), is(1));
 
         assertThat("Assert final_decision_id", paymentEventsObject.getFinalDecisionId(), is(2));
@@ -117,6 +117,10 @@ class RouterRuleTests extends TestBaseRule {
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
         Assertions.assertNotNull(paymentEventsObject);
         UUID paymentId = paymentEventsObject.getPaymentId();
+
+        List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
+        assertThat("Assert decisionType", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
+        assertThat("Assert decisionId", paymentDecisionsObject.getFirst().getDecisionCode(), is(0));
 
         Allure.step("Send payment rejection");
         PutDecisionsRequestBody putPaymentDecisionBody1 = new PutDecisionsRequestBody();
@@ -157,6 +161,10 @@ class RouterRuleTests extends TestBaseRule {
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
         Assertions.assertNotNull(paymentEventsObject);
         UUID paymentId = paymentEventsObject.getPaymentId();
+
+        List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
+        assertThat("Assert decisionType", paymentDecisionsObject.getFirst().getDecisionType(), is("risk"));
+        assertThat("Assert decisionId", paymentDecisionsObject.getFirst().getDecisionCode(), is(0));
 
         Allure.step("Send payment rejection");
         PutDecisionsRequestBody putPaymentDecisionBody1 = new PutDecisionsRequestBody();
@@ -214,7 +222,7 @@ class RouterRuleTests extends TestBaseRule {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("currency", data.crmWithdrawalEvent.getWithdrawalCurrency());
         Response response = getRateUsd(queryParams);
-        Double rateUsd = Arrays.stream(objectMapper.readValue(response.body().string(), GetRaterUsdResponse[].class)).toList().getFirst().getRateUsd();
+        Double rateUsd = Arrays.stream(objectMapper.readValue(response.body().string(), GetRatesUsdResponse[].class)).toList().getFirst().getRateUsd();
 
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.rateUSD, is(rateUsd.toString()));
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.amountUSD, is(String.valueOf(data.crmWithdrawalEvent.getWithdrawalAmount() * rateUsd)));

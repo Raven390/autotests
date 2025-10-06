@@ -25,6 +25,8 @@ import helpers.database.DbName;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static business_objects.api.connection_search_api.get_connections.GetConnectionsRequest.getConnectionsByClientId;
@@ -43,6 +45,10 @@ public class Utils {
     private static final Logger logger = Logger.getLogger(Utils.class.getName());
 
     static SecureRandom random = new SecureRandom();
+
+    public static void writeLog(String message) {
+        logger.log(Level.INFO, message);
+    }
 
     public static Integer getRandomInt() {
         return random.nextInt();
@@ -78,7 +84,7 @@ public class Utils {
 
     public static String getRandomEmail() {
         String email = "testmail" + getRandomInt() + "@mail.com";
-        logger.info("Generated email: " + email);
+        writeLog("Generated email: " + email);
         return email;
     }
 
@@ -367,7 +373,7 @@ public class Utils {
 
         long time = ChronoUnit.MINUTES.between(dateTime, dateTime2);
 
-        logger.info("TIME DIFFERENCE IN MINUTES IS " + time);
+        writeLog("TIME DIFFERENCE IN MINUTES IS " + time);
 
         return time;
     }
@@ -481,7 +487,7 @@ public class Utils {
 
     public static double convertToUsd(double amount, String symbol) {
         RatesUsdCurrentObject rate = getObjectsFromDBFinal(CLICKHOUSE, RATES_USD_CURRENT, "currency = '" + symbol + "'", RatesUsdCurrentObject.class).getFirst();
-        logger.info("rate is " + rate.getRate());
+        writeLog("rate is " + rate.getRate());
         return amount * rate.getRate();
     }
 

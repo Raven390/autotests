@@ -115,7 +115,7 @@ public class MirrorFlagDataInserter {
         return rawQuerry.replace("clientBrand", client.getBrand()).replace("clientRegulator", client.getRegulator()).replace("clientId", client.getUserId().toString()).replace("clientAccount", client.getTradingAccount().toString()).replace("clientServerId", client.getServerId().toString()).replace("clientUcid", client.getUcid());
     }
 
-    public static void deleteMirrorFlagData(ClientHelper client) {
+    public static void deleteData(ClientHelper client) {
         try {
             deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         } catch (Exception e) {

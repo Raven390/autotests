@@ -142,12 +142,12 @@ public class TestBaseRule {
     }
 
     @Step("Check {elementId} presented in rule path")
-    public static void checkElementId(String elementId, String eventId, String ruleName) {
+    public static void checkElementId(String elementId, String eventId, String bpmnProcessId) {
 
         // Wait until runId appears in zeebe_rules_started
         ZeebeRulesStarted started = await().atMost(120, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
             List<ZeebeRulesStarted> startedList = getObjectsFromDB(
-                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", REPORTING_DB_ZEEBE_RULES_STARTED, eventId, ruleName), ZeebeRulesStarted.class);
+                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", REPORTING_DB_ZEEBE_RULES_STARTED, eventId, bpmnProcessId), ZeebeRulesStarted.class);
 
             if (startedList != null && !startedList.isEmpty()) {
                 return startedList.getFirst();

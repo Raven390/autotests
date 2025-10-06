@@ -12,7 +12,7 @@ public class RuleExecutionsRequestBodyFactory {
     public static PostRuleExecutionsBody generatePostRuleExecutionsBody(PaymentEventsObject event) {
         PostRuleExecutionsBody body = new PostRuleExecutionsBody();
 
-        body.setRunId(String.valueOf(System.currentTimeMillis()));
+        body.setRunId(getRandomIntPositive().toString());
         body.setPaymentId(event.getPaymentId());
         body.setRuleId(101);
         body.setRuleVersion("1.0." + getRandomIntPositive());
@@ -25,7 +25,7 @@ public class RuleExecutionsRequestBodyFactory {
     public static PutRuleExecutionsBody generatePutRuleExecutionsBody(PaymentEventsObject event) {
         PutRuleExecutionsBody body = new PutRuleExecutionsBody();
 
-        body.setRunId(String.valueOf(System.currentTimeMillis()));
+        body.setRunId(getRandomIntPositive().toString());
         body.setPaymentId(event.getPaymentId());
         body.setRuleId(101);
         body.setRuleVersion("1.0." + getRandomIntPositive());

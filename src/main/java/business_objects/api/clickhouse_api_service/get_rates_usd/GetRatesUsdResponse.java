@@ -1,10 +1,10 @@
-package business_objects.api.clickhouse_api_service.get_rate_usd;
+package business_objects.api.clickhouse_api_service.get_rates_usd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class GetRaterUsdResponse {
+public class GetRatesUsdResponse {
 
     @JsonProperty("rateUSD")
     private Double rateUsd;
@@ -30,7 +30,7 @@ public class GetRaterUsdResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof GetRaterUsdResponse that)) return false;
+        if (!(o instanceof GetRatesUsdResponse that)) return false;
         return Objects.equals(rateUsd, that.rateUsd) && Objects.equals(currency, that.currency);
     }
 
