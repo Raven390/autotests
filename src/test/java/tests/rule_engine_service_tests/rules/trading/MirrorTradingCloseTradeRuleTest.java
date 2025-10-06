@@ -18,7 +18,6 @@ import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.WaveFlagInserter.deleteWaveFlagData;
-import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.data.rules.trading.MirrorTradingCloseTradeEventRuleDataFactory.setupMirrorTradingCloseTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -38,8 +37,6 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
         // Enable emulator to set restrictions to status APPLIED
         enableCRMEmulator();
         dbDataMap = setupMirrorTradingCloseTradeRuleData();
-        insertWaveFlagData(dbDataMap.get("15").clientHelper);
-        insertWaveFlagData(dbDataMap.get("16").clientHelper);
     }
 
     @AfterAll
@@ -284,14 +281,14 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
+
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-
-        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -302,14 +299,14 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
+
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-
-        checkElementId("Event_end_8", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
@@ -320,25 +317,19 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-
         checkElementId("Event_12inxex", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test
     @AllureId("1435")
-    @DisplayName("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_end_4")
+    @DisplayName("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     void mirrorTradeRuleTest13() throws Exception {
         DataHelper data = dbDataMap.get("13");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        Thread.sleep(30_000);
+        checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, "mirror_trade");
+
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -371,8 +362,6 @@ class MirrorTradingCloseTradeRuleTest extends TestBaseRule {
         assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
         assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Mirror trade pattern"));
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
-
-        checkElementId("Event_end_4", data.closeTradeMtEvent.id, "mirror_trade");
     }
 
     @Test

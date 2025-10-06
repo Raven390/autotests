@@ -59,6 +59,13 @@ class ReconciliationTests {
     private static PaymentDetailsObject paymentDetailsObject3;
     private static TmpRuleDecisionsObject tmpRuleDecisionsObject3;
 
+    private static ClientHelper client4;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject4;
+    private static PutRuleExecutionsBody putRuleExecutionsBody4;
+    private static PaymentEventsObject paymentEventsObject4;
+    private static PaymentDetailsObject paymentDetailsObject4;
+    private static TmpRuleDecisionsObject tmpRuleDecisionsObject4;
+
     @BeforeAll
     static void setupData() throws Exception {
 
@@ -88,6 +95,15 @@ class ReconciliationTests {
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
         tmpRuleDecisionsObject3 = generateTmpRuleDecisionsObject(paymentEventsObject3);
         putRuleExecutionsBody3 = generatePutRuleExecutionsBody(paymentEventsObject3);
+
+        client4 = getRandomVantageClientAllFields();
+        crmTbWithdrawalObject4 = generateCrmTbWithdrawalObjectByClient(client4);
+        paymentEventsObject4 = generatePaymentEventsObject(client4);
+        paymentEventsObject4.setCrmId(crmTbWithdrawalObject4.transferId.toString());
+        paymentEventsObject4.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
+        tmpRuleDecisionsObject4 = generateTmpRuleDecisionsObject(paymentEventsObject4);
+        putRuleExecutionsBody4 = generatePutRuleExecutionsBody(paymentEventsObject4);
     }
 
     @AfterAll
@@ -102,26 +118,25 @@ class ReconciliationTests {
 
     @Test
     @AllureId("1575")
-    @DisplayName("Payment reconciliation test 1. Status = Risk audit and id = 20 -> DELIVERED")
+    @DisplayName("Payment reconciliation test 1. Payment not found")
     void ReconciliationTest1() throws Exception {
         crmTbWithdrawalObject1.setStatusId(20);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, List.of(tmpRuleDecisionsObject1));
-        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject1));
 
         Thread.sleep(125_000);
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client1.getUcid());
-        assertThat("Check status", event.getDeliveryStatus(), is("DELIVERED"));
+        assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
     }
 
     @Test
     @AllureId("1577")
-    @DisplayName("Payment reconciliation test 2. Status = Risk audit1 and id = 21 -> DELIVERED")
+    @DisplayName("Payment reconciliation test 2. Status != Risk audit and id != 21 -> DELIVERED")
     void ReconciliationTest2() throws Exception {
-        crmTbWithdrawalObject2.setStatus("Risk Audit1");
-        crmTbWithdrawalObject2.setStatusId(21);
+        crmTbWithdrawalObject2.setStatus("Risk Audit_");
+        crmTbWithdrawalObject2.setStatusId(212);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject2));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject2));
@@ -135,15 +150,32 @@ class ReconciliationTests {
 
     @Test
     @AllureId("1578")
-    @DisplayName("Payment reconciliation test 3. Status = Risk audit and id = 21 -> FAILED")
+    @DisplayName("Payment reconciliation test 3. Status = Risk audit_ and id = 21 -> FAILED")
     void ReconciliationTest3() throws Exception {
-        crmTbWithdrawalObject3.setStatus("Risk Audit");
+        crmTbWithdrawalObject3.setStatus("Risk Audit_");
         crmTbWithdrawalObject3.setStatusId(21);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject3));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject3));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, List.of(tmpRuleDecisionsObject3));
         insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject3));
+
+        Thread.sleep(125_000);
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client3.getUcid());
+        assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
+    }
+
+    @Test
+    @AllureId("1645")
+    @DisplayName("Payment reconciliation test 3. Status = Risk audit and id = 22 -> FAILED")
+    void ReconciliationTest4() throws Exception {
+        crmTbWithdrawalObject4.setStatus("Risk Audit");
+        crmTbWithdrawalObject4.setStatusId(22);
+
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject4));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject4));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, List.of(tmpRuleDecisionsObject4));
+        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject4));
 
         Thread.sleep(125_000);
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client3.getUcid());

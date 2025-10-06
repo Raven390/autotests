@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
@@ -23,6 +25,7 @@ import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoerce
 import static business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsFactory.generateS3FactIbSalesCommissionsClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.setupData;
+import static helpers.data.rules.ShortToxicityInserter.insertShortToxicityOrdersData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -55,68 +58,23 @@ public class LatencyArbitrageRuleDataFactory {
     }
 
 
-    @Step("Exit from rule without alert if Platform is not MT5")
+    @Step("Latency arbitrage rule rule. Exit without alert if user is a test/st user")
     private static DataHelper getLatencyArbitrageRuleTest1Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest1Client);
-        data.closeTradeMtEvent.metadata = new TradeEventMetadata("MT4");
-        return data;
-    }
-
-    @Step("Exit from rule without alert if user is test or social trader user")
-    private static DataHelper getLatencyArbitrageRuleTest2Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest2Client);
         data.dictIsTestObject = generateDictIsTestByClientTrue(data.clientHelper);
         return data;
     }
 
-    @Step("Latency arbitrage. Exit without alert if user has less that 10 trading days")
-    private static DataHelper getLatencyArbitrageRuleTest3Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest3Client);
-        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 11);
-        return data;
-    }
+    @Step("Latency arbitrage rule. Exit without alert if user has resolved alerts. ElementId: Event_end_12")
+    private static DataHelper getLatencyArbitrageRuleTest2Data() throws Exception {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest2Client);
 
-    @Step("Latency arbitrage. Exit without alert if user has less that 100 trades")
-    private static DataHelper getLatencyArbitrageRuleTest4Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest4Client);
-        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 9);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 10, getCurrentTimestampDbFormat());
-        return data;
-    }
-
-    @Step("Latency arbitrage. Exit without alert if netProfit + rebatesAmount not >= 500?")
-    private static DataHelper getLatencyArbitrageRuleTest5Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest5Client);
-        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 9);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 100, getCurrentTimestampDbFormat());
-        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
-        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(1d);
-        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(1d);
-        return data;
-    }
-
-    @Step("Latency arbitrage. Exit without alert if Total Profit / Cumulative deposit not >= 0.3")
-    private static DataHelper getLatencyArbitrageRuleTest6Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest6Client);
-        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
-        data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
-        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
-        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
-        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
-        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(300d);
-        return data;
-    }
-
-    @Step("Latency arbitrage. Exit without alert if shortToxicity / ((netProfit + rebatesAmount) * 100) not >= 80")
-    private static DataHelper getLatencyArbitrageRuleTest7Data() {
-        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest7Client);
         data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
         data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
         // Generate deals
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
+        data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
+        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
         // Generate ib commission
         data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
         data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
@@ -127,20 +85,48 @@ public class LatencyArbitrageRuleDataFactory {
         data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
         data.mtBalanceOrdersObjects.getFirst().amount = 100d;
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
+
+        insertShortToxicityOrdersData(data.clientHelper);
+
+        data.boAlertsObjects = List.of(generateAlert(data.clientHelper));
+        data.boAlertsObjects.getFirst().setRule("Latency Arbitrage");
+        data.boAlertsObjects.getFirst().setStatus("CLOSED");
         return data;
     }
 
-    public static Map<String, DataHelper> setupLatencyArbitrageData() {
+    @Step("Latency arbitrage. Exit without alert if user has less that 10 trading days")
+    private static DataHelper getLatencyArbitrageRuleTest3Data() throws InterruptedException {
+        DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest3Client);
+
+        data.dictIsTestObject = generateDictIsTestByClientFalse(data.clientHelper);
+        data.dictActiveTradingDaysByUcidObject = generateTradingDaysByClient(data.clientHelper, 1);
+        // Generate deals
+        data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101, getCurrentTimestampDbFormat());
+        data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
+        data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
+        // Generate ib commission
+        data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
+        data.s3FactIbSalesCommissionsObject.getFirst().setSalesCommission(300d);
+        data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(300d);
+        // Generate cumulative deposit data
+        data.mtBalanceOrdersObjects = List.of(
+                generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
+        data.mtBalanceOrdersObjects.getFirst().comment = "deposit";
+        data.mtBalanceOrdersObjects.getFirst().amount = 100d;
+        data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
+
+        insertShortToxicityOrdersData(data.clientHelper);
+
+        return data;
+    }
+
+    public static Map<String, DataHelper> setupLatencyArbitrageData() throws Exception {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a list
         map.put("1", getLatencyArbitrageRuleTest1Data());
         map.put("2", getLatencyArbitrageRuleTest2Data());
         map.put("3", getLatencyArbitrageRuleTest3Data());
-        map.put("4", getLatencyArbitrageRuleTest4Data());
-        map.put("5", getLatencyArbitrageRuleTest5Data());
-        map.put("6", getLatencyArbitrageRuleTest6Data());
-        map.put("7", getLatencyArbitrageRuleTest7Data());
 
         setupData(map);
 

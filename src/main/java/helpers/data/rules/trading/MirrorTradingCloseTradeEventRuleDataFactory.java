@@ -29,6 +29,8 @@ import static business_objects.db.data_science.ucid_mirror_score_python.UcidMirr
 import static helpers.data.ClientFactory.*;
 import static helpers.data.DataHelper.addAlert;
 import static helpers.data.DataHelper.setupData;
+import static helpers.data.rules.MaxUsedLeverageInserter.insertMaxUsedLeverageData;
+import static helpers.data.rules.WaveFlagInserter.insertWaveFlagData;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -128,7 +130,7 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    @Description("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. Event_end_4")
+    @Description("Mirror trading. Scotland. Exit with alert and restriction if Leverage > 200. ElementId: Event_1k86ppo")
     private static DataHelper getMirrorTradingCloseTradeTest13Data() {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest13Data);
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
@@ -142,6 +144,8 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
         data.mtAccountObject.equityUsd = 3d;
         data.mtAccountObject.equity = 3d;
+        insertMaxUsedLeverageData(data.clientHelper);
+
         return data;
     }
 
@@ -163,7 +167,7 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
     }
 
     @Description("Mirror trading. Waves. Exit without alert if pattern matched and at least 1 resolved alerts. ElementId: Event_end_9")
-    public static DataHelper getMirrorTradingCloseTradeTest15Data() {
+    public static DataHelper getMirrorTradingCloseTradeTest15Data() throws InterruptedException {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest15Data);
         data.mtTbCreditsObjects = null;
         data.crmTbDepositObjects = null;
@@ -173,11 +177,12 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtAccountObject.equityUsd = 3d;
         data.mtAccountObject.equity = 3d;
         addAlert(data, "Mirror Trading", "CLOSED");
+        insertWaveFlagData(data.clientHelper);
         return data;
     }
 
     @Description("Mirror trading. Waves. Exit with alert and MWR if pattern matched and at no resolved alerts. ElementId: Event_end_9")
-    public static DataHelper getMirrorTradingCloseTradeTest16Data() {
+    public static DataHelper getMirrorTradingCloseTradeTest16Data() throws InterruptedException {
         DataHelper data = getMirrorTradingRuleData(getMirrorTradingCloseTradeTest16Data);
         data.mtTbCreditsObjects = null;
         data.crmTbDepositObjects = null;
@@ -186,6 +191,7 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
         data.mtAccountObject.equityUsd = 3d;
         data.mtAccountObject.equity = 3d;
+        insertWaveFlagData(data.clientHelper);
         return data;
     }
 
@@ -272,7 +278,7 @@ public class MirrorTradingCloseTradeEventRuleDataFactory {
         return data;
     }
 
-    public static Map<String, DataHelper> setupMirrorTradingCloseTradeRuleData() {
+    public static Map<String, DataHelper> setupMirrorTradingCloseTradeRuleData() throws InterruptedException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
