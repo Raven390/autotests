@@ -100,7 +100,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account1.account), equalTo(account1.accountStatus));
         assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account1.account), equalTo(account1.platform));
         assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account1.account), equalTo(account1.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account1.account), equalTo(String.format("%s %s", trade1.getProfitUsd(), CURRENCY_USD)));
+        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTradingPnl(account1.account), equalTo(String.format("%s %s", trade1.getProfitUsd(), CURRENCY_USD)));
         assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account1.account), equalTo(String.format("%s %s", account1.equity, account1.currency)));
         assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account1.account), equalTo(String.format("%s %s", account1.credit, account1.currency)));
         assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account1.account), equalTo(account1.leverage.toString()));
@@ -114,7 +114,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         assertThat("Assert that account status in card view is as expected", tradingPage.getAccountStatus(account2.account), equalTo(account2.accountStatus));
         assertThat("Assert that account platform in card view is as expected", tradingPage.getAccountPlatform(account2.account), equalTo(account2.platform));
         assertThat("Assert that account type in card view is as expected", tradingPage.getAccountType(account2.account), equalTo(account2.accountType));
-        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTotalPnl(account2.account), equalTo(String.format("%s %s", trade2.getProfitUsd(), CURRENCY_USD)));
+        assertThat("Assert that account total pnl in card view is as expected", tradingPage.getAccountTradingPnl(account2.account), equalTo(String.format("%s %s", trade2.getProfitUsd(), CURRENCY_USD)));
         assertThat("Assert that account equity in card view is as expected", tradingPage.getAccountEquity(account2.account), equalTo(String.format("%s %s", account2.equity, account2.currency)));
         assertThat("Assert that account credit in card view is as expected", tradingPage.getAccountCredit(account2.account), equalTo(String.format("%s %s", account2.credit, account2.currency)));
         assertThat("Assert that account leverage in card view is as expected", tradingPage.getAccountLeverage(account2.account), equalTo(account2.leverage.toString()));

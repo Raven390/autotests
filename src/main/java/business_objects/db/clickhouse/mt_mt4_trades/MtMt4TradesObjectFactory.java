@@ -30,7 +30,7 @@ public class MtMt4TradesObjectFactory {
         trade.accountType = "autoTestType";
         trade.accountGroup = "autoTestGroup";
         trade.accountCurrency = "autoTestGroup";
-        trade.ticket = 424242L;
+        trade.ticket = getRandomLongPositive();
         trade.cmd = 1;
         trade.reason = 0L;
         trade.contractSize = 1L;

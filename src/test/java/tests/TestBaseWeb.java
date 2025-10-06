@@ -60,8 +60,9 @@ public class TestBaseWeb {
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
-    public static DecimalFormat dfwholed = new DecimalFormat("###,###,###");
-    public static DecimalFormat decimalFormat = new DecimalFormat("###,###,###.##");
+    public static DecimalFormat dfWholed = new DecimalFormat("###,###,###");
+    public static DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.##");
+
 
     public Faker faker = new Faker();
 
@@ -72,6 +73,15 @@ public class TestBaseWeb {
                 TIMEOUT));
         startSshTunnel();
         enableCRMEmulator();
+
+        df.setMinimumFractionDigits(1);
+        df.setMaximumFractionDigits(2);
+
+        dfd.setMinimumFractionDigits(1);
+        dfd.setMaximumFractionDigits(2);
+
+        decimalFormat.setMinimumFractionDigits(1);
+        decimalFormat.setMaximumFractionDigits(2);
     }
 
     @AfterAll
