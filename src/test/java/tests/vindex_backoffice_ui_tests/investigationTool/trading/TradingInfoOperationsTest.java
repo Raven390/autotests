@@ -31,7 +31,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 
-public class TradingInfoDealsTest extends TestBaseWeb {
+public class TradingInfoOperationsTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);

@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class TradingInfoDealsSortingFiltrationTest extends TestBaseWeb {
+public class TradingInfoOperationsSortingFiltrationTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
