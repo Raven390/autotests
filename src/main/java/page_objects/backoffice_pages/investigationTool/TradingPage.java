@@ -755,8 +755,8 @@ public class TradingPage extends AbstractPage {
     }
 
     @Step("Get account total pnl in card view")
-    public String getAccountTotalPnl(int accountId) {
-        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Total PNL")).textContent();
+    public String getAccountTradingPnl(int accountId) {
+        return accountCard.nth(getAccountIndex(accountId)).locator(String.format(ACCOUNT_CARD_VALUE_BY_TITLE_PATTERN, "Trading PNL")).textContent();
     }
 
     @Step("Get account equity in card view")

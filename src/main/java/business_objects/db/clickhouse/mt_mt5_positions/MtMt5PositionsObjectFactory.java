@@ -8,8 +8,7 @@ import io.qameta.allure.Step;
 
 import java.util.Locale;
 
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getRandomRoundedDouble;
+import static utils.Utils.*;
 
 public class MtMt5PositionsObjectFactory {
     @Step("Generate mt5 position object")
@@ -89,7 +88,7 @@ public class MtMt5PositionsObjectFactory {
         position.setAccountType("testAccountType");
         position.setAccountGroup("testAccountGroup");
         position.setAccountCurrency("USD");
-        position.setPositionId(client.getUserId());
+        position.setPositionId(getRandomIntPositive());
         position.setAction(0);
         position.setReason(0);
         position.setContractSize(1.0);

@@ -123,7 +123,7 @@ class PaymentsTabTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         paymentsPage.hoverOverCashflowLineByTypeDeposit(transaction.paymentType);
-        paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentChannel, dfwholed.format(Math.round(transaction.amountUsd)));
+        paymentsPage.checkTotalCountByPaymentSystem(transaction.paymentChannel, dfWholed.format(Math.round(transaction.amountUsd)));
         CrmTbDepositObject transaction2 = generateDepositByClient(client);
         transaction2.paymentType = "P2P";
         transaction2.paymentChannel = "chanel1";
@@ -384,9 +384,9 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("filter test date");
         paymentsPage.selectDateFilter("Last 7 days");
         paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(totalDeposits));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(totalWithdrawals));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(totalCredits));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(totalDeposits));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(totalWithdrawals));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(totalCredits));
     }
 
     @Test
@@ -505,9 +505,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDatesInCalendar("2024-12-11", "2024-12-11");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay("Dec 11");
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test
@@ -565,9 +565,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDateFilter("Last 1 year");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test
@@ -624,9 +624,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDateFilter("Last 30 days");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test
@@ -683,9 +683,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDateFilter("Last 6 months");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test
@@ -743,9 +743,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDateFilter("Last 7 days");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test
@@ -802,9 +802,9 @@ class PaymentsTabTest extends TestBaseWeb {
         paymentsPage.selectDateFilter("Last 90 days");
         Allure.step("check that only data for the test date is displayed");
         paymentsPage.hoverOverFirstFilledTransactionsGraphByDateSingleDay();
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfwholed.format(deposit1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfwholed.format(withdrawal1.amountUsd));
-        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfwholed.format(credit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Deposit", dfWholed.format(deposit1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Withdrawal", dfWholed.format(withdrawal1.amountUsd));
+        paymentsPage.checkFinancialTransactionsRowInTooltip("Credit", dfWholed.format(credit1.amountUsd));
     }
 
     @Test

@@ -33,6 +33,8 @@ import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMe
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.BoHelper.*;
+import static helpers.database.ChHelper.calculateDepositValue;
+import static helpers.database.ChHelper.calculateWithdrawalsValue;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
@@ -93,7 +95,7 @@ public class SummaryPanelTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Total PNL", tradingPage.calculatePnlByDeal(deal1));
+        generalTab.checkSummaryPanelValue("Trading PNL", tradingPage.calculatePnlByDeal(deal1));
     }
 
     @Test
@@ -110,13 +112,19 @@ public class SummaryPanelTest extends TestBaseWeb {
         depositObject1.statusId = 5;
         CrmTbDepositObject depositObject2 = generateDepositByClient(client);
         depositObject2.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        depositObject2.statusId = 5;
-        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(depositObject1, depositObject2));
+        depositObject2.statusId = 6;
+        CrmTbDepositObject depositObject3 = generateDepositByClient(client);
+        depositObject3.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        depositObject3.statusId = 9;
+        CrmTbDepositObject depositObject4 = generateDepositByClient(client);
+        depositObject4.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        depositObject4.statusId = 4;
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(depositObject1, depositObject2, depositObject3, depositObject4));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Deposits", depositObject1.amountUsd + depositObject2.amountUsd);
+        generalTab.checkSummaryPanelValue("Deposits", calculateDepositValue(depositObject1, depositObject2, depositObject3));
     }
 
     @Test
@@ -130,16 +138,44 @@ public class SummaryPanelTest extends TestBaseWeb {
         Allure.step("Prepare DB data for test user");
         CrmTbWithdrawalObject withdrawalObject1 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawalObject1.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject1.statusId = 16;
+        withdrawalObject1.reversedAmountUsd = roundDouble((withdrawalObject1.amountUsd / 2), 2);
+        withdrawalObject1.statusId = 3;
         CrmTbWithdrawalObject withdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawalObject2.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject2.statusId = 7;
-        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawalObject1, withdrawalObject2));
+        withdrawalObject2.reversedAmountUsd = roundDouble((withdrawalObject2.amountUsd / 2), 2);
+        withdrawalObject2.statusId = 5;
+        CrmTbWithdrawalObject withdrawalObject3 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject3.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject3.reversedAmountUsd = roundDouble((withdrawalObject3.amountUsd / 2), 2);
+        withdrawalObject3.statusId = 7;
+        CrmTbWithdrawalObject withdrawalObject4 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject4.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject4.reversedAmountUsd = roundDouble((withdrawalObject4.amountUsd / 2), 2);
+        withdrawalObject4.statusId = 9;
+        CrmTbWithdrawalObject withdrawalObject5 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject5.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject5.reversedAmountUsd = roundDouble((withdrawalObject5.amountUsd / 2), 2);
+        withdrawalObject5.statusId = 16;
+        CrmTbWithdrawalObject withdrawalObject6 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject6.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject6.reversedAmountUsd = roundDouble((withdrawalObject6.amountUsd / 2), 2);
+        withdrawalObject6.statusId = 17;
+        CrmTbWithdrawalObject withdrawalObject7 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject7.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject7.reversedAmountUsd = roundDouble((withdrawalObject7.amountUsd / 2), 2);
+        withdrawalObject7.statusId = 61;
+        withdrawalObject7.status = "1";
+        CrmTbWithdrawalObject withdrawalObject8 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawalObject8.amountUsd = getRandomRoundedDouble(0.00, 500_000);
+        withdrawalObject8.reversedAmountUsd = roundDouble((withdrawalObject8.amountUsd / 2), 2);
+        withdrawalObject8.statusId = 61;
+        withdrawalObject8.status = "2";
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7, withdrawalObject8));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Withdrawals", withdrawalObject1.amountUsd + withdrawalObject2.amountUsd);
+        generalTab.checkSummaryPanelValue("Withdrawals", calculateWithdrawalsValue(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7));
     }
 
     @Test
