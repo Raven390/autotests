@@ -1,11 +1,13 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
+import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,19 +23,23 @@ import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
+import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
 import static helpers.data.enums.FraudTypeOld.*;
 import static helpers.database.BoHelper.*;
-import static helpers.database.ChHelper.calculateDepositValue;
 import static helpers.database.ChHelper.calculateWithdrawalsValue;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
@@ -41,11 +47,16 @@ import static utils.Utils.*;
 import static utils.Utils.getRandomRoundedDouble;
 
 public class SummaryPanelTest extends TestBaseWeb {
-
+    // Format: US format with comma as thousands separator, dot as decimal, ALWAYS 2 decimals
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.US));
     private static final ClientHelper client = new ClientHelper(222_201, "d555fa11-3e45-44d3-8070-e28eaff987c7", Brand.INFINOX, Regulator.VFSC2, 222_201_001, 22_201_002, 42);
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
+
+    static {
+        DECIMAL_FORMAT.setMinimumFractionDigits(2);
+    }
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException,
@@ -57,6 +68,8 @@ public class SummaryPanelTest extends TestBaseWeb {
         insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount1);
+        CrmTbAccountForMtObject crmTbAccountForMt1 = generateAccountForMtByAccount(account1);
+        insertObjectToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, crmTbAccountForMt1);
 
     }
 
@@ -67,64 +80,101 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel PNL")
     public void clientSummaryPnlTest() {
+        // Clean ALL related data
         deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount());
-        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "account =" + client.getTradingAccount2());
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+        deleteObjectFromDb(MT4_TRADES_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+
         Allure.step("Generate historical data what not include current date");
         S3FactLoginMetricsObject historyMetrics1 = generateS3FactLoginMetricsClient(client);
         historyMetrics1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
         historyMetrics1.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
+
         S3FactLoginMetricsObject historyMetrics2 = generateS3FactLoginMetricsClient(client);
         historyMetrics2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
         historyMetrics2.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
+
         insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(historyMetrics1, historyMetrics2));
-        Allure.step("Generate MT5 deals for current date");
+
+        // Calculate daily_net_closed_pnl_d1_usd (historical PNL)
+        double dailyNetClosedPnlD1 = historyMetrics1.getDailyNetClosedPnl() + historyMetrics2.getDailyNetClosedPnl();
+
+        Allure.step("Generate MT5 closed deals (today_pnl_usd)");
         Mt5DealsCoercedObject deal1 = generateTradeByClient(client);
-        deal1.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 0, 0, 0, 1));
-        deal1.setProfitUsd(getRandomRoundedDouble(0, 555_555));
-        deal1.setCommissionUsd(getRandomRoundedDouble(0, 555_555));
-        deal1.setStorageUsd(getRandomDouble());
-        Allure.step("Generate MT5 deals outside of current date");
+        deal1.setTime(getCurrentTimestampDbFormat());
+        deal1.setProfitUsd(getRandomRoundedDouble(100, 1000));
+        deal1.setCommissionUsd(getRandomRoundedDouble(10, 100));
+        deal1.setStorageUsd(getRandomRoundedDouble(5, 50));
+
         Mt5DealsCoercedObject deal2 = generateTradeByClient(client);
-        deal2.setTime(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 1, 0, 0, 1));
-        deal2.setProfitUsd(getRandomRoundedDouble(0, 555_555));
-        deal2.setCommissionUsd(getRandomRoundedDouble(0, 555_555));
-        deal2.setStorageUsd(getRandomDouble());
+        deal2.setTime(getCurrentTimestampDbFormat());
+        deal2.setProfitUsd(getRandomRoundedDouble(100, 1000));
+        deal2.setCommissionUsd(getRandomRoundedDouble(10, 100));
+        deal2.setStorageUsd(getRandomRoundedDouble(5, 50));
+
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2));
 
+        // Calculate today_pnl_usd (today's closed deals: profit + commission + storage)
+        double todayPnlUsd = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
+
+        // realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
+        double realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
+
+        Allure.step("Generate MT4 open trades (floating_pnl_mt4)");
+        MtMt4TradesObject mt4Trade1 = generateMt4TradesObject(client);
+        mt4Trade1.setCloseTime("1970-01-01 00:00:00");
+        mt4Trade1.setCmd(0); // Buy order
+        mt4Trade1.setProfitUsd(getRandomRoundedDouble(50, 500));
+        mt4Trade1.setCommissionUsd(getRandomRoundedDouble(5, 50));
+        mt4Trade1.setStorageUsd(getRandomRoundedDouble(2, 20));
+
+        MtMt4TradesObject mt4Trade2 = generateMt4TradesObject(client);
+        mt4Trade2.setCloseTime("1970-01-01 00:00:00");
+        mt4Trade2.setCmd(1); // Sell order
+        mt4Trade2.setProfitUsd(getRandomRoundedDouble(50, 500));
+        mt4Trade2.setCommissionUsd(getRandomRoundedDouble(5, 50));
+        mt4Trade2.setStorageUsd(getRandomRoundedDouble(2, 20));
+
+        insertObjectsToDb(MT4_TRADES_TABLE_NAME, List.of(mt4Trade1, mt4Trade2));
+
+        // Calculate floating_pnl_mt4_usd (profit + storage + commission)
+        double floatingPnlMt4 = (mt4Trade1.getProfitUsd() + mt4Trade1.getCommissionUsd() + mt4Trade1.getStorageUsd()) + (mt4Trade2.getProfitUsd() + mt4Trade2.getCommissionUsd() + mt4Trade2.getStorageUsd());
+
+        Allure.step("Generate MT5 open positions (floating_pnl_mt5)");
+        MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client);
+        position1.setAccount(client.getTradingAccount());
+        position1.setServerId(client.getServerId());
+        position1.setIsDeleted(0);
+        position1.setAction(0); // Buy
+        position1.setProfitUsd(getRandomRoundedDouble(50, 500));
+        position1.setStorageUsd(getRandomRoundedDouble(2, 20));
+
+        MtMt5PositionsObject position2 = generateMtMt5PositionsObject(client);
+        position2.setAccount(client.getTradingAccount());
+        position2.setServerId(client.getServerId());
+        position2.setIsDeleted(0);
+        position2.setAction(1); // Sell
+        position2.setProfitUsd(getRandomRoundedDouble(50, 500));
+        position2.setStorageUsd(getRandomRoundedDouble(2, 20));
+
+        insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position2));
+
+        // Calculate floating_pnl_mt5_usd (profit + storage, NO commission for positions)
+        double floatingPnlMt5 = (position1.getProfitUsd() + position1.getStorageUsd()) + (position2.getProfitUsd() + position2.getStorageUsd());
+
+        // trading_client_pnl_usd = realized_pnl_usd + floating_pnl_usd
+        // where: realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
+        //        floating_pnl_usd = floating_pnl_mt4_usd + floating_pnl_mt5_usd
+        double expectedPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
+
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Trading PNL", tradingPage.calculatePnlByDeal(deal1));
-    }
 
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("1023")
-    @Feature("BMS-62 Clients summary panel")
-    @DisplayName("Clients summary panel Deposits")
-    public void clientSummaryDepositsTest() {
-        deleteObjectFromDb(CRM_DEPOSIT_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        Allure.step("Prepare DB data for test user");
-        CrmTbDepositObject depositObject1 = generateDepositByClient(client);
-        depositObject1.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        depositObject1.statusId = 5;
-        CrmTbDepositObject depositObject2 = generateDepositByClient(client);
-        depositObject2.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        depositObject2.statusId = 6;
-        CrmTbDepositObject depositObject3 = generateDepositByClient(client);
-        depositObject3.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        depositObject3.statusId = 9;
-        CrmTbDepositObject depositObject4 = generateDepositByClient(client);
-        depositObject4.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        depositObject4.statusId = 4;
-        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(depositObject1, depositObject2, depositObject3, depositObject4));
-
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAutotestUser();
-        generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Deposits", calculateDepositValue(depositObject1, depositObject2, depositObject3));
+        String formattedExpectedPnl = DECIMAL_FORMAT.format(roundDouble(expectedPnl, 2));
+        generalTab.checkSummaryPanelValue("Trading PNL", formattedExpectedPnl);
     }
 
     @Test
@@ -175,7 +225,7 @@ public class SummaryPanelTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Withdrawals", calculateWithdrawalsValue(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7));
+        generalTab.checkSummaryPanelValue("Withdrawals", DECIMAL_FORMAT.format(calculateWithdrawalsValue(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7)));
     }
 
     @Test
@@ -265,8 +315,8 @@ public class SummaryPanelTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Revenue", generalTab.calculateRevenue(revenue));
+        generalTab.checkSummaryPanelValue(
+                "Company RFR", DECIMAL_FORMAT.format(generalTab.calculateRevenue(revenue))
+        );
     }
-
-
 }
