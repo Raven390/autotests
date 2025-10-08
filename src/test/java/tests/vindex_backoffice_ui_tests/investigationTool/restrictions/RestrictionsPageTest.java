@@ -27,12 +27,12 @@ import static helpers.data.enums.Restriction.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.CleanTableHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.checkKafkaRequestApplyUserId;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.checkRestrictionApplymentAuditGeneral;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RestrictionsPageTest extends TestBaseWeb {
@@ -60,7 +60,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, labelClientDB));
 
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(active, inactive));
+        insertCrmAccountsToDb(active, inactive);
     }
 
 

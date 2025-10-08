@@ -35,7 +35,6 @@ class FraudManagingTest extends TestBaseWeb {
 
     @BeforeAll
     static void setup() throws IOException {
-
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
     }
 

@@ -32,6 +32,7 @@ import static helpers.database.DbName.POSTGRES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -55,7 +56,7 @@ public class LogUsersActionsTest extends TestBaseWeb {
         insertObjectToDb(CONNECTIONS_TABLE_NAME, getConnectionTableEntryForUi(client, connectedClient));
         insertObjectToDb(KYC_FILES_TABLE_NAME, getKycFile(client));
         insertObjectToDb(ID_PROOF_TABLE_NAME, getIdProof(client));
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         RuleAlert alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         userId = getUserIdByUser(autotestUserOne());

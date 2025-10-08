@@ -63,7 +63,7 @@ class MitigationServiceApiTest extends TestBaseApi {
         CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
         CrmTbAccountObject active = generateStaticCrmTbAccountActive(restrictionClient);
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(restrictionClientDB, byBitUser));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(active, activeByBit));
+        insertCrmAccountsToDb(active, activeByBit);
         Thread.sleep(5000);
     }
 

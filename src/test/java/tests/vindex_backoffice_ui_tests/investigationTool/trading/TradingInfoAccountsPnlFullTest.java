@@ -35,6 +35,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
 import static utils.Utils.getRandomRoundedDouble;
+import static utils.Utils.insertCrmAccountsToDb;
 
 class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
 
@@ -64,7 +65,7 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = "EUR";
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
@@ -110,7 +111,7 @@ class TradingInfoAccountsPnlFullTest extends TestBaseWeb {
         positions21.setAccount(account2.account);
 
         calculatedPnl = (trade511.getProfitUsd() + trade511.getStorageUsd() + trade511.getCommissionUsd()) + (trade512.getProfitUsd() + trade512.getStorageUsd() + trade512.getCommissionUsd()) + (trade411.getProfitUsd() + trade411.getStorageUsd() + trade411.getCommissionUsd()) + (trade412.getProfitUsd() + trade412.getStorageUsd() + trade412.getCommissionUsd()) + (positions11.getProfitUsd() + positions11.getStorageUsd()) + (positions12.getProfitUsd() + positions12.getStorageUsd());
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
+        insertCrmAccountsToDb(account2);
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);

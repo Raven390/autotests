@@ -26,6 +26,7 @@ import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCo
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.insertCrmAccountsToDb;
 
 public class TradingTest extends TestBaseWeb {
 
@@ -41,7 +42,7 @@ public class TradingTest extends TestBaseWeb {
         crmTbUser.firstName = "Trading";
         crmTbUser.lastName = "Trademan";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertCrmAccountsToDb(account1, account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
     }
 

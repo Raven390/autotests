@@ -40,6 +40,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 
 @Tag(TEAM_BACKOFFICE)
@@ -64,7 +65,7 @@ public class ResolveTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws InterruptedException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, crmAccount);
+        insertCrmAccountsToDb(crmAccount);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         trade1 = generateMt4TradesCoerced(client);
         trade2 = generateMt4TradesCoerced(client);

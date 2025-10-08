@@ -76,7 +76,7 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         CrmTbAccountObject account4 = generateCrmTbAccountDataForUi(connectedClient4);
         CrmTbAccountObject account5 = generateCrmTbAccountDataForUi(connectedClient5);
         CrmTbAccountObject account6 = generateCrmTbAccountDataForUi(connectedClient6);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, account1, account2, account3, account4, account5, account6));
+        insertCrmAccountsToDb(account, account1, account2, account3, account4, account5, account6);
         MtMt4TradesCoercedObject trade = generateMt4TradesCoercedForConnectionSearch(client, 123.45, getCurrentTimestampDbFormat());
         MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedForConnectionSearch(connectedClient1, 12.45, getCurrentTimestampDbFormat());
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedForConnectionSearch(connectedClient2, 25.46, getPreviousWeekTimestampDbFormat());

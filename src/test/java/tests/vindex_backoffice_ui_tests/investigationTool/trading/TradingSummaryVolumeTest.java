@@ -90,7 +90,7 @@ public class TradingSummaryVolumeTest extends TestBaseWeb {
         trade1.closeTime = getCurrentTimestampDbFormat();
         crmTbUser.registrationDate = getCurrentTimestampMinusOffsetFormatted(DATE, 0, 0, 8, 0, 0);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, trade6, trade7, trade8));
     }

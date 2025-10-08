@@ -88,7 +88,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
     @AllureId("1030")
     @DisplayName("Verify IB rebates widget no rebates, 1 account in Trading - Summary")
     public void verifyTradingSummaryIbRebates2Test() {
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation1);
         investigationPage.navigateEnterPage();
@@ -109,7 +109,7 @@ public class TradingSummaryIbRebatesTest extends TestBaseWeb {
     @AllureId("1031")
     @DisplayName("Verify IB rebates widget rebates in Trading - Summary")
     public void verifyTradingSummaryIbRebates3Test() {
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
+        insertCrmAccountsToDb(account2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount2);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation2);
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation3);

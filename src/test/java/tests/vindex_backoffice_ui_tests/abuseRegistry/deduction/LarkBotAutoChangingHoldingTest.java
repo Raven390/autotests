@@ -57,6 +57,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 
 @Feature("BMS-2169 Notifications on auto-deductions after holding to Lark")
@@ -84,7 +85,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         coercedObject = MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedBalance(client, 500.12, "Initial balance");
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, coercedObject);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client);
         insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position1);
@@ -112,7 +113,7 @@ class LarkBotAutoChangingHoldingTest extends TestBaseWeb {
         coercedObject2 = MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedBalance(client2, 500.12, "Initial balance");
         insertObjectToDb(MT4_TRADES_COERCED_TABLE_NAME, coercedObject2);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser2);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
+        insertCrmAccountsToDb(account2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount2);
         MtMt5PositionsObject position2 = generateMtMt5PositionsObject(client2);
         insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position2);

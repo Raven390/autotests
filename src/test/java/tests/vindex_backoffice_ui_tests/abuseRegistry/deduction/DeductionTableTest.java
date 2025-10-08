@@ -34,6 +34,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 import static utils.Utils.writeLog;
 
 
@@ -51,7 +52,7 @@ class DeductionTableTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account.currency = EUR.getCode();
         MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         Thread.sleep(2000);
         addFraudForClient(client, HEDGING, INTERNAL, CONFIRMED, List.of("EURUSD", "GBPUSD"));

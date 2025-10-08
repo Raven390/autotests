@@ -108,7 +108,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         account2.currency = Currency.getInstance("EUR").getCurrencyCode();
         mtAccount = generateMtAccountByCrmTbAccount(account);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, account2));
+        insertCrmAccountsToDb(account, account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
         Thread.sleep(1000);
 
@@ -204,7 +204,7 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         account2.currency = Currency.getInstance("EUR").getCurrencyCode();
         mtAccount = generateMtAccountByCrmTbAccount(account);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, account2));
+        insertCrmAccountsToDb(account, account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, mtAccount2));
         Thread.sleep(1000);
 

@@ -26,8 +26,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
-import static utils.Utils.getRandomIntPositive;
+import static utils.Utils.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
@@ -89,7 +88,7 @@ public class PaymentsSummaryRebatesReceivedTest extends TestBaseWeb {
     @AllureId("1133")
     @DisplayName("Verify Rebates received widget no rebates, 1 account in Payments - Summary")
     public void verifyPaymentsSummaryRebatesReceived2Test() {
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();

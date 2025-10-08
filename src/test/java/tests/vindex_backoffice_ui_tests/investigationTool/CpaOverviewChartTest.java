@@ -41,8 +41,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentDate;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CpaOverviewChartTest extends TestBaseWeb {
@@ -83,7 +82,7 @@ public class CpaOverviewChartTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, ibCrmTbUser));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
+        insertCrmAccountsToDb(account, ibAccount);
         insertObjectToDb(CRM_TB_USER_EXTENDS_TABLE_NAME, crmTbUserExtends);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, ibMtAccount));
         // Relations

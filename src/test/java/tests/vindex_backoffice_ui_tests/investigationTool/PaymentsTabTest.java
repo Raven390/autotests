@@ -54,7 +54,7 @@ class PaymentsTabTest extends TestBaseWeb {
         crmTbUser.firstName = "Operator";
         crmTbUser.lastName = "Trademan";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertCrmAccountsToDb(account1, account2);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
     }
 

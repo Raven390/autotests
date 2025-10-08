@@ -26,8 +26,7 @@ import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.*;
 
 public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
 
@@ -42,7 +41,7 @@ public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
         crmTbUser.firstName = "Holden";
         crmTbUser.lastName = "Times";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
     }
 

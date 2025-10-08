@@ -58,8 +58,7 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         ConnectionTableEntry connectionTableEntry1 = getConnectionTableEntryForUiFiltration1(client, connectedClient1);
         ConnectionTableEntry connectionTableEntry2 = getConnectionTableEntryForUiFiltration2(client, connectedClient2);
         insertObjectsToDb(CONNECTIONS_TABLE_NAME, List.of(connectionTableEntry1, connectionTableEntry2));
-
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertCrmAccountsToDb(account1, account2);
         waitForConnectionSearchToUpdate(client);
     }
 

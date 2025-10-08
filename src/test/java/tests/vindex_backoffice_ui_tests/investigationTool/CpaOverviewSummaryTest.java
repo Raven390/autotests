@@ -35,8 +35,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentDate;
-import static utils.Utils.getCurrentTimestampDbFormat;
+import static utils.Utils.*;
 
 public class CpaOverviewSummaryTest extends TestBaseWeb {
 
@@ -62,7 +61,7 @@ public class CpaOverviewSummaryTest extends TestBaseWeb {
         ibCrmTbUser.email = "";
         ibCrmTbUser.phoneNum = "";
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, ibCrmTbUser));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
+        insertCrmAccountsToDb(account, ibAccount);
         insertObjectToDb(CRM_TB_USER_EXTENDS_TABLE_NAME, crmTbUserExtends);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, ibMtAccount));
         // Relations
