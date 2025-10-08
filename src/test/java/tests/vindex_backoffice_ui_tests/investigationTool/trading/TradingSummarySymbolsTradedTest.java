@@ -28,6 +28,7 @@ import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCo
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
 
@@ -41,7 +42,7 @@ public class TradingSummarySymbolsTradedTest extends TestBaseWeb {
         crmTbUser.firstName = "Tradeus";
         crmTbUser.lastName = "Symboll";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
     }
 

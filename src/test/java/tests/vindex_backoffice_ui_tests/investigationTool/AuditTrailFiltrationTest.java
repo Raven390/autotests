@@ -29,6 +29,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AuditTrailFiltrationTest extends TestBaseWeb {
@@ -44,7 +45,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         crmTbUser = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account = generateCrmTbAccountDataForUi(client);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         RuleAlert alert = generateWithdrawalNotificationAlert(client);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         RestrictionPage.setRestrictionAPIGeneral(crmTbUser.ucid, LOGIN_CRM.getCode());

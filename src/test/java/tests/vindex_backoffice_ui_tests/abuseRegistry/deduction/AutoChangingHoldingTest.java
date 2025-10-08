@@ -111,7 +111,7 @@ class AutoChangingHoldingTest extends TestBaseWeb {
 
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4, account5));
+        insertCrmAccountsToDb(account1, account2, account3, account4, account5);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, tradeWithdrawal));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client);

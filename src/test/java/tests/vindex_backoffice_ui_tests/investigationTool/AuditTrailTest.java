@@ -31,6 +31,7 @@ import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 public class AuditTrailTest extends TestBaseWeb {
 
@@ -49,7 +50,7 @@ public class AuditTrailTest extends TestBaseWeb {
         crmTbUser = generateUserByClient(client);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account = generateCrmTbAccountDataForUi(client);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         alert = generateRuleAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
     }

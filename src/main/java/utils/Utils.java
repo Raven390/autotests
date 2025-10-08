@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 
 import business_objects.api.connection_search_api.get_connections.GetConnectionsResponse;
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -521,5 +523,10 @@ public class Utils {
 
     public static String buildUcid(String brand, Integer clientId) {
         return brand + "-" + clientId.toString();
+    }
+
+    public static void insertCrmAccountsToDb(CrmTbAccountObject... crmTbAccounts) {
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, Arrays.stream(crmTbAccounts).toList());
+        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, Arrays.stream(crmTbAccounts).map(CrmTbAccountForMtObjectFactory::generateAccountForMtByAccount).toList());
     }
 }

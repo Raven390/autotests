@@ -75,7 +75,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbClient);
         account1 = generateStaticCrmTbAccountActive(client);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount1);
     }
@@ -125,8 +125,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbReferral);
         CrmTbAccountObject refAccount1 = generateStaticCrmTbAccountActive(referral);
         CrmTbAccountObject refAccount2 = generateAdditionalCrmTbAccountData(referral);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount1);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount2);
+        insertCrmAccountsToDb(refAccount1, refAccount2);
         MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
@@ -173,7 +172,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         crmTbReferral.lastName = "Clientson";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbReferral);
         CrmTbAccountObject refAccount1 = generateStaticCrmTbAccountActive(referral);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount1);
+        insertCrmAccountsToDb(refAccount1);
         MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);
 
@@ -347,8 +346,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbReferral);
         CrmTbAccountObject refAccount1 = generateStaticCrmTbAccountActive(referral);
         CrmTbAccountObject refAccount2 = generateAdditionalCrmTbAccountData(referral);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount1);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, refAccount2);
+        insertCrmAccountsToDb(refAccount1, refAccount2);
         MtAccountObject refMtAccount1 = generateMtAccountByCrmTbAccount(refAccount1);
         MtAccountObject refMtAccount2 = generateMtAccountByCrmTbAccount(refAccount2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, refMtAccount1);

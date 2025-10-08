@@ -41,14 +41,14 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
         crmTbUser.firstName = "Pienell";
         crmTbUser.lastName = "Duration";
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
     }
 
     @Test
     @AllureId("914")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct amounts in tooltips")
-    public void pnlByDurationAmountsTest() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlByDurationAmountsTest() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 
@@ -113,7 +113,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
     @AllureId("914")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct percentage in tooltips")
-    public void pnlByDurationPercentage() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlByDurationPercentage() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 
@@ -182,7 +182,7 @@ public class TradingSummaryPnlByDuration extends TestBaseWeb {
     @AllureId("915")
     @Feature("BMS-216 PNL by duration")
     @DisplayName("Test that PNL by duration shows correct tops")
-    public void pnlByDurationTop() throws ReflectiveOperationException, SQLException, InterruptedException {
+    public void pnlByDurationTop() throws SQLException, InterruptedException {
 
         tradingPage.deleteClientDeals(client.getUcid());
 

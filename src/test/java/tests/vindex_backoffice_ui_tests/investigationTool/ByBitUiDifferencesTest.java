@@ -38,7 +38,7 @@ class ByBitUiDifferencesTest extends TestBaseWeb {
         user.firstName = client.getFirstName();
         user.lastName = client.getLastName();
         insertObjectToDb(CRM_USER_TABLE_NAME, user);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(deposit1, withdrawal1, deposit2, withdrawal2));
     }
 

@@ -1,7 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -65,12 +63,9 @@ public class SummaryPanelTest extends TestBaseWeb {
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateStaticCrmTbAccountActive(client);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount1);
-        CrmTbAccountForMtObject crmTbAccountForMt1 = generateAccountForMtByAccount(account1);
-        insertObjectToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, crmTbAccountForMt1);
-
     }
 
     @Test

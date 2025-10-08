@@ -22,8 +22,7 @@ import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
-import static utils.Utils.getCurrentTimestampDbFormat;
-import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
+import static utils.Utils.*;
 
 class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
 
@@ -38,11 +37,11 @@ class TradingInfoOperationsAutoscrollTest extends TestBaseWeb {
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.platform = "MT5";
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
+        insertCrmAccountsToDb(account2);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account2));
 
         List<MtMt4TradesCoercedObject> deals = new java.util.ArrayList<>(List.of());

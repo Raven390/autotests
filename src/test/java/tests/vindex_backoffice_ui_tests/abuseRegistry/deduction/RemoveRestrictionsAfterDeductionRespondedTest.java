@@ -98,7 +98,7 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
         account = generateCrmTbAccountDataForUi(client);
         account.currency = Currency.getInstance("EUR").getCurrencyCode();
         mtAccount = generateMtAccountByCrmTbAccount(account);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         Thread.sleep(3000);
 

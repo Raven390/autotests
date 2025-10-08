@@ -26,6 +26,7 @@ import static helpers.database.CleanTableHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
 
@@ -39,7 +40,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
     }
 
     @Test

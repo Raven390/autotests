@@ -55,7 +55,7 @@ public class PaymentsWithdrawalsTest extends TestBaseWeb {
     @BeforeAll
     static void setup() throws IOException {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account);
+        insertCrmAccountsToDb(account);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount);
         withdrawalAlert1.rule.attributes.amount = "123.45";
         withdrawalAlert1.rule.attributes.currency = "EUR";

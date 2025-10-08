@@ -29,6 +29,7 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static utils.Constants.*;
+import static utils.Utils.insertCrmAccountsToDb;
 
 public class TradingInfoAccountsTest extends TestBaseWeb {
 
@@ -49,7 +50,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = "EUR";
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account1);
+        insertCrmAccountsToDb(account1);
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, generateMtAccountByCrmTbAccount(account1));
         account2 = generateAdditionalCrmTbAccountDataForUi(client);
         account2.serverIdSt = 22;
@@ -64,7 +65,7 @@ public class TradingInfoAccountsTest extends TestBaseWeb {
         trade2.setProfitUsd(22.2);
         trade2.setStorageUsd(0d);
         trade2.setCommissionUsd(0.0);
-        insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, account2);
+        insertCrmAccountsToDb(account2);
 
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);

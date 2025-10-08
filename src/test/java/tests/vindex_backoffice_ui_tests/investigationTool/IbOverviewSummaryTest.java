@@ -64,7 +64,7 @@ public class IbOverviewSummaryTest extends TestBaseWeb {
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, ibCrmTbUser));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account, ibAccount));
+        insertCrmAccountsToDb(account, ibAccount);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount, ibMtAccount));
         // Relations
         relation = generateAccountIbRelationObjectByClient(client);
