@@ -2,6 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
@@ -103,6 +105,12 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         mtAccount4 = generateMtAccountByCrmTbAccount(account4);
         mtAccount5 = generateMtAccountByCrmTbAccount(account5);
 
+        CrmTbAccountForMtObject crmTbAccountMt1 = generateAccountForMtByAccount(account1);
+        CrmTbAccountForMtObject crmTbAccountMt2 = generateAccountForMtByAccount(account2);
+        CrmTbAccountForMtObject crmTbAccountMt3 = generateAccountForMtByAccount(account3);
+        CrmTbAccountForMtObject crmTbAccountMt4 = generateAccountForMtByAccount(account4);
+        CrmTbAccountForMtObject crmTbAccountMt5 = generateAccountForMtByAccount(account5);
+
         String comment = "comment";
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
         trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 1000.23, comment);
@@ -112,7 +120,7 @@ class ResolveDeductionsCalculationTest extends TestBaseWeb {
         tradeWithdrawal = generateMt4TradesCoercedAccountProfitComment(account1, -10_000d, "withdraw");
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4, account5));
+        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(crmTbAccountMt1, crmTbAccountMt2, crmTbAccountMt3, crmTbAccountMt4, crmTbAccountMt5));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, tradeWithdrawal));
         MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
