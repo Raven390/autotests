@@ -20,6 +20,8 @@ public class Alert {
     private Boolean isHighPriority;
     private String investigatorId;
     private String investigationId;
+    private String amountUsd;
+    private String paymentMethod;
 
     public String getInvestigationId() {
         return investigationId;
@@ -149,12 +151,29 @@ public class Alert {
         this.investigatorId = investigatorId;
     }
 
+    public String getAmountUsd() {
+        return amountUsd;
+    }
+
+    public void setAmountUsd(String amountUsd) {
+        this.amountUsd = amountUsd;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
     public Alert() {
     }
 
     public Alert(Long id, String uuid, Long clientId, String happenedAt, String receivedAt, String closedAt,
             String status, String rule, String trigger, String ruleVersion, String fraudType, String ruleAttributes,
-            String alertResolution, Boolean isHighPriority, String investigatorId) {
+            String alertResolution, Boolean isHighPriority, String investigatorId, String investigationId,
+            String amountUsd, String paymentMethod) {
         this.id = id;
         this.uuid = uuid;
         this.clientId = clientId;
@@ -170,6 +189,9 @@ public class Alert {
         this.alertResolution = alertResolution;
         this.isHighPriority = isHighPriority;
         this.investigatorId = investigatorId;
+        this.investigationId = investigationId;
+        this.amountUsd = amountUsd;
+        this.paymentMethod = paymentMethod;
     }
 
     @Override

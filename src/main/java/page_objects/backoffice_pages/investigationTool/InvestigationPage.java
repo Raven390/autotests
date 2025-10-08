@@ -101,6 +101,8 @@ public class InvestigationPage extends AbstractPage {
     private final Locator commentButton;
     private final Locator closeToastButtom;
     private final Locator selectInvestigationTypeDropDown;
+    private final Locator paymentFilterAmountFrom;
+    private final Locator paymentFilterAmountTo;
 
     private static final String CLIENT_LIST_LOADING = "//div[@class='v-suspicious-client-list-skeleton']";
     private static final String FILTER_BUTTON_BY_TEXT_PATTERN = "//span[text()='%s']/parent::button";
@@ -191,6 +193,8 @@ public class InvestigationPage extends AbstractPage {
         this.commentButton = page.locator("[data-qa='investigation_tools__add_comment_button']");
         this.closeToastButtom = page.locator(".g-button.g-toast__btn-close");
         this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
+        this.paymentFilterAmountFrom = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
+        this.paymentFilterAmountTo = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
     }
 
     @Step("Open the autotest login page main page")
@@ -408,6 +412,19 @@ public class InvestigationPage extends AbstractPage {
         Allure.step("Fill add comment form");
         addCommentInput.fill(comment);
         addCommentInput.textContent().contains(comment);
+    }
+
+    @Step("Fill amount filter")
+    public void fillAmountFilter(String left, String right) {
+        Allure.step("Fill amount filter");
+        paymentFilterAmountFrom.fill(left);
+        paymentFilterAmountTo.fill(right);
+    }
+
+    @Step
+    public void fillPaymentMethodFilter(String paymentMethod) {
+        Allure.step("Fill payment method filter");
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, paymentMethod)).click();
     }
 
     @Step("Submit comment form with error")
@@ -708,6 +725,23 @@ public class InvestigationPage extends AbstractPage {
             Locator checkbox = assigneeCheckboxes.nth(i);
             assertThat("Assert that each assignee checkbox is not selected", checkbox.getAttribute("class"), not(containsString("g-checkbox_checked")));
         }
+    }
+
+    @Step("Get client IDs from visible client cards")
+    public List<String> getClientIdsFromClientCards() {
+        Allure.step("Get client IDs from visible client cards");
+        List<String> clientIds = new ArrayList<>();
+        if (clientContainer.count() > 0) {
+            for (int i = 0; i < clientContainer.count(); i++) {
+                clientIds.add(clientContainer.nth(i).locator(clientIdElement).textContent());
+            }
+        }
+        return clientIds;
+    }
+
+    @Step("Apply filter button is disabled")
+    public void verifyApplyFilterButtonIsDisabled() {
+        assertTrue(applyFilterButton.isDisabled());
     }
 
     @Step("Press reset button for brands and verify that none are selected")
