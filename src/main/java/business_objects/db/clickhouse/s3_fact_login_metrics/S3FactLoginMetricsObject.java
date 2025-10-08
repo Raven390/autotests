@@ -64,8 +64,35 @@ public class S3FactLoginMetricsObject {
     private Double dailyVbSpreadRevenuePe;
     private Double dailyAppliedMinSpreadRevenuePe;
     private Double dailyAppliedMaxSpreadRevenuePe;
+    private Double dailyMakerSpreadRevenueOz;
+    private Double salesCommission;
+    private Double ibCommission;
     private String dlInsertTs;
     private String dlUpdateTs;
+
+    public Double getSalesCommission() {
+        return salesCommission;
+    }
+
+    public void setSalesCommission(Double salesCommission) {
+        this.salesCommission = salesCommission;
+    }
+
+    public Double getIbCommission() {
+        return ibCommission;
+    }
+
+    public void setIbCommission(Double ibCommission) {
+        this.ibCommission = ibCommission;
+    }
+
+    public Double getDailyMakerSpreadRevenueOz() {
+        return dailyMakerSpreadRevenueOz;
+    }
+
+    public void setDailyMakerSpreadRevenueOz(Double dailyMakerSpreadRevenueOz) {
+        this.dailyMakerSpreadRevenueOz = dailyMakerSpreadRevenueOz;
+    }
 
     @Override
     public String toString() {
