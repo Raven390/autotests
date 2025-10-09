@@ -49,7 +49,6 @@ public class LatencyArbitrageRuleDataFactory {
     private static DataHelper getLatencyArbitrageRuleData(ClientHelper client) {
         DataHelper ruleData = new DataHelper();
         ruleData.clientHelper = client;
-        ruleData.clientHelper.setServerId(4);
         ruleData.crmTbUserObject = generateUserByClient(client);
         ruleData.crmTbAccountObject = generateAccountByClient(client, false);
         ruleData.crmTbAccountForMtObject = generateAccountForMtByClient(client, false);
@@ -173,7 +172,7 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    @Description("")
+    @Description("Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
     private static DataHelper getLatencyArbitrageRuleTest7Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest7Client);
 
@@ -191,12 +190,13 @@ public class LatencyArbitrageRuleDataFactory {
         data.mtBalanceOrdersObjects.getFirst().amountUsd = 100d;
         data.s3FactIbSalesCommissionsObject = List.of(generateS3FactIbSalesCommissionsClient(data.clientHelper));
         data.s3FactIbSalesCommissionsObject.getFirst().setIbCommission(100_000.0);
-        data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(10_000_001.00);
+        data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(30_000_001.00);
+        data.mt5DealsCoercedObjects.get(1).setNotionalValueUsd(20_000_001.00);
 
         return data;
     }
 
-    @Description("")
+    @Description("Latency arbitrage rule. Rebate Latency Branch. At least 1 resolved Alert. ElementId: Event_0u8x3op")
     private static DataHelper getLatencyArbitrageRuleTest8Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest8Client);
 
@@ -220,7 +220,7 @@ public class LatencyArbitrageRuleDataFactory {
         return data;
     }
 
-    @Description("")
+    @Description("Latency arbitrage rule. Rebate Latency Branch. No resolved Alerts. ElementId: Event_04a1zpc")
     private static DataHelper getLatencyArbitrageRuleTest9Data() {
         DataHelper data = getLatencyArbitrageRuleData(latencyArbitrageTest9Client);
 
@@ -254,6 +254,8 @@ public class LatencyArbitrageRuleDataFactory {
         map.put("5", getLatencyArbitrageRuleTest5Data());
         map.put("6", getLatencyArbitrageRuleTest6Data());
         map.put("7", getLatencyArbitrageRuleTest7Data());
+        map.put("8", getLatencyArbitrageRuleTest8Data());
+        map.put("9", getLatencyArbitrageRuleTest9Data());
 
         setupData(map);
 
