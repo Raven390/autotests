@@ -1,6 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.audit_service_db.Event;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.mitigation_service_db.ClientTradingRestriction;
@@ -14,15 +13,12 @@ import helpers.data.enums.Restriction;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import okhttp3.Response;
 import page_objects.backoffice_pages.AbstractPage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static com.microsoft.playwright.options.WaitForSelectorState.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.getObjectsFromDB;
@@ -243,13 +239,9 @@ public class RestrictionPage extends AbstractPage {
         for (ClientGeneralRestriction i : restrictionList) {
             String idString = i.getId().toString();
             deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, "client_restriction_id = " + idString);
-            Thread.sleep(200);
             deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, "client_restriction_id = " + idString);
-            Thread.sleep(200);
             deleteEntryFromDb(POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, "client_restriction_id = " + idString);
-            Thread.sleep(200);
             deleteEntryFromDb(POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id = " + idString);
-            Thread.sleep(200);
         }
     }
 
@@ -274,70 +266,8 @@ public class RestrictionPage extends AbstractPage {
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'");
-        Thread.sleep(200);
     }
 
-    @Deprecated
-    public static void setRestrictionAPIGeneral(String ucid, String code, String applyReason, String updatedBySystem,
-            String updatedByUser) throws IOException {
-        Allure.step("Set restriction through API GENERAL");
-        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
-        );
-        Response response = postRestriction(postRestrictionRequestBody);
-        assertNotNull(response);
-        assertEquals(200, response.code());
-    }
-
-    @Deprecated
-    public static String setRestrictionAPIGeneralResponse(String ucid, String code, String applyReason,
-            String updatedBySystem,
-            String updatedByUser) throws IOException {
-        Allure.step("Set restriction through API GENERAL");
-        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "GENERAL", null, null, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
-        );
-        Response response = postRestriction(postRestrictionRequestBody);
-        assertNotNull(response);
-        assertEquals(response.code(), 200);
-        assert response.body() != null;
-        return response.body().string();
-    }
-
-    @Step("Set restriction through API")
-    public static void setRestrictionAPIGeneral(String ucid, String code) throws IOException {
-        Allure.step("Set restriction through API GENERAL");
-        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "GENERAL", null, null, "Integration test", new PostRestrictionRequestBody.UpdatedBy("test", "automation")
-        );
-        Response response = postRestriction(postRestrictionRequestBody);
-        assertEquals(200, response.code());
-    }
-
-    @Step
-    public void setRestrictionAPITrade(String ucid, int accId, int serverId, String code) throws IOException {
-        Allure.step("Set restriction through API TRADE");
-        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "TRADING", accId, serverId, "Integration test", new PostRestrictionRequestBody.UpdatedBy("string", "string")
-        );
-        Response response = postRestriction(postRestrictionRequestBody);
-        assertEquals(200, response.code());
-    }
-
-    @Step
-    public static String setRestrictionAPITradeResponse(String ucid, String code, int accId, int serverId,
-            String applyReason,
-            String updatedBySystem, String updatedByUser) throws IOException {
-        Allure.step("Set restriction through API TRADE");
-        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
-                ucid, code, "TRADING", accId, serverId, applyReason, new PostRestrictionRequestBody.UpdatedBy(updatedBySystem, updatedByUser)
-        );
-        Response response = postRestriction(postRestrictionRequestBody);
-        assertNotNull(response);
-        assertEquals(200, response.code());
-        assert response.body() != null;
-        return response.body().string();
-    }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
         List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);

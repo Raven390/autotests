@@ -42,13 +42,12 @@ class GetAbuseTypesTests extends TestBaseApi {
     private static ClientHelper client2 = getRandomVantageClient();
 
     @BeforeAll
-    static void setupData() throws IOException, InterruptedException {
+    static void setupData() throws IOException {
         CrmTbUserObject user = generateUserByClient(client);
         CrmTbUserObject user2 = generateUserByClient(client2);
 
         insertObjectToDb(CRM_USER_TABLE_NAME, user);
         insertObjectToDb(CRM_USER_TABLE_NAME, user2);
-        Thread.sleep(30_000);
 
         fraud1 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.HEDGING.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());
         fraud2 = new ClientFraudTypes(client.getUcid(), FraudTypeOld.CPA_ABUSE.getKey(), FRAUD_TYPE_SOURCE_VINDEX, 0, getCurrentTimestampDbFormat());

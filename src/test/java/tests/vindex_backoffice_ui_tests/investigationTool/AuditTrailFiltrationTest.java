@@ -10,7 +10,6 @@ import helpers.data.ClientHelper;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseWeb;
 
 import java.io.IOException;
@@ -21,6 +20,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
 import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Restriction.LOGIN_CRM;
 import static helpers.database.BoHelper.closeAlert;
@@ -48,7 +48,7 @@ public class AuditTrailFiltrationTest extends TestBaseWeb {
         insertCrmAccountsToDb(account);
         RuleAlert alert = generateWithdrawalNotificationAlert(client);
         kafka.produceMessage(alert.alertId, objectMapper.writeValueAsString(alert), KAFKA_TOPIC_ALERTS);
-        RestrictionPage.setRestrictionAPIGeneral(crmTbUser.ucid, LOGIN_CRM.getCode());
+        setRestrictionAPIGeneral(crmTbUser.ucid, LOGIN_CRM.getCode());
     }
 
     @Test

@@ -11,7 +11,6 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import okhttp3.Response;
 import org.junit.jupiter.api.*;
-import page_objects.backoffice_pages.investigationTool.RestrictionPage;
 import tests.TestBaseWeb;
 
 
@@ -23,6 +22,8 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
+import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
+import static helpers.api.RestrictionHelper.setRestrictionAPITrade;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static helpers.database.CleanTableHelper.*;
@@ -93,7 +94,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("328")
     @DisplayName("Restriction tab remove account restriction UI")
     void cancelAccountRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), ACCOUNT_CREATION.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), ACCOUNT_CREATION.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -124,7 +125,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("330")
     @DisplayName("Restriction tab remove Transfer Restriction UI")
     void cancelTransferRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), INTERNAL_TRANSFER.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -155,7 +156,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("332")
     @DisplayName("Restriction tab remove Deposits restriction UI")
     void cancelDepositsRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), DEPOSITS.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), DEPOSITS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -186,7 +187,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("334")
     @DisplayName("Restriction tab remove Withdrawals restriction UI")
     void cancelWithdrawalsRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), WITHDRAWALS.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), WITHDRAWALS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -217,7 +218,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("336")
     @DisplayName("Restriction tab remove Login CRM restriction UI")
     void cancelLoginCRMRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), LOGIN_CRM.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), LOGIN_CRM.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -248,7 +249,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("743")
     @DisplayName("Restriction tab remove Credit and Bonus restriction UI client without transactions")
     void cancelCreditAndBonusRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), CREDIT_AND_BONUS.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), CREDIT_AND_BONUS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -279,7 +280,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("338")
     @DisplayName("Restriction tab remove Manual Withdrawal Review restriction UI")
     void cancelManualWithdrawalRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), MANUAL_WITHDRAWAL_REVIEW.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -295,7 +296,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("1158")
     @DisplayName("Restriction tab remove Note for withdrawals restriction UI")
     void cancelNoteForWithdrawalsRestrictionUITest() throws Exception {
-        RestrictionPage.setRestrictionAPIGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getCode());
+        setRestrictionAPIGeneral(restrictionClient.getUcid(), NOTE_FOR_WITHDRAWALS.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -326,7 +327,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("340")
     @DisplayName("Restriction tab remove Close only mode restriction UI")
     void cancelCloseOnlyModeRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), CLOSE_ONLY_MODE.getCode());
+        setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), CLOSE_ONLY_MODE.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());
@@ -357,7 +358,7 @@ public class RestrictionsPageTest extends TestBaseWeb {
     @AllureId("342")
     @DisplayName("Restriction tab remove Off quotes restriction UI")
     void cancelOffQuotesRestrictionUITest() throws Exception {
-        restrictionPage.setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), OFF_QUOTES.getCode());
+        setRestrictionAPITrade(restrictionClient.getUcid(), restrictionClient.getTradingAccount(), restrictionClient.getServerId(), OFF_QUOTES.getCode());
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         restrictionPage.navigate(restrictionClient.getUcid());

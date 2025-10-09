@@ -15,19 +15,19 @@ import static utils.Utils.getRandomUuidString;
 public class ClientFactory {
 
     public static ClientHelper getRandomClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), randomEnum(Brand.class), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50));
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), randomEnum(Brand.class), getRandomIntPositive(), 4);
         client.setRegulator(Regulator.VFSC);
         return client;
     }
 
     public static ClientHelper getRandomVantageClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50));
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, getRandomIntPositive(), 4);
         client.setRegulator(Regulator.VFSC);
         return client;
     }
 
     public static ClientHelper getRandomBybitClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.BYBIT, getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50));
+        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.BYBIT, getRandomIntPositive(), 64);
         client.setRegulator(Regulator.VFSC);
         return client;
     }
@@ -35,7 +35,7 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientAllFields() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS", getRandomUuidString()
+                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), 4, faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositive(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), getRandomUuidString(), "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS", getRandomUuidString()
         );
     }
 
@@ -60,7 +60,7 @@ public class ClientFactory {
     public static ClientHelper getRandomVantageClientNoCpaIbRef() {
         Faker faker = new Faker();
         return new ClientHelper(
-                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), getRandomIntPositiveWithBounds(1, 50), faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS", getRandomUuidString()
+                getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, Regulator.VFSC2, getRandomIntPositive(), getRandomIntPositive(), 4, faker.internet().emailAddress(), faker.phoneNumber().cellPhoneInternational().replace("+", "").replace(" ", "").replace("-", ""), faker.internet().ipV4Address(), "CY", null, null, null, null, null, null, null, "1990-01-01", faker.name().firstName(), faker.name().lastName(), "CYPRUS", getRandomUuidString()
         );
     }
 

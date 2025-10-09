@@ -1,9 +1,7 @@
 package tests.rule_engine_service_tests.rules.general;
 
 import business_objects.api.abuse_registry.GetStatusResponseBody;
-import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
-import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.enums.FraudType;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
@@ -19,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
+import static helpers.api.RestrictionHelper.addCancelledRestriction;
 import static helpers.data.rules.general.LoginRuleDataFactory.setupLoginRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -52,21 +51,6 @@ class LoginRuleTests extends TestBaseRule {
     }
 
     @Test
-    @AllureId("1461")
-    @DisplayName("Login rule. Connection search sub-process. Exit without alert if user has no connections. ElementId: end_connections_not_found")
-    void loginRuleTest1() throws Exception {
-        DataHelper data = dbDataMap.get("1");
-
-        produceLoginMessageToKafka(data.loginEvent);
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-    }
-
-    @Test
     @AllureId("1462")
     @DisplayName("Login rule. Connection search sub-process. Exit without restriction if no toxic connections for non VT or PU users. ElementId: Event.id end_cs_no_toxic")
     void loginRuleTest2() throws Exception {
@@ -74,11 +58,31 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
+        checkElementId("end_cs_no_toxic", data.loginEvent.getId(), "login_rule");
+    }
 
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+    @Test
+    @AllureId("1656")
+    @DisplayName("Login rule. Connection search sub-process. Exit if general score < 0.7. ElementId: end_gs_low")
+    void loginRuleTest16() throws Exception {
+        DataHelper data = dbDataMap.get("16");
+
+        produceLoginMessageToKafka(data.loginEvent);
+
+        checkElementId("end_gs_low", data.loginEvent.getId(), "login_rule");
+    }
+
+    @Test
+    @AllureId("1655")
+    @DisplayName("Login rule. Connection search sub-process. Exit if has WR that 24OP removed and current <= previous average generalScore. ElementId: Event_1fdy7w1")
+    void loginRuleTest17() throws Exception {
+        DataHelper data = dbDataMap.get("17");
+
+        addCancelledRestriction(data.clientHelper, "GENERAL", "13");
+
+        produceLoginMessageToKafka(data.loginEvent);
+
+        checkElementId("Event_1fdy7w1", data.loginEvent.getId(), "login_rule");
     }
 
     @Test
@@ -89,39 +93,7 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-    }
-
-    @Test
-    @AllureId("1464")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if no toxic connections for VT or PU users. ElementId: end_cs_no_toxic")
-    void loginRuleTest4() throws Exception {
-        DataHelper data = dbDataMap.get("4");
-        produceLoginMessageToKafka(data.loginEvent);
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
-    }
-
-    @Test
-    @AllureId("1465")
-    @DisplayName("Login rule. Connection search sub-process. Exit without restriction if exists toxic connections for VT or PU users, general score < 0.7. ElementId: Event_0qy8dcr")
-    void loginRuleTest5() throws Exception {
-        DataHelper data = dbDataMap.get("5");
-        produceLoginMessageToKafka(data.loginEvent);
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_cs_no_toxic", data.loginEvent.getId(), "login_rule");
     }
 
     @Test
@@ -131,11 +103,7 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("6");
         produceLoginMessageToKafka(data.loginEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_no_str1_hedge", data.loginEvent.getId(), "login_rule");
     }
 
     @Test
@@ -145,11 +113,7 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("7");
         produceLoginMessageToKafka(data.loginEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_1o2qu8z", data.loginEvent.getId(), "login_rule");
     }
 
     @Test
@@ -157,19 +121,21 @@ class LoginRuleTests extends TestBaseRule {
     @DisplayName("Login rule. Exit with restriction if user has strong connection with HEDGING fraud user and no bonus restriction. ElementId: end_cs_abuse")
     void loginRuleTest8() throws Exception {
         DataHelper data = dbDataMap.get("8");
+
         produceLoginMessageToKafka(data.loginEvent);
+
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restriction
         Allure.step("Get client restrictions");
-        Thread.sleep(45_000);
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked Hedging Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked Hedging Abuser"));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
         //add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -177,13 +143,13 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getCreatedAt(), notNullValue());
         assertThat(abuserStatus.getUpdatedAt(), notNullValue());
         assertThat(abuserStatus.getComment(), is("Linked hedging abuser"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("HEDGING"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Hedging"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked hedging abuser"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.HEDGING.getDescription()));
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getCode(), is("HEDGING"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getName(), is("Hedging"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getComment(), is("Linked hedging abuser"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getDescription(), is(FraudType.HEDGING.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
     @Test
@@ -193,11 +159,7 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("9");
         produceLoginMessageToKafka(data.loginEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_unknown_fraud_type", data.loginEvent.getId(), "login_rule");
     }
 
     @Test
@@ -207,24 +169,18 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("10");
         produceLoginMessageToKafka(data.loginEvent);
 
-        Thread.sleep(45_000);
-        // Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restrictions
         Allure.step("Get client restrictions");
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked MM Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked MM Abuser"));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
         //add check for MARKET_MANIPULATION
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -233,28 +189,23 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getUpdatedAt(), notNullValue());
         assertThat(abuserStatus.getComment(), is("Linked market manipulator"));
         assertThat(abuserStatus.getPendingProcessing(), is("false"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("MARKET_MANIPULATION"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Market manipulation"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked market manipulator"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.MARKET_MANIPULATION.getDescription()));
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getCode(), is("MARKET_MANIPULATION"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getName(), is("Market manipulation"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getComment(), is("Linked market manipulator"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getDescription(), is(FraudType.MARKET_MANIPULATION.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
     @Test
     @AllureId("1532")
-    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Bonus abuser and toxic account linked. ElementId: end_cs_abuse.id")
+    @DisplayName("Login rule. Connection search sub-process. General score> 0.7, fraud type is Bonus abuser and toxic account linked. ElementId: end_cs_abuse")
     void loginRuleTest15() throws Exception {
         DataHelper data = dbDataMap.get("15");
         produceLoginMessageToKafka(data.loginEvent);
 
-        // Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restrictions
         Allure.step("Get client restrictions");
@@ -283,13 +234,13 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getUpdatedAt(), notNullValue());
         assertThat(abuserStatus.getComment(), is("Linked bonus abuser"));
         assertThat(abuserStatus.getPendingProcessing(), is("false"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("BONUS_ABUSE"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Bonus abuse"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked bonus abuser"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.BONUS_ABUSE.getDescription()));
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getCode(), is("BONUS_ABUSE"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getName(), is("Bonus abuse"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getComment(), is("Linked bonus abuser"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getDescription(), is(FraudType.BONUS_ABUSE.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
     @Test
@@ -299,23 +250,18 @@ class LoginRuleTests extends TestBaseRule {
         DataHelper data = dbDataMap.get("11");
         produceLoginMessageToKafka(data.loginEvent);
 
-        // Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restrictions
         Allure.step("Get client restrictions");
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.get(0).getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.get(0).getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.get(0).getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.get(0).getComment(), is("Linked Chargeback Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.get(0).getStatus(), is("APPLIED"));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked Chargeback Abuser"));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
         //add check for CHARGEBACK
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -323,13 +269,13 @@ class LoginRuleTests extends TestBaseRule {
         assertThat(abuserStatus.getCreatedAt(), notNullValue());
         assertThat(abuserStatus.getUpdatedAt(), notNullValue());
         assertThat(abuserStatus.getComment(), is("Linked chargeback abuser"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getStatus(), is("POTENTIAL"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getCode(), is("CHARGEBACK"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getName(), is("Chargeback"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getComment(), is("Linked chargeback abuser"));
-        assertThat(abuserStatus.getFraudTypes().get(0).getDescription(), is(FraudType.CHARGEBACK.getDescription()));
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeCode(), nullValue());
-        assertThat(abuserStatus.getFraudTypes().get(0).getSubtypeName(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getStatus(), is("POTENTIAL"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getCode(), is("CHARGEBACK"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getName(), is("Chargeback"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getComment(), is("Linked chargeback abuser"));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getDescription(), is(FraudType.CHARGEBACK.getDescription()));
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeCode(), nullValue());
+        assertThat(abuserStatus.getFraudTypes().getFirst().getSubtypeName(), nullValue());
     }
 
     @Test
@@ -337,10 +283,12 @@ class LoginRuleTests extends TestBaseRule {
     @DisplayName("Login rule. Connection search sub-process. Exit without restriction if user has model score> 0.7 and fraud type is CPA. ElementId: end_no_mitigation")
     void loginRuleTest12() throws Exception {
         DataHelper data = dbDataMap.get("12");
+
         produceLoginMessageToKafka(data.loginEvent);
 
-        // Verify alerts
+        checkElementId("end_no_mitigation", data.loginEvent.getId(), "login_rule");
 
+        // Verify alerts
         assertThat("Verify amount of user alerts in kafka", getUserAlertsFromKafka(data.clientHelper).size(), is(0));
         assertThat("Verify amount of alerts in BO DB", getUserAlertsFromDb(data.clientHelper).size(), is(0));
 
@@ -368,35 +316,14 @@ class LoginRuleTests extends TestBaseRule {
 
         produceLoginMessageToKafka(data.loginEvent);
 
+        checkElementId("end_hedge_ald_no_bonus", data.loginEvent.getId(), "login_rule");
+
         // Verify restriction is bonus restriction with code 14
         Allure.step("Get client restrictions");
-        Thread.sleep(30_000);
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Verify restriction id ", clientGeneralRestrictions.getFirst().getRestrictionId(), equalTo(9L));
         assertThat("Verify restriction id ", clientGeneralRestrictions.getFirst().getId(), equalTo(Long.valueOf(restrictionId)));
-    }
-
-    @Test
-    @AllureId("1474")
-    @DisplayName("Login rule. Connection search sub-process. Exit without alert if user recently cancelled WD restriction. ElementId: end_wr_cooldown")
-    void loginRuleTest14() throws Exception {
-        DataHelper data = dbDataMap.get("14");
-
-        //add bonus restriction
-        Thread.sleep(10_000);
-        Integer restrictionId = postRestriction(data.clientHelper, "GENERAL", "13").id;
-        //cancel bonus restriction
-        assertThat("Assert response code", cancelRestriction(restrictionId).code(), is(204));
-        //
-
-        produceLoginMessageToKafka(data.loginEvent);
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
     }
 
 }

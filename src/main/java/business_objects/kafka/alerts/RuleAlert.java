@@ -177,10 +177,10 @@ public class RuleAlert {
             public String mmCounter;
 
             @JsonProperty("Rate USD")
-            public String rateUSD;
+            public Double rateUSD;
 
             @JsonProperty("Amount USD")
-            public String amountUSD;
+            public Double amountUSD;
 
             @JsonProperty("Payment ID")
             public String paymentId;

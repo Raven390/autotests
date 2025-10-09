@@ -21,31 +21,26 @@ public class OperationsHelper {
         writeLog("credits deleted");
         executeQueryToDb(DbName.CLICKHOUSE, "ALTER TABLE vindex_test.dp_and_wd_by_channel\n" + "DELETE WHERE ucid='" + ucid + "'");
         writeLog("aggregation table cleared");
-        Thread.sleep(100);
     }
 
-    public static void cleanUserFinancialTransactionDbUcid(String ucid) throws Exception {
+    public static void cleanUserFinancialTransactionDbUcid(String ucid) {
         Allure.step("delete user's with financial transactions transactions from DB");
         deleteEntryFromDb("vindex_test.payments_total", "ucid = '" + ucid + "'");
-        Thread.sleep(100);
-
     }
 
-    public static void cleanUserCashflowDbDeposit(String ucid) throws Exception {
+    public static void cleanUserCashflowDbDeposit(String ucid) {
         Allure.step("delete user's cashflow Deposit  transactions from DB");
         try {
             deleteEntryFromDb("vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Deposit'");
-            Thread.sleep(100);
         } catch (Exception NoSuchElementException) {
             writeLog("No such Deposit records with provided ucid");
         }
     }
 
-    public static void cleanUserCashflowDbWithdrawal(String ucid) throws Exception {
+    public static void cleanUserCashflowDbWithdrawal(String ucid) {
         Allure.step("delete user's cashflow Withdrawal  transactions from DB");
         try {
             deleteEntryFromDb(DbName.POSTGRES, "vindex_test.dp_and_wd_by_channel", "ucid = '" + ucid + "' AND transfer_type = 'Withdrawal'");
-            Thread.sleep(100);
         } catch (Exception NoSuchElementException) {
             writeLog("No such Withdrawal records with provided ucid");
         }

@@ -57,12 +57,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_end_1", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -73,12 +68,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_197txjh", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -89,12 +79,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_end_12", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -104,6 +89,8 @@ class NoSlippageRuleTest extends TestBaseRule {
         DataHelper data = dbDataMap.get("4");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_0oa6zyc", data.closeTradeMtEvent.id, "no_slippage");
 
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
@@ -134,12 +121,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_1u9lc7r", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -150,12 +132,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_034y6nl", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -166,12 +143,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_12inxex", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -182,12 +154,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_0n07x4l", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -198,12 +165,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_13p6x81", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -214,12 +176,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_0jy5i8k", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -230,12 +187,7 @@ class NoSlippageRuleTest extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
-        //Verify alerts
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("Event_1rm136r", data.closeTradeMtEvent.id, "no_slippage");
     }
 
     @Test
@@ -245,6 +197,8 @@ class NoSlippageRuleTest extends TestBaseRule {
         DataHelper data = dbDataMap.get("12");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_1k86ppo", data.closeTradeMtEvent.id, "no_slippage");
 
         //Verify alerts
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "No Slippage");

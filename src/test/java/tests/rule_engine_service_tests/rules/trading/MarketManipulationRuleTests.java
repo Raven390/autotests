@@ -45,12 +45,13 @@ class MarketManipulationRuleTests extends TestBaseRule {
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_0k840lo", data.closeTradeMtEvent.id, "marketManipulation_rule");
+
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Market Manipulation");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
-        checkElementId("Event_0k840lo", data.closeTradeMtEvent.id, "marketManipulation_rule");
     }
 }

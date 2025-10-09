@@ -49,11 +49,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_no_alert", data.registrationEvent.getId(), "clientRegistration_event_rule");
     }
 
     @Test
@@ -64,7 +60,8 @@ class RegistrationRuleTest extends TestBaseRule {
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
-        Thread.sleep(10_000);
+        checkElementId("End_registration_rule_alert1", data.registrationEvent.getId(), "clientRegistration_event_rule");
+
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
@@ -88,7 +85,8 @@ class RegistrationRuleTest extends TestBaseRule {
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
-        Thread.sleep(30_000);
+        checkElementId("end_registration_rule_cs", data.registrationEvent.getId(), "clientRegistration_event_rule");
+
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
@@ -112,14 +110,6 @@ class RegistrationRuleTest extends TestBaseRule {
 
         produceRegistrationEventToKafka(data.registrationEvent);
 
-        Thread.sleep(30_000);
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(0));
-
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("end_no_alert", data.registrationEvent.getId(), "clientRegistration_event_rule");
     }
 }

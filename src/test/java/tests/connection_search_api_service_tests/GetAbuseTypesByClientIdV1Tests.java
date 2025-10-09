@@ -107,7 +107,7 @@ class GetAbuseTypesByClientIdV1Tests extends TestBaseApi {
         addFraudForClient(fraudPotential, "POTENTIAL");
         insertConnectionToDb(connectionTableEntry11, connectionTableEntry12, connectionTableEntry13, connectionTableEntry21, connectionTableEntry22, connectionTableEntry23, connectionTableEntry3, connectionTableEntryStatus1, connectionTableEntryStatus2);
         waitForConnectionSearchToUpdate();
-        Thread.sleep(5000);//pause for asinc services like CS and AR alvays set up connections last and use waitForConnectionSearchToUpdate() before this wait.
+        Thread.sleep(5000);//pause for async services like CS and AR always set up connections last and use waitForConnectionSearchToUpdate() before this wait.
     }
 
     @AfterAll

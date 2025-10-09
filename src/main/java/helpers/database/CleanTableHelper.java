@@ -156,13 +156,9 @@ public class CleanTableHelper {
             List<String> restrictionIdList = restrictionList.stream().map(restriction -> restriction.getId().toString()).toList();
             String inClause = "IN (" + restrictionIdList.stream().map(id -> "'" + id + "'").collect(Collectors.joining(", ")) + ")";
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_REQUEST_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_RESPONSE_GENERAL, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, "id " + inClause);
-            Thread.sleep(100);
         }
     }
 
@@ -173,15 +169,10 @@ public class CleanTableHelper {
             List<String> restrictionIdList = restrictionList.stream().map(restriction -> restriction.getId().toString()).toList();
             String inClause = "IN (" + restrictionIdList.stream().map(id -> "'" + id + "'").collect(Collectors.joining(", ")) + ")";
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_ACTION, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_REQUEST_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_KAFKA_RESPONSE_TRADING, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION_STATUS_BY_SITE, String.format(WHERE_STATEMENT_BY_RESTRICTION_ID, inClause));
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, MITIGATION_CLIENT_TRADING_RESTRICTION, "id " + inClause);
-            Thread.sleep(100);
         }
     }
 
@@ -190,7 +181,6 @@ public class CleanTableHelper {
     @Step("Clean users audit history")
     public static void cleanUserAudit(String ucid) throws Exception {
         deleteEntryFromDb(DbName.POSTGRES, AUDIT_EVENT_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
-        Thread.sleep(100);
     }
 
     // Data science db
@@ -200,7 +190,6 @@ public class CleanTableHelper {
 
         deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME, "ucid = '" + ucid + "'");
         //deleteEntryFromDb(DATA_SCIENCE_FEATURE_STORE_SERVICE_V2_TABLE_NAME, "ucid = '" + ucid + "'");
-        Thread.sleep(100);
     }
 
     // Payment gate db
