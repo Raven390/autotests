@@ -44,7 +44,6 @@ public class BoHelper {
         } catch (Exception e) {
             writeLog("Error closing alert");
         }
-
     }
 
     @Step("Close alerts for client")
@@ -63,7 +62,6 @@ public class BoHelper {
                 openAlertList = getObjectsFromDB(POSTGRES, BO_ALERT_TABLE_NAME, String.format("client_ucid ='%s' and status = 'OPEN'", ucid), Alert.class);
             }
         }
-
     }
 
     @Step("Delete user from BO")
@@ -74,16 +72,11 @@ public class BoHelper {
             if (!investigations.isEmpty()) {
                 String investigationIds = investigations.stream().map(inv -> String.valueOf(inv.getId())).collect(Collectors.joining(","));
                 deleteEntryFromDb(POSTGRES, BO_INVESTIGATION_HISTORY_TABLE_NAME, "investigation_id IN (" + investigationIds + ")");
-                Thread.sleep(100);
             }
             deleteEntryFromDb(POSTGRES, BO_INVESTIGATION_TABLE_NAME, "client_ucid = '" + ucid + "'");
-            Thread.sleep(100);
             deleteEntryFromDb(POSTGRES, BO_WD_REQUEST_TABLE_NAME, "ucid = '" + ucid + "'");
-            Thread.sleep(100);
             deleteEntryFromDb(POSTGRES, BO_ALERT_TABLE_NAME, "client_ucid = '" + ucid + "'");
-            Thread.sleep(100);
             deleteEntryFromDb(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'");
-            Thread.sleep(100);
         } catch (Exception e) {
             writeLog(NO_SUCH_CLIENT_IN_BO);
         }
@@ -96,42 +89,30 @@ public class BoHelper {
     @Step("Delete user's frauds from BO")
     public static void cleanUserFraudsBo(String ucid) throws Exception {
 
-        List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         deleteEntryFromDb(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'");
-        Thread.sleep(100);
     }
 
     @Step("Check that user have record about fraud in db")
     public static void checkUserFraudBo(String ucid, long expectedFraud) throws Exception {
         Allure.step("Check that user have record about fraud in db");
-        Thread.sleep(2000);
-        long fraud = 0;
-
+        long fraud;
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         writeLog(CLIENT_ID_IN_BO + boId);
         List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "' AND fraud_type_id = '" + expectedFraud + "'", ClientsFraudTypes.class);
-        Thread.sleep(100);
-
         fraud = clientsFraudTypes.getFirst().getFraudTypeId();
         writeLog("FRAUD ID " + fraud);
 
-        assertEquals(expectedFraud, fraud);
     }
 
     @Step("Check that user NOT have records about frauds in db")
     public static void checkUserNoFraudBo(String ucid) throws Exception {
         Allure.step("Check that user not have records about frauds in db");
-        Thread.sleep(2000);
-
         List<Client> client = getObjectsFromDB(POSTGRES, BO_CLIENT_TABLE_NAME, "ucid = '" + ucid + "'", Client.class);
         int boId = client.getFirst().id;
         writeLog(CLIENT_ID_IN_BO + boId);
         List<ClientsFraudTypes> clientsFraudTypes = getObjectsFromDB(POSTGRES, BO_CLIENTS_FRAUD_TYPES_TABLE_NAME, "client_ucid = '" + ucid + "'", ClientsFraudTypes.class);
-        Thread.sleep(100);
-
         assertEquals(clientsFraudTypes.size(), 0);
-
         assertTrue(clientsFraudTypes.isEmpty());
     }
 

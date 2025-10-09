@@ -54,11 +54,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper);
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEvent1TestOrSocialTrader", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -68,11 +64,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEvent2DoesNotHaveCredits", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -82,11 +74,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -96,11 +84,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEvent3DoesNotHaveEnoughTrades", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -110,11 +94,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEvent5MirrorScoreIsNotHigh", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -124,11 +104,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
 
         produceTradeMessageToKafka(data.tradeEvent);
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
-        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
-
-        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
-        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(0));
+        checkElementId("endEventFinishWithoutAlert", data.tradeEvent.id, "openTradeMirrorTrade");
     }
 
     @Test
@@ -137,6 +113,9 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
         DataHelper data = dbDataMap.get("7");
 
         produceTradeMessageToKafka(data.tradeEvent);
+
+        checkElementId("wrModel", data.tradeEvent.id, "openTradeMirrorTrade");
+        checkElementId("endEvent4SuspectsByMLModel", data.tradeEvent.id, "openTradeMirrorTrade");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Mirror Trading");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
@@ -148,7 +127,7 @@ class MirrorTradingOpenTradeRuleTest extends TestBaseRule {
         assertThat("Verify trading account in alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.clientHelper.getTradingAccount())));
         assertThat("Verify ucid in alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
         assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.tradeEvent.eventDate));
 
         List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));

@@ -333,6 +333,7 @@ public class DbHelper {
                 writeLog(query);
                 statement.executeUpdate();
             }
+            Thread.sleep(100);
             return null;
         });
     }

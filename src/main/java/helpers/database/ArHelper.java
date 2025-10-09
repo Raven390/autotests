@@ -29,15 +29,10 @@ public class ArHelper {
             String condition = String.format(WHERE_CONDITION, ucids);
 
             deleteDeductions(ucidList);
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, condition);
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, condition);
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, condition);
-            Thread.sleep(100);
             deleteEntryFromDb(DbName.POSTGRES, AR_PENDING_PROCESSING_TABLE_NAME, condition);
-            Thread.sleep(100);
 
         } catch (NoSuchElementException e) {
             writeLog(NO_SUCH_CLIENT_IN_AR);

@@ -29,7 +29,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class KafkaHelper {
 
     public static final Path filePath = Path.of("src/main/resources/config/consumer-groups");
-    public static final Integer MAX_ATTEMPTS = 50;
+    public static final Integer MAX_ATTEMPTS = 10;
 
     public static String getFreeConsumerId() {
         FileLock fileLock = null;
@@ -670,10 +670,5 @@ public class KafkaHelper {
             cleanConsumerIdAfterUse(consumerId, consumerId);
             consumer.close();
         }
-    }
-
-    @Step("Get event type from headers")
-    public static String getEventTypeFromHeaders(MessageWithHeaders messageWithHeaders) {
-        return messageWithHeaders.headers().get("__TypeId__");
     }
 }

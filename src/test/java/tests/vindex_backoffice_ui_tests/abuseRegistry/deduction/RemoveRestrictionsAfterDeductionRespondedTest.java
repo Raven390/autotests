@@ -27,6 +27,7 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
+import static helpers.api.RestrictionHelper.setRestrictionAPIGeneral;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.FraudSubtype.FIRST_TIME;
 import static helpers.data.enums.FraudType.GAP_TRADING;
@@ -43,7 +44,6 @@ import static helpers.database.CleanTableHelper.cleanUserAudit;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static page_objects.backoffice_pages.investigationTool.RestrictionPage.setRestrictionAPIGeneral;
 import static tests.TestBaseApi.objectMapper;
 import static utils.Constants.*;
 import static utils.Utils.*;

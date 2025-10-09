@@ -110,46 +110,101 @@ class LatencyArbitrageRuleTest extends TestBaseRule {
         assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
     }
 
-    @Disabled
     @Test
     @AllureId("1374")
-    @DisplayName("")
+    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. Total Profit / Cumulative deposit =< 0.2. ElementId: Event_1jau96v")
     void latencyArbitrageRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_1jau96v", data.closeTradeMtEvent.id, "latency_arbitrage");
     }
 
-    @Disabled
     @Test
     @AllureId("1375")
-    @DisplayName("")
+    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. rebates(client) / profit(client) < 0.3?. ElementId: Event_0cyuekk")
     void latencyArbitrageRuleTest5() throws Exception {
         DataHelper data = dbDataMap.get("5");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_0cyuekk", data.closeTradeMtEvent.id, "latency_arbitrage");
     }
 
-    @Disabled
     @Test
-    @AllureId("1375")
-    @DisplayName("")
+    @DisplayName("Latency arbitrage rule. notionalValue(ucid) < 10 000 000. ElementId: Event_04k2uu4")
     void latencyArbitrageRuleTest6() throws Exception {
         DataHelper data = dbDataMap.get("6");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_04k2uu4", data.closeTradeMtEvent.id, "latency_arbitrage");
     }
 
-    @Disabled("Not implemented")
     @Test
     @AllureId("1376")
-    @DisplayName("")
+    @DisplayName("Latency arbitrage rule. max(maxNotionalValue.maxDailyNotionalValueUSD) / sum(notionalValue.notionalValueAmountUSD) > 0.6. ElementId: Event_0byoyft")
     void latencyArbitrageRuleTest7() throws Exception {
         DataHelper data = dbDataMap.get("7");
 
         produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
 
+        checkElementId("Event_0byoyft", data.closeTradeMtEvent.id, "latency_arbitrage");
+    }
+
+    @Test
+    @AllureId("1657")
+    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. At least 1 resolved Alert. ElementId: Event_0u8x3op")
+    void latencyArbitrageRuleTest8() throws Exception {
+        DataHelper data = dbDataMap.get("8");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_0u8x3op", data.closeTradeMtEvent.id, "latency_arbitrage");
+    }
+
+    @Test
+    @AllureId("1658")
+    @DisplayName("Latency arbitrage rule. Rebate Latency Branch. No resolved Alerts. ElementId: Event_04a1zpc")
+    void latencyArbitrageRuleTest9() throws Exception {
+        DataHelper data = dbDataMap.get("9");
+
+        produceCloseTradeMessageToKafka(data.closeTradeMtEvent);
+
+        checkElementId("Event_04a1zpc", data.closeTradeMtEvent.id, "latency_arbitrage");
+
+        Allure.step("Verify there is alert in kafka");
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Latency Arbitrage");
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().alertId, is(data.closeTradeMtEvent.id));
+        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, is(data.closeTradeMtEvent.eventDate));
+
+        assertThat("Verify alert", alerts.getFirst().rule.name, is("Latency Arbitrage"));
+        assertThat("Verify alert", alerts.getFirst().rule.fraudType, is("LATENCY_ARBITRAGE"));
+        assertThat("Verify alert", alerts.getFirst().rule.trigger, is("Close Trade"));
+        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
+
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.reason, is("Detected suspicious Latency Arbitrage pattern + Rebate abuse"));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.symbolTraded, is(data.closeTradeMtEvent.symbol));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.serverId, is(data.closeTradeMtEvent.serverId));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.ticketId, is(String.valueOf(data.closeTradeMtEvent.tradeId)));
+        assertThat("Verify alert", alerts.getFirst().rule.attributes.account, is(String.valueOf(data.closeTradeMtEvent.tradingAccount)));
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        // Verify restriction
+        Allure.step("Get client restrictions");
+        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
+        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
+        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
+        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
+        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Lattency arbitrage pattern"));
+        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
     }
 }

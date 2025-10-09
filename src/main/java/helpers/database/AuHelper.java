@@ -11,7 +11,5 @@ public class AuHelper {
         String ucids = Arrays.stream(ucid).map(u -> "'" + u + "'").collect(Collectors.joining(", "));
         String condition = "ucid IN (" + ucids + ")";
         deleteEntryFromDb(DbName.POSTGRES, AUDIT_EVENT, condition);
-
-        Thread.sleep(200);
     }
 }
