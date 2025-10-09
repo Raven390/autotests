@@ -18,6 +18,7 @@ import page_objects.backoffice_pages.abuseRegistry.DeductionPage;
 import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
+import page_objects.backoffice_pages.search.SearchPage;
 import page_objects.vantage_user_account_pages.StageRegistrationHelperPage;
 import page_objects.vantage_user_account_pages.VantageUserAccountPage;
 import utils.TestResultWatcher;
@@ -57,6 +58,7 @@ public class TestBaseWeb {
     public static OpenPositions openPositions;
     public FraudstersPage fraudstersPage;
     public DeductionPage deductionPage;
+    public SearchPage searchPage;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -120,6 +122,7 @@ public class TestBaseWeb {
         alertHistoryPage = new AlertHistoryPage(page);
         fraudstersPage = new FraudstersPage(page);
         deductionPage = new DeductionPage(page);
+        searchPage = new SearchPage(page);
     }
 
     @AfterEach

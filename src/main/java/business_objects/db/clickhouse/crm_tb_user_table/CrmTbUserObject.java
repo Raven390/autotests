@@ -10,6 +10,7 @@ public class CrmTbUserObject {
     public String ucid;
     public String brand;
     public String regulator;
+    public String brandGroup;
     public String registrationDate;
     public String registrationDateUtc;
     public String firstName;
@@ -43,7 +44,8 @@ public class CrmTbUserObject {
     public CrmTbUserObject() {
     }
 
-    public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String registrationDate,
+    public CrmTbUserObject(int userId, String ucid, String brand, String regulator, String brandGroup,
+            String registrationDate,
             String registrationDateUtc,
             String firstName, String lastName, String gender, String birthday, String country, String countryCode,
             String isoCountryCode, String language, String nationality, String email, String phoneNum,
@@ -56,6 +58,7 @@ public class CrmTbUserObject {
         this.ucid = ucid;
         this.brand = brand;
         this.regulator = regulator;
+        this.brandGroup = brandGroup;
         this.registrationDate = registrationDate;
         this.registrationDateUtc = registrationDateUtc;
         this.firstName = firstName;
