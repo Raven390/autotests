@@ -39,6 +39,16 @@ public class AbuserDeduction {
     private Double balanceAtResolutionUsd;
     private Boolean sendToLark;
     private String deductionType;
+    private Boolean isDeleted;
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
 
     public String getDeductionType() {
         return deductionType;
