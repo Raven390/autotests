@@ -167,6 +167,10 @@ public class ConfigFactory {
     public static final String FIRST_NAME_AUTOTEST_ONE = CONFIG.firstNameAutotestOne();
     public static final String LAST_NAME_AUTOTEST_ONE = CONFIG.lastNameAutotestOne();
     public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
+    public static final String EMAIL_AUTOTEST_OPS24_DUTY = CONFIG.emailOps24DutyUser();
+    public static final String ID_AUTOTEST_OPS24_DUTY = CONFIG.idOps24DutyUser();
+    public static final String EMAIL_AUTOTEST_OPS24_SENIOR = CONFIG.emailOps24SeniorUser();
+    public static final String ID_AUTOTEST_OPS24 = CONFIG.idOps24User();
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
@@ -653,6 +657,18 @@ public class ConfigFactory {
 
         @Key("abuseRegistryPostAbuserStatus")
         String abuseRegistryPostAbuserStatus();
+
+        @Key("emailOps24DutyUser")
+        String emailOps24DutyUser();
+
+        @Key("idOps24DutyUser")
+        String idOps24DutyUser();
+
+        @Key("emailOps24SeniorUser")
+        String emailOps24SeniorUser();
+
+        @Key("idOps24User")
+        String idOps24User();
 
         //Lark
 

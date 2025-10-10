@@ -74,6 +74,16 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(autotestUserOne());
     }
 
+    @Step("Log in as duty ops user")
+    public void loginAsDutyOpsUser() {
+        loginWithUser(autotestUserOPSDuty());
+    }
+
+    @Step("Log in as senior ops user")
+    public void loginAsSeniorOpsUser() {
+        loginWithUser(autotestUserSeniorOPS());
+    }
+
     @Step("Log in as AF user")
     public void loginAsAFUser() {
         Allure.step("Login as AF user");
