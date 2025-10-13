@@ -19,8 +19,7 @@ import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
 import page_objects.backoffice_pages.search.SearchPage;
-import page_objects.vantage_user_account_pages.StageRegistrationHelperPage;
-import page_objects.vantage_user_account_pages.VantageUserAccountPage;
+import page_objects.StageRegistrationHelperPage;
 import utils.TestResultWatcher;
 import utils.TestUtils;
 import utils.Utils;
@@ -39,7 +38,6 @@ public class TestBaseWeb {
     public Page page;
 
     public StageRegistrationHelperPage stageRegistrationHelperPage;
-    public VantageUserAccountPage vantageUserAccountPage;
     public InvestigationPage investigationPage;
     public KeycloackPage keycloackPage;
     public ProfilePage profilePage;
@@ -102,7 +100,6 @@ public class TestBaseWeb {
 
         // Core team pages
         stageRegistrationHelperPage = new StageRegistrationHelperPage(page);
-        vantageUserAccountPage = new VantageUserAccountPage(page);
         // Back office team pages
         investigationPage = new InvestigationPage(page);
         keycloackPage = new KeycloackPage(page);

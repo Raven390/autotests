@@ -38,7 +38,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
-import static utils.Utils.writeLog;
 
 
 @ExtendWith(TestResultWatcher.class)
@@ -81,16 +80,7 @@ public class TestBaseRule {
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client, String ruleName)
             throws InterruptedException,
             JsonProcessingException {
-        return await().atMost(120, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
-            List<RuleAlert> list = Arrays.stream(
-                    objectMapper.readValue(
-                            kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert != null && alert.rule != null && alert.rule.name != null && alert.rule.name.equals(ruleName)).toList();
-            if (list != null && !list.isEmpty()) {
-                return list;
-            } else {
-                return null;
-            }
-        }, Objects::nonNull);
+        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
 
@@ -135,15 +125,9 @@ public class TestBaseRule {
 
     @Step("Get User restrictions from mitigation DB")
     public static List<ClientGeneralRestriction> getUserRestrictionsFromDb(ClientHelper client) throws Exception {
-        return await().atMost(120, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
-            List<ClientGeneralRestriction> list = getObjectsFromDB(
-                    DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class);
-            if (list != null && !list.isEmpty()) {
-                return list;
-            } else {
-                return null;
-            }
-        }, Objects::nonNull);
+        List<ClientGeneralRestriction> result = getObjectsFromDB(
+                DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class, 30);
+        return result != null ? result : List.of(); // empty if no alerts found after retries
     }
 
     @Step("Get abuser status by ucid")
@@ -184,7 +168,7 @@ public class TestBaseRule {
             } else {
                 joined = list.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
             }
-            writeLog("Looking for Element ID: " + elementId + " in list: " + joined);
+            System.out.println("Looking for Element ID: " + elementId + " in list: " + joined);
             return joined;
         }, ids -> ids != null && ids.contains(elementId));
 

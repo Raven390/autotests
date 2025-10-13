@@ -1,4 +1,4 @@
-package page_objects.vantage_user_account_pages;
+package page_objects;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
