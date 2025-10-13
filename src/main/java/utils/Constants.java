@@ -37,6 +37,7 @@ public class Constants {
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MARKET_CLOSE = "Clickhouse api. Get market close";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BALANCE_ORDERS = "Clickhouse api. Get balance orders";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_BONUSES = "Clickhouse api. Get bonuses";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_CLIENT = "Clickhouse api. Get client request";

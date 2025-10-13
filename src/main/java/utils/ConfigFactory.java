@@ -50,6 +50,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_FLOATING_TRADES_GROUP_BY = CONFIG.clickhouseGetFloatingTradesGroupBy();
     public static final String CLICKHOUSE_API_GET_MIRROR_ACCOUNTS_BY_TRADES = CONFIG.clickhouseGetMirrorAccountsByTrades();
     public static final String CLICKHOUSE_API_GET_ABUSE_TYPES = CONFIG.clickhouseGetAbuseTypes();
+    public static final String CLICKHOUSE_API_GET_MARKET_CLOSE = CONFIG.clickhouseGetMarketClose();
     public static final String CLICKHOUSE_API_GET_CREDIT_RISK_FREE_REVENUE_RATIO = CONFIG.clickhouseGetCreditRiskFreeRevenueRatio();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_FEES = CONFIG.clickhouseGetSwapFreeFees();
     public static final String CLICKHOUSE_API_GET_SWAP_FREE_VOLUMES = CONFIG.clickhouseGetSwapFreeVolumes();
@@ -341,6 +342,9 @@ public class ConfigFactory {
 
         @Key("clickhouseGetTotalLoyalties")
         String clickhouseGetTotalLoyalties();
+
+        @Key("clickhouseGetMarketClose")
+        String clickhouseGetMarketClose();
 
         @Key("clickhouseGetMirrorClientsByTrades")
         String clickhouseGetMirrorClientsByTrades();

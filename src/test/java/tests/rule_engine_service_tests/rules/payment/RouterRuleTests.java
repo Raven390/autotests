@@ -256,6 +256,7 @@ class RouterRuleTests extends TestBaseRule {
         assertThat("Verify status of approval in Kafka topic", approval.getFirst().getStatus(), is("Approve"));
         assertThat("Verify status of checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
         assertThat("Verify checkName in Kafka topic", approval.getFirst().getCheckName(), is("Crypto_Risk"));
+        assertThat("Verify checkName in Kafka topic", approval.getFirst().getBrand(), is("Vantage"));
         assertThat("Verify orderNumber in Kafka topic", approval.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr");
