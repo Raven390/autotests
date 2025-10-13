@@ -22,13 +22,6 @@ public class ConfigFactory {
     public static final String PATH_TRACE_VIDEO = CONFIG.pathTraceVideo();
     public static final String PATH_TRACE = CONFIG.pathTrace();
     public static final String PATH_BASELINE_SCREENSHOT = CONFIG.pathBaselineScreenshot();
-    // Databases
-    public static final String MYSQL_STAGING_CRM_HOST = CONFIG.mysqlStagingCrmHost();
-    public static final String MYSQL_STAGING_CRM_LOGIN = CONFIG.mysqlStagingCrmLogin();
-    public static final String MYSQL_STAGING_CRM_PASSWORD = CONFIG.mysqlStagingCrmPassword();
-    // Registration helper
-    public static final String REGISTRATION_HELPER_LOGIN = CONFIG.registrationHelperLogin();
-    public static final String REGISTRATION_HELPER_PASSWORD = CONFIG.registrationHelperPassword();
     // Clickhouse api
     public static final String CLICKHOUSE_API_BASE_TEST = CONFIG.clickhouseBasePathTest();
     public static final String CLICKHOUSE_API_BASE_PROD = CONFIG.clickhouseBasePathProd();
@@ -120,7 +113,6 @@ public class ConfigFactory {
     public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
     // Postrgres db
     public static final String POSTGRES_DB_SSH_HOST = CONFIG.postgresDbSshHost();
-    public static final String POSTGRES_DB_SSH_PORT = String.valueOf(CONFIG.postgresDbSshPort());
     public static final String POSTGRES_DB_SSH_USER = CONFIG.postgresDbSshUser();
     public static final String POSTGRES_DB_SSH_PRIVATE_KEY = CONFIG.postgresDbSshPrivateKey();
     public static final String POSTGRES_DB_HOST = CONFIG.postgresDbHost(); // As seen from the SSH server
@@ -132,11 +124,6 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_HOST = CONFIG.clickhouseHost();
     public static final String CLICKHOUSE_USER = CONFIG.clickhouseUser();
     public static final String CLICKHOUSE_PASSWORD = CONFIG.clickhousePassword();
-    // Backoffice test user
-    public static final String CRM_INTEGRATION_USER_UCID = CONFIG.crmIntegrationUserUcid();
-    // Other
-    public static final String COUNTRY_MALAYSIA = CONFIG.countryMalaysia();
-    public static final Double TIMEOUT = CONFIG.waitTimeout();
     // Backoffice UI users
     public static final String ID_FIRST_LOGIN = CONFIG.idFirstLogin();
     public static final String USERNAME_FIRST_LOGIN = CONFIG.usernameFirstLogin();
@@ -181,6 +168,8 @@ public class ConfigFactory {
     public static final String LARK_BASE_URL = CONFIG.larkBaseUrl();
     public static final String LARK_GET_TENANT_TOKEN_PATH = CONFIG.larkGetTenantTokenPath();
     public static final String LARK_GET_MESSAGE_HISTORY_PATH = CONFIG.larkGetMessageHistoryPath();
+    // Other
+    public static final Double TIMEOUT = CONFIG.waitTimeout();
 
     @Config.Sources({"classpath:config/config.properties", "system:properties"})
     public interface UserConfig extends Config {
@@ -226,25 +215,6 @@ public class ConfigFactory {
 
         @Key("testClusterKafkaPassword")
         String testClusterKafkaPassword();
-
-        // Databases
-
-        @Key("mysqlStagingCrmHost")
-        String mysqlStagingCrmHost();
-
-        @Key("mysqlStagingCrmLogin")
-        String mysqlStagingCrmLogin();
-
-        @Key("mysqlStagingCrmPassword")
-        String mysqlStagingCrmPassword();
-
-        // Registration helper
-
-        @Key("registrationHelperLogin")
-        String registrationHelperLogin();
-
-        @Key("registrationHelperPassword")
-        String registrationHelperPassword();
 
         // Clickhouse database
 
@@ -547,19 +517,6 @@ public class ConfigFactory {
 
         @Key("postgresDbName")
         String postgresDbName();
-
-        // Other
-
-        @Key("countryMalaysia")
-        String countryMalaysia();
-
-        // Test users
-
-        @Key("crmIntegrationUserUcid")
-        String crmIntegrationUserUcid();
-
-        @Key("crmIntegrationUserId")
-        String crmIntegrationUserId();
 
         // Backoffice UI users
 

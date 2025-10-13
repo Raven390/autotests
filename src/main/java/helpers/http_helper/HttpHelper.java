@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import okio.Buffer;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -94,7 +93,7 @@ public class HttpHelper {
     @Step("Send post request: {url}, {headersMap}, {queryParamsMap}")
     public Response sendPostRequest(String url, Map<String, Object> headersMap, Map<String, Object> queryParamsMap,
             RequestBody requestBody) throws IOException {
-        writeLog("Request Body: " + bodyToString(requestBody));
+        writeLog("Request Body: " + requestBody);
         HttpUrl httpUrl = buildUrlWithQueryParams(url, queryParamsMap);
         Request request = buildRequestWithHeaders(httpUrl, headersMap).post(requestBody).build();
         writeLog("Request to execute: " + request);
@@ -102,16 +101,6 @@ public class HttpHelper {
         writeLog("Response : " + response);
         writeLog("Response body: " + response.peekBody(Long.MAX_VALUE).string());
         return response;
-    }
-
-    private static String bodyToString(RequestBody requestBody) {
-        try {
-            Buffer buffer = new Buffer();
-            requestBody.writeTo(buffer);
-            return buffer.readUtf8();
-        } catch (IOException e) {
-            return "Error reading body";
-        }
     }
 
     @Step("Send put request: {url}, {headersMap}, {queryParamsMap}")

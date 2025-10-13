@@ -25,7 +25,6 @@ public class CreateSimpleAlert {
         writeLog("Alert was sent successfully");
     }
 
-
     public static void sendSimplePaymentAlert(String ucid) throws JsonProcessingException {
         objectMapper.findAndRegisterModules();
         PaymentAlertMessage alert = generatePaymentAlertByUcid(ucid);

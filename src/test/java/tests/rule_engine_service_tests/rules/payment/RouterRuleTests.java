@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
+@Disabled("Will be enabled after decision to go to prod")
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE)
 @Tag(TEAM_CORE)
@@ -213,9 +214,9 @@ class RouterRuleTests extends TestBaseRule {
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
         assertEquals(data.crmWithdrawalEvent.getWithdrawalId(), Long.valueOf(events.getFirst().getCrmId()));
 
-        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Withdrawal Review");
+        List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "PGS Withdrawal Review");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert name", alerts.getFirst().rule.name, is("Withdrawal Review"));
+        assertThat("Verify alert name", alerts.getFirst().rule.name, is("PGS Withdrawal Review"));
         assertThat("Verify alert ucid", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
 
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.rateUSD, is(instanceOf(Double.class)));

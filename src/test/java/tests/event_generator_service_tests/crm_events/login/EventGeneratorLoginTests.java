@@ -21,7 +21,6 @@ import tests.TestBaseKafka;
 @Tag(SUITE_EVENT_GENERATOR_SERVICE)
 class EventGeneratorLoginTests extends TestBaseKafka {
 
-
     @Test
     @DisplayName("Generate login event with event generator service")
     @AllureId("65")
