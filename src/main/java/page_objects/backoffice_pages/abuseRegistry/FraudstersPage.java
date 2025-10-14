@@ -52,6 +52,7 @@ public class FraudstersPage extends AbstractPage {
     private final Locator pendingProcessingToggleLocator;
     private final Locator pendingProcessingCells;
     private final Locator validationListItem;
+    private final Locator serverAccInput;
 
 
     public FraudstersPage(Page page) {
@@ -61,6 +62,7 @@ public class FraudstersPage extends AbstractPage {
         this.uploadDrawer = page.locator(uploadDrawerLocator + "//*[text()='Add clients to abuse registry']");
         this.removeDrawer = page.locator(uploadDrawerLocator + "//*[text()='Remove fraud types or restrictions']");
         this.clientIdInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter client IDs separated with spaces, commas, semicolons or new lines']");
+        this.serverAccInput = page.locator(uploadDrawerLocator + "//textarea[@placeholder='Enter a list of accounts with servers (e.g.: MT5-PUG2 123456789), separated with spaces, commas, semicolons or new lines']");
         this.addFraudButton = page.locator(uploadDrawerLocator + "//*[@data-qa='fraud_type_selector__add_button' or @data-qa='abuse_registry_manage_fraud_drawer__fraud_type_selector__anchor']");
         this.validationList = page.locator(".v-abuse-registry-batch-delete-errors__list");
         this.validationListItem = page.locator(".v-abuse-registry-batch-delete-errors-item__item");
@@ -126,6 +128,17 @@ public class FraudstersPage extends AbstractPage {
         }
     }
 
+    public void typeServerAcc(String serverAcc) {
+        serverAccInput.fill(serverAcc);
+        boolean assertion = serverAccInput.textContent().contains(serverAcc);
+        int iterator = 0;
+        while (!assertion && iterator < 50) {
+            page.waitForTimeout(100);
+            assertion = serverAccInput.textContent().contains(serverAcc);
+            iterator++;
+        }
+    }
+
     public void typeClientsID(String... clientId) {
         String input = null;
         if (clientId.length > 1) {
@@ -134,6 +147,24 @@ public class FraudstersPage extends AbstractPage {
             input = clientId[0];
         }
         typeClientID(input);
+    }
+
+    public void typeServerNameAcc(String... serverNameAcc) {
+        StringBuilder inputBuilder = new StringBuilder();
+
+        for (int i = 0; i < serverNameAcc.length; i++) {
+            if (i > 0) {
+                if (i % 2 == 0) {
+                    inputBuilder.append(",");
+                } else {
+                    inputBuilder.append(" ");
+                }
+            }
+            inputBuilder.append(serverNameAcc[i]);
+        }
+
+        String input = inputBuilder.toString();
+        typeServerAcc(input);
     }
 
     public void clickAddFraudButton() {
