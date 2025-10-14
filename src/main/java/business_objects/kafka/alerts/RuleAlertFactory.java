@@ -74,6 +74,37 @@ public class RuleAlertFactory {
         return alert;
     }
 
+    @Step("Generate withdrawal notification alert")
+    public static RuleAlert generatePgsWithdrawalNotificationAlert(ClientHelper client, UUID paymentId) {
+        RuleAlert alert = new RuleAlert();
+        alert.alertId = getRandomUuidString();
+        alert.timestamp = Instant.now().toString();
+        alert.ucid = client.getUcid();
+        alert.type = "TRADING";
+        alert.triggerCreatedTime = Instant.now().toString();
+        alert.rule = new RuleAlert.Rule();
+        alert.rule.ver = "0.1.8";
+        alert.rule.name = "Withdrawal Review";
+        alert.rule.trigger = "Withdrawal";
+        alert.rule.fraudType = "POTENTIAL_ABUSE";
+        alert.rule.attributes = new RuleAlert.Rule.Attribute();
+        alert.rule.attributes.withdrawalId = getRandomIntPositive().toString();
+        alert.rule.attributes.amount = "123.45";
+        alert.rule.attributes.currency = "EUR";
+        alert.rule.attributes.paymentType = "CRYPTO";
+        alert.rule.attributes.check = "Big_Amount";
+        alert.rule.attributes.orderId = "AU603771220250201005755";
+        alert.rule.attributes.paymentChannel = "Cryptocurrency-ETH";
+        alert.rule.attributes.brand = client.getBrand();
+        alert.rule.attributes.account = client.getTradingAccount().toString();
+        alert.rule.attributes.platform = "MT4";
+        alert.rule.attributes.createTime = getCurrentTimestampDbFormat().replace(" ", "T") + "+03:00";
+        alert.rule.attributes.regulator = client.getRegulator();
+        alert.rule.attributes.date = getCurrentTimestampDbFormat().replace(" ", "T") + "+03:00";
+        alert.rule.attributes.paymentId = paymentId.toString();
+        return alert;
+    }
+
     @Step("Generate payment alert for client with ucid '{ucid}'")
     public static PaymentAlertMessage generatePaymentAlertByUcid(String ucid) {
         return new PaymentAlertMessage(UUID.randomUUID(), AlertMessageType.PAYMENT, OffsetDateTime.now(), OffsetDateTime.now(), ucid, new PaymentAlertMessage.Rule(

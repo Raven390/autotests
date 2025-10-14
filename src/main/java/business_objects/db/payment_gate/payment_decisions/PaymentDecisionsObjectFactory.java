@@ -22,5 +22,18 @@ public class PaymentDecisionsObjectFactory {
         );
     }
 
+    public static PaymentDecisionsObject generateRiskPaymentDecisionObject(PaymentEventsObject event) {
+        return new PaymentDecisionsObject(
+                event.getPaymentId(),       // paymentId
+                "risk",                                     // decisionType
+                0,                                              // decisionCode
+                0,                                              // rejectionCode
+                "QA",                                      // actor
+                Timestamp.from(Instant.now()),                  // dateCreated
+                Timestamp.from(Instant.now()),                // dateUpdated
+                Timestamp.from(Instant.now())                   // dateDecided
+        );
+    }
+
 
 }
