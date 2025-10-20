@@ -19,6 +19,7 @@ public class PaymentsRequestBodyFactory {
         body.setDecisionType(Decision.FINAL_APPROVE.getType());
         body.setDecisionCode(Decision.FINAL_APPROVE.getCode());
         body.setDecidedAt(getRandomDateTimeIsoUtc());
+        body.setActor("Vindex BO");
         return body;
     }
 }
