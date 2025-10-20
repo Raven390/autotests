@@ -7,22 +7,23 @@ import java.util.UUID;
 
 public class PaymentDecisionsObject {
 
-    public UUID paymentId;
-    public String decisionType;
-    public Integer decisionCode;
-    public Integer rejectionCode;
-    public String actor;
-    public Timestamp dateCreated;
-    public Timestamp dateUpdated;
-    public Timestamp dateDecided;
+    private Integer id;
+    private UUID paymentId;
+    private String decisionType;
+    private Integer decisionCode;
+    private Integer rejectionCode;
+    private String actor;
+    private Timestamp dateCreated;
+    private Timestamp dateUpdated;
+    private Timestamp dateDecided;
 
     public PaymentDecisionsObject() {
     }
 
     public PaymentDecisionsObject(
-            UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode,
-            String actor,
+            Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode, String actor,
             Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided) {
+        this.id = id;
         this.paymentId = paymentId;
         this.decisionType = decisionType;
         this.decisionCode = decisionCode;
@@ -31,6 +32,14 @@ public class PaymentDecisionsObject {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.dateDecided = dateDecided;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public UUID getPaymentId() {
@@ -100,7 +109,7 @@ public class PaymentDecisionsObject {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PaymentDecisionsObject that)) return false;
-        return Objects.equals(paymentId, that.paymentId) && Objects.equals(
+        return Objects.equals(id, that.id) && Objects.equals(paymentId, that.paymentId) && Objects.equals(
                 decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(
                         rejectionCode, that.rejectionCode) && Objects.equals(actor, that.actor) && Objects.equals(
                                 dateCreated, that.dateCreated) && Objects.equals(dateUpdated, that.dateUpdated) && Objects.equals(
@@ -109,11 +118,11 @@ public class PaymentDecisionsObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(paymentId, decisionType, decisionCode, rejectionCode, actor, dateCreated, dateUpdated, dateDecided);
+        return Objects.hash(id, paymentId, decisionType, decisionCode, rejectionCode, actor, dateCreated, dateUpdated, dateDecided);
     }
 
     @Override
     public String toString() {
-        return "PaymentDecisionsObject{" + "paymentId='" + paymentId + '\'' + ", decisionType='" + decisionType + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor + '\'' + ", dateCreated='" + dateCreated + '\'' + ", dateUpdated='" + dateUpdated + '\'' + ", dateDecided='" + dateDecided + '\'' + '}';
+        return "PaymentDecisionsObject{" + "id=" + id + ", paymentId=" + paymentId + ", decisionType='" + decisionType + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided=" + dateDecided + '}';
     }
 }

@@ -1,4 +1,4 @@
-package business_objects.api.payment_gate.decisions;
+package business_objects.api.payment_gate.payments_decisions;
 
 import helpers.http_helper.HttpHelper;
 import io.qameta.allure.Step;

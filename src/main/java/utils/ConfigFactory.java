@@ -107,6 +107,7 @@ public class ConfigFactory {
     // Mitigation service
     public static final String PAYMENT_GATE_SERVICE_BASE_PATH = CONFIG.paymentGateServiceBasePath();
     public static final String PAYMENT_GATE_PAYMENTS_PATH = CONFIG.paymentGatePaymentsPath();
+    public static final String PAYMENT_GATE_REJECTION_REASONS_PATH = CONFIG.paymentGateRejectionReasonsPath();
     public static final String PAYMENT_GATE_DECISIONS_PATH = CONFIG.paymentGateDecisionsPath();
     public static final String PAYMENT_GATE_TEMP_DECISIONS_PATH = CONFIG.paymentGateTempDecisionsPath();
     public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
@@ -476,6 +477,9 @@ public class ConfigFactory {
 
         @Key("paymentGatePaymentsPath")
         String paymentGatePaymentsPath();
+
+        @Key("paymentGateRejectionReasonsPath")
+        String paymentGateRejectionReasonsPath();
 
         @Key("paymentGateDecisionsPath")
         String paymentGateDecisionsPath();

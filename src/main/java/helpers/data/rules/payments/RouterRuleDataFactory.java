@@ -6,6 +6,7 @@ import helpers.data.DataHelper;
 import io.qameta.allure.Description;
 import utils.Utils;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,6 @@ public class RouterRuleDataFactory {
     private static final ClientHelper routerRuleClient4 = getRandomVantageClientAllFields();
     private static final ClientHelper routerRuleClient5 = getRandomVantageClientAllFields();
 
-
     @Description("Create data for Router rule")
     private static DataHelper getRouterRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
@@ -38,7 +38,7 @@ public class RouterRuleDataFactory {
                 data.clientHelper.getBrand().toLowerCase(),   // brand
                 "",                                           // checkName
                 data.clientHelper.getUserId(),                // clientId
-                "2025-06-03T16:30:07+03:00",                  // eventDate (you can format if you need +03:00)
+                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
                 "4",                                          // expMonth
                 "2030",                                       // expYear
                 data.clientHelper.getFirstName(),             // fullName
@@ -53,7 +53,7 @@ public class RouterRuleDataFactory {
                 "1.0",                               // schemaVersion
                 CRM_WITHDRAWAL_EVENT,                // type
                 1,                                   // withdrawalAmount
-                "2025-06-03T16:30:07",               // withdrawalApplicationTime
+                Instant.now().toString(),               // withdrawalApplicationTime
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
@@ -63,6 +63,7 @@ public class RouterRuleDataFactory {
 
     private static DataHelper getMirrorTradingCloseTradeBybitTest1Data() {
         DataHelper data = getRouterRuleData(routerRuleClient1);
+        data.crmWithdrawalEvent.setWithdrawalAmount(1);
         return data;
     }
 
@@ -99,10 +100,10 @@ public class RouterRuleDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
-        map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
-        map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
-        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
+//        map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
+//        map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
+//        map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
+//        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
         map.put("5", getMirrorTradingCloseTradeBybitTest5Data());
 
         setupData(map);

@@ -1,4 +1,4 @@
-package business_objects.api.payment_gate.decisions;
+package business_objects.api.payment_gate.payments_decisions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

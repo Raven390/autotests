@@ -1,8 +1,8 @@
 package tests.payment_gate_service_tests;
 
 
-import business_objects.api.payment_gate.decisions.PostDecisionsRequestBody;
-import business_objects.api.payment_gate.decisions.PostDecisionsResponseBody;
+import business_objects.api.payment_gate.payments_decisions.PostDecisionsRequestBody;
+import business_objects.api.payment_gate.payments_decisions.PostDecisionsResponseBody;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
@@ -18,8 +18,8 @@ import tests.TestBaseApi;
 
 import java.util.List;
 
-import static business_objects.api.payment_gate.decisions.DecisionsRequests.postDecisions;
-import static business_objects.api.payment_gate.decisions.PaymentsRequestBodyFactory.createPostDecisionsRequestBody;
+import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.postDecisions;
+import static business_objects.api.payment_gate.payments_decisions.PaymentsRequestBodyFactory.createPostDecisionsRequestBody;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
