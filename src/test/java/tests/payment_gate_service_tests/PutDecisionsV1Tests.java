@@ -120,14 +120,15 @@ class PutDecisionsV1Tests extends TestBaseApi {
         assertThat("Check response", mappedResponse[0].getDecidedAt(), is(putPaymentDecisionBody1.getDecidedAt()));
 
         List<PaymentDecisionsObject> dbObject = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", paymentEventsObject1.getPaymentId().toString()), PaymentDecisionsObject.class);
-        assertThat("Check db object", dbObject.getFirst().getPaymentId(), is(paymentEventsObject1.getPaymentId()));
-        assertThat("Check db object", dbObject.getFirst().getDecisionType(), is(mappedResponse[0].getDecisionType()));
-        assertThat("Check db object", dbObject.getFirst().getDecisionCode(), is(mappedResponse[0].getDecisionCode()));
-        assertThat("Check db object", dbObject.getFirst().getRejectionCode(), is(nullValue()));
-        assertThat("Check db object", dbObject.getFirst().getActor(), is("Rule engine"));
-        assertThat("Check db object", dbObject.getFirst().getDateCreated(), is(notNullValue()));
-        assertThat("Check db object", dbObject.getFirst().getDateUpdated(), is(notNullValue()));
-        assertThat("Check db object", dbObject.getFirst().getDateDecided(), is(notNullValue()));
+        PaymentDecisionsObject decisionsObject = dbObject.getFirst();
+        assertThat("Check db object", decisionsObject.getPaymentId(), is(paymentEventsObject1.getPaymentId()));
+        assertThat("Check db object", decisionsObject.getDecisionType(), is(mappedResponse[0].getDecisionType()));
+        assertThat("Check db object", decisionsObject.getDecisionCode(), is(mappedResponse[0].getDecisionCode()));
+        assertThat("Check db object", decisionsObject.getRejectionCode(), is(nullValue()));
+        assertThat("Check db object", decisionsObject.getDateCreated(), is(notNullValue()));
+        assertThat("Check db object", decisionsObject.getDateUpdated(), is(notNullValue()));
+        assertThat("Check db object", decisionsObject.getDateDecided(), is(notNullValue()));
+        assertThat("Check db object", decisionsObject.getActor(), is("Vindex BO"));
     }
 
     @Test
@@ -162,7 +163,7 @@ class PutDecisionsV1Tests extends TestBaseApi {
         Allure.step("Validate Data in response");
         PutDecisionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutDecisionsResponseBody.class);
         assertThat("Check response", mappedResponse.getError(), is("validation_error"));
-        assertThat("Check response", mappedResponse.getMessage(), containsString("{jakarta.validation.constraints.NotNull.message}"));
+        assertThat("Check response", mappedResponse.getMessage(), containsString("must not be null"));
     }
 
     @Test
