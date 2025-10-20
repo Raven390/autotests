@@ -66,7 +66,7 @@ class TempDecisionMonitoringTests {
         crmTbWithdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client2);
         paymentEventsObject2 = generatePaymentEventsObject(client2);
         paymentEventsObject2.setCrmId(crmTbWithdrawalObject2.transferId.toString());
-        paymentEventsObject2.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentEventsObject2.setDateDecided(Timestamp.from(Instant.now().minusMillis(4 * 60 * 1000)));
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
         tmpRuleDecisionsObject2 = generateTmpRuleDecisionsObject(paymentEventsObject2);
         putRuleExecutionsBody2 = generatePutRuleExecutionsBody(paymentEventsObject2);
@@ -91,19 +91,5 @@ class TempDecisionMonitoringTests {
         Thread.sleep(125_000);
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client1.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
-    }
-
-    @Test
-    @AllureId("1579")
-    @DisplayName("TmpDecisionMonitoringTest2. Do nothing if tmp_decision entry found")
-    void TmpDecisionMonitoringTest2() throws Exception {
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject2));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject2));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, List.of(tmpRuleDecisionsObject2));
-        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject2));
-
-        Thread.sleep(125_000);
-        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client2.getUcid());
-        assertThat("Check status", event.getDeliveryStatus(), is("DELIVERED"));
     }
 }

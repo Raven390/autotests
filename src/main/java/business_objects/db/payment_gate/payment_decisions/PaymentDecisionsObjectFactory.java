@@ -11,7 +11,7 @@ public class PaymentDecisionsObjectFactory {
 
     public static PaymentDecisionsObject generatePaymentDecisionObject(PaymentEventsObject event) {
         return new PaymentDecisionsObject(
-                event.getPaymentId(),       // paymentId
+                null, event.getPaymentId(),       // paymentId
                 "final",                                     // decisionType
                 1,                                              // decisionCode
                 0,                                              // rejectionCode
@@ -24,7 +24,7 @@ public class PaymentDecisionsObjectFactory {
 
     public static PaymentDecisionsObject generateRiskPaymentDecisionObject(PaymentEventsObject event) {
         return new PaymentDecisionsObject(
-                event.getPaymentId(),       // paymentId
+                null, event.getPaymentId(),       // paymentId
                 "risk",                                     // decisionType
                 0,                                              // decisionCode
                 0,                                              // rejectionCode

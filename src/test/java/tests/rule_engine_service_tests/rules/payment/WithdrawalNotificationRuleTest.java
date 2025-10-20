@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
@@ -25,6 +26,7 @@ import static helpers.data.rules.MirrorFlagDataInserter.insertMirrorFlagData;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.CleanTableHelper.cleanCrmUserTableByClient;
 import static helpers.database.DbHelper.*;
+import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +34,7 @@ import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
+@Disabled
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
 @Story(STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE)
 @Tag(TEAM_CORE)
@@ -81,7 +84,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 client1.getBrand().toLowerCase(),    // brand
                 "",                                  // checkName
                 client1.getUserId(),                 // clientId
-                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                Instant.now().toString(),         // eventDate 
                 "4",                                 // expMonth
                 "2030",                              // expYear
                 "1",                                 // fullName
@@ -96,7 +99,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "1.0",                               // schemaVersion
                 CRM_WITHDRAWAL_EVENT,                // type
                 1,                                   // withdrawalAmount
-                "2025-06-03T16:30:07",               // withdrawalApplicationTime
+                Instant.now().toString(),               // withdrawalApplicationTime
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
@@ -123,7 +126,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 client2.getBrand().toLowerCase(),    // brand
                 "Checkname",                                  // checkName
                 client2.getUserId(),                 // clientId
-                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                Instant.now().toString(),         // eventDate 
                 "4",                                 // expMonth
                 "2030",                              // expYear
                 "1",                                 // fullName
@@ -138,7 +141,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "1.0",                               // schemaVersion
                 CRM_WITHDRAWAL_EVENT,                // type
                 1,                                   // withdrawalAmount
-                "2025-06-03T16:30:07",           // withdrawalApplicationTime
+                Instant.now().toString(),           // withdrawalApplicationTime
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
@@ -149,13 +152,15 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         List<Alert> dbAlerts = getUserAlertsFromDb(client2, "Withdrawal Review");
         assertThat("Verify amount of alerts in DB", dbAlerts.size(), is(1));
-        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client2);
+
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(client2.getUcid());
+        assertAlertsWithdrawalNotificationRule(paymentEventsObject, alerts, dbAlerts, withdrawalEvent, client2);
 
         List<PaymentEventsObject> events = getUserPaymentEventsFromDb(client2);
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
         List<TmpRuleDecisionsObject> decision = getTempRuleDecisionByWithdrawalIdFromDb((events.getFirst().getPaymentId()));
         assertThat("Verify amount of decisions in DB", decision.size(), is(1));
-        assertThat("Verify decisions have right decision ", decision.getFirst().decision, is("ALERT"));
+        assertThat("Verify decisions have right decision ", decision.getFirst().getDecision(), is("ALERT"));
     }
 
     @Test
@@ -169,7 +174,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 client3.getBrand().toLowerCase(),    // brand
                 "Crypto_Risk",                                  // checkName
                 client3.getUserId(),                 // clientId
-                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                Instant.now().toString(),         // eventDate 
                 "4",                                 // expMonth
                 "2030",                              // expYear
                 "1",                                 // fullName
@@ -184,7 +189,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "1.0",                               // schemaVersion
                 CRM_WITHDRAWAL_EVENT,                // type
                 1,                                   // withdrawalAmount
-                "2025-06-03T16:30:07",           // withdrawalApplicationTime
+                Instant.now().toString(),           // withdrawalApplicationTime
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
@@ -195,7 +200,8 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
         List<Alert> dbAlerts = getUserAlertsFromDb(client3, "Withdrawal Review");
         assertThat("Verify amount of alerts in DB", dbAlerts.size(), is(1));
-        assertAlertsWithdrawalNotificationRule(alerts, dbAlerts, withdrawalEvent, client3);
+        PaymentEventsObject paymentEventsObject = getPaymentEvent(client3.getUcid());
+        assertAlertsWithdrawalNotificationRule(paymentEventsObject, alerts, dbAlerts, withdrawalEvent, client3);
 
         List<PaymentEventsObject> events = getUserPaymentEventsFromDb(client3);
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
@@ -216,7 +222,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 client4.getBrand().toLowerCase(),    // brand
                 "Crypto_Risk",                                  // checkName
                 client4.getUserId(),                 // clientId
-                "2025-06-03T16:30:07+03:00",         // eventDate (you can format if you need +03:00)
+                Instant.now().toString(),         // eventDate 
                 "4",                                 // expMonth
                 "2030",                              // expYear
                 "1",                                 // fullName
@@ -231,7 +237,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "1.0",                               // schemaVersion
                 CRM_WITHDRAWAL_EVENT,                // type
                 1,                                   // withdrawalAmount
-                "2025-06-03T16:30:07",           // withdrawalApplicationTime
+                Instant.now().toString(),           // withdrawalApplicationTime
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );

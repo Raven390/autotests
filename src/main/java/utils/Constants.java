@@ -105,6 +105,7 @@ public class Constants {
     public static final String STORY_PAYMENT_GATE_PUT_DECISIONS = "Put decisions request";
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS_AGGR_BY_CLIENT = "Get payments aggr by client request";
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS = "Get payments request";
+    public static final String STORY_PAYMENT_GATE_GET_REJECTION_REASONS = "Get rejection reasons request";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";
@@ -179,7 +180,7 @@ public class Constants {
     public static final String CRM_TRANSFERS_TABLE_NAME = "vindex_test.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "vindex_test.crm___tb_user";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "vindex_test.crm___tb_withdrawal";
-    public static final String DATA_SCIENCE_BYBIT_FEATURE_STORE_TABLE_NAME = "data_science_test.bybit_feature_store";
+    public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_BYBIT = "data_science_test.ucid_mirror_score_bybit";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science_test.feature_store_service";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON = "data_science_test.ucid_mirror_score_python";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME = "data_science_test.ucid_mirror_score";

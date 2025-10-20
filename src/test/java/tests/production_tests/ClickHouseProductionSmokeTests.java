@@ -584,7 +584,7 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("serverIds", serverId);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_NET_PROFIT, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"netProfit\":0.0000}]"));
+        assertThat("Assert body", response.body().string(), is("[{\"clientId\":\"vantage-3384621\",\"netProfit\":0.0000,\"profit\":0.0000}]"));
     }
 
     @Test
@@ -696,7 +696,7 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("cpa", 1);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_COUNT_CPA, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("[{\"count\":19}]"));
+        assertThat("Assert body", response.body().string(), is("[{\"count\":35}]"));
     }
 
     @Test
@@ -733,6 +733,6 @@ class ClickHouseProductionSmokeTests extends TestBaseApi {
         queryParamsMap.put("clientId", ucid);
         Response response = new HttpHelper().sendGetRequest(CLICKHOUSE_API_BASE_PROD + CLICKHOUSE_API_GET_GENERAL_SCORE, null, queryParamsMap);
         assertThat("Assert that code is 200", response.code(), is(200));
-        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.026685204,\"ucidScore\":0.07802434}"));
+        assertThat("Assert body", response.body().string(), is("{\"modelScore\":0.038232025,\"ucidScore\":0.07537152,\"avgPastUcidScore\":0.09}"));
     }
 }

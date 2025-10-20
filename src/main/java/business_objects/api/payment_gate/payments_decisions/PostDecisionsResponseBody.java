@@ -1,4 +1,4 @@
-package business_objects.api.payment_gate.decisions;
+package business_objects.api.payment_gate.payments_decisions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class PutDecisionsResponseBody {
+public class PostDecisionsResponseBody {
 
     // Single-item creation response fields
     @JsonProperty("decisionId")
@@ -39,7 +39,7 @@ public class PutDecisionsResponseBody {
     @JsonProperty("message")
     private String message;
 
-    public PutDecisionsResponseBody() {
+    public PostDecisionsResponseBody() {
     }
 
     // Getters and setters
@@ -111,7 +111,7 @@ public class PutDecisionsResponseBody {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PutDecisionsResponseBody that = (PutDecisionsResponseBody) o;
+        PostDecisionsResponseBody that = (PostDecisionsResponseBody) o;
         return Objects.equals(decisionId, that.decisionId) && Objects.equals(paymentId, that.paymentId) && Objects.equals(decisionType, that.decisionType) && Objects.equals(decisionCode, that.decisionCode) && Objects.equals(decidedAt, that.decidedAt) && Objects.equals(created, that.created) && Objects.equals(error, that.error) && Objects.equals(message, that.message);
     }
 
@@ -122,7 +122,7 @@ public class PutDecisionsResponseBody {
 
     @Override
     public String toString() {
-        return "PutDecisionsResponseBody{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\'' + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\'' + ", decidedAt='" + decidedAt + '\'' + ", created=" + created + ", error='" + error + '\'' + ", message='" + message + '\'' + '}';
+        return "PostDecisionsResponseBody{" + "decisionId='" + decisionId + '\'' + ", paymentId='" + paymentId + '\'' + ", decisionType='" + decisionType + '\'' + ", decisionCode='" + decisionCode + '\'' + ", decidedAt='" + decidedAt + '\'' + ", created=" + created + ", error='" + error + '\'' + ", message='" + message + '\'' + '}';
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

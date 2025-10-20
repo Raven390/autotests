@@ -6,6 +6,7 @@ import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.reporting_test.ZeebeRulesElements;
 import business_objects.db.clickhouse.reporting_test.ZeebeRulesStarted;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
+import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.tmp_rule_decisions.TmpRuleDecisionsObject;
 import business_objects.kafka.alerts.RuleAlert;
@@ -29,6 +30,7 @@ import utils.TestResultWatcher;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -73,14 +75,16 @@ public class TestBaseRule {
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client) throws InterruptedException,
             JsonProcessingException {
-        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
     }
 
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client, String ruleName)
             throws InterruptedException,
             JsonProcessingException {
-        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
 
@@ -88,7 +92,8 @@ public class TestBaseRule {
     public static List<WithdrawalApprovals> getWithdrawalApprovalsFromKafka(String withdrawalId)
             throws InterruptedException,
             JsonProcessingException {
-        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalId).toString(), WithdrawalApprovals[].class)).toList();
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalId).toString(), WithdrawalApprovals[].class)).toList();
     }
 
     @Step("Get User Alerts from postgres.bo.alert table")
@@ -116,6 +121,13 @@ public class TestBaseRule {
     public static List<TmpRuleDecisionsObject> getTempRuleDecisionByWithdrawalIdFromDb(java.util.UUID withdrawalId)
             throws Exception {
         return getTempRuleDecisionByWithdrawalIdFromDb(withdrawalId.toString());
+    }
+
+
+    @Step("Get Rule Decision from payment gate db")
+    public static List<PaymentDecisionsObject> getRuleDecisionByWithdrawalIdFromDb(UUID paymentId)
+            throws Exception {
+        return getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId), PaymentDecisionsObject.class);
     }
 
     @Step("Get User Payment event from postgres.paymentgate.payment_events table")
