@@ -12,6 +12,9 @@ public class GetTradesResponse {
     @JsonProperty("tradeId")
     public Long tradeId;
 
+    @JsonProperty("positionId")
+    public Long positionId;
+
     @JsonProperty("tradingAccount")
     public Integer tradingAccount;
 

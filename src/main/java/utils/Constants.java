@@ -234,6 +234,7 @@ public class Constants {
     public static final String REPORTING_DB_ZEEBE_RULE_ELEMENTS = "reporting_test.zeebe_rules_elements";
     public static final String REPORTING_DB_ZEEBE_RULES_STARTED = "reporting_test.zeebe_rules_started";
     public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE = "postgres.paymentgate.payment_decisions";
+    public static final String PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE = "postgres.paymentgate.payment_rejection_attributes";
     public static final String PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE = "postgres.paymentgate.payment_details";
     public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
     public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";

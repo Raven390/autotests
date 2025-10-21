@@ -89,7 +89,7 @@ class GetRejectionReasonsV1Tests extends TestBaseApi {
     @AllureId("1697")
     @DisplayName("Get rejection reasons V1. Success test request with name. 200")
     void GetRejectionReasonsV1Test2() throws Exception {
-        Response response = getRejectionReasons("", "Default");
+        Response response = getRejectionReasons("1", "Default");
         assertThat("Assert status", response.code(), is(200));
         Allure.step("Validate Data in response");
         String body = response.body().string();

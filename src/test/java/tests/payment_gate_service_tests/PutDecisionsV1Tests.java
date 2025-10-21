@@ -1,10 +1,12 @@
 package tests.payment_gate_service_tests;
 
+import business_objects.api.payment_gate.payments_decisions.PostDecisionsResponseBody;
 import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
 import business_objects.api.payment_gate.payments_decisions.PutDecisionsResponseBody;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
@@ -15,6 +17,7 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
@@ -72,12 +75,11 @@ class PutDecisionsV1Tests extends TestBaseApi {
         paymentEventsObject2 = generatePaymentEventsObject(client2);
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
         putPaymentDecisionBody2 = createPutDecisionsRequestBody();
-        putPaymentDecisionBody3 = createPutDecisionsRequestBody();
 
         client3 = getRandomVantageClientAllFields();
         paymentEventsObject3 = generatePaymentEventsObject(client3);
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
-        putPaymentDecisionBody3 = createPutDecisionsRequestBody();
+        putPaymentDecisionBody3 = createPutDecisionsRequestBody(true);
 
         client4 = getRandomVantageClientAllFields();
         paymentEventsObject4 = generatePaymentEventsObject(client4);
@@ -179,5 +181,44 @@ class PutDecisionsV1Tests extends TestBaseApi {
         PutDecisionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PutDecisionsResponseBody.class);
         assertThat("Check response", mappedResponse.getError(), is("conflict"));
         assertThat("Check response", mappedResponse.getMessage(), containsString("could not execute statement"));
+    }
+
+    @Test
+    @AllureId("1709")
+    @DisplayName("Put Decisions V1. Success test with reject. 201")
+    void PutPaymentDecisionV1Test5() throws Exception {
+
+        Allure.step("send post decisions request with valid data");
+        Response response = putDecisions(paymentEventsObject3.getPaymentId().toString(), List.of(putPaymentDecisionBody3));
+        assertThat(response.code(), is(201));
+
+        Allure.step("Validate Data in response");
+        PostDecisionsResponseBody[] mappedResponse = objectMapper.readValue(response.body().string(), PostDecisionsResponseBody[].class);
+        assertThat("Check response", mappedResponse[0].getDecisionId(), is(instanceOf(Integer.class)));
+        assertThat("Check response", mappedResponse[0].getPaymentId(), is(paymentEventsObject3.getPaymentId().toString()));
+        assertThat("Check response", mappedResponse[0].getDecisionType(), is(putPaymentDecisionBody3.getDecisionType()));
+        assertThat("Check response", mappedResponse[0].getDecisionCode(), is(putPaymentDecisionBody3.getDecisionCode()));
+        assertThat("Check response", mappedResponse[0].getDecidedAt(), is(putPaymentDecisionBody3.getDecidedAt()));
+
+        List<PaymentDecisionsObject> dbObject = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", paymentEventsObject3.getPaymentId().toString()), PaymentDecisionsObject.class);
+        assertThat("Check db object", dbObject.getFirst().getId(), is(instanceOf(Integer.class)));
+        assertThat("Check db object", dbObject.getFirst().getPaymentId(), is(paymentEventsObject3.getPaymentId()));
+        assertThat("Check db object", dbObject.getFirst().getDecisionType(), is(mappedResponse[0].getDecisionType()));
+        assertThat("Check db object", dbObject.getFirst().getDecisionCode(), is(mappedResponse[0].getDecisionCode()));
+        assertThat("Check db object", dbObject.getFirst().getRejectionCode(), is(0));
+        assertThat("Check db object", dbObject.getFirst().getActor(), is("Rule engine"));
+        assertThat("Check db object", dbObject.getFirst().getDateCreated(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getDateUpdated(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getDateDecided(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getReasonString(), is(instanceOf(String.class)));
+
+        List<PaymentRejectionAttributesObject> attributes = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, String.format("payment_id = '%s'", paymentEventsObject3.getPaymentId().toString()), PaymentRejectionAttributesObject.class);
+        assertThat("Check attribute object", attributes.getFirst().getPaymentId(), is(paymentEventsObject3.getPaymentId()));
+        assertThat("Check attribute object", attributes.getFirst().getDecisionId(), is(dbObject.getFirst().getId()));
+        assertThat("Check attribute object", attributes.getFirst().getId(), is(instanceOf(Integer.class)));
+        assertThat("Check attribute object", attributes.getFirst().getAttributeId(), is(1));
+        assertThat("Check attribute object", attributes.getFirst().getAttributeValue(), is("Passport"));
+        assertThat("Check attribute object", attributes.getFirst().getDateCreated(), is(instanceOf(Timestamp.class)));
+        assertThat("Check attribute object", attributes.getFirst().getDateUpdated(), is(instanceOf(Timestamp.class)));
     }
 }

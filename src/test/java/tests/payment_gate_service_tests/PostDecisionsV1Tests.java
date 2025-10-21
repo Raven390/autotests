@@ -6,6 +6,7 @@ import business_objects.api.payment_gate.payments_decisions.PostDecisionsRespons
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
@@ -16,6 +17,7 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.postDecisions;
@@ -45,21 +47,29 @@ class PostDecisionsV1Tests extends TestBaseApi {
     private static ClientHelper client3;
     private static ClientHelper client4;
     private static ClientHelper client5;
+    private static ClientHelper client6;
+    private static ClientHelper client7;
     private static PostDecisionsRequestBody postPaymentDecisionBody1;
     private static PostDecisionsRequestBody postPaymentDecisionBody2;
     private static PostDecisionsRequestBody postPaymentDecisionBody3;
     private static PostDecisionsRequestBody postPaymentDecisionBody4;
     private static PostDecisionsRequestBody postPaymentDecisionBody5;
+    private static PostDecisionsRequestBody postPaymentDecisionBody6;
+    private static PostDecisionsRequestBody postPaymentDecisionBody7;
     private static PaymentEventsObject paymentEventsObject1;
     private static PaymentEventsObject paymentEventsObject2;
     private static PaymentEventsObject paymentEventsObject3;
     private static PaymentEventsObject paymentEventsObject4;
     private static PaymentEventsObject paymentEventsObject5;
+    private static PaymentEventsObject paymentEventsObject6;
+    private static PaymentEventsObject paymentEventsObject7;
     private static PaymentDetailsObject paymentDetailsObject1;
     private static PaymentDetailsObject paymentDetailsObject2;
     private static PaymentDetailsObject paymentDetailsObject3;
     private static PaymentDetailsObject paymentDetailsObject4;
     private static PaymentDetailsObject paymentDetailsObject5;
+    private static PaymentDetailsObject paymentDetailsObject6;
+    private static PaymentDetailsObject paymentDetailsObject7;
 
 
     @BeforeAll
@@ -79,7 +89,7 @@ class PostDecisionsV1Tests extends TestBaseApi {
         client3 = getRandomVantageClientAllFields();
         paymentEventsObject3 = generatePaymentEventsObject(client3);
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
-        postPaymentDecisionBody3 = createPostDecisionsRequestBody();
+        postPaymentDecisionBody3 = createPostDecisionsRequestBody(true);
 
         client4 = getRandomVantageClientAllFields();
         paymentEventsObject4 = generatePaymentEventsObject(client4);
@@ -91,8 +101,20 @@ class PostDecisionsV1Tests extends TestBaseApi {
         paymentDetailsObject5 = generatePaymentDetailsObject(paymentEventsObject5, client5);
         postPaymentDecisionBody5 = createPostDecisionsRequestBody();
 
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4, paymentEventsObject5));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4, paymentDetailsObject5));
+        client6 = getRandomVantageClientAllFields();
+        paymentEventsObject6 = generatePaymentEventsObject(client6);
+        paymentDetailsObject6 = generatePaymentDetailsObject(paymentEventsObject6, client6);
+        postPaymentDecisionBody6 = createPostDecisionsRequestBody();
+
+        client7 = getRandomVantageClientAllFields();
+        paymentEventsObject7 = generatePaymentEventsObject(client7);
+        paymentDetailsObject7 = generatePaymentDetailsObject(paymentEventsObject7, client7);
+        postPaymentDecisionBody7 = createPostDecisionsRequestBody();
+
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(
+                paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4, paymentEventsObject5, paymentEventsObject6, paymentEventsObject7));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(
+                paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4, paymentDetailsObject5, paymentDetailsObject6, paymentDetailsObject7));
     }
 
     @AfterAll
@@ -102,6 +124,8 @@ class PostDecisionsV1Tests extends TestBaseApi {
         cleanPaymentGateData(client3.getUcid(), client3.getUserId(), paymentEventsObject3.getPaymentId().toString());
         cleanPaymentGateData(client4.getUcid(), client4.getUserId(), paymentEventsObject4.getPaymentId().toString());
         cleanPaymentGateData(client5.getUcid(), client5.getUserId(), paymentEventsObject5.getPaymentId().toString());
+        cleanPaymentGateData(client6.getUcid(), client6.getUserId(), paymentEventsObject6.getPaymentId().toString());
+        cleanPaymentGateData(client7.getUcid(), client7.getUserId(), paymentEventsObject7.getPaymentId().toString());
     }
 
     @Test
@@ -164,7 +188,7 @@ class PostDecisionsV1Tests extends TestBaseApi {
         Allure.step("Validate Data in response");
         PostDecisionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PostDecisionsResponseBody.class);
         assertThat("Check response", mappedResponse.getError(), is("validation_error"));
-        assertThat("Check response", mappedResponse.getMessage(), containsString("{jakarta.validation.constraints.NotNull.message}"));
+        assertThat("Check response", mappedResponse.getMessage(), containsString("createPaymentDecisions.paymentDecisionRequest[0].decisionType: must not be null"));
     }
 
     @Test
@@ -180,5 +204,44 @@ class PostDecisionsV1Tests extends TestBaseApi {
         PostDecisionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), PostDecisionsResponseBody.class);
         assertThat("Check response", mappedResponse.getError(), is("conflict"));
         assertThat("Check response", mappedResponse.getMessage(), containsString("could not execute statement"));
+    }
+
+    @Test
+    @AllureId("1700")
+    @DisplayName("Post Decisions V1. Success test with reject. 201")
+    void PostPaymentDecisionV1Test5() throws Exception {
+
+        Allure.step("send post decisions request with valid data");
+        Response response = postDecisions(paymentEventsObject3.getPaymentId().toString(), List.of(postPaymentDecisionBody3));
+        assertThat(response.code(), is(201));
+
+        Allure.step("Validate Data in response");
+        PostDecisionsResponseBody[] mappedResponse = objectMapper.readValue(response.body().string(), PostDecisionsResponseBody[].class);
+        assertThat("Check response", mappedResponse[0].getDecisionId(), is(instanceOf(Integer.class)));
+        assertThat("Check response", mappedResponse[0].getPaymentId(), is(paymentEventsObject3.getPaymentId().toString()));
+        assertThat("Check response", mappedResponse[0].getDecisionType(), is(postPaymentDecisionBody3.getDecisionType()));
+        assertThat("Check response", mappedResponse[0].getDecisionCode(), is(postPaymentDecisionBody3.getDecisionCode()));
+        assertThat("Check response", mappedResponse[0].getDecidedAt(), is(postPaymentDecisionBody3.getDecidedAt()));
+
+        List<PaymentDecisionsObject> dbObject = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", paymentEventsObject3.getPaymentId().toString()), PaymentDecisionsObject.class);
+        assertThat("Check db object", dbObject.getFirst().getId(), is(instanceOf(Integer.class)));
+        assertThat("Check db object", dbObject.getFirst().getPaymentId(), is(paymentEventsObject3.getPaymentId()));
+        assertThat("Check db object", dbObject.getFirst().getDecisionType(), is(mappedResponse[0].getDecisionType()));
+        assertThat("Check db object", dbObject.getFirst().getDecisionCode(), is(mappedResponse[0].getDecisionCode()));
+        assertThat("Check db object", dbObject.getFirst().getRejectionCode(), is(0));
+        assertThat("Check db object", dbObject.getFirst().getActor(), is("Rule engine"));
+        assertThat("Check db object", dbObject.getFirst().getDateCreated(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getDateUpdated(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getDateDecided(), is(notNullValue()));
+        assertThat("Check db object", dbObject.getFirst().getReasonString(), is(instanceOf(String.class)));
+
+        List<PaymentRejectionAttributesObject> attributes = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, String.format("payment_id = '%s'", paymentEventsObject3.getPaymentId().toString()), PaymentRejectionAttributesObject.class);
+        assertThat("Check attribute object", attributes.getFirst().getPaymentId(), is(paymentEventsObject3.getPaymentId()));
+        assertThat("Check attribute object", attributes.getFirst().getDecisionId(), is(dbObject.getFirst().getId()));
+        assertThat("Check attribute object", attributes.getFirst().getId(), is(instanceOf(Integer.class)));
+        assertThat("Check attribute object", attributes.getFirst().getAttributeId(), is(1));
+        assertThat("Check attribute object", attributes.getFirst().getAttributeValue(), is("Passport"));
+        assertThat("Check attribute object", attributes.getFirst().getDateCreated(), is(instanceOf(Timestamp.class)));
+        assertThat("Check attribute object", attributes.getFirst().getDateUpdated(), is(instanceOf(Timestamp.class)));
     }
 }
