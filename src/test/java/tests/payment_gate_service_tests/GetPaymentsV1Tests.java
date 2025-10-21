@@ -4,6 +4,7 @@ import business_objects.api.payment_gate.payments.GetPaymentsResponseBody;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import io.qameta.allure.Allure;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import static business_objects.api.payment_gate.payments.PaymentsRequests.getPay
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObjectFactory.generatePaymentRejectionAttributesObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -47,38 +50,48 @@ class GetPaymentsV1Tests extends TestBaseApi {
     private static PaymentEventsObject paymentEventsObject2;
     private static PaymentEventsObject paymentEventsObject3;
     private static PaymentEventsObject paymentEventsObject4;
+    private static PaymentDecisionsObject paymentDecisionsObject1;
+    private static PaymentDecisionsObject paymentDecisionsObject2;
+    private static PaymentDecisionsObject paymentDecisionsObject3;
+    private static PaymentDecisionsObject paymentDecisionsObject4;
+    private static PaymentDetailsObject paymentDetailsObject1;
+    private static PaymentDetailsObject paymentDetailsObject2;
+    private static PaymentDetailsObject paymentDetailsObject3;
+    private static PaymentDetailsObject paymentDetailsObject4;
+    private static PaymentRejectionAttributesObject paymentRejectionAttributesObject1;
 
     @BeforeAll
     static void setupData() {
 
         client1 = getRandomVantageClientAllFields();
         paymentEventsObject1 = generatePaymentEventsObject(client1);
-        PaymentDetailsObject paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
+        paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
-        PaymentDecisionsObject paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
+        paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
+        paymentRejectionAttributesObject1 = generatePaymentRejectionAttributesObject(paymentEventsObject1, paymentDecisionsObject1);
 
         client2 = getRandomVantageClientAllFields();
         paymentEventsObject2 = generatePaymentEventsObject(client2);
-        PaymentDetailsObject paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
-        PaymentDecisionsObject paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
+        paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
+        paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
         paymentEventsObject3 = generatePaymentEventsObject(client3);
-        PaymentDetailsObject paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
-        PaymentDecisionsObject paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
-
+        paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
+        paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
 
         client4 = getRandomVantageClientAllFields();
         paymentEventsObject4 = generatePaymentEventsObject(client4);
-        PaymentDetailsObject paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
-        PaymentDecisionsObject paymentDecisionsObject4 = generatePaymentDecisionObject(paymentEventsObject4);
+        paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
+        paymentDecisionsObject4 = generatePaymentDecisionObject(paymentEventsObject4);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1, paymentDecisionsObject2, paymentDecisionsObject3, paymentDecisionsObject4));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, List.of(paymentRejectionAttributesObject1));
     }
 
-    @AfterAll
+    //@AfterAll
     static void deleteData() throws Exception {
         cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
         cleanPaymentGateData(client2.getUcid(), client2.getUserId(), paymentEventsObject2.getPaymentId().toString());
@@ -159,8 +172,14 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat("Assert card.lastFour is 1225", card.getLastFour(), is("1225"));
         assertThat("Assert card.binNumber is 654321", card.getBinNumber(), is("654321"));
 
-        // decisions array present (can be empty)
-        assertThat("Assert decisions list present", item.getDecisions(), notNullValue());
+        GetPaymentsResponseBody.Decision decision = item.getDecisions().getFirst();
+        assertThat("Assert decisions list present", decision, notNullValue());
+        assertThat("Assert decisions list present", decision.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
+        assertThat("Assert decisions list present", decision.getDecisionCode(), is(paymentDecisionsObject1.getDecisionCode()));
+        assertThat("Assert decisions list present", decision.getAttributes().getFirst().getCode(), is("1"));
+        assertThat("Assert decisions list present", decision.getAttributes().getFirst().getValue(), is("Passport"));
+        assertThat("Assert decisions list present", decision.getDecidedAt(), is(instanceOf(Timestamp.class)));
+        assertThat("Assert decisions list present", decision.getActor(), is(paymentDecisionsObject1.getActor()));
     }
 
     @Test

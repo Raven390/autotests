@@ -9,6 +9,9 @@ public class GetTradeResponse {
     @JsonProperty("tradeId")
     private Long tradeId;
 
+    @JsonProperty("positionId")
+    private Long positionId;
+
     @JsonProperty("tradeDate")
     private String tradeDate;
 

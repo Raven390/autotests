@@ -16,10 +16,12 @@ public class PaymentDecisionsObject {
     private Timestamp dateCreated;
     private Timestamp dateUpdated;
     private Timestamp dateDecided;
+    private String reasonString;
 
     public PaymentDecisionsObject() {
     }
 
+    @Deprecated
     public PaymentDecisionsObject(
             Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode, String actor,
             Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided) {
@@ -32,6 +34,21 @@ public class PaymentDecisionsObject {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.dateDecided = dateDecided;
+    }
+
+    public PaymentDecisionsObject(
+            Integer id, UUID paymentId, String decisionType, Integer decisionCode, Integer rejectionCode, String actor,
+            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateDecided, String reasonString) {
+        this.id = id;
+        this.paymentId = paymentId;
+        this.decisionType = decisionType;
+        this.decisionCode = decisionCode;
+        this.rejectionCode = rejectionCode;
+        this.actor = actor;
+        this.dateCreated = dateCreated;
+        this.dateUpdated = dateUpdated;
+        this.dateDecided = dateDecided;
+        this.reasonString = reasonString;
     }
 
     public Integer getId() {
@@ -104,6 +121,14 @@ public class PaymentDecisionsObject {
 
     public void setDateDecided(Timestamp dateDecided) {
         this.dateDecided = dateDecided;
+    }
+
+    public String getReasonString() {
+        return reasonString;
+    }
+
+    public void setReasonString(String reasonString) {
+        this.reasonString = reasonString;
     }
 
     @Override

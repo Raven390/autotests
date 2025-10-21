@@ -2,6 +2,7 @@ package business_objects.api.payment_gate.payments;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -473,7 +474,23 @@ public class GetPaymentsResponseBody {
     public static class Decision {
         private String decisionType;
         private Integer decisionCode;
-        private String decidedAt;
+        private Integer rejectionCode;
+        private String reasonString;
+        private List<Attribute> rejectionAttributes;
+        private Timestamp decidedAt;
+        private String actor;
+
+        public Decision(
+                String decisionType, Integer decisionCode, Integer rejectionCode, String reasonString,
+                List<Attribute> rejectionAttributes, Timestamp decidedAt, String actor) {
+            this.decisionType = decisionType;
+            this.decisionCode = decisionCode;
+            this.rejectionCode = rejectionCode;
+            this.reasonString = reasonString;
+            this.rejectionAttributes = rejectionAttributes;
+            this.decidedAt = decidedAt;
+            this.actor = actor;
+        }
 
         public Decision() {
         }
@@ -494,12 +511,83 @@ public class GetPaymentsResponseBody {
             this.decisionCode = decisionCode;
         }
 
-        public String getDecidedAt() {
+        public Integer getRejectionCode() {
+            return rejectionCode;
+        }
+
+        public void setRejectionCode(Integer rejectionCode) {
+            this.rejectionCode = rejectionCode;
+        }
+
+        public String getReasonString() {
+            return reasonString;
+        }
+
+        public void setReasonString(String reasonString) {
+            this.reasonString = reasonString;
+        }
+
+        public List<Attribute> getRejectionAttributes() {
+            return rejectionAttributes;
+        }
+
+        public void setRejectionAttributes(
+                List<Attribute> rejectionAttributes) {
+            this.rejectionAttributes = rejectionAttributes;
+        }
+
+        public Timestamp getDecidedAt() {
             return decidedAt;
         }
 
-        public void setDecidedAt(String decidedAt) {
+        public void setDecidedAt(Timestamp decidedAt) {
             this.decidedAt = decidedAt;
         }
+
+        public String getActor() {
+            return actor;
+        }
+
+        public void setActor(String actor) {
+            this.actor = actor;
+        }
+
+        public List<Attribute> getAttributes() {
+            return rejectionAttributes;
+        }
+
+        public void setAttributes(List<Attribute> attributes) {
+            this.rejectionAttributes = attributes;
+        }
+
+        public static class Attribute {
+            private String code;
+            private String value;
+
+            public Attribute() {
+            }
+
+            public Attribute(String code, String value) {
+                this.code = code;
+                this.value = value;
+            }
+
+            public String getCode() {
+                return code;
+            }
+
+            public void setCode(String code) {
+                this.code = code;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
+        }
+
     }
 }

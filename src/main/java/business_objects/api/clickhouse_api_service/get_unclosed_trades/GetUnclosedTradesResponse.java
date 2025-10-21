@@ -17,6 +17,9 @@ public class GetUnclosedTradesResponse {
     @JsonProperty("profit")
     public Double profit;
 
+    @JsonProperty("symbol")
+    public String symbol;
+
     @JsonProperty("profitUSD")
     public Double profitUsd;
 
