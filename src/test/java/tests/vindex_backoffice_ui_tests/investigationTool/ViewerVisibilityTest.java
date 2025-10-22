@@ -31,8 +31,6 @@ import static helpers.data.enums.Currency.USD;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.waitForConnectionSearchToUpdate;
@@ -40,8 +38,8 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
-@Feature("BMS-1980 Investigation tool visibility + assignment payment alerts")
-class PaymentTeamVisibilityTest extends TestBaseWeb {
+@Feature("BMS-1872 [Q3] Role based model")
+class ViewerVisibilityTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient2 = getRandomVantageClientAllFields();
@@ -126,22 +124,13 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
         insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
     }
 
-    @Test
-    @AllureId("1567")
-    @DisplayName("BO user with Payment Team role can see tabs")
-    void assignClientCardTest() throws Exception {
-        sendSimplePaymentAlert(client.getUcid());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
-        investigationPage.navigateToClient(client.getUcid());
-    }
 
     @Test
-    @AllureId("1561")
-    @DisplayName("Payment Team user have reduced set of tabs")
-    void paymentTeamNotSeeAllTabs() {
+    @AllureId("1738")
+    @DisplayName("Viewer user have reduced set of tabs")
+    void viewerNotSeeAllTabs() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsViewerUser();
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.isAlertTabHidden();
         generalTab.isGeneralTabVisible();
@@ -154,32 +143,32 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
     }
 
     @Test
-    @AllureId("1562")
-    @DisplayName("Payment Team user can see only summary in payment tab")
-    void paymentTeamNotSeePaymentWithdrawals() {
+    @AllureId("1739")
+    @DisplayName("Viewer user can see summary and withdrawals in payment tab")
+    void viewerNotSeePaymentWithdrawals() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsViewerUser();
         paymentsPage.navigate(client.getUcid());
-        paymentsPage.isWithdrawalsSubtabHidden();
+        paymentsPage.isWithdrawalsSubtabVisible();
         paymentsPage.isSummarySubtabVisible();
     }
 
     @Test
-    @AllureId("1563")
-    @DisplayName("Payment Team user not have illegal profit button in trading/operations")
-    void paymentTeamNotSeeIllegalProfitButtonInTradingOperations() {
+    @AllureId("1740")
+    @DisplayName("Viewer user not have illegal profit button in trading/operations")
+    void viewerNotSeeIllegalProfitButtonInTradingOperations() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsViewerUser();
         tradingPage.navigateOperations(client.getUcid());
         tradingPage.isIllegalProfitButtonHidden();
     }
 
     @Test
-    @AllureId("1564")
-    @DisplayName("Payment Team user not have multiselect on table CS")
-    void paymentTeamNotHaveMultiselectInConnectionSearch() {
+    @AllureId("1741")
+    @DisplayName("Viewer user not have multiselect on table CS")
+    void viewerNotHaveMultiselectInConnectionSearch() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsViewerUser();
         connectionPage.navigate(client.getUcid());
         connectionPage.openConnectionGraph();
         connectionPage.isMultiselectButtonHidden();

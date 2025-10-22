@@ -157,9 +157,12 @@ public class ConfigFactory {
     public static final String LAST_NAME_AUTOTEST_ONE = CONFIG.lastNameAutotestOne();
     public static final String EMAIL_AUTOTEST_ONE = CONFIG.emailAutotestOne();
     public static final String EMAIL_AUTOTEST_OPS24_DUTY = CONFIG.emailOps24DutyUser();
+    public static final String EMAIL_AUTOTEST_OPS24 = CONFIG.emailOps24User();
     public static final String ID_AUTOTEST_OPS24_DUTY = CONFIG.idOps24DutyUser();
     public static final String EMAIL_AUTOTEST_OPS24_SENIOR = CONFIG.emailOps24SeniorUser();
+    public static final String ID_AUTOTEST_OPS24_SENIOR = CONFIG.idOps24SeniorUser();
     public static final String ID_AUTOTEST_OPS24 = CONFIG.idOps24User();
+    public static final String EMAIL_AUTOTEST_VIEWER = CONFIG.emailViewerUser();
     // Abuse registry
     public static final String ABUSE_REGISTRY_BASE_PATH = CONFIG.abuseRegistryBasePath();
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
@@ -626,11 +629,21 @@ public class ConfigFactory {
         @Key("emailOps24DutyUser")
         String emailOps24DutyUser();
 
+        @Key("emailOps24User")
+        String emailOps24User();
+
+
+        @Key("emailViewerUser")
+        String emailViewerUser();
+
         @Key("idOps24DutyUser")
         String idOps24DutyUser();
 
         @Key("emailOps24SeniorUser")
         String emailOps24SeniorUser();
+
+        @Key("idOps24SeniorUser")
+        String idOps24SeniorUser();
 
         @Key("idOps24User")
         String idOps24User();

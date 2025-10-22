@@ -142,7 +142,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchBySingleAccountTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by server and account
@@ -165,7 +165,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchByMultipleAccountsSameClientTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by multiple accounts of the same client
@@ -199,7 +199,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchByMultipleAccountsDifferentClientsTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by accounts of different clients
@@ -230,7 +230,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchByNonExistentAccountTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by non-existent account
@@ -251,7 +251,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchByMixedValidInvalidAccountsTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search with valid and invalid accounts mixed
@@ -278,7 +278,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void verifySearchResultsColumnsTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         searchPage.searchByBulk(searchQueryAccount1);
@@ -303,7 +303,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void clickSearchResultNavigateToInvestigationTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         searchPage.searchByBulk(searchQueryAccount1);
@@ -324,7 +324,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     void searchWithDifferentSeparatorsTest() {
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Test with different separators: space, comma, tab
@@ -483,7 +483,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
 
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by account
@@ -588,7 +588,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
 
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by account
@@ -621,7 +621,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
 
         searchPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
 
         // Search by account
@@ -641,7 +641,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
         Thread.sleep(3000); // Wait for alert processing
 
         // Refresh search and check behavior changed to Suspicious
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
         searchPage.searchByBulk(searchQueryAccount1);
         searchPage.waitForPageToLoad();
@@ -660,7 +660,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
         Thread.sleep(2000); // Wait for fraud processing
 
         // Refresh search and verify confirmed frauds in tooltip
-        searchPage.navigateToBulkSearchPage();
+        searchPage.navigateToSearchPage();
         searchPage.waitForPageToLoad();
         searchPage.searchByBulk(searchQueryAccount1);
         searchPage.waitForPageToLoad();

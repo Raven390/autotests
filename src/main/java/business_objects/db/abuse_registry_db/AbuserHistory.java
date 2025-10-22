@@ -15,6 +15,24 @@ public class AbuserHistory {
     private Timestamp timestamp;
     private String fraudSubtypeCode;
     private String symbols;
+    private String correlationType;
+    private String correlationId;
+
+    public String getCorrelationType() {
+        return correlationType;
+    }
+
+    public void setCorrelationType(String correlationType) {
+        this.correlationType = correlationType;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
+    }
 
     public AbuserHistory() {
     }

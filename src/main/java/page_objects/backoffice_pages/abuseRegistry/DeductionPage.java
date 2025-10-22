@@ -171,7 +171,12 @@ public class DeductionPage extends AbstractPage {
 
     public void navigateDeduction() {
         page.navigate(BASE_URL_E2E + "abuse-registry/deductions");
+        waitForPageToLoad();
+    }
+
+    public void isDeductionOpened() {
         deductionTable.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        assertTrue(page.url().contains("deductions"));
     }
 
     public void hoverOverDeductionTableRow(String clientId) {

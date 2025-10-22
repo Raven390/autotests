@@ -1022,6 +1022,7 @@ public class ConnectionPage extends AbstractPage {
         Allure.step("check is connections tab hidden");
         waitForPageToLoad();
         connectionTab.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+        assertFalse(connectionTab.isVisible());
     }
 
     public void isConnectionsTabVisible() {
@@ -1031,9 +1032,17 @@ public class ConnectionPage extends AbstractPage {
     }
 
     public void isMultiselectButtonHidden() {
-        Allure.step("check is connections tab hidden");
+        Allure.step("check is multiselect button hidden");
         waitForPageToLoad();
         multiselectButton.waitFor(new Locator.WaitForOptions().setState(HIDDEN));
+        assertFalse(multiselectButton.isVisible());
+    }
+
+    public void isMultiselectButtonVisible() {
+        Allure.step("check is multiselect button visible");
+        waitForPageToLoad();
+        multiselectButton.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        assertTrue(multiselectButton.isVisible());
     }
 
     public void navigate(String ucid) {

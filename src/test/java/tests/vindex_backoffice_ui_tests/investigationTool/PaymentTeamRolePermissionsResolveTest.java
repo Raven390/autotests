@@ -29,8 +29,7 @@ import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimpleAlert;
 import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.Constants.*;
 
 
@@ -189,6 +188,89 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
         Allure.step("check that trading alert is not assigned to current user");
         assertEquals(investigation2.getId().toString(), alert2.getInvestigationId());
         assertEquals(OPEN.getDisplayName(), alert2.getStatus());
+    }
+
+    @Test
+    @AllureId("1691")
+    @DisplayName("BO user with Payment Team role dont have investigation type selector")
+    void dontHaveAlertTypeFilterTest() throws Exception {
+        sendSimplePaymentAlert(client.getUcid());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateInvestigationTool();
+        investigationPage.investigationTypeSwitchIsNotPresented();
+    }
+
+    @Test
+    @AllureId("1692")
+    @DisplayName("BO user with Payment Team role can comment client")
+    void canCommentClientTest() throws Exception {
+        sendSimplePaymentAlert(client.getUcid());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateInvestigationTool();
+        investigationPage.navigateToClient(client.getUcid());
+        investigationPage.openCommentForm();
+        String message = "comment test " + timestamp;
+        investigationPage.fillCommentForm(message);
+        investigationPage.submitCommentForm();
+        auditTrailPage.openAuditTrailTab();
+        auditTrailPage.findRecord(message);
+    }
+
+    @Test
+    @AllureId("1695")
+    @DisplayName("BO user with Payment Team role can comment client")
+    void cantDoBulkActionsArTest() throws Exception {
+        sendSimplePaymentAlert(client.getUcid());
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        fraudstersPage.navigateAbuseRegistryFraudsters();
+        fraudstersPage.openRemoveDrawerButtonIsHidden();
+        fraudstersPage.openRemoveDrawerButtonIsDisabled();
+    }
+
+    @Test
+    @AllureId("1694")
+    @DisplayName("BO user with Payment Team role can open alert history page")
+    void canOpenAlertHistoryTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        alertHistoryPage.navigateAlertHistory();
+        alertHistoryPage.waitForPageToLoad();
+    }
+
+    @Test
+    @AllureId("")
+    @DisplayName("BO user with Payment Team role cant view deduction page open Ву")
+    void cantOpenDeductionPageTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        deductionPage.navigateDeduction();
+        Allure.step("check that deduction page is not opened");
+        assertTrue(page.url().contains("fraudsters"));
+    }
+
+    @Test
+    @AllureId("1696")
+    @DisplayName("BO user with Payment Team role can view search page")
+    void canOpenSearchPageTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        searchPage.navigateToSearchPage();
+        Allure.step("check that search page is opened");
+        assertTrue(page.url().contains("clients-search"));
+    }
+
+    @Test
+    @AllureId("1699")
+    @DisplayName("BO user with Payment Team role can't view duty team portal")
+    void cantOpenDutyTeamPortalTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        dutyTeamPage.navigateToDutyTeamPage();
+        Allure.step("check that duty portal page is not opened");
+        assertFalse(page.url().contains("duty-team-portal"));
     }
 
 }

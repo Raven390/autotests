@@ -449,20 +449,41 @@ public class InvestigationPage extends AbstractPage {
         page.waitForTimeout(500);
         waitForPageToLoad();
         int attempts = 0;
-        while ((!page.locator("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='" + userId + "']").isVisible()) && attempts < 5000) {
+        while ((!page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).isVisible()) && attempts < 5000) {
             suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
             page.mouse().wheel(0, 100);
             page.waitForTimeout(500);
             attempts++;
         }
-        page.locator("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='" + userId + "']").hover();
-        page.locator("//div[text()='" + userId + "']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button").nth(0).click();
+        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).hover();
+        page.locator(String.format("//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button", userId)).nth(0).click();
         String message = infoToast.textContent();
         assertEquals("Client investigation started", message);
     }
 
+    @Step("user can't take client to investigation from the alert list")
+    public void investigateUserAlertListDisabled(String userId) {
+        Allure.step("user can't take client to investigation from the alert list");
+        page.waitForTimeout(500);
+        waitForPageToLoad();
+        int attempts = 0;
+        while ((!page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).isVisible()) && attempts < 5000) {
+            suspiciousClientsList.hover();//.evaluate("e => e.scrollTop += 100");
+            page.mouse().wheel(0, 100);
+            page.waitForTimeout(500);
+            attempts++;
+        }
+        page.locator(String.format("//*[@class='v-suspicious-client-list__item']/descendant::div[text()='%s']", userId)).hover();
+        Locator investigateButton1 = page.locator(String.format("//div[text()='%s']/ancestor::div[@class='v-suspicious-client-list__item']/descendant::button", userId)).nth(0);
+        assertTrue(investigateButton1.isDisabled());
+    }
+
     public void investigateUserAlertList(Integer userId) {
         investigateUserAlertList(String.valueOf(userId));
+    }
+
+    public void investigateUserAlertListDisabled(Integer userId) {
+        investigateUserAlertListDisabled(String.valueOf(userId));
     }
 
     @Step("take client to investigation from the client card")
@@ -478,6 +499,14 @@ public class InvestigationPage extends AbstractPage {
         } else {
             page.waitForTimeout(1);
         }
+    }
+
+    public void investigateClientCardDisabled() {
+        Allure.step("check that investigation button in the client card is disabled");
+        page.waitForTimeout(500);
+        waitForPageToLoad();
+        Allure.step("take client to investigation from the from the client card");
+        assertTrue(investigateButton.isDisabled());
     }
 
     @Step("take client to investigation from the client card")
@@ -797,6 +826,13 @@ public class InvestigationPage extends AbstractPage {
     }
 
 
+    public void isCommentButtonDisabled() {
+        Allure.step("check if comment button is disabled");
+        assertTrue(commentButton.isDisabled());
+
+    }
+
+
     public void cantOpenCommentForm() {
         waitForPageToLoad();
         assertTrue(commentButton.isDisabled());
@@ -827,6 +863,23 @@ public class InvestigationPage extends AbstractPage {
     public void clickSelectInvestigationType(String investigationType) {
         selectInvestigationTypeDropDown.click();
         page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType)).click();
+    }
+
+    public void selectInvestigationTypeSwitchIsHidden() {
+        selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertThat("Assert that select investigation type drop down is hidden", selectInvestigationTypeDropDown.isVisible(), equalTo(false));
+    }
+
+    public void investigationTypeSwitchIsNotPresented() {
+        waitForPageToLoad();
+        selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertThat("Assert that select investigation type drop down is hidden", selectInvestigationTypeDropDown.isVisible(), equalTo(false));
+    }
+
+    public void investigationTypeSwitchIsPresented() {
+        waitForPageToLoad();
+        selectInvestigationTypeDropDown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertThat("Assert that select investigation type drop down is present", selectInvestigationTypeDropDown.isVisible(), equalTo(true));
     }
 
     @Step("Select 'Trading' investigation type from the dropdown")

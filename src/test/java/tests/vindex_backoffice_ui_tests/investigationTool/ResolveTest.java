@@ -3,11 +3,14 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.abuse_registry_db.Abuser;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
+import business_objects.db.abuse_registry_db.AbuserHistory;
+import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
+import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +42,7 @@ import static helpers.database.BoHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
@@ -512,5 +516,31 @@ public class ResolveTest extends TestBaseWeb {
         WithdrawalApprovals actualKafkaApproval = objectMapper.readValue(kafka.consumeMessage(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalAlert.rule.attributes.withdrawalId), WithdrawalApprovals.class);
         WithdrawalApprovals expectedKafkaApproval = new WithdrawalApprovals(null, null, Long.valueOf(withdrawalAlert.rule.attributes.withdrawalId), client.getBrand(), client.getRegulator(), "", "Approve", withdrawalAlert.rule.attributes.orderId, withdrawalAlert.rule.attributes.check);
         assertThat("Verify kafka message for withdrawal approval", actualKafkaApproval, is(expectedKafkaApproval));
+    }
+
+    @Test
+    @AllureId("1710")
+    @DisplayName("restriction and investigation and fraud type have linked though investigation Id")
+    void resolveTestInvestigationId() throws Exception {
+        kafka.produceMessages(alert.alertId, KAFKA_TOPIC_ALERTS, objectMapper.writeValueAsString(alert));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(client.getUcid());
+        investigationPage.investigateClientCard();
+        resolvePage.openResolveSuspicious();
+        resolvePage.addFraud(FraudType.HEDGING, POTENTIAL);
+        resolvePage.clickCleanRestrictionList();
+        resolvePage.addRestriction(ACCOUNT_CREATION.getName());
+        resolvePage.fillCommentAndApply(RESOLVE_COMMENT);
+        waitForClientToChangeStatus(client.getUcid(), POTENTIAL);
+        Investigation investigation = getObjectsFromDB(DbName.POSTGRES, BO_INVESTIGATION_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid()), Investigation.class).getFirst();
+        AbuserHistory history = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, String.format(UCID_WHERE, client.getUcid()), AbuserHistory.class).getFirst();
+        ClientGeneralRestriction restriction = getObjectsFromDB(DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format(UCID_WHERE, client.getUcid()), ClientGeneralRestriction.class).getFirst();
+        assertEquals(investigation.getId().toString(), restriction.getCorrelationId());
+        assertEquals(investigation.getId().toString(), restriction.getCorrelationId());
+        assertEquals("INVESTIGATION", history.getCorrelationType());
+        assertEquals("INVESTIGATION", restriction.getCorrelationType());
+
+
     }
 }

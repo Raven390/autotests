@@ -14,6 +14,8 @@ public class ClientGeneralRestriction {
     private String failReason;
     private String createdAt;
     private String updatedAt;
+    private String correlationType;
+    private String correlationId;
 
     public ClientGeneralRestriction() {
     }
@@ -47,6 +49,22 @@ public class ClientGeneralRestriction {
         this.regulator = regulator;
         this.restrictionId = restrictionId;
         this.status = status;
+    }
+
+    public String getCorrelationType() {
+        return correlationType;
+    }
+
+    public void setCorrelationType(String correlationType) {
+        this.correlationType = correlationType;
+    }
+
+    public String getCorrelationId() {
+        return correlationId;
+    }
+
+    public void setCorrelationId(String correlationId) {
+        this.correlationId = correlationId;
     }
 
     public Long getId() {

@@ -95,10 +95,27 @@ public class FraudstersPage extends AbstractPage {
         waitForPageToLoad();
     }
 
+    public void navigateAbuseRegistryDeductions() {
+        Allure.step("navigate abuse to registry page / deductions");
+        page.navigate(BASE_URL_E2E + "abuse-registry/deductions");
+        waitForPageToLoad();
+    }
+
     public void openRemoveDrawer() {
         Allure.step("open upload remove by click to remove list button");
         removeListButton.click();
         removeDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void openRemoveDrawerButtonIsHidden() {
+        waitForPageToLoad();
+        removeListButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertTrue(removeListButton.isHidden());
+    }
+
+    public void openRemoveDrawerButtonIsDisabled() {
+        waitForPageToLoad();
+        assertTrue(uploadListButton.isDisabled());
     }
 
     public void openUploadDrawer() {
