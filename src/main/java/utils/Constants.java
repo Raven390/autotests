@@ -211,6 +211,7 @@ public class Constants {
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "vindex_test.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "vindex_test.mt___mt4_trades";
     public static final String MT5_DEALS_COERCED_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced";
+    public static final String MT5_DEALS_TABLE_NAME = "vindex_test.mt___mt5_deals";
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "vindex_test.mt___mt5_deals_coerced_toxicity";
     public static final String MT5_POSITIONS_TABLE_NAME = "vindex_test.mt___mt5_positions";
     public static final String MT_ACCOUNT_TABLE_NAME = "vindex_test.mt___account";
