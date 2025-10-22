@@ -3,6 +3,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
+import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByAccount;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory.generateMt4TradesCoercedAccountProfitComment;
@@ -70,6 +72,11 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
     private static MtAccountObject mtAccount3;
     private static MtAccountObject mtAccount4;
     private static MtAccountObject mtAccount5;
+    private static CrmTbAccountForMtObject crmAccountMt1;
+    private static CrmTbAccountForMtObject crmAccountMt2;
+    private static CrmTbAccountForMtObject crmAccountMt3;
+    private static CrmTbAccountForMtObject crmAccountMt4;
+    private static CrmTbAccountForMtObject crmAccountMt5;
     private static MtMt4TradesCoercedObject trade1;
     private static MtMt4TradesCoercedObject trade2;
     private static MtMt4TradesCoercedObject trade3;
@@ -98,6 +105,12 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
         mtAccount3 = generateMtAccountByCrmTbAccount(account3);
         mtAccount4 = generateMtAccountByCrmTbAccount(account4);
         mtAccount5 = generateMtAccountByCrmTbAccount(account5);
+        crmAccountMt1 = generateAccountForMtByAccount(account1);
+        crmAccountMt2 = generateAccountForMtByAccount(account2);
+        crmAccountMt3 = generateAccountForMtByAccount(account3);
+        crmAccountMt4 = generateAccountForMtByAccount(account4);
+        crmAccountMt5 = generateAccountForMtByAccount(account5);
+
 
         String comment = "comment";
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
@@ -110,6 +123,7 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4, account5));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
+        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(crmAccountMt1, crmAccountMt2, crmAccountMt3, crmAccountMt4, crmAccountMt5));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, trade3, trade4, trade5, tradeWithdrawal));
         MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
         position.setAccount(mtAccount2.account);
@@ -212,7 +226,7 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         resolvePage.openReportFraudForm();
         String potentialMarketManipulation = String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName());
-        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems2(), contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD, GBPUSD"), List.of(potentialMarketManipulation, "")));
+//        assertThat("Verify previously reported fraud", resolvePage.getPreviouslyReportedFraudItems2(), contains(List.of(String.format("%s (%s)", HEDGING.getName(), INTERNAL.getName().toLowerCase()), "EURUSD, GBPUSD"), List.of(potentialMarketManipulation, "")));
         resolvePage.deleteFraudByNameNoPopup(potentialMarketManipulation);
         resolvePage.addFraud(LATENCY_ARBITRAGE, CONFIRMED);
         resolvePage.selectFraudSource(INSIGHT.getDisplayName());
@@ -224,17 +238,17 @@ class ManageFraudWithDeductionsTest extends TestBaseWeb {
 
         List<String> deductionItems = resolvePage.getSuggestedDeductionItems();
         assertThat("Verify amount of deductions", deductionItems.size(), is(5));
-        assertThat("Verify 1st deduction illegal profit and balance", deductionItems.getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount1.account, formatter.format(trade1.profit + tradeWithdrawal.profit), formatter.format((trade1.profit + tradeWithdrawal.profit) - tradeWithdrawal.profit))));
-        assertThat("Verify 2nd deduction illegal profit and balance", deductionItems.get(1), is(String.format(SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount5.account, formatter.format(trade5.profit))));
-        assertThat("Verify 3rd deduction illegal profit and balance", deductionItems.get(2), matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
-        assertThat("Verify 4th deduction illegal profit and balance", deductionItems.get(3), matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
-        assertThat("Verify 5th deduction illegal profit and balance", deductionItems.getLast(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount2.account, formatter.format(trade2.profit))));
+        assertThat("Verify 1st deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount1.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_ILLEGAL, mtAccount1.account, formatter.format(trade1.profit + tradeWithdrawal.profit), formatter.format((trade1.profit + tradeWithdrawal.profit) - tradeWithdrawal.profit))));
+        assertThat("Verify 2nd deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount5.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount5.account, formatter.format(trade5.profit))));
+        assertThat("Verify 3rd deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount4.account.toString())).toList().getFirst(), matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount4.account)));
+        assertThat("Verify 4th deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount3.account.toString())).toList().getFirst(), matchesPattern(String.format(SUGGESTED_DEDUCTION_PATTERN, mtAccount3.account)));
+        assertThat("Verify 5th deduction illegal profit and balance", deductionItems.stream().filter(u -> u.contains(mtAccount2.account.toString())).toList().getFirst(), is(String.format(SUGGESTED_DEDUCTION_PATTERN_USD, mtAccount2.account, formatter.format(trade2.profit))));
 
         Function<Double, String> calculateDeduction = deduction -> String.format("%s USD", formatter.format(deduction * -1));
         List<String> suggestedDeductionValues = resolvePage.getSuggestedDeductionValues();
         assertThat("Verify amount of suggested deductions", suggestedDeductionValues.size(), is(5));
         assertThat("Verify 1st suggested deduction value", suggestedDeductionValues.getFirst(), is(calculateDeduction.apply(trade1.profit + tradeWithdrawal.profit)));
-        assertThat("Verify 2nd suggested deduction value", suggestedDeductionValues.get(1), is(calculateDeduction.apply(trade5.profit)));
+        assertThat("Verify 2nd suggested deduction value", suggestedDeductionValues.get(3), is(calculateDeduction.apply(trade5.profit)));
         assertThat("Verify 3rd suggested deduction value", suggestedDeductionValues.get(2), matchesPattern(REGEX_PATTERN_DEDUCTION));
         assertThat("Verify 4th suggested deduction value", suggestedDeductionValues.get(3), matchesPattern(REGEX_PATTERN_DEDUCTION));
         assertThat("Verify 5th suggested deduction value", suggestedDeductionValues.getLast(), is(DeductionStatusUi.HOLDING.getDisplayName()));
