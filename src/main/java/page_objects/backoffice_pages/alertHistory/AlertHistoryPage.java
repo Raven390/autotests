@@ -3,6 +3,7 @@ package page_objects.backoffice_pages.alertHistory;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
@@ -10,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static utils.ConfigFactory.BASE_URL_E2E;
 
 
 public class AlertHistoryPage extends AbstractPage {
@@ -30,6 +37,8 @@ public class AlertHistoryPage extends AbstractPage {
     private static final String INVESTIGATOR_FILTER_CONTAINER = String.format(FILTER_CONTAINER_BY_TITLE, "Investigator");
 
     private static final String LOADER_ANIMATION = ".v-loader";
+    private final Locator clickableRow;
+    private final Locator drawer;
 
     public AlertHistoryPage(Page page) {
         super(page);
@@ -38,6 +47,8 @@ public class AlertHistoryPage extends AbstractPage {
         this.alertHistoryTableHeaders = page.locator("//div[contains(@class,'v-header-cell')]");
         this.filterButton = page.locator("//div[@class='v-alert-history-filter-button__filters']/button");
         this.applyFilterButton = page.locator("//span[text()='Apply']/..");
+        this.clickableRow = page.locator(".v-body-row_clickable");
+        this.drawer = page.locator("[data-qa=\"drawer_body\"]");
     }
 
     @Override
@@ -64,6 +75,22 @@ public class AlertHistoryPage extends AbstractPage {
             list.add(alertHistoryTableHeaders.nth(i).textContent());
         }
         return list;
+    }
+
+    @Step("Get list of alert history table headers")
+    public void notHaveQc() {
+        Allure.step("check if QC column is not present in alert history table");
+        assertThat(getTableHeaders(), not(contains("QC", "REVIEWER", "QC NOTE")));
+        clickableRow.nth(0).click();
+        page.waitForTimeout(100);
+        assertFalse(drawer.isVisible());
+
+    }
+
+    public void navigateAlertHistory() {
+        Allure.step("navigate alert history page");
+        page.navigate(BASE_URL_E2E + "alert-history");
+        super.waitForPageToLoad();
     }
 
     private List<String> getCellValuesByColumnIndex(int columnIndex) {

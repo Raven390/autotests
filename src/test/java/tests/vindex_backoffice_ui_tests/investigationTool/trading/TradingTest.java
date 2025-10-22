@@ -645,36 +645,4 @@ public class TradingTest extends TestBaseWeb {
 
     }
 
-
-    @Disabled
-    @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
-    @AllureId("")
-    @DisplayName("generateTestData ")
-    public void generateTestData() {
-        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid = '" + client.getUcid() + "'");
-        MtMt4TradesCoercedObject trade0 = generateMt4TradesCoercedRandomized(client);
-        trade0.ticketType = "Sell";
-        trade0.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 0, 0, 0);
-        trade0.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 2, 0, 0, 0);
-        MtMt4TradesCoercedObject trade1 = generateMt4TradesCoercedRandomized(client);
-        trade1.ticketType = "Sell";
-        trade1.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 0, 0, 0);
-        trade1.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 3, 0, 0, 0);
-        MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedRandomized(client);
-        trade2.ticketType = "Sell";
-        trade2.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 4, 0, 0, 0);
-        trade2.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 4, 0, 0, 0);
-        MtMt4TradesCoercedObject trade3 = generateMt4TradesCoercedRandomized(client);
-        trade3.ticketType = "Sell";
-        trade3.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
-        trade3.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
-        MtMt4TradesCoercedObject trade4 = generateMt4TradesCoercedRandomized(client);
-        trade4.ticketType = "Sell";
-        trade4.openTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
-        trade4.closeTime = getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE_AND_TIME, 0, 0, 5, 0, 0, 0);
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
-
-    }
 }

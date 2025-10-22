@@ -32,9 +32,10 @@ public class SearchPage extends AbstractPage {
         this.noResultsMessage = page.locator("//span[@class='g-text g-text_variant_body-2']");
     }
 
-    @Step("Navigate to Bulk Search page")
-    public void navigateToBulkSearchPage() {
+    @Step("Navigate to Search page")
+    public void navigateToSearchPage() {
         page.navigate(BASE_URL_E2E + SEARCH_PAGE_PATH);
+        waitForPageToLoad();
     }
 
     @Step("Search by bulk input: {searchQuery}")

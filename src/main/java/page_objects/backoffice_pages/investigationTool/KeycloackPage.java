@@ -95,6 +95,16 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(devUser());
     }
 
+    @Step("Log in as viewer user")
+    public void loginAsViewerUser() {
+        loginWithUser(autotestUserViewer());
+    }
+
+    @Step("Log in as OPS24 user")
+    public void loginAsOps24User() {
+        loginWithUser(autotestUserOPS24());
+    }
+
     @Step("Check that authorisation is failed")
     public void errorMessageIsShown() {
         errorMessage.isVisible();

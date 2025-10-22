@@ -134,6 +134,7 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         deductionPage.navigateDeduction();
+        deductionPage.isDeductionOpened();
         deductionPage.hoverOverDeductionTableRow(client.getUserId());
         deductionPage.openEditDrawer();
         deductionPage.isDeductIsInactive();

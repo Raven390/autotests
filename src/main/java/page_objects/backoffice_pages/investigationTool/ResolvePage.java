@@ -98,6 +98,7 @@ public class ResolvePage extends AbstractPage {
     private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
     private static final String CONFIRMED_FRAUD_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s')]";
     private static final String FRAUD_SUBTYPE_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s__item')]";
+    private final Locator cleanRestrictionListButton;
 
 
     public ResolvePage(Page page) {
@@ -119,8 +120,9 @@ public class ResolvePage extends AbstractPage {
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
         this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type-v2']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
+        this.cleanRestrictionListButton = page.locator("button[data-qa=\"button_with_confirmation\"]");
         this.fraudListButton = page.locator("//button[contains(@data-qa,'fraud_type_selector__anchor')]");
-        this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
+        this.restrictionListButton = page.locator("//*[text()='Restrictions']/..//button");
         this.fraudTypeDropdownOption = page.locator("//div[@class='v-drop-down-menu-2__content']/descendant::div[contains(@class,'v-sub-menu__anchor')]");
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.applyButton = page.locator("//button/*[text()='Apply']");
@@ -209,6 +211,12 @@ public class ResolvePage extends AbstractPage {
     public void clickWithdrawalApprove() {
         resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         approveAllwithdrawalsButton.click();
+    }
+
+
+    public void clickCleanRestrictionList() {
+        cleanRestrictionListButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        cleanRestrictionListButton.click();
     }
 
     @Step("reject all withdrawals")

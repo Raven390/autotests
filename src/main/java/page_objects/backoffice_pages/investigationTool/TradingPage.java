@@ -2318,6 +2318,14 @@ public class TradingPage extends AbstractPage {
         Allure.step("check is illegal profit button hidden");
         super.waitForPageToLoad();
         illegalProfitButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        assertFalse(illegalProfitButton.isVisible());
+    }
+
+    public void isIllegalProfitButtonVisible() {
+        Allure.step("check is illegal profit button hidden");
+        super.waitForPageToLoad();
+        illegalProfitButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(illegalProfitButton.isVisible());
     }
 }
 

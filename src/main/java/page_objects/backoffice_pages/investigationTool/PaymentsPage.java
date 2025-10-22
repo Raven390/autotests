@@ -746,13 +746,19 @@ public class PaymentsPage extends AbstractPage {
     }
 
     public void isWithdrawalsSubtabHidden() {
-        Allure.step("check is payment tab have only summary subtab");
+        Allure.step("check is withdrawals subtab hidden");
         waitForPageToLoad();
         withdrawalsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
+    public void isWithdrawalsSubtabVisible() {
+        Allure.step("check is withdrawals subtab visible");
+        waitForPageToLoad();
+        withdrawalsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
     public void isSummarySubtabVisible() {
-        Allure.step("check is payment tab have only summary subtab");
+        Allure.step("check is summary subtab visible");
         waitForPageToLoad();
         summaryTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }

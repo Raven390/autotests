@@ -14,6 +14,7 @@ import helpers.kafka.KafkaHelper;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import page_objects.backoffice_pages.DutyTeamPortal.DutyTeamPage;
 import page_objects.backoffice_pages.abuseRegistry.DeductionPage;
 import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
@@ -57,6 +58,7 @@ public class TestBaseWeb {
     public FraudstersPage fraudstersPage;
     public DeductionPage deductionPage;
     public SearchPage searchPage;
+    public DutyTeamPage dutyTeamPage;
 
     public static DecimalFormat df = new DecimalFormat("#,###");
     public static DecimalFormat dfd = new DecimalFormat("#,###.##");
@@ -120,6 +122,7 @@ public class TestBaseWeb {
         fraudstersPage = new FraudstersPage(page);
         deductionPage = new DeductionPage(page);
         searchPage = new SearchPage(page);
+        dutyTeamPage = new DutyTeamPage(page);
     }
 
     @AfterEach

@@ -31,8 +31,6 @@ import static helpers.data.enums.Currency.USD;
 import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
-import static helpers.database.DbHelper.insertObjectToDb;
-import static helpers.kafka.alerts.CreateSimpleAlert.sendSimplePaymentAlert;
 import static utils.Constants.*;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.waitForConnectionSearchToUpdate;
@@ -40,8 +38,8 @@ import static utils.Utils.waitForConnectionSearchToUpdate;
 
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
-@Feature("BMS-1980 Investigation tool visibility + assignment payment alerts")
-class PaymentTeamVisibilityTest extends TestBaseWeb {
+@Feature("BMS-1872 [Q3] Role based model")
+class Ops24VisibilityTest extends TestBaseWeb {
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient1 = getRandomVantageClientAllFields();
     private static final ClientHelper connectedClient2 = getRandomVantageClientAllFields();
@@ -117,8 +115,8 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
 
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4, account5));
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
         insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(crmTbAccFormtAccount1, crmTbAccFormtAccount2, crmTbAccFormtAccount3, crmTbAccFormtAccount4, crmTbAccFormtAccount5));
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4, mtAccount5));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, trade2, tradeWithdrawal, trade3, trade4, trade5, trade6, trade7, trade8, trade9, trade10));
         MtMt5PositionsObject position = generateMtMt5PositionsObject(client);
         position.setAccount(mtAccount2.account);
@@ -126,22 +124,13 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
         insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position);
     }
 
-    @Test
-    @AllureId("1567")
-    @DisplayName("BO user with Payment Team role can see tabs")
-    void assignClientCardTest() throws Exception {
-        sendSimplePaymentAlert(client.getUcid());
-        investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
-        investigationPage.navigateToClient(client.getUcid());
-    }
 
     @Test
-    @AllureId("1561")
-    @DisplayName("Payment Team user have reduced set of tabs")
-    void paymentTeamNotSeeAllTabs() {
+    @AllureId("1737")
+    @DisplayName("OPS24 user have reduced set of tabs")
+    void viewerNotSeeAllTabs() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsOps24User();
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.isAlertTabHidden();
         generalTab.isGeneralTabVisible();
@@ -154,35 +143,35 @@ class PaymentTeamVisibilityTest extends TestBaseWeb {
     }
 
     @Test
-    @AllureId("1562")
-    @DisplayName("Payment Team user can see only summary in payment tab")
-    void paymentTeamNotSeePaymentWithdrawals() {
+    @AllureId("1736")
+    @DisplayName("OPS24 user can see summary and withdrawals in payment tab")
+    void viewerNotSeePaymentWithdrawals() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsOps24User();
         paymentsPage.navigate(client.getUcid());
-        paymentsPage.isWithdrawalsSubtabHidden();
+        paymentsPage.isWithdrawalsSubtabVisible();
         paymentsPage.isSummarySubtabVisible();
     }
 
     @Test
-    @AllureId("1563")
-    @DisplayName("Payment Team user not have illegal profit button in trading/operations")
-    void paymentTeamNotSeeIllegalProfitButtonInTradingOperations() {
+    @AllureId("1735")
+    @DisplayName("OPS24 user not have illegal profit button in trading/operations")
+    void viewerNotSeeIllegalProfitButtonInTradingOperations() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsOps24User();
         tradingPage.navigateOperations(client.getUcid());
-        tradingPage.isIllegalProfitButtonHidden();
+        tradingPage.isIllegalProfitButtonVisible();
     }
 
     @Test
-    @AllureId("1564")
-    @DisplayName("Payment Team user not have multiselect on table CS")
-    void paymentTeamNotHaveMultiselectInConnectionSearch() {
+    @AllureId("1734")
+    @DisplayName("OPS24 user not have multiselect on table CS")
+    void viewerNotHaveMultiselectInConnectionSearch() {
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsPaymentTeamUser();
+        keycloackPage.loginAsOps24User();
         connectionPage.navigate(client.getUcid());
-        connectionPage.openConnectionGraph();
-        connectionPage.isMultiselectButtonHidden();
+        connectionPage.openConnectionTable();
+        connectionPage.isMultiselectButtonVisible();
     }
 
     @AfterAll
