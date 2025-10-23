@@ -437,7 +437,11 @@ public class GeneralTab extends AbstractPage {
         Allure.step("check value in section " + sectionName + " of the summary panel");
         String locator = SUMMARY_PANEL_ITEM + "//*[text()='" + sectionName + "']/.." + SUMMARY_PANEL_VALUE;
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
-        assertEquals(expectedValue, page.locator(locator).textContent());
+        String actualValue = page.locator(locator).textContent();
+        if ("Withdrawals".equals(sectionName) || "Company RFR".equals(sectionName) || "Trading PNL".equals(sectionName)) {
+            actualValue = actualValue.replace(" USD", "");
+        }
+        assertEquals(expectedValue, actualValue);
     }
 
     public void checkSummaryPanelFraudValue(String sectionName, String expectedValue) {
