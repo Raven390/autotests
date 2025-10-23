@@ -70,7 +70,7 @@ class AlertHistoryTest extends TestBaseWeb {
     void verifyAlertHistory1() {
         String dateTimeRegex = "\\d{4}-\\d{2}-\\d{2}\\d{2}:\\d{2}:\\d{2}";
         assertThat("Verify alert history page title", alertHistoryPage.getTitle(), is("Alert history"));
-        assertThat("Verify alert history table headers", alertHistoryPage.getTableHeaders(), contains("CLIENT", "ALERTED RULE", "CREATED", "RESOLVED", "DURATION", "INVESTIGATOR"));
+        assertThat("Verify alert history table headers", alertHistoryPage.getTableHeaders(), contains("CLIENT", "ALERTED RULE", "CREATED", "RESOLVED", "DURATION", "INVESTIGATOR", "RESOLUTION", "QC", "REVIEWER", "QC NOTE"));
         assertThat("Verify alert history client value", alertHistoryPage.getClientValues().getFirst(), is(String.format("%s %s%s", crmTbUser.firstName, crmTbUser.lastName, client.getUserId())));
         assertThat("Verify alert history rule name value", alertHistoryPage.getAlertedRuleValues().getFirst(), is(alert.rule.name));
         assertThat("Verify alert history created cell value", alertHistoryPage.getCreatedValues().getFirst(), matchesPattern(dateTimeRegex));
