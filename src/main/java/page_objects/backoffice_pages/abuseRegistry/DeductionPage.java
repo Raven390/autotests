@@ -30,6 +30,7 @@ public class DeductionPage extends AbstractPage {
     private final Locator brandValues;
     private final Locator deductionTable;
     private final Locator singleEditButton;
+    private final Locator getFileButton;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN = "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
     private static final String COLUMN_VALUE_BY_ORDER_PATTERN = "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
@@ -42,6 +43,7 @@ public class DeductionPage extends AbstractPage {
     private static final String DRAWER_CANCEL_BUTTON_LOCATOR = "//span[text()='Cancel']/ancestor::button";
     private static final String DRAWER_SAVE_BUTTON_LOCATOR = "//span[text()='Save']/ancestor::button";
     private static final String DRAWER_DEDUCT_BUTTON_LOCATOR = "//span[text()='Deduct']/ancestor::button";
+    private static final String DRAWER_FILE_BUTTON_LOCATOR = "//button[@data-qa='deductions__multiselect_panel__get_file']";
     private final Locator illegalProfitInput;
     private final Locator suggesteedDeductionInput;
     private final Locator deductionInput;
@@ -76,6 +78,7 @@ public class DeductionPage extends AbstractPage {
         this.saveButton = page.locator(DRAWER_SAVE_BUTTON_LOCATOR);
         this.deductButton = page.locator(DRAWER_DEDUCT_BUTTON_LOCATOR);
         this.toast = page.locator(".g-toaster .g-toast__content");
+        this.getFileButton = page.locator(DRAWER_FILE_BUTTON_LOCATOR);
     }
 
     @Step("Click abuse registry button")
@@ -192,6 +195,28 @@ public class DeductionPage extends AbstractPage {
         targetRowLocator.hover();
     }
 
+    public void clickOnDeductionCheckBox(Integer id) {
+        String targetRow = DEDUCTION_TABLE_LOCATOR + "//div[@data-qa='deductions__table__rows__" + id + "__checkbox']";
+        Locator targetRowLocator = page.locator(targetRow);
+        int i = 0;
+        while (!targetRowLocator.isVisible() && i < 100) {
+            deductionTableRow.last().hover();
+            page.waitForTimeout(100);
+            page.mouse().wheel(0, 50);
+            i++;
+        }
+        targetRowLocator.hover();
+        targetRowLocator.click();
+    }
+
+    public boolean getFileButtonIsVisible() {
+        return getFileButton.isVisible();
+    }
+
+    public void clickOnGetFileButton() {
+        getFileButton.click();
+    }
+
     public void hoverOverDeductionTableRow(int clientId) {
         hoverOverDeductionTableRow(String.valueOf(clientId));
     }
@@ -254,5 +279,9 @@ public class DeductionPage extends AbstractPage {
         assertEquals("Deduction request has been successfully submitted", toast.textContent());
     }
 
+    public void checkOneDeductionRecalculated() {
+        toast.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        assertEquals("Illegal profit and suggested deduction were recalculated for 1 client due to changes in realized or floating PNL after record creation", toast.textContent());
+    }
 }
 
