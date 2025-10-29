@@ -176,6 +176,7 @@ class GetPaymentsV1Tests extends TestBaseApi {
         assertThat("Assert decisions list present", decision, notNullValue());
         assertThat("Assert decisions list present", decision.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
         assertThat("Assert decisions list present", decision.getDecisionCode(), is(paymentDecisionsObject1.getDecisionCode()));
+        assertThat("Assert decisions list present", decision.getDecision(), is("Approve"));
         assertThat("Assert decisions list present", decision.getAttributes().getFirst().getCode(), is("1"));
         assertThat("Assert decisions list present", decision.getAttributes().getFirst().getValue(), is("Passport"));
         assertThat("Assert decisions list present", decision.getDecidedAt(), is(instanceOf(Timestamp.class)));
