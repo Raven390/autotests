@@ -474,6 +474,7 @@ public class GetPaymentsResponseBody {
     public static class Decision {
         private String decisionType;
         private Integer decisionCode;
+        private String decision;
         private Integer rejectionCode;
         private String reasonString;
         private List<Attribute> rejectionAttributes;
@@ -481,7 +482,8 @@ public class GetPaymentsResponseBody {
         private String actor;
 
         public Decision(
-                String decisionType, Integer decisionCode, Integer rejectionCode, String reasonString,
+                String decisionType, Integer decisionCode, String decisionName, Integer rejectionCode,
+                String reasonString,
                 List<Attribute> rejectionAttributes, Timestamp decidedAt, String actor) {
             this.decisionType = decisionType;
             this.decisionCode = decisionCode;
@@ -493,6 +495,14 @@ public class GetPaymentsResponseBody {
         }
 
         public Decision() {
+        }
+
+        public String getDecision() {
+            return decision;
+        }
+
+        public void setDecision(String decision) {
+            this.decision = decision;
         }
 
         public String getDecisionType() {
