@@ -17,13 +17,14 @@ public class PaymentEventsObject {
     private Timestamp dateUpdated;
     private Timestamp dateDecided;
     private String deliveryStatus;
+    private String details;
 
     public PaymentEventsObject() {
     }
 
     public PaymentEventsObject(
             UUID paymentId, String crmId, String type, Integer finalDecisionId, String ucid, Timestamp dateCreated,
-            Timestamp dateUpdated, Timestamp dateDecided, String deliveryStatus) {
+            Timestamp dateUpdated, Timestamp dateDecided, String deliveryStatus, String details) {
         this.paymentId = paymentId;
         this.crmId = crmId;
         this.type = type;
@@ -33,6 +34,7 @@ public class PaymentEventsObject {
         this.dateUpdated = dateUpdated;
         this.dateDecided = dateDecided;
         this.deliveryStatus = deliveryStatus;
+        this.deliveryStatus = details;
     }
 
     public UUID getPaymentId() {
@@ -105,6 +107,14 @@ public class PaymentEventsObject {
 
     public void setDeliveryStatus(String deliveryStatus) {
         this.deliveryStatus = deliveryStatus;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     @Override

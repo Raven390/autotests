@@ -109,7 +109,6 @@ public class ConfigFactory {
     public static final String PAYMENT_GATE_PAYMENTS_PATH = CONFIG.paymentGatePaymentsPath();
     public static final String PAYMENT_GATE_REJECTION_REASONS_PATH = CONFIG.paymentGateRejectionReasonsPath();
     public static final String PAYMENT_GATE_DECISIONS_PATH = CONFIG.paymentGateDecisionsPath();
-    public static final String PAYMENT_GATE_TEMP_DECISIONS_PATH = CONFIG.paymentGateTempDecisionsPath();
     public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
     public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
     // Postrgres db
@@ -486,9 +485,6 @@ public class ConfigFactory {
 
         @Key("paymentGateDecisionsPath")
         String paymentGateDecisionsPath();
-
-        @Key("paymentGateTempDecisionsPath")
-        String paymentGateTempDecisionsPath();
 
         @Key("paymentGateRuleExecutionsPath")
         String paymentGateRuleExecutionsPath();
