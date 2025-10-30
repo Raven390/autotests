@@ -24,4 +24,16 @@ public class BoAlertsFactory {
         return alert;
     }
 
+    public static BoAlertsObject generateAlertCustomAttributes(ClientHelper client, String ruleAttributes) {
+        BoAlertsObject alert = new BoAlertsObject();
+        alert.setId(Utils.getRandomIntPositive());
+        alert.setStatus("STATUS");
+        alert.setRule("RULE");
+        alert.setAlertResolution("RESOLUTION");
+        alert.setLastUpdated(getCurrentTimestampDbFormat());
+        alert.setRuleAttributes(ruleAttributes);
+
+        return alert;
+    }
+
 }

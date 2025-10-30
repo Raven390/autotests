@@ -20,7 +20,7 @@ public class PaymentEventsObjectFactory {
                 Timestamp.from(Instant.now()),                              // dateCreated
                 Timestamp.from(Instant.now()),                              // dateUpdated
                 Timestamp.from(Instant.now()),                              // dateDecided
-                "PENDING"
+                "PENDING", ""
         );
     }
 }

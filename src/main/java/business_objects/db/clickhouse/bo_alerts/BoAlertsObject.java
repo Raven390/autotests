@@ -5,6 +5,7 @@ import java.util.Objects;
 public class BoAlertsObject {
 
     protected Integer alertId;
+    protected Integer id;
     protected String ucid;
     protected String brand;
     protected String createdAt;
@@ -13,9 +14,11 @@ public class BoAlertsObject {
     protected String resolvedAtUtc;
     protected String status;
     protected String rule;
+    protected String ruleAttributes;
     protected String alertResolution;
     protected String lastUpdated;
 
+    @Deprecated
     public BoAlertsObject(
             Integer alertId, String ucid, String brand, String createdAt, String createdAtUtc, String resolvedAt,
             String resolvedAtUtc, String status, String rule, String alertResolution, String lastUpdated) {
@@ -32,8 +35,36 @@ public class BoAlertsObject {
         this.lastUpdated = lastUpdated;
     }
 
+    public BoAlertsObject(
+            Integer id, String ucid, String brand, String createdAt, String createdAtUtc, String resolvedAt,
+            String resolvedAtUtc, String status, String rule, String ruleAttributes, String alertResolution,
+            String lastUpdated) {
+        this.id = id;
+        this.status = status;
+        this.rule = rule;
+        this.ruleAttributes = ruleAttributes;
+        this.alertResolution = alertResolution;
+        this.lastUpdated = lastUpdated;
+    }
+
     public BoAlertsObject() {
 
+    }
+
+    public String getRuleAttributes() {
+        return ruleAttributes;
+    }
+
+    public void setRuleAttributes(String ruleAttributes) {
+        this.ruleAttributes = ruleAttributes;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getAlertId() {

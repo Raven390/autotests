@@ -159,7 +159,8 @@ public class Constants {
     public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
     public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
     public static final String BO_INVESTIGATION_HISTORY_TABLE_NAME = "postgres.bo.investigation_history";
-    public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alerts";
+    public static final String CLICKHOUSE_BO_ALERTS_TABLE_NAME = "vindex_test.bo___alerts";
+    public static final String CLICKHOUSE_BO_ALERT_TABLE_NAME = "vindex_test.bo___alert";
     public static final String CLICKHOUSE_OZ_TRADES_TABLE_NAME = "vindex_test.oz___trades";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "vindex_test.client_fraud_types";

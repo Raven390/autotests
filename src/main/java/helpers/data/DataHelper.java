@@ -302,7 +302,7 @@ public class DataHelper {
                 insertObjectToDb(DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON, data.ucidMirrorScore);
             }
             if (data.boAlertsObjects != null) {
-                data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, alerts));
+                data.boAlertsObjects.forEach(alerts -> insertObjectToDb(CLICKHOUSE_BO_ALERTS_TABLE_NAME, alerts));
             }
             if (data.ozTradesTableObjects != null) {
                 data.ozTradesTableObjects.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
@@ -400,7 +400,7 @@ public class DataHelper {
                 deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
             if (data.boAlertsObjects != null) {
-                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERT_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
+                data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERTS_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
             }
             if (data.ozTradesTableObjects != null) {
                 data.ozTradesTableObjects.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
