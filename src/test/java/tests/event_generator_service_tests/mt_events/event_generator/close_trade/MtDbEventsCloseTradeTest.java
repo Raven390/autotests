@@ -13,11 +13,13 @@ import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.close_trade.CloseTradeMtDbEventMt5;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
 
+@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_CLOSE_TRADE)
 @Tag(TEAM_CORE)

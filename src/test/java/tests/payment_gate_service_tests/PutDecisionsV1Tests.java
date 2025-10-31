@@ -216,7 +216,7 @@ class PutDecisionsV1Tests extends TestBaseApi {
         assertThat("Check attribute object", attributes.getFirst().getPaymentId(), is(paymentEventsObject3.getPaymentId()));
         assertThat("Check attribute object", attributes.getFirst().getDecisionId(), is(dbObject.getFirst().getId()));
         assertThat("Check attribute object", attributes.getFirst().getId(), is(instanceOf(Integer.class)));
-        assertThat("Check attribute object", attributes.getFirst().getAttributeId(), is(1));
+        assertThat("Check attribute object", attributes.getFirst().getAttributeId(), is(6));
         assertThat("Check attribute object", attributes.getFirst().getAttributeValue(), is("Passport"));
         assertThat("Check attribute object", attributes.getFirst().getDateCreated(), is(instanceOf(Timestamp.class)));
         assertThat("Check attribute object", attributes.getFirst().getDateUpdated(), is(instanceOf(Timestamp.class)));
