@@ -72,5 +72,6 @@ class GetTradeByTradeIdTests extends TestBaseApi {
         assertThat("Assert profit", mappedResponse[0].getProfit(), is(trade1.getProfit()));
         assertThat("Assert volumeInLots", mappedResponse[0].getVolumeInLots(), is(trade1.getVolumeLots()));
         assertThat("Assert comment", mappedResponse[0].getComment(), is(trade1.getComment()));
+        assertThat("Assert symbolUnderlying", mappedResponse[0].getSymbolUnderlying(), is("EURUSD"));
     }
 }

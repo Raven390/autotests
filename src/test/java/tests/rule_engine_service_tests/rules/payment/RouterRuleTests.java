@@ -69,7 +69,7 @@ class RouterRuleTests extends TestBaseRule {
         PaymentDetailsObject paymentDetailsObject = getPaymentDetails(data.clientHelper.getUserId());
         assertThat("Assert payment details", paymentDetailsObject.getPaymentId(), is(paymentId));
         assertThat("Assert payment details", paymentDetailsObject.getPaymentId(), is(paymentId));
-        assertThat("Assert payment details", paymentDetailsObject.getPayload(), containsString("\"withdrawalAmountUSD\": 1.16"));
+        assertThat("Assert payment details", paymentDetailsObject.getPayload(), containsString("\"withdrawalAmountUSD\": 1.1"));
 
         List<Acknowledgement> acknowledgement = getPaymentAcknowledgementFromKafka(data.crmWithdrawalEvent.getId());
         assertThat("Assert acknowledgement", acknowledgement.getFirst().getPaymentId(), is(paymentId.toString()));

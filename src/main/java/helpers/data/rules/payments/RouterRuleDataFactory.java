@@ -100,10 +100,10 @@ public class RouterRuleDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-//        map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
-//        map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
-//        map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
-//        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
+        map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
+        map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
+        map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
+        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
         map.put("5", getMirrorTradingCloseTradeBybitTest5Data());
 
         setupData(map);

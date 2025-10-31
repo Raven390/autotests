@@ -42,6 +42,9 @@ public class GetTradeResponse {
     @JsonProperty("reason")
     private Integer reason;
 
+    @JsonProperty("symbolUnderlying")
+    private String symbolUnderlying;
+
     public GetTradeResponse() {
     }
 
@@ -79,6 +82,22 @@ public class GetTradeResponse {
     @Override
     public String toString() {
         return "GetTradeResponse{" + "tradeId='" + tradeId + '\'' + ", tradeDate='" + tradeDate + '\'' + ", tradingAccount='" + tradingAccount + '\'' + ", action='" + action + '\'' + ", entry='" + entry + '\'' + ", symbol='" + symbol + '\'' + ", profitUSD='" + profitUSD + '\'' + ", profit='" + profit + '\'' + ", volumeInLots='" + volumeInLots + '\'' + ", comment='" + comment + '\'' + ", reason='" + reason + '\'' + '}';
+    }
+
+    public Long getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(Long positionId) {
+        this.positionId = positionId;
+    }
+
+    public String getSymbolUnderlying() {
+        return symbolUnderlying;
+    }
+
+    public void setSymbolUnderlying(String symbolUnderlying) {
+        this.symbolUnderlying = symbolUnderlying;
     }
 
     public Long getTradeId() {

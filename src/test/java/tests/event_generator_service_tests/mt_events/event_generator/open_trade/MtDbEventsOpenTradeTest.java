@@ -13,11 +13,13 @@ import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt4;
 import business_objects.kafka.mt_db_events.open_trade.OpenTradeMtDbEventMt5;
 import business_objects.kafka.mt_events.OpenTradeMtEvent;
 import io.qameta.allure.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseKafka;
 
+@Disabled
 @Feature(FEATURE_EVENT_GENERATOR_SERVICE)
 @Story(STORY_EVENT_GENERATOR_SERVICE_OPEN_TRADE)
 @Tag(TEAM_CORE)

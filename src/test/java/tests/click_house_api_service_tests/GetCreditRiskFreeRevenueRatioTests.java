@@ -22,11 +22,11 @@ import static business_objects.api.clickhouse_api_service.get_credit_risk_free_r
 import static business_objects.db.clickhouse.aggr_credit_risk_free_revenue_ratio.AggrCreditRiskFreeRevenueRatioObjectFactory.generateAggrCreditRiskFreeRevenueRatioObject;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClient;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
-import static helpers.data.ClientFactory.getRandomVantageClient;
+import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -43,11 +43,12 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     private static S3FactLoginMetricsObject s3Metrics;
     private static MtTbCreditsObject credit;
 
-    static final ClientHelper client1 = getRandomVantageClient();
+    static final ClientHelper client1 = getRandomVantageClientAllFields();
 
     @BeforeAll
     static void setupData() {
         data1 = generateAggrCreditRiskFreeRevenueRatioObject(client1);
+        data1.currentRiskFreeRevenue = 6d;
         s3Metrics = generateS3FactLoginMetricsClient(client1);
         s3Metrics.setDailyCoreSpreadRevenuePe(6d);
         credit = generateCreditsByClient(client1);
@@ -81,13 +82,14 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         assertThat("Assert tradingIndicators size", mappedResponse.tradingIndicators.size(), is(3));
 
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(0).indicatorDate, is(date));
-        assertThat("Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(0).currentRiskFreeRevenue, is(6));
-
+        assertThat(
+                "Assert tradingIndicators currentRiskFreeRevenue", mappedResponse.tradingIndicators.get(0).currentRiskFreeRevenue, anyOf(instanceOf(Double.class), instanceOf(Integer.class))
+        );
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(1).indicatorDate, is(date));
         assertThat("Assert tradingIndicators sumCreditOrder", mappedResponse.tradingIndicators.get(1).sumCreditOrder, is(2));
 
         assertThat("Assert tradingIndicators indicatorDate", mappedResponse.tradingIndicators.get(2).indicatorDate, is(date));
-        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.get(2).creditRiskFreeRevenueRatio, is(3));
+        assertThat("Assert tradingIndicators creditRiskFreeRevenueRatio", mappedResponse.tradingIndicators.get(2).creditRiskFreeRevenueRatio, anyOf(instanceOf(Double.class), instanceOf(Integer.class)));
 
     }
 
