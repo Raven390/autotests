@@ -42,6 +42,7 @@ public class PaymentsPage extends AbstractPage {
     private final Locator financialTransactionGraphSection;
     private final Locator withdrawalsTab;
     private final Locator summaryTab;
+    private final Locator paymentProfilesTab;
     private final Locator withdrawalTabButtonContent;
     private final Locator filterOptions;
     private final Locator createTimeFilter;
@@ -88,6 +89,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
+    private final Locator paymentProfilesFamilyBlock;
 
     public PaymentsPage(Page page) {
         super(page);
@@ -110,6 +112,8 @@ public class PaymentsPage extends AbstractPage {
         this.activeTimelineSection = page.locator(ACTIVE_TIMELINE_SECTION_SELECTOR);
         this.withdrawalsTab = page.locator("//input[@value='WITHDRAWALS']");
         this.summaryTab = page.locator("//input[@value='SUMMARY']");
+        this.paymentProfilesTab = page.locator("//input[@value='PAYMENT_PROFILES']");
+        this.paymentProfilesFamilyBlock = page.locator("//div[@class='v-payments-profiles__family-block']");
         this.filterOptions = page.locator("//div[@role='option']");
         this.createTimeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "Lifetime"));
         this.typeFilter = page.locator(String.format(FILTER_BY_PLACEHOLDER_PATTERN, "All types"));
@@ -151,6 +155,32 @@ public class PaymentsPage extends AbstractPage {
     public void clickPaymentsTabButton() {
         paymentsTab.click();
         waitForPageToLoad();
+    }
+
+    @Step("Click payments tab")
+    public void clickPaymentProfilesTabButton() {
+        paymentProfilesTab.click();
+        waitForPageToLoad();
+    }
+
+    public record PaymentFamilyBlock(String header, List<String> rowDataList) {
+    }
+
+    @Step("Click payments tab")
+    public List<PaymentFamilyBlock> getPaymentProfilesList() {
+        List<PaymentFamilyBlock> list = new ArrayList<>();
+        for (int i = 0; i < paymentProfilesFamilyBlock.count(); i++) {
+            Locator row = paymentProfilesFamilyBlock.nth(i);
+            Locator header = row.locator(".v-payments-profiles__family-summary");
+            String headerText = header.textContent();
+            Locator profileRow = row.locator(".v-payment-profiles-list__profile-row");
+            List<String> rowDataList = new ArrayList<>();
+            for (int k = 0; k < profileRow.count(); k++) {
+                rowDataList.add(profileRow.nth(k).textContent());
+            }
+            list.add(new PaymentFamilyBlock(headerText, rowDataList));
+        }
+        return list;
     }
 
     @Step("Open users operations tab")

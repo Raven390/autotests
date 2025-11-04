@@ -24,6 +24,8 @@ public class CrmTbDepositObject {
     public String status;
     public Integer paymentTypeId;
     public String paymentType;
+    public String paymentProfile;
+    public String paymentFamily;
     public Integer paymentChannelId;
     public String paymentChannel;
     public String paymentSystemAccount;
