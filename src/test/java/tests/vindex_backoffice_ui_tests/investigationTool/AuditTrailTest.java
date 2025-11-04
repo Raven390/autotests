@@ -2,43 +2,47 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.kafka.alerts.RuleAlert;
-import business_objects.ui.audit_trail.AuditTrailItem;
+import business_objects.ui.audit_trail.AuditTrailItemV2;
 import business_objects.ui.user.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
+import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateRuleAlertByUcid;
-import static business_objects.kafka.alerts.RuleAlertFactory.generateWithdrawalNotificationAlert;
+import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generateRiskPaymentDecisionObject;
+import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
+import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.kafka.alerts.RuleAlertFactory.*;
 import static business_objects.ui.user.UserFactory.*;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Restriction.*;
 import static helpers.database.BoHelper.closeAlert;
-import static helpers.database.DbHelper.deleteEntryFromDb;
-import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.CleanTableHelper.cleanPaymentGateData;
+import static helpers.database.DbHelper.*;
+import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
-public class AuditTrailTest extends TestBaseWeb {
+class AuditTrailTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static CrmTbUserObject crmTbUser;
     private static CrmTbAccountObject account;
+    private static PaymentEventsObject paymentEventsObject1;
     private static RuleAlert alert;
     private static ClientHelper client;
     private static final String TIME_PATTERN = "^([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$";
@@ -72,12 +76,11 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigateToClient(client.getUcid());
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there is 1 audit trail item", auditTrailItems, hasSize(1));
-        AuditTrailItem item = auditTrailItems.getFirst();
-        assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s", "Alert received", "Vindex BO")));
-        assertThat("Verify audit trail item details", item.getDetails(), equalTo(String.format("Alert: %s; rule: %s", alert.alertId, alert.rule.name)));
+        AuditTrailItemV2 item = auditTrailItems.getFirst();
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Registration"));
+        assertThat("Verify audit trail item details", item.getDetails(), equalTo("stepName:\nLinked market manipulator abuser"));
     }
 
     @Test
@@ -95,12 +98,11 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.fillCommentForm(comment);
         investigationPage.submitCommentForm();
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
-        AuditTrailItem item = auditTrailItems.getFirst();
-        assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Comment added", user.getFirstName(), user.getLastName())));
-        assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
+        AuditTrailItemV2 item = auditTrailItems.getFirst();
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Comment added"));
+        assertThat("Verify audit trail item details", item.getDetails(), equalTo("Test comment added action type"));
     }
 
     @Test
@@ -115,11 +117,10 @@ public class AuditTrailTest extends TestBaseWeb {
         alertsPage.waitForPageToLoad();
         investigationPage.investigateClientCard();
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 2 audit trail items", auditTrailItems, hasSize(2));
-        AuditTrailItem item = auditTrailItems.getFirst();
-        assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Client assigned", user.getFirstName(), user.getLastName())));
+        AuditTrailItemV2 item = auditTrailItems.getFirst();
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Investigation started"));
     }
 
     @Test
@@ -140,13 +141,11 @@ public class AuditTrailTest extends TestBaseWeb {
         investigationPage.navigateToClient(crmTbUser.ucid);
         alertsPage.waitForPageToLoad();
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 4 audit trail items", auditTrailItems, hasSize(4));
-        AuditTrailItem item = auditTrailItems.get(1);
-        assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        assertThat("Verify audit trail item header", item.getHeader(), equalTo(String.format("%s%s %s", "Investigation completed", user.getFirstName(), user.getLastName())));
-        assertThat("Verify audit trail item comment", item.getComment(), equalTo(comment));
-        assertThat("Verify audit trail item details", item.getDetails(), equalTo("Fraud type not detected."));
+        AuditTrailItemV2 item = auditTrailItems.get(1);
+        assertThat("Verify audit trail item header", item.getHeader(), equalTo("Investigation completed"));
+        assertThat("Verify audit trail item details", item.getDetails(), equalTo("Test investigation completed action type"));
     }
 
     @Test
@@ -165,24 +164,10 @@ public class AuditTrailTest extends TestBaseWeb {
         String commentCancel = "Test cancellation requested action type";
         restrictionPage.removeRestriction(LOGIN_CRM, commentCancel);
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
-        assertThat("Assert that there are 5 audit trail items", auditTrailItems, hasSize(5));
-        for (AuditTrailItem item : auditTrailItems) {
-            assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        }
-        AuditTrailItem restrictionRequested = new AuditTrailItem(
-                String.format("%s%s %s", "Restriction requested", user.getFirstName(), user.getLastName()), commentSet, "Login CRM", null
-        );
-        AuditTrailItem restrictionApplied = new AuditTrailItem(
-                String.format("%s%s %s", "Restriction applied", user.getFirstName(), user.getLastName()), null, "Login CRM", null
-        );
-        AuditTrailItem cancellationRequested = new AuditTrailItem(
-                String.format("%s%s %s", "Cancellation requested", user.getFirstName(), user.getLastName()), commentCancel, "Login CRM", null
-        );
-        AuditTrailItem restrictionCancelled = new AuditTrailItem(
-                String.format("%s%s %s", "Restriction cancelled", user.getFirstName(), user.getLastName()), null, "Login CRM", null
-        );
-        assertThat("Verify audit trail items", auditTrailItems, hasItems(restrictionRequested, restrictionApplied, cancellationRequested, restrictionCancelled));
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
+        assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
+        assertThat("Verify audit trail items", auditTrailItems, hasItems(
+                new AuditTrailItemV2("Restriction management", "Test cancellation requested action type\nLogin CRM"), new AuditTrailItemV2("Restriction management", "Test restriction requested action type\nLogin CRM")));
     }
 
     @Test
@@ -190,8 +175,9 @@ public class AuditTrailTest extends TestBaseWeb {
     @Tag(LAYER_WEB)
     @AllureId("606")
     @DisplayName("Audit trail. Verify message for withdrawal request decision action type")
-    public void verifyWithdrawalRequestDecisionTest() throws IOException {
-        RuleAlert withdrawalAlert = generateWithdrawalNotificationAlert(client);
+    public void verifyWithdrawalRequestDecisionTest() throws Exception {
+        paymentEventsObject1 = setupDataPGS();
+        RuleAlert withdrawalAlert = generateWithdrawalNotificationAlertWithPaymentId(client, paymentEventsObject1.getPaymentId());
         kafka.produceMessage(withdrawalAlert.alertId, objectMapper.writeValueAsString(withdrawalAlert), KAFKA_TOPIC_ALERTS);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -205,14 +191,26 @@ public class AuditTrailTest extends TestBaseWeb {
         paymentsPage.clickApproveButton();
         page.waitForTimeout(2000);
         auditTrailPage.openAuditTrailTab();
-        List<AuditTrailItem> auditTrailItems = auditTrailPage.getAuditTrailItems();
+        List<AuditTrailItemV2> auditTrailItems = auditTrailPage.getAuditTrailItemsV2();
         assertThat("Assert that there are 3 audit trail items", auditTrailItems, hasSize(3));
-        for (AuditTrailItem item : auditTrailItems) {
-            assertThat("Verify audit trail item time", item.getTime(), matchesPattern(TIME_PATTERN));
-        }
-        AuditTrailItem withdrawalRequestDecision = new AuditTrailItem(
-                String.format("%s%s %s", "Withdrawal request decision", user.getFirstName(), user.getLastName()), comment, String.format("Transaction ID %s; %s %s %s %s; Approve", withdrawalAlert.rule.attributes.withdrawalId, new DecimalFormat("#.00").format(Float.valueOf(withdrawalAlert.rule.attributes.amount)), withdrawalAlert.rule.attributes.currency, withdrawalAlert.rule.attributes.createTime.substring(0, withdrawalAlert.rule.attributes.createTime.length() - 9).replace("T", " "), withdrawalAlert.rule.attributes.paymentType), null
-        );
-        assertThat("Verify audit trail items", auditTrailItems, hasItem(withdrawalRequestDecision));
+        var firstEvent = auditTrailItems.get(0);
+        var secondEvent = auditTrailItems.get(1);
+        assertThat("Verify audit trail item header", firstEvent.getHeader(), equalTo("Withdrawal decision"));
+        assertThat("Verify audit trail item details", firstEvent.getDetails(), equalTo("Test withdrawal request decision action type\n123.45 EUR"));
+        assertThat("Verify audit trail item header", secondEvent.getHeader(), equalTo("Withdrawal Review"));
+        cleanPaymentGateData(client.getUcid(), client.getUserId(), paymentEventsObject1.getPaymentId().toString());
+    }
+
+    static PaymentEventsObject setupDataPGS() {
+        paymentEventsObject1 = generatePaymentEventsObject(client);
+        var paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client);
+        paymentDetailsObject1.setPayload("{\"id\": \"123e4567-e89b-12d3-a456-426614174000\", \"ip\": \"121.233.122.82\", \"card\": {\"card3ds\": 0, \"expYear\": \"2029\", \"expMonth\": \"4\", \"fullName\": \"sheryar shah\", \"lastFour\": \"1225\", \"binNumber\": \"654321\"}, \"cost\": 0.56, \"type\": \"withdrawal\", \"brand\": \"vantage\", \"status\": \"Success\", \"clientId\": 112341, \"platform\": \"WEB\", \"statusId\": 1, \"checkName\": \"WR_Blacklist\", \"eventDate\": \"2025-05-20T14:30:00Z\", \"regulator\": \"CIMA\", \"statusKYC\": \"Confirmed\", \"mt4Account\": 3031915, \"accountType\": \"MT5\", \"withdrawalId\": 2373634, \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VTSG1115142220250202132259\", \"paymentTypeCode\": 2, \"paymentTypeName\": \"Credit card\", \"withdrawalAmount\": 1500.00, \"paymentMethodCode\": \"CREDIT_CARD\", \"paymentChannelCode\": 1, \"paymentChannelName\": \"Credit card\", \"withdrawalCurrency\": \"USD\", \"withdrawalAmountUSD\": 1500.00, \"withdrawalApplicationTime\": \"2025-07-15 07:38:05\"}");
+        var paymentDecisionsObject1 = generateRiskPaymentDecisionObject(paymentEventsObject1);
+
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1));
+
+        return paymentEventsObject1;
     }
 }
