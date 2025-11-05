@@ -87,11 +87,13 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_RULE = "Withdrawal notification rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE = "Router rule in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE = "Router rule. Withdrawal integrity check in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_OPEN_TRADE_EVENT_RULE = "Mirror trade with open trade event rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NEWS_TRADER_OPEN_TRADE_EVENT_RULE = "News Trader with close trade event rule in Rule Engine service";
     public static final String STORY_RULE_ENGINE_NO_SLIPPAGE_RULE = "No slippage rule with close trade event in Rule Engine service";
     public static final String STORY_RULE_ENGINE_LOGIN_RULE = "Login rule with login event in Rule Engine service";
+    public static final String STORY_RULE_ENGINE_CUSTOM_RULE = "Custom rule in Rule Engine service";
     public static final String STORY_PAYMENT_GATE_GET_DECISIONS = "Get decisions request";
     public static final String STORY_PAYMENT_GATE_POST_DECISIONS = "Post decisions request";
     public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";
@@ -128,6 +130,8 @@ public class Constants {
     public static final String KAFKA_TOPIC_CLIENT_RESTRICTIONS_CANCEL = "client.restrictions.cancel";
     public static final String KAFKA_TOPIC_CRM_DB_EVENTS = "crm-db-events";
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
+    public static final String KAFKA_TOPIC_CUSTOM_EVENTS = "custom-events";
+    public static final String KAFKA_TOPIC_CRM_PAYMENTS = "crm-payment";
     public static final String KAFKA_TOPIC_MT_4_TRADE_RECORD = "mt4_trade_record";
     public static final String KAFKA_TOPIC_MT_5_DEAL_PERFORM = "mt5_DealPerform";
     public static final String KAFKA_TOPIC_MT_DB_EVENTS = "mt-db-events";
@@ -136,12 +140,6 @@ public class Constants {
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
     public static final String KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE = "payment.acknowledge";
-    // PARAMS
-    public static final String REGISTRATION_HELPER_FIRST_NAME = "Test";
-    public static final String REGISTRATION_HELPER_INTERFACE = "/api/registrationV2/register";
-    public static final String REGISTRATION_HELPER_REGULATOR_VFSC2 = "VFSC2";
-    public static final String REGISTRATION_HELPER_SECOND_NAME = "User";
-    public static final String REGISTRATION_HELPER_WID_VANTAGE = "AU";
     // TABLES
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "vindex_test.account_ib_relation_snapshot";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "vindex_test.account_ib_relation";

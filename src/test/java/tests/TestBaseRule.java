@@ -8,7 +8,9 @@ import business_objects.db.clickhouse.reporting_test.ZeebeRulesStarted;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.kafka.CustomEvent;
 import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
@@ -23,6 +25,7 @@ import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Step;
 import okhttp3.Response;
+import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.extension.ExtendWith;
 import utils.TestResultWatcher;
 
@@ -38,6 +41,7 @@ import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static utils.Constants.*;
 
 
@@ -48,7 +52,7 @@ public class TestBaseRule {
 
     @Step("Produce withdrawal event to crm-events topic")
     public static void produceWithdrawalMessageToKafka(CrmWithdrawalEvent event) throws JsonProcessingException {
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
     }
 
     @Step("Produce close trade event to mt-events topic")
@@ -71,6 +75,11 @@ public class TestBaseRule {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
     }
 
+    @Step("Produce message to custom-event topic")
+    public static void produceCustomMessageToKafka(CustomEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CUSTOM_EVENTS);
+    }
+
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client) throws InterruptedException,
             JsonProcessingException {
@@ -84,6 +93,14 @@ public class TestBaseRule {
             JsonProcessingException {
         return Arrays.stream(
                 objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
+    }
+
+    @Step("Get User Alerts from Kafka topic 'alerts'")
+    public static List<RuleAlertV2> getUserAlertsV2FromKafka(ClientHelper client, String ruleName)
+            throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
 
@@ -173,4 +190,51 @@ public class TestBaseRule {
         return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId).toString(), Acknowledgement[].class)).toList();
     }
 
+    @Step("Check {elementId} NOT presented in rule path")
+    public static void checkElementIdNotPresent(String elementId, String eventId, String bpmnProcessId)
+            throws Exception {
+        // Wait until runId appears in zeebe_rules_started
+        ZeebeRulesStarted started = await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+            List<ZeebeRulesStarted> startedList = getObjectsFromDB(
+                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULES_STARTED, String.format("SELECT run_id FROM %s WHERE event_id = '%s' and rule_name = '%s'", REPORTING_DB_ZEEBE_RULES_STARTED, eventId, bpmnProcessId), ZeebeRulesStarted.class);
+
+            if (startedList != null && !startedList.isEmpty()) {
+                return startedList.getFirst();
+            } else {
+                return null;
+            }
+        }, Objects::nonNull);
+
+        String runId = started.getRunId();
+
+        // Try to wait until the elementId appears and expect a timeout (meaning it never appeared)
+        try {
+            await().atMost(30, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).until(() -> {
+                List<ZeebeRulesElements> list = getObjectsFromDB(
+                        DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
+                String joined;
+                if (list == null || list.isEmpty()) {
+                    joined = "";
+                } else {
+                    joined = list.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
+                }
+                System.out.println("Ensuring Element ID is absent: " + elementId + " current list: " + joined);
+                return joined.contains(elementId);
+            });
+
+            // If we reach here, the element appeared within the timeout, which is a failure for this check
+            throw new AssertionError("Element ID '" + elementId + "' unexpectedly appeared in rule path for runId=" + runId);
+        } catch (ConditionTimeoutException ignored) {
+            // Expected: element never appeared during the waiting period. Verify once more and assert not present.
+            List<ZeebeRulesElements> list = getObjectsFromDB(
+                    DbName.CLICKHOUSE, REPORTING_DB_ZEEBE_RULE_ELEMENTS, String.format("run_id = '%s'", runId), ZeebeRulesElements.class);
+            String joined;
+            if (list == null || list.isEmpty()) {
+                joined = "";
+            } else {
+                joined = list.stream().map(ZeebeRulesElements::getElementId).filter(Objects::nonNull).filter(s -> !s.isBlank()).collect(Collectors.joining(","));
+            }
+            assertThat(joined, not(containsString(elementId)));
+        }
+    }
 }

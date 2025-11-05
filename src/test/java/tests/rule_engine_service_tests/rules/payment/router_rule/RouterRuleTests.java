@@ -1,4 +1,4 @@
-package tests.rule_engine_service_tests.rules.payment;
+package tests.rule_engine_service_tests.rules.payment.router_rule;
 
 import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
 import business_objects.db.backoffice_db.alert.Alert;
@@ -20,7 +20,7 @@ import java.util.*;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
-import static helpers.data.rules.payments.RouterRuleDataFactory.setupRouterRuleData;
+import static helpers.data.rules.payments.router_rule.RouterRuleDataFactory.setupRouterRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
