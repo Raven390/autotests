@@ -1,4 +1,4 @@
-package helpers.data.rules.payments;
+package helpers.data.rules.payments.router_rule;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
@@ -61,27 +61,27 @@ public class RouterRuleDataFactory {
         return data;
     }
 
-    private static DataHelper getMirrorTradingCloseTradeBybitTest1Data() {
+    private static DataHelper getRouterRuleTest1Data() {
         DataHelper data = getRouterRuleData(routerRuleClient1);
         data.crmWithdrawalEvent.setWithdrawalAmount(1);
         return data;
     }
 
-    private static DataHelper getMirrorTradingCloseTradeBybitTest2Data() {
+    private static DataHelper getRouterRuleTest2Data() {
         DataHelper data = getRouterRuleData(routerRuleClient2);
         data.crmWithdrawalEvent.setCheckName("Checkname");
 
         return data;
     }
 
-    private static DataHelper getMirrorTradingCloseTradeBybitTest3Data() {
+    private static DataHelper getRouterRuleTest3Data() {
         DataHelper data = getRouterRuleData(routerRuleClient3);
         data.crmWithdrawalEvent.setCheckName("Checkname");
 
         return data;
     }
 
-    private static DataHelper getMirrorTradingCloseTradeBybitTest4Data() {
+    private static DataHelper getRouterRuleTest4Data() {
         DataHelper data = getRouterRuleData(routerRuleClient4);
         data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
         insertMirrorFlagData(data.clientHelper);
@@ -89,7 +89,7 @@ public class RouterRuleDataFactory {
         return data;
     }
 
-    private static DataHelper getMirrorTradingCloseTradeBybitTest5Data() {
+    private static DataHelper getRouterRuleTest5Data() {
         DataHelper data = getRouterRuleData(routerRuleClient5);
         data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
 
@@ -100,11 +100,11 @@ public class RouterRuleDataFactory {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getMirrorTradingCloseTradeBybitTest1Data());
-        map.put("2", getMirrorTradingCloseTradeBybitTest2Data());
-        map.put("3", getMirrorTradingCloseTradeBybitTest3Data());
-        map.put("4", getMirrorTradingCloseTradeBybitTest4Data());
-        map.put("5", getMirrorTradingCloseTradeBybitTest5Data());
+        map.put("1", getRouterRuleTest1Data());
+        map.put("2", getRouterRuleTest2Data());
+        map.put("3", getRouterRuleTest3Data());
+        map.put("4", getRouterRuleTest4Data());
+        map.put("5", getRouterRuleTest5Data());
 
         setupData(map);
 

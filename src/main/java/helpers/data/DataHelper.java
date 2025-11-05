@@ -39,6 +39,7 @@ import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
+import business_objects.kafka.CustomEvent;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.database.DbName;
@@ -119,70 +120,9 @@ public class DataHelper {
     public UcidGeneralScore ucidGeneralScore;
     public List<AppTbFinindexData> AppTbFinindexData;
     public CrmWithdrawalEvent crmWithdrawalEvent;
+    public CustomEvent customEvent;
 
     public DataHelper() {
-    }
-
-    public DataHelper(ClientHelper clientHelper, CrmTbUserObject crmTbUserObject,
-            DictAccountToUcidObject dictAccountToUcidObject, DictIsTestObject dictIsTestObject,
-            List<DictActiveTradingDaysByUcidObject> dictActiveTradingDaysByUcidObjects,
-            LnSessionParsedObject lnSessionParsedObjectRegistration, LnSessionParsedObject lnSessionParsedObjectLogin,
-            List<ConnectionTableEntry> connections, List<CrmTbUserObject> connectedUsers,
-            EgWithdrawalEvent withdrawalEvent, CloseTradeMtEvent closeTradeEvent, TradeEvent tradeEvent,
-            List<ClientFraudTypes> clientFraudTypes,
-            List<CrmTbAccountObject> crmTbAccountObjectConnections, List<MtTbCreditsObject> mtTbCreditsObjects,
-            CrmTbAccountObject crmTbAccountObject, CrmTbAccountForMtObject crmTbAccountForMtObject,
-            List<CrmTbWithdrawalObject> crmTbWithdrawalObjects, List<CrmTbDepositObject> crmTbDepositObjects,
-            List<CrmTbBonusObject> crmTbBonusObjects, List<Mt5DealsCoercedObject> mt5DealsCoercedObjects,
-            AggrCreditEquityRateObject aggrCreditEquityRate, MirrorLoginObject aggrMirrorAccountsByTrades,
-            List<MtBalanceOrdersObject> mtBalanceOrdersObjects, List<MirrorLoginObject> mirrorLoginObjects,
-            List<AggrFloatingTradesGroupBy> floatingTrades, List<ClientHelper> connectedClientHelpers,
-            List<MirrorUcidObject> mirrorUcidObjects, MtAccountObject mtAccountObject,
-            List<LoyaltiesRedemptionObject> loyaltyObjects, List<MtMt5PositionsObject> mtMt5PositionsObjects,
-            List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject, UcidMirrorScorePython ucidMirrorScore,
-            List<RuleAlert> ruleAlerts, List<BoAlertsObject> boAlertsObjects,
-            List<OzTradesTableEntry> ozTradesTableObjects, RegistrationEvent registrationEvent, LoginEvent loginEvent,
-            UcidGeneralScore ucidGeneralScore, CrmWithdrawalEvent crmWithdrawalEvent) {
-        this.clientHelper = clientHelper;
-        this.crmTbUserObject = crmTbUserObject;
-        this.dictAccountToUcidObject = dictAccountToUcidObject;
-        this.dictIsTestObject = dictIsTestObject;
-        this.dictActiveTradingDaysByUcidObject = dictActiveTradingDaysByUcidObjects;
-        this.lnSessionParsedObjectRegistration = lnSessionParsedObjectRegistration;
-        this.lnSessionParsedObjectLogin = lnSessionParsedObjectLogin;
-        this.connections = connections;
-        this.connectedUsers = connectedUsers;
-        this.withdrawalEvent = withdrawalEvent;
-        this.closeTradeEvent = closeTradeEvent;
-        this.tradeEvent = tradeEvent;
-        this.clientFraudTypes = clientFraudTypes;
-        this.crmTbAccountObject = crmTbAccountObject;
-        this.crmTbAccountForMtObject = crmTbAccountForMtObject;
-        this.crmTbAccountObjectConnections = crmTbAccountObjectConnections;
-        this.mtTbCreditsObjects = mtTbCreditsObjects;
-        this.crmTbWithdrawalObjects = crmTbWithdrawalObjects;
-        this.crmTbDepositObjects = crmTbDepositObjects;
-        this.crmTbBonusObjects = crmTbBonusObjects;
-        this.mt5DealsCoercedObjects = mt5DealsCoercedObjects;
-        this.aggrCreditEquityRate = aggrCreditEquityRate;
-        this.aggrMirrorAccountsByTrades = aggrMirrorAccountsByTrades;
-        this.mtBalanceOrdersObjects = mtBalanceOrdersObjects;
-        this.mirrorLoginObjects = mirrorLoginObjects;
-        this.floatingTrades = floatingTrades;
-        this.connectedClientHelpers = connectedClientHelpers;
-        this.mirrorUcidObjects = mirrorUcidObjects;
-        this.mtAccountObject = mtAccountObject;
-        this.loyaltyObjects = loyaltyObjects;
-        this.mtMt5PositionsObjects = mtMt5PositionsObjects;
-        this.s3FactIbSalesCommissionsObject = s3FactIbSalesCommissionsObject;
-        this.ucidMirrorScore = ucidMirrorScore;
-        this.ruleAlerts = ruleAlerts;
-        this.boAlertsObjects = boAlertsObjects;
-        this.ozTradesTableObjects = ozTradesTableObjects;
-        this.registrationEvent = registrationEvent;
-        this.loginEvent = loginEvent;
-        this.ucidGeneralScore = ucidGeneralScore;
-        this.crmWithdrawalEvent = crmWithdrawalEvent;
     }
 
     @Override
@@ -432,6 +372,8 @@ public class DataHelper {
 
     public static DataHelper createClient(DataHelper dataHelper, ClientHelper clientHelper) {
         dataHelper.clientHelper = clientHelper;
+//        dataHelper.clientHelper.setBrand(Brand.VANTAGE);
+//        dataHelper.clientHelper.setUserId(3712321);
         dataHelper.crmTbUserObject = generateUserByClient(dataHelper.clientHelper);
         dataHelper.crmTbAccountObject = generateAccountByClient(dataHelper.clientHelper, false);
         dataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(dataHelper.clientHelper, false);
