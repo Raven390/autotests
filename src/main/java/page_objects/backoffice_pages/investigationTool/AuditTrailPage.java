@@ -28,12 +28,14 @@ public class AuditTrailPage extends AbstractPage {
     private final Locator auditTrailItemDetails;
     private final Locator auditTrailItemDetailsV2;
     private final Locator auditTrailItemTime;
-    private final Locator auditTrailFilterButton;
+    private final Locator auditTrailFilterActiveButton;
+    private final Locator auditTrailFilterCommentsButton;
     private final Locator auditTrailClearFilterButton;
+    private final Locator auditTrailFilterTeamSelect;
 
     private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
-    private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@data-qa='select-popup']/descendant::*[text()='%s']";
-    private static final String AUDIT_TRAIL_FILTER = "//div[contains(@class,'v-investigation-tools-trail-filters__select')]";
+    private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@role='option']/descendant::*[text()='%s']";
+    private static final String AUDIT_TRAIL_FILTER = "//div[@data-qa='audit_trail__filters__action']";
 
     public AuditTrailPage(Page page) {
         super(page);
@@ -46,8 +48,10 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
         this.auditTrailItemDetailsV2 = page.locator("//div[@class='v-audit-trail-v2-content__attributes']");
         this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");
-        this.auditTrailFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button");
         this.auditTrailClearFilterButton = page.locator(AUDIT_TRAIL_FILTER + "/descendant::button[@data-qa='select-clear']");
+        this.auditTrailFilterActiveButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Active alerts\"]");
+        this.auditTrailFilterCommentsButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Comments\"]");
+        this.auditTrailFilterTeamSelect = page.locator("//div[@class='g-select v-audit-trail-v2-filters__select']");
     }
 
     public void navigate(String ucid) {
@@ -109,13 +113,24 @@ public class AuditTrailPage extends AbstractPage {
         return auditTrailItems;
     }
 
-    @Step("Click audit trail filter button")
-    public void clickAuditTrailFilter() {
-        auditTrailFilterButton.click();
+
+    @Step("Click active alerts audit filter button")
+    public void clickAuditTrailActiveFilter() {
+        auditTrailFilterActiveButton.click();
     }
 
-    @Step("Select option in audit trail filter")
-    public void selectAuditTrailFilter(String selection) {
+    @Step("Click comments audit filter button")
+    public void clickAuditTrailCommentsFilter() {
+        auditTrailFilterCommentsButton.click();
+    }
+
+    @Step("Click team audit filter select")
+    public void clickAuditTrailTeamFilter() {
+        auditTrailFilterTeamSelect.click();
+    }
+
+    @Step("Select option in audit trail team filter")
+    public void selectAuditTrailTeamFilter(String selection) {
         page.locator(String.format(AUDIT_TRAIL_FILTER_ITEM_PATTERN, selection)).click();
         waitForPageToLoad();
     }
