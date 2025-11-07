@@ -21,40 +21,40 @@ public class CustomEvent {
     // }
 
     @JsonProperty("id")
-    public String id;
+    private String id;
 
     @JsonProperty("type")
-    public String type;
+    private String type;
 
     @JsonProperty("timestamp")
-    public String timestamp;
+    private String timestamp;
 
     @JsonProperty("serverId")
-    public String serverId;
+    private String serverId;
 
     @JsonProperty("tradingAccount")
-    public String tradingAccount;
+    private String tradingAccount;
 
     @JsonProperty("brand")
-    public String brand;
+    private String brand;
 
     @JsonProperty("clientId")
-    public String clientId;
+    private String clientId;
 
     @JsonProperty("alert")
-    public String alert;
+    private String alert;
 
     @JsonProperty("fraudType")
-    public String fraudType;
+    private String fraudType;
 
     @JsonProperty("restriction")
-    public String restriction;
+    private String restriction;
 
     @JsonProperty("source")
-    public String source;
+    private String source;
 
     @JsonProperty("message")
-    public String message;
+    private String message;
 
     public CustomEvent(
             String id, String type, String timestamp, String serverId, String tradingAccount, String brand,

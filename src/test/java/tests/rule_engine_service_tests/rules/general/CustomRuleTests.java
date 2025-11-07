@@ -75,17 +75,17 @@ class CustomRuleTests extends TestBaseRule {
         //Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, data.customEvent.getSource());
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
-        assertThat("Verify alert", alerts.getFirst().reason, is("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
-        assertThat("Verify alert", alerts.getFirst().timestamp, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().alertId, is(data.customEvent.getId()));
-        assertThat("Verify alert", alerts.getFirst().triggerCreatedTime, matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
-        assertThat("Verify alert", alerts.getFirst().fraudType, is(data.customEvent.getFraudType()));
-        assertThat("Verify alert", alerts.getFirst().trigger, is(data.customEvent.getType()));
-        assertThat("Verify alert", alerts.getFirst().ucid, is(data.clientHelper.getUcid()));
-        assertThat("Verify alert", alerts.getFirst().type, is("TRADING"));
-        assertThat("Verify alert", alerts.getFirst().rule.name, is(data.customEvent.getSource()));
-        assertThat("Verify alert", alerts.getFirst().rule.ver, notNullValue());
-        assertThat("Verify alert", alerts.getFirst().attributes.details, is(""));
+        assertThat("Verify alert", alerts.getFirst().getReason(), is("Client repeatedly opens opposite-direction trades using known hedging EA comments ('vef', 'My Order')."));
+        assertThat("Verify alert", alerts.getFirst().getTimestamp(), matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.customEvent.getId()));
+        assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().getFraudType(), is(data.customEvent.getFraudType()));
+        assertThat("Verify alert", alerts.getFirst().getTrigger(), is(data.customEvent.getType()));
+        assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.clientHelper.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().getType(), is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().getRule().getName(), is(data.customEvent.getSource()));
+        assertThat("Verify alert", alerts.getFirst().getRule().getVer(), notNullValue());
+        assertThat("Verify alert", alerts.getFirst().getAttributes().getDetails(), is(""));
 
         GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(getAbuseTypes(List.of(data.clientHelper.getUcid())).body().string(), GetAbuseTypesResponse[].class);
         assertThat("Assert array size", mappedResponse.length, is(1));
