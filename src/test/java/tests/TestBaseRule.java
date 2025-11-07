@@ -9,6 +9,7 @@ import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.kafka.CustomEvent;
+import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
@@ -80,6 +81,11 @@ public class TestBaseRule {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CUSTOM_EVENTS);
     }
 
+    @Step("Produce mirrorScore message to ucid_mirror_score topic")
+    public static void produceMirrorScoreMessageToKafka(MirrorScoreEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_UCID_MIRROR_SCORE);
+    }
+
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client) throws InterruptedException,
             JsonProcessingException {
@@ -100,7 +106,7 @@ public class TestBaseRule {
             throws InterruptedException,
             JsonProcessingException {
         return Arrays.stream(
-                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> alert.getRule().getName().equals(ruleName)).toList();
     }
 
 
