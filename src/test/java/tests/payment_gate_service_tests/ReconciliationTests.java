@@ -75,6 +75,20 @@ class ReconciliationTests {
     private static PaymentDetailsObject paymentDetailsObject5;
     private static PaymentDecisionsObject paymentDecisionsObject5;
 
+    private static ClientHelper client6;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject6;
+    private static PutRuleExecutionsBody putRuleExecutionsBody6;
+    private static PaymentEventsObject paymentEventsObject6;
+    private static PaymentDetailsObject paymentDetailsObject6;
+    private static PaymentDecisionsObject paymentDecisionsObject6;
+
+    private static ClientHelper client7;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject7;
+    private static PutRuleExecutionsBody putRuleExecutionsBody7;
+    private static PaymentEventsObject paymentEventsObject7;
+    private static PaymentDetailsObject paymentDetailsObject7;
+    private static PaymentDecisionsObject paymentDecisionsObject7;
+
     @BeforeAll
     static void setupData() throws Exception {
 
@@ -122,20 +136,42 @@ class ReconciliationTests {
         paymentDetailsObject5 = generatePaymentDetailsObject(paymentEventsObject5, client5);
         putRuleExecutionsBody5 = generatePutRuleExecutionsBody(paymentEventsObject5);
         paymentDecisionsObject5 = generatePaymentDecisionObject(paymentEventsObject5);
+
+        client6 = getRandomVantageClientAllFields();
+        crmTbWithdrawalObject6 = generateCrmTbWithdrawalObjectByClient(client6);
+        paymentEventsObject6 = generatePaymentEventsObject(client6);
+        paymentEventsObject6.setCrmId(crmTbWithdrawalObject6.transferId.toString());
+        paymentEventsObject6.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentDetailsObject6 = generatePaymentDetailsObject(paymentEventsObject6, client6);
+        putRuleExecutionsBody6 = generatePutRuleExecutionsBody(paymentEventsObject6);
+        paymentDecisionsObject6 = generatePaymentDecisionObject(paymentEventsObject6);
+
+        client7 = getRandomVantageClientAllFields();
+        crmTbWithdrawalObject7 = generateCrmTbWithdrawalObjectByClient(client7);
+        paymentEventsObject7 = generatePaymentEventsObject(client7);
+        paymentEventsObject7.setCrmId(crmTbWithdrawalObject7.transferId.toString());
+        paymentEventsObject7.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentDetailsObject7 = generatePaymentDetailsObject(paymentEventsObject7, client7);
+        putRuleExecutionsBody7 = generatePutRuleExecutionsBody(paymentEventsObject7);
+        paymentDecisionsObject7 = generatePaymentDecisionObject(paymentEventsObject7);
     }
 
-    // @AfterAll
+    @AfterAll
     static void deleteData() throws Exception {
         cleanCrmTbWithdrawalTableByUcid(client1.getUcid(), client1.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client2.getUcid(), client2.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client3.getUcid(), client3.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client4.getUcid(), client4.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client5.getUcid(), client5.getUcid());
+        cleanCrmTbWithdrawalTableByUcid(client6.getUcid(), client6.getUcid());
+        cleanCrmTbWithdrawalTableByUcid(client7.getUcid(), client7.getUcid());
         cleanPaymentGateData(client1.getUcid(), client1.getUserId(), putRuleExecutionsBody1.getPaymentId().toString());
         cleanPaymentGateData(client2.getUcid(), client2.getUserId(), putRuleExecutionsBody2.getPaymentId().toString());
         cleanPaymentGateData(client3.getUcid(), client3.getUserId(), putRuleExecutionsBody3.getPaymentId().toString());
         cleanPaymentGateData(client4.getUcid(), client4.getUserId(), putRuleExecutionsBody4.getPaymentId().toString());
         cleanPaymentGateData(client5.getUcid(), client5.getUserId(), putRuleExecutionsBody5.getPaymentId().toString());
+        cleanPaymentGateData(client6.getUcid(), client6.getUserId(), putRuleExecutionsBody6.getPaymentId().toString());
+        cleanPaymentGateData(client7.getUcid(), client7.getUserId(), putRuleExecutionsBody7.getPaymentId().toString());
     }
 
     @Test
@@ -240,5 +276,41 @@ class ReconciliationTests {
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client5.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("PENDING"));
         assertThat("Check status", event.getDetails(), is(nullValue()));
+    }
+
+
+    @Test
+    @AllureId("1759")
+    @DisplayName("Payment reconciliation test 6. Status = Risk audit and id != 21 -> FAILED  Status != Risk audit and id != 21 -> DELIVERED two payments with the same payment ID")
+    void ReconciliationTest6() throws Exception {
+
+        crmTbWithdrawalObject6.setStatus("Risk Audit");
+        crmTbWithdrawalObject6.setStatusId(22);
+        paymentEventsObject6.setDeliveryStatus("PENDING");
+
+        crmTbWithdrawalObject7.setStatus("Risk Audit_");
+        crmTbWithdrawalObject7.setStatusId(212);
+        crmTbWithdrawalObject7.setTransferId(crmTbWithdrawalObject6.getTransferId());
+        paymentEventsObject7.setDeliveryStatus("PENDING");
+        paymentEventsObject7.setCrmId(paymentEventsObject6.getCrmId());
+
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject7));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject7));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject7));
+        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject7));
+
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject6));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject6));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject6));
+        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject6));
+
+        Thread.sleep(130_000);
+
+        PaymentEventsObject event1 = PaymentGateHelper.getPaymentEvent(client6.getUcid());
+        assertThat("Check status", event1.getDeliveryStatus(), is("FAILED"));
+        assertThat("Check status", event1.getDetails(), is("Stuck in Risk Audit"));
+        PaymentEventsObject event2 = PaymentGateHelper.getPaymentEvent(client7.getUcid());
+        assertThat("Check status", event2.getDeliveryStatus(), is("DELIVERED"));
+        assertThat("Check status", event2.getDetails(), is(nullValue()));
     }
 }
