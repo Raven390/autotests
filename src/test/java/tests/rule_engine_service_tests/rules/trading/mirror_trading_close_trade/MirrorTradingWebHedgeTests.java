@@ -1,10 +1,8 @@
 package tests.rule_engine_service_tests.rules.trading.mirror_trading_close_trade;
 
 import business_objects.db.backoffice_db.alert.Alert;
-import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlert;
 import helpers.data.DataHelper;
-import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -17,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.trading.mirror_trading_close_trade.MirrorTradingWebHedgeDataFactory.setupMirrorTradingWebHedgeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -116,9 +115,6 @@ class MirrorTradingWebHedgeTests extends TestBaseRule {
         assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
 
         // Verify restriction is bonus restriction with code 13
-        Allure.step("Get client restrictions");
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only restriction", clientGeneralRestrictions.size(), equalTo(1));
-        assertThat("Verify restriction id ", clientGeneralRestrictions.getFirst().getRestrictionId(), equalTo(8L));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Mirror trade pattern");
     }
 }

@@ -1,7 +1,5 @@
 package tests.payment_gate_service_tests;
 
-import business_objects.api.payment_gate.rule_executions.PutRuleExecutionsBody;
-import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
@@ -18,8 +16,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequestBodyFactory.generatePutRuleExecutionsBody;
-import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlertCustomAttributes;
 import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
@@ -27,7 +23,6 @@ import static business_objects.db.payment_gate.payment_events.PaymentEventsObjec
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 
 import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
-import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -42,52 +37,50 @@ class ReconciliationTests {
 
     private static ClientHelper client1;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject1;
-    private static PutRuleExecutionsBody putRuleExecutionsBody1;
     private static PaymentEventsObject paymentEventsObject1;
     private static PaymentDetailsObject paymentDetailsObject1;
     private static PaymentDecisionsObject paymentDecisionsObject1;
 
     private static ClientHelper client2;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject2;
-    private static PutRuleExecutionsBody putRuleExecutionsBody2;
     private static PaymentEventsObject paymentEventsObject2;
     private static PaymentDetailsObject paymentDetailsObject2;
     private static PaymentDecisionsObject paymentDecisionsObject2;
 
     private static ClientHelper client3;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject3;
-    private static PutRuleExecutionsBody putRuleExecutionsBody3;
     private static PaymentEventsObject paymentEventsObject3;
     private static PaymentDetailsObject paymentDetailsObject3;
     private static PaymentDecisionsObject paymentDecisionsObject3;
 
     private static ClientHelper client4;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject4;
-    private static PutRuleExecutionsBody putRuleExecutionsBody4;
     private static PaymentEventsObject paymentEventsObject4;
     private static PaymentDetailsObject paymentDetailsObject4;
     private static PaymentDecisionsObject paymentDecisionsObject4;
 
     private static ClientHelper client5;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject5;
-    private static PutRuleExecutionsBody putRuleExecutionsBody5;
     private static PaymentEventsObject paymentEventsObject5;
     private static PaymentDetailsObject paymentDetailsObject5;
     private static PaymentDecisionsObject paymentDecisionsObject5;
 
     private static ClientHelper client6;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject6;
-    private static PutRuleExecutionsBody putRuleExecutionsBody6;
     private static PaymentEventsObject paymentEventsObject6;
     private static PaymentDetailsObject paymentDetailsObject6;
     private static PaymentDecisionsObject paymentDecisionsObject6;
 
     private static ClientHelper client7;
     private static CrmTbWithdrawalObject crmTbWithdrawalObject7;
-    private static PutRuleExecutionsBody putRuleExecutionsBody7;
     private static PaymentEventsObject paymentEventsObject7;
     private static PaymentDetailsObject paymentDetailsObject7;
     private static PaymentDecisionsObject paymentDecisionsObject7;
+
+    private static ClientHelper client8;
+    private static CrmTbWithdrawalObject crmTbWithdrawalObject8;
+    private static PaymentEventsObject paymentEventsObject8;
+    private static PaymentDetailsObject paymentDetailsObject8;
 
     @BeforeAll
     static void setupData() throws Exception {
@@ -99,7 +92,6 @@ class ReconciliationTests {
         paymentEventsObject1.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
-        putRuleExecutionsBody1 = generatePutRuleExecutionsBody(paymentEventsObject1);
 
         client2 = getRandomVantageClientAllFields();
         crmTbWithdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client2);
@@ -107,7 +99,6 @@ class ReconciliationTests {
         paymentEventsObject2.setCrmId(crmTbWithdrawalObject2.transferId.toString());
         paymentEventsObject2.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
-        putRuleExecutionsBody2 = generatePutRuleExecutionsBody(paymentEventsObject2);
         paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
@@ -116,7 +107,6 @@ class ReconciliationTests {
         paymentEventsObject3.setCrmId(crmTbWithdrawalObject3.transferId.toString());
         paymentEventsObject3.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
-        putRuleExecutionsBody3 = generatePutRuleExecutionsBody(paymentEventsObject3);
         paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
 
         client4 = getRandomVantageClientAllFields();
@@ -125,7 +115,6 @@ class ReconciliationTests {
         paymentEventsObject4.setCrmId(crmTbWithdrawalObject4.transferId.toString());
         paymentEventsObject4.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
-        putRuleExecutionsBody4 = generatePutRuleExecutionsBody(paymentEventsObject4);
         paymentDecisionsObject4 = generatePaymentDecisionObject(paymentEventsObject4);
 
         client5 = getRandomVantageClientAllFields();
@@ -134,7 +123,6 @@ class ReconciliationTests {
         paymentEventsObject5.setCrmId(crmTbWithdrawalObject5.transferId.toString());
         paymentEventsObject5.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject5 = generatePaymentDetailsObject(paymentEventsObject5, client5);
-        putRuleExecutionsBody5 = generatePutRuleExecutionsBody(paymentEventsObject5);
         paymentDecisionsObject5 = generatePaymentDecisionObject(paymentEventsObject5);
 
         client6 = getRandomVantageClientAllFields();
@@ -143,7 +131,6 @@ class ReconciliationTests {
         paymentEventsObject6.setCrmId(crmTbWithdrawalObject6.transferId.toString());
         paymentEventsObject6.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject6 = generatePaymentDetailsObject(paymentEventsObject6, client6);
-        putRuleExecutionsBody6 = generatePutRuleExecutionsBody(paymentEventsObject6);
         paymentDecisionsObject6 = generatePaymentDecisionObject(paymentEventsObject6);
 
         client7 = getRandomVantageClientAllFields();
@@ -152,8 +139,14 @@ class ReconciliationTests {
         paymentEventsObject7.setCrmId(crmTbWithdrawalObject7.transferId.toString());
         paymentEventsObject7.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject7 = generatePaymentDetailsObject(paymentEventsObject7, client7);
-        putRuleExecutionsBody7 = generatePutRuleExecutionsBody(paymentEventsObject7);
         paymentDecisionsObject7 = generatePaymentDecisionObject(paymentEventsObject7);
+
+        client8 = getRandomVantageClientAllFields();
+        crmTbWithdrawalObject8 = generateCrmTbWithdrawalObjectByClient(client8);
+        paymentEventsObject8 = generatePaymentEventsObject(client8);
+        paymentEventsObject8.setCrmId(crmTbWithdrawalObject8.transferId.toString());
+        paymentEventsObject8.setDateCreated(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentDetailsObject8 = generatePaymentDetailsObject(paymentEventsObject8, client8);
     }
 
     @AfterAll
@@ -165,13 +158,6 @@ class ReconciliationTests {
         cleanCrmTbWithdrawalTableByUcid(client5.getUcid(), client5.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client6.getUcid(), client6.getUcid());
         cleanCrmTbWithdrawalTableByUcid(client7.getUcid(), client7.getUcid());
-        cleanPaymentGateData(client1.getUcid(), client1.getUserId(), putRuleExecutionsBody1.getPaymentId().toString());
-        cleanPaymentGateData(client2.getUcid(), client2.getUserId(), putRuleExecutionsBody2.getPaymentId().toString());
-        cleanPaymentGateData(client3.getUcid(), client3.getUserId(), putRuleExecutionsBody3.getPaymentId().toString());
-        cleanPaymentGateData(client4.getUcid(), client4.getUserId(), putRuleExecutionsBody4.getPaymentId().toString());
-        cleanPaymentGateData(client5.getUcid(), client5.getUserId(), putRuleExecutionsBody5.getPaymentId().toString());
-        cleanPaymentGateData(client6.getUcid(), client6.getUserId(), putRuleExecutionsBody6.getPaymentId().toString());
-        cleanPaymentGateData(client7.getUcid(), client7.getUserId(), putRuleExecutionsBody7.getPaymentId().toString());
     }
 
     @Test
@@ -180,8 +166,10 @@ class ReconciliationTests {
     void ReconciliationTest1() throws Exception {
         crmTbWithdrawalObject1.setStatus("Test");
         paymentEventsObject1.setDeliveryStatus("PENDING");
+        paymentDecisionsObject1.setDecisionCode(1);
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1));
         Thread.sleep(130_000);
 
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client1.getUcid());
@@ -202,6 +190,7 @@ class ReconciliationTests {
         crmTbWithdrawalObject2.setStatus("Risk Audit");
         crmTbWithdrawalObject2.setStatusId(22);
         paymentEventsObject2.setDeliveryStatus("PENDING");
+        paymentDecisionsObject2.setDecisionCode(1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject2));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject2));
@@ -222,6 +211,7 @@ class ReconciliationTests {
         crmTbWithdrawalObject3.setStatus("Risk Audit_");
         crmTbWithdrawalObject3.setStatusId(212);
         paymentEventsObject3.setDeliveryStatus("PENDING");
+        paymentDecisionsObject3.setDecisionCode(1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject3));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject3));
@@ -241,6 +231,7 @@ class ReconciliationTests {
         crmTbWithdrawalObject4.setStatus("Risk Audit_");
         crmTbWithdrawalObject4.setStatusId(21);
         paymentEventsObject4.setDeliveryStatus("PENDING");
+        paymentDecisionsObject4.setDecisionCode(1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject4));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject4));
@@ -255,17 +246,12 @@ class ReconciliationTests {
 
     @Test
     @AllureId("1743")
-    @DisplayName("Payment reconciliation test 5. Do nothing if alert is existing")
+    @DisplayName("Payment reconciliation test 5. Do nothing if decision code is 0")
     void ReconciliationTest5() throws Exception {
         crmTbWithdrawalObject5.setStatus("Risk Audit_");
         crmTbWithdrawalObject5.setStatusId(21);
         paymentEventsObject5.setDeliveryStatus("PENDING");
-
-        String json = String.format("{\"Withdrawal ID\": \"%s\"}", paymentEventsObject5.getCrmId());
-        BoAlertsObject alert = generateAlertCustomAttributes(client5, json);
-        alert.setRule("Withdrawal Review");
-        alert.setStatus("OPEN");
-        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_BO_ALERT_TABLE_NAME, List.of(alert));
+        paymentDecisionsObject5.setDecisionCode(0);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject5));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject5));
@@ -278,12 +264,10 @@ class ReconciliationTests {
         assertThat("Check status", event.getDetails(), is(nullValue()));
     }
 
-
     @Test
     @AllureId("1759")
     @DisplayName("Payment reconciliation test 6. Status = Risk audit and id != 21 -> FAILED  Status != Risk audit and id != 21 -> DELIVERED two payments with the same payment ID")
     void ReconciliationTest6() throws Exception {
-
         crmTbWithdrawalObject6.setStatus("Risk Audit");
         crmTbWithdrawalObject6.setStatusId(22);
         paymentEventsObject6.setDeliveryStatus("PENDING");
@@ -312,5 +296,20 @@ class ReconciliationTests {
         PaymentEventsObject event2 = PaymentGateHelper.getPaymentEvent(client7.getUcid());
         assertThat("Check status", event2.getDeliveryStatus(), is("DELIVERED"));
         assertThat("Check status", event2.getDetails(), is(nullValue()));
+    }
+
+    @Test
+    @AllureId("1763")
+    @DisplayName("Payment reconciliation test 7. Decision not found")
+    void ReconciliationTest7() throws Exception {
+        crmTbWithdrawalObject8.setStatus("Test");
+        paymentEventsObject8.setDeliveryStatus("PENDING");
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject8));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject8));
+        Thread.sleep(130_000);
+
+        PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client8.getUcid());
+        assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
+        assertThat("Check status", event.getDetails(), is("Decision not found"));
     }
 }

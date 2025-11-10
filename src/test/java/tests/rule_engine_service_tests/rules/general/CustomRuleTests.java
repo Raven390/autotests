@@ -1,10 +1,8 @@
 package tests.rule_engine_service_tests.rules.general;
 
 import business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesResponse;
-import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
-import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -18,6 +16,7 @@ import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_abuse_types.GetAbuseTypesRequest.getAbuseTypes;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.general.CustomRuleDataFactory.setupCustomRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -63,14 +62,7 @@ class CustomRuleTests extends TestBaseRule {
         checkElementId("endEvent", data.customEvent.getId(), "custom_rule");
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
-        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is(data.customEvent.getMessage()));
-        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, data.customEvent.getMessage());
 
         //Verify alert
         List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, data.customEvent.getSource());
