@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.*;
 import static helpers.api.RestrictionHelper.addCancelledRestriction;
+import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.general.LoginRuleDataFactory.setupLoginRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.DbHelper.stopSshTunnel;
@@ -127,15 +128,8 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restriction
-        Allure.step("Get client restrictions");
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
-        //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked Hedging Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Hedging Abuser");
+
         //add check for FT_HEDGE
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -172,15 +166,8 @@ class LoginRuleTests extends TestBaseRule {
         checkElementId("end_cs_abuse", data.loginEvent.getId(), "login_rule");
 
         // Verify restrictions
-        Allure.step("Get client restrictions");
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
-        //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked MM Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked MM Abuser");
+
         //add check for MARKET_MANIPULATION
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));
@@ -220,11 +207,8 @@ class LoginRuleTests extends TestBaseRule {
         assertThat("Verify restriction", clientGeneralRestrictions.getFirst().getStatus(), equalTo("APPLIED"));
 
         //Check restriction
-        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getUcid(), equalTo(data.clientHelper.getUcid()));
-        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getRegulator(), equalTo(data.clientHelper.getRegulator()));
-        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getRestrictionId(), equalTo(8L));
-        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getComment(), equalTo("Linked Bonus Abuser"));
-        assertThat("Verify restriction", clientGeneralRestrictions.getLast().getStatus(), equalTo("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Bonus Abuser");
+
 
         //add check for bonus
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
@@ -257,11 +241,7 @@ class LoginRuleTests extends TestBaseRule {
         List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
         assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
         //Check restriction
-        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("Linked Chargeback Abuser"));
-        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "Linked Chargeback Abuser");
         //add check for CHARGEBACK
         GetStatusResponseBody abuserStatus = getAbuserStatus(data.clientHelper);
         assertThat(abuserStatus.getUcid(), is(data.clientHelper.getUcid()));

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
 import static helpers.data.rules.general.RegistrationRuleDataFactory.setupRegistrationRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -62,13 +63,7 @@ class RegistrationRuleTest extends TestBaseRule {
 
         checkElementId("End_registration_rule_alert1", data.registrationEvent.getId(), "clientRegistration_event_rule");
 
-        List<ClientGeneralRestriction> clientGeneralRestrictions = getUserRestrictionsFromDb(data.clientHelper);
-        assertThat("Verify that there is only 1 restriction", clientGeneralRestrictions.size(), equalTo(1));
-        assertThat("Check ucid", clientGeneralRestrictions.getFirst().getUcid(), is(data.clientHelper.getUcid()));
-        assertThat("Check regulator", clientGeneralRestrictions.getFirst().getRegulator(), is(data.clientHelper.getRegulator()));
-        assertThat("Check restrictionId", clientGeneralRestrictions.getFirst().getRestrictionId(), is(8L));
-        assertThat("Check comment", clientGeneralRestrictions.getFirst().getComment(), is("No alert. High Lexis score"));
-        assertThat("Check status", clientGeneralRestrictions.getFirst().getStatus(), is("APPLIED"));
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "No alert. High Lexis score");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "Registration");
         assertThat("Verify amount of user alerts in kafka", alerts.size(), is(0));
