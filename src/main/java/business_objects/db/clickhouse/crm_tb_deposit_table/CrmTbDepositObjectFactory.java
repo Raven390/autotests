@@ -30,6 +30,7 @@ public class CrmTbDepositObjectFactory {
         depositObject.paymentType = "Crypto";
         depositObject.paymentChannel = "somecoin";
         depositObject.paymentSystemAccount = "Other";
+        depositObject.vWalletAccount = "walletAccount";
         depositObject.paymentSystemCurrency = "EUR";
         depositObject.paymentDetails = "details";
         depositObject.paymentExpirationDate = getCurrentTimestampDbFormat();
