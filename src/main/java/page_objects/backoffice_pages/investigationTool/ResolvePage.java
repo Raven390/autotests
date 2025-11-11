@@ -183,6 +183,13 @@ public class ResolvePage extends AbstractPage {
         return list;
     }
 
+    @Step("Get Withdrawal list")
+    public boolean isWithdrawalListVisible() {
+        Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
+        resolution.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        return withdrawalList.isVisible();
+    }
+
     @Step("Open resolve form in suspicious client")
     public void openResolveSuspicious() {
         isPageLoaded();
