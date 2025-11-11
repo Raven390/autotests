@@ -1,4 +1,4 @@
-package page_objects.backoffice_pages.investigationTool;
+package page_objects.backoffice_pages.search;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -32,6 +32,8 @@ public class GeneralSearchElements extends AbstractPage {
     private static final String SEARCH_ERROR_CONTAINER_LOCATOR = "div[@class='v-search']/descendant::div[@class='v-error-view__content']";
     private static final String SEARCH_CLIENT_CARD_HEADER_LOCATOR = "*[@class='v-search-client-card__header']";
     private static final String SEARCH_CLIENT_CARD_BUTTONS_LOCATOR = "*[@class='v-search-client-card__externals']/button";
+    public static final String CLEAR_BUTTON_SELECTOR = "[aria-label='Clear']";
+    private static final String CLIENT_SEARCH_CARD = "[data-qa='client_search__card__%s']";
 
     public GeneralSearchElements(Page page) {
         super(page);
@@ -181,10 +183,42 @@ public class GeneralSearchElements extends AbstractPage {
 
     }
 
+    public void clearSearch() {
+        Locator clearButton = page.locator(CLEAR_BUTTON_SELECTOR);
+        if (clearButton.count() > 0) {
+            clearButton.click();
+        }
+    }
+
+    public void waitForClientCard(String text) {
+        page.locator(CLIENT_SEARCH_CARD.formatted(text)).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
     public void clickCopyButtonClientsCard(Integer clientId, String clientBrand) {
         clickConnectionSearchClientsCard(String.valueOf(clientId), clientBrand);
     }
 
+    public String getClientFullName(String ucid) {
+        return page.locator(CLIENT_SEARCH_CARD.formatted(ucid)).locator(".v-search-client-card__header").textContent();
+    }
+
+    public Page clickCard(String ucid) {
+        Locator card = page.locator(CLIENT_SEARCH_CARD.formatted(ucid));
+        assertTrue(card.isVisible(), "Assert that card is visible");
+
+        // Wait for new page to open
+        Page newPage = page.context().waitForPage(card::click);
+
+        // Wait for the new page to load
+        newPage.waitForLoadState();
+
+        return newPage;
+    }
+
+    public boolean isCardPresent(String ucid) {
+        Locator card = page.locator(CLIENT_SEARCH_CARD.formatted(ucid));
+        return card.isVisible();
+    }
 
 }
 
