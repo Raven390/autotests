@@ -369,8 +369,6 @@ public class DataHelper {
 
     public static DataHelper createClient(DataHelper dataHelper, ClientHelper clientHelper) {
         dataHelper.clientHelper = clientHelper;
-//        dataHelper.clientHelper.setBrand(Brand.VANTAGE);
-//        dataHelper.clientHelper.setUserId(3712321);
         dataHelper.crmTbUserObject = generateUserByClient(dataHelper.clientHelper);
         dataHelper.crmTbAccountObject = generateAccountByClient(dataHelper.clientHelper, false);
         dataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(dataHelper.clientHelper, false);

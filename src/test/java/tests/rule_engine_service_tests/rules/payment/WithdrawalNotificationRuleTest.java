@@ -103,7 +103,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 getRandomIntPositive()               // withdrawalId
         );
 
-        produceWithdrawalMessageToKafka(withdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(withdrawalEvent);
 
         checkElementId("Event_end_2", withdrawalEvent.getId(), "withdrawal_notification");
 
@@ -144,7 +144,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
-        produceWithdrawalMessageToKafka(withdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(withdrawalEvent);
         checkElementId("Event_1waht3m", withdrawalEvent.getId(), "withdrawal_notification");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(client2, "Withdrawal Review");
@@ -193,7 +193,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
-        produceWithdrawalMessageToKafka(withdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(withdrawalEvent);
         checkElementId("Event_0go9648", withdrawalEvent.getId(), "withdrawal_notification");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(client3, "Withdrawal Review");
@@ -242,7 +242,7 @@ class WithdrawalNotificationRuleTest extends TestBaseRule {
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
-        produceWithdrawalMessageToKafka(withdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(withdrawalEvent);
         checkElementId("Event_1gdl5i3", withdrawalEvent.getId(), "withdrawal_notification");
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(client4, "Withdrawal Review");

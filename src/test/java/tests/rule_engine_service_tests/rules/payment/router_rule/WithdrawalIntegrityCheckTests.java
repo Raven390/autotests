@@ -14,8 +14,6 @@ import java.util.Map;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
 import static helpers.data.rules.payments.router_rule.WithdrawalIntegrityDataFactory.setupWithdrawalIntegrityCheckRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
-import static helpers.database.PaymentGateHelper.*;
-import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -45,7 +43,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     void WithdrawalIntegrityCheckRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         checkElementId("end_202", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
         checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule");
@@ -57,7 +55,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     void WithdrawalIntegrityCheckRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         checkElementId("end_203", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
         checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule");
@@ -69,7 +67,7 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
     void WithdrawalIntegrityCheckRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         checkElementId("end_101", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
         checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule");

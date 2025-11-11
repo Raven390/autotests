@@ -1,4 +1,4 @@
-package helpers.data.rules.trading;
+package helpers.data.rules.payments;
 
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
@@ -7,26 +7,27 @@ import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.kafka.crm_events.EgWithdrawalEvent;
+import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
+import utils.Utils;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.*;
+import static helpers.data.DataHelper.createClient;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.data.DataHelper.setupData;
 import static helpers.database.DbHelper.*;
@@ -35,27 +36,50 @@ import static utils.Utils.*;
 
 @RuleTestData("cpa-abuse")
 public class CpaAbuseRuleDataFactory {
-    private static final ClientHelper cpaAbuseRuleExitEventEnd1Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd2Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd3Client = getRandomVantageClientNoCpaIbRef();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd4Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd5p1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd5p2Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd6Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd7p1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd7p2Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd8p1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd8p2Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd9p1Client = getRandomVantageClientAllFields();
-    private static final ClientHelper cpaAbuseRuleExitEventEnd9p2Client = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient1 = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper cpaAbuseRuleClient2 = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper cpaAbuseRuleClient3 = getRandomVantageClientNoCpaIbRef();
+    private static final ClientHelper cpaAbuseRuleClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient5 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient6 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient7 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient8 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient9 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient10 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient11 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient12 = getRandomVantageClientAllFields();
+    private static final ClientHelper cpaAbuseRuleClient13 = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
     private static DataHelper getCpaAbuseRuleData(ClientHelper client) {
-        DataHelper ruleData = new DataHelper();
-        ruleData.crmTbUserObject = generateUserByClient(client);
-        ruleData.crmTbAccountObject = generateCrmTbAccountData(client);
-        ruleData.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), "vfsc", "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
-        return ruleData;
+        DataHelper data = new DataHelper();
+        createClient(data, client);
+        data.crmWithdrawalEvent = new CrmWithdrawalEvent(
+                "MT4",                            // accountType
+                Utils.getRandomIntPositive().toString(),      // binNumber
+                data.clientHelper.getBrand().toLowerCase(),   // brand
+                "",                                           // checkName
+                data.clientHelper.getUserId(),                // clientId
+                Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
+                "4",                                          // expMonth
+                "2030",                                       // expYear
+                data.clientHelper.getFirstName(),             // fullName
+                getRandomUuidString(),                        // id
+                "VTSG" + getRandomIntPositive(),              // merchantOrderId (example)
+                data.clientHelper.getTradingAccount(),        // mt4Account
+                PAYMENT_PROVIDER_FASAPAY,            // paymentChannelCode
+                "-",                                 // paymentChannelName
+                "CREDIT_CARD",                       // paymentMethodCode
+                "WEB",                               // platform
+                data.clientHelper.getRegulator(),    // regulator
+                "1.0",                               // schemaVersion
+                CRM_WITHDRAWAL_EVENT,                // type
+                1,                                   // withdrawalAmount
+                Instant.now().toString(),               // withdrawalApplicationTime
+                "EUR",                               // withdrawalCurrency
+                getRandomIntPositive()               // withdrawalId
+        );
+        return data;
     }
 
     private static ConnectionTableEntry getConnection(ClientHelper fromClient, ClientHelper toClient) {
@@ -68,20 +92,18 @@ public class CpaAbuseRuleDataFactory {
     }
 
     private static DataHelper getCpaAbuseRuleExitEventEnd1Data() {
-        Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd1Client);
-        Allure.step("Create user object with no CPA");
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient1);
         data.clientHelper.setCpaId(null);
         return data;
     }
 
     private static DataHelper getCpaAbuseRuleExitEventEnd2Data() {
         Allure.step("Get client data");
-        cpaAbuseRuleExitEventEnd2Client.setCpaId(8888);
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd2Client);
+        cpaAbuseRuleClient2.setCpaId(8888);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient2);
         Allure.step("Create user object with no CPA");
 
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd2Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient2);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60, 0, 1));
         trade1Close.setTimeUtc(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60, 0, 1));
@@ -98,13 +120,13 @@ public class CpaAbuseRuleDataFactory {
     private static DataHelper getCpaAbuseRuleExitEventEnd3Data() {
         Allure.step("Get client data");
         int cpa = 8888;
-        cpaAbuseRuleExitEventEnd3Client.setCpaId(cpa);
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd3Client);
+        cpaAbuseRuleClient3.setCpaId(cpa);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient3);
         Allure.step("Create user object with no CPA");
 
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd3Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient3);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 59, 13, 59));
         trade1Close.setTimeUtc(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 59, 13, 59));
@@ -121,7 +143,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd4Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd4Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient4);
 
         Allure.step("Client has cpa abuse connected account");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -135,7 +157,7 @@ public class CpaAbuseRuleDataFactory {
         data.clientFraudTypes.add(clientFraudTypes);
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd4Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient4);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -152,11 +174,11 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd5p1Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient5);
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd5p1Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient5);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -171,11 +193,11 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd5p2Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd5p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient6);
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd5p2Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient6);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -190,7 +212,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd6Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd6Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient7);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("At least 70% have any CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -217,7 +239,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd6Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient7);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -233,7 +255,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd7p1Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient8);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -255,7 +277,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd7p1Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient8);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -266,7 +288,7 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd7p1Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient8);
         deposit.paymentChannel = "Crypto";
         deposit.amountUsd = 500d;
         deposit.setCreateTime(getCurrentTimestampDbFormat());
@@ -277,7 +299,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd7p2Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd7p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient9);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -304,7 +326,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd7p2Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient9);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -315,7 +337,7 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd7p2Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient9);
         deposit.paymentChannel = "Crypto";
         deposit.amountUsd = 500d;
         deposit.setCreateTime(getCurrentTimestampDbFormat());
@@ -326,7 +348,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd8p1Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient10);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("100% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -353,7 +375,7 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Send alert");
 
         //MT5 trade with current time
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd8p1Client);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient10);
         trade1Close.setComment("trade 1 close");
         trade1Close.setTime(getCurrentTimestampDbFormat());
         trade1Close.setTimeUtc(trade1Close.getTime());
@@ -364,7 +386,7 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd8p1Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient10);
         deposit.paymentChannel = "Bank";
         deposit.amountUsd = 550.01;
         deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
@@ -375,7 +397,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd8p2Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd8p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient11);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -400,12 +422,12 @@ public class CpaAbuseRuleDataFactory {
         data.connections.add(getConnection(data.clientHelper, connectedClient4));
 
         Allure.step("Any mirror trades? = true");
-        MirrorUcidObject mirrorUcid = generateMirrorUcidObjectByClient(cpaAbuseRuleExitEventEnd8p2Client);
+        MirrorUcidObject mirrorUcid = generateMirrorUcidObjectByClient(cpaAbuseRuleClient11);
         data.mirrorUcidObjects.add(mirrorUcid);
 
         Allure.step("HFT trades = true");
-        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleExitEventEnd8p2Client);
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd8p2Client);
+        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleClient11);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient11);
 
         trade1Open.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2));
         trade1Open.setTimeUtc(trade1Open.getTime());
@@ -425,7 +447,7 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Cryptocurrency , value 449.99");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd8p2Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient11);
         deposit.paymentType = "Cryptocurrency";
         deposit.amountUsd = 449.99;
         deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
@@ -437,7 +459,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd9p1Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p1Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient12);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -465,8 +487,8 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Any mirror trades? = false");
 
         Allure.step("HFT trades = false");
-        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleExitEventEnd9p1Client);
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd9p1Client);
+        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleClient12);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient12);
 
         trade1Open.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 1, 2));
         trade1Open.setTimeUtc(trade1Open.getTime());
@@ -486,7 +508,7 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Other , value 500.00");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd9p1Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient12);
         deposit.paymentType = "Other";
         deposit.amountUsd = 500.00;
         deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
@@ -498,7 +520,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd9p2Data() {
         Allure.step("Get client data");
-        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleExitEventEnd9p2Client);
+        DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient13);
         Allure.step("Client has not cpa abuse connected account");
         Allure.step("50% have same CPA value");
         ClientHelper connectedClient = getRandomVantageClientAllFields();
@@ -526,8 +548,8 @@ public class CpaAbuseRuleDataFactory {
         Allure.step("Any mirror trades? = false");
 
         Allure.step("HFT trades = false");
-        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleExitEventEnd9p2Client);
-        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleExitEventEnd9p2Client);
+        Mt5DealsCoercedObject trade1Open = generateTradeByClient(cpaAbuseRuleClient13);
+        Mt5DealsCoercedObject trade1Close = generateTradeByClient(cpaAbuseRuleClient13);
 
         trade1Open.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 1, 2));
         trade1Open.setTimeUtc(trade1Open.getTime());
@@ -547,7 +569,7 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Other , value 500.00");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleExitEventEnd9p2Client);
+        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient13);
         deposit.paymentType = "Other";
         deposit.amountUsd = 500.00;
         deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
@@ -557,23 +579,23 @@ public class CpaAbuseRuleDataFactory {
         return data;
     }
 
-    private static Map<String, DataHelper> setupCpaAbuseRuleData() {
+    public static Map<String, DataHelper> setupCpaAbuseRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
         map.put("1", getCpaAbuseRuleExitEventEnd1Data());
-        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
-        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
-        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
-        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
-        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
-        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
-        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
-        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
-        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
-        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
-        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
-        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
+//        map.put("2", getCpaAbuseRuleExitEventEnd2Data());
+//        map.put("3", getCpaAbuseRuleExitEventEnd3Data());
+//        map.put("4", getCpaAbuseRuleExitEventEnd4Data());
+//        map.put("5", getCpaAbuseRuleExitEventEnd5p1Data());
+//        map.put("6", getCpaAbuseRuleExitEventEnd5p2Data());
+//        map.put("7", getCpaAbuseRuleExitEventEnd6Data());
+//        map.put("8", getCpaAbuseRuleExitEventEnd7p1Data());
+//        map.put("9", getCpaAbuseRuleExitEventEnd7p2Data());
+//        map.put("10", getCpaAbuseRuleExitEventEnd8p1Data());
+//        map.put("11", getCpaAbuseRuleExitEventEnd8p2Data());
+//        map.put("12", getCpaAbuseRuleExitEventEnd9p1Data());
+//        map.put("13", getCpaAbuseRuleExitEventEnd9p2Data());
 
         // Loop through the list with data and insert all the data into the according tables
         setupData(map);

@@ -56,7 +56,7 @@ class RouterRuleTests extends TestBaseRule {
     void routerRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_end_2", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr");
         checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), "router_rule");
@@ -108,7 +108,7 @@ class RouterRuleTests extends TestBaseRule {
         DataHelper data = dataMap.get("2");
 
         data.crmWithdrawalEvent.setCheckName("Checkname");
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -155,7 +155,7 @@ class RouterRuleTests extends TestBaseRule {
         DataHelper data = dataMap.get("3");
 
         data.crmWithdrawalEvent.setCheckName("Checkname");
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -203,7 +203,7 @@ class RouterRuleTests extends TestBaseRule {
     void routerRuleTest4() throws Exception {
         DataHelper data = dataMap.get("4");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         List<PaymentEventsObject> events = getUserPaymentEventsFromDb(data.clientHelper);
         UUID paymentId = events.getFirst().getPaymentId();
@@ -248,7 +248,7 @@ class RouterRuleTests extends TestBaseRule {
     void routerRuleTest5() throws Exception {
         DataHelper data = dataMap.get("5");
 
-        produceWithdrawalMessageToKafka(data.crmWithdrawalEvent);
+        produceWithdrawalMessageToCrmEventsTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr");
         checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), "router_rule");
