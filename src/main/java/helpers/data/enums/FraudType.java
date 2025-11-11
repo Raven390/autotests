@@ -12,6 +12,13 @@ public enum FraudType {
     private final String description;
     private final boolean isVisible;
 
+
+    public static FraudType valueOfName(String name) {
+        return Arrays.stream(values()).filter(f -> f.getName().equalsIgnoreCase(name)) // или equals() если нужен точный матч
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("No enum constant with name: " + name));
+    }
+
+
     FraudType(String code, String name, String description) {
         this.code = code;
         this.name = name;

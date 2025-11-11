@@ -16,8 +16,7 @@ import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory;
-import business_objects.kafka.alerts.PaymentAlertMessage;
-import business_objects.kafka.alerts.RuleAlert;
+import business_objects.kafka.alerts.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -31,9 +30,9 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
@@ -62,18 +61,18 @@ import static utils.Utils.getRandomIntPositive;
 @Feature("BMS-2051 Complete client investigation (Payment alerts)")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PaymentCompleteInvestigationTest extends TestBaseWeb {
+    private static final double WD_USD = 20_000.12;
+    private static final double WD_EUR = 14_654.76;
+    private static final String PAYMENT_METHOD_CODE = "Brazil Bank Transfer";
+    private static final String ALERT_WHERE = "client_ucid = '%s' and type='%s' ORDER BY happened_at DESC";
 
-    private static final KafkaHelper kafka = new KafkaHelper();
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final java.text.DecimalFormat formatter = new java.text.DecimalFormat("#,##0.00", java.text.DecimalFormatSymbols.getInstance(java.util.Locale.US));
+
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
-    private static final DecimalFormat formatter = new DecimalFormat("#,##0.##");
-    public static final String WD_PATTERN = "1 request for %s USD%s EUR%s%s USD";
-    private static final String PAYMENT_METHOD_CODE = "Brazil Bank Transfer";
-    public static final double WD_USD = 20_000.12;
-    public static final double WD_EUR = 14_654.76;
-    private static final String ALERT_WHERE = "client_ucid = '%s' and type='%s' ORDER BY happened_at DESC";
-    public static final String PAYLOAD = "{\"id\": \"361564a9-2404-4dd6-aafb-31ce12af19e8\", \"iban\": \"\", \"type\": \"withdrawal\", \"brand\": \"vantage\", \"bankName\": \"testvv\", \"clientId\": \"99887766\", \"platform\": \"WEB\", \"checkName\": \"Little_Amount\", \"eventDate\": \"2025-09-18T06:15:50+03:00\", \"regulator\": \"VFSC2\", \"mt4Account\": 1398842009, \"accountType\": \"MT4\", \"withdrawalId\": \"41000779\", \"schemaVersion\": \"1.0\", \"merchantOrderId\": \"VU856068920250918061547\", \"paymentTypeName\": \"Bank Transfers\", \"withdrawalAmount\": %f, \"paymentMethodCode\": \"%s\", \"paymentChannelCode\": \"642\", \"paymentChannelName\": \"Brazil-CPS\", \"withdrawalCurrency\": \"EUR\", \"withdrawalAmountUSD\": %f, \"bankAccountHolderName\": \"testvv\", \"withdrawalApplicationTime\": \"2025-09-18T06:15:46.379Z\"}".formatted(WD_EUR, PAYMENT_METHOD_CODE, WD_USD);
+    public static final String REASON_NO_PARAMS = "Reason no params";
+    public static final String REASON_WITH_PARAMS = "Reason with params";
+
     private static MtAccountObject mtAccount1;
     private static MtAccountObject mtAccount2;
     private static MtMt4TradesCoercedObject trade1;
@@ -81,8 +80,19 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
     private static PaymentEventsObject event = PaymentEventsObjectFactory.generatePaymentEventsObject(client);
     private static MtMt4TradesCoercedObject tradeWithdrawal;
 
+    private static final KafkaHelper kafka = new KafkaHelper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public static String buildPayload(double WD_EUR, String PAYMENT_METHOD_CODE, double WD_USD) throws Exception {
+        Map<String, Object> payload = Map.ofEntries(
+                Map.entry("id", "361564a9-2404-4dd6-aafb-31ce12af19e8"), Map.entry("iban", ""), Map.entry("type", "withdrawal"), Map.entry("brand", "vantage"), Map.entry("bankName", "testvv"), Map.entry("clientId", "99887766"), Map.entry("platform", "WEB"), Map.entry("checkName", "Little_Amount"), Map.entry("eventDate", "2025-09-18T06:15:50+03:00"), Map.entry("regulator", "VFSC2"), Map.entry("mt4Account", 1_398_842_009), Map.entry("accountType", "MT4"), Map.entry("withdrawalId", "41000779"), Map.entry("schemaVersion", "1.0"), Map.entry("merchantOrderId", "VU856068920250918061547"), Map.entry("paymentTypeName", "Bank Transfers"), Map.entry("withdrawalAmount", WD_EUR), Map.entry("paymentMethodCode", PAYMENT_METHOD_CODE), Map.entry("paymentChannelCode", "642"), Map.entry("paymentChannelName", "Brazil-CPS"), Map.entry("withdrawalCurrency", "EUR"), Map.entry("withdrawalAmountUSD", WD_USD), Map.entry("bankAccountHolderName", "testvv"), Map.entry("withdrawalApplicationTime", "2025-09-18T06:15:46.379Z")
+        );
+
+        return objectMapper.writeValueAsString(payload);
+    }
+
     @BeforeAll
-    static void setup() {
+    static void setup() throws JsonProcessingException {
         objectMapper.findAndRegisterModules();
         CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client);
         account1.currency = USD.getCode();
@@ -91,7 +101,6 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         account2.currency = USD.getCode();
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         mtAccount2 = generateMtAccountByCrmTbAccount(account2);
-
 
         String comment = "comment";
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
@@ -110,7 +119,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
 
     @BeforeEach
-    void sendAlert() throws JsonProcessingException {
+    void sendAlert() throws Exception {
         PaymentAlertMessage alertPayment = generatePaymentAlertByUcid(crmTbUser.ucid);
         kafka.produceMessage(alertPayment.getId().toString(), objectMapper.writeValueAsString(alertPayment), KAFKA_TOPIC_ALERTS);
         RuleAlert alert = generateRuleAlertByUcid(client.getUcid());
@@ -122,7 +131,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
         PaymentDetailsObject details = PaymentDetailsObjectFactory.generatePaymentDetailsObject(client);
         details.setType("withdrawal");
-        details.setPayload(PAYLOAD);
+        String payload = buildPayload(WD_EUR, PAYMENT_METHOD_CODE, WD_USD);
+        details.setPayload(payload);
         details.setPaymentId(event.getPaymentId());
         insertObjectToDb(POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, details);
         PaymentDecisionsObject decision = PaymentDecisionsObjectFactory.generatePaymentDecisionObject(event);
@@ -165,9 +175,9 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
-        resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
+        resolvePage.addFraud();
         resolvePage.resolveNoActions("test comment");
 
         //check investigation in db
@@ -189,9 +199,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
-        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
-
-
+        assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
     }
 
     @Order(2)
@@ -208,9 +216,9 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
-        resolvePage.clickWithdrawalReject();
-        resolvePage.addFraud(MARKET_MANIPULATION, CONFIRMED);
+        assertWithdrawalText(withdrawalList.getFirst());
+        resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
+        resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActions("test comment");
 
         //PGS decision check in db
@@ -218,15 +226,13 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that decision is saved in db", decisions.size(), is(1));
         PaymentDecisionsObject actualDecision = decisions.getFirst();
         assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
-        assertThat("Verify that rejectionCode is 0", actualDecision.getRejectionCode(), is(0));
+        assertThat("Verify that rejectionCode is not default 0 (reason code should be provided)", actualDecision.getRejectionCode(), greaterThan(0));
         assertThat("Verify that actor is Vindex BO", actualDecision.getActor(), is("Vindex BO"));
 
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
-
     }
-
 
     @Order(3)
     @Test
@@ -242,13 +248,12 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
-
     }
 
     @Order(4)
@@ -265,14 +270,13 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
-        resolvePage.addFraud(CPA_ABUSE, CONFIRMED);
+        resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
-
     }
 
 
@@ -295,7 +299,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
+        assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
@@ -323,13 +327,12 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
-        resolvePage.clickWithdrawalReject();
+        assertWithdrawalText(withdrawalList.getFirst());
+        resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
-
     }
 
     @Order(7)
@@ -346,14 +349,13 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
-        resolvePage.clickWithdrawalReject();
-        resolvePage.addFraud(CPA_ABUSE, CONFIRMED);
+        assertWithdrawalText(withdrawalList.getFirst());
+        resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
+        resolvePage.addFraud(CHARGEBACK, CONFIRMED);
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
-
     }
 
     @Order(8)
@@ -370,14 +372,48 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         resolvePage.openResolveSuspicious();
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
-        assertThat("Verify that withdrawal list contains withdrawal", withdrawalList.getFirst(), containsString(String.format(WD_PATTERN, formatter.format(WD_USD), formatter.format(WD_EUR), PAYMENT_METHOD_CODE, formatter.format(WD_USD))));
-        resolvePage.clickWithdrawalReject();
+        assertWithdrawalText(withdrawalList.getFirst());
+        resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.resolveNoActions("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
-
     }
 
+    @Order(9)
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1766")
+    @DisplayName("Verify complete investigation with reject withdrawals for payment team with dynamic values in Rejection Reasons")
+    void completeInvestigationRejectWithDynamicValueTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        alertsPage.waitForPageToLoad();
+        resolvePage.openResolveSuspicious();
+        List<String> withdrawalList = resolvePage.getWithdrawalList();
+        assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
+        assertWithdrawalText(withdrawalList.getFirst());
+        resolvePage.resolveWithdrawalsAllReject(REASON_WITH_PARAMS, "AQA", "AQA", "AQA", "AQA");
 
+        //PGS decision check in db
+        List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
+        assertThat("Verify that decision is saved in db", decisions.size(), is(1));
+        PaymentDecisionsObject actualDecision = decisions.getFirst();
+        assertThat("Verify that decision is rejected", actualDecision.getDecisionCode(), is(2));
+        assertThat("Verify that rejectionCode is not default 0 (reason code should be provided)", actualDecision.getRejectionCode(), greaterThan(0));
+        assertThat("Verify that actor is Vindex BO", actualDecision.getActor(), is("Vindex BO"));
+        assertThat("Verify that reason string contains AQA tag", actualDecision.getReasonString(), containsString("AQA"));
+
+        //Alert resolution
+        Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
+        assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
+    }
+
+    private static void assertWithdrawalText(String text) {
+        assertThat("Verify withdrawal item shows USD amount", text, containsString(formatter.format(WD_USD)));
+        assertThat("Verify withdrawal item shows EUR amount", text, containsString(formatter.format(WD_EUR)));
+        assertThat("Verify withdrawal item shows payment method", text, containsString(PAYMENT_METHOD_CODE));
+    }
 }

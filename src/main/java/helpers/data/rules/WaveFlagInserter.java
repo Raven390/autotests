@@ -11,7 +11,7 @@ import static utils.Utils.writeLog;
 public class WaveFlagInserter {
     public static void insertWaveFlagData(ClientHelper client) throws InterruptedException {
         String rawQueryAccount = """
-                INSERT INTO vindex_test.crm___tb_account
+                INSERT INTO consolidated.crm___tb_account
                 (source_id_st, brand_uid, brand, regulator, user_id, ucid, account, server_id_st, server_name, account_type_id,
                  account_type, account_group, platform, create_time, create_time_utc, create_date, create_date_utc, account_status,
                  last_login, last_login_utc, last_order, last_order_utc, balance, currency, balance_usd, equity, credit, pnl, leverage,
@@ -23,7 +23,7 @@ public class WaveFlagInserter {
                         0, 'mv', '2025-08-03 07:43:19.000', 0);
                         """;
         String rawQueryDeposit = """
-                                INSERT INTO vindex_test.crm___tb_deposit
+                                INSERT INTO consolidated.crm___tb_deposit
                 (brand_uid, brand, regulator, user_id, ucid, account, transfer_id,
                  create_time, create_time_utc, amount, amount_usd, currency, status_id, status, last_updated)
                 VALUES
@@ -32,7 +32,7 @@ public class WaveFlagInserter {
                                         """;
 
         String rawQueryCredit = """
-                                INSERT INTO vindex_test.mt___credit_orders
+                                INSERT INTO consolidated.mt___credit_orders
                 (ticket, server_id, server_name, ucid, brand, regulator, user_id,
                  platform, account, currency, create_time, create_time_utc,
                  amount, rate_to_usd, amount_usd, is_deleted, last_updated)
@@ -43,7 +43,7 @@ public class WaveFlagInserter {
                                 """;
 
         String rawQueryDeals = """
-                                INSERT INTO vindex_test.mt___mt5_deals_coerced
+                                INSERT INTO consolidated.mt___mt5_deals_coerced
                 (brand, regulator, user_id, ucid, account, platform, server_id, server_name,
                  deal, "order", action, time, time_utc, symbol, symbol_underlying,
                  volume_lots, notional_value_usd, profit_usd, last_updated)

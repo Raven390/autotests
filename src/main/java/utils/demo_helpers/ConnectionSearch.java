@@ -79,7 +79,7 @@ public class ConnectionSearch {
         list.add(connectionTableEntry9);
         list.add(connectionTableEntry10);
 
-        insertObjectsToDb("vindex_test.connection_table", list);
+        insertObjectsToDb("consolidated.connection_table", list);
         startSshTunnel();
 
         //first floor
@@ -111,7 +111,7 @@ public class ConnectionSearch {
         cleanUserFraudsBo(ucid7);
         cleanUserFraudsBo(ucid8);
         cleanUserFraudsBo(ucid9);
-        deleteEntryFromDb("vindex_test.connection_table", "user_to in (" + ucid1 + ", " + ucid2 + ", " + ucid3 + ", " + ucid4 + ", " + ucid5 + ", " + ucid6 + ", " + ucid7 + ", " + ucid8 + ", " + ucid9 + ", " + ucid10 + ")");
+        deleteEntryFromDb("consolidated.connection_table", "user_to in (" + ucid1 + ", " + ucid2 + ", " + ucid3 + ", " + ucid4 + ", " + ucid5 + ", " + ucid6 + ", " + ucid7 + ", " + ucid8 + ", " + ucid9 + ", " + ucid10 + ")");
     }
 
     @Test
