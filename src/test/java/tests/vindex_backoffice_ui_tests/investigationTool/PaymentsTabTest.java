@@ -949,7 +949,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 99 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(98));
@@ -974,7 +974,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 10 months");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(10));
@@ -1003,7 +1003,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 1 day");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getCurrentDate());
@@ -1026,7 +1026,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 15 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(14));
@@ -1050,7 +1050,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getCurrentDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 20 months ");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDateYearMonthDayByIntMonthMinus1Day(21));
@@ -1069,7 +1069,7 @@ class PaymentsTabTest extends TestBaseWeb {
         Allure.step("add to DB transaction in a testing interval so financial transaction graph will be visible");
         cleanUserFinancialTransactionDbUcid(client.getUcid());
         PaymentsTotalObject payments = new PaymentsTotalObject(client.getUcid(), "Infinox", "FCA", 171_701, 17_170_101, getYesterdayDate(), 16.3, 17, 18.3, 19, 20.3, 21, 22.3, 23, 24.3, 25, getCurrentTimestampDbFormat());
-        insertObjectToDb("vindex_test.payments_total", payments);
+        insertObjectToDb("consolidated.payments_total", payments);
         paymentsPage.navigatePaymentsTab(client.getUcid());
         Allure.step("filter 21 days");
         paymentsPage.selectDatesInCalendar(getCurrentDate(), getPreviousDayByIntDaysYearMonthDay(20));

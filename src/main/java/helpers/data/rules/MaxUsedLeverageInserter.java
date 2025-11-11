@@ -9,7 +9,7 @@ import static utils.Constants.*;
 public class MaxUsedLeverageInserter {
     public static void insertMaxUsedLeverageData(ClientHelper client) {
         String rawQuerry = """
-                INSERT INTO vindex_test.mt___mt5_deals_coerced_dd (
+                INSERT INTO consolidated.mt___mt5_deals_coerced_dd (
                     brand, regulator, user_id, ucid, account, platform, server_id, server_name, account_type, account_group, account_currency,
                     deal, `order`, action, entry, reason, contract_size, time, time_utc, symbol, symbol_underlying, base_currency, quote_currency,
                     rate_usd_base, rate_usd_quote, rate_usd_acc, price, volume, volume_lots, notional_value_usd, profit, storage, commission,

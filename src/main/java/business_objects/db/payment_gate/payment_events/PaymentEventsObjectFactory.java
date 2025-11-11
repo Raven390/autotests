@@ -14,7 +14,7 @@ public class PaymentEventsObjectFactory {
         return new PaymentEventsObject(
                 getRandomUuid(),                                            // paymentId
                 getRandomIntPositive().toString(),                          // crmId
-                "Withdrawal",                                               // type
+                "withdrawal",                                               // type
                 1,                                                          // finalDecisionId
                 client.getUcid(),                                           // ucid (if differs from paymentId)
                 Timestamp.from(Instant.now()),                              // dateCreated

@@ -10,7 +10,6 @@ public class CrmTbAccountObject {
     public String regulator;
     public Integer userId;
     public String ucid;
-    public String uid;
     public Integer account;
     public Integer serverIdSt;
     public String serverName;
@@ -69,7 +68,6 @@ public class CrmTbAccountObject {
         this.regulator = regulator;
         this.userId = userId;
         this.ucid = ucid;
-        this.uid = uid;
         this.account = account;
         this.serverIdSt = serverIdSt;
         this.serverName = serverName;
@@ -116,7 +114,7 @@ public class CrmTbAccountObject {
         CrmTbAccountObject that = (CrmTbAccountObject) o;
         return Objects.equals(sourceIdSt, that.sourceIdSt) && Objects.equals(brandUid, that.brandUid) && Objects.equals(
                 brand, that.brand) && Objects.equals(regulator, that.regulator) && Objects.equals(
-                        userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(uid, that.uid) && Objects.equals(
+                        userId, that.userId) && Objects.equals(ucid, that.ucid) && Objects.equals(
                                 account, that.account) && Objects.equals(serverIdSt, that.serverIdSt) && Objects.equals(
                                         serverName, that.serverName) && Objects.equals(accountTypeId, that.accountTypeId) && Objects.equals(
                                                 accountType, that.accountType) && Objects.equals(accountGroup, that.accountGroup) && Objects.equals(
@@ -139,11 +137,11 @@ public class CrmTbAccountObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(sourceIdSt, brandUid, brand, regulator, userId, ucid, uid, account, serverIdSt, serverName, accountTypeId, accountType, accountGroup, platform, createTime, createTimeUtc, createDate, createDateUtc, accountStatus, lastLogin, lastLoginUtc, lastOrder, lastOrderUtc, balance, currency, balanceUsd, equity, credit, pnl, leverage, marginFree, isRebateAccount, rebateAccountNr, ibId, pId, isSwapFree, isPamm, isCent, isArchive, isHidden, isDel, isDeleted, lastUpdated, internalComment);
+        return Objects.hash(sourceIdSt, brandUid, brand, regulator, userId, ucid, account, serverIdSt, serverName, accountTypeId, accountType, accountGroup, platform, createTime, createTimeUtc, createDate, createDateUtc, accountStatus, lastLogin, lastLoginUtc, lastOrder, lastOrderUtc, balance, currency, balanceUsd, equity, credit, pnl, leverage, marginFree, isRebateAccount, rebateAccountNr, ibId, pId, isSwapFree, isPamm, isCent, isArchive, isHidden, isDel, isDeleted, lastUpdated, internalComment);
     }
 
     @Override
     public String toString() {
-        return "CrmTbAccountObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", uid='" + uid + '\'' + ", account=" + account + ", serverIdSt=" + serverIdSt + ", serverName='" + serverName + '\'' + ", accountTypeId=" + accountTypeId + ", accountType='" + accountType + '\'' + ", accountGroup='" + accountGroup + '\'' + ", platform='" + platform + '\'' + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", createDate='" + createDate + '\'' + ", createDateUtc='" + createDateUtc + '\'' + ", accountStatus='" + accountStatus + '\'' + ", lastLogin='" + lastLogin + '\'' + ", lastLoginUtc='" + lastLoginUtc + '\'' + ", lastOrder='" + lastOrder + '\'' + ", lastOrderUtc='" + lastOrderUtc + '\'' + ", balance=" + balance + ", currency='" + currency + '\'' + ", balanceUsd=" + balanceUsd + ", equity=" + equity + ", credit=" + credit + ", pnl=" + pnl + ", leverage=" + leverage + ", marginFree=" + marginFree + ", isRebateAccount='" + isRebateAccount + '\'' + ", rebateAccountNr='" + rebateAccountNr + '\'' + ", ibId=" + ibId + ", pId=" + pId + ", isSwapFree=" + isSwapFree + ", isPamm=" + isPamm + ", isCent=" + isCent + ", isArchive=" + isArchive + ", isHidden=" + isHidden + ", isDel=" + isDel + ", isDelete=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
+        return "CrmTbAccountObject{" + "sourceIdSt=" + sourceIdSt + ", brandUid=" + brandUid + ", brand='" + brand + '\'' + ", regulator='" + regulator + '\'' + ", userId=" + userId + ", ucid='" + ucid + '\'' + ", account=" + account + ", serverIdSt=" + serverIdSt + ", serverName='" + serverName + '\'' + ", accountTypeId=" + accountTypeId + ", accountType='" + accountType + '\'' + ", accountGroup='" + accountGroup + '\'' + ", platform='" + platform + '\'' + ", createTime='" + createTime + '\'' + ", createTimeUtc='" + createTimeUtc + '\'' + ", createDate='" + createDate + '\'' + ", createDateUtc='" + createDateUtc + '\'' + ", accountStatus='" + accountStatus + '\'' + ", lastLogin='" + lastLogin + '\'' + ", lastLoginUtc='" + lastLoginUtc + '\'' + ", lastOrder='" + lastOrder + '\'' + ", lastOrderUtc='" + lastOrderUtc + '\'' + ", balance=" + balance + ", currency='" + currency + '\'' + ", balanceUsd=" + balanceUsd + ", equity=" + equity + ", credit=" + credit + ", pnl=" + pnl + ", leverage=" + leverage + ", marginFree=" + marginFree + ", isRebateAccount='" + isRebateAccount + '\'' + ", rebateAccountNr='" + rebateAccountNr + '\'' + ", ibId=" + ibId + ", pId=" + pId + ", isSwapFree=" + isSwapFree + ", isPamm=" + isPamm + ", isCent=" + isCent + ", isArchive=" + isArchive + ", isHidden=" + isHidden + ", isDel=" + isDel + ", isDelete=" + isDeleted + ", lastUpdated='" + lastUpdated + '\'' + ", internalComment='" + internalComment + '\'' + '}';
     }
 }

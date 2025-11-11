@@ -1,8 +1,5 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.kafka.restriction_events.WithdrawalApprovals;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
@@ -11,7 +8,6 @@ import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.FraudSubtype;
 import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeStatus;
-import helpers.kafka.KafkaHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
@@ -19,26 +15,30 @@ import page_objects.backoffice_pages.AbstractPage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
+
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.Utils.writeLog;
 
 public class ResolvePage extends AbstractPage {
 
     private static final String investigationCompleted = "Investigation completed";
     private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
+    public static final String FRAUD_TYPE_SELECTOR_FORMATTER = "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
+    public static final String REJECTION_REASON_INPUT_SELECTOR = ".v-rejection-reason-plain-input__input";
+    public static final String FRAUD_MENU_ITEM_SELECTOR = "div.g-popup__content div.v-sub-menu__anchor";
+    public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
+    public static final String RESOLUTION = "Resolution";
 
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
     private final Locator resolveButton;
     private final Locator investigateButton;
-    private final Locator resolutionForm;
     private final Locator commentInput;
     private final Locator withdrawalList;
     private final Locator approveAllwithdrawalsButton;
     private final Locator rejectAllwithdrawalsButton;
-    private final Locator approveFirstButton;
     private final Locator completeInvestigationButton;
     private final Locator successToast;
     private final Locator closeToastButton;
@@ -47,12 +47,9 @@ public class ResolvePage extends AbstractPage {
     private final Locator fraudTypeDropdownOption;
     private final Locator fraudSelectApplyButton;
     private final Locator clientRestrictionItem;
-    private final Locator approveSecondButton;
-    private final Locator submitCommentButton;
     private final Locator reportFraudButton;
     private final Locator reportForm;
     private final Locator submitFraudButton;
-    private final Locator selectedFraudLabel;
     private final Locator fraudDeletionPopup;
     private final Locator confirmFraudDeletionButton;
     private final Locator resetFraudChangesButton;
@@ -79,6 +76,11 @@ public class ResolvePage extends AbstractPage {
     private final Locator symbolDropdown;
     private final Locator dropdownOptions;
     private final Locator addRestrictionButton;
+    // Rejection reasons UI
+    private final Locator rejectionReasonSelects;
+    private final Locator rejectionReasonItems;
+    private final Locator rejectionDynamicInputs;
+    private final Locator rejectionReasonInput;
 
     private static final String SELECTED_FRAUD_LOCATOR = "//div[@data-qa='selected_fraud_type_item']";
     private static final String FRAUD_TYPE_POPUP_LOCATOR = "//*[contains(@class, 'v-fraud-type-v2__popup')]";
@@ -93,7 +95,7 @@ public class ResolvePage extends AbstractPage {
     private static final String DELETE_FRAUD_BY_NAME_PATTERN = String.format("%s/descendant::button", FRAUD_CONTAINER_BY_NAME_PATTERN);
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR_PATTERN = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div[text()='%s']";
     private static final String FRAUD_DROPOUT_LIST_ELEMENT_LOCATOR = "//*[contains(@class,'v-dropdown-select-item-base')]/div/div";
-    private static final String FRAUD_BY_TEXT_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[text()='%s']";
+    private static final String FRAUD_BY_TEXT_PATTERN = "div.g-popup__content div.v-sub-menu__anchor >> text=%s";
     private static final String FRAUD_STATUS_PATTERN = "//div[@class='g-popup__content' or contains(@class,'v-sub-menu__content')]/descendant::div[contains(@data-qa,'fraud_type_selector__item_%s__%s')]";
     private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
     private static final String CONFIRMED_FRAUD_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s')]";
@@ -109,14 +111,11 @@ public class ResolvePage extends AbstractPage {
         this.reportFraudButton = page.locator("[data-qa=investigation_tools__report_fraud_button]");
         this.investigateButton = page.locator(".g-button__text").getByText("Investigate");
         this.completeInvestigationButton = page.locator("//button[contains(@data-qa,'complete_investigation_button') or contains(@data-qa,'apply_changes_button')]");
-        this.resolutionForm = page.locator("[data-qa='drawer_body']").getByText("Resolution");
         this.reportForm = page.locator("[data-qa='drawer_body']").getByText("Fraud management");
         this.commentInput = page.locator(".v-drawer-section-layout textarea");
-        this.withdrawalList = page.locator(".v-withdrawals-list");
-        this.approveAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(0);
-        this.rejectAllwithdrawalsButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(1);
-        this.approveFirstButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(2);
-        this.approveSecondButton = page.locator(".v-withdrawals-list__reject-resolve button").nth(4);
+        this.withdrawalList = page.locator(".v-withdrawals-list-with-rejections__list");
+        this.approveAllwithdrawalsButton = page.locator(".v-rejection-decision-input button").nth(0);
+        this.rejectAllwithdrawalsButton = page.locator(".v-rejection-decision-input .g-button").nth(1);
         this.successToast = page.locator(".g-toast__container").first();
         this.closeToastButton = page.locator(".g-button.g-toast__btn-close").first();
         this.cleanFraudListButton = page.locator("//div[@class='v-fraud-type-v2']/descendant::button[@data-qa='selected_fraud_type_item__remove_button']").first();
@@ -127,9 +126,7 @@ public class ResolvePage extends AbstractPage {
         this.fraudSelectApplyButton = page.locator("[data-qa='fraud_type_select_apply_button']");
         this.applyButton = page.locator("//button/*[text()='Apply']");
         this.clientRestrictionItem = page.locator(".v-client-restrictions-list-item__item-body");
-        this.submitCommentButton = page.locator("[data-qa='investigation_tools__add_comment_textarea_container']");
         this.submitFraudButton = page.locator("button[data-qa='report_fraud_drawer__submit_button']");
-        this.selectedFraudLabel = page.locator(SELECTED_FRAUD_LOCATOR);
         this.fraudDeletionPopup = page.locator("//div[@class='v-fraud-type-v2__action-content']");
         this.confirmFraudDeletionButton = page.locator("//span[@class='g-button__text' and text()='Yes']");
         this.resetFraudChangesButton = page.locator(RESET_FRAUD_CHANGES_BUTTON_LOCATOR);
@@ -154,6 +151,12 @@ public class ResolvePage extends AbstractPage {
         this.symbolDropdown = page.locator("//button[@data-qa='fraud_type_symbol_select__select_control']");
         this.dropdownOptions = page.locator("//span[@class='g-select-list__option-default-label']");
         this.addRestrictionButton = page.locator("//div[contains(@data-qa,'restrictions_selector')]/descendant::button[not(@data-qa)]");
+        // Rejection reasons UI
+        this.rejectionReasonSelects = page.locator("[data-qa='select-popup']");
+        this.rejectionReasonInput = page.locator(".v-rejection-reason-input");
+        this.rejectionReasonItems = page.locator("[data-qa='select-popup'] [role='option']");
+
+        this.rejectionDynamicInputs = page.locator(".v-rejection-reason__dynamic-values input, .v-dynamic-attributes input[type='text'], input[data-qa='rejection_dynamic_attribute_input']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -171,7 +174,8 @@ public class ResolvePage extends AbstractPage {
 
     @Step("Get Withdrawal list")
     public List<String> getWithdrawalList() {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
+        resolution.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         List<String> list = new ArrayList<>();
         for (int i = 0; i < withdrawalList.count(); i++) {
             list.add(withdrawalList.nth(i).textContent());
@@ -197,37 +201,25 @@ public class ResolvePage extends AbstractPage {
         }
     }
 
-    @Step("Resolve and approve all withdrawals")
-    public void resolveWithdrawalsAllApprove() {
-//        page.waitForSelector(resolutionForm.toString());
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        approveAllwithdrawalsButton.click();
-        commentInput.fill("autotest to withdrawals");
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
     @Step("approve all withdrawals")
     public void clickWithdrawalApprove() {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         approveAllwithdrawalsButton.click();
     }
 
 
     public void clickCleanRestrictionList() {
-        cleanRestrictionListButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         cleanRestrictionListButton.click();
     }
 
     @Step("reject all withdrawals")
-    public void clickWithdrawalReject() {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    public void clickWithdrawalReject(String reasonTitle, String... dynamicValues) {
         rejectAllwithdrawalsButton.click();
+        // Select predefined rejection reason and fill dynamic values if required
+        selectRejectionReasonAndFillDynamics(reasonTitle, dynamicValues);
     }
 
     @Step("Resolve and approve all withdrawals")
     public void resolveWithdrawalsAllApprove(String comment) {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         approveAllwithdrawalsButton.click();
         commentInput.fill(comment);
         completeInvestigationButton.click();
@@ -235,46 +227,11 @@ public class ResolvePage extends AbstractPage {
     }
 
     @Step("Resolve and reject all withdrawals")
-    public void resolveWithdrawalsAllReject() {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    public void resolveWithdrawalsAllReject(String reasonTitle, String... dynamicValues) {
+        Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
+        resolution.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         rejectAllwithdrawalsButton.click();
-        commentInput.fill("autotest to withdrawals");
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
-    @Step("Resolve and reject all withdrawals")
-    public void resolveWithdrawalsAllReject(String comment) {
-        Allure.step("Resolve and reject all withdrawals");
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        rejectAllwithdrawalsButton.click();
-        commentInput.fill(comment);
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
-    @Step("Resolve and approve one withdrawal")
-    public void resolveWithdrawalsApproveFirst() {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        rejectAllwithdrawalsButton.click();
-        approveFirstButton.click();
-        commentInput.fill("autotest to withdrawals");
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
-    public void clickApproveWithdrawalByPaymentType(String paymentType) {
-        Allure.step("click approve withdrawal on selected transaction");
-        String locator = "//div[text() = '" + paymentType + "']/ancestor::div[@class = 'v-withdrawals-list__list-item']//button[1]";
-        page.waitForSelector(locator);
-        page.locator(locator).click();
-    }
-
-    @Step("Resolve and approve one withdrawal")
-    public void resolveWithdrawalsApproveOneByType(String paymentType) {
-        resolutionForm.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        rejectAllwithdrawalsButton.click();
-        clickApproveWithdrawalByPaymentType(paymentType);
+        selectRejectionReasonAndFillDynamics(reasonTitle, dynamicValues);
         commentInput.fill("autotest to withdrawals");
         completeInvestigationButton.click();
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -298,26 +255,23 @@ public class ResolvePage extends AbstractPage {
         completeInvestigationButton.click();
     }
 
-    @Step("Resolve with adding fraud")
-    public void resolveAddFraud(String comment, FraudType addedFraud) {
-        commentInput.fill(comment);
-        addFraud(addedFraud);
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
 
-    @Step("Resolve with adding fraud")
-    public void resolveInvestigation() {
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    public void addFraud() {
+        fraudListButton.click();
+        Locator menuItems = page.locator(FRAUD_MENU_ITEM_SELECTOR);
+        Locator target = menuItems.first();
+        String fraudCode = FraudType.valueOfName(target.textContent()).getCode();
+
+        target.hover();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMATTER.formatted(fraudCode, CONFIRMED.getDisplayName().toLowerCase())).click();
     }
 
     public void addFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(FRAUD_BY_TEXT_PATTERN, fraud.getName())).hover();
-        page.locator(String.format(FRAUD_STATUS_PATTERN, fraud.getCode(), status.getDisplayName().toLowerCase())).click();
+        page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMATTER.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
     }
+
 
     public void addFraud(FraudType fraud, FraudSubtype subtype) {
         fraudListButton.click();
@@ -355,17 +309,6 @@ public class ResolvePage extends AbstractPage {
         resetRestrictionsChangesButton.click();
     }
 
-    @Step("Resolve with adding a few frauds")
-    public void resolveAddMultipleFraud(String comment, FraudType... addedFraud) {
-        commentInput.fill(comment);
-        for (FraudType fraud : addedFraud) {
-            addFraud(fraud, CONFIRMED);
-        }
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
-
     public List<String> getFraudTypesList() {
         fraudListButton.click();
         List<String> list = new ArrayList<>();
@@ -373,86 +316,6 @@ public class ResolvePage extends AbstractPage {
             list.add(fraudTypeDropdownOption.nth(i).textContent());
         }
         return list;
-    }
-
-
-    public void checkRestrictionIsDisplayed(String restriction) {
-        Allure.step("Check if the restriction " + restriction + " is displayed on resolve screen");
-        clientRestrictionItem.getByText(restriction).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-    }
-
-    @Step("Resolve test 250 symbols in comment")
-    public void test250Symbols() {
-        commentInput.fill(bigLorem);
-        assertEquals(commentInput.inputValue(), smallLorem);
-    }
-
-    @Step("Resolve cleaning fraud list")
-    public void resolveNoFrauds(String comment) {
-        commentInput.fill(comment);
-        if (cleanFraudListButton.isVisible()) {
-            cleanFraudListButton.click();
-        }
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String actual = successToast.textContent();
-        assertEquals(investigationCompleted, actual);
-    }
-
-    @Step("Resolve cleaning fraud list")
-    public void resolveClearFrauds(String comment) {
-        commentInput.fill(comment);
-        if (cleanFraudListButton.isVisible()) {
-            cleanFraudListButton.click();
-            page.locator(FRAUD_TYPE_POPUP_LOCATOR + "//button").getByText("Yes").click();
-        }
-        completeInvestigationButton.click();
-        successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String actual = successToast.textContent();
-        assertEquals(investigationCompleted, actual);
-    }
-
-    @Step("Resolve cleaning fraud list")
-    public void resolveNoActionFrauds(String comment) {
-        commentInput.fill(comment);
-        completeInvestigationButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String actual = successToast.textContent();
-        assertEquals(investigationCompleted, actual);
-    }
-
-    public void fillCommentForm(String comment) {
-        Allure.step("Fill comment form");
-        commentInput.fill(comment);
-        assertEquals(commentInput.inputValue(), comment);
-    }
-
-    public void submitCommentForm() {
-        Allure.step("click on the add comment button");
-        submitCommentButton.click();
-        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        String actual = successToast.textContent();
-        assertEquals("Comment added to Audit trail", actual);
-    }
-
-    @Step("Check withdrawal approval message in Kafka")
-    public void checkKafkaRequestWithdrawal(String transactionID, String expectedStatus) throws InterruptedException,
-            JsonProcessingException {
-        KafkaHelper helper = new KafkaHelper();
-        List<String> kafkaResponses = helper.consumeMessages("withdrawal.approvals", transactionID);
-        for (String response : kafkaResponses) {
-            writeLog(response);
-        }
-        String kafkaResponse = kafkaResponses.getLast();
-        ObjectMapper objectMapper = new ObjectMapper();
-        WithdrawalApprovals apply = objectMapper.readValue(kafkaResponse, WithdrawalApprovals.class);
-        assertTrue(apply.getTransferId().equals(String.valueOf(transactionID)));
-        assertNotNull((apply.getRegulator()));
-        assertNotNull((apply.getBrand()));
-        assertNotNull((apply.getTimestamp()));
-        assertNotNull((apply.getStatus()));
-        assertNotNull((apply.getInternalReason()));
-        assertEquals(expectedStatus, (apply.getStatus()));
     }
 
     public void openReportFraudForm() {
@@ -484,36 +347,17 @@ public class ResolvePage extends AbstractPage {
         page.waitForSelector(locator).waitForElementState(ElementState.VISIBLE);
     }
 
-    public void checkFraudDisplayed(String... addedFraud) {
-        Allure.step("check that fraud type displayed");
-        for (String i : addedFraud) {
-            page.locator(SELECTED_FRAUD_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        }
-    }
-
-    public void checkFraudNotDisplayed(String... addedFraud) {
-        Allure.step("check that fraud type displayed");
-        for (String i : addedFraud) {
-            page.locator(SELECTED_FRAUD_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        }
-    }
-
     @Step("Get time label for the provided fraud")
     public String getFraudTimeByName(String fraudName) {
         Allure.step("Get time label for the provided fraud");
         return page.locator(String.format(FRAUD_TIME_BY_NAME_PATTERN, fraudName)).textContent();
     }
 
-    @Step("Get time label for the provided fraud")
-    public void resolveFillCommentary(String comment) {
-        commentInput.fill(comment);
-    }
-
     @Step("Click delete fraud and confirm the popup")
     public void deleteFraudByName(String fraudName) {
         Allure.step("Click delete fraud and confirm the popup");
         page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
-        assertThat(fraudDeletionPopup).containsText("Are you sure that the client should not be identified with this fraud anymore?");
+        com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat(fraudDeletionPopup).containsText("Are you sure that the client should not be identified with this fraud anymore?");
         confirmFraudDeletionButton.click();
         commentInput.fill(String.format("confirm %s", fraudName));
         submitFraudButton.click();
@@ -524,39 +368,12 @@ public class ResolvePage extends AbstractPage {
         page.locator(String.format(DELETE_FRAUD_BY_NAME_PATTERN, fraudName)).click();
     }
 
-    @Step("Click delete restriction ")
-    public void clickDeleteRestrictionButtonByName(String restriction) {
-        Allure.step("click delete restriction button");
-        String locator = "//*[text()='" + restriction + "']" + RESTRICTION_LIST_LOCATOR_ANCESTOR + REMOVE_BUTTON_LOCATOR;
-        page.locator(locator).click();
-    }
-
     public List<String> getSelectedRestrictionsList() {
         List<String> list = new ArrayList<>();
         for (int i = 0; i < clientRestrictionItem.count(); i++) {
             list.add(clientRestrictionItem.nth(i).textContent());
         }
         return list;
-    }
-
-    public void checkRestrictionDisplayed(String... addedRestriction) {
-        Allure.step("check that fraud type displayed");
-        for (String i : addedRestriction) {
-            page.locator(RESTRICTION_LIST_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        }
-    }
-
-    public void checkRestrictionNotDisplayed(String... addedRestriction) {
-        Allure.step("check that fraud type displayed");
-        for (String i : addedRestriction) {
-            page.locator(RESTRICTION_LIST_LOCATOR).getByText(i).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
-        }
-    }
-
-    public void confirmRestrictionDeletion(String buttonText) {
-        Allure.step("Click button " + buttonText + " in popup");
-        page.waitForSelector(RESTRICTION_DELETION_POPUP_LOCATOR).waitForElementState(ElementState.VISIBLE);
-        page.locator(RESTRICTION_DELETION_POPUP_LOCATOR).getByText(buttonText).click();
     }
 
     @Deprecated()//"version for old UI"
@@ -647,6 +464,33 @@ public class ResolvePage extends AbstractPage {
         }
         return list;
     }
+
+    @Step("Select predefined rejection reason and fill dynamic values if required")
+    protected void selectRejectionReasonAndFillDynamics(String reasonTitle, String... dynamics) {
+        Locator reasonOption = rejectionReasonItems.getByText(reasonTitle);
+        reasonOption.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        reasonOption.click();
+
+        Locator inputs = page.locator(REJECTION_REASON_INPUT_SELECTOR);
+        int count = inputs.count();
+
+        if (count == 0) {
+            return;
+        }
+
+        assertThat("Length of dynamic inputs is equals to received arguments", inputs.count(), is(dynamics.length));
+        for (int i = 0; i < count; i++) {
+            Locator input = inputs.nth(i);
+
+            try {
+                input.scrollIntoViewIfNeeded();
+                input.click();
+                input.fill(dynamics[i]);
+            } catch (Throwable ignored) {
+            }
+        }
+    }
+
 
     @Step("Select fraud source")
     public void selectFraudSource(String fraudSource) {
