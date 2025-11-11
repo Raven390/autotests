@@ -57,7 +57,6 @@ public class RouterRuleDataFactory {
                 "EUR",                               // withdrawalCurrency
                 getRandomIntPositive()               // withdrawalId
         );
-
         return data;
     }
 

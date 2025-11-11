@@ -52,7 +52,14 @@ public class TestBaseRule {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
     @Step("Produce withdrawal event to crm-events topic")
-    public static void produceWithdrawalMessageToKafka(CrmWithdrawalEvent event) throws JsonProcessingException {
+    public static void produceWithdrawalMessageToCrmEventsTopic(CrmWithdrawalEvent event)
+            throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_EVENTS);
+    }
+
+    @Step("Produce withdrawal event to crm-events topic")
+    public static void produceWithdrawalMessageToCrmPaymentTopic(CrmWithdrawalEvent event)
+            throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
     }
 
