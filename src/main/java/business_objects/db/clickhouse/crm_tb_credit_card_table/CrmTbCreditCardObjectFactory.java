@@ -1,0 +1,28 @@
+package business_objects.db.clickhouse.crm_tb_credit_card_table;
+
+import helpers.data.ClientHelper;
+import io.qameta.allure.Step;
+
+import static utils.Utils.*;
+
+public class CrmTbCreditCardObjectFactory {
+    @Step("Generate credit card object by user id")
+    public static CrmTbCreditCardObject generateDepositByClient(ClientHelper client) {
+        CrmTbCreditCardObject depositObject = new CrmTbCreditCardObject();
+        depositObject.sourceIdSt = client.getServerId();
+        depositObject.userId = client.getUserId();
+        depositObject.createTime = getCurrentTimestampDbFormat();
+        depositObject.updateTime = getCurrentTimestampDbFormat();
+        depositObject.cardBeginSixDigits = "463387";
+        depositObject.cardLastFourDigits = "2992";
+        depositObject.cardHolderName = "Mr Test";
+        depositObject.expiryMonth = "12";
+        depositObject.expiryYear = "2020";
+        depositObject.threeDomainSecure = 1;
+        depositObject.paymentType = 0;
+        depositObject.status = 0;
+        depositObject.isDel = 0;
+        depositObject.lastUpdated = getCurrentTimestampDbFormat();
+        return depositObject;
+    }
+}

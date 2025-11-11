@@ -173,11 +173,13 @@ public class Constants {
     public static final String CLIENT_FRAUD_TYPES_TABLE_NAME = "consolidated.client_fraud_types";
     public static final String CONNECTIONS_TABLE_NAME = "data_science_test.connection_table";
     public static final String CRM_BONUS_TABLE_NAME = "consolidated.crm___tb_bonus";
+    public static final String CRM_TB_CREDIT_CARD_TABLE_NAME = "consolidated.crm___tb_credit_card";
     public static final String CRM_DEPOSIT_TABLE_NAME = "consolidated.crm___tb_deposit";
     public static final String CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME = "consolidated.crm___tb_account_for_mt";
     public static final String CRM_TB_ACCOUNT_TABLE_NAME = "consolidated.crm___tb_account";
     public static final String CRM_TB_LOYALTY_REDEMPTION = "consolidated.crm___tb_loyalty_redemption";
     public static final String CRM_TB_USER_EXTENDS_TABLE_NAME = "consolidated.crm___tb_user_extends";
+    public static final String CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME = "consolidated.crm___tb_withdraw_account";
     public static final String CRM_TRANSFERS_TABLE_NAME = "consolidated.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "consolidated.crm___tb_user";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "consolidated.crm___tb_withdrawal";

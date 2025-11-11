@@ -26,6 +26,7 @@ public class CrmTbDepositObject {
     public String paymentType;
     public String paymentProfile;
     public String paymentFamily;
+    public String vWalletAccount;
     public Integer paymentChannelId;
     public String paymentChannel;
     public String paymentSystemAccount;

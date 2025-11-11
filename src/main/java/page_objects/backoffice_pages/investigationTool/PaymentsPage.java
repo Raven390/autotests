@@ -10,10 +10,7 @@ import page_objects.backoffice_pages.AbstractPage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static utils.ConfigFactory.BASE_URL_E2E;
@@ -67,6 +64,9 @@ public class PaymentsPage extends AbstractPage {
     private final Locator rebatesReceivedWidgetValue;
     private final Locator rebatesReceivedWidgetCounter;
     private final Locator timelineAnnotation;
+    private final Locator paymentProfilesFamilyBlock;
+    private final Locator paymentProfileDetailsRow;
+    private final Locator paymentProfileDetailsTotalItem;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -79,6 +79,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String TIMELINE_BAR = TIMELINE_SECTION + "//*[@class = 'v-range-timeline-section__bar']";
     private static final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
     private static final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
+    private static final String PAYMENT_PROFILE_ITEM = "//div[contains(@class,'v-payment-profiles-list__profile-name') and text()='%s']";
     private static final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private static final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
     private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]//button";
@@ -89,7 +90,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
-    private final Locator paymentProfilesFamilyBlock;
+    public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected Clients')]";
 
     public PaymentsPage(Page page) {
         super(page);
@@ -138,6 +139,8 @@ public class PaymentsPage extends AbstractPage {
         this.rebatesReceivedWidgetValue = rebatesReceivedWidget.locator(WIDGET_VALUE);
         this.rebatesReceivedWidgetCounter = rebatesReceivedWidget.locator(WIDGET_COUNTER);
         this.timelineAnnotation = page.locator(".v-range-timeline-section__label");
+        this.paymentProfileDetailsRow = page.locator(".v-payment-profile-overview__detail-row");
+        this.paymentProfileDetailsTotalItem = page.locator(".v-payment-profile-totals__total-item");
     }
 
     @Step("Open users operations tab")
@@ -166,7 +169,7 @@ public class PaymentsPage extends AbstractPage {
     public record PaymentFamilyBlock(String header, List<String> rowDataList) {
     }
 
-    @Step("Click payments tab")
+    @Step("Get payment profile list")
     public List<PaymentFamilyBlock> getPaymentProfilesList() {
         List<PaymentFamilyBlock> list = new ArrayList<>();
         for (int i = 0; i < paymentProfilesFamilyBlock.count(); i++) {
@@ -179,6 +182,50 @@ public class PaymentsPage extends AbstractPage {
                 rowDataList.add(profileRow.nth(k).textContent());
             }
             list.add(new PaymentFamilyBlock(headerText, rowDataList));
+        }
+        return list;
+    }
+
+    @Step("Get payment profile details")
+    public Map<String, String> getPaymentProfileDetailsRows() {
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < paymentProfileDetailsRow.count(); i++) {
+            Locator row = paymentProfileDetailsRow.nth(i);
+            String name = row.locator("//*[contains(@class, 'g-text')]").nth(0).textContent();
+            String value = row.locator("//*[contains(@class, 'g-text')]").nth(1).textContent();
+            map.put(name, value);
+        }
+        return map;
+    }
+
+    @Step("Get payment profile details total")
+    public List<String> getPaymentProfileDetailsTotals() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < paymentProfileDetailsTotalItem.count(); i++) {
+            Locator row = paymentProfileDetailsTotalItem.nth(i);
+            list.add(row.textContent());
+        }
+        return list;
+    }
+
+    @Step("Open payment profile details drawer")
+    public void openPaymentProfileDetails(String profileName) {
+        String str = String.format(PAYMENT_PROFILE_ITEM, profileName);
+        page.waitForSelector(str).click();
+    }
+
+    @Step("Open payment profile drawer")
+    public void openPaymentProfileDetailsConnectedClients() {
+        page.waitForSelector(CONNECTED_CLIENTS_BUTTON).click();
+    }
+
+    @Step("Get payment profile details connected clients")
+    public List<String> getPaymentProfileDetailsConnectedClients() {
+        page.waitForSelector("//*[@data-qa= 'virtualized_table']");
+        List<String> list = new ArrayList<>();
+        Locator locator = page.locator("//*[contains(@data-qa, 'virtualized_table__rows__') and contains(@data-qa, '-') and string-length(translate(substring-after(@data-qa, '-'), '0123456789', '')) = 0]");
+        for (int i = 0; i < locator.count(); i++) {
+            list.add(locator.nth(i).textContent());
         }
         return list;
     }
