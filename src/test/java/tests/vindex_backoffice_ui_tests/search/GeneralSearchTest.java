@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.investigationTool;
+package tests.vindex_backoffice_ui_tests.search;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
@@ -10,11 +10,8 @@ import helpers.data.enums.Brand;
 import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import page_objects.backoffice_pages.investigationTool.GeneralSearchElements;
+import org.junit.jupiter.api.*;
+import page_objects.backoffice_pages.search.GeneralSearchElements;
 import tests.TestBaseWeb;
 
 import java.sql.SQLException;
@@ -27,6 +24,9 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.database.DbHelper.insertObjectToDb;
 import static helpers.database.DbHelper.insertObjectsToDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
@@ -47,12 +47,18 @@ class GeneralSearchTest extends TestBaseWeb {
     private static MtAccountObject mtAccount21 = generateMtAccountByCrmTbAccount(account21);
     private static MtAccountObject mtAccount22 = generateMtAccountByCrmTbAccount(account22);
 
+    public static final String CLIENT_FULL_NAME_FORMAT = "%s %s";
+    public static final String ENCRYPTED_EMAIL_FIRST = "dUWiXVMG5K9niVudIef4Tff7jNArTmj6n9ZoGIdI89o=";
+    private static final String PLAIN_EMAIL_FIRST = "test-search-email-1@test.com";
+
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException {
         crmTbUser1.firstName = "General";
         crmTbUser1.lastName = "Searchman";
         crmTbUser1.registrationDate = "2025-02-21";
+        crmTbUser1.email = ENCRYPTED_EMAIL_FIRST;
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser1);
+        crmTbUser1.email = PLAIN_EMAIL_FIRST;
         insertCrmAccountsToDb(account11, account12);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount11, mtAccount12));
 
@@ -223,4 +229,61 @@ class GeneralSearchTest extends TestBaseWeb {
         newTab.checkPageUrl(expectedUrl);
     }
 
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1767")
+    @DisplayName("Search client by exact email")
+    void searchClientByExactEmail() {
+        generalSearch.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalSearch.navigateToMain();
+        generalSearch.waitForPageToLoad();
+        generalSearch.openSearch();
+        // Clear any previous search
+        generalSearch.clearSearch();
+
+        // Perform search by exact email
+        generalSearch.inputSearchText(crmTbUser1.email);
+        generalSearch.inputSearchPressEnter();
+        // Wait until the client card appears
+        generalSearch.waitForClientCard(crmTbUser1.ucid);
+
+        // Verify the client card displays the correct name
+        String displayedName = generalSearch.getClientFullName(crmTbUser1.ucid);
+        assertThat(displayedName, is(CLIENT_FULL_NAME_FORMAT.formatted(crmTbUser1.firstName, crmTbUser1.lastName)));
+
+        // Optionally click operations button to verify it's clickable
+
+        // Click on the first result
+        try (Page clientPage = generalSearch.clickCard(crmTbUser1.ucid)) {
+            var url = clientPage.url();
+            assertThat("Verify URL contains client UCID", url, containsString(crmTbUser1.ucid));
+        }
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1768")
+    @DisplayName("Verify no results for non-existent email")
+    void searchClientByNonExistentEmail() {
+        generalSearch.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalSearch.navigateToMain();
+        generalSearch.waitForPageToLoad();
+        generalSearch.openSearch();
+        // Clear previous search
+        generalSearch.clearSearch();
+
+        // Search with a random non-existent email
+        String randomEmail = "nonexistent_" + System.currentTimeMillis() + "@example.com";
+        generalSearch.inputSearchText(randomEmail);
+        generalSearch.inputSearchPressEnter();
+
+        // Verify that no client card appears
+        Assertions.assertFalse(
+                generalSearch.isCardPresent(client1.getUcid()), "No client card should appear for non-existent email"
+        );
+    }
 }

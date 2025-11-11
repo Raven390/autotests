@@ -19,6 +19,7 @@ import page_objects.backoffice_pages.abuseRegistry.DeductionPage;
 import page_objects.backoffice_pages.abuseRegistry.FraudstersPage;
 import page_objects.backoffice_pages.alertHistory.AlertHistoryPage;
 import page_objects.backoffice_pages.investigationTool.*;
+import page_objects.backoffice_pages.search.GeneralSearchElements;
 import page_objects.backoffice_pages.search.SearchPage;
 import page_objects.StageRegistrationHelperPage;
 import utils.TestResultWatcher;
