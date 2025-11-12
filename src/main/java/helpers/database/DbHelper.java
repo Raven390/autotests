@@ -385,8 +385,12 @@ public class DbHelper {
             writeLog(sshCommand);
 
             try {
-                new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY).start();
-                Thread.sleep(500);
+                String os = System.getProperty("os.name").toLowerCase();
+                if (!os.contains("win")) {
+                    new ProcessBuilder("chmod", "600", System.getProperty("user.dir") + "/" + POSTGRES_DB_SSH_PRIVATE_KEY).start();
+                    Thread.sleep(500);
+                }
+
                 sshTunnelProcess = new ProcessBuilder("bash", "-c", sshCommand).start();
                 Thread.sleep(2000); // Wait for the tunnel to establish
             } catch (IOException | InterruptedException e) {
