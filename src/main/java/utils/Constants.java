@@ -199,7 +199,7 @@ public class Constants {
     public static final String ID_PROOF_TABLE_NAME = "consolidated.crm___tb_id_proof";
     public static final String IP_TABLE_NAME = "data_science_test.ip";
     public static final String KYC_FILES_TABLE_NAME = "consolidated.crm___tb_kyc_files";
-    public static final String LEXIS_NEXIS_TABLE_NAME = "consolidated.ln_session_parsed";
+    public static final String LEXIS_NEXIS_TABLE_NAME = "lexisnexis.ln_session_parsed";
     public static final String MIRROR_LOGIN_TABLE_NAME = "data_science_test.mirror_login";
     public static final String MIRROR_UCID_TABLE_NAME = "consolidated.mirror_ucid";
     public static final String MITIGATION_CLIENT_GENERAL_RESTRICTION = "postgres.mi.client_general_restriction";

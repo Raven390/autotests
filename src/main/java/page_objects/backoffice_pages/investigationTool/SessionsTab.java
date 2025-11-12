@@ -74,7 +74,8 @@ public class SessionsTab extends AbstractPage {
     private final Locator emailageTab;
     private final Locator deviceTab;
     private final Locator ipAddressTab;
-
+    private final Locator summaryHeader;
+    private final Locator summaryList;
 
     private static final String COLUMN_DATE_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_date')]";
     private static final String COLUMN_EVENT_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_event')]";
@@ -82,7 +83,7 @@ public class SessionsTab extends AbstractPage {
     private static final String COLUMN_OS_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_os')]";
     private static final String COLUMN_RISK_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_risk')]";
     private static final String COLUMN_SCORE_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_score')]";
-    private static final String COLUMN_POLICIES_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_policies')]";
+    private static final String COLUMN_POLICIES_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__column_type_summary')]";
     private static final String TABLE_HEADERS_LOCATOR = "//thead";
     private static final String TABLE_BODY_LOCATOR = "//tbody";
     private static final String PRIMARY_TEXT_LOCATOR = "//*[contains(@class, 'g-color-text_color_primary')]";
@@ -91,6 +92,7 @@ public class SessionsTab extends AbstractPage {
     private static final String POSITIVE_TEXT_LOCATOR = "//*[contains(@class, 'g-color-text_color_positive')]";
     private static final String SORTABLE_CELL_LOCATOR = "//*[contains(@class, 'v-activity-tab-table__sortable-cell')]";
     private static final String SCORE_METER_SECTION_LOCATOR = "//*[@class = 'v-activity-tab-risk-score-meter']";
+    private static final String SUMMARY_SECTION_LOCATOR = "//*[@class = 'v-activity-tab-summary-reasons']";
     private static final String APPLIED_POLICIES_SECTION_LOCATOR = "//*[@class = 'v-applied-policies-labels']";
     private static final String TMX_REASON_SECTION_LOCATOR = "//*[@class = 'v-tmx-reasons-labels']";
     private static final String SCORE_SECTION_LOCATOR = "//*[@class = 'v-summary-score-bars__scores']";
@@ -160,6 +162,8 @@ public class SessionsTab extends AbstractPage {
         this.scoreMeterLable = page.locator(SCORE_METER_SECTION_LOCATOR + LABEL_LOCATOR);
         this.scoreMeterSuccessLable = page.locator(SCORE_METER_SECTION_LOCATOR + SUCCESS_LABEL_LOCATOR);
         this.scoreMeterDangerLable = page.locator(SCORE_METER_SECTION_LOCATOR + DANGER_LABEL_LOCATOR);
+        this.summaryHeader = page.locator(SUMMARY_SECTION_LOCATOR + SUBHEADER_3_LOCATOR);
+        this.summaryList = page.locator(SUMMARY_SECTION_LOCATOR + "//div[@class='v-activity-tab-summary-reasons__list']");
         this.applyedPoliciesHeader = page.locator(APPLIED_POLICIES_SECTION_LOCATOR + SUBHEADER_3_LOCATOR);
         this.applyedPoliciesPolicyName = page.locator(APPLIED_POLICIES_SECTION_LOCATOR + "//span[not(contains(@class, 'v-applied-policies-labels__score'))]");
         this.applyedPoliciesPolicyScore = page.locator(APPLIED_POLICIES_SECTION_LOCATOR + "//span[contains(@class, 'v-applied-policies-labels__score')]");
@@ -374,8 +378,8 @@ public class SessionsTab extends AbstractPage {
         assertFalse(columnRiskDataDanger.isVisible());
     }
 
-    public void checkPoliciesColumnValue(String expectedValue) {
-        Allure.step("Check values in the policies column");
+    public void checkSummaryColumnValue(String expectedValue) {
+        Allure.step("Check values in the summary column");
         String actualValue = columnPoliciesData.textContent();
         assertEquals(expectedValue, actualValue);
     }
@@ -554,6 +558,16 @@ public class SessionsTab extends AbstractPage {
         Allure.step("Check correct title for the applied policies section");
         applyedPoliciesHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         assertEquals(expectedTitle, applyedPoliciesHeader.textContent());
+    }
+
+    public String getSummarySectionTitle() {
+        summaryHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        return summaryHeader.textContent();
+    }
+
+    public String getSummarySectionText() {
+        summaryList.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        return summaryList.textContent();
     }
 
     public void checkRuleName(String expectedTitle) {
