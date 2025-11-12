@@ -14,8 +14,11 @@ public enum FraudType {
 
 
     public static FraudType valueOfName(String name) {
-        return Arrays.stream(values()).filter(f -> f.getName().equalsIgnoreCase(name)) // или equals() если нужен точный матч
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No enum constant with name: " + name));
+        return Arrays.stream(values()).filter(f -> f.getName().equalsIgnoreCase(name)).findFirst().orElseThrow(() -> new IllegalArgumentException("No enum constant with name: " + name));
+    }
+
+    public static FraudType valueOfCode(String code) {
+        return Arrays.stream(values()).filter(f -> f.getCode().equalsIgnoreCase(code)).findFirst().orElseThrow(() -> new IllegalArgumentException("No enum constant with name: " + code));
     }
 
 

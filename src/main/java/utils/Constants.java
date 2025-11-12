@@ -154,6 +154,7 @@ public class Constants {
     public static final String AR_DEDUCTION_KAFKA_REQUEST_TABLE_NAME = "postgres.ar.deduction_kafka_request";
     public static final String AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME = "postgres.ar.deduction_kafka_response";
     public static final String AR_PENDING_PROCESSING_TABLE_NAME = "postgres.ar.pending_processing";
+    public static final String AR_FRAUD_TYPE_CATEGORY_TABLE_NAME = "postgres.ar.fraud_type_category";
     public static final String AUDIT_EVENT = "postgres.au.event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
