@@ -30,6 +30,7 @@ public class ResolvePage extends AbstractPage {
     public static final String FRAUD_MENU_ITEM_SELECTOR = "div.g-popup__content div.v-sub-menu__anchor";
     public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
     public static final String RESOLUTION = "Resolution";
+    public static final String CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR = "div[data-qa='client_report_fraud_drawer__fraud_type_selector__item_%s__%s']";
 
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
@@ -277,6 +278,12 @@ public class ResolvePage extends AbstractPage {
         fraudListButton.click();
         page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
         page.locator(FRAUD_TYPE_SELECTOR_FORMATTER.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
+    }
+
+    public void reportFraud(FraudType fraud, FraudTypeStatus status) {
+        fraudListButton.click();
+        page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
+        page.locator(CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
     }
 
 
