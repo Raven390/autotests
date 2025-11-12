@@ -24,6 +24,8 @@ import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedOb
 import static helpers.data.enums.DateTimeFormat.DATE;
 import static helpers.data.enums.DateTimeFormat.DATE_AND_TIME;
 import static helpers.database.DbHelper.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static utils.Constants.*;
 import static utils.Constants.LAYER_WEB;
 import static utils.Utils.*;
@@ -58,6 +60,7 @@ public class SessionsTabTest extends TestBaseWeb {
         lexis.setOs("android");
         lexis.setRiskRating("high");
         lexis.setPolicyScore(-50);
+        lexis.setSummaryReasonCodeOriginal("[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
         insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, lexis);
 
         sessionsTab.navigateEnterPage();
@@ -72,8 +75,7 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkRiskColumnColourDanger();
         sessionsTab.checkScoreColumnValue(lexis.getPolicyScore());
         sessionsTab.checkScoreColumnColourDanger();
-        sessionsTab.checkPoliciesColumnValue("testRule-10");
-
+        sessionsTab.checkSummaryColumnValue("Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used");
     }
 
     @Test
@@ -670,6 +672,37 @@ public class SessionsTabTest extends TestBaseWeb {
         sessionsTab.checkDangerLabelDisplayed();
         sessionsTab.checkTextInLabel(firstLexis.getRiskRating());
         sessionsTab.checkPositionOfTheLineDivider("0.5");
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Activity tab - Summary, summary section test")
+    @AllureId("1789")
+    public void summarySummaryShowDataFromDb() {
+
+        deleteLexis(activityClient);
+
+        LnSessionParsedObject firstLexis = generateLexisNexisDataByClient(activityClient);
+        firstLexis.setEventDatetime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 5, 0, 0));
+        firstLexis.setEventType("account_creation");
+        firstLexis.setConditionAttrib5("mobile_app");
+        firstLexis.setOs("android");
+        firstLexis.setRiskRating("high");
+        firstLexis.setPolicyScore(99);
+        firstLexis.setEmailageEmailriskscoreEascore(11);
+        firstLexis.setEmailageEmailriskscoreEariskbandid(22);
+        firstLexis.setEmailageEmailriskscoreEaadvice("test advice");
+        firstLexis.setSummaryReasonCodeOriginal("[ \"Connection via Mobile Hotspot\", \"First Time Mobile Hotspot  Used\", \"Computer browser used\" ]");
+
+        insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, firstLexis);
+
+        sessionsTab.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        sessionsTab.navigate(activityClient.getUcid());
+        sessionsTab.clickOnDataRow();
+        assertThat(sessionsTab.getSummarySectionTitle(), is("Summary"));
+        assertThat(sessionsTab.getSummarySectionText(), is("Connection via Mobile HotspotFirst Time Mobile Hotspot  UsedComputer browser used"));
     }
 
     @Test
