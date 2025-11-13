@@ -32,6 +32,11 @@ public class AuditTrailPage extends AbstractPage {
     private final Locator auditTrailFilterCommentsButton;
     private final Locator auditTrailClearFilterButton;
     private final Locator auditTrailFilterTeamSelect;
+    private final Locator auditTrailDetailsTitle;
+    private final Locator auditTrailDetailsLabels;
+    private final Locator auditTrailDetailsAttributes;
+    private final Locator auditTrailDetailsAttributesNames;
+    private final Locator auditTrailDetailsAttributesValues;
 
     private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
     private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@role='option']/descendant::*[text()='%s']";
@@ -52,6 +57,11 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailFilterActiveButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Active alerts\"]");
         this.auditTrailFilterCommentsButton = page.locator(AUDIT_TRAIL_FILTER + "//div[text()=\"Comments\"]");
         this.auditTrailFilterTeamSelect = page.locator("//div[@class='g-select v-audit-trail-v2-filters__select']");
+        this.auditTrailDetailsTitle = page.locator("//*[contains(@class,'v-audit-trail-v2-details__title')]");
+        this.auditTrailDetailsLabels = page.locator("//*[@class='v-audit-trail-v2-details__labels']/div");
+        this.auditTrailDetailsAttributes = page.locator("//*[@class='v-audit-trail-v2-details__attribute']");
+        this.auditTrailDetailsAttributesNames = auditTrailDetailsAttributes.locator("//*[contains(@class,'g-color-text_color_secondary')]");
+        this.auditTrailDetailsAttributesValues = page.locator("//*[contains(@class,'v-audit-trail-v2-details__attribute-value')]");
     }
 
     public void navigate(String ucid) {
@@ -148,6 +158,43 @@ public class AuditTrailPage extends AbstractPage {
     public void isAuditTabVisible() {
         Allure.step("check is audit tab hidden");
         auditTrailTab.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+    }
+
+    @Step("Click first audit trail card")
+    public void clickFirstAuditCard() {
+        auditTrailItemV2.first().click();
+    }
+
+    @Step("Get audit trail details drawer title")
+    public String getAuditTrailDetailsTitle() {
+        return auditTrailDetailsTitle.textContent();
+    }
+
+    @Step("Get audit trail details drawer labels")
+    public List<String> getAuditTrailDetailsLabels() {
+        List<String> labels = new ArrayList<>();
+        for (int i = 0; i < auditTrailDetailsLabels.count(); i++) {
+            labels.add(auditTrailDetailsLabels.nth(i).textContent());
+        }
+        return labels;
+    }
+
+    @Step("Get audit trail details drawer attribute names")
+    public List<String> getAuditTrailDetailsAttributeNames() {
+        List<String> names = new ArrayList<>();
+        for (int i = 0; i < auditTrailDetailsAttributesNames.count(); i++) {
+            names.add(auditTrailDetailsAttributesNames.nth(i).textContent());
+        }
+        return names;
+    }
+
+    @Step("Get audit trail details drawer attribute values")
+    public List<String> getAuditTrailDetailsAttributeValues() {
+        List<String> values = new ArrayList<>();
+        for (int i = 0; i < auditTrailDetailsAttributesValues.count(); i++) {
+            values.add(auditTrailDetailsAttributesValues.nth(i).textContent());
+        }
+        return values;
     }
 }
 
