@@ -470,7 +470,6 @@ public class PaymentsPage extends AbstractPage {
         }
     }
 
-
     public void checkFinancialTransactionsRowInTooltip(String rowTitle, String expectedValue) {
         Allure.step("Check value in line " + rowTitle + " in appeared tooltip");
         page.waitForSelector("//div[@class='v-payments-summary-transcations-tooltip__type']//span[text()='" + rowTitle + "']/following-sibling::span");
