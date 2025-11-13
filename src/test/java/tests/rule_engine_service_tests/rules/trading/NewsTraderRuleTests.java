@@ -29,7 +29,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
-class NewsTraderRuleTest extends TestBaseRule {
+class NewsTraderRuleTests extends TestBaseRule {
 
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 

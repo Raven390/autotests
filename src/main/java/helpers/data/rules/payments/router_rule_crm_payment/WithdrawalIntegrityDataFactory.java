@@ -1,4 +1,4 @@
-package helpers.data.rules.payments.router_rule;
+package helpers.data.rules.payments.router_rule_crm_payment;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;

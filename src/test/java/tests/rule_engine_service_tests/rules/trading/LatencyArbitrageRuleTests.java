@@ -28,7 +28,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
-class LatencyArbitrageRuleTest extends TestBaseRule {
+class LatencyArbitrageRuleTests extends TestBaseRule {
 
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 

@@ -30,7 +30,7 @@ import static utils.Utils.writeLog;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_RULE_ENGINE_RULES_TESTS)
-class NoSlippageRuleTest extends TestBaseRule {
+class NoSlippageRuleTests extends TestBaseRule {
 
     private static Map<String, DataHelper> dbDataMap = new HashMap<>();
 

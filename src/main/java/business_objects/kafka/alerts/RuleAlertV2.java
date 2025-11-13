@@ -31,6 +31,27 @@ public class RuleAlertV2 {
     @JsonProperty("type")
     private String type;
 
+    @JsonProperty("amount")
+    private Double amount;
+
+    @JsonProperty("amountUSD")
+    private Double amountUsd;
+
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+
+    @JsonProperty("merchantOrderId")
+    private String merchantOrderId;
+
+    @JsonProperty("currency")
+    private String currency;
+
+    @JsonProperty("account")
+    private Integer account;
+
+    @JsonProperty("paymentEventId")
+    private String paymentEventId;
+
     @JsonProperty("attributes")
     private Attribute attributes;
 
@@ -106,6 +127,62 @@ public class RuleAlertV2 {
         this.type = type;
     }
 
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public Double getAmountUsd() {
+        return amountUsd;
+    }
+
+    public void setAmountUsd(Double amountUsd) {
+        this.amountUsd = amountUsd;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getMerchantOrderId() {
+        return merchantOrderId;
+    }
+
+    public void setMerchantOrderId(String merchantOrderId) {
+        this.merchantOrderId = merchantOrderId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public Integer getAccount() {
+        return account;
+    }
+
+    public void setAccount(Integer account) {
+        this.account = account;
+    }
+
+    public String getPaymentEventId() {
+        return paymentEventId;
+    }
+
+    public void setPaymentEventId(String paymentEventId) {
+        this.paymentEventId = paymentEventId;
+    }
+
     public Attribute getAttributes() {
         return attributes;
     }
@@ -141,6 +218,30 @@ public class RuleAlertV2 {
 
     public static class Attribute {
 
+        @JsonProperty("Platform")
+        private String platform;
+
+        @JsonProperty("Create Time")
+        private String createTime;
+
+        @JsonProperty("Check")
+        private String check;
+
+        @JsonProperty("Date")
+        private String date;
+
+        @JsonProperty("Withdrawal ID")
+        private Long withdrawalId;
+
+        @JsonProperty("Regulator")
+        private String regulator;
+
+        @JsonProperty("Brand")
+        private String brand;
+
+        @JsonProperty("Payment channel")
+        private String paymentChannel;
+
         @JsonProperty("Details")
         private String details;
 
@@ -149,6 +250,70 @@ public class RuleAlertV2 {
 
         @JsonProperty("UcidScore")
         private Double ucidScore;
+
+        public String getPlatform() {
+            return platform;
+        }
+
+        public void setPlatform(String platform) {
+            this.platform = platform;
+        }
+
+        public String getCreateTime() {
+            return createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
+
+        public String getCheck() {
+            return check;
+        }
+
+        public void setCheck(String check) {
+            this.check = check;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public Long getWithdrawalId() {
+            return withdrawalId;
+        }
+
+        public void setWithdrawalId(Long withdrawalId) {
+            this.withdrawalId = withdrawalId;
+        }
+
+        public String getRegulator() {
+            return regulator;
+        }
+
+        public void setRegulator(String regulator) {
+            this.regulator = regulator;
+        }
+
+        public String getBrand() {
+            return brand;
+        }
+
+        public void setBrand(String brand) {
+            this.brand = brand;
+        }
+
+        public String getPaymentChannel() {
+            return paymentChannel;
+        }
+
+        public void setPaymentChannel(String paymentChannel) {
+            this.paymentChannel = paymentChannel;
+        }
 
         public String getDetails() {
             return details;

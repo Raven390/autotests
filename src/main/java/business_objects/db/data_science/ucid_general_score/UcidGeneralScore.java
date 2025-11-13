@@ -12,14 +12,13 @@ public class UcidGeneralScore {
     Integer countAction;
     Double cumSumScore;
     Double ucidScore;
-    String reason;
 
     public UcidGeneralScore() {
     }
 
     public UcidGeneralScore(
             String ucid, String id, Integer action, String timeUtc, String insertTimeUtc, Double modelScore,
-            Integer countAction, Double cumSumScore, Double ucidScore, String reason) {
+            Integer countAction, Double cumSumScore, Double ucidScore) {
         this.ucid = ucid;
         this.id = id;
         this.action = action;
@@ -29,7 +28,6 @@ public class UcidGeneralScore {
         this.countAction = countAction;
         this.cumSumScore = cumSumScore;
         this.ucidScore = ucidScore;
-        this.reason = reason;
     }
 
     @Override
@@ -39,17 +37,17 @@ public class UcidGeneralScore {
                 action, that.action) && Objects.equals(timeUtc, that.timeUtc) && Objects.equals(
                         insertTimeUtc, that.insertTimeUtc) && Objects.equals(modelScore, that.modelScore) && Objects.equals(
                                 countAction, that.countAction) && Objects.equals(cumSumScore, that.cumSumScore) && Objects.equals(
-                                        ucidScore, that.ucidScore) && Objects.equals(reason, that.reason);
+                                        ucidScore, that.ucidScore);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ucid, id, action, timeUtc, insertTimeUtc, modelScore, countAction, cumSumScore, ucidScore, reason);
+        return Objects.hash(ucid, id, action, timeUtc, insertTimeUtc, modelScore, countAction, cumSumScore, ucidScore);
     }
 
     @Override
     public String toString() {
-        return "UcidGeneralScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action + ", timeUtc='" + timeUtc + '\'' + ", insertTimeUtc='" + insertTimeUtc + '\'' + ", modelScore=" + modelScore + ", countAction=" + countAction + ", cumSumScore=" + cumSumScore + ", ucidScore=" + ucidScore + ", reason='" + reason + '\'' + '}';
+        return "UcidGeneralScore{" + "ucid='" + ucid + '\'' + ", id='" + id + '\'' + ", action=" + action + ", timeUtc='" + timeUtc + '\'' + ", insertTimeUtc='" + insertTimeUtc + '\'' + ", modelScore=" + modelScore + ", countAction=" + countAction + ", cumSumScore=" + cumSumScore + ", ucidScore=" + ucidScore + '\'' + '}';
     }
 
     public String getUcid() {
@@ -122,13 +120,5 @@ public class UcidGeneralScore {
 
     public void setUcidScore(Double ucidScore) {
         this.ucidScore = ucidScore;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
     }
 }
