@@ -113,9 +113,18 @@ public class TestBaseRule {
             throws InterruptedException,
             JsonProcessingException {
         return Arrays.stream(
-                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> alert.getRule().getName().equals(ruleName)).toList();
+                objectMapper.readValue(
+                        kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> {
+                            RuleAlertV2.Rule rule = alert.getRule();
+                            String actual;
+                            if (rule != null) {
+                                actual = rule.getName();
+                            } else {
+                                actual = null;
+                            }
+                            return actual != null && actual.trim().equalsIgnoreCase(ruleName.trim());
+                        }).toList();
     }
-
 
     @Step("Get Withdrawal from Kafka topic 'approvals'")
     public static List<WithdrawalApprovals> getWithdrawalApprovalsFromKafka(String withdrawalId)

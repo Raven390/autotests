@@ -1,4 +1,4 @@
-package helpers.data.rules.payments.router_rule;
+package helpers.data.rules.payments.router_rule_crm_payment;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
@@ -20,15 +20,12 @@ import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
-public class RouterRuleDataFactory {
-    private static final ClientHelper routerRuleClient1 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient2 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient3 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient4 = getRandomVantageClientAllFields();
-    private static final ClientHelper routerRuleClient5 = getRandomVantageClientAllFields();
+public class MirrorTradeDataFactory {
+    private static final ClientHelper mirrorTradeRuleClient1 = getRandomVantageClientAllFields();
+    private static final ClientHelper mirrorTradeRuleClient2 = getRandomVantageClientAllFields();
 
-    @Description("Create data for Router rule")
-    private static DataHelper getRouterRuleData(ClientHelper client) {
+    @Description("Create data for Mirror Trade rule")
+    private static DataHelper getMirrorTradeRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
@@ -36,7 +33,7 @@ public class RouterRuleDataFactory {
                 "MT4",                            // accountType
                 Utils.getRandomIntPositive().toString(),      // binNumber
                 data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
+                "",                                           // Name
                 data.clientHelper.getUserId(),                // clientId
                 Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
                 "4",                                          // expMonth
@@ -60,50 +57,24 @@ public class RouterRuleDataFactory {
         return data;
     }
 
-    private static DataHelper getRouterRuleTest1Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(1);
-        return data;
-    }
-
-    private static DataHelper getRouterRuleTest2Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient2);
-        data.crmWithdrawalEvent.setCheckName("Checkname");
+    private static DataHelper getMirrorTradeTest1Data() {
+        DataHelper data = getMirrorTradeRuleData(mirrorTradeRuleClient1);
 
         return data;
     }
 
-    private static DataHelper getRouterRuleTest3Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient3);
-        data.crmWithdrawalEvent.setCheckName("Checkname");
-
-        return data;
-    }
-
-    private static DataHelper getRouterRuleTest4Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient4);
-        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
+    private static DataHelper getMirrorTradeTest2Data() {
+        DataHelper data = getMirrorTradeRuleData(mirrorTradeRuleClient2);
         insertMirrorFlagData(data.clientHelper);
-
         return data;
     }
 
-    private static DataHelper getRouterRuleTest5Data() {
-        DataHelper data = getRouterRuleData(routerRuleClient5);
-        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
-
-        return data;
-    }
-
-    public static Map<String, DataHelper> setupRouterRuleData() {
+    public static Map<String, DataHelper> setupMirrorTradeRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getRouterRuleTest1Data());
-        map.put("2", getRouterRuleTest2Data());
-        map.put("3", getRouterRuleTest3Data());
-        map.put("4", getRouterRuleTest4Data());
-        map.put("5", getRouterRuleTest5Data());
+        map.put("1", getMirrorTradeTest1Data());
+        map.put("2", getMirrorTradeTest2Data());
 
         setupData(map);
 
