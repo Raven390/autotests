@@ -1,0 +1,127 @@
+package tests.vindex_backoffice_ui_tests.investigationTool.paymentsTab;
+
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.mt_account.MtAccountObject;
+import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
+import io.qameta.allure.AllureId;
+import org.junit.jupiter.api.*;
+import tests.TestBaseWeb;
+
+import java.util.List;
+
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
+import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
+import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
+import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClientRandomized;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.OperationsHelper.cleanUserPaymentsDb;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static utils.Constants.*;
+import static utils.Utils.getCurrentDateMonthDay;
+import static utils.Utils.insertCrmAccountsToDb;
+
+public class TransactionsGraphTest extends TestBaseWeb {
+    private static ClientHelper client = new ClientHelper(63_350_541, "e5880ca5-8578-4a1e-969d-7a64716ca411", Brand.VANTAGE, Regulator.FCA, 322_322_322, 322_322_321, 228);
+    private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
+    private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
+    private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);
+    private static MtAccountObject mtAccount1 = generateMtAccountByCrmTbAccount(account1);
+    private static MtAccountObject mtAccount2 = generateMtAccountByCrmTbAccount(account2);
+
+    @BeforeAll
+    static void setup() throws Exception {
+        crmTbUser.firstName = "Operator";
+        crmTbUser.lastName = "Trademan";
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertCrmAccountsToDb(account1, account2);
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
+        cleanUserPaymentsDb(client.getUcid());
+    }
+
+    @AfterAll
+    public static void teardown() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1798")
+    @DisplayName("Payments tab. Transaction graph tooltip show data from DB")
+    void transactionGraphWithoutFilters() throws Exception {
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject deposit1 = generateDepositByClient(client);
+        deposit1.statusId = 5;
+        deposit1.paymentType = "Crypto";
+        deposit1.paymentChannel = "CryptoCoino";
+        deposit1.setAmount(5000d);
+        deposit1.setAmountUsd(5000d);
+        CrmTbDepositObject deposit2 = generateDepositByClient(client);
+        deposit2.statusId = 5;
+        deposit2.paymentType = "Bank of Latverya";
+        deposit2.paymentChannel = "Doom Crones";
+        deposit2.setAmount(1000d);
+        deposit2.setAmountUsd(1000d);
+        insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
+        CrmTbWithdrawalObject withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal1.paymentType = "local depositor";
+        withdrawal1.paymentChannel = "Bison Bucks";
+        withdrawal1.setAmount(500d);
+        withdrawal1.setAmountUsd(500d);
+        CrmTbWithdrawalObject withdrawal2 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal2.paymentType = "Bank of Latverya";
+        withdrawal2.paymentChannel = "channel";
+        withdrawal2.setAmount(100d);
+        withdrawal2.setAmountUsd(100d);
+        CrmTbWithdrawalObject withdrawal3 = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal3.paymentType = "Cryptobro";
+        withdrawal3.paymentChannel = "brocoin net";
+        withdrawal3.setAmount(300d);
+        withdrawal3.setAmountUsd(300d);
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2, withdrawal3));
+
+        MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
+        credit1.setAmount(50_000d);
+        credit1.setAmountUsd(50_000d);
+        MtTbCreditsObject credit2 = generateCreditsByClientRandomized(client);
+        credit2.setAmount(10_000d);
+        credit2.setAmountUsd(10_000d);
+        MtTbCreditsObject credit3 = generateCreditsByClientRandomized(client);
+        credit3.setAmount(30_000d);
+        credit3.setAmountUsd(30_000d);
+        MtTbCreditsObject credit4 = generateCreditsByClientRandomized(client);
+        credit4.setAmount(40_000d);
+        credit4.setAmountUsd(40_000d);
+        insertObjectsToDb(MT_CREDITS_TABLE_NAME, List.of(credit1, credit2, credit3, credit4));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        paymentsPage.navigatePaymentsTab(client.getUcid());
+
+        double totalDeposits = deposit1.amountUsd + deposit2.amountUsd;
+        double totalWithdrawals = withdrawal1.amountUsd + withdrawal2.amountUsd + withdrawal3.amountUsd;
+        double totalCredits = credit1.amountUsd + credit2.amountUsd + credit3.amountUsd + credit4.amountUsd;
+        paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
+        checkValue("//div[@data-qa='payments__transactions_chart__features__0']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_brand']", dfWholed.format(totalDeposits));
+        checkValue("//div[@data-qa='payments__transactions_chart__features__1']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_danger']", dfWholed.format(totalWithdrawals));
+        checkValue("//div[@data-qa='payments__transactions_chart__features__2']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_misc']", dfWholed.format(totalCredits));
+    }
+
+    private void checkValue(String selector, String expectedValue) {
+        page.waitForSelector(selector);
+        String actualValue = page.locator(selector).textContent();
+        assertEquals(expectedValue, actualValue);
+    }
+
+
+}

@@ -5,6 +5,14 @@ import java.util.Objects;
 
 public class MtTbCreditsObject {
 
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setAmountUsd(Double amountUsd) {
+        this.amountUsd = amountUsd;
+    }
+
     public Integer account;
     public Double amount;
     public Double amountUsd;
