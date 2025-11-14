@@ -31,6 +31,7 @@ public class FraudstersPage extends AbstractPage {
     private final Locator addFraudButton;
     private final Locator fraudTypeInput;
     private final String fraudDropoutListElementLocatorPattern = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
+    private final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
     private final String restrictionPopupListElementLocatorPattern = "//*[@class='g-select-list__option-default-label'][text()='%s']";
     private final String sourceSelectPattern = "//*[text()='%s']/ancestor::*[@class ='v-fraud-type']//*[@data-qa=\"source_select__select_control\"]";
     private final String statusOptionPattern = "//*[@data-qa=\"select-list\"]//span[text()='%s']";
@@ -53,6 +54,8 @@ public class FraudstersPage extends AbstractPage {
     private final Locator pendingProcessingCells;
     private final Locator validationListItem;
     private final Locator serverAccInput;
+    private final Locator uploadByIdButton;
+    private final Locator uploadByAccountButton;
 
 
     public FraudstersPage(Page page) {
@@ -71,7 +74,7 @@ public class FraudstersPage extends AbstractPage {
         this.fraudTypeInput = page.locator("//input[@placeholder='Type fraud name']");
         this.fraudDropoutListElement = page.locator("//*[contains(@class,'v-dropdown-select-item-base')]/div/div");
         this.selectPopup = page.locator("[data-qa=\"select-popup\"]");
-        this.selectPopupApplyButton = page.locator("//*[@data-qa=\"select-popup\"]//button/*[@title='Client IDs']");
+        this.selectPopupApplyButton = page.locator("[data-qa='client_restrictions_selector__apply']");
         this.commentaryField = page.locator("//textarea[@placeholder='Describe your decision']");
         this.applyUploadButton = page.locator(uploadDrawerLocator + "//button/*[text()='Apply']");
         this.clientIdsButton = page.locator(uploadDrawerLocator + "//div/*[@title='Client IDs']");
@@ -81,6 +84,8 @@ public class FraudstersPage extends AbstractPage {
         this.restrictionListButton = page.locator("//*[text()='Active restrictions']/..//button");
         this.pendingProcessingToggleLocator = page.locator("//*[@data-qa=\"abuse_registry__controls__pending_processing_switch\"]");
         this.pendingProcessingCells = page.locator("//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
+        this.uploadByIdButton = page.locator("[title='Client IDs']");
+        this.uploadByAccountButton = page.locator("[title='Accounts']");
     }
 
     public void navigateAbuseRegistry() {
@@ -126,6 +131,10 @@ public class FraudstersPage extends AbstractPage {
 
     public void selectBrandToUpload(String brandName) {
         page.click(String.format(brandSelectButtonLocatorPattern, brandName));
+    }
+
+    public void selectFraudSource(String sourceName) {
+        page.click(String.format(sourceSelectButtonLocatorPattern, sourceName));
     }
 
     public void selectClientIdsAndBrandToUpload(String brandName) {
@@ -276,6 +285,14 @@ public class FraudstersPage extends AbstractPage {
     public void clickDeleteUpload() {
         deleteUploadButton.click();
         uploadDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+    }
+
+    public void clickUploadByClientId() {
+        uploadByIdButton.click();
+    }
+
+    public void clickUploadByAccount() {
+        uploadByAccountButton.click();
     }
 
     public void verifySuccessMessageUpload() {

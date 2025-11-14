@@ -25,12 +25,15 @@ public class ResolvePage extends AbstractPage {
 
     private static final String investigationCompleted = "Investigation completed";
     private static final String FRAUD_MANAGEMENT_COMPLETED = "Fraud management completed";
-    public static final String FRAUD_TYPE_SELECTOR_FORMATTER = "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
+    public static final String FRAUD_TYPE_STATUS_SELECTOR_FORMATTER = "div[data-qa='client_payment_resolving_drawer__fraud_type_selector__item_%s__%s']";
+    public static final String FRAUD_TYPE_SELECTOR_FORMAT = "//*[@class ='v-sub-menu']//*[text()='%s']";
+    public static final String FRAUD_TYPE_STATUS_FORMAT = "//*[@class='v-menuitem']/*[text()='%s']";
     public static final String REJECTION_REASON_INPUT_SELECTOR = ".v-rejection-reason-plain-input__input";
     public static final String FRAUD_MENU_ITEM_SELECTOR = "div.g-popup__content div.v-sub-menu__anchor";
     public static final String DRAWER_HEADER_SELECTOR = "[data-qa='drawer_header']";
     public static final String RESOLUTION = "Resolution";
     public static final String CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR = "div[data-qa='client_report_fraud_drawer__fraud_type_selector__item_%s__%s']";
+    private static final String sourceSelectButtonLocatorPattern = "[data-qa='buttons_list__item__%s']";
 
     private final Locator loaderAnimation;
     private final Locator loaderSpin;
@@ -234,6 +237,12 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
+
+    public void selectFraudSourceManage(String sourceName) {
+        Allure.step("select fraud source");
+        page.click(String.format(sourceSelectButtonLocatorPattern, sourceName));
+    }
+
     @Step("Resolve and reject all withdrawals")
     public void resolveWithdrawalsAllReject(String reasonTitle, String... dynamicValues) {
         Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
@@ -271,13 +280,19 @@ public class ResolvePage extends AbstractPage {
         String fraudCode = FraudType.valueOfName(target.textContent()).getCode();
 
         target.hover();
-        page.locator(FRAUD_TYPE_SELECTOR_FORMATTER.formatted(fraudCode, CONFIRMED.getDisplayName().toLowerCase())).click();
+        page.locator(FRAUD_TYPE_STATUS_SELECTOR_FORMATTER.formatted(fraudCode, CONFIRMED.getDisplayName().toLowerCase())).click();
     }
 
     public void addFraud(FraudType fraud, FraudTypeStatus status) {
         fraudListButton.click();
         page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
-        page.locator(FRAUD_TYPE_SELECTOR_FORMATTER.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
+        page.locator(FRAUD_TYPE_STATUS_SELECTOR_FORMATTER.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
+    }
+
+    public void addFraudManagement(FraudType fraud, FraudTypeStatus status) {
+        fraudListButton.click();
+        page.locator(FRAUD_TYPE_SELECTOR_FORMAT.formatted(fraud.getName())).hover();
+        page.locator(FRAUD_TYPE_STATUS_FORMAT.formatted(status.getDisplayName())).click();
     }
 
     public void reportFraud(FraudType fraud, FraudTypeStatus status) {
