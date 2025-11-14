@@ -2,6 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.PaymentAlertMessage;
+import business_objects.kafka.alerts.PaymentAlertMessageV2;
 import business_objects.ui.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcid;
+import static business_objects.kafka.alerts.RuleAlertFactory.generatePaymentAlertByUcidByTrigger;
 import static business_objects.ui.user.UserFactory.autotestUserOne;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.BoHelper.closeAlert;
@@ -43,11 +45,12 @@ class SuspiciousClientsPaymentFiltersTest extends TestBaseWeb {
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser1, crmTbUser2));
         PaymentAlertMessage alert1 = generatePaymentAlertByUcid(crmTbUser1.ucid);
         alert1.setAmount("3000");
-        PaymentAlertMessage alert2 = generatePaymentAlertByUcid(crmTbUser2.ucid);
-        alert2.setAmount("9000");
-        alert2.setPaymentMethod("Credit card");
+        PaymentAlertMessageV2 alert2 = generatePaymentAlertByUcidByTrigger(crmTbUser2.ucid, "transferToWA");
+        alert2.amount = "9000";
+        alert2.amountUSD = "9000";
+        alert2.paymentMethod = "Credit card";
         kafka.produceMessage(alert1.getId().toString(), objectMapper.writeValueAsString(alert1), KAFKA_TOPIC_ALERTS);
-        kafka.produceMessage(alert2.getId().toString(), objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
+        kafka.produceMessage(alert2.id.toString(), objectMapper.writeValueAsString(alert2), KAFKA_TOPIC_ALERTS);
     }
 
     @Test
@@ -88,6 +91,25 @@ class SuspiciousClientsPaymentFiltersTest extends TestBaseWeb {
         investigationPage.filterAll();
         investigationPage.waitForPageToLoad();
         investigationPage.verifyAllCardsFilteredByRuleName(ruleName);
+    }
+
+    @Test
+    @AllureId("1792")
+    @DisplayName("Verify payment filtration by priority for suspicious clients")
+    void verifyPriorityFiltrationTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToMain();
+        investigationPage.waitForPageToLoad();
+        investigationPage.clickSelectPaymentInvestigationType();
+        investigationPage.clickSuspiciousClientsFiltration();
+        String filterName = "HIGH";
+        investigationPage.fillPriorityFilter(filterName);
+        investigationPage.clickApplyFiltrationButton();
+        investigationPage.verifyAllCardsFilteredByHighPriority();
+        investigationPage.filterAll();
+        investigationPage.waitForPageToLoad();
+        investigationPage.verifyAllCardsFilteredByHighPriority();
     }
 
     @Test

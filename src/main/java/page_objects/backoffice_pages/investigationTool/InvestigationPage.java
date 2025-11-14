@@ -110,6 +110,7 @@ public class InvestigationPage extends AbstractPage {
     private static final String CLIENT_CARD_BY_CLIENT_ID_PATTERN = "//div[text()='%s']/ancestor::div[contains(@data-qa,'suspicious_clients__card')]";
     private static final String FILTER_LOADING = "//div[@class='v-investigation-tools-side-panel__filters']/button[contains(@class,'g-button_loading')]";
     private static final String INVESTIGATION_TYPE_LOCATOR_TEMPLATE = "//span[@class='g-select-list__option-default-label' and text()='%s']";
+    public static final String HIGH_PRIORITY_LOCATOR = "//div[contains(@class,'v-suspicious-client-card__alerts-count') and contains(@class,'v-suspicious-client-card__alerts-count_isHighPriority')]";
     private final Locator unassignedSuspiciousClientsCounter;
     private final Locator mySuspiciousClientsCounter;
     private final Locator allSuspiciousClientsCounter;
@@ -425,6 +426,21 @@ public class InvestigationPage extends AbstractPage {
     public void fillPaymentMethodFilter(String paymentMethod) {
         Allure.step("Fill payment method filter");
         page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, paymentMethod)).click();
+    }
+
+
+    @Step
+    public void fillPriorityFilter(String priority) {
+        Allure.step("Fill priority filter");
+        page.locator(String.format(CHECKBOX_BY_VALUE_PATTERN, priority)).click();
+    }
+
+    @Step("Verify all client cards are filtered by High priority")
+    public void verifyAllCardsFilteredByHighPriority() {
+        for (int i = 0; i < clientContainer.count(); i++) {
+            Locator child = clientContainer.nth(i).locator(HIGH_PRIORITY_LOCATOR);
+            assertThat("Assert that client card is according to high priority filtration", child.isVisible(), equalTo(true));
+        }
     }
 
     @Step("Submit comment form with error")
@@ -763,6 +779,19 @@ public class InvestigationPage extends AbstractPage {
         if (clientContainer.count() > 0) {
             for (int i = 0; i < clientContainer.count(); i++) {
                 clientIds.add(clientContainer.nth(i).locator(clientIdElement).textContent());
+            }
+        }
+        return clientIds;
+    }
+
+    @Step("Get client IDs from visible client cards")
+    public List<Boolean> getPriorityFromClientCards() {
+        Allure.step("Get client IDs from visible client cards");
+        List<Boolean> clientIds = new ArrayList<>();
+        if (clientContainer.count() > 0) {
+            for (int i = 0; i < clientContainer.count(); i++) {
+                Locator count = clientContainer.nth(i).locator(HIGH_PRIORITY_LOCATOR);
+                clientIds.add(count.isVisible());
             }
         }
         return clientIds;
