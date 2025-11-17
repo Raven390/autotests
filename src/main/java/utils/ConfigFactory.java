@@ -34,6 +34,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_TRADES_GROUP_BY = CONFIG.clickhouseGetTradesGroupByPath();
     public static final String CLICKHOUSE_API_GET_TRADES = CONFIG.clickhouseGetTradesPath();
     public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES = CONFIG.clickhouseGetUnclosedTradesPath();
+    public static final String CLICKHOUSE_API_GET_UNCLOSED_TRADES_BY_SYMBOL = CONFIG.clickhouseGetUnclosedTradesBySymbol();
     public static final String CLICKHOUSE_API_GET_DEPOSITS = CONFIG.clickhouseGetDepositsPath();
     public static final String CLICKHOUSE_API_GET_RATE_USD = CONFIG.clickhouseGetRateUsd();
     public static final String CLICKHOUSE_API_GET_WITHDRAWALS = CONFIG.clickhouseGetWithdrawalsPath();
@@ -61,6 +62,7 @@ public class ConfigFactory {
     public static final String CLICKHOUSE_API_GET_VERIFY_TRADING_ACCOUNT = CONFIG.clickhouseGetVerifyTradingAccount();
     public static final String CLICKHOUSE_API_GET_STOPOUT_TRADES_RATIO = CONFIG.clickhouseGetStopoutTradesRatio();
     public static final String CLICKHOUSE_API_GET_SLIPPAGE_AMOUNT = CONFIG.clickhouseGetSlippageAmount();
+    public static final String CLICKHOUSE_API_GET_SYMBOL_GROUPS = CONFIG.clickhouseGetSymbolGroups();
     public static final String CLICKHOUSE_API_GET_SHORT_TOXICITY = CONFIG.clickhouseGetShortToxicity();
     public static final String CLICKHOUSE_API_GET_REBATE_AMOUNT = CONFIG.clickhouseGetRebateAmount();
     public static final String CLICKHOUSE_API_GET_PROFIT_TO_CAPITAL_RATIO = CONFIG.clickhouseGetProfitToCapital();
@@ -396,6 +398,12 @@ public class ConfigFactory {
 
         @Key("clickhouseGetGeneralScore")
         String clickhouseGetGeneralScore();
+
+        @Key("clickhouseGetSymbolGroups")
+        String clickhouseGetSymbolGroups();
+
+        @Key("clickhouseGetUnclosedTradesBySymbol")
+        String clickhouseGetUnclosedTradesBySymbol();
 
 
         // Rule engine
