@@ -276,7 +276,18 @@ tasks.register('testRunnerDebug', Test) {
 sourceSets {
     main {
         java {
-            srcDir "${buildDir}/generated/src/main/java"
+            srcDirs = ["src/main/java"] // include main sources and generated sources
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+        }
+    }
+    test {
+        java {
+            srcDirs = ["src/test/java"]
+        }
+        resources {
+            srcDirs = ["src/test/resources"]
         }
     }
 }

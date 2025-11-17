@@ -54,6 +54,8 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME = "Clickhouse api. Get swap free volume";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SYMBOL_GROUPS = "Clickhouse api. Get symbol groups";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES_BY_SYMBOL = "Clickhouse api. Get unclosed trades by symbol";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES = "Clickhouse api. Get trades";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_TRADES_GROUP_BY_SYMBOL = "Clickhouse api. Get trades grouped by symbol";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_UNCLOSED_TRADES = "Clickhouse api. Get unclosed trades";
@@ -334,12 +336,8 @@ public class Constants {
     public static final String CRM_LOGIN_EVENT = "login";
     public static final String CRM_REGISTRATION_EVENT = "registration";
     public static final String CRM_WITHDRAWAL_EVENT = "withdrawal";
-    public static final String EG_CLOSE_TRADE_EVENT = "egCloseTrade";
-    public static final String EG_DEPOSIT_EVENT = "egDeposit";
     public static final String EG_LOGIN_EVENT = "egLoginToWeb";
-    public static final String EG_OPEN_TRADE_EVENT = "egOpenTrade";
     public static final String EG_RAF_BALANCE_EVENT = "egRaf";
-    public static final String EG_REGISTRATION_EVENT = "egRegistration";
     public static final String REGISTRATION_EVENT = "registration";
     public static final String EG_WITHDRAWAL_EVENT = "egWithdrawal";
     public static final String KAFKA_MESSAGE_KEY = "QA";
