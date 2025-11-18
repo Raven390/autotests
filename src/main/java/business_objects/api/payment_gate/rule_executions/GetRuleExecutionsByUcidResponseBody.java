@@ -7,30 +7,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/**
- * Response model for GET /rule-executions endpoint
- *
- * Example:
- * {
- * "paymentId": "56b6b3e8-5be3-4909-b221-31d5316806c9",
- * "items": [
- * {
- * "id": 223344,
- * "runId": "2398529387692876",
- * "paymentId": "56b6b3e8-5be3-4909-b221-31d5316806c9",
- * "ruleId": 101,
- * "ruleVersion": "1.0.23",
- * "ruleEndId": 2,
- * "startedAt": "2025-08-27T09:31:00Z",
- * "completedAt": "2025-08-27T09:31:02Z",
- * "createdAt": "2025-08-27T09:31:02Z",
- * "updatedAt": "2025-08-27T09:31:02Z"
- * }
- * ]
- * }
- */
+/// [
+/// {
+/// "paymentId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+/// "items": [
+/// {
+/// "id": 223344,
+/// "runId": "2398529387692876",
+/// "paymentId": "56b6b3e8-5be3-4909-b221-31d5316806c9",
+/// "ruleId": 101,
+/// "ruleType": "risk",
+/// "ruleVersion": "1.0.23",
+/// "ruleEndId": 2,
+/// "startedAt": "2025-08-27T09:31:00Z",
+/// "completedAt": "2025-08-27T09:31:02Z",
+/// "createdAt": "2025-08-27T09:31:02Z",
+/// "updatedAt": "2025-08-27T09:31:02Z"
+/// }
+/// ]
+/// }
+/// ]
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GetExecutionsResponseBody {
+public class GetRuleExecutionsByUcidResponseBody {
 
     @JsonProperty("paymentId")
     private UUID paymentId;
@@ -38,35 +37,10 @@ public class GetExecutionsResponseBody {
     @JsonProperty("items")
     private List<Item> items;
 
-    // Optional legacy error fields
-    @JsonProperty("error")
-    private String error;
-
-    @JsonProperty("message")
-    private String message;
-
-    // Problem Details (RFC 7807) error fields for 4xx/5xx responses
-    @JsonProperty("type")
-    private String type;
-
-    @JsonProperty("title")
-    private String title;
-
-    @JsonProperty("status")
-    private Integer status;
-
-    @JsonProperty("detail")
-    private String detail;
-
-    @JsonProperty("instance")
-    private String instance;
-
-    //Response body: {"type":"about:blank","title":"Bad Request","status":400,"detail":"Failed to convert 'ruleId' with value: 'ааа'","instance":"/v1/payments/9ee25fa4-01ee-4380-8c5a-3eda96981806/ruleExecutions"}
-
-    public GetExecutionsResponseBody() {
+    public GetRuleExecutionsByUcidResponseBody() {
     }
 
-    public GetExecutionsResponseBody(UUID paymentId, List<Item> items) {
+    public GetRuleExecutionsByUcidResponseBody(UUID paymentId, List<Item> items) {
         this.paymentId = paymentId;
         this.items = items;
     }
@@ -87,67 +61,11 @@ public class GetExecutionsResponseBody {
         this.items = items;
     }
 
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getDetail() {
-        return detail;
-    }
-
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
-
-    public String getInstance() {
-        return instance;
-    }
-
-    public void setInstance(String instance) {
-        this.instance = instance;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GetExecutionsResponseBody that = (GetExecutionsResponseBody) o;
+        GetRuleExecutionsByUcidResponseBody that = (GetRuleExecutionsByUcidResponseBody) o;
         return Objects.equals(paymentId, that.paymentId) && Objects.equals(items, that.items);
     }
 
@@ -158,41 +76,54 @@ public class GetExecutionsResponseBody {
 
     @Override
     public String toString() {
-        return "GetExecutionsResponseBody{" + "paymentId='" + paymentId + '\'' + ", items=" + items + '}';
+        return "GetRuleExecutionsByUcidResponseBody{" + "paymentId=" + paymentId + ", items=" + items + '}';
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Item {
         @JsonProperty("id")
         private Integer id;
+
         @JsonProperty("runId")
         private String runId;
+
         @JsonProperty("paymentId")
         private String paymentId;
+
         @JsonProperty("ruleId")
         private Integer ruleId;
+
+        @JsonProperty("ruleType")
+        private String ruleType;
+
         @JsonProperty("ruleVersion")
         private String ruleVersion;
+
         @JsonProperty("ruleEndId")
         private Integer ruleEndId;
+
         @JsonProperty("startedAt")
         private String startedAt;
+
         @JsonProperty("completedAt")
         private String completedAt;
+
         @JsonProperty("createdAt")
         private String createdAt;
+
         @JsonProperty("updatedAt")
         private String updatedAt;
 
         public Item() {
         }
 
-        public Item(Integer id, String runId, String paymentId, Integer ruleId, String ruleVersion, Integer ruleEndId,
-                String startedAt, String completedAt, String createdAt, String updatedAt) {
+        public Item(Integer id, String runId, String paymentId, Integer ruleId, String ruleType, String ruleVersion,
+                Integer ruleEndId, String startedAt, String completedAt, String createdAt, String updatedAt) {
             this.id = id;
             this.runId = runId;
             this.paymentId = paymentId;
             this.ruleId = ruleId;
+            this.ruleType = ruleType;
             this.ruleVersion = ruleVersion;
             this.ruleEndId = ruleEndId;
             this.startedAt = startedAt;
@@ -231,6 +162,14 @@ public class GetExecutionsResponseBody {
 
         public void setRuleId(Integer ruleId) {
             this.ruleId = ruleId;
+        }
+
+        public String getRuleType() {
+            return ruleType;
+        }
+
+        public void setRuleType(String ruleType) {
+            this.ruleType = ruleType;
         }
 
         public String getRuleVersion() {
@@ -286,17 +225,17 @@ public class GetExecutionsResponseBody {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Item item = (Item) o;
-            return Objects.equals(id, item.id) && Objects.equals(runId, item.runId) && Objects.equals(paymentId, item.paymentId) && Objects.equals(ruleId, item.ruleId) && Objects.equals(ruleVersion, item.ruleVersion) && Objects.equals(ruleEndId, item.ruleEndId) && Objects.equals(startedAt, item.startedAt) && Objects.equals(completedAt, item.completedAt) && Objects.equals(createdAt, item.createdAt) && Objects.equals(updatedAt, item.updatedAt);
+            return Objects.equals(id, item.id) && Objects.equals(runId, item.runId) && Objects.equals(paymentId, item.paymentId) && Objects.equals(ruleId, item.ruleId) && Objects.equals(ruleType, item.ruleType) && Objects.equals(ruleVersion, item.ruleVersion) && Objects.equals(ruleEndId, item.ruleEndId) && Objects.equals(startedAt, item.startedAt) && Objects.equals(completedAt, item.completedAt) && Objects.equals(createdAt, item.createdAt) && Objects.equals(updatedAt, item.updatedAt);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, runId, paymentId, ruleId, ruleVersion, ruleEndId, startedAt, completedAt, createdAt, updatedAt);
+            return Objects.hash(id, runId, paymentId, ruleId, ruleType, ruleVersion, ruleEndId, startedAt, completedAt, createdAt, updatedAt);
         }
 
         @Override
         public String toString() {
-            return "Item{" + "id=" + id + ", runId='" + runId + '\'' + ", paymentId='" + paymentId + '\'' + ", ruleId=" + ruleId + ", ruleVersion='" + ruleVersion + '\'' + ", ruleEndId=" + ruleEndId + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
+            return "Item{" + "id=" + id + ", runId='" + runId + '\'' + ", paymentId='" + paymentId + '\'' + ", ruleId=" + ruleId + ", ruleType='" + ruleType + '\'' + ", ruleVersion='" + ruleVersion + '\'' + ", ruleEndId=" + ruleEndId + ", startedAt='" + startedAt + '\'' + ", completedAt='" + completedAt + '\'' + ", createdAt='" + createdAt + '\'' + ", updatedAt='" + updatedAt + '\'' + '}';
         }
     }
 }

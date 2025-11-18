@@ -1,6 +1,6 @@
 package tests.payment_gate_service_tests;
 
-import business_objects.api.payment_gate.rule_executions.GetRuleExecutionsResponseBody;
+import business_objects.api.payment_gate.rule_executions.GetRuleExecutionsByUcidResponseBody;
 import business_objects.api.payment_gate.rule_executions.PostRuleExecutionsBody;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
@@ -15,13 +15,10 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequestBodyFactory.generatePostRuleExecutionsBody;
-import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequests.getRuleExecutionsRequest;
+import static business_objects.api.payment_gate.rule_executions.RuleExecutionsRequests.getRuleExecutionsByUcidRequest;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
@@ -37,7 +34,7 @@ import static utils.Constants.*;
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
-class GetRuleExecutionsV1Tests extends TestBaseApi {
+class GetRuleExecutionsByUCIDV1Tests extends TestBaseApi {
     private static ClientHelper client1;
     private static ClientHelper client2;
     private static ClientHelper client3;
@@ -55,6 +52,9 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
     private static PaymentDetailsObject paymentDetailsObject3;
     private static PaymentDetailsObject paymentDetailsObject4;
     private static PaymentRuleExecutionsObject paymentRuleExecutionsObject1;
+    private static PaymentRuleExecutionsObject paymentRuleExecutionsObject2;
+    private static PaymentRuleExecutionsObject paymentRuleExecutionsObject3;
+    private static PaymentRuleExecutionsObject paymentRuleExecutionsObject4;
 
     @BeforeAll
     static void setupData() {
@@ -64,25 +64,30 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         postRuleExecutionsBody1 = generatePostRuleExecutionsBody(paymentEventsObject1);
         paymentRuleExecutionsObject1 = generatePaymentRuleExecutionsObject(paymentEventsObject1);
+        paymentRuleExecutionsObject1.setRuleEndId(101);
+        paymentRuleExecutionsObject1.setRuleId(1);
 
         client2 = getRandomVantageClientAllFields();
         paymentEventsObject2 = generatePaymentEventsObject(client2);
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
         postRuleExecutionsBody2 = generatePostRuleExecutionsBody(paymentEventsObject2);
+        paymentRuleExecutionsObject2 = generatePaymentRuleExecutionsObject(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
         paymentEventsObject3 = generatePaymentEventsObject(client3);
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
         postRuleExecutionsBody3 = generatePostRuleExecutionsBody(paymentEventsObject3);
+        paymentRuleExecutionsObject3 = generatePaymentRuleExecutionsObject(paymentEventsObject3);
 
         client4 = getRandomVantageClientAllFields();
         paymentEventsObject4 = generatePaymentEventsObject(client4);
         paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
         postRuleExecutionsBody4 = generatePostRuleExecutionsBody(paymentEventsObject4, true);
+        paymentRuleExecutionsObject4 = generatePaymentRuleExecutionsObject(paymentEventsObject4);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
-        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1, paymentRuleExecutionsObject2, paymentRuleExecutionsObject3, paymentRuleExecutionsObject4));
     }
 
     @AfterAll
@@ -94,21 +99,28 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
     }
 
     @Test
-    @AllureId("1585")
+    @AllureId("1825")
     @DisplayName("Get rule execution V1. Success test. 200")
-    void GetRuleExecutionsV1Test1() throws Exception {
+    void GetRuleExecutionsByUCIDV1Test1() throws Exception {
 
         Allure.step("send get payment request with valid data");
         Map<String, Object> paramsMap = new HashMap<>();
-        Response response = getRuleExecutionsRequest(postRuleExecutionsBody1.getPaymentId().toString(), paramsMap);
+        paramsMap.put("ruleId", paymentRuleExecutionsObject1.getRuleId());
+        paramsMap.put("ruleEndId", paymentRuleExecutionsObject1.getRuleEndId());
+        paramsMap.put("dateFrom", "2025-08-27T09:31:02Z");
+        paramsMap.put("ruleOutcomeEndType", "OK");
+        Response response = getRuleExecutionsByUcidRequest(client1.getUcid(), paramsMap);
         assertThat(response.code(), is(200));
+        assertThat(response.body(), notNullValue());
+        String responseBodyString = response.peekBody(Long.MAX_VALUE).string();
+        assertThat("Response body should not be an empty array", responseBodyString, not("[]"));
 
         Allure.step("Validate Data in response");
-        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
-        assertThat("Assert paymentId present", mappedResponse.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId()));
+        List<GetRuleExecutionsByUcidResponseBody> mappedResponse = Arrays.stream(objectMapper.readValue(responseBodyString, GetRuleExecutionsByUcidResponseBody[].class)).toList();
+        assertThat("Assert paymentId present", mappedResponse.get(0).getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId()));
         // Additional asserts based on the sample response structure
-        assertThat("Assert items list present", mappedResponse.getItems(), is(notNullValue()));
-        GetRuleExecutionsResponseBody.Item item = mappedResponse.getItems().getFirst();
+        assertThat("Assert items list present", mappedResponse.get(0).getItems(), is(notNullValue()));
+        GetRuleExecutionsByUcidResponseBody.Item item = mappedResponse.get(0).getItems().get(0);
         assertThat("Assert item.runId present", item.getRunId(), not(paymentRuleExecutionsObject1.getRunId()));
         assertThat("Assert item.paymentId equals response paymentId", item.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId().toString()));
         assertThat("Assert item.ruleId present", item.getRuleId(), is(paymentRuleExecutionsObject1.getRuleId()));
@@ -118,61 +130,6 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
         assertThat("Assert item.completedAt present", item.getCompletedAt(), not(paymentRuleExecutionsObject1.getDateCompleted()));
         assertThat("Assert item.createdAt present", item.getCreatedAt(), not(paymentRuleExecutionsObject1.getDateCreated()));
         assertThat("Assert item.updatedAt present", item.getUpdatedAt(), not(paymentRuleExecutionsObject1.getDateUpdated()));
-    }
-
-    @Test
-    @AllureId("1584")
-    @DisplayName("Get rule execution V1. Success test. 400")
-    void GetRuleExecutionsV1Test2() throws Exception {
-
-        Allure.step("send get payment request with valid data");
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("ruleId", "ааа");
-        Response response = getRuleExecutionsRequest(postRuleExecutionsBody2.getPaymentId().toString(), paramsMap);
-        assertThat(response.code(), is(400));
-
-        Allure.step("Validate Data in response");
-        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
-        assertThat("Assert status present", mappedResponse.getStatus(), is(400));
-        assertThat("Assert title is Bad Request", mappedResponse.getTitle(), is("Bad Request"));
-        assertThat("Assert detail explains ruleId conversion failure", mappedResponse.getDetail(), containsString("Failed to convert 'ruleId'"));
-    }
-
-    @Test
-    @AllureId("1583")
-    @DisplayName("Get rule execution V1. Success test. 400")
-    void GetRuleExecutionsV1Test3() throws Exception {
-
-        Allure.step("send get payment request with valid data");
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("ruleEndId", "fff");
-        Response response = getRuleExecutionsRequest(postRuleExecutionsBody2.getPaymentId().toString(), paramsMap);
-        assertThat(response.code(), is(400));
-
-        Allure.step("Validate Data in response");
-        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
-        assertThat("Assert status present", mappedResponse.getStatus(), is(400));
-        assertThat("Assert title is Bad Request", mappedResponse.getTitle(), is("Bad Request"));
-        assertThat("Assert detail explains ruleId conversion failure", mappedResponse.getDetail(), containsString("Failed to convert 'ruleEndId'"));
-    }
-
-    @Test
-    @AllureId("1582")
-    @DisplayName("Get rule execution V1. Success test. 404")
-    void GetRuleExecutionsV1Test4() throws Exception {
-
-        Allure.step("send get payment request with valid data");
-        Map<String, Object> paramsMap = new HashMap<>();
-        paramsMap.put("ruleId", "");
-        paramsMap.put("ruleEndId", "");
-        String uuid = UUID.randomUUID().toString();
-        Response response = getRuleExecutionsRequest(uuid, paramsMap);
-        assertThat(response.code(), is(404));
-
-        Allure.step("Validate Data in response");
-        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
-        assertThat("Assert status present", mappedResponse.getError(), is("not_found"));
-        assertThat("Assert status present", mappedResponse.getMessage(), is(String.format("paymentId %s is not found", uuid)));
     }
 
 }
