@@ -123,7 +123,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("clientId", userFrom1.getUcid());
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -143,7 +143,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("clientId1", userFrom1.getUcid());
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -165,7 +165,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("abuseTypes", List.of("HEDGING"));
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -184,7 +184,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionDepth", 2);
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -203,7 +203,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 0.9);
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -220,7 +220,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 0.7);
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -239,7 +239,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 1.1);
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -257,7 +257,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionScoreTo", 0.1);
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -275,7 +275,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionAttributes", List.of("digital"));
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -293,7 +293,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("abuseTypeStatus", "CONFIRMED");
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -311,7 +311,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("abuseTypeStatus", "POTENTIAL");
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));
@@ -335,7 +335,7 @@ class GetAbuseTypesByClientIdV2Tests extends TestBaseApi {
         queryParams.put("connectionAttributes", List.of("digital", "payoutId"));
 
         Response response = getAbuseTypesByClientIdV2(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV2[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV2[].class
         ));

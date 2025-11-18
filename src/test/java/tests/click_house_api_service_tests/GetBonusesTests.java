@@ -22,6 +22,7 @@ import static helpers.database.CleanTableHelper.cleanBonusesTableByClient;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
@@ -37,7 +38,7 @@ class GetBonusesTests extends TestBaseApi {
     private static CrmTbBonusObject bonus2;
 
     @BeforeAll
-    static void setupBonuses() {
+    static void setup() {
         bonus1 = generateBonusByClient(getRandomVantageClient());
         bonus2 = generateBonusByClient(getRandomVantageClient());
         bonus2.createTime = getTomorrowTimestampDbFormat();
@@ -46,7 +47,7 @@ class GetBonusesTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownBonuses() throws Exception {
+    static void teardown() throws Exception {
         cleanBonusesTableByClient(bonus1.ucid, bonus2.ucid);
     }
 
@@ -65,7 +66,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
         Response response = getBonuses(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -93,7 +94,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("limit", "");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -108,7 +109,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("clientIds", List.of(bonus1.ucid, bonus2.ucid));
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -127,7 +128,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
@@ -150,7 +151,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("orderBy", "createTime");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -173,7 +174,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBonusesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBonusesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -188,7 +189,7 @@ class GetBonusesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientIds' for method parameter type List is not present"));
@@ -209,7 +210,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientIds' for method parameter type List is not present"));
@@ -226,7 +227,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -245,7 +246,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -264,7 +265,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: clientId, createTime, actualAmount, actualAmountUSD"));
@@ -281,7 +282,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -298,7 +299,7 @@ class GetBonusesTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getBonuses(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));

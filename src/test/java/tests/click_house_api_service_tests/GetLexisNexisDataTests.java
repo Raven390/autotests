@@ -42,12 +42,12 @@ class GetLexisNexisDataTests extends TestBaseApi {
     private static String ucid2 = object2.getUcid();
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(object1, object2));
     }
 
     @AfterAll
-    static void teardownData() throws Exception {
+    static void teardown() throws Exception {
         cleanLexisNexisTableByUcid(ucid1, ucid2);
     }
 

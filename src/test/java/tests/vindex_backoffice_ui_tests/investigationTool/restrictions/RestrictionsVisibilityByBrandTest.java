@@ -67,7 +67,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
                 client.getUcid(), CLOSE_ONLY_MODE.getCode(), CLOSE_ONLY_MODE.getType(), account.account, account.serverIdSt, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert response code is 400", response.code(), equalTo(400));
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         PostRestrictionResponse responseBody = objectMapper.readValue(
                 response.body().string(), PostRestrictionResponse.class
         );
@@ -84,7 +84,7 @@ public class RestrictionsVisibilityByBrandTest extends TestBaseWeb {
                 client.getUcid(), CLOSE_ONLY_MODE.getCode(), CLOSE_ONLY_MODE.getType(), account.account, account.serverIdSt, "Automation test", new PostRestrictionRequestBody.UpdatedBy("Auto", "Test")
         ));
         assertThat("Assert response code is 400", response.code(), equalTo(400));
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         PostRestrictionResponse responseBody = objectMapper.readValue(
                 response.body().string(), PostRestrictionResponse.class
         );

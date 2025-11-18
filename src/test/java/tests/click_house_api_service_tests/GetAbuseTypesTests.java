@@ -42,7 +42,7 @@ class GetAbuseTypesTests extends TestBaseApi {
     private static ClientHelper client2 = getRandomVantageClient();
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         CrmTbUserObject user = generateUserByClient(client);
         CrmTbUserObject user2 = generateUserByClient(client2);
 
@@ -56,7 +56,7 @@ class GetAbuseTypesTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
+    static void delete() throws Exception {
         cleanFraudTypeTableByClient(fraud1.getUcid(), fraud2.getUcid(), fraud3.getUcid());
         deleteUserFromAbuseRegistry(client.getUcid());
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
@@ -71,7 +71,7 @@ class GetAbuseTypesTests extends TestBaseApi {
 
         Response response = getAbuseTypes(List.of(fraud1.getUcid()));
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetAbuseTypesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert array size", mappedResponse.length, is(1));
@@ -91,7 +91,7 @@ class GetAbuseTypesTests extends TestBaseApi {
 
         Response response = getAbuseTypes(List.of(fraud1.getUcid(), fraud3.getUcid()));
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetAbuseTypesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert array size", mappedResponse.length, is(2));
@@ -106,7 +106,7 @@ class GetAbuseTypesTests extends TestBaseApi {
 
         Response response = getAbuseTypes(List.of("test"));
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid \"clientId\" property format. The property clientId must contain brand and userId divided by a dash e.g., vantage-2068746030"));

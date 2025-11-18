@@ -34,7 +34,7 @@ class GetEventsTests {
 
         Response response = getEvents();
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetEventsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetEventsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Check the response body", Arrays.stream(mappedResponse).toList(), hasItem(withdrawal));

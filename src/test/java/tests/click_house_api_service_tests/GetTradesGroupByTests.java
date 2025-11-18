@@ -48,7 +48,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     private static Mt5DealsCoercedObject trade7;
 
     @BeforeAll
-    static void setupTradesGroupBy() {
+    static void setup() {
         client = getRandomVantageClient();
         client2 = getRandomVantageClient();
         client3 = getRandomVantageClient();
@@ -88,7 +88,7 @@ class GetTradesGroupByTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownTradesGroupBy() throws Exception {
+    static void teardown() throws Exception {
         cleanMt5CoercedTableByUcid(client.getUcid(), client2.getUcid(), client3.getUcid());
     }
 
@@ -101,7 +101,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -121,7 +121,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("action", trade1.getAction());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -141,7 +141,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("entry", trade2.getEntry());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -161,7 +161,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("dateFrom", "2029-01-02T00:00:00");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -181,7 +181,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("dateTo", "2024-01-02T00:00:00");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -202,7 +202,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -223,7 +223,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -243,7 +243,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("orderBy", "symbol");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -263,7 +263,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("orderBy", "profit");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -283,7 +283,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("limit", 1);
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
@@ -300,7 +300,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -316,7 +316,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("tradingAccount", client.getTradingAccount());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -333,7 +333,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", client.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -350,7 +350,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -368,7 +368,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("action", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -388,7 +388,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("entry", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -408,7 +408,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -428,7 +428,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -448,7 +448,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -466,7 +466,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -484,7 +484,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 200", response.code(), is(400));
 
@@ -502,7 +502,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("clientIds", List.of(client.getUcid()));
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -522,7 +522,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", List.of(client2.getServerId(), client3.getServerId()));
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));
@@ -543,7 +543,7 @@ class GetTradesGroupByTests extends TestBaseApi {
         queryParams.put("serverId", client2.getServerId() + "," + client3.getServerId());
         Response response = getTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetTradesGroupByResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetTradesGroupByResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(2));

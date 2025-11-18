@@ -20,8 +20,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -34,7 +33,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
     private static final ClientHelper client = getRandomVantageClientAllFields();
 
     @BeforeAll
-    static void setupMirrorTrades() {
+    static void setup() {
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(generateCrmTbAccountData(client), generateAdditionalCrmTbAccountData(client)));
     }
 
@@ -46,7 +45,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
         Response response = getClientTradingAccounts(client.getUcid());
 
         // Assert response
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetClientTradingAccountsResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetClientTradingAccountsResponse[].class)).toList();
         GetClientTradingAccountsResponse response1 = new GetClientTradingAccountsResponse(
                 "clientAccounts", client.getUcid(), client.getTradingAccount().toString(), client.getServerId().toString(), "USD"
@@ -68,7 +67,7 @@ class GetClientTradingAccountTests extends TestBaseApi {
         Response response = getClientTradingAccounts("1");
 
         // Assert response
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Check response code", response.code(), is(400));
         assertThat("Check response code", mappedResponse.getStatus(), is(400));

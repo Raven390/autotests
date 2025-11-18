@@ -28,12 +28,12 @@ import static utils.Constants.SUITE_CLICKHOUSE_API_SERVICE;
 class GetSymbolGroupsTests extends TestBaseApi {
 
     @BeforeAll
-    static void setupData() throws IOException {
+    static void setup() throws IOException {
         // No test data needed for these endpoint checks
     }
 
     @AfterAll
-    static void deleteData() throws Exception {
+    static void delete() throws Exception {
         // No cleanup needed
     }
 
@@ -45,7 +45,7 @@ class GetSymbolGroupsTests extends TestBaseApi {
         queryParams.put("symbol", "EURUSDpro");
         Response response = getSymbolGroups(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSymbolGroupsResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSymbolGroupsResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that code is 200", mappedResponse.getGroup(), is("Forex"));
@@ -58,7 +58,7 @@ class GetSymbolGroupsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getSymbolGroups(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -74,7 +74,7 @@ class GetSymbolGroupsTests extends TestBaseApi {
         queryParams.put("symbol", "ACVKSJ");
         Response response = getSymbolGroups(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 404", response.code(), is(404));
 

@@ -22,6 +22,7 @@ import static business_objects.api.clickhouse_api_service.get_floating_trades_gr
 import static helpers.data.ClientFactory.getRandomClient;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
@@ -54,7 +55,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("limit", ""); // Limit the number of results returned
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert listSize", mappedResponse.floatingTradesItems.size(), is(2));
@@ -72,7 +73,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
@@ -89,7 +90,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("serverId", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -106,7 +107,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("tradingAccount", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
@@ -123,7 +124,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("serverId", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
     }
@@ -142,7 +143,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("dateFrom", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -161,7 +162,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("dateTo", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -181,7 +182,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("dateTo", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -200,7 +201,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("entity", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -219,7 +220,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("action", "");
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -238,7 +239,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("orderBy", "createTime"); // Enum - createTime, actualAmount, actualAmountUSD
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -257,7 +258,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("orderBy", "actualAmount"); // Enum - createTime, actualAmount, actualAmountUSD
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -276,7 +277,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("orderBy", "actualAmountUSD"); // Enum - createTime, actualAmount, actualAmountUSD
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -296,7 +297,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -316,7 +317,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -336,7 +337,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -356,7 +357,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -376,7 +377,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -396,7 +397,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // Enum - asc, desc
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }
@@ -415,7 +416,7 @@ class GetFloatingTradesGroupBy extends TestBaseApi {
         queryParams.put("limit", ""); // Limit the number of results returned
         Response response = getFloatingTradesGroupBy(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFloatingTradesGroupByResponse mappedResponse = objectMapper.readValue(response.body().string(), GetFloatingTradesGroupByResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
     }

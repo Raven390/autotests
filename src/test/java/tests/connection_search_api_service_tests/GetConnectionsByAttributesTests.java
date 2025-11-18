@@ -633,7 +633,7 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         queryParams.put("device", deviceIdTableEntry.deviceId);
 
         Response response = getConnectionsByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
@@ -655,7 +655,7 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
 
 
         Response response = getConnectionsByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
@@ -676,7 +676,7 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         queryParams.put("nameBirth", userFromNameBirth.getNameDateOfBirth());
 
         Response response = getConnectionsByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );
@@ -697,7 +697,7 @@ class GetConnectionsByAttributesTests extends TestBaseApi {
         queryParams.put("session", sessionIdTableEntry.sessionId);
 
         Response response = getConnectionsByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetConnectionsResponse[] responseBody = objectMapper.readValue(
                 response.body().string(), GetConnectionsResponse[].class
         );

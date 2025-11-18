@@ -42,6 +42,7 @@ import static helpers.database.CleanTableHelper.*;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.waitForConnectionSearchToUpdate;
 
@@ -203,7 +204,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("clientId", userFrom1.getUcid());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -222,7 +223,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom1.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -236,7 +237,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom4.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -250,7 +251,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom5.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -264,7 +265,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom6.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -278,7 +279,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom3.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
@@ -292,7 +293,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom2.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
@@ -306,7 +307,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("digital", userFrom1.getDigitalId());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -320,7 +321,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("device", userFrom1.getDeviceId());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -334,7 +335,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("session", userFrom1.getSessionId());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -348,7 +349,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("nameBirth", userFrom1.getNameDateOfBirth());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -362,7 +363,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("webSession", userFrom1.getWebSessionId());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -376,7 +377,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("phoneNumber", userFrom1.getPhoneNumber());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -390,7 +391,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("ipAddress", userFrom1.getIpAddress());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
@@ -404,7 +405,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("ipAddress", userFrom9.getIpAddress());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("false"));
     }
@@ -416,7 +417,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -438,7 +439,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom7.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }
@@ -452,7 +453,7 @@ class GetCheckConnectedIbTests extends TestBaseApi {
         queryParams.put("emailAddress", userFrom8.getEmail());
 
         Response response = getCheckConnectedIb(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Check the response code is 200", response.code(), is(200));
         assertThat("Check the response code is 200", response.body().string(), is("true"));
     }

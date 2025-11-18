@@ -113,6 +113,10 @@ public class ConfigFactory {
     public static final String PAYMENT_GATE_DECISIONS_PATH = CONFIG.paymentGateDecisionsPath();
     public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
     public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
+    // Mitigation service
+    public static final String UTILITIES_API_SERVICE_TEST_BASE_PATH = CONFIG.utilitiesApiTestBasePath();
+    public static final String UTILITIES_API_SERVICE_PROD_BASE_PATH = CONFIG.utilitiesApiProdBasePath();
+    public static final String UTILITIES_API_GET_DECRYPT = CONFIG.utilitiesApiDecryptPath();
     // Postrgres db
     public static final String POSTGRES_DB_SSH_HOST = CONFIG.postgresDbSshHost();
     public static final String POSTGRES_DB_SSH_USER = CONFIG.postgresDbSshUser();
@@ -499,6 +503,17 @@ public class ConfigFactory {
 
         @Key("paymentGateAggrByUcidPath")
         String paymentGateAggrByUcidPath();
+
+        // Utilities api service
+
+        @Key("utilitiesApiTestBasePath")
+        String utilitiesApiTestBasePath();
+
+        @Key("utilitiesApiProdBasePath")
+        String utilitiesApiProdBasePath();
+
+        @Key("utilitiesApiDecryptPath")
+        String utilitiesApiDecryptPath();
 
         // Postgres db
 

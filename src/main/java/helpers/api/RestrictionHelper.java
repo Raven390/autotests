@@ -12,6 +12,7 @@ import static business_objects.api.mitigation_service.MitigationServiceRequest.c
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -59,7 +60,7 @@ public class RestrictionHelper {
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
         assertEquals(response.code(), 200);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         return response.body().string();
     }
 
@@ -74,7 +75,7 @@ public class RestrictionHelper {
         Response response = postRestriction(postRestrictionRequestBody);
         assertNotNull(response);
         assertEquals(200, response.code());
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         return response.body().string();
     }
 

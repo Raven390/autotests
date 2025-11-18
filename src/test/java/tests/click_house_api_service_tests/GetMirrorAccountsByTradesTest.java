@@ -39,15 +39,14 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
     private static final String dateTo = getTomorrowTimestampDbFormat().replace(" ", "T");
     private static final String dateFrom = getCurrentTimestampDbFormat().replace(" ", "T");
 
-
     @BeforeAll
-    static void setupMirrorTrades() {
+    static void setup() {
         data1 = generateMirrorTradesByAccount(client1);
         insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, data1);
     }
 
     @AfterAll
-    static void teardownMirrorTrades() {
+    static void teardown() {
         deleteEntryFromDb(MIRROR_LOGIN_TABLE_NAME, String.format("login_1 = '%s'", data1.login_1));
     }
 
@@ -64,7 +63,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert requestTradingAccount", mappedResponse[0].originalTradingAccount, is(data1.login_1));
@@ -87,7 +86,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -101,7 +100,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("serverId", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'symbol' for method parameter type String is not present"));
@@ -118,7 +117,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", "2"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
@@ -135,7 +134,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
@@ -154,7 +153,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -170,7 +169,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
     }
 
@@ -185,7 +184,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
@@ -202,7 +201,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", symbol); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));
@@ -219,7 +218,7 @@ class GetMirrorAccountsByTradesTest extends TestBaseApi {
         queryParams.put("symbol", "1"); // Required
         Response response = getMirrorAccountsByTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetMirrorAccountsByTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetMirrorAccountsByTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert that mirror accounts list is empty", mappedResponse.length, is(0));

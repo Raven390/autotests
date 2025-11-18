@@ -48,7 +48,7 @@ class PostRulesTests extends TestBaseApi {
     void postRulesTest1() throws Exception {
         Response response = postRules(rule);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response body", response.body().string(), is("{\"id\":\"" + rule.getId() + "\"}"));
 

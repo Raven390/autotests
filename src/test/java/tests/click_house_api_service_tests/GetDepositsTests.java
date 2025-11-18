@@ -23,6 +23,7 @@ import static helpers.database.CleanTableHelper.cleanDepositsTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
@@ -39,7 +40,7 @@ class GetDepositsTests extends TestBaseApi {
     private static ClientHelper client;
 
     @BeforeAll
-    static void setupDeposits() {
+    static void setup() {
         client = getRandomVantageClient();
         deposit1 = generateDepositByClient(client);
         deposit2 = generateDepositByClient(client);
@@ -49,7 +50,7 @@ class GetDepositsTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownDeposits() throws Exception {
+    static void teardown() throws Exception {
         cleanDepositsTableByUcid(deposit1.ucid, deposit2.ucid);
     }
 
@@ -67,7 +68,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -94,7 +95,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -109,7 +110,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("clientId", deposit1.ucid);
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -127,7 +128,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
@@ -149,7 +150,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("orderBy", "createTime");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -172,7 +173,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -187,7 +188,7 @@ class GetDepositsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
@@ -207,7 +208,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
@@ -224,7 +225,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -243,7 +244,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -262,7 +263,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
@@ -279,7 +280,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -296,7 +297,7 @@ class GetDepositsTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getDeposits(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));

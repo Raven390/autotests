@@ -23,6 +23,7 @@ import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.formatTimeToUtc;
 import static utils.Utils.getTomorrowTimestampDbFormat;
@@ -38,7 +39,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     private static CrmTbWithdrawalObject withdrawal2;
 
     @BeforeAll
-    static void setupWithdrawals() {
+    static void setup() {
         ClientHelper client = getRandomVantageClient();
         withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
         withdrawal2 = generateCrmTbWithdrawalObjectByClient(client);
@@ -48,7 +49,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownWithdrawals() throws Exception {
+    static void teardown() throws Exception {
         cleanCrmTbWithdrawalTableByUcid(withdrawal1.ucid, withdrawal2.ucid);
     }
 
@@ -66,7 +67,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -92,7 +93,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("limit", "");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -107,7 +108,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("clientId", withdrawal1.ucid);
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -125,7 +126,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
@@ -146,7 +147,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("orderBy", "createTime");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -168,7 +169,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -183,7 +184,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
@@ -203,7 +204,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'clientId' for method parameter type String is not present"));
@@ -220,7 +221,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -239,7 +240,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -258,7 +259,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
@@ -275,7 +276,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -292,7 +293,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getWithdrawals(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));

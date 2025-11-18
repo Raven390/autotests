@@ -40,9 +40,7 @@ import java.util.stream.Collectors;
 import static helpers.api.AbuseRegistryHelper.getClientStatus;
 import static helpers.database.DbHelper.getObjectsFromDB;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 
@@ -167,7 +165,7 @@ public class TestBaseRule {
     public static GetStatusResponseBody getAbuserStatus(ClientHelper client) throws Exception {
         Response response = getClientStatus(client);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetStatusResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetStatusResponseBody.class);
         assertThat("Assert that code is 200", response.code(), is(200));
 

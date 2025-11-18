@@ -47,7 +47,7 @@ class GetClientTests extends TestBaseApi {
         Thread.sleep(2000);
 
         // Assert response
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetClientResponse getClientResponse = objectMapper.readValue(response.body().string(), GetClientResponse.class);
         assertThat("Check response code", 200, is(response.code()));
         assertThat("Check clientId", client.getUcid(), is(getClientResponse.getClientId()));
@@ -87,7 +87,7 @@ class GetClientTests extends TestBaseApi {
     @AllureId("61")
     void getClientNotFoundTest() throws IOException {
         Response response = getClient("AlphaTick-999");
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 404", response.code(), is(404));
         assertThat("Assert that code is 404", mappedResponse.getStatus(), is(404));
@@ -99,7 +99,7 @@ class GetClientTests extends TestBaseApi {
     @AllureId("62")
     void getClientBadRequestTest() throws IOException {
         Response response = getClient(1);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
 
         assertThat("Assert that code is 400", response.code(), is(400));
