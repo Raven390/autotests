@@ -21,8 +21,8 @@ public class PaymentRuleExecutionsObject {
     }
 
     public PaymentRuleExecutionsObject(
-            UUID paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId,
-            Timestamp dateCreated, Timestamp dateUpdated, Timestamp dateStarted, Timestamp dateCompleted) {
+            UUID paymentId, Integer runId, Integer ruleId, String ruleVersion, Integer ruleEndId, Timestamp dateCreated,
+            Timestamp dateUpdated, Timestamp dateStarted, Timestamp dateCompleted) {
         this.paymentId = paymentId;
         this.runId = runId;
         this.ruleId = ruleId;

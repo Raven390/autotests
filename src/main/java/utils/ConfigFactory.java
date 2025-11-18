@@ -112,6 +112,7 @@ public class ConfigFactory {
     public static final String PAYMENT_GATE_REJECTION_REASONS_PATH = CONFIG.paymentGateRejectionReasonsPath();
     public static final String PAYMENT_GATE_DECISIONS_PATH = CONFIG.paymentGateDecisionsPath();
     public static final String PAYMENT_GATE_RULE_EXECUTIONS_PATH = CONFIG.paymentGateRuleExecutionsPath();
+    public static final String PAYMENT_GATE_RULE_EXECUTIONS_BY_UCID_PATH = CONFIG.paymentGateRuleExecutionsByUcidPath();
     public static final String PAYMENT_GATE_AGGR_BY_UCID_PATH = CONFIG.paymentGateAggrByUcidPath();
     // Mitigation service
     public static final String UTILITIES_API_SERVICE_TEST_BASE_PATH = CONFIG.utilitiesApiTestBasePath();
@@ -500,6 +501,9 @@ public class ConfigFactory {
 
         @Key("paymentGateRuleExecutionsPath")
         String paymentGateRuleExecutionsPath();
+
+        @Key("paymentGateRuleExecutionsByUcidPath")
+        String paymentGateRuleExecutionsByUcidPath();
 
         @Key("paymentGateAggrByUcidPath")
         String paymentGateAggrByUcidPath();
