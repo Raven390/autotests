@@ -29,6 +29,7 @@ public class CrmTbWithdrawalObject {
     public Integer paymentTypeId;
     public String paymentType;
     public String paymentProfile;
+    public String paymentProfileMasked;
     public String paymentFamily;
     public Integer paymentChannelId;
     public String paymentChannel;
@@ -142,6 +143,30 @@ public class CrmTbWithdrawalObject {
 
     public Integer getUserId() {
         return userId;
+    }
+
+    public String getPaymentProfile() {
+        return paymentProfile;
+    }
+
+    public void setPaymentProfile(String paymentProfile) {
+        this.paymentProfile = paymentProfile;
+    }
+
+    public String getPaymentProfileMasked() {
+        return paymentProfileMasked;
+    }
+
+    public void setPaymentProfileMasked(String paymentProfileMasked) {
+        this.paymentProfileMasked = paymentProfileMasked;
+    }
+
+    public String getPaymentFamily() {
+        return paymentFamily;
+    }
+
+    public void setPaymentFamily(String paymentFamily) {
+        this.paymentFamily = paymentFamily;
     }
 
     public void setUserId(Integer userId) {

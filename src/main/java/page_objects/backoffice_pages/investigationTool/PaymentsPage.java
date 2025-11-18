@@ -85,12 +85,15 @@ public class PaymentsPage extends AbstractPage {
     private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]//button";
     private static final String VARIANT_HEADER_2_SELECTOR = "//div[contains(@class, 'g-text_variant_header-2')]";
     private static final String CASHFLOW_SECTION_SELECTOR = "//div[@class = 'v-chart-wrapper__title']/div[text() = 'Cashflow']";
+    private static final String CASHFLOW_HEADER_SELECTOR = "//*[@data-qa='payments__cashflow_chart__features']";
     private static final String FILTER_BY_PLACEHOLDER_PATTERN = "//span[text()='%s']/..";
     private static final String WIDGET_BY_TITLE_PATTERN = "//div[contains(@class,'v-payments-summary-card__title') and text()='%s']/ancestor::div[@class='v-payments-summary-card']";
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
     public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected Clients')]";
+    private final Locator paymentFamilyButton;
+    private final Locator paymentProfileButton;
 
     public PaymentsPage(Page page) {
         super(page);
@@ -141,6 +144,8 @@ public class PaymentsPage extends AbstractPage {
         this.timelineAnnotation = page.locator(".v-range-timeline-section__label");
         this.paymentProfileDetailsRow = page.locator(".v-payment-profile-overview__detail-row");
         this.paymentProfileDetailsTotalItem = page.locator(".v-payment-profile-totals__total-item");
+        this.paymentFamilyButton = page.locator("//input[@value='PAYMENT_FAMILY']");
+        this.paymentProfileButton = page.locator("//input[@value='PAYMENT_PROFILE']");
     }
 
     @Step("Open users operations tab")
@@ -353,6 +358,36 @@ public class PaymentsPage extends AbstractPage {
         assertEquals(expectedAmount, totalAmount);
     }
 
+    public void checkCashflowTopPaymentSourceHeaderDeposit(String expectedCategorySource, String expectedAmount) {
+        Allure.step("Check top payment category and its total amount in usd Deposit");
+        String topInfoLocator = (CASHFLOW_HEADER_SELECTOR + "//*[text()='Max deposit']/following-sibling::div");
+        String topSourceLocator = topInfoLocator + "[2]";
+        page.waitForSelector(topSourceLocator);
+        String topCategory = page.locator(topSourceLocator).textContent();
+        writeLog("Top category in Deposit: " + topCategory);
+        assertTrue(topCategory.contains(expectedCategorySource));
+        String topSumLocator = (topInfoLocator + "[1]");
+        page.waitForSelector(topSumLocator);
+        String totalAmount = page.locator(topSumLocator).textContent();
+        writeLog("totalAmount in Deposit: " + totalAmount);
+        assertEquals(expectedAmount, totalAmount);
+    }
+
+    public void checkCashflowTopPaymentSourceHeaderWithdrawal(String expectedCategorySource, String expectedAmount) {
+        Allure.step("Check top payment category and its total amount in usd Withdrawal");
+        String topInfoLocator = (CASHFLOW_HEADER_SELECTOR + "//*[text()='Max withdrawal']/following-sibling::div");
+        String topSourceLocator = topInfoLocator + "[2]";
+        page.waitForSelector(topSourceLocator);
+        String topCategory = page.locator(topSourceLocator).textContent();
+        writeLog("Top category in Deposit: " + topCategory);
+        assertTrue(topCategory.contains(expectedCategorySource));
+        String topSumLocator = (topInfoLocator + "[1]");
+        page.waitForSelector(topSumLocator);
+        String totalAmount = page.locator(topSumLocator).textContent();
+        writeLog("totalAmount in Deposit: " + totalAmount);
+        assertEquals(expectedAmount, totalAmount);
+    }
+
     public void checkCashflowTopPaymentSystemTypesHeaderDeposit(String expectedCategory, Double expectedAmount) {
         checkCashflowTopPaymentSystemTypesHeaderDeposit(expectedCategory, dfwholed.format(expectedAmount));
     }
@@ -376,6 +411,14 @@ public class PaymentsPage extends AbstractPage {
 
     public void checkCashflowTopPaymentSystemTypesHeaderWithdrawal(String expectedCategory, Double expectedAmount) {
         checkCashflowTopPaymentSystemTypesHeaderWithdrawal(expectedCategory, dfwholed.format(expectedAmount));
+    }
+
+    public void checkCashflowTopPaymentSourceHeaderDeposit(String expectedCategory, Double expectedAmount) {
+        checkCashflowTopPaymentSourceHeaderDeposit(expectedCategory, dfwholed.format(expectedAmount));
+    }
+
+    public void checkCashflowTopPaymentSourceHeaderWithdrawal(String expectedCategory, Double expectedAmount) {
+        checkCashflowTopPaymentSourceHeaderWithdrawal(expectedCategory, dfwholed.format(expectedAmount));
     }
 
     public void hoverOverFinancialTransactionsGraphByDateMMMdd(String dateString) throws ParseException {
@@ -837,5 +880,13 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("check is summary subtab visible");
         waitForPageToLoad();
         summaryTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public void clickPaymentFamilyButton() {
+        paymentFamilyButton.click();
+    }
+
+    public void clickPaymentProfileButton() {
+        paymentProfileButton.click();
     }
 }

@@ -25,6 +25,7 @@ public class CrmTbDepositObject {
     public Integer paymentTypeId;
     public String paymentType;
     public String paymentProfile;
+    public String paymentProfileMasked;
     public String paymentFamily;
     public String vWalletAccount;
     public Integer paymentChannelId;
@@ -280,6 +281,38 @@ public class CrmTbDepositObject {
 
     public void setPaymentSystemCurrency(String paymentSystemCurrency) {
         this.paymentSystemCurrency = paymentSystemCurrency;
+    }
+
+    public String getPaymentProfile() {
+        return paymentProfile;
+    }
+
+    public void setPaymentProfile(String paymentProfile) {
+        this.paymentProfile = paymentProfile;
+    }
+
+    public String getPaymentProfileMasked() {
+        return paymentProfileMasked;
+    }
+
+    public void setPaymentProfileMasked(String paymentProfileMasked) {
+        this.paymentProfileMasked = paymentProfileMasked;
+    }
+
+    public String getPaymentFamily() {
+        return paymentFamily;
+    }
+
+    public void setPaymentFamily(String paymentFamily) {
+        this.paymentFamily = paymentFamily;
+    }
+
+    public String getvWalletAccount() {
+        return vWalletAccount;
+    }
+
+    public void setvWalletAccount(String vWalletAccount) {
+        this.vWalletAccount = vWalletAccount;
     }
 
     public String getPaymentDetails() {
