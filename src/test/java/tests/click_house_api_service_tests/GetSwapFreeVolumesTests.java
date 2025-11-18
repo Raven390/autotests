@@ -58,14 +58,14 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
     private static final String dateTo = getCurrentTimestampDbFormat();
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2, deal3, deal5, deal6));
     }
 
     //TODO uncomment after solving error with delete statement
     @AfterAll
-    static void teardownData() throws Exception {
+    static void teardown() throws Exception {
         cleanCrmUserTableByClient(client1.getUcid(), client2.getUcid(), client3.getUcid());
         cleanMt5CoercedTableByComment(deal1.getComment(), deal2.getComment());
         // deleteEntryFromDb(CRM_ACCOUNT_TABLE_NAME, String.format("account = '%s'", client1.getTradingAccount()));
@@ -84,7 +84,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("dateTo", dateTo.replace(" ", "T"));
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
@@ -106,7 +106,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
@@ -129,7 +129,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("dateTo", 1);
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -149,7 +149,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("tradingAccount", 1); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -167,7 +167,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", client2.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
@@ -188,7 +188,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", 1); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -207,7 +207,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("dateTo", LocalDateTime.now().minusYears(10));
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));
@@ -229,7 +229,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -247,7 +247,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", "abc"); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -265,7 +265,7 @@ class GetSwapFreeVolumesTests extends TestBaseApi {
         queryParams.put("serverId", client3.getServerId()); // Required
         Response response = getSwapFreeVolumes(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetSwapFreeVolumesResponse mappedResponse = objectMapper.readValue(response.body().string(), GetSwapFreeVolumesResponse.class);
         assertThat("Check response code", response.code(), is(200));
         assertThat("Check list size", mappedResponse.tradingIndicators.size(), is(4));

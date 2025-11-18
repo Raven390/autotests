@@ -51,7 +51,7 @@ class GetRulesTests extends TestBaseApi {
     void getRulesTest1() throws Exception {
         Response response = getRules();
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetRulesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetRulesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Check the response body", Arrays.stream(mappedResponse)  // Convert the array to a stream

@@ -7,6 +7,7 @@ public class Constants {
     // SUITE
     public static final String DEBUG_RUNNER = "debug_runner";
     public static final String SUITE_CLICKHOUSE_API_SERVICE = "suite_clickhouse_api_service";
+    public static final String SUITE_UTILITIES_API_SERVICE = "suite_utilities_api_service";
     public static final String SUITE_CONNECTION_SEARCH_SERVICE = "suite_connection_search_service";
     public static final String SUITE_EVENT_GENERATOR_SERVICE = "suite_event_generator_service";
     public static final String SUITE_MIRROR_TRADING_SCORE_API_TESTS = "mirror_trading_score_api_tests";
@@ -34,6 +35,7 @@ public class Constants {
     public static final String FEATURE_PRODUCTION_TESTS_CLICKHOUSE_API = "Clickhouse Api. Production tests";
     public static final String FEATURE_PRODUCTION_TESTS_CONNECTION_SEARCH = "Connection search. Production tests";
     public static final String FEATURE_PAYMENT_GATE = "Payment gate";
+    public static final String FEATURE_UTILITIES_API_SERVICE = "Payment gate";
     // STORIES
     public static final String STORY_CHECK_CONNECTED_IB = "Check connected IB";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_ABUSE_TYPES = "Clickhouse api. Get abuse types";
@@ -112,6 +114,7 @@ public class Constants {
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS_AGGR_BY_CLIENT = "Get payments aggr by client request";
     public static final String STORY_PAYMENT_GATE_GET_PAYMENTS = "Get payments request";
     public static final String STORY_PAYMENT_GATE_GET_REJECTION_REASONS = "Get rejection reasons request";
+    public static final String STORY_UTILITIES_API_GET_DECRYPT = "Get decrypt user data";
     // PAYMENT TYPES
     public static final String PAYMENT_TYPE_BONUS = "bonus";
     public static final String PAYMENT_TYPE_DEPOSIT = "deposit";

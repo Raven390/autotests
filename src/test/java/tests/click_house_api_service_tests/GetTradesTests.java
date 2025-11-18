@@ -55,7 +55,7 @@ class GetTradesTests extends TestBaseApi {
     private static Mt5DealsCoercedObject trade5;
 
     @BeforeAll
-    static void setupTrades() {
+    static void setup() {
         trade1 = generateTradeByClient(clientHelper);
         trade2 = generateTradeByClient(clientHelper);
         trade3 = generateTradeByClient(clientHelper);
@@ -73,7 +73,7 @@ class GetTradesTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownTrades() throws Exception {
+    static void teardown() throws Exception {
         cleanMt5CoercedTableByUcid(clientHelper.getUcid(), clientHelper2.getUcid(), clientHelper3.getUcid());
     }
 
@@ -95,7 +95,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
@@ -128,7 +128,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -144,7 +144,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("serverId", trade1.getServerId());
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -163,7 +163,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
@@ -189,7 +189,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("orderBy", "tradeDate");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -216,7 +216,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
@@ -231,7 +231,7 @@ class GetTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Either clientId or tradingAccount and serverId must be provided."));
@@ -254,7 +254,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Either clientId or tradingAccount and serverId must be provided."));
@@ -277,7 +277,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
@@ -295,7 +295,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("dateFrom", "test");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -315,7 +315,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("dateTo", "test");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -335,7 +335,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: tradeDate, symbol, profit, profitUSD"));
@@ -353,7 +353,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -371,7 +371,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -391,7 +391,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("serverId", trade4.getServerId() + "," + trade5.getServerId());
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
 
         // Convert to a list of trade IDs
@@ -417,7 +417,7 @@ class GetTradesTests extends TestBaseApi {
         queryParams.put("serverId", List.of(trade4.getServerId(), trade5.getServerId()));
         Response response = getTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradesResponse[].class);
 
         // Convert to a list of trade IDs

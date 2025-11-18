@@ -46,7 +46,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     static final ClientHelper client1 = getRandomVantageClientAllFields();
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         data1 = generateAggrCreditRiskFreeRevenueRatioObject(client1);
         data1.currentRiskFreeRevenue = 6d;
         s3Metrics = generateS3FactLoginMetricsClient(client1);
@@ -60,7 +60,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownData() {
+    static void teardown() {
         deleteEntryFromDb(AGGR_CREDIT_RISK_FREE_REVENUE_RATIO, String.format("trading_account = '%s'", data1.tradingAccount));
     }
 
@@ -75,7 +75,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("dateTo", date); // Required
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetCreditRiskFreeRevenueRatioResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
@@ -102,7 +102,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetCreditRiskFreeRevenueRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponseError.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
@@ -118,7 +118,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetCreditRiskFreeRevenueRatioResponseError mappedResponse = objectMapper.readValue(response.body().string(), GetCreditRiskFreeRevenueRatioResponseError.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.status, is("400"));
@@ -136,7 +136,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("dateTo", "1");
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
         assertThat("Assert type", mappedResponse.getType(), is("about:blank"));
@@ -156,7 +156,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("dateTo", date); // Required
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response body", response.body().string(), is("{}"));
     }
@@ -172,7 +172,7 @@ class GetCreditRiskFreeRevenueRatioTests extends TestBaseApi {
         queryParams.put("dateTo", formatTimeToUtc("2024-12-30 00:00:00"));
         Response response = getCreditRiskFreeRevenueRatio(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response body", response.body().string(), is("{}"));
     }

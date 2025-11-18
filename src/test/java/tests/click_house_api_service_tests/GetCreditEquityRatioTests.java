@@ -37,7 +37,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
     private static final ClientHelper client1 = getRandomVantageClient();
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         data1 = generateMtAccountByClient(client1);
         data1.equityUsd = 1d;//currentEquity
         data1.creditUsd = 2d;//sumCreditOrder
@@ -45,7 +45,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownData() {
+    static void teardown() {
         deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("account = '%s'", data1.account));
     }
 
@@ -60,7 +60,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         queryParams.put("dateTo", DATE_TIME);
         Response response = getCreditEquity(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetCreditEquityResponse mappedResponse = objectMapper.readValue(response.body().string(), GetCreditEquityResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradingAccount", mappedResponse.tradingAccount, is(client1.getTradingAccount()));
@@ -85,7 +85,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         queryParams.put("tradingAccount", client1.getTradingAccount()); // Required
         Response response = getCreditEquity(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
@@ -101,7 +101,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getCreditEquity(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert that code is 400", mappedResponse.getStatus(), is(400));
@@ -118,7 +118,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getCreditEquity(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         assertThat("Assert that code is 200", response.code(), is(400));
         assertThat("Assert that code is 200", response.body().string(), containsString("Required request parameter 'dateTo' for method parameter type LocalDateTime is not present"));
     }
@@ -134,7 +134,7 @@ class GetCreditEquityRatioTests extends TestBaseApi {
         queryParams.put("dateTo", "1");
         Response response = getCreditEquity(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert status", mappedResponse.getStatus(), is(400));
         assertThat("Assert type", mappedResponse.getType(), is("about:blank"));

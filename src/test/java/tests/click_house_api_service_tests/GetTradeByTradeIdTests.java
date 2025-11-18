@@ -22,6 +22,7 @@ import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.formatTimeToUtc;
 
@@ -37,13 +38,13 @@ class GetTradeByTradeIdTests extends TestBaseApi {
 
 
     @BeforeAll
-    static void setupTrades() {
+    static void setup() {
         trade1 = generateTradeByClient(clientHelper);
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(trade1));
     }
 
     @AfterAll
-    static void teardownTrades() throws Exception {
+    static void teardown() throws Exception {
         cleanMt5CoercedTableByUcid(clientHelper.getUcid());
     }
 
@@ -58,7 +59,7 @@ class GetTradeByTradeIdTests extends TestBaseApi {
         queryParams.put("tradeId", trade1.getDeal());
         Response response = getTrade(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetTradeResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetTradeResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));

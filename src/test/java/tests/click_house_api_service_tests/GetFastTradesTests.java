@@ -42,7 +42,7 @@ class GetFastTradesTests extends TestBaseApi {
     private static GetFastTradesResponse responseTrade2;
 
     @BeforeAll
-    static void setupTrades() {
+    static void setup() {
         tradeOpen1 = generateTradeByClient(client);
         tradeOpen1.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 0, 0, 2));
         tradeOpen1.setTimeUtc(tradeOpen1.getTime());
@@ -81,7 +81,7 @@ class GetFastTradesTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownTrades() {
+    static void teardown() {
         deleteEntryFromDb(MT5_DEALS_COERCED_TABLE_NAME, String.format("account = %s", client.getTradingAccount()));
     }
 
@@ -101,7 +101,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("limit", "2");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContaining(responseTrade1, responseTrade2));
@@ -123,7 +123,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("limit", "");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContainingInAnyOrder(responseTrade1, responseTrade2));
@@ -140,7 +140,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContainingInAnyOrder(responseTrade1, responseTrade2));
@@ -158,7 +158,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContaining(responseTrade1));
@@ -176,7 +176,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContainingInAnyOrder(responseTrade2));
@@ -193,7 +193,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 70);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContaining(responseTrade2));
@@ -212,7 +212,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContaining(responseTrade2, responseTrade1));
@@ -232,7 +232,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetFastTradesResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetFastTradesResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response contains expected trades in order", mappedResponse, arrayContaining(responseTrade1));
@@ -246,7 +246,7 @@ class GetFastTradesTests extends TestBaseApi {
         Map<String, Object> queryParams = new HashMap<>();
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
@@ -263,7 +263,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
@@ -280,7 +280,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
@@ -297,7 +297,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("serverId", client.getServerId());
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error message", mappedResponse.getError(), is("Required request parameter 'tradeDurationSeconds' for method parameter type Integer is not present"));
@@ -315,7 +315,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getError(), is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
@@ -333,7 +333,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getError(), is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
@@ -352,7 +352,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -373,7 +373,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("tradeDurationSeconds", 130);
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));
@@ -394,7 +394,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("orderBy", "test");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: tradeDateOpen, tradeDateClose, symbol, profit, profitUSD"));
@@ -413,7 +413,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "test");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -432,7 +432,7 @@ class GetFastTradesTests extends TestBaseApi {
         queryParams.put("limit", "test");
         Response response = getFastTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert title", mappedResponse.getTitle(), is("Bad Request"));

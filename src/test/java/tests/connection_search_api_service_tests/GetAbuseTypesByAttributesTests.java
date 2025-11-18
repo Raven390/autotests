@@ -251,7 +251,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("emailAddress", userFromEmail.getEmail());
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -270,7 +270,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("payoutId", payoutTableEntry.payout);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -289,7 +289,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("digital", digitalIdTableEntry.digitalId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -308,7 +308,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("device", deviceIdTableEntry.deviceId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -327,7 +327,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("session", sessionIdTableEntry.sessionId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -346,7 +346,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("nameBirth", userFromNameBirth.getNameDateOfBirth());
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -365,7 +365,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("webSession", webSessionTableEntry.webSessionId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -385,7 +385,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("phoneNumber", phoneTableEntry.phoneNum);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -403,7 +403,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("ipAddress", userToIp2.getIpAddress());
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -422,7 +422,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -443,7 +443,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -461,7 +461,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -480,7 +480,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -498,7 +498,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentType", documentTableEntry.accIdType);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -517,7 +517,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentCountryId", documentTableEntry.nationalityId);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -536,7 +536,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("documentNumber", documentTableEntry.accIdNum);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -557,7 +557,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("connectionDepth", 1);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
 
         assertThat("Check the response code is 200", response.code(), is(200));
     }
@@ -571,7 +571,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("connectionScoreTo", 1);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -590,7 +590,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("connectionScoreFrom", 1);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -607,7 +607,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("connectionType", List.of("Same Network"));
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));
@@ -624,7 +624,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("connectionType", List.of("", ""));
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ConnectionSearchResponseError responseBody = (objectMapper.readValue(
                 response.body().string(), ConnectionSearchResponseError.class
         ));
@@ -642,7 +642,7 @@ class GetAbuseTypesByAttributesTests extends TestBaseApi {
         queryParams.put("phoneNumber", phoneTableEntryStatusConfirmed.phoneNum);
 
         Response response = getAbuseTypesByAttributes(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetAbuseTypesResponseV1[] responseBody = (objectMapper.readValue(
                 response.body().string(), GetAbuseTypesResponseV1[].class
         ));

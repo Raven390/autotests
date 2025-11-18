@@ -50,7 +50,7 @@ class DeleteRulesTests extends TestBaseApi {
     void deleteRulesTest1() throws Exception {
         Response response = deleteRules(rule.getId());
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<RuleDbObjectPgArray> ruleFromDb = getObjectsFromDB(POSTGRES, RULE_ENGINE_RULE_TABLE, "id = '" + rule.getId() + "'", RuleDbObjectPgArray.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Check that no element in the list has the specific id", ruleFromDb.stream()  // Convert the list to a stream

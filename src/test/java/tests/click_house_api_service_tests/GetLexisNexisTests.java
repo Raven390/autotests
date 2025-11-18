@@ -41,7 +41,7 @@ class GetLexisNexisTests extends TestBaseApi {
     private static LnSessionParsedObject event4 = generateLexisNexisDataByClient(client4);
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         insertObjectsToDb(LEXIS_NEXIS_TABLE_NAME, List.of(event, event2, event3, event4));
     }
 
@@ -181,7 +181,7 @@ class GetLexisNexisTests extends TestBaseApi {
         queryParams.put("userId", 1);
         queryParams.put("eventType", eventTypeRegistration);
         Response response = getLexisNexis(queryParams);
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         String responseBody = response.body().string();
 
         assertThat("Assert that code is 200", response.code(), is(200));

@@ -25,6 +25,7 @@ import static helpers.database.CleanTableHelper.cleanMt5CoercedTableByAccount;
 import static helpers.database.DbHelper.insertObjectsToDb;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
@@ -51,7 +52,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
     private static final ClientHelper client5 = getRandomVantageClientAllFields();
 
     @BeforeAll
-    static void setupTests() {
+    static void setup() {
         trade1 = generateTradeByClient(client1, 0, 0, 0, Utils.getRandomLongPositive());
         trade2 = generateTradeByClient(client2, 0, 0, 0, Utils.getRandomLongPositive());
         trade3 = generateTradeByClient(client3, 0, 0, 0, Utils.getRandomLongPositive());
@@ -83,7 +84,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
     }
 
     @AfterAll
-    static void teardownTests() throws Exception {
+    static void teardown() throws Exception {
         cleanMt5CoercedTableByAccount(client1.getTradingAccount(), client2.getTradingAccount(), client3.getTradingAccount(), client4.getTradingAccount(), client5.getTradingAccount());
     }
 
@@ -97,7 +98,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("limit", 1);
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
@@ -123,7 +124,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("limit", 1);
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));
@@ -145,7 +146,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("limit", "a");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
@@ -163,7 +164,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("tradingAccount", trade1.getAccount());
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Required request parameter 'serverId' for method parameter type String is not present"));
@@ -178,7 +179,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId());
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Required request parameter 'tradingAccount' for method parameter type String is not present"));
@@ -195,7 +196,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("dateFrom", "a");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
@@ -215,7 +216,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("dateTo", "a");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response type", mappedResponse.getType(), is("about:blank"));
@@ -235,7 +236,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "a");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Invalid &quot;sortOrder&quot; property format. The property may include only: asc, desc"));
@@ -252,7 +253,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("orderBy", "a");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Invalid &quot;orderBy&quot; property format. The property may include only: createTime, actualAmount, actualAmountUSD"));
@@ -269,7 +270,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("limit", 1);
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert comment", mappedResponse.getFirst().comment, is(""));
@@ -286,7 +287,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeDate, is("2025-01-02T00:00:00Z"));
@@ -304,7 +305,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradeId", mappedResponse.getFirst().tradeDate, is("2025-01-01T00:00:00Z"));
@@ -322,7 +323,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradeId", mappedResponse.getFirst().profit, is(1d));
@@ -340,7 +341,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert profit", mappedResponse.getFirst().profitUsd, is(1d));
@@ -358,7 +359,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert profitUsd", mappedResponse.getFirst().profit, is(2d));
@@ -376,7 +377,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert tradeId", mappedResponse.getFirst().profitUsd, is(2d));
@@ -392,7 +393,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("serverId", "trade1.serverId");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Invalid serverId format: serverId must be a string that can be parsed into an integer"));
@@ -408,7 +409,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("serverId", trade1.getServerId());
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
         assertThat("Assert response error", mappedResponse.getError(), is("Invalid tradingAccount format: tradingAccount must be a string that can be parsed into a long"));
@@ -425,7 +426,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("dateFrom", "2030-01-01T00:00:00");
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(0));
@@ -442,7 +443,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
 
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(0));
@@ -459,7 +460,7 @@ class GetUnclosedTradesTests extends TestBaseApi {
         queryParams.put("limit", 1);
         Response response = getUnclosedTrades(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetUnclosedTradesResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetUnclosedTradesResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.size(), is(1));

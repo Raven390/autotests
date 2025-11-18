@@ -46,7 +46,7 @@ class PostRuleDeploymentsTests extends TestBaseApi {
         RequestBody requestBody = RequestBody.create(xmlData, MediaType.parse("text/xml"));
         Response response = postRuleDeployment(requestBody, "author_name", "rule_name");
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         PostRuleDeploymentResponse mappedResponse = objectMapper.readValue(response.body().string(), PostRuleDeploymentResponse.class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert rule uuid", mappedResponse.getUuid(), is(notNullValue()));

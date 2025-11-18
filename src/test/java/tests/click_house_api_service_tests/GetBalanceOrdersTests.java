@@ -44,14 +44,14 @@ class GetBalanceOrdersTests extends TestBaseApi {
     private static String comment = "Administration Fee Automation test";
 
     @BeforeAll
-    static void setupData() {
+    static void setup() {
         data1 = generateMtBalanceOrder(client1, 1d, 2d, tradeDate1);
         data2 = generateMtBalanceOrder(client1, 3d, 4d, tradeDate2);
         insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(data1, data2));
     }
 
     @AfterAll
-    static void teardownData() throws Exception {
+    static void teardown() throws Exception {
         cleanMtBalanceOrdersTableByClient(data1.ucid, data2.ucid);
     }
 
@@ -65,7 +65,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("serverId", client1.getServerId()); // Required
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetBalanceOrdersResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class)).toList();
         GetBalanceOrdersResponse object1 = new GetBalanceOrdersResponse(formatTimeToUtc(tradeDate1), data1.ticket, client1.getTradingAccount(), 1d, 2d, comment);
         GetBalanceOrdersResponse object2 = new GetBalanceOrdersResponse(formatTimeToUtc(tradeDate2), data2.ticket, client1.getTradingAccount(), 3d, 4d, comment);
@@ -90,7 +90,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("limit", "1");
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
 
         assertThat("Assert that code is 200", response.code(), is(200));
@@ -114,7 +114,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("dateFrom", getPreviousYearTimestampDbFormat().replace(" ", "T"));
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -131,7 +131,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("dateTo", getNextYearTimestampDbFormat().replace(" ", "T"));
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -149,7 +149,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -170,7 +170,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -191,7 +191,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -212,7 +212,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -233,7 +233,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "asc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -254,7 +254,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "desc"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         GetBalanceOrdersResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetBalanceOrdersResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert length", mappedResponse.length, is(2));
@@ -272,7 +272,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("tradingAccount", 1); // Required
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -289,7 +289,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("serverId", 1); // Required
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -308,7 +308,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("dateFrom", 1);
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -330,7 +330,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("dateTo", 1);
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -352,7 +352,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("orderBy", "1"); // tradeDate, profit, profitUsd
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -372,7 +372,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("sortOrder", "1"); // asc, desc
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 
@@ -391,7 +391,7 @@ class GetBalanceOrdersTests extends TestBaseApi {
         queryParams.put("limit", "a");
         Response response = getBalanceOrders(queryParams);
 
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         ClickhouseApiErrorResponse mappedResponse = objectMapper.readValue(response.body().string(), ClickhouseApiErrorResponse.class);
         assertThat("Assert that code is 400", response.code(), is(400));
 

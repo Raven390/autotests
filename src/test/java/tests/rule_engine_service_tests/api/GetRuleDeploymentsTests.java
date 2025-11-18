@@ -53,7 +53,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
     @AllureId("1123")
     void getRuleDeploymentTest1() throws IOException {
         Response response = getRuleDeploymentsNoParams();
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert rule uuid", mappedResponse.size(), greaterThanOrEqualTo(1));
@@ -64,7 +64,7 @@ class GetRuleDeploymentsTests extends TestBaseApi {
     @AllureId("1124")
     void getRuleDeploymentTest2() throws IOException {
         Response response = getRuleDeploymentsByProcessId(rule.getProcessId());
-        assert response.body() != null;
+        assertThat(response.body(), is(notNullValue()));
         List<GetRuleDeploymentResponse> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetRuleDeploymentResponse[].class)).toList();
         assertThat("Assert that code is 200", response.code(), is(200));
 
