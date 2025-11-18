@@ -12,7 +12,7 @@ public class MtAccountObjectFactory {
         mtAccount.sourceIdSt = client.getServerId();
         mtAccount.account = client.getTradingAccount();
         mtAccount.server = "MT5-UK";
-        mtAccount.accountGroup = "Social_Trading\\VU_Hedge\\ARCHIVE_SUB_USD";
+        mtAccount.accountGroup = "S_VFX_EUR";
         mtAccount.platform = "MT5";
         mtAccount.currency = "EUR";
         mtAccount.createTime = getCurrentTimestampDbFormat();
