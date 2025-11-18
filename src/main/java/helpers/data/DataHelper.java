@@ -148,9 +148,6 @@ public class DataHelper {
             if (data.dictAccountToUcidObject != null) {
                 insertObjectToDb(DICT_ACCOUNT_TO_UCID, data.dictAccountToUcidObject);
             }
-            if (data.dictIsTestObject != null) {
-                insertObjectToDb(DICT_IS_TEST, data.dictIsTestObject);
-            }
             if (data.dictActiveTradingDaysByUcidObject != null) {
                 data.dictActiveTradingDaysByUcidObject.forEach(tradingDays -> insertObjectToDb(DICT_ACTIVE_TRADE_DAYS_BY_UCID, tradingDays));
             }
@@ -162,6 +159,10 @@ public class DataHelper {
             }
             if (data.lnSessionParsedObject != null) {
                 insertObjectToDb(LEXIS_NEXIS_TABLE_NAME, data.lnSessionParsedObject);
+            }
+            if (data.dictIsTestObject != null) {
+                deleteEntryFromDb(DICT_IS_TEST, "account =" + data.dictIsTestObject.account);
+                insertObjectToDb(DICT_IS_TEST, data.dictIsTestObject);
             }
             if (data.clientFraudTypes != null) {
                 data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
