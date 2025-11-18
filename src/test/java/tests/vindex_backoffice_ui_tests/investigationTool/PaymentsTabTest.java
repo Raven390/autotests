@@ -119,6 +119,7 @@ class PaymentsTabTest extends TestBaseWeb {
         transaction.statusId = 5;
         transaction.paymentType = "Crypto";
         transaction.paymentChannel = "CryptoCoino";
+        transaction.paymentFamily = "CryptoFamily";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
         paymentsPage.navigatePaymentsTab(client.getUcid());
@@ -127,6 +128,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction2 = generateDepositByClient(client);
         transaction2.paymentType = "P2P";
         transaction2.paymentChannel = "chanel1";
+        transaction.paymentFamily = "P2PFamily";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction2);
         page.waitForTimeout(1000);
@@ -136,6 +138,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction3 = generateDepositByClient(client);
         transaction3.paymentType = "Bank Transfers";
         transaction3.paymentChannel = "transferno";
+        transaction3.paymentFamily = "Transit";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction3);
         page.waitForTimeout(1000);
@@ -145,6 +148,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction4 = generateDepositByClient(client);
         transaction4.paymentType = "Payment Services";
         transaction4.paymentChannel = "quiwy";
+        transaction4.paymentFamily = "EWall";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction4);
         page.waitForTimeout(1000);
@@ -154,6 +158,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction5 = generateDepositByClient(client);
         transaction5.paymentType = "local depositor";
         transaction5.paymentChannel = "otherway";
+        transaction5.paymentFamily = "otherDepos";
         Allure.step("add record about new deposit with another type");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction5);
         page.waitForTimeout(1000);
@@ -163,6 +168,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction6 = generateDepositByClient(client);
         transaction6.paymentType = "offline payment";
         transaction6.paymentChannel = "otherwayBig";
+        transaction6.paymentFamily = "otherwayBigFamily";
         transaction6.amountUsd = transaction5.amountUsd + 1.1;
         Allure.step("add record about new deposit with existing type and another channel type with greater amount");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction6);
@@ -173,6 +179,7 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbDepositObject transaction7 = generateDepositByClient(client);
         transaction7.paymentType = "offline payment";
         transaction7.paymentChannel = "otherwayBig";
+        transaction7.paymentFamily = "otherwayBigFamily";
         Allure.step("add record about new deposit with existing type and channel type to check that too;tip show sum");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction7);
         page.waitForTimeout(1000);
@@ -182,18 +189,23 @@ class PaymentsTabTest extends TestBaseWeb {
         CrmTbWithdrawalObject transaction8 = generateCrmTbWithdrawalObjectByClient(client);
         transaction8.paymentType = "Crypto";
         transaction8.paymentChannel = "CryptoCoino";
+        transaction8.paymentFamily = "CryptoFamily";
         CrmTbWithdrawalObject transaction9 = generateCrmTbWithdrawalObjectByClient(client);
         transaction9.paymentType = "P2P";
+        transaction9.paymentFamily = "P2PFamily";
         transaction9.paymentChannel = "chanel1";
         CrmTbWithdrawalObject transaction10 = generateCrmTbWithdrawalObjectByClient(client);
         transaction10.paymentType = "Bank Transfers";
         transaction10.paymentChannel = "transferno";
+        transaction10.paymentFamily = "Transit";
         CrmTbWithdrawalObject transaction11 = generateCrmTbWithdrawalObjectByClient(client);
         transaction11.paymentType = "Payment Services";
         transaction11.paymentChannel = "quiwy";
+        transaction11.paymentFamily = "EWall";
         CrmTbWithdrawalObject transaction12 = generateCrmTbWithdrawalObjectByClient(client);
         transaction12.paymentType = "local depositor";
         transaction12.paymentChannel = "otherway";
+        transaction12.paymentFamily = "otherDepos";
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(transaction8, transaction9, transaction10, transaction11, transaction12));
         Allure.step("add withdrawals for every expected payment type to check them displayed ");
         page.waitForTimeout(5000);
@@ -214,70 +226,160 @@ class PaymentsTabTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("589")
-    @DisplayName("Payments tab. Cashflow header show data from DB")
-    void cashflowValueInHeaderTest() throws Exception {
+    @DisplayName("Payments tab. Cashflow header show data from DB Families")
+    void cashflowValueInHeaderFamiliesTest() throws Exception {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         cleanUserPaymentsDb(client.getUcid());
         CrmTbDepositObject transaction = generateDepositByClient(client);
         transaction.statusId = 5;
         transaction.paymentType = "Crypto";
+        transaction.paymentFamily = "CryptoFamily";
         transaction.paymentChannel = "CryptoCoino";
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
         Allure.step("add record about deposit");
         page.waitForTimeout(1000);
         paymentsPage.navigatePaymentsTab(client.getUcid());
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction.paymentType, transaction.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction.paymentFamily, transaction.amountUsd);
 
         CrmTbDepositObject transaction2 = generateDepositByClient(client);
         transaction2.statusId = 5;
         transaction2.paymentType = "Bank of Latverya";
         transaction2.paymentChannel = "Doom Crones";
+        transaction2.paymentFamily = "Latverya";
         transaction2.amountUsd = transaction.amountUsd + 1.1;
         Allure.step("add record about new deposit with another type and bigger amount");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction2);
         page.waitForTimeout(1000);
         page.reload();
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.paymentType, transaction2.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction2.paymentFamily, transaction2.amountUsd);
 
         CrmTbDepositObject transaction3 = generateDepositByClient(client);
         transaction3.statusId = 5;
-        transaction3.paymentType = transaction2.paymentType;
         transaction3.paymentChannel = "SomeBank LLC";
+        transaction3.paymentFamily = transaction2.paymentFamily;
         Allure.step("add record about new deposit with existing in DB and another channel");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction3);
         page.waitForTimeout(1000);
         page.reload();
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderDeposit(transaction2.paymentType, transaction2.amountUsd + transaction3.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction2.paymentFamily, transaction2.amountUsd + transaction3.amountUsd);
 
         CrmTbWithdrawalObject transaction4 = generateCrmTbWithdrawalObjectByClient(client);
         transaction4.paymentType = "P2Pinocchio";
         transaction4.paymentChannel = "Pinocchio";
+        transaction4.paymentFamily = "Online paymentino";
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction4);
         Allure.step("add record about withdrawal with type that was not used in deposits");
         page.waitForTimeout(1000);
         page.reload();
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction4.paymentType, transaction4.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction4.paymentFamily, transaction4.amountUsd);
 
         CrmTbWithdrawalObject transaction5 = generateCrmTbWithdrawalObjectByClient(client);
         transaction5.paymentType = "offline payment";
         transaction5.paymentChannel = "dullas";
+        transaction5.paymentFamily = "offline depository";
         transaction5.amountUsd = transaction4.amountUsd + 1.1;
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction5);
         Allure.step("add record about withdrawal with type that was not used early with bigger amount that previous withdrawal");
         page.waitForTimeout(1000);
         page.reload();
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction5.paymentType, transaction5.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction5.paymentFamily, transaction5.amountUsd);
 
         CrmTbWithdrawalObject transaction6 = generateCrmTbWithdrawalObjectByClient(client);
         transaction6.paymentType = "local depositor";
         transaction6.paymentChannel = "Bison Bucks";
+        transaction6.paymentFamily = "offline depository";
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction6);
         Allure.step("add record about withdrawal with type that was used for withdrawals and check that them summed");
         page.waitForTimeout(1000);
         page.reload();
-        paymentsPage.checkCashflowTopPaymentSystemTypesHeaderWithdrawal(transaction6.paymentType, transaction5.amountUsd + transaction6.amountUsd);
+        paymentsPage.clickPaymentFamilyButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction6.paymentFamily, transaction5.amountUsd + transaction6.amountUsd);
+    }
 
+    @Test
+    @AllureId("1824")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Payments tab. Cashflow header show data from DB Profiles")
+    void cashflowValueInHeaderProfilesTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        cleanUserPaymentsDb(client.getUcid());
+        CrmTbDepositObject transaction = generateDepositByClient(client);
+        transaction.statusId = 5;
+        transaction.paymentType = "Crypto";
+        transaction.paymentProfileMasked = "CryptoFamily";
+        transaction.paymentChannel = "CryptoCoino";
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction);
+        Allure.step("add record about deposit");
+        page.waitForTimeout(1000);
+        paymentsPage.navigatePaymentsTab(client.getUcid());
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction.paymentProfileMasked, transaction.amountUsd);
+
+        CrmTbDepositObject transaction2 = generateDepositByClient(client);
+        transaction2.statusId = 5;
+        transaction2.paymentType = "Bank of Latverya";
+        transaction2.paymentChannel = "Doom Crones";
+        transaction2.paymentProfileMasked = "Latverya";
+        transaction2.amountUsd = transaction.amountUsd + 1.1;
+        Allure.step("add record about new deposit with another type and bigger amount");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction2);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction2.paymentProfileMasked, transaction2.amountUsd);
+
+        CrmTbDepositObject transaction3 = generateDepositByClient(client);
+        transaction3.statusId = 5;
+        transaction3.paymentChannel = "SomeBank LLC";
+        transaction3.paymentProfileMasked = transaction2.paymentProfileMasked;
+        Allure.step("add record about new deposit with existing in DB and another channel");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, transaction3);
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderDeposit(transaction2.paymentProfileMasked, transaction2.amountUsd + transaction3.amountUsd);
+
+        CrmTbWithdrawalObject transaction4 = generateCrmTbWithdrawalObjectByClient(client);
+        transaction4.paymentType = "P2Pinocchio";
+        transaction4.paymentChannel = "Pinocchio";
+        transaction4.paymentProfileMasked = "Online paymentino";
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction4);
+        Allure.step("add record about withdrawal with type that was not used in deposits");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction4.paymentProfileMasked, transaction4.amountUsd);
+
+        CrmTbWithdrawalObject transaction5 = generateCrmTbWithdrawalObjectByClient(client);
+        transaction5.paymentType = "offline payment";
+        transaction5.paymentChannel = "dullas";
+        transaction5.paymentProfileMasked = "offline depository";
+        transaction5.amountUsd = transaction4.amountUsd + 1.1;
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction5);
+        Allure.step("add record about withdrawal with type that was not used early with bigger amount that previous withdrawal");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction5.paymentProfileMasked, transaction5.amountUsd);
+
+        CrmTbWithdrawalObject transaction6 = generateCrmTbWithdrawalObjectByClient(client);
+        transaction6.paymentType = "local depositor";
+        transaction6.paymentChannel = "Bison Bucks";
+        transaction6.paymentProfileMasked = "offline depository";
+        insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, transaction6);
+        Allure.step("add record about withdrawal with type that was used for withdrawals and check that them summed");
+        page.waitForTimeout(1000);
+        page.reload();
+        paymentsPage.clickPaymentProfileButton();
+        paymentsPage.checkCashflowTopPaymentSourceHeaderWithdrawal(transaction6.paymentProfileMasked, transaction5.amountUsd + transaction6.amountUsd);
     }
 
     @Test
