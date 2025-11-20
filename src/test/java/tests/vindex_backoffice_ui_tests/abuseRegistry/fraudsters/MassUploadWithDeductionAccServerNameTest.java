@@ -28,8 +28,11 @@ import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObje
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
 import static helpers.data.enums.deduction.DeductionStatusApproval.AWAITING_APPROVAL;
+import static helpers.data.enums.deduction.DeductionStatusApproval.NOT_REQUIRED;
+import static helpers.data.enums.deduction.DeductionStatusDeduction.NO_DEDUCTION;
 import static helpers.data.enums.deduction.DeductionStatusDeduction.TO_BE_DEDUCTED;
 import static helpers.data.enums.deduction.DeductionStatusEmail.NOT_SENT;
+import static helpers.data.enums.deduction.DeductionStatusEmail.SENT;
 import static helpers.data.enums.deduction.DeductionStatusOpenPositions.*;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
 import static helpers.database.DbHelper.*;
@@ -47,12 +50,14 @@ import static utils.Utils.getRandomIntPositive;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
 
+    private static final ClientHelper client3 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client1);
     private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client1);
     private static final CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(client2);
     private static final CrmTbAccountObject account3 = generateCrmTbAccountDataForUi(client2);
+    private static final CrmTbAccountObject account4 = generateCrmTbAccountDataForUi(client3);
     private static MtAccountObject mtAccount1;
     private static MtMt4TradesCoercedObject trade1;
     private static MtMt4TradesCoercedObject tradeWithdrawal;
@@ -62,9 +67,12 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         account1.currency = USD.getCode();
         account2.account = getRandomIntPositive();
         account3.account = getRandomIntPositive();
+        account4.currency = USD.getCode();
+        account4.accountStatus = "Inactive";
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
         var mtAccount2 = generateMtAccountByCrmTbAccount(account2);
         var mtAccount3 = generateMtAccountByCrmTbAccount(account3);
+        var mtAccount4 = generateMtAccountByCrmTbAccount(account4);
 
         String comment = "comment";
         trade1 = generateMt4TradesCoercedAccountProfitComment(account1, 500.12 + 10_000d, comment);
@@ -73,17 +81,21 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         MtMt4TradesCoercedObject trade2 = generateMt4TradesCoercedAccountProfitComment(account2, 500.12 + 10_000d, comment);
         var tradeWithdrawal2 = generateMt4TradesCoercedAccountProfitComment(account2, -10_000d, "withdraw");
         var trade3 = generateMt4TradesCoercedAccountProfitComment(account3, 1800.45, comment);
+        var trade4 = generateMt4TradesCoercedAccountProfitComment(account4, 1800.45, comment);
         CrmTbUserObject crmClient2 = generateUserByClient(client2);
-        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, crmClient2));
-        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3));
-        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2), generateAccountForMtByAccount(account3)));
-        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3));
-        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2, trade3, tradeWithdrawal2));
+        CrmTbUserObject crmClient3 = generateUserByClient(client3);
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser, crmClient2, crmClient3));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2, account3, account4));
+        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2), generateAccountForMtByAccount(account3), generateAccountForMtByAccount(account4)));
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2, mtAccount3, mtAccount4));
+        insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2, trade3, tradeWithdrawal2, trade4));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
         MtMt5PositionsObject position2 = generateMtMt5PositionsObject(client2);
-        insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position2));
+        MtMt5PositionsObject position3 = generateMtMt5PositionsObject(client3);
+        insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position2, position3));
         executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount2.account));
         executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount3.account));
+        executeQueryToDb(DbName.CLICKHOUSE, String.format("UPDATE %s SET is_deleted = 1 WHERE account = %s", MT5_POSITIONS_TABLE_NAME, mtAccount4.account));
 
     }
 
@@ -91,8 +103,16 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
     static void teardown() throws Exception {
         deleteUserFromAbuseRegistry(client1.getUcid());
         deleteUserFromAbuseRegistry(client2.getUcid());
-        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", client1.getUcid()));
+        deleteUserFromAbuseRegistry(client3.getUcid());
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client3.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client3.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client3.getUcid()));
     }
 
     @Test
@@ -167,5 +187,39 @@ class MassUploadWithDeductionAccServerNameTest extends TestBaseWeb {
         AbuserDeduction actualDeduction2 = deductionList.stream().filter(abuserDeduction -> abuserDeduction.getAccount().equals(account3.account.toString())).findFirst().get();
         assertThat(actualDeduction, is(expected));
         assertThat(actualDeduction2, is(expected2));
+    }
+
+    @Test
+    @AllureId("1797")
+    @DisplayName("Batch upload by serverName and acc INACTIVE ACCOUNT test")
+    void accServerNameInactiveTest() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        fraudstersPage.navigateAbuseRegistryFraudsters();
+        fraudstersPage.openUploadDrawer();
+        fraudstersPage.typeServerNameAcc(account4.serverName, account4.account.toString());
+        fraudstersPage.clickAddFraudButton();
+        FraudType fraudTypeOld = FraudType.LOOPHOLE_ABUSE;
+        fraudstersPage.addSelectedFraudAdd(fraudTypeOld.getName(), "Confirmed");
+        fraudstersPage.clickVindexFraudSource();
+        String commentary = "test" + getCurrentTimestampSeconds();
+        fraudstersPage.fillCommentary(commentary);
+        fraudstersPage.clickApplyUpload();
+        fraudstersPage.verifySuccessMessageUpload();
+
+        page.waitForTimeout(2000);
+
+        var deductions = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, String.format("ucid = '%s'", client3.getUcid()), AbuserDeduction.class);
+
+        assertThat(deductions.size(), is(1));
+        var deduction = deductions.getFirst();
+
+        assertThat(deduction.getUcid(), is(client3.getUcid()));
+        assertThat(deduction.getAccount(), is(String.valueOf(account4.account)));
+        assertThat(deduction.getServerId(), is(account4.serverIdSt));
+        assertThat(deduction.getDeductionType(), is(NO_DEDUCTION.toString()));
+        assertThat(deduction.getStatusEmail(), is(SENT.toString()));
+        assertThat(deduction.getStatusDeduction(), is(NO_DEDUCTION.toString()));
+        assertThat(deduction.getStatusApproval(), is(NOT_REQUIRED.toString()));
     }
 }
