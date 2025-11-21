@@ -6,13 +6,13 @@ import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLogin
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObject;
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
 import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
 import business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictActiveTradingDaysByUcidObject;
@@ -89,8 +89,8 @@ public class DataHelper {
     public CrmTbAccountForMtObject crmTbAccountForMtObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
     public List<MtTbCreditsObject> mtTbCreditsObjects;
-    public List<CrmTbWithdrawalObject> crmTbWithdrawalObjects;
-    public List<CrmTbDepositObject> crmTbDepositObjects;
+    public List<CrmTbWithdrawalEntity> crmTbWithdrawalObjects;
+    public List<CrmTbDepositEntity> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
     public List<Mt5DealsCoercedObject> mt5DealsCoercedObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
@@ -284,10 +284,10 @@ public class DataHelper {
                 data.mtTbCreditsObjects.forEach(credit -> deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", credit.ucid)));
             }
             if (data.crmTbWithdrawalObjects != null) {
-                data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.ucid)));
+                data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid())));
             }
             if (data.crmTbDepositObjects != null) {
-                data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.ucid)));
+                data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid())));
             }
             if (data.crmTbBonusObjects != null) {
                 data.crmTbBonusObjects.forEach(bonus -> deleteEntryFromDb(CRM_BONUS_TABLE_NAME, String.format("ucid = '%s'", bonus.ucid)));
@@ -350,7 +350,7 @@ public class DataHelper {
             closeAlert(data.clientHelper.getUcid());
             if ((data.connectedUsers != null) && (!data.connectedUsers.isEmpty())) {
                 int size = data.connectedUsers.size();
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.append("(");
                 for (CrmTbUserObject user : data.connectedUsers) {
                     sb.append("'");
@@ -535,7 +535,7 @@ public class DataHelper {
     }
 
     public void addAlert(String ruleName, String status) {
-        DataHelper data = this;
+        var data = this;
         List<BoAlertsObject> alerts = List.of(generateAlert(data.clientHelper));
         alerts.getFirst().setRule(ruleName);
         alerts.getFirst().setStatus(status);

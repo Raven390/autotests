@@ -1,6 +1,7 @@
 package helpers.data.rules.trading;
 
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
@@ -10,6 +11,8 @@ import helpers.data.enums.DateTimeFormat;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +21,6 @@ import java.util.Map;
 import static business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexDataFactory.generateAppFinindexData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientTrue;
@@ -111,8 +113,8 @@ public class NewsTraderRuleDataFactory {
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.4);
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.4), 2, RoundingMode.HALF_UP));
         return data;
     }
 
@@ -131,8 +133,8 @@ public class NewsTraderRuleDataFactory {
         data.mt5DealsCoercedObjects.addAll(newsDeals);
         writeLog("count of deals is: " + data.mt5DealsCoercedObjects.size());
         data.mt5DealsCoercedObjects.forEach(deal -> deal.setProfitUsd(100.0));
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().setAmountUsd(1100.0 / 0.6);
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.valueOf(1100.0).divide(BigDecimal.valueOf(0.6), 2, RoundingMode.HALF_UP));
         return data;
     }
 

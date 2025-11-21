@@ -3,7 +3,8 @@ package tests.vindex_backoffice_ui_tests.search;
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
@@ -24,6 +25,8 @@ import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.search.SearchPage;
 import tests.TestBaseWeb;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
@@ -34,7 +37,6 @@ import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelati
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
@@ -234,7 +236,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
         searchPage.waitForPageToLoad();
 
         // Search by non-existent account
-        String searchQuery = "NonExistentServer 999999999";
+        var searchQuery = "NonExistentServer 999999999";
         searchPage.searchByBulk(searchQuery);
         searchPage.waitForPageToLoad();
 
@@ -375,7 +377,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
 
 
         // Format: US format with comma as thousands separator, dot as decimal, up to 2 decimals (not always 2)
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));
+        var decimalFormat = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));
         decimalFormat.setMaximumFractionDigits(2);
 
         // Prepare Trading PNL data (same logic as SummaryPanelTest)
@@ -416,7 +418,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
         double todayPnlUsd = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
 
         // realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
-        double realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
+        var realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
 
         Allure.step("Generate MT4 open trades (floating_pnl_mt4)");
         MtMt4TradesObject mt4Trade1 = generateMt4TradesObject(client1);
@@ -461,24 +463,23 @@ class ClientBulkSearchTest extends TestBaseWeb {
         double floatingPnlMt5 = (position1.getProfitUsd() + position1.getStorageUsd()) + (position2.getProfitUsd() + position2.getStorageUsd());
 
         // trading_client_pnl_usd = realized_pnl_usd + floating_pnl_mt4_usd + floating_pnl_mt5_usd
-        double expectedTradingPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
+        var expectedTradingPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
 
         // Prepare Withdrawals data (same logic as SummaryPanelTest)
-        CrmTbWithdrawalObject withdrawal1 = generateCrmTbWithdrawalObjectByClient(client1);
-        withdrawal1.amountUsd = getRandomRoundedDouble(100.00, 1000.00);
-        withdrawal1.reversedAmountUsd = roundDouble((withdrawal1.amountUsd / 2), 2);
-        withdrawal1.statusId = 3;
+        CrmTbWithdrawalEntity withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client1);
+        withdrawal1.setAmountUsd(BigDecimal.valueOf(getRandomRoundedDouble(100.00, 1000.00)));
+        withdrawal1.setReversedAmountUsd(withdrawal1.getAmountUsd().divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawal1.setStatusId(3);
 
-        CrmTbWithdrawalObject withdrawal2 = generateCrmTbWithdrawalObjectByClient(client1);
-        withdrawal2.amountUsd = getRandomRoundedDouble(100.00, 1000.00);
-        withdrawal2.reversedAmountUsd = roundDouble((withdrawal2.amountUsd / 2), 2);
-        withdrawal2.statusId = 5;
+        CrmTbWithdrawalEntity withdrawal2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client1);
+        withdrawal2.setAmountUsd(BigDecimal.valueOf(getRandomRoundedDouble(100.00, 1000.00)));
+        withdrawal1.setReversedAmountUsd(withdrawal1.getAmountUsd().divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawal2.setStatusId(5);
 
-        CrmTbWithdrawalObject withdrawal3 = generateCrmTbWithdrawalObjectByClient(client1);
-        withdrawal3.amountUsd = getRandomRoundedDouble(100.00, 1000.00);
-        withdrawal3.reversedAmountUsd = roundDouble((withdrawal3.amountUsd / 2), 2);
-        withdrawal3.statusId = 7;
-
+        CrmTbWithdrawalEntity withdrawal3 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client1);
+        withdrawal3.setAmountUsd(BigDecimal.valueOf(getRandomRoundedDouble(100.00, 1000.00)));
+        withdrawal1.setReversedAmountUsd(withdrawal1.getAmountUsd().divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawal3.setStatusId(7);
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2, withdrawal3));
 
         searchPage.navigateEnterPage();
@@ -520,7 +521,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
         assertThat("Verify sales group", row.salesGroup, is(crmTbUser1.brandGroup));
 
         // Verify TRADING PNL column
-        String formattedExpectedTradingPnl = decimalFormat.format(expectedTradingPnl);
+        var formattedExpectedTradingPnl = decimalFormat.format(expectedTradingPnl);
         assertThat("Verify trading PNL", row.tradingPnl, containsString(formattedExpectedTradingPnl));
 
         // Verify GROSS PNL column

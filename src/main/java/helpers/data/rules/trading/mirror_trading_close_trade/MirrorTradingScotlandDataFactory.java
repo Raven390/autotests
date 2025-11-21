@@ -1,5 +1,6 @@
 package helpers.data.rules.trading.mirror_trading_close_trade;
 
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
@@ -8,6 +9,7 @@ import helpers.data.DataHelper;
 import io.qameta.allure.Description;
 import io.qameta.allure.Step;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +17,6 @@ import java.util.Map;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
@@ -66,9 +67,9 @@ public class MirrorTradingScotlandDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().amount = 1d;
-        data.crmTbDepositObjects.getFirst().amountUsd = 1d;
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         return data;
     }
 
@@ -78,9 +79,9 @@ public class MirrorTradingScotlandDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().amount = 1d;
-        data.crmTbDepositObjects.getFirst().amountUsd = 1d;
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         // leverage
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);
@@ -94,9 +95,9 @@ public class MirrorTradingScotlandDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1d;
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().amount = 1d;
-        data.crmTbDepositObjects.getFirst().amountUsd = 1d;
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
         // leverage
         data.mt5DealsCoercedObjects.getFirst().setNotionalValueUsd(1000d);
         data.mtAccountObject = generateMtAccountByClient(data.clientHelper);

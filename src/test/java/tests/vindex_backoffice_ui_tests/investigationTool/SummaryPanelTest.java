@@ -2,7 +2,8 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
@@ -21,6 +22,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.TestBaseWeb;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -29,7 +32,6 @@ import java.util.Locale;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
@@ -115,7 +117,7 @@ public class SummaryPanelTest extends TestBaseWeb {
         double todayPnlUsd = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
 
         // realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
-        double realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
+        var realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
 
         Allure.step("Generate MT4 open trades (floating_pnl_mt4)");
         MtMt4TradesObject mt4Trade1 = generateMt4TradesObject(client);
@@ -162,7 +164,7 @@ public class SummaryPanelTest extends TestBaseWeb {
         // trading_client_pnl_usd = realized_pnl_usd + floating_pnl_usd
         // where: realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
         //        floating_pnl_usd = floating_pnl_mt4_usd + floating_pnl_mt5_usd
-        double expectedPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
+        var expectedPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
@@ -181,40 +183,56 @@ public class SummaryPanelTest extends TestBaseWeb {
     public void clientSummaryWithdrawalsTest() {
         deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, "ucid ='" + client.getUcid() + "'");
         Allure.step("Prepare DB data for test user");
-        CrmTbWithdrawalObject withdrawalObject1 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject1.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject1.reversedAmountUsd = roundDouble((withdrawalObject1.amountUsd / 2), 2);
-        withdrawalObject1.statusId = 3;
-        CrmTbWithdrawalObject withdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject2.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject2.reversedAmountUsd = roundDouble((withdrawalObject2.amountUsd / 2), 2);
-        withdrawalObject2.statusId = 5;
-        CrmTbWithdrawalObject withdrawalObject3 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject3.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject3.reversedAmountUsd = roundDouble((withdrawalObject3.amountUsd / 2), 2);
-        withdrawalObject3.statusId = 7;
-        CrmTbWithdrawalObject withdrawalObject4 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject4.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject4.reversedAmountUsd = roundDouble((withdrawalObject4.amountUsd / 2), 2);
-        withdrawalObject4.statusId = 9;
-        CrmTbWithdrawalObject withdrawalObject5 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject5.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject5.reversedAmountUsd = roundDouble((withdrawalObject5.amountUsd / 2), 2);
-        withdrawalObject5.statusId = 16;
-        CrmTbWithdrawalObject withdrawalObject6 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject6.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject6.reversedAmountUsd = roundDouble((withdrawalObject6.amountUsd / 2), 2);
-        withdrawalObject6.statusId = 17;
-        CrmTbWithdrawalObject withdrawalObject7 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject7.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject7.reversedAmountUsd = roundDouble((withdrawalObject7.amountUsd / 2), 2);
-        withdrawalObject7.statusId = 61;
-        withdrawalObject7.status = "1";
-        CrmTbWithdrawalObject withdrawalObject8 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawalObject8.amountUsd = getRandomRoundedDouble(0.00, 500_000);
-        withdrawalObject8.reversedAmountUsd = roundDouble((withdrawalObject8.amountUsd / 2), 2);
-        withdrawalObject8.statusId = 61;
-        withdrawalObject8.status = "2";
+        CrmTbWithdrawalEntity withdrawalObject1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount1 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject1.setAmountUsd(amount1);
+        withdrawalObject1.setReversedAmountUsd(amount1.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject1.setStatusId(3);
+
+        CrmTbWithdrawalEntity withdrawalObject2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount2 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject2.setAmountUsd(amount2);
+        withdrawalObject2.setReversedAmountUsd(amount2.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject2.setStatusId(5);
+
+        CrmTbWithdrawalEntity withdrawalObject3 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount3 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject3.setAmountUsd(amount3);
+        withdrawalObject3.setReversedAmountUsd(amount3.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject3.setStatusId(7);
+
+        CrmTbWithdrawalEntity withdrawalObject4 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount4 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject4.setAmountUsd(amount4);
+        withdrawalObject4.setReversedAmountUsd(amount4.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject4.setStatusId(9);
+
+        CrmTbWithdrawalEntity withdrawalObject5 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount5 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject5.setAmountUsd(amount5);
+        withdrawalObject5.setReversedAmountUsd(amount5.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject5.setStatusId(16);
+
+        CrmTbWithdrawalEntity withdrawalObject6 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount6 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject6.setAmountUsd(amount6);
+        withdrawalObject6.setReversedAmountUsd(amount6.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject6.setStatusId(17);
+
+        CrmTbWithdrawalEntity withdrawalObject7 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount7 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject7.setAmountUsd(amount7);
+        withdrawalObject7.setReversedAmountUsd(amount7.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject7.setStatusId(61);
+        withdrawalObject7.setStatus("1");
+
+        CrmTbWithdrawalEntity withdrawalObject8 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        BigDecimal amount8 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
+        withdrawalObject8.setAmountUsd(amount8);
+        withdrawalObject8.setReversedAmountUsd(amount8.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
+        withdrawalObject8.setStatusId(61);
+        withdrawalObject8.setStatus("2");
+
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7, withdrawalObject8));
 
         investigationPage.navigateEnterPage();

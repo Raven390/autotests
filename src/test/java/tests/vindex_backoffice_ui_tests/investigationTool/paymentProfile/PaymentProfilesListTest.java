@@ -1,9 +1,11 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentProfile;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
@@ -12,12 +14,11 @@ import org.junit.jupiter.api.*;
 import page_objects.backoffice_pages.investigationTool.PaymentsPage;
 import tests.TestBaseWeb;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -37,41 +38,41 @@ class PaymentProfilesListTest extends TestBaseWeb {
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static MtAccountObject mtAccount1 = generateMtAccountByCrmTbAccount(account1);
-    private static CrmTbDepositObject deposit;
-    private static CrmTbDepositObject deposit2;
-    private static CrmTbWithdrawalObject withdrawal1;
+    private static CrmTbDepositEntity deposit;
+    private static CrmTbDepositEntity deposit2;
+    private static CrmTbWithdrawalEntity withdrawal1;
 
     @BeforeAll
     static void setup() {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
         insertCrmAccountsToDb(account1);
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1));
-        deposit = generateDepositByClient(client);
-        deposit2 = generateDepositByClient(client);
-        withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
-        deposit.paymentProfile = "Cryptocurrency " + getRandomIntPositive();
-        deposit2.paymentProfile = "Cryptocurrency " + getRandomIntPositive();
-        withdrawal1.paymentProfile = "Card";
-        deposit.paymentType = "Cryptocurrency";
-        deposit2.paymentType = "Cryptocurrency";
-        withdrawal1.paymentType = "Card";
-        withdrawal1.paymentChannel = "USDT(BEP20)-CPS";
-        deposit.paymentChannel = "Offline";
-        deposit2.paymentChannel = "Offline";
-        withdrawal1.isDel = 0;
-        deposit.isDel = 0;
-        deposit2.isDel = 0;
-        deposit.paymentFamily = "Crypto";
-        deposit2.paymentFamily = "Crypto";
-        withdrawal1.paymentFamily = "LBT";
-        deposit.amount = 100.0;
-        deposit.amountUsd = 101.12;
-        deposit2.amount = 100.0;
-        deposit2.amountUsd = 102.12;
-        withdrawal1.amount = 100.0;
-        withdrawal1.amountUsd = 101.01;
-        withdrawal1.reversedAmount = 0.0;
-        withdrawal1.reversedAmountUsd = 0.0;
+        deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit2 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        deposit.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
+        deposit2.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
+        withdrawal1.setPaymentProfile("Card");
+        deposit.setPaymentType("Cryptocurrency");
+        deposit2.setPaymentType("Cryptocurrency");
+        withdrawal1.setPaymentType("Card");
+        withdrawal1.setPaymentChannel("USDT(BEP20)-CPS");
+        deposit.setPaymentChannel("Offline");
+        deposit2.setPaymentChannel("Offline");
+        withdrawal1.setIsDel(0);
+        deposit.setIsDel(0);
+        deposit2.setIsDel(0);
+        deposit.setPaymentFamily("Crypto");
+        deposit2.setPaymentFamily("Crypto");
+        withdrawal1.setPaymentFamily("LBT");
+        deposit.setAmount(BigDecimal.valueOf(100.0));
+        deposit.setAmountUsd(BigDecimal.valueOf(101.12));
+        deposit2.setAmount(BigDecimal.valueOf(100.0));
+        deposit2.setAmountUsd(BigDecimal.valueOf(102.12));
+        withdrawal1.setAmount(BigDecimal.valueOf(100.0));
+        withdrawal1.setAmountUsd(BigDecimal.valueOf(101.01));
+        withdrawal1.setReversedAmount(BigDecimal.ZERO);
+        withdrawal1.setReversedAmountUsd(BigDecimal.ZERO);
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1));
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
@@ -95,13 +96,13 @@ class PaymentProfilesListTest extends TestBaseWeb {
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
         assertThat("Verify payment profiles is not empty", paymentProfilesList.size(), equalTo(2));
         PaymentsPage.PaymentFamilyBlock lbtPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("LBT")).findFirst().get();
-        assertThat("Verify LBT payment family header ", lbtPaymentFamily.header(), equalTo(String.format("LBT%d profile %d USD %.2f USD %d connections", 1, 0, withdrawal1.amountUsd, 0)));
-        assertThat("Verify LBT payment profiles", lbtPaymentFamily.rowDataList().getFirst(), equalTo(String.format("%s%d USDNo deposits%.2f USD1 withdrawal%d clientsConnected", withdrawal1.paymentProfile, 0, withdrawal1.amountUsd, 0)));
+        assertThat("Verify LBT payment family header ", lbtPaymentFamily.header(), equalTo(String.format("LBT%d profile %d USD %.2f USD %d connections", 1, 0, withdrawal1.getAmountUsd(), 0)));
+        assertThat("Verify LBT payment profiles", lbtPaymentFamily.rowDataList().getFirst(), equalTo(String.format("%s%d USDNo deposits%.2f USD1 withdrawal%d clientsConnected", withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd(), 0)));
 
         PaymentsPage.PaymentFamilyBlock cryptoPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("Crypto")).findFirst().get();
-        assertThat("Verify Crypto payment family header ", cryptoPaymentFamily.header(), equalTo(String.format("Crypto%d profiles %.2f USD 0 USD %d connections", 2, deposit.amountUsd + deposit2.amountUsd, 2)));
-        assertThat("Verify Crypto payment profiles 1", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit.paymentProfile)).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit.paymentProfile, deposit.amountUsd, 1, 1)));
-        assertThat("Verify Crypto payment profiles 2", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit2.paymentProfile)).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit2.paymentProfile, deposit2.amountUsd, 1, 1)));
+        assertThat("Verify Crypto payment family header ", cryptoPaymentFamily.header(), equalTo(String.format("Crypto%d profiles %.2f USD 0 USD %d connections", 2, deposit.getAmountUsd().add(deposit2.getAmountUsd()), 2)));
+        assertThat("Verify Crypto payment profiles 1", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit.getPaymentProfile())).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit.getPaymentProfile(), deposit.getAmountUsd(), 1, 1)));
+        assertThat("Verify Crypto payment profiles 2", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit2.getPaymentProfile())).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 1)));
     }
 
 

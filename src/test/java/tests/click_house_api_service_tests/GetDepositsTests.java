@@ -2,7 +2,8 @@ package tests.click_house_api_service_tests;
 
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_deposits.GetDepositsResponse;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -12,12 +13,15 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_deposits.GetDepositsRequest.getDeposits;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanDepositsTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -25,8 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
-import static utils.Utils.formatTimeToUtc;
-import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_DEPOSITS)
@@ -35,23 +37,23 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetDepositsTests extends TestBaseApi {
 
-    private static CrmTbDepositObject deposit1;
-    private static CrmTbDepositObject deposit2;
+    private static CrmTbDepositEntity deposit1;
+    private static CrmTbDepositEntity deposit2;
     private static ClientHelper client;
 
     @BeforeAll
     static void setup() {
         client = getRandomVantageClient();
-        deposit1 = generateDepositByClient(client);
-        deposit2 = generateDepositByClient(client);
-        deposit2.createTime = getTomorrowTimestampDbFormat();
-        deposit2.amountUsd = 3.0;
+        deposit1 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit2 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit2.setCreateTime(OffsetDateTime.now().plusDays(1));
+        deposit2.setAmountUsd(BigDecimal.valueOf(3.0));
         insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
     }
 
     @AfterAll
     static void teardown() throws Exception {
-        cleanDepositsTableByUcid(deposit1.ucid, deposit2.ucid);
+        cleanDepositsTableByUcid(deposit1.getUcid(), deposit2.getUcid());
     }
 
     @Test
@@ -60,9 +62,9 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
-        queryParams.put("dateFrom", deposit1.createTime.replace(" ", "T"));
-        queryParams.put("dateTo", deposit2.createTime.replace(" ", "T"));
+        queryParams.put("clientId", deposit1.getUcid());
+        queryParams.put("dateFrom", deposit1.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        queryParams.put("dateTo", deposit2.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
@@ -73,11 +75,11 @@ class GetDepositsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId.toString()));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit2.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.getTransferId().toString()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.getAmount()));
     }
 
     @Test
@@ -86,7 +88,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("dateFrom", "");
         queryParams.put("dateTo", "");
         queryParams.put("bonusType", "");
@@ -107,7 +109,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         Response response = getDeposits(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
@@ -122,7 +124,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "1");
@@ -133,11 +135,11 @@ class GetDepositsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.transferId.toString()));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit2.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit2.getTransferId().toString()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit2.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit2.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit2.getAmount()));
     }
 
     @Test
@@ -146,7 +148,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("orderBy", "createTime");
         Response response = getDeposits(queryParams);
 
@@ -155,11 +157,11 @@ class GetDepositsTests extends TestBaseApi {
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
         assertThat("Assert tradingAccount", mappedResponse[0].tradingAccount, is(client.getTradingAccount().toString()));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit1.transferId.toString()));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(deposit1.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit1.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit1.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(deposit1.getTransferId().toString()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(deposit1.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(deposit1.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(deposit1.getAmount()));
     }
 
     @Test
@@ -168,7 +170,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("orderBy", "actualAmountUSD");
         queryParams.put("sortOrder", "desc");
         Response response = getDeposits(queryParams);
@@ -177,7 +179,7 @@ class GetDepositsTests extends TestBaseApi {
         GetDepositsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetDepositsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.amountUsd));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(deposit1.getAmountUsd()));
     }
 
     @Test
@@ -201,8 +203,8 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("dateFrom", deposit1.createTime.replace(" ", "T"));
-        queryParams.put("dateTo", deposit2.createTime.replace(" ", "T"));
+        queryParams.put("dateFrom", deposit1.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        queryParams.put("dateTo", deposit2.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
@@ -221,7 +223,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("dateFrom", "test");
         Response response = getDeposits(queryParams);
 
@@ -240,7 +242,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("dateTo", "test");
         Response response = getDeposits(queryParams);
 
@@ -259,7 +261,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("orderBy", "test");
         Response response = getDeposits(queryParams);
 
@@ -276,7 +278,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("sortOrder", "test");
         Response response = getDeposits(queryParams);
 
@@ -293,7 +295,7 @@ class GetDepositsTests extends TestBaseApi {
     void getDepositsIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", deposit1.ucid);
+        queryParams.put("clientId", deposit1.getUcid());
         queryParams.put("limit", "test");
         Response response = getDeposits(queryParams);
 

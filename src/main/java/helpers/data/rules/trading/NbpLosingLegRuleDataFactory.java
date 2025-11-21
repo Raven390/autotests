@@ -1,20 +1,21 @@
 package helpers.data.rules.trading;
 
 import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObjectFactory.generateBonusByClient;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClients;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
@@ -68,45 +69,45 @@ public class NbpLosingLegRuleDataFactory {
 
     private static DataHelper getNbpLosingLegExit2Data() {
         DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit2Client);
-        for (int i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
             stopoutTrade.setTimeUtc(stopoutTrade.getTime());
             stopoutTrade.setComment("S/O");
             data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 200.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(200.0));
         data.crmTbDepositObjects.add(deposit);
         return data;
     }
 
     private static DataHelper getNbpLosingLegExit3v1Data() {
         DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v1Client);
-        for (int i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
             stopoutTrade.setTimeUtc(stopoutTrade.getTime());
             stopoutTrade.setComment("S/O");
             data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 110.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(110.0));
         data.crmTbDepositObjects.add(deposit);
         return data;
     }
 
     private static DataHelper getNbpLosingLegExit3v2Data() {
         DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit3v2Client);
-        for (int i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
             stopoutTrade.setTimeUtc(stopoutTrade.getTime());
             stopoutTrade.setComment("S/O");
             data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 110.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(110.0));
         data.crmTbDepositObjects.add(deposit);
         ClientHelper mirrorClient = getRandomVantageClientAllFields();
         data.mirrorUcidObjects.add(generateMirrorUcidObjectByClients(data.clientHelper, mirrorClient));
@@ -115,15 +116,15 @@ public class NbpLosingLegRuleDataFactory {
 
     private static DataHelper getNbpLosingLegExit4Data() {
         DataHelper data = getNbpLosingLegRuleData(nbpLosingLegExit4Client);
-        for (int i = 1; i <= 8; i++) {
+        for (var i = 1; i <= 8; i++) {
             Mt5DealsCoercedObject stopoutTrade = generateTradeByClient(data.clientHelper);
             stopoutTrade.setTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, i, 0, 0, 0));
             stopoutTrade.setTimeUtc(stopoutTrade.getTime());
             stopoutTrade.setComment("S/O");
             data.mt5DealsCoercedObjects.add(stopoutTrade);
         }
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 110.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(110.0));
         data.crmTbDepositObjects.add(deposit);
         ClientHelper mirrorClient = getRandomVantageClientAllFields();
         data.mirrorUcidObjects.add(generateMirrorUcidObjectByClients(data.clientHelper, mirrorClient));
@@ -131,9 +132,9 @@ public class NbpLosingLegRuleDataFactory {
         mirrorTrade.setProfitUsd(4000.0);
         data.mt5DealsCoercedObjects.add(mirrorTrade);
         data.connectedClientHelpers.add(mirrorClient);
-        CrmTbDepositObject mirrorDeposit = generateDepositByClient(mirrorClient);
-        mirrorDeposit.amountUsd = 100.0;
-        mirrorDeposit.status = "Success";
+        CrmTbDepositEntity mirrorDeposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(mirrorClient);
+        mirrorDeposit.setAmountUsd(BigDecimal.valueOf(100.0));
+        mirrorDeposit.setStatus("Success");
         data.crmTbDepositObjects.add(mirrorDeposit);
         data.crmTbAccountObjectConnections.add(generateCrmTbAccountData(mirrorClient));
         data.connectedUsers.add(generateUserByClient(mirrorClient));

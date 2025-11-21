@@ -1,23 +1,23 @@
 package helpers.database;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 
 
 public class ChHelper {
 
-    public static double calculateWithdrawalsValue(CrmTbWithdrawalObject... withdrawal) {
+    public static double calculateWithdrawalsValue(CrmTbWithdrawalEntity... withdrawal) {
         double result = 0;
-        for (CrmTbWithdrawalObject w : withdrawal) {
-            result += (w.amountUsd - w.reversedAmountUsd);
+        for (CrmTbWithdrawalEntity w : withdrawal) {
+            result += (w.getAmountUsd().subtract(w.getReversedAmountUsd())).doubleValue();
         }
         return result;
     }
 
-    public static double calculateDepositValue(CrmTbDepositObject... deposit) {
+    public static double calculateDepositValue(CrmTbDepositEntity... deposit) {
         double result = 0;
-        for (CrmTbDepositObject d : deposit) {
-            result += d.amountUsd;
+        for (CrmTbDepositEntity d : deposit) {
+            result += d.getAmountUsd().doubleValue();
         }
         return result;
     }

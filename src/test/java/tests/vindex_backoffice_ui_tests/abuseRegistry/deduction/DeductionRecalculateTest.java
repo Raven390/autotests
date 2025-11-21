@@ -3,9 +3,11 @@ package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObjectFactory;
@@ -26,9 +28,7 @@ import java.util.concurrent.TimeUnit;
 import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.generateAbuserDeductionByAccount;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static helpers.api.AbuseRegistryHelper.addFraudForClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -54,8 +54,8 @@ public class DeductionRecalculateTest extends TestBaseWeb {
     static ClientHelper client;
     static CrmTbAccountObject account;
     static CrmTbAccountObject account2;
-    static CrmTbDepositObject deposit;
-    static CrmTbWithdrawalObject withdrawal;
+    static CrmTbDepositEntity deposit;
+    static CrmTbWithdrawalEntity withdrawal;
     static MtAccountObject mtAccount;
     static MtAccountObject mtAccount2;
     static MtMt4TradesCoercedObject mtMt4TradesCoercedObject;
@@ -145,11 +145,11 @@ public class DeductionRecalculateTest extends TestBaseWeb {
         var deduction = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_DEDUCTION_TABLE_NAME, "ucid='" + client.getUcid() + "'", AbuserDeduction.class).getFirst();
 
         //set deposit
-        deposit = generateDepositByClient(client);
+        deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
         //set withdrawal
-        withdrawal = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
         page.waitForTimeout(1000);

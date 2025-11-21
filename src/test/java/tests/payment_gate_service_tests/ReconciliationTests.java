@@ -1,6 +1,7 @@
 package tests.payment_gate_service_tests;
 
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
@@ -16,7 +17,6 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
@@ -36,49 +36,49 @@ import static utils.Constants.*;
 class ReconciliationTests {
 
     private static ClientHelper client1;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject1;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject1;
     private static PaymentEventsObject paymentEventsObject1;
     private static PaymentDetailsObject paymentDetailsObject1;
     private static PaymentDecisionsObject paymentDecisionsObject1;
 
     private static ClientHelper client2;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject2;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject2;
     private static PaymentEventsObject paymentEventsObject2;
     private static PaymentDetailsObject paymentDetailsObject2;
     private static PaymentDecisionsObject paymentDecisionsObject2;
 
     private static ClientHelper client3;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject3;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject3;
     private static PaymentEventsObject paymentEventsObject3;
     private static PaymentDetailsObject paymentDetailsObject3;
     private static PaymentDecisionsObject paymentDecisionsObject3;
 
     private static ClientHelper client4;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject4;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject4;
     private static PaymentEventsObject paymentEventsObject4;
     private static PaymentDetailsObject paymentDetailsObject4;
     private static PaymentDecisionsObject paymentDecisionsObject4;
 
     private static ClientHelper client5;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject5;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject5;
     private static PaymentEventsObject paymentEventsObject5;
     private static PaymentDetailsObject paymentDetailsObject5;
     private static PaymentDecisionsObject paymentDecisionsObject5;
 
     private static ClientHelper client6;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject6;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject6;
     private static PaymentEventsObject paymentEventsObject6;
     private static PaymentDetailsObject paymentDetailsObject6;
     private static PaymentDecisionsObject paymentDecisionsObject6;
 
     private static ClientHelper client7;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject7;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject7;
     private static PaymentEventsObject paymentEventsObject7;
     private static PaymentDetailsObject paymentDetailsObject7;
     private static PaymentDecisionsObject paymentDecisionsObject7;
 
     private static ClientHelper client8;
-    private static CrmTbWithdrawalObject crmTbWithdrawalObject8;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject8;
     private static PaymentEventsObject paymentEventsObject8;
     private static PaymentDetailsObject paymentDetailsObject8;
 
@@ -86,65 +86,65 @@ class ReconciliationTests {
     static void setupData() throws Exception {
 
         client1 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject1 = generateCrmTbWithdrawalObjectByClient(client1);
+        crmTbWithdrawalObject1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client1);
         paymentEventsObject1 = generatePaymentEventsObject(client1);
-        paymentEventsObject1.setCrmId(crmTbWithdrawalObject1.transferId.toString());
+        paymentEventsObject1.setCrmId(crmTbWithdrawalObject1.getTransferId().toString());
         paymentEventsObject1.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
 
         client2 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject2 = generateCrmTbWithdrawalObjectByClient(client2);
+        crmTbWithdrawalObject2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client2);
         paymentEventsObject2 = generatePaymentEventsObject(client2);
-        paymentEventsObject2.setCrmId(crmTbWithdrawalObject2.transferId.toString());
+        paymentEventsObject2.setCrmId(crmTbWithdrawalObject2.getTransferId().toString());
         paymentEventsObject2.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject2 = generatePaymentDetailsObject(paymentEventsObject2, client2);
         paymentDecisionsObject2 = generatePaymentDecisionObject(paymentEventsObject2);
 
         client3 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject3 = generateCrmTbWithdrawalObjectByClient(client3);
+        crmTbWithdrawalObject3 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client3);
         paymentEventsObject3 = generatePaymentEventsObject(client3);
-        paymentEventsObject3.setCrmId(crmTbWithdrawalObject3.transferId.toString());
+        paymentEventsObject3.setCrmId(crmTbWithdrawalObject3.getTransferId().toString());
         paymentEventsObject3.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject3 = generatePaymentDetailsObject(paymentEventsObject3, client3);
         paymentDecisionsObject3 = generatePaymentDecisionObject(paymentEventsObject3);
 
         client4 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject4 = generateCrmTbWithdrawalObjectByClient(client4);
+        crmTbWithdrawalObject4 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client4);
         paymentEventsObject4 = generatePaymentEventsObject(client4);
-        paymentEventsObject4.setCrmId(crmTbWithdrawalObject4.transferId.toString());
+        paymentEventsObject4.setCrmId(crmTbWithdrawalObject4.getTransferId().toString());
         paymentEventsObject4.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject4 = generatePaymentDetailsObject(paymentEventsObject4, client4);
         paymentDecisionsObject4 = generatePaymentDecisionObject(paymentEventsObject4);
 
         client5 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject5 = generateCrmTbWithdrawalObjectByClient(client5);
+        crmTbWithdrawalObject5 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client5);
         paymentEventsObject5 = generatePaymentEventsObject(client5);
-        paymentEventsObject5.setCrmId(crmTbWithdrawalObject5.transferId.toString());
+        paymentEventsObject5.setCrmId(crmTbWithdrawalObject5.getTransferId().toString());
         paymentEventsObject5.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject5 = generatePaymentDetailsObject(paymentEventsObject5, client5);
         paymentDecisionsObject5 = generatePaymentDecisionObject(paymentEventsObject5);
 
         client6 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject6 = generateCrmTbWithdrawalObjectByClient(client6);
+        crmTbWithdrawalObject6 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client6);
         paymentEventsObject6 = generatePaymentEventsObject(client6);
-        paymentEventsObject6.setCrmId(crmTbWithdrawalObject6.transferId.toString());
+        paymentEventsObject6.setCrmId(crmTbWithdrawalObject6.getTransferId().toString());
         paymentEventsObject6.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject6 = generatePaymentDetailsObject(paymentEventsObject6, client6);
         paymentDecisionsObject6 = generatePaymentDecisionObject(paymentEventsObject6);
 
         client7 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject7 = generateCrmTbWithdrawalObjectByClient(client7);
+        crmTbWithdrawalObject7 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client7);
         paymentEventsObject7 = generatePaymentEventsObject(client7);
-        paymentEventsObject7.setCrmId(crmTbWithdrawalObject7.transferId.toString());
+        paymentEventsObject7.setCrmId(crmTbWithdrawalObject7.getTransferId().toString());
         paymentEventsObject7.setDateDecided(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject7 = generatePaymentDetailsObject(paymentEventsObject7, client7);
         paymentDecisionsObject7 = generatePaymentDecisionObject(paymentEventsObject7);
 
         client8 = getRandomVantageClientAllFields();
-        crmTbWithdrawalObject8 = generateCrmTbWithdrawalObjectByClient(client8);
+        crmTbWithdrawalObject8 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client8);
         paymentEventsObject8 = generatePaymentEventsObject(client8);
-        paymentEventsObject8.setCrmId(crmTbWithdrawalObject8.transferId.toString());
+        paymentEventsObject8.setCrmId(crmTbWithdrawalObject8.getTransferId().toString());
         paymentEventsObject8.setDateCreated(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject8 = generatePaymentDetailsObject(paymentEventsObject8, client8);
     }

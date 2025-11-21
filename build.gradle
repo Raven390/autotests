@@ -54,6 +54,7 @@ def jsonVersion = '20240303'
 def httpcomponentsVersion = '5.2.3'
 def commonsConfigurationVersion = '1.7'
 def fakerVersion = '2.4.1'
+def lombokVersion = '1.18.34'
 
 dependencies {
     // Junit
@@ -113,6 +114,11 @@ dependencies {
 
     //Waits
     implementation 'org.awaitility:awaitility:4.3.0'
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
 }
 
 spotless {

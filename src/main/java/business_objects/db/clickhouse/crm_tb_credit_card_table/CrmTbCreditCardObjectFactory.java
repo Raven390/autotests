@@ -9,6 +9,7 @@ public class CrmTbCreditCardObjectFactory {
     @Step("Generate credit card object by user id")
     public static CrmTbCreditCardObject generateDepositByClient(ClientHelper client) {
         CrmTbCreditCardObject depositObject = new CrmTbCreditCardObject();
+        depositObject.id = getRandomIntPositive();
         depositObject.sourceIdSt = client.getServerId();
         depositObject.userId = client.getUserId();
         depositObject.createTime = getCurrentTimestampDbFormat();
