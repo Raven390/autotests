@@ -1,5 +1,6 @@
 package helpers.data.rules.trading;
 
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
@@ -8,12 +9,12 @@ import helpers.data.enums.Brand;
 import helpers.data.DataHelper;
 import io.qameta.allure.Step;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
 import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateMt5DealsCoercedObject;
@@ -162,9 +163,9 @@ public class MirrorTradingCloseTradeEventBybitRuleDataFactory {
         data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
         data.mtTbCreditsObjects.getFirst().amount = 1000d;
         data.mtTbCreditsObjects.getFirst().amountUsd = 1000d;
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
-        data.crmTbDepositObjects.getFirst().amount = 1d;
-        data.crmTbDepositObjects.getFirst().amountUsd = 1d;
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
+        data.crmTbDepositObjects.getFirst().setAmount(BigDecimal.ONE);
+        data.crmTbDepositObjects.getFirst().setAmountUsd(BigDecimal.ONE);
 
         return data;
     }

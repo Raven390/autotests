@@ -1,5 +1,6 @@
 package helpers.data.rules.trading;
 
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEventMetadata;
 import generator.annotations.RuleTestData;
@@ -16,7 +17,6 @@ import java.util.Map;
 import static business_objects.db.clickhouse.bo_alerts.BoAlertsFactory.generateAlert;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAccountByClient;
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictIsTestDictActiveTradingDaysByUcidObjectFactory.generateTradingDaysByClient;
 import static business_objects.db.clickhouse.dict_is_test.DictIsTestObjectFactory.generateDictIsTestByClientFalse;
@@ -139,7 +139,7 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
         data.mtBalanceOrdersObjects = List.of(
                 generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
@@ -159,7 +159,7 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
         data.mtBalanceOrdersObjects = List.of(
                 generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
@@ -181,7 +181,7 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
         data.mtBalanceOrdersObjects = List.of(
                 generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
@@ -205,7 +205,7 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
         data.mtBalanceOrdersObjects = List.of(
                 generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));
@@ -229,7 +229,7 @@ public class LatencyArbitrageRuleDataFactory {
         data.mt5DealsCoercedObjects = generateMt5DealsCoercedObject(data.clientHelper, 101);
         data.mt5DealsCoercedObjects.getFirst().setProfit(500d);
         data.mt5DealsCoercedObjects.getFirst().setProfitUsd(500d);
-        data.crmTbDepositObjects = List.of(generateDepositByClient(data.clientHelper));
+        data.crmTbDepositObjects = List.of(CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper));
         // Generate cumulative deposit data
         data.mtBalanceOrdersObjects = List.of(
                 generateMtBalanceOrder(data.clientHelper, 0d, 0d, getCurrentTimestampDbFormat()));

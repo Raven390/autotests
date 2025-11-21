@@ -2,7 +2,8 @@ package tests.click_house_api_service_tests;
 
 import business_objects.api.clickhouse_api_service.ClickhouseApiErrorResponse;
 import business_objects.api.clickhouse_api_service.get_withdrawals.GetWithdrawalsResponse;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import helpers.data.ClientHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -12,12 +13,15 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.clickhouse_api_service.get_withdrawals.GetWithdrawalsRequest.getWithdrawals;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static helpers.data.ClientFactory.getRandomVantageClient;
 import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
@@ -25,8 +29,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static utils.Constants.*;
-import static utils.Utils.formatTimeToUtc;
-import static utils.Utils.getTomorrowTimestampDbFormat;
 
 @Feature(FEATURE_CLICKHOUSE_API_SERVICE)
 @Story(STORY_CLICKHOUSE_API_SERVICE_GET_WITHDRAWALS)
@@ -35,22 +37,22 @@ import static utils.Utils.getTomorrowTimestampDbFormat;
 @Tag(SUITE_CLICKHOUSE_API_SERVICE)
 class GetWithdrawalsTests extends TestBaseApi {
 
-    private static CrmTbWithdrawalObject withdrawal1;
-    private static CrmTbWithdrawalObject withdrawal2;
+    private static CrmTbWithdrawalEntity withdrawal1;
+    private static CrmTbWithdrawalEntity withdrawal2;
 
     @BeforeAll
     static void setup() {
         ClientHelper client = getRandomVantageClient();
-        withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawal2 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawal2.createTime = getTomorrowTimestampDbFormat();
-        withdrawal2.amountUsd = 3.0;
+        withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawal2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawal2.setCreateTime(OffsetDateTime.now().plusDays(1));
+        withdrawal2.setAmountUsd(BigDecimal.valueOf(3.0));
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2));
     }
 
     @AfterAll
     static void teardown() throws Exception {
-        cleanCrmTbWithdrawalTableByUcid(withdrawal1.ucid, withdrawal2.ucid);
+        cleanCrmTbWithdrawalTableByUcid(withdrawal1.getUcid(), withdrawal2.getUcid());
     }
 
     @Test
@@ -59,9 +61,9 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsAllParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
-        queryParams.put("dateFrom", withdrawal1.createTime.replace(" ", "T"));
-        queryParams.put("dateTo", withdrawal2.createTime.replace(" ", "T"));
+        queryParams.put("clientId", withdrawal1.getUcid());
+        queryParams.put("dateFrom", withdrawal1.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        queryParams.put("dateTo", withdrawal2.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
@@ -71,11 +73,11 @@ class GetWithdrawalsTests extends TestBaseApi {
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal2.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.getTransferId()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.getAmount()));
     }
 
     @Test
@@ -84,7 +86,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsEmptyParamsTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("dateFrom", "");
         queryParams.put("dateTo", "");
         queryParams.put("bonusType", "");
@@ -105,7 +107,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         Response response = getWithdrawals(queryParams);
 
         assertThat(response.body(), is(notNullValue()));
@@ -120,7 +122,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "1");
@@ -130,11 +132,11 @@ class GetWithdrawalsTests extends TestBaseApi {
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(1));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal2.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal2.getTransferId()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal2.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal2.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal2.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal2.getAmount()));
     }
 
     @Test
@@ -143,7 +145,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsDefaultSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("orderBy", "createTime");
         Response response = getWithdrawals(queryParams);
 
@@ -151,11 +153,11 @@ class GetWithdrawalsTests extends TestBaseApi {
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal1.transferId));
-        assertThat("Assert createTime", mappedResponse[0].createTime, is(formatTimeToUtc(withdrawal1.createTime)));
-        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal1.ucid));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.amountUsd));
-        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal1.amount));
+        assertThat("Assert transferId", mappedResponse[0].transferId, is(withdrawal1.getTransferId()));
+        assertThat("Assert createTime", mappedResponse[0].createTime, is(withdrawal1.getCreateTime().atZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)));
+        assertThat("Assert clientId", mappedResponse[0].clientId, is(withdrawal1.getUcid()));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.getAmountUsd()));
+        assertThat("Assert actualAmount", mappedResponse[0].actualAmount, is(withdrawal1.getAmount()));
     }
 
     @Test
@@ -164,7 +166,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsOrderByAmountUsdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("orderBy", "actualAmountUSD");
         queryParams.put("sortOrder", "desc");
         Response response = getWithdrawals(queryParams);
@@ -173,7 +175,7 @@ class GetWithdrawalsTests extends TestBaseApi {
         GetWithdrawalsResponse[] mappedResponse = objectMapper.readValue(response.body().string(), GetWithdrawalsResponse[].class);
         assertThat("Assert that code is 200", response.code(), is(200));
         assertThat("Assert response length", mappedResponse.length, is(2));
-        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.amountUsd));
+        assertThat("Assert actualAmountUSD", mappedResponse[0].actualAmountUsd, is(withdrawal1.getAmountUsd()));
     }
 
     @Test
@@ -197,8 +199,8 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsNoClientIdTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("dateFrom", withdrawal1.createTime.replace(" ", "T"));
-        queryParams.put("dateTo", withdrawal2.createTime.replace(" ", "T"));
+        queryParams.put("dateFrom", withdrawal1.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
+        queryParams.put("dateTo", withdrawal2.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME));
         queryParams.put("orderBy", "createTime");
         queryParams.put("sortOrder", "desc");
         queryParams.put("limit", "2");
@@ -217,7 +219,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsIncorrectDateFromTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("dateFrom", "test");
         Response response = getWithdrawals(queryParams);
 
@@ -236,7 +238,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsIncorrectDateToTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("dateTo", "test");
         Response response = getWithdrawals(queryParams);
 
@@ -255,7 +257,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsIncorrectOrderByTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("orderBy", "test");
         Response response = getWithdrawals(queryParams);
 
@@ -272,7 +274,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsIncorrectSortOrderTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("sortOrder", "test");
         Response response = getWithdrawals(queryParams);
 
@@ -289,7 +291,7 @@ class GetWithdrawalsTests extends TestBaseApi {
     void getWithdrawalsIncorrectLimitTest() throws IOException {
 
         Map<String, Object> queryParams = new HashMap<>();
-        queryParams.put("clientId", withdrawal1.ucid);
+        queryParams.put("clientId", withdrawal1.getUcid());
         queryParams.put("limit", "test");
         Response response = getWithdrawals(queryParams);
 

@@ -4,9 +4,11 @@ import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.s3___dim_client.S3DimClientObject;
@@ -25,9 +27,7 @@ import static business_objects.db.abuse_registry_db.AbuserDeductionFactory.gener
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalCrmTbAccountData;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.db.clickhouse.s3___dim_client.S3DimClientFactory.generateS3DimClientObject;
@@ -57,8 +57,8 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
     static CrmTbAccountObject account2;
     static AccountIbRelationObject ibRelation;
     static S3DimClientObject s3Dim;
-    static CrmTbDepositObject deposit;
-    static CrmTbWithdrawalObject withdrawal;
+    static CrmTbDepositEntity deposit;
+    static CrmTbWithdrawalEntity withdrawal;
     static MtMt5PositionsObject position1;
     static MtMt5PositionsObject position2;
     static MtAccountObject mtAccount;
@@ -134,11 +134,11 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectToDb(S3_DIM_CLIENT, s3Dim);
 
         //set deposit
-        deposit = generateDepositByClient(client);
+        deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
         //set withdrawal
-        withdrawal = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
         //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd
@@ -231,11 +231,11 @@ public class ManageSingleDeductionTest extends TestBaseWeb {
         insertObjectToDb(S3_DIM_CLIENT, s3Dim);
 
         //set deposit
-        deposit = generateDepositByClient(client);
+        deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
 
         //set withdrawal
-        withdrawal = generateCrmTbWithdrawalObjectByClient(client);
+        withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
 
         //set MT5 positions gap_pnl_total = (sum(trading_pnl_usd) = sum(profit_usd + storage_usd)) and must be grater than gap_illegal_profit_total: sum of illegal_profit_usd

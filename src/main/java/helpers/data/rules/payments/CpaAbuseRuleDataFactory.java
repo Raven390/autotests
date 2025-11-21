@@ -1,8 +1,9 @@
 package helpers.data.rules.payments;
 
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
@@ -16,12 +17,13 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import utils.Utils;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClients;
 import static business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObjectFactory.generateMirrorUcidObjectByClient;
@@ -119,7 +121,7 @@ public class CpaAbuseRuleDataFactory {
 
     private static DataHelper getCpaAbuseRuleExitEventEnd3Data() {
         Allure.step("Get client data");
-        int cpa = 8888;
+        var cpa = 8888;
         cpaAbuseRuleClient3.setCpaId(cpa);
         DataHelper data = getCpaAbuseRuleData(cpaAbuseRuleClient3);
         Allure.step("Create user object with no CPA");
@@ -288,10 +290,9 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient8);
-        deposit.paymentChannel = "Crypto";
-        deposit.amountUsd = 500d;
-        deposit.setCreateTime(getCurrentTimestampDbFormat());
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient8);
+        deposit.setPaymentChannel("Crypto");
+        deposit.setAmountUsd(BigDecimal.valueOf(500d));
         data.crmTbDepositObjects.add(deposit);
 
         return data;
@@ -337,10 +338,9 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient9);
-        deposit.paymentChannel = "Crypto";
-        deposit.amountUsd = 500d;
-        deposit.setCreateTime(getCurrentTimestampDbFormat());
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient9);
+        deposit.setPaymentChannel("Crypto");
+        deposit.setAmountUsd(BigDecimal.valueOf(500d));
         data.crmTbDepositObjects.add(deposit);
 
         return data;
@@ -386,10 +386,10 @@ public class CpaAbuseRuleDataFactory {
         trade1Close.setVolumeLots(0.1);
         data.mt5DealsCoercedObjects.add(trade1Close);
 
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient10);
-        deposit.paymentChannel = "Bank";
-        deposit.amountUsd = 550.01;
-        deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient10);
+        deposit.setPaymentChannel("Bank");
+        deposit.setAmountUsd(BigDecimal.valueOf(550.01));
+        deposit.setCreateTime(OffsetDateTime.now().minusDays(60));
         data.crmTbDepositObjects.add(deposit);
 
         return data;
@@ -447,10 +447,10 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Cryptocurrency , value 449.99");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient11);
-        deposit.paymentType = "Cryptocurrency";
-        deposit.amountUsd = 449.99;
-        deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient11);
+        deposit.setPaymentChannel("Cryptocurrency");
+        deposit.setAmountUsd(BigDecimal.valueOf(449.99));
+        deposit.setCreateTime(OffsetDateTime.now().minusDays(60));
         data.crmTbDepositObjects.add(deposit);
 
         Allure.step("Send alert");
@@ -508,10 +508,10 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Other , value 500.00");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient12);
-        deposit.paymentType = "Other";
-        deposit.amountUsd = 500.00;
-        deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient12);
+        deposit.setPaymentChannel("Other");
+        deposit.setAmountUsd(BigDecimal.valueOf(500d));
+        deposit.setCreateTime(OffsetDateTime.now().minusDays(60));
         data.crmTbDepositObjects.add(deposit);
 
         Allure.step("Send alert");
@@ -569,10 +569,10 @@ public class CpaAbuseRuleDataFactory {
         data.mt5DealsCoercedObjects.add(trade1Open);
 
         Allure.step("Deposit paymentType = Other , value 500.00");
-        CrmTbDepositObject deposit = generateDepositByClient(cpaAbuseRuleClient13);
-        deposit.paymentType = "Other";
-        deposit.amountUsd = 500.00;
-        deposit.setCreateTime(getCurrentTimestampMinusOffsetFormatted(DATE_AND_TIME, 0, 0, 60));
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(cpaAbuseRuleClient13);
+        deposit.setPaymentChannel("Other");
+        deposit.setAmountUsd(BigDecimal.valueOf(500.00));
+        deposit.setCreateTime(OffsetDateTime.now().minusDays(60));
         data.crmTbDepositObjects.add(deposit);
 
         Allure.step("Send alert");

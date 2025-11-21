@@ -1,9 +1,11 @@
 package tests.vindex_backoffice_ui_tests.investigationTool.paymentsTab;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import helpers.data.ClientHelper;
@@ -13,13 +15,12 @@ import io.qameta.allure.AllureId;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateAdditionalStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
 import static business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObjectFactory.generateCreditsByClientRandomized;
 import static helpers.database.DbHelper.insertObjectToDb;
@@ -60,34 +61,34 @@ public class TransactionsGraphTest extends TestBaseWeb {
     @DisplayName("Payments tab. Transaction graph tooltip show data from DB")
     void transactionGraphWithoutFilters() throws Exception {
         cleanUserPaymentsDb(client.getUcid());
-        CrmTbDepositObject deposit1 = generateDepositByClient(client);
-        deposit1.statusId = 5;
-        deposit1.paymentType = "Crypto";
-        deposit1.paymentChannel = "CryptoCoino";
-        deposit1.setAmount(5000d);
-        deposit1.setAmountUsd(5000d);
-        CrmTbDepositObject deposit2 = generateDepositByClient(client);
-        deposit2.statusId = 5;
-        deposit2.paymentType = "Bank of Latverya";
-        deposit2.paymentChannel = "Doom Crones";
-        deposit2.setAmount(1000d);
-        deposit2.setAmountUsd(1000d);
+        CrmTbDepositEntity deposit1 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit1.setStatusId(5);
+        deposit1.setPaymentType("Crypto");
+        deposit1.setPaymentChannel("CryptoCoino");
+        deposit1.setAmount(BigDecimal.valueOf(5000d));
+        deposit1.setAmountUsd(BigDecimal.valueOf(5000d));
+        CrmTbDepositEntity deposit2 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit2.setStatusId(5);
+        deposit2.setPaymentType("Bank of Latverya");
+        deposit2.setPaymentChannel("Doom Crones");
+        deposit2.setAmount(BigDecimal.valueOf(1000d));
+        deposit2.setAmountUsd(BigDecimal.valueOf(1000d));
         insertObjectsToDb(CRM_DEPOSIT_TABLE_NAME, List.of(deposit1, deposit2));
-        CrmTbWithdrawalObject withdrawal1 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawal1.paymentType = "local depositor";
-        withdrawal1.paymentChannel = "Bison Bucks";
-        withdrawal1.setAmount(500d);
-        withdrawal1.setAmountUsd(500d);
-        CrmTbWithdrawalObject withdrawal2 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawal2.paymentType = "Bank of Latverya";
-        withdrawal2.paymentChannel = "channel";
-        withdrawal2.setAmount(100d);
-        withdrawal2.setAmountUsd(100d);
-        CrmTbWithdrawalObject withdrawal3 = generateCrmTbWithdrawalObjectByClient(client);
-        withdrawal3.paymentType = "Cryptobro";
-        withdrawal3.paymentChannel = "brocoin net";
-        withdrawal3.setAmount(300d);
-        withdrawal3.setAmountUsd(300d);
+        CrmTbWithdrawalEntity withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawal1.setPaymentType("local depositor");
+        withdrawal1.setPaymentChannel("Bison Bucks");
+        withdrawal1.setAmount(BigDecimal.valueOf(500d));
+        withdrawal1.setAmountUsd(BigDecimal.valueOf(500d));
+        CrmTbWithdrawalEntity withdrawal2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawal2.setPaymentType("Bank of Latverya");
+        withdrawal2.setPaymentChannel("channel");
+        withdrawal2.setAmount(BigDecimal.valueOf(100d));
+        withdrawal2.setAmountUsd(BigDecimal.valueOf(100d));
+        CrmTbWithdrawalEntity withdrawal3 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
+        withdrawal3.setPaymentType("Cryptobro");
+        withdrawal3.setPaymentChannel("brocoin net");
+        withdrawal3.setAmount(BigDecimal.valueOf(300d));
+        withdrawal3.setAmountUsd(BigDecimal.valueOf(300d));
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2, withdrawal3));
 
         MtTbCreditsObject credit1 = generateCreditsByClientRandomized(client);
@@ -108,8 +109,8 @@ public class TransactionsGraphTest extends TestBaseWeb {
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigatePaymentsTab(client.getUcid());
 
-        double totalDeposits = deposit1.amountUsd + deposit2.amountUsd;
-        double totalWithdrawals = withdrawal1.amountUsd + withdrawal2.amountUsd + withdrawal3.amountUsd;
+        double totalDeposits = deposit1.getAmountUsd().add(deposit2.getAmountUsd()).doubleValue();
+        double totalWithdrawals = withdrawal1.getAmountUsd().add(withdrawal2.getAmountUsd()).add(withdrawal3.getAmountUsd()).doubleValue();
         double totalCredits = credit1.amountUsd + credit2.amountUsd + credit3.amountUsd + credit4.amountUsd;
         paymentsPage.hoverOverFinancialTransactionsGraphByDateSingleDay(getCurrentDateMonthDay());
         checkValue("//div[@data-qa='payments__transactions_chart__features__0']//div[@class='g-text g-text_variant_header-1 g-color-text g-color-text_color_brand']", dfWholed.format(totalDeposits));

@@ -1,6 +1,7 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import generator.annotations.RuleTestData;
@@ -9,12 +10,12 @@ import helpers.data.DataHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientNoCpaIbRef;
@@ -40,8 +41,8 @@ public class AbnormalProfitRuleDataFactory {
     private static DataHelper getAbnormalProfitRuleExitEventEnd1Data() {
         Allure.step("Get client data");
         DataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd1Client);
-        CrmTbDepositObject deposit = generateDepositByClient(abnormalProfitRuleExitEventEnd1Client);
-        deposit.setAmountUsd(10d);
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(abnormalProfitRuleExitEventEnd1Client);
+        deposit.setAmountUsd(BigDecimal.valueOf(10d));
 
         Mt5DealsCoercedObject trade = generateTradeByClient(abnormalProfitRuleExitEventEnd1Client);
         trade.setProfitUsd(2001d);
@@ -54,8 +55,8 @@ public class AbnormalProfitRuleDataFactory {
     private static DataHelper getAbnormalProfitRuleExitEventEnd2Data() {
         Allure.step("Get client data");
         DataHelper data = getAbnormalProfitRuleData(abnormalProfitRuleExitEventEnd2Client);
-        CrmTbDepositObject deposit = generateDepositByClient(abnormalProfitRuleExitEventEnd2Client);
-        deposit.setAmountUsd(10d);
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(abnormalProfitRuleExitEventEnd2Client);
+        deposit.setAmountUsd(BigDecimal.valueOf(10d));
         Mt5DealsCoercedObject trade = generateTradeByClient(abnormalProfitRuleExitEventEnd2Client);
         trade.setProfitUsd(1999d);
 

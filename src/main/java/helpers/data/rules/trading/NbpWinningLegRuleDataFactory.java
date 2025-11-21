@@ -1,18 +1,19 @@
 package helpers.data.rules.trading;
 
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.kafka.crm_events.EgWithdrawalEvent;
 import generator.annotations.RuleTestData;
 import helpers.data.ClientHelper;
 import helpers.data.DataHelper;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountData;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
@@ -32,8 +33,8 @@ public class NbpWinningLegRuleDataFactory {
         data.clientHelper = client;
         data.crmTbUserObject = generateUserByClient(client);
         data.withdrawalEvent = new EgWithdrawalEvent(getRandomUuidString(), Instant.now().toString(), getRandomIntPositive(), client.getUserId(), client.getTradingAccount(), client.getBrand(), client.getRegulator(), "FASAPAY", 1, 1d, 1d, 1d, 1d, "555555**** **6666", 1, Instant.now().toString(), "", "", 1, "", 1d, 1, 1, "", 1, 1, 1d, 2, 1d, "egWithdrawal");
-        CrmTbDepositObject deposit = generateDepositByClient(client);
-        deposit.amountUsd = 199.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
+        deposit.setAmountUsd(BigDecimal.valueOf(199.0));
         data.crmTbDepositObjects.add(deposit);
         return data;
     }
@@ -44,17 +45,17 @@ public class NbpWinningLegRuleDataFactory {
 
     private static DataHelper getNbpWinningLegExit2Data() {
         DataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit2Client);
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 200.0;
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(200.0));
         data.crmTbDepositObjects.add(deposit);
         return data;
     }
 
     private static DataHelper getNbpWinningLegExit3Data() {
         DataHelper data = getNbpWinningLegRuleData(nbpLosingLegExit3Client);
-        CrmTbDepositObject deposit = generateDepositByClient(data.clientHelper);
-        deposit.amountUsd = 200.0;
-        deposit.status = "Success";
+        CrmTbDepositEntity deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(data.clientHelper);
+        deposit.setAmountUsd(BigDecimal.valueOf(200.0));
+        deposit.setStatus("Success");
         data.crmTbDepositObjects.add(deposit);
         Mt5DealsCoercedObject trade = generateTradeByClient(data.clientHelper);
         trade.setProfitUsd(4000.0);

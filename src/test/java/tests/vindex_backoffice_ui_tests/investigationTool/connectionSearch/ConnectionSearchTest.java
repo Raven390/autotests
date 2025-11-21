@@ -2,11 +2,13 @@ package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.api.mitigation_service.PostRestrictionRequestBody;
 import business_objects.db.clickhouse.account_ib_relation.AccountIbRelationObject;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
+import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
+import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
-import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObject;
 import business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCoercedObject;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,9 +24,7 @@ import java.util.List;
 import static business_objects.api.mitigation_service.MitigationServiceRequest.postRestriction;
 import static business_objects.db.clickhouse.account_ib_relation.AccountIbRelationFactory.generateAccountIbRelationObjectByClient;
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateCrmTbAccountDataForUi;
-import static business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositObjectFactory.generateDepositByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserWithUcidFirstName;
-import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalObjectFactory.generateCrmTbWithdrawalObjectByClient;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntry;
 import static business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntryFactory.getConnectionTableEntryForUi;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
@@ -65,8 +65,8 @@ class ConnectionSearchTest extends TestBaseWeb {
     private static CrmTbUserObject connectedCrmTbUser3;
     private static CrmTbUserObject connectedCrmTbUser4;
     private static CrmTbUserObject connectedCrmTbUser5;
-    private static CrmTbDepositObject deposit;
-    private static CrmTbWithdrawalObject withdrawal;
+    private static CrmTbDepositEntity deposit;
+    private static CrmTbWithdrawalEntity withdrawal;
 
 
     @BeforeAll
@@ -113,9 +113,9 @@ class ConnectionSearchTest extends TestBaseWeb {
         relation.setDirectIb(getRandomIntPositive());
         insertObjectToDb(ACCOUNT_IB_RELATION_TABLE_NAME, relation);
         // Withdrawal, Deposit
-        deposit = generateDepositByClient(connectedClient3);
+        deposit = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(connectedClient3);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
-        withdrawal = generateCrmTbWithdrawalObjectByClient(connectedClient3);
+        withdrawal = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(connectedClient3);
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal);
         waitForConnectionSearchToUpdate(client);
     }
@@ -148,7 +148,7 @@ class ConnectionSearchTest extends TestBaseWeb {
     @DisplayName("Verify connection search ucids, statuses, order")
     void connectionSearchTest1() {
         // Statuses
-        String statusReason = "Verify status shown in the node";
+        var statusReason = "Verify status shown in the node";
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(client.getUcid()), is(STATUS_NORMAL));
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient1.getUcid()), is(STATUS_NORMAL));
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient2.getUcid()), is(STATUS_SUSPICIOUS));
@@ -156,7 +156,7 @@ class ConnectionSearchTest extends TestBaseWeb {
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient4.getUcid()), is(String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName())));
         assertThat(statusReason, connectionPage.getStatusByNodeTitle(connectedClient5.getUcid()), is(GAP_TRADING.getName()));
         // Order
-        String orderReason = "Verify order of the node in the graph";
+        var orderReason = "Verify order of the node in the graph";
         assertThat(orderReason, connectionPage.getOrderByNodeTitle(client.getUcid()), is("0"));
         assertThat(orderReason, connectionPage.getOrderByNodeTitle(connectedClient1.getUcid()), anyOf(is("1"), is("2")));
         assertThat(orderReason, connectionPage.getOrderByNodeTitle(connectedClient2.getUcid()), anyOf(is("1"), is("2")));
@@ -196,8 +196,8 @@ class ConnectionSearchTest extends TestBaseWeb {
         assertThat(connectionPage.getCardLastLogin(), is(trade.closeTime.substring(0, trade.closeTime.length() - 3)));
         assertThat(connectionPage.getCardTrading(), is("1 closed deal"));
         assertThat(connectionPage.getCardTotalPnl(), is(String.format("%s USD", formatter.format(trade.profitUsd))));
-        assertThat(connectionPage.getCardDeposit(), is(String.format("%s USD", formatter.format(deposit.amountUsd))));
-        assertThat(connectionPage.getCardWithdrawal(), is(String.format("%s USD", formatter.format(withdrawal.amountUsd - withdrawal.reversedAmountUsd))));
+        assertThat(connectionPage.getCardDeposit(), is(String.format("%s USD", formatter.format(deposit.getAmountUsd()))));
+        assertThat(connectionPage.getCardWithdrawal(), is(String.format("%s USD", formatter.format(withdrawal.getAmountUsd().subtract(withdrawal.getReversedAmountUsd())))));
         assertThat(connectionPage.getCardFraud(), is(POTENTIAL_ABUSE));
         assertThat(connectionPage.getDirectConnectionsAmount(), is("2"));
         assertThat(connectionPage.getDirectConnectionType(connectedClient5.getUcid()), is(CONNECTION_TYPE_SAME_PERSON));
@@ -263,12 +263,12 @@ class ConnectionSearchTest extends TestBaseWeb {
         connectionPage.openConnectionTable();
         connectionPage.verifyConnectionTableIsRendered();
         connectionPage.openConnectionTable();
-        String connectionScore = "1";
+        var connectionScore = "1";
         List<String> row1Data = List.of("2", String.format("%s ", connectedClient4.getUcid()), connectedClient4.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", String.format("%s %s", POTENTIAL.getDisplayName(), MARKET_MANIPULATION.getName()), String.format("CPA %s", connectedClient4.getCpaId()), connectedCrmTbUser4.registrationDate);
         List<String> row2Data = List.of("3", String.format("%s ", connectedClient5.getUcid()), connectedClient5.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_DIGITAL, CONNECTION_SEARCH_DATA_DIGITAL, CONNECTION_ATTRIBUTE_NAME_EMAIL_ADDRESS, CONNECTION_SEARCH_DATA_EMAIL_HIDDEN, CONNECTION_ATTRIBUTE_NAME_SESSION, CONNECTION_SEARCH_DATA_SESSION, CONNECTION_ATTRIBUTE_NAME_NAME_BIRTH, CONNECTION_SEARCH_DATA_NAME_BIRTH, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, CONNECTION_ATTRIBUTE_NAME_DEVICE, CONNECTION_SEARCH_DATA_DEVICE, CONNECTION_ATTRIBUTE_NAME_DOCUMENT_NUMBER, CONNECTION_SEARCH_DATA_DOCUMENT_HIDDEN, CONNECTION_ATTRIBUTE_NAME_IP_ADDRESS, CONNECTION_SEARCH_DATA_IP1, CONNECTION_ATTRIBUTE_NAME_PHONE_NUMBER, CONNECTION_SEARCH_DATA_PHONE_HIDDEN, "", GAP_TRADING.getName(), String.format("CPA %s", connectedClient5.getCpaId()), connectedCrmTbUser5.registrationDate);
         List<String> row3Data = List.of("1", String.format("%s ", connectedClient2.getUcid()), connectedClient2.getUserId().toString(), CONNECTION_TYPE_SAME_PERSON, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", STATUS_SUSPICIOUS, String.format("CPA %s", connectedClient2.getCpaId()), connectedCrmTbUser2.registrationDate);
         List<String> row4Data = List.of("1", String.format("%s ", connectedClient1.getUcid()), connectedClient1.getUserId().toString(), CONNECTION_TYPE_SAME_PERSON, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", STATUS_NORMAL, String.format("CPA %s", connectedClient1.getCpaId()), connectedCrmTbUser1.registrationDate);
-        List<String> row5Data = List.of("2", String.format("%s ", connectedClient3.getUcid()), connectedClient3.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", POTENTIAL_ABUSE, formatter.format(trade.profitUsd), "1 deal", String.format("+%s", formatter.format(deposit.amountUsd)), String.format("-%s", formatter.format(withdrawal.amountUsd - withdrawal.reversedAmountUsd)), String.format("CPA %s", connectedCrmTbUser3.cpaId), String.format("IB %s", relation.getDirectIbRebateAccount()), connectedCrmTbUser3.registrationDate, trade.closeTime.split(" ")[0], trade.closeTime.split(" ")[1].substring(0, 5));
+        List<String> row5Data = List.of("2", String.format("%s ", connectedClient3.getUcid()), connectedClient3.getUserId().toString(), CONNECTION_TYPE_INDIRECT, connectionScore, CONNECTION_ATTRIBUTE_NAME_PAYOUT_ID, CONNECTION_SEARCH_DATA_CARD_NUMBER, "", POTENTIAL_ABUSE, formatter.format(trade.profitUsd), "1 deal", String.format("+%s", formatter.format(deposit.getAmountUsd())), String.format("-%s", formatter.format(withdrawal.getAmountUsd().subtract(withdrawal.getReversedAmountUsd()))), String.format("CPA %s", connectedCrmTbUser3.cpaId), String.format("IB %s", relation.getDirectIbRebateAccount()), connectedCrmTbUser3.registrationDate, trade.closeTime.split(" ")[0], trade.closeTime.split(" ")[1].substring(0, 5));
         assertThat(connectionPage.getConnectionTableDataByRows(), contains(is(row1Data), containsInAnyOrder(row2Data.toArray()), is(row3Data), is(row4Data), is(row5Data)));
     }
 
