@@ -96,6 +96,14 @@ public class Utils {
         return random.nextInt(Integer.MAX_VALUE) + 1;
     }
 
+    public static Short getRandomShortPositive() {
+        return (short) (random.nextInt(Short.MAX_VALUE) + 1);
+    }
+
+    public static Byte getRandomBytePositive() {
+        return (byte) (random.nextInt(Byte.MAX_VALUE) + 1);
+    }
+
     public static Integer getRandomIntPositiveWithBounds(Integer boundLow, Integer boundHigh) {
         return random.nextInt(boundLow, boundHigh);
     }

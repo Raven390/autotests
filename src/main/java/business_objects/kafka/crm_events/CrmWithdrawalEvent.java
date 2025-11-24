@@ -8,6 +8,9 @@ public class CrmWithdrawalEvent {
     @JsonProperty("accountType")
     private String accountType;
 
+    @JsonProperty("accountCategory")
+    private String accountCategory;
+
     @JsonProperty("binNumber")
     private String binNumber;
 
@@ -62,8 +65,14 @@ public class CrmWithdrawalEvent {
     @JsonProperty("type")
     private String type;
 
+    @JsonProperty("fundType")
+    private String fundType;
+
     @JsonProperty("withdrawalAmount")
     private Double withdrawalAmount;
+
+    @JsonProperty("withdrawalAmountUSD")
+    private Double withdrawalAmountUSD;
 
     @JsonProperty("withdrawalApplicationTime")
     private String withdrawalApplicationTime;
@@ -75,6 +84,14 @@ public class CrmWithdrawalEvent {
     private Long withdrawalId;
 
     public CrmWithdrawalEvent() {
+    }
+
+    public Double getWithdrawalAmountUSD() {
+        return withdrawalAmountUSD;
+    }
+
+    public void setWithdrawalAmountUSD(Double withdrawalAmountUSD) {
+        this.withdrawalAmountUSD = withdrawalAmountUSD;
     }
 
     public CrmWithdrawalEvent(
@@ -115,6 +132,30 @@ public class CrmWithdrawalEvent {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    public String getFundType() {
+        return fundType;
+    }
+
+    public void setFundType(String fundType) {
+        this.fundType = fundType;
+    }
+
+    public void setWithdrawalAmount(Double withdrawalAmount) {
+        this.withdrawalAmount = withdrawalAmount;
+    }
+
+    public void setWithdrawalId(Long withdrawalId) {
+        this.withdrawalId = withdrawalId;
+    }
+
+    public String getAccountCategory() {
+        return accountCategory;
+    }
+
+    public void setAccountCategory(String accountCategory) {
+        this.accountCategory = accountCategory;
     }
 
     public String getBinNumber() {
