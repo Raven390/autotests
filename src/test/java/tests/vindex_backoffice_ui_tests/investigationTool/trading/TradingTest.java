@@ -270,8 +270,8 @@ public class TradingTest extends TestBaseWeb {
         trade4.volumeLots = 8.1;
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade0, trade1, trade2, trade3, trade4));
 
-        int from = 4;
-        int to = 8;
+        double from = 4.0;
+        double to = 8.0;
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         tradingPage.navigateOperations(client.getUcid());

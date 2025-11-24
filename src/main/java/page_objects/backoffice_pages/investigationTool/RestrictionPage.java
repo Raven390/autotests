@@ -1,6 +1,7 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.db.audit_service_db.Event;
+import business_objects.db.audit_service_db.AuditEvent;
+import business_objects.db.audit_service_db.EventOld;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.mitigation_service_db.ClientTradingRestriction;
 import business_objects.kafka.restriction_events.*;
@@ -265,12 +266,12 @@ public class RestrictionPage extends AbstractPage {
     @Deprecated
     @Step("Clean users audit history")
     public void cleanUserAudit(String ucid) throws Exception {
-        deleteEntryFromDb(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'");
+        deleteEntryFromDb(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'");
     }
 
 
     public void checkRestrictionCancellationAuditBO(String ucid, String detail) throws Exception {
-        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'", EventOld.class);
         String type1 = event.get(2).getType();
         assertEquals("CANCELLATION_REQUESTED", type1);
         String details = event.get(2).getDetails();
@@ -282,7 +283,7 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public void checkRestrictionCancellationAuditBO(String ucid, String type, String expectedDetails) throws Exception {
-        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", Event.class);
+        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "' and type = '" + type + "' AND details = '" + expectedDetails + "'", EventOld.class);
         assertNotNull(event);
         assertNotNull(event.getLast().getKafkaMessageId());
         assertNotNull(event.getLast().getId());
@@ -296,7 +297,7 @@ public class RestrictionPage extends AbstractPage {
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String detail) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "'", Event.class);
+        List<EventOld> event = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "'", EventOld.class);
         String type1 = event.get(event.size() - 2).getType();
         assertEquals(RESTRICTION_REQUESTED_STATUS, type1);
         String details = event.get(event.size() - 2).getDetails();
@@ -308,11 +309,11 @@ public class RestrictionPage extends AbstractPage {
     }
 
     public static void checkRestrictionApplymentAuditGeneral(String ucid, String expectedSystem, String expectedUser,
-            String expectedComment, String detail) throws Exception {
+            String expectedComment, String restrictionName) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> events = new ArrayList<>();
+        List<AuditEvent> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
+            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
@@ -320,31 +321,31 @@ public class RestrictionPage extends AbstractPage {
             }
             Thread.sleep(1000);
         }
-        Event event1 = events.getFirst();
-        Event event2 = events.getLast();
+        AuditEvent event1 = events.getFirst();
+        AuditEvent event2 = events.getLast();
         assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
-            assertEquals(expectedSystem, event1.getInitiatedBySystem());
-            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertEquals(expectedSystem, event1.getSourceService());
+            assertEquals(expectedUser, event1.getActorName());
             assertEquals(expectedComment, event1.getComment());
-            assertEquals(detail, event1.getDetails());
+            assertEquals(restrictionName, event1.getRestriction());
             assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getInitiatedBySystem());
-            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertEquals(expectedSystem, event2.getSourceService());
+            assertEquals(expectedUser, event2.getActorName());
             assertNull(event2.getComment());
-            assertEquals(detail, event2.getDetails());
+            assertEquals(restrictionName, event2.getRestriction());
         } else {
             assertEquals(RESTRICTION_APPLIED_STATUS, event1.getType());
-            assertEquals(expectedSystem, event1.getInitiatedBySystem());
-            assertEquals(expectedUser, event1.getInitiatedByUser());
+            assertEquals(expectedSystem, event1.getSourceService());
+            assertEquals(expectedUser, event1.getActorName());
             assertNull(event1.getComment());
-            assertEquals(detail, event1.getDetails());
+            assertEquals(restrictionName, event1.getRestriction());
             assertEquals(RESTRICTION_REQUESTED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getInitiatedBySystem());
-            assertEquals(expectedUser, event2.getInitiatedByUser());
+            assertEquals(expectedSystem, event2.getSourceService());
+            assertEquals(expectedUser, event2.getActorName());
             assertEquals(expectedComment, event2.getComment());
-            assertEquals(detail, event2.getDetails());
+            assertEquals(restrictionName, event2.getRestriction());
         }
     }
 
@@ -352,9 +353,9 @@ public class RestrictionPage extends AbstractPage {
             String expectedComment, String detail, int accountId) throws Exception {
         String eventDetailsRegex = "; account: ";
         Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<Event> events = new ArrayList<>();
+        List<EventOld> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY created_at ASC", Event.class);
+            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "' ORDER BY created_at ASC", EventOld.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
@@ -362,8 +363,8 @@ public class RestrictionPage extends AbstractPage {
             }
             Thread.sleep(1000);
         }
-        Event event1 = events.getFirst();
-        Event event2 = events.getLast();
+        EventOld event1 = events.getFirst();
+        EventOld event2 = events.getLast();
         assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
         if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {

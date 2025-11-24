@@ -1,7 +1,7 @@
 package tests.vindex_backoffice_ui_tests.abuseRegistry.fraudsters;
 
 import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.Event;
+import business_objects.db.audit_service_db.EventOld;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.*;
@@ -96,9 +96,9 @@ class MassUploadTest extends TestBaseWeb {
         assertEquals(source, fraud.getFraudSource());
 
 
-        List<Event> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'", Event.class);
+        List<EventOld> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_OLD, "ucid='" + client1.getUcid() + "' and type ='FRAUD_REPORTED'", EventOld.class);
 
-        Event event = events.getFirst();
+        EventOld event = events.getFirst();
         assertEquals("Batch operation. " + commentary, event.getComment());
 
         checkUserHaveRestrictionGeneral(client1.getUcid(), restriction.getId(), "APPLIED");

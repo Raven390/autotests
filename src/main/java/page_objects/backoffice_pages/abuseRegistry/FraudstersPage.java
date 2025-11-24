@@ -54,7 +54,6 @@ public class FraudstersPage extends AbstractPage {
     private final Locator pendingProcessingCells;
     private final Locator validationListItem;
     private final Locator serverAccInput;
-    private final Locator fraudSourceVindexButton;
     private final Locator uploadByIdButton;
     private final Locator uploadByAccountButton;
 
@@ -87,7 +86,6 @@ public class FraudstersPage extends AbstractPage {
         this.pendingProcessingCells = page.locator("//div[contains(@class,'v-body-row')]/descendant::div[contains(@data-qa,'pending_processing')]");
         this.uploadByIdButton = page.locator("[title='Client IDs']");
         this.uploadByAccountButton = page.locator("[title='Accounts']");
-        this.fraudSourceVindexButton = page.locator("[data-qa=\"buttons_list__item__Vindex\"]");
     }
 
     public void navigateAbuseRegistry() {
@@ -137,6 +135,10 @@ public class FraudstersPage extends AbstractPage {
 
     public void selectFraudSource(String sourceName) {
         page.click(String.format(sourceSelectButtonLocatorPattern, sourceName));
+    }
+
+    public void clickVindexFraudSource() {
+        selectFraudSource("Vindex");
     }
 
     public void selectClientIdsAndBrandToUpload(String brandName) {
@@ -348,10 +350,6 @@ public class FraudstersPage extends AbstractPage {
             page.getByRole(AriaRole.OPTION).getByText(i).click();
         }
         restrictionApplyButton.click();
-    }
-
-    public void clickVindexFraudSource() {
-        fraudSourceVindexButton.click();
     }
 }
 

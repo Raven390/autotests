@@ -3,7 +3,7 @@ package tests.vindex_backoffice_ui_tests.abuseRegistry.deduction;
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserHistory;
 import business_objects.db.abuse_registry_db.DeductionKafkaRequest;
-import business_objects.db.audit_service_db.Event;
+import business_objects.db.audit_service_db.EventOld;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
@@ -151,14 +151,14 @@ class RemoveRestrictionsAfterDeductionRespondedTest extends TestBaseWeb {
         deleteEntryFromDb(DbName.POSTGRES, AR_DEDUCTION_KAFKA_RESPONSE_TABLE_NAME, String.format("message_id = '%s'", request.getMessageId()));
         Allure.step("send your response to Kafka");
         kafka.produceMessage(request.getMessageId(), objectMapper.writeValueAsString(response), KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE);
-        List<Event> cancellationEvents = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, "ucid = '" + client.getUcid() + "' and type = 'RESTRICTION_CANCELLED'", Event.class);
+        List<EventOld> cancellationEvents = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + client.getUcid() + "' and type = 'RESTRICTION_CANCELLED'", EventOld.class);
         Allure.step("check that there is 2 cancellation events in audit for our test client");
         assertEquals(2, cancellationEvents.size());
         Allure.step("check that there is cancellation event for Withdrawals restriction");
-        Event eventFirst = cancellationEvents.stream().filter(e -> "Withdrawals".equals(e.getDetails())).findFirst().orElse(null);
+        EventOld eventFirst = cancellationEvents.stream().filter(e -> "Withdrawals".equals(e.getDetails())).findFirst().orElse(null);
         Assertions.assertNotNull(eventFirst);
         Allure.step("check that there is cancellation event for Manual withdrawal review restriction");
-        Event eventSecond = cancellationEvents.stream().filter(e -> "Manual withdrawal review".equals(e.getDetails())).findFirst().orElse(null);
+        EventOld eventSecond = cancellationEvents.stream().filter(e -> "Manual withdrawal review".equals(e.getDetails())).findFirst().orElse(null);
         Assertions.assertNotNull(eventSecond);
     }
 }
