@@ -182,6 +182,8 @@ public class Constants {
     public static final String CRM_BONUS_TABLE_NAME = "consolidated.crm___tb_bonus";
     public static final String CRM_TB_CREDIT_CARD_TABLE_NAME = "consolidated.crm___tb_credit_card";
     public static final String CRM_DEPOSIT_TABLE_NAME = "consolidated.crm___tb_deposit";
+    public static final String CRM_DEPOSIT_TYPE_TABLE_NAME = "consolidated.crm___tb_deposit_type";
+    public static final String CRM_DEPOSIT_CHANNEL_TABLE_NAME = "consolidated.crm___tb_deposit_channel";
     public static final String CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME = "consolidated.crm___tb_account_for_mt";
     public static final String CRM_TB_ACCOUNT_TABLE_NAME = "consolidated.crm___tb_account";
     public static final String CRM_TB_LOYALTY_REDEMPTION = "consolidated.crm___tb_loyalty_redemption";
@@ -190,6 +192,7 @@ public class Constants {
     public static final String CRM_TRANSFERS_TABLE_NAME = "consolidated.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "consolidated.crm___tb_user";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "consolidated.crm___tb_withdrawal";
+    public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE = "consolidated.crm___tb_withdraw_type";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_BYBIT = "data_science.ucid_mirror_score_bybit";
     public static final String DATA_SCIENCE_FEATURE_STORE_SERVICE_TABLE_NAME = "data_science.feature_store_service";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_PYTHON = "data_science.ucid_mirror_score_python";

@@ -6,6 +6,9 @@ import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLogin
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
+import business_objects.db.clickhouse.crm_tb_deposit_type.CrmTbDepositTypeObject;
+import business_objects.db.clickhouse.crm_tb_withdrawal_type.CrmTbWithdrawalTypeObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
@@ -24,12 +27,14 @@ import business_objects.db.clickhouse.loyalties_redemption.LoyaltiesRedemptionOb
 import business_objects.db.clickhouse.mirror_ucid_table.MirrorUcidObject;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
+import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
 import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.mt_tb_credits.MtTbCreditsObject;
 import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
+import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
 import business_objects.kafka.MirrorScoreEvent;
@@ -89,6 +94,9 @@ public class DataHelper {
     public CrmTbAccountForMtObject crmTbAccountForMtObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
     public List<MtTbCreditsObject> mtTbCreditsObjects;
+    public List<CrmTbWithdrawalTypeObject> crmTbWithdrawalTypeObjects;
+    public List<CrmTbDepositTypeObject> crmTbDepositTypeObjects;
+    public List<CrmTbDepositChannelObject> crmTbDepositChannelObjects;
     public List<CrmTbWithdrawalEntity> crmTbWithdrawalObjects;
     public List<CrmTbDepositEntity> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
@@ -114,6 +122,8 @@ public class DataHelper {
     public CloseTradeMtEvent closeTradeMtEvent;
     public List<Mt5DealsCoercedObject> mt5DealsObjects;
     public List<S3FactIbSalesCommissionsObject> s3FactIbSalesCommissionsObject;
+    public List<S3FactLoginMetricsObject> S3FactLoginMetricsObjects;
+    public List<MtMt4TradesObject> MtMt4TradesObjects;
     public UcidMirrorScorePython ucidMirrorScore;
     public List<RuleAlert> ruleAlerts;
     public List<BoAlertsObject> boAlertsObjects;
@@ -173,6 +183,9 @@ public class DataHelper {
             if (data.crmTbAccountForMtObject != null) {
                 insertObjectToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, data.crmTbAccountForMtObject);
             }
+            if (data.MtMt4TradesObjects != null) {
+                insertObjectsToDb(MT4_TRADES_TABLE_NAME, data.MtMt4TradesObjects);
+            }
             if (data.crmTbAccountObjectConnections != null) {
                 data.crmTbAccountObjectConnections.forEach(credit -> insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, credit));
             }
@@ -197,14 +210,26 @@ public class DataHelper {
             if (data.crmTbWithdrawalObjects != null) {
                 data.crmTbWithdrawalObjects.forEach(withdrawal -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal));
             }
+            if (data.crmTbWithdrawalTypeObjects != null) {
+                data.crmTbWithdrawalTypeObjects.forEach(withdrawalType -> insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE, withdrawalType));
+            }
             if (data.crmTbDepositObjects != null) {
                 data.crmTbDepositObjects.forEach(deposit -> insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit));
+            }
+            if (data.crmTbDepositTypeObjects != null) {
+                data.crmTbDepositTypeObjects.forEach(type -> insertObjectToDb(CRM_DEPOSIT_TYPE_TABLE_NAME, type));
+            }
+            if (data.crmTbDepositChannelObjects != null) {
+                data.crmTbDepositChannelObjects.forEach(channel -> insertObjectToDb(CRM_DEPOSIT_CHANNEL_TABLE_NAME, channel));
             }
             if (data.crmTbBonusObjects != null) {
                 data.crmTbBonusObjects.forEach(bonus -> insertObjectToDb(CRM_BONUS_TABLE_NAME, bonus));
             }
             if (data.mt5DealsCoercedObjects != null && !data.mt5DealsCoercedObjects.isEmpty()) {
                 insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, data.mt5DealsCoercedObjects);
+            }
+            if (data.S3FactLoginMetricsObjects != null && !data.S3FactLoginMetricsObjects.isEmpty()) {
+                insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, data.S3FactLoginMetricsObjects);
             }
             if (data.mtMt5PositionsObjects != null) {
                 data.mtMt5PositionsObjects.forEach(position -> insertObjectToDb(MT5_POSITIONS_TABLE_NAME, position));
@@ -286,7 +311,19 @@ public class DataHelper {
             if (data.crmTbWithdrawalObjects != null) {
                 data.crmTbWithdrawalObjects.forEach(withdrawal -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s'", withdrawal.getUcid())));
             }
+            if (data.crmTbWithdrawalTypeObjects != null) try {
+                data.crmTbWithdrawalTypeObjects.forEach(withdrawalType -> deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("id = '%s'", withdrawalType.getId())));
+            } catch (Exception e) {
+                writeLog("Exception in deleteData: " + e.getMessage());
+            }
             if (data.crmTbDepositObjects != null) {
+                data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid())));
+            }
+            if (data.crmTbDepositTypeObjects != null) {
+                data.crmTbDepositTypeObjects.forEach(depositType -> deleteEntryFromDb(CRM_DEPOSIT_TYPE_TABLE_NAME, String.format("id = '%s'", depositType.getId())));
+            }
+            if (data.crmTbDepositChannelObjects != null) {
+                data.crmTbDepositChannelObjects.forEach(depositChannel -> deleteEntryFromDb(CRM_DEPOSIT_CHANNEL_TABLE_NAME, String.format("id = '%s'", depositChannel.getId())));
                 data.crmTbDepositObjects.forEach(deposit -> deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", deposit.getUcid())));
             }
             if (data.crmTbBonusObjects != null) {
@@ -334,6 +371,9 @@ public class DataHelper {
             if (data.s3FactIbSalesCommissionsObject != null) {
                 data.s3FactIbSalesCommissionsObject.forEach(salesComm -> deleteEntryFromDb(S3_FACT_IB_SALES_COMMISSIONS, String.format("ucid = '%s'", salesComm.getUcid())));
             }
+            if (data.S3FactLoginMetricsObjects != null) {
+                data.S3FactLoginMetricsObjects.forEach(mertic -> deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, String.format("ucid = '%s'", mertic.getUcid())));
+            }
             if (data.ucidMirrorScore != null) {
                 deleteObjectFromDb(DATA_SCIENCE_UCID_MIRROR_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
@@ -342,6 +382,9 @@ public class DataHelper {
             }
             if (data.ozTradesTableObjects != null) {
                 data.ozTradesTableObjects.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));
+            }
+            if (data.MtMt4TradesObjects != null) {
+                data.MtMt4TradesObjects.forEach(trade -> deleteEntryFromDb(MT4_TRADES_TABLE_NAME, String.format("ucid = '%s'", trade.getUcid())));
             }
             if (data.ucidGeneralScore != null) {
                 deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.ucidGeneralScore.getUcid()));

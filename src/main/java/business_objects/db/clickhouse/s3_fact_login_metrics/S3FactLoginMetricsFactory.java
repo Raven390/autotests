@@ -40,6 +40,39 @@ public class S3FactLoginMetricsFactory {
         return metric;
     }
 
+    public static S3FactLoginMetricsObject generateS3FactLoginMetricsClientZero(ClientHelper client) {
+        S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
+        metric.setDate(getCurrentDate());
+        metric.setBrand(client.getBrand());
+        metric.setRegulator(client.getRegulator());
+        metric.setUserId(client.getUserId());
+        metric.setUcid(client.getUcid());
+        metric.setAccount(client.getTradingAccount());
+        metric.setServerId(client.getServerId());
+        metric.setDlInsertTs(getCurrentTimestampDbFormat());
+        metric.setDlUpdateTs(getCurrentTimestampDbFormat());
+        metric.setDailyCoreSpreadRevenueOz(0.0);
+        metric.setDailyCoreSpreadRevenuePe(0.0);
+        metric.setDailyTakerSpreadRevenueOz(0.0);
+        metric.setDailyTakerSpreadRevenuePe(0.0);
+        metric.setDailyLpSpreadRevenueOz(0.0);
+        metric.setDailyLpSpreadRevenuePe(0.0);
+        metric.setDailyVbSpreadRevenueOz(0.0);
+        metric.setDailyVbSpreadRevenuePe(0.0);
+        metric.setDailyAppliedMinSpreadRevenueOz(0.0);
+        metric.setDailyAppliedMinSpreadRevenuePe(0.0);
+        metric.setDailyAppliedMaxSpreadRevenueOz(0.0);
+        metric.setDailyAppliedMaxSpreadRevenuePe(0.0);
+        metric.setDailyMakerSpreadRevenueOz(0.0);
+        metric.setDailyClientSlippageRevenueOz(0.0);
+        metric.setDailyClientSlippageRevenuePe(0.0);
+        metric.setDailyCommissionRevenue(0.0);
+        metric.setDailySwapsRevenue(0.0);
+        metric.setIbCommission(0.0);
+        metric.setSalesCommission(0.0);
+        return metric;
+    }
+
     @Step("Generate data for given account")
     public static S3FactLoginMetricsObject generateS3FactLoginMetricsClientAdditionalAccount(ClientHelper client) {
         S3FactLoginMetricsObject metric = new S3FactLoginMetricsObject();
