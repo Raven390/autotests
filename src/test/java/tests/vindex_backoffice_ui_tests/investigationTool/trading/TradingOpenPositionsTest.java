@@ -179,8 +179,8 @@ class TradingOpenPositionsTest extends TestBaseWeb {
         openPositions.navigateOpenPositions(client.getUcid());
         openPositions.openPositionsRenders();
 
-        int from = 4;
-        int to = 8;
+        double from = 4;
+        double to = 8;
         tradingPage.openFilter();
         tradingPage.fillVolumeLotValues(String.valueOf(from), String.valueOf(to));
         tradingPage.clickApplyButton();

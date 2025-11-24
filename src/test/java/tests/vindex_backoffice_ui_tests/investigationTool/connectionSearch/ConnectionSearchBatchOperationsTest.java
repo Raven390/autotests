@@ -2,7 +2,7 @@ package tests.vindex_backoffice_ui_tests.investigationTool.connectionSearch;
 
 import business_objects.db.abuse_registry_db.AbuserDeduction;
 import business_objects.db.abuse_registry_db.AbuserFraudType;
-import business_objects.db.audit_service_db.Event;
+import business_objects.db.audit_service_db.EventOld;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.data_science_test.connection_table.ConnectionTableEntry;
@@ -84,15 +84,15 @@ public class ConnectionSearchBatchOperationsTest extends TestBaseWeb {
         String comment = "Connection batch comment";
         connectionPage.fillMultiselectComment(comment);
         connectionPage.clickMultiselectAddCommentButton();
-        List<Event> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT, String.format("ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC", connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE), Event.class);
+        List<EventOld> events = getObjectsFromDB(DbName.POSTGRES, AUDIT_EVENT_OLD, String.format("ucid IN ('%s', '%s') AND type = '%s' ORDER BY created_at ASC", connectedClient1.getUcid(), connectedClient2.getUcid(), COMMENT_ADDED_TYPE), EventOld.class);
         assertThat("Verify comments amount", events.size(), is(2));
-        Event commentEvent1 = new Event();
+        EventOld commentEvent1 = new EventOld();
         commentEvent1.setUcid(connectedClient1.getUcid());
         commentEvent1.setType(COMMENT_ADDED_TYPE);
         commentEvent1.setInitiatedBySystem(VINDEX_BO_SYSTEM);
         commentEvent1.setInitiatedByUser(String.format("%s %s", autotestUserOne().getFirstName(), autotestUserOne().getLastName()));
         commentEvent1.setComment(comment);
-        Event commentEvent2 = new Event();
+        EventOld commentEvent2 = new EventOld();
         commentEvent2.setUcid(connectedClient2.getUcid());
         commentEvent2.setType(COMMENT_ADDED_TYPE);
         commentEvent2.setInitiatedBySystem(VINDEX_BO_SYSTEM);

@@ -299,6 +299,7 @@ public class ResolvePage extends AbstractPage {
         fraudListButton.click();
         page.locator(FRAUD_MENU_ITEM_SELECTOR).getByText(fraud.getName()).hover();
         page.locator(CLIENT_REPORT_FRAUD_DRAWER_ITEM_SELECTOR.formatted(fraud.getCode(), status.getDisplayName().toLowerCase())).click();
+        selectFraudSourceManage("Vindex");
     }
 
 

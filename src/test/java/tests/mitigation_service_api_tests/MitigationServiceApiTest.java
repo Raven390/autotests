@@ -118,9 +118,9 @@ class MitigationServiceApiTest extends TestBaseApi {
         String updatedBySystem = "system" + getCurrentTimestampSeconds();
         String updatedByUser = "user" + getCurrentTimestampSeconds();
         setRestrictionAPIGeneralResponse(restrictionClient.getUcid(), restriction.getCode(), applyReason, updatedBySystem, updatedByUser);
-        RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
         RestrictionPage.checkKafkaRequestApplyUserId(restrictionClient.getUserId());
         RestrictionPage.checkUserHaveRestrictionGeneral(restrictionClient.getUcid(), restriction.getId(), "APPLIED");
+        RestrictionPage.checkRestrictionApplymentAuditGeneral(restrictionClient.getUcid(), updatedBySystem, updatedByUser, applyReason, restriction.getName());
     }
 
     @Test

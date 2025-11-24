@@ -1,6 +1,6 @@
 package page_objects.backoffice_pages.investigationTool;
 
-import business_objects.db.audit_service_db.Event;
+import business_objects.db.audit_service_db.EventOld;
 import business_objects.ui.user.User;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -535,7 +535,7 @@ public class InvestigationPage extends AbstractPage {
     public void checkInvestigationAssigmentAudit(String ucid) throws Exception {
         Allure.step("check assigment event in Audit DB");
         page.waitForTimeout(5000);
-        List<Event> event = getObjectsFromDB(DbName.POSTGRES, "event", "ucid = '" + ucid + "'", Event.class);
+        List<EventOld> event = getObjectsFromDB(DbName.POSTGRES, "event", "ucid = '" + ucid + "'", EventOld.class);
         String type = event.get(1).getType();
         assertEquals("CLIENT_ASSIGNED", type);
         String system = event.get(1).getInitiatedBySystem();

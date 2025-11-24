@@ -310,23 +310,23 @@ public class TradingPage extends AbstractPage {
         this.commissionColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='COMMISSION')]");
         this.methodColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='METHOD')]");
         this.commentColumnHeader = page.locator("//" + TABLE_HEADER + " and (text()='COMMENT')]");
-        this.accountColumnCell = page.locator("//*[@class='v-body-cell'][1]");
-        this.typeValue = page.locator("//*[@class='v-body-cell'][2]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
-        this.typeColumnCell = page.locator("//*[@class='v-body-cell'][2]");
-        this.profitColumnCell = page.locator("//*[@class='v-body-cell'][7]");
-        this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][3]");
-        this.volumeLotsValue = page.locator("//*[@class='v-body-cell'][3]//" + PRIMARY_TEXT);
-        this.volumeUsdValue = page.locator("//*[@class='v-body-cell'][3]" + SECONDARY_TEXT);
-        this.openColumnCellDate = page.locator("//*[@class='v-body-cell'][4]//" + PRIMARY_TEXT);
-        this.closeColumnCellDate = page.locator("//*[@class='v-body-cell'][5]//" + PRIMARY_TEXT);
-        this.openColumnCell = page.locator("//*[@class='v-body-cell'][4]");
+        this.accountColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__account')]");
+        this.typeValue = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__type')]//*[contains(@class,'v-trading-tab-deals__deal-type')]");
+        this.typeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__type')]");
+        this.profitColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__profit')]");
+        this.volumeColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]");
+        this.volumeLotsValue = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]//%s", PRIMARY_TEXT));
+        this.volumeUsdValue = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__volume')]%s", SECONDARY_TEXT));
+        this.openColumnCellDate = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__open')]//%s", PRIMARY_TEXT));
+        this.closeColumnCellDate = page.locator(String.format("//*[@class='v-body-cell'][contains(@data-qa, '__close')]//%s", PRIMARY_TEXT));
+        this.openColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__open')]");
         this.closeColumnCell = page.locator("//*[@class='v-body-cell'][5]");
-        this.tpslColumnCell = page.locator("//*[@class='v-body-cell'][6]");
-        this.swapColumnCell = page.locator("//*[@class='v-body-cell'][8]");
-        this.srColumnCell = page.locator("//*[@class='v-body-cell'][9]");
-        this.commissionColumnCell = page.locator("//*[@class='v-body-cell'][10]");
-        this.methodColumnCell = page.locator("//*[@class='v-body-cell'][11]");
-        this.commentColumnCell = page.locator("//*[@class='v-body-cell'][12]");
+        this.tpslColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__tp/sl')]");
+        this.swapColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__swap')]");
+        this.srColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__sr')]");
+        this.commissionColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__commission')]");
+        this.methodColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__method')]");
+        this.commentColumnCell = page.locator("//*[@class='v-body-cell'][contains(@data-qa, '__comment')]");
         this.filterButton = page.locator("//button//*[text()=' Filter']");
         this.filterMenu = page.locator("[data-qa=\"drawer_body\"] .v-trading-tab-deals-filter__content");
         this.checkboxItem = page.locator(".v-trading-tab-deals-filter__filter-container  .g-checkbox");
@@ -456,7 +456,7 @@ public class TradingPage extends AbstractPage {
         this.highlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row_highlighted')]");
         this.notHighlightedRow = page.locator("//*[@class='v-virtualized-table__body-container']//*[contains(@class, 'v-body-row') and not (contains(@class, 'v-body-row_highlighted'))]");
         this.lotsAmountSwitch = page.locator(LOTS_AMOUNT_SWITCH);
-        this.errorMessage = page.locator("//div[@class='v-error-view__error-text']");
+        this.errorMessage = page.locator("//*[@data-qa='trading_deals__table']//div[@class='v-error-view__error-text']");
         this.illegalProfitButton = page.locator("//button[@data-qa='trading_deals__controls__illegal_profit_button']");
         this.checkboxIllegalProfit = page.locator("//input[@type='checkbox']");
         this.illegalProfitAmountLoaded = page.locator("//div[@class='v-trading-tab-deals-multiselect-panel__illegal-profit']");
@@ -540,8 +540,8 @@ public class TradingPage extends AbstractPage {
         tpslColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        srColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        srColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        //deprecated column srColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        //deprecated column srColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnCell.first().waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         methodColumnHeader.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -557,7 +557,7 @@ public class TradingPage extends AbstractPage {
         closeColumnHeader.getByText("CLOSE").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         tpslColumnHeader.getByText("TP/SL").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         swapColumnHeader.getByText("SWAP").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
-        srColumnHeader.getByText("SR").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        //deprecated column srColumnHeader.getByText("SR").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commissionColumnHeader.getByText("COMMISSION").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         methodColumnHeader.getByText("METHOD").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         commentColumnHeader.getByText("COMMENT").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
@@ -615,8 +615,8 @@ public class TradingPage extends AbstractPage {
     @Step("Check text content of first and last method cells on page")
     public void checkMethodCellsContent(String methodName) {
         Allure.step("Check text content of first and last method cells on page " + methodName);
-        assertTrue(methodColumnCell.first().textContent().matches("(.)*" + methodName + "*"));
-        assertTrue(methodColumnCell.last().textContent().matches("(.)*" + methodName + "*"));
+        assertEquals(methodName, methodColumnCell.first().textContent());
+        assertEquals(methodName, methodColumnCell.last().textContent());
     }
 
 
@@ -625,6 +625,8 @@ public class TradingPage extends AbstractPage {
         Allure.step("Check text content of first and last type cells on page " + typeName);
         assertTrue(typeValue.first().textContent().matches("(.)*" + typeName + "*"));
         assertTrue(typeValue.last().textContent().matches("(.)*" + typeName + "*"));
+        assertEquals(typeName, typeValue.first().textContent());
+        assertEquals(typeName, typeValue.last().textContent());
     }
 
     @Step("Click apply button")
@@ -663,25 +665,25 @@ public class TradingPage extends AbstractPage {
     }
 
     @Step("Check text content of first and last Volume in USD cells on page is in interval")
-    public void checkVolumeCellsContentUSD(int from, int to) {
+    public void checkVolumeCellsContentUSD(double from, double to) {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
         String firstCell = volumeUsdValue.first().textContent().replace(" USD", "");
         String lastCell = volumeUsdValue.last().textContent().replace(" USD", "");
-        writeLog(Integer.parseInt(firstCell));
-        writeLog(Integer.parseInt(lastCell));
-        assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
-        assertTrue(from <= Integer.parseInt(lastCell) && Integer.parseInt(lastCell) <= to);
+        writeLog(Double.parseDouble(firstCell));
+        writeLog(Double.parseDouble(lastCell));
+        assertTrue(from <= Double.parseDouble(firstCell) && Double.parseDouble(firstCell) <= to);
+        assertTrue(from <= Double.parseDouble(lastCell) && Double.parseDouble(lastCell) <= to);
     }
 
     @Step("Check text content of first and last Volume in Lots cells on page is in interval")
-    public void checkVolumeCellsContentLots(int from, int to) {
+    public void checkVolumeCellsContentLots(Double from, Double to) {
         Allure.step("Check text content of first and last Volume cells on page is in interval");
         String firstCell = volumeLotsValue.first().textContent().replace(" lots", "");
         String lastCell = volumeLotsValue.last().textContent().replace(" lots", "");
-        writeLog(Integer.parseInt(firstCell));
-        writeLog(Integer.parseInt(lastCell));
-        assertTrue(from <= Integer.parseInt(firstCell) && Integer.parseInt(firstCell) <= to);
-        assertTrue(from <= Integer.parseInt(lastCell) && Integer.parseInt(lastCell) <= to);
+        writeLog(Double.parseDouble(firstCell));
+        writeLog(Double.parseDouble(lastCell));
+        assertTrue(from <= Double.parseDouble(firstCell) && Double.parseDouble(firstCell) <= to);
+        assertTrue(from <= Double.parseDouble(lastCell) && Double.parseDouble(lastCell) <= to);
     }
 
     @Step("Check text content of first and last profit cells on page is in interval")
