@@ -7,15 +7,15 @@ import static utils.Utils.*;
 
 public class CrmTbCreditCardObjectFactory {
     @Step("Generate credit card object by user id")
-    public static CrmTbCreditCardObject generateDepositByClient(ClientHelper client) {
+    public static CrmTbCreditCardObject generateByClient(ClientHelper client, int creditCardId) {
         CrmTbCreditCardObject depositObject = new CrmTbCreditCardObject();
-        depositObject.id = getRandomIntPositive();
+        depositObject.id = creditCardId;
         depositObject.sourceIdSt = client.getServerId();
         depositObject.userId = client.getUserId();
         depositObject.createTime = getCurrentTimestampDbFormat();
         depositObject.updateTime = getCurrentTimestampDbFormat();
-        depositObject.cardBeginSixDigits = "463387";
-        depositObject.cardLastFourDigits = "2992";
+        depositObject.cardBeginSixDigits = "454793";
+        depositObject.cardLastFourDigits = "5815";
         depositObject.cardHolderName = "Mr Test";
         depositObject.expiryMonth = "12";
         depositObject.expiryYear = "2020";

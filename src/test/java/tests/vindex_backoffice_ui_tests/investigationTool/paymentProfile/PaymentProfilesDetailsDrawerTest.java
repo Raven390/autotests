@@ -6,12 +6,11 @@ import business_objects.db.clickhouse.crm_tb_credit_card_table.CrmTbCreditCardOb
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntityFactory;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
-import business_objects.db.clickhouse.crm_tb_withdraw_account.CrmTbWithdrawAccountObject;
-import business_objects.db.clickhouse.crm_tb_withdraw_account.CrmTbWithdrawAccountObjectFactory;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
 import helpers.data.ClientHelper;
+import helpers.data.enums.VerificationStatus;
 import helpers.database.DbName;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
@@ -59,7 +58,6 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
     private static CrmTbWithdrawalEntity withdrawal1;
     private static CrmTbWithdrawalEntity withdrawal2;
     private static CrmTbCreditCardObject cardObject;
-    private static CrmTbWithdrawAccountObject crmTbWithdrawAccountObject;
 
     @BeforeAll
     static void setup() throws IOException {
@@ -73,8 +71,11 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         deposit3 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client2);
         withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         deposit.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
+        deposit.setPaymentProfileKey(deposit.getPaymentProfile());
         deposit2.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
+        deposit2.setPaymentProfileKey(deposit2.getPaymentProfile());
         withdrawal1.setPaymentProfile("Card");
+        withdrawal1.setPaymentProfileKey(withdrawal1.getPaymentProfile());
         deposit.setPaymentType("Cryptocurrency");
         deposit2.setPaymentType("Cryptocurrency");
         withdrawal1.setPaymentType("Card");
@@ -97,6 +98,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         withdrawal1.setReversedAmountUsd(BigDecimal.ZERO);
 
         deposit3.setPaymentProfile(deposit.getPaymentProfile());
+        deposit3.setPaymentProfileKey(deposit.getPaymentProfileKey());
         deposit3.setPaymentType(deposit.getPaymentType());
         deposit3.setPaymentChannel(deposit.getPaymentChannel());
         deposit3.setIsDel(0);
@@ -106,24 +108,24 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
 
         withdrawal2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         withdrawal2.setPaymentProfile("LBT1");
+        withdrawal2.setPaymentProfileKey(withdrawal2.getPaymentProfile());
         withdrawal2.setPaymentType("Card");
         withdrawal2.setPaymentFamily("LBT");
         withdrawal2.setPaymentChannel("USDT(BEP20)-CPS");
         withdrawal2.setIsDel(0);
+        withdrawal2.setCreditCardId(withdrawal1.getCreditCardId());
         withdrawal2.setPaymentFamily("LBT");
         withdrawal2.setAmount(BigDecimal.valueOf(10.0));
         withdrawal2.setAmountUsd(BigDecimal.valueOf(11.01));
         withdrawal2.setReversedAmount(BigDecimal.ZERO);
         withdrawal2.setReversedAmountUsd(BigDecimal.ZERO);
-        crmTbWithdrawAccountObject = CrmTbWithdrawAccountObjectFactory.generateByClient(client);
-        cardObject = CrmTbCreditCardObjectFactory.generateDepositByClient(client);
+        cardObject = CrmTbCreditCardObjectFactory.generateByClient(client, withdrawal1.getCreditCardId().intValue());
         insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawal1, withdrawal2));
-        insertObjectsToDb(CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, List.of(crmTbWithdrawAccountObject));
         insertObjectToDb(CRM_TB_CREDIT_CARD_TABLE_NAME, cardObject);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit2);
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit3);
-        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit3);
+        executeQueryToDb(DbName.CLICKHOUSE, String.format("INSERT INTO consolidated.client_payment_info (user_id, brand, regulator, ucid, country, bank_name, bank_address, account_number, beneficiary_name, holder_address, swift, sort_code, bsb_code, bank_account_name, bank_branch_name, bank_city, bank_province, ifsc_code, is_del, last_updated) VALUES(%s, 'Vantage', 'VFSC2', '%s', '', 'Revolut Bank UAB', 'Konstitucijos ave. 21B, 08130, Vilnius, Lithuania', 'LT133250055915934239', 'Lolita Reid', 'Lolita Reid', 'REVOLT21', 'test sort code', 'test bsb code', 'Lolita Reid', '', '', '', 'test ifsc code', 0, '2025-11-04 14:08:55.000');", client.getUserId(), client.getUcid()));
         addFraudForClient(client2, MARKET_MANIPULATION, POTENTIAL, List.of());
     }
 
@@ -133,6 +135,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         cleanUserPaymentsDb(client2.getUcid());
         deleteEntryFromDb(DbName.CLICKHOUSE, CRM_TB_CREDIT_CARD_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
         deleteEntryFromDb(DbName.CLICKHOUSE, CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
+        deleteEntryFromDb(DbName.CLICKHOUSE, CLIENT_PAYMENT_INFO_TABLE_NAME, "user_id='%s'".formatted(crmTbUser.userId));
     }
 
     @Test
@@ -147,7 +150,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         paymentsPage.openPaymentProfileDetails(deposit.getPaymentProfile());
         Map<String, String> paymentProfileDetailsRows = paymentsPage.getPaymentProfileDetailsRows();
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(4));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(5));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Family"), equalTo(deposit.getPaymentFamily()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Type"), equalTo(deposit.getPaymentType()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("System"), equalTo(deposit.getPaymentChannel()));
@@ -161,11 +164,9 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         assertThat("Verify net deposit total", netDepTotal, equalTo(String.format("%s USDnet deposit", deposit.getAmountUsd())));
         paymentsPage.openPaymentProfileDetailsConnectedClients();
         List<String> paymentProfileDetailsConnectedClients = paymentsPage.getPaymentProfileDetailsConnectedClients();
-        assertThat("Verify connected clients size", paymentProfileDetailsConnectedClients.size(), equalTo(2));
+        assertThat("Verify connected clients size", paymentProfileDetailsConnectedClients.size(), equalTo(1));
         var user2 = paymentProfileDetailsConnectedClients.stream().filter(x -> x.contains(String.valueOf(crmTbUser2.userId))).findFirst().get();
-        String format = String.format("%s %s%sMarket manipulation%s%s%s", crmTbUser2.firstName, crmTbUser2.lastName, crmTbUser2.userId, deposit3.getAmountUsd(),               // deposit
-                "0",                    // wd
-                LocalDate.now()         // date
+        String format = String.format("%s %s%sPotential Market manipulation%s%s%s%s", crmTbUser2.firstName, crmTbUser2.lastName, crmTbUser2.userId, deposit3.getAmountUsd(), "0", VerificationStatus.NOT_VERIFIED.getDisplayName(), LocalDate.now()
         );
         assertThat("Verify connected client", user2, containsString(format));
     }
@@ -182,7 +183,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         paymentsPage.openPaymentProfileDetails(withdrawal1.getPaymentProfile());
         Map<String, String> paymentProfileDetailsRows = paymentsPage.getPaymentProfileDetailsRows();
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(10));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(11));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Family"), equalTo(withdrawal1.getPaymentFamily()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Type"), equalTo(withdrawal1.getPaymentType()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("System"), equalTo(withdrawal1.getPaymentChannel()));
@@ -192,7 +193,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Expiry"), equalTo(String.format("%s/%s", cardObject.expiryMonth, cardObject.expiryYear.substring(2))));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("3DS"), equalTo("Yes"));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Bank"), equalTo("Revolut Bank Uab"));
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Country").strip(), equalTo("LITHUANIA"));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Country").strip(), equalTo("ROMANIA"));
     }
 
     @Test
@@ -207,13 +208,13 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         paymentsPage.clickPaymentProfilesTabButton();
         paymentsPage.openPaymentProfileDetails(withdrawal2.getPaymentProfile());
         Map<String, String> paymentProfileDetailsRows = paymentsPage.getPaymentProfileDetailsRows();
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(6));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.size(), equalTo(11));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Family"), equalTo(withdrawal2.getPaymentFamily()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Type"), equalTo(withdrawal2.getPaymentType()));
         assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("System"), equalTo(withdrawal2.getPaymentChannel()));
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Account"), equalTo(crmTbWithdrawAccountObject.bankCard));
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Bank Name"), equalTo(crmTbWithdrawAccountObject.bankName));
-        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Swift"), equalTo(crmTbWithdrawAccountObject.swiftCode));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Account"), equalTo("LT133250055915934239"));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Bank Name"), equalTo("Revolut Bank UAB"));
+        assertThat("Verify payment profile details rows", paymentProfileDetailsRows.get("Swift"), equalTo("REVOLT21"));
 
     }
 

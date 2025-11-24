@@ -190,6 +190,7 @@ public class Constants {
     public static final String CRM_TB_LOYALTY_REDEMPTION = "consolidated.crm___tb_loyalty_redemption";
     public static final String CRM_TB_USER_EXTENDS_TABLE_NAME = "consolidated.crm___tb_user_extends";
     public static final String CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME = "consolidated.crm___tb_withdraw_account";
+    public static final String CLIENT_PAYMENT_INFO_TABLE_NAME = "consolidated.client_payment_info";
     public static final String CRM_TRANSFERS_TABLE_NAME = "consolidated.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "consolidated.crm___tb_user";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "consolidated.crm___tb_withdrawal";
