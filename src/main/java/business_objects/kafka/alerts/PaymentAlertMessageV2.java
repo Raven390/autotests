@@ -1,11 +1,15 @@
 package business_objects.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+@Setter
+@Getter
 public class PaymentAlertMessageV2 extends BaseAlertMessageV2 {
     @JsonProperty(value = "account", required = true)
     public String account;
