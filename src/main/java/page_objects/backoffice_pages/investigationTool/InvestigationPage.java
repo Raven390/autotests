@@ -114,6 +114,7 @@ public class InvestigationPage extends AbstractPage {
     private final Locator unassignedSuspiciousClientsCounter;
     private final Locator mySuspiciousClientsCounter;
     private final Locator allSuspiciousClientsCounter;
+    private final Locator tabTitle;
 
     public InvestigationPage(Page page) {
         super(page);
@@ -196,6 +197,7 @@ public class InvestigationPage extends AbstractPage {
         this.selectInvestigationTypeDropDown = page.locator("//button[@data-qa='suspicious_clients__select_type']");
         this.paymentFilterAmountFrom = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__from']/descendant::input");
         this.paymentFilterAmountTo = page.locator("//*[@data-qa='suspicious_clients__filters__amount__input__input__to']/descendant::input");
+        this.tabTitle = page.locator(".v-investigation-tools-tabs__marker .g-tabs__item-title");
     }
 
     @Step("Open the autotest login page main page")
@@ -976,6 +978,24 @@ public class InvestigationPage extends AbstractPage {
             actualValue = "0";
         }
         assertEquals(expectedCount, Long.parseLong(actualValue));
+    }
+
+    public void checkTabOrder() {
+        Allure.step("Check tab order");
+        assertEquals("Audit trail", tabTitle.nth(0).textContent());
+        assertEquals("General", tabTitle.nth(1).textContent());
+        assertEquals("Sessions", tabTitle.nth(2).textContent());
+        assertEquals("Payments", tabTitle.nth(3).textContent());
+        assertEquals("Trading", tabTitle.nth(4).textContent());
+        assertEquals("Connections", tabTitle.nth(5).textContent());
+        assertEquals("Restrictions", tabTitle.nth(6).textContent());
+        assertEquals("Alerts", tabTitle.nth(7).textContent());
+    }
+
+    public void checkOpenedTab(String tabName) {
+        waitForPageToLoad();
+        Allure.step("Check opened tab");
+        assertTrue(page.url().contains(tabName.toLowerCase()));
     }
 
 }
