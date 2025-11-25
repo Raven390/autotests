@@ -3,6 +3,7 @@ package page_objects.backoffice_pages.investigationTool;
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.DateTimeFormat;
+import helpers.data.enums.VerificationStatus;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
@@ -67,6 +68,12 @@ public class PaymentsPage extends AbstractPage {
     private final Locator paymentProfilesFamilyBlock;
     private final Locator paymentProfileDetailsRow;
     private final Locator paymentProfileDetailsTotalItem;
+    private final Locator paymentFamilyButton;
+    private final Locator paymentProfileButton;
+    private final Locator updateVerificationStatusButton;
+    private final Locator commentInput;
+    private final Locator successToast;
+
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -79,7 +86,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String TIMELINE_BAR = TIMELINE_SECTION + "//*[@class = 'v-range-timeline-section__bar']";
     private static final String TIMELINE_VOLUME_BUTTON = "//*[@title='Volume']";
     private static final String TIMELINE_ACTIVITY_BUTTON = "//*[@title='Activity']";
-    private static final String PAYMENT_PROFILE_ITEM = "//div[contains(@class,'v-payment-profiles-list__profile-name') and text()='%s']";
+    private static final String PAYMENT_PROFILE_ITEM = "//*[contains(@class,'v-payment-profiles-list__profile-name') and text()='%s']";
     private static final String ACTIVE_TIMELINE_SECTION_SELECTOR = "//*[contains(@class, 'v-range-timeline__section-container') and not(contains(@class, 'v-range-timeline__section-container_isTransparent'))]";
     private static final String VARIANT_BODY_1_SELECTOR = "//div[contains(@class, 'g-text_variant_body-1')]";
     private static final String ACCOUNT_SELECTION = "//div[contains(@class, '-filters__accounts')]//button";
@@ -92,8 +99,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
     public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected Clients')]";
-    private final Locator paymentFamilyButton;
-    private final Locator paymentProfileButton;
+    public static final String OPEN_VERIFICATION_DRAWER_BUTTON = "//*[@data-qa='payment_profile__view_drawer__change_status']";
 
     public PaymentsPage(Page page) {
         super(page);
@@ -146,6 +152,9 @@ public class PaymentsPage extends AbstractPage {
         this.paymentProfileDetailsTotalItem = page.locator(".v-payment-profile-totals__total-item");
         this.paymentFamilyButton = page.locator("//input[@value='PAYMENT_FAMILY']");
         this.paymentProfileButton = page.locator("//input[@value='PAYMENT_PROFILE']");
+        this.updateVerificationStatusButton = page.locator("//button[@data-qa='payment_profile__edit_drawer__submit']");
+        this.commentInput = page.locator("//*[@data-qa='payment_profile__edit_drawer__comment_input']//textarea");
+        this.successToast = page.locator(".g-toast__container").first();
     }
 
     @Step("Open users operations tab")
@@ -217,11 +226,34 @@ public class PaymentsPage extends AbstractPage {
     public void openPaymentProfileDetails(String profileName) {
         String str = String.format(PAYMENT_PROFILE_ITEM, profileName);
         page.waitForSelector(str).click();
+        assertTrue(page.waitForSelector("//*[@data-qa='drawer_header']").isVisible());
     }
 
     @Step("Open payment profile drawer")
     public void openPaymentProfileDetailsConnectedClients() {
         page.waitForSelector(CONNECTED_CLIENTS_BUTTON).click();
+    }
+
+    @Step("Open payment profile verification drawer")
+    public void openPaymentProfileVerificationDrawer() {
+        page.waitForSelector(OPEN_VERIFICATION_DRAWER_BUTTON).click();
+    }
+
+    @Step("Get payment profile verification drawer")
+    public String getPaymentProfileVerificationDrawerName() {
+        return page.waitForSelector("//*[@data-qa='payment_profile__edit_drawer__profile_name']").textContent();
+    }
+
+    @Step("Select verification status")
+    public void selectVerificationStatus(VerificationStatus verificationStatus) {
+        page.waitForSelector(String.format("//*[@data-qa='payment_profile__edit_drawer__verification_status_selector__item__%s']", verificationStatus.toString())).click();
+    }
+
+    @Step("Send status update")
+    public void commentAndSendVerificationStatus(String comment) {
+        commentInput.fill(comment);
+        updateVerificationStatusButton.click();
+        successToast.getByText("Verification status updated").waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
     @Step("Get payment profile details connected clients")
