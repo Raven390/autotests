@@ -41,10 +41,12 @@ public class AuditTrailPage extends AbstractPage {
     private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
     private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@role='option']/descendant::*[text()='%s']";
     private static final String AUDIT_TRAIL_FILTER = "//div[@data-qa='audit_trail__filters__action']";
+    private final Locator auditTrailAlertCounter;
 
     public AuditTrailPage(Page page) {
         super(page);
         this.auditTrailTab = page.locator("[role=\"tab\"][title=\"Audit trail\"]");
+        this.auditTrailAlertCounter = page.locator("[role='tab'][title='Audit trail'] .g-tabs__item-counter");
         this.auditTrailItem = page.locator("//div[@class='v-investigation-tools-trail__item']/div/div[contains(@class,'v-timeline-item')]");
         this.auditTrailItemV2 = page.locator("//div[@class='v-audit-trail-v2-item__card']");
         this.auditTrailItemHeader = page.locator("//div[@class='v-investigation-tools-trail-card__header']");
@@ -195,6 +197,18 @@ public class AuditTrailPage extends AbstractPage {
             values.add(auditTrailDetailsAttributesValues.nth(i).textContent());
         }
         return values;
+    }
+
+    @Step("Check audit trail alert counter")
+    public void checkAuditTrailAlertCounter(int expectedAlertsCount) {
+        waitForPageToLoad();
+        auditTrailAlertCounter.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        int n = 0;
+        while (expectedAlertsCount != Integer.parseInt(auditTrailAlertCounter.textContent()) || n < 50) {
+            page.waitForTimeout(100);
+            n++;
+        }
+        assertEquals(expectedAlertsCount, Integer.valueOf(auditTrailAlertCounter.textContent()));
     }
 }
 
