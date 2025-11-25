@@ -571,11 +571,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
     }
 
     void openTransactionPage() {
-        page.waitForTimeout(1000);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         paymentsPage.navigatePaymentsTab(client1.getUcid());
         paymentsPage.clickTransactionsButton();
-        page.waitForTimeout(1000);
+        paymentsPage.waitForPageToLoad();
     }
 }
