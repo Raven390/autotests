@@ -74,6 +74,23 @@ public class PaymentsPage extends AbstractPage {
     private final Locator commentInput;
     private final Locator successToast;
 
+    private final Locator transactionsButton;
+    private final Locator transactionHistoryRows;
+    private final Locator transactionsFilterButton;
+    private final Locator transactionFilterDrawer;
+    private final Locator transactionFilterOrderInput;
+    private final Locator transactionFilterApplyButton;
+    private final Locator transactionFilterTypeDeposit;
+    private final Locator transactionFilterTypeWithdrawal;
+    private final Locator transactionFilterDateToday;
+    private final Locator transactionFilterMethodInput;
+    private final Locator transactionFilterMethodSection;
+    private final Locator transactionFilterStatusSection;
+    private final Locator transactionDetailsDrawer;
+    private final Locator transactionDetailsDrawerHeader;
+    private final Locator transactionDetailsTransactionSection;
+    private final Locator transactionDetailsPaymentProfileSection;
+    private final Locator transactionDetailsRiskAuditSection;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -155,6 +172,25 @@ public class PaymentsPage extends AbstractPage {
         this.updateVerificationStatusButton = page.locator("//button[@data-qa='payment_profile__edit_drawer__submit']");
         this.commentInput = page.locator("//*[@data-qa='payment_profile__edit_drawer__comment_input']//textarea");
         this.successToast = page.locator(".g-toast__container").first();
+
+        this.transactionsButton = page.locator("input[type='radio'][value='TRANSACTIONS']");
+        this.transactionsFilterButton = page.locator("button[data-qa='trading_open_positions__controls__filter_button']");
+        this.transactionHistoryRows = page.locator("div.v-body-row[data-qa^='transaction_history__table__rows__']");
+        this.transactionFilterDrawer = page.locator("div.v-drawer__drawer-content[data-qa='drawer_body']");
+        this.transactionFilterOrderInput = page.locator("div.v-transaction-history-filter__filter-container:has-text('Order') input[placeholder='Enter order number']");
+        this.transactionFilterApplyButton = page.locator("button[data-qa='transaction_history__filters__apply_button']");
+        this.transactionFilterTypeDeposit = page.locator("button[data-qa='transaction_history__filters__types__item__deposit']");
+        this.transactionFilterTypeWithdrawal = page.locator("button[data-qa='transaction_history__filters__types__item__withdrawal']");
+        this.transactionFilterDateToday = page.locator("button[data-qa='transaction_history__filter__date_range_preset_today__preset__0']");
+        this.transactionFilterMethodInput = page.locator("div[data-qa='transaction_history__filters__attributes'] input[placeholder='Payment family or profile name']");
+        this.transactionFilterMethodSection = page.locator("div[data-qa='transaction_history__filters__attributes']");
+        this.transactionFilterStatusSection = page.locator("div.v-checkbox-list[data-qa='transaction_history__filters__status']");
+
+        this.transactionDetailsDrawer = page.locator("div.v-drawer__drawer-content[data-qa='drawer_body']");
+        this.transactionDetailsDrawerHeader = page.locator("div[data-qa='drawer_header']");
+        this.transactionDetailsTransactionSection = page.locator("//div[@class='v-transaction-history-details__attributes'][1]");
+        this.transactionDetailsPaymentProfileSection = page.locator("//div[@class='v-transaction-history-details__attributes'][2]");
+        this.transactionDetailsRiskAuditSection = page.locator("//div[@class='v-transaction-history-details__attributes'][3]");
     }
 
     @Step("Open users operations tab")
@@ -175,8 +211,33 @@ public class PaymentsPage extends AbstractPage {
     }
 
     @Step("Click payments tab")
+    public void clickTransactionsButton() {
+        transactionsButton.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Click payments tab")
     public void clickPaymentProfilesTabButton() {
         paymentProfilesTab.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Click transactions filter button")
+    public void clickTransactionsFilterButton() {
+        transactionsFilterButton.click();
+        page.waitForTimeout(500);
+    }
+
+    @Step("Filter transactions by date: Today")
+    public void filterTransactionsByToday() {
+        transactionFilterDateToday.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        transactionFilterDateToday.click();
+        page.waitForTimeout(300);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
         waitForPageToLoad();
     }
 
@@ -265,6 +326,211 @@ public class PaymentsPage extends AbstractPage {
             list.add(locator.nth(i).textContent());
         }
         return list;
+    }
+
+    @Step("Check transaction details drawer is visible")
+    public void checkTransactionDetailsDrawerIsVisible() {
+        transactionDetailsDrawer.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        assertTrue(transactionDetailsDrawerHeader.getByText("Transaction details").isVisible());
+    }
+
+    @Step("Get transaction details data")
+    public Map<String, String> getTransactionDetailsData() {
+        Map<String, String> transactionData = new HashMap<>();
+        Locator attributesList = transactionDetailsTransactionSection.locator(".v-transaction-history-details__attribute");
+
+        for (int i = 0; i < attributesList.count(); i++) {
+            Locator attribute = attributesList.nth(i);
+            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
+            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            transactionData.put(label, value);
+        }
+
+        return transactionData;
+    }
+
+    @Step("Get payment profile details data from transaction drawer")
+    public Map<String, String> getPaymentProfileDetailsDataFromDrawer() {
+        Map<String, String> paymentProfileData = new HashMap<>();
+        Locator attributesList = transactionDetailsPaymentProfileSection.locator(".v-transaction-history-details__attribute");
+
+        for (int i = 0; i < attributesList.count(); i++) {
+            Locator attribute = attributesList.nth(i);
+            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
+            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            paymentProfileData.put(label, value);
+        }
+
+        return paymentProfileData;
+    }
+
+    @Step("Get risk audit data from transaction drawer")
+    public Map<String, String> getRiskAuditDataFromDrawer() {
+        Map<String, String> riskAuditData = new HashMap<>();
+
+        // Check if Risk Audit section exists
+        if (transactionDetailsRiskAuditSection.count() == 0) {
+            return riskAuditData; // Return empty map if section doesn't exist
+        }
+
+        Locator attributesList = transactionDetailsRiskAuditSection.locator(".v-transaction-history-details__attribute");
+
+        for (int i = 0; i < attributesList.count(); i++) {
+            Locator attribute = attributesList.nth(i);
+            String label = attribute.locator(".v-transaction-history-details__attribute-label").textContent().trim();
+            String value = attribute.locator(".v-transaction-history-details__attribute-value").textContent().trim();
+            riskAuditData.put(label, value);
+        }
+
+        return riskAuditData;
+    }
+
+    @Step("Close transaction details drawer")
+    public void closeTransactionDetailsDrawer() {
+        page.locator("button[data-qa='drawer_header__close_button']").click();
+        page.waitForTimeout(500);
+    }
+
+    public List<TransactionRow> getAllTransactions() {
+        List<TransactionRow> transactions = new ArrayList<>();
+        int rowCount = transactionHistoryRows.count();
+
+        for (int i = 0; i < rowCount; i++) {
+            Locator row = transactionHistoryRows.nth(i);
+            String orderNumber = row.getAttribute("data-qa").replace("transaction_history__table__rows__", "");
+            transactions.add(getTransactionByOrderNumber(orderNumber));
+        }
+        return transactions;
+    }
+
+    public TransactionRow getTransactionByOrderNumber(String orderNumber) {
+        String baseLocator = String.format("div[data-qa='transaction_history__table__rows__%s", orderNumber);
+        return new TransactionRow(
+                page.locator(baseLocator + "__created']").textContent(), page.locator(baseLocator + "__type']").textContent(), page.locator(baseLocator + "__account']").textContent(), page.locator(baseLocator + "__method']").textContent(), page.locator(baseLocator + "__submitted']").textContent(), page.locator(baseLocator + "__processed']").textContent(), page.locator(baseLocator + "__risk_audit']").textContent(), page.locator(baseLocator + "__rejection_reason']").textContent()
+        );
+    }
+
+    public record TransactionRow(
+                                 String created,
+                                 String type,
+                                 String account,
+                                 String method,
+                                 String submitted,
+                                 String processed,
+                                 String riskAudit,
+                                 String rejectionReason
+    ) {
+    }
+
+    @Step("Filter transactions by order number: {orderNumber}")
+    public void filterTransactionsByOrderNumber(String orderNumber) {
+        transactionFilterDrawer.evaluate("el => el.scrollTo(0, el.scrollHeight)");
+        page.waitForTimeout(300);
+
+        transactionFilterOrderInput.fill(orderNumber);
+        page.waitForTimeout(200);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Filter transactions by type: {transactionType}")
+    public void filterTransactionsByType(String transactionType) {
+        transactionFilterDrawer.evaluate("el => el.scrollTo(0, 0)");
+        page.waitForTimeout(300);
+
+        if ("Deposit".equalsIgnoreCase(transactionType)) {
+            transactionFilterTypeDeposit.click();
+        } else if ("Withdrawal".equalsIgnoreCase(transactionType)) {
+            transactionFilterTypeWithdrawal.click();
+        } else {
+            throw new IllegalArgumentException("Invalid transaction type. Use 'Deposit' or 'Withdrawal'");
+        }
+        page.waitForTimeout(300);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Filter transactions by account: {accountNumber}")
+    public void filterTransactionsByAccount(String accountNumber) {
+        Locator accountCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
+        accountCheckbox.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        accountCheckbox.click();
+        page.waitForTimeout(200);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Uncheck account filter: {accountNumber}")
+    public void uncheckAccountFilter(String accountNumber) {
+        Locator accountCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__accounts__item__%s']", accountNumber));
+        accountCheckbox.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        Locator checkbox = accountCheckbox.locator("input[type='checkbox']");
+        if (checkbox.isChecked()) {
+            accountCheckbox.click();
+            page.waitForTimeout(200);
+        }
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Filter transactions by payment profile: {paymentProfile}")
+    public void filterTransactionsByPaymentProfile(String paymentProfile) {
+        transactionFilterMethodSection.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        transactionFilterMethodInput.fill(paymentProfile);
+        page.waitForTimeout(500);
+
+        Locator paymentMethodItem = page.locator(String.format("div[data-dd-value*=':%s']", paymentProfile));
+        paymentMethodItem.first().click();
+        page.waitForTimeout(300);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Filter transactions by status: {status}")
+    public void filterTransactionsByStatus(String status) {
+        transactionFilterStatusSection.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        Locator statusCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
+        statusCheckbox.click();
+        page.waitForTimeout(200);
+
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
+    }
+
+    @Step("Uncheck status filter: {status}")
+    public void uncheckStatusFilter(String status) {
+        transactionFilterStatusSection.scrollIntoViewIfNeeded();
+        page.waitForTimeout(300);
+
+        Locator statusCheckbox = page.locator(String.format("label.g-checkbox[data-qa='transaction_history__filters__status__item__%s']", status));
+        Locator checkbox = statusCheckbox.locator("input[type='checkbox']");
+
+        if (checkbox.isChecked()) {
+            statusCheckbox.click();
+            page.waitForTimeout(200);
+        }
+        transactionFilterApplyButton.click();
+        page.waitForTimeout(1000);
+        waitForPageToLoad();
     }
 
     @Step("Open users operations tab")
@@ -894,6 +1160,13 @@ public class PaymentsPage extends AbstractPage {
         Allure.step("check is payment tab visible");
         waitForPageToLoad();
         paymentsTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Click on transaction row by order number: {orderNumber}")
+    public void clickTransactionRow(String orderNumber) {
+        String rowSelector = String.format("div[data-qa='transaction_history__table__rows__%s']", orderNumber);
+        page.locator(rowSelector).click();
+        page.waitForTimeout(500);
     }
 
     public void isWithdrawalsSubtabHidden() {
