@@ -892,6 +892,7 @@ public class InvestigationPage extends AbstractPage {
     }
 
     public void clickSelectInvestigationType(String investigationType) {
+        waitForPageToLoad();
         selectInvestigationTypeDropDown.click();
         page.locator(String.format(INVESTIGATION_TYPE_LOCATOR_TEMPLATE, investigationType)).click();
     }
