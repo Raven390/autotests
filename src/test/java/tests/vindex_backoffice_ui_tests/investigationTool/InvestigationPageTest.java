@@ -1,16 +1,35 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
+import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static helpers.database.DbHelper.insertObjectToDb;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Constants.*;
 
+import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
+import helpers.data.ClientHelper;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Regulator;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Muted;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import okhttp3.Response;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
+import java.io.IOException;
+
 public class InvestigationPageTest extends TestBaseWeb {
+
+    static ClientHelper restrictionClient = new ClientHelper(424_343, "062cde3b-ea8d-48b5-8e2c-98f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_343_101, 42);
+
+    @BeforeAll
+    static void setup() throws IOException, InterruptedException {
+        Response response = enableCRMEmulator();
+        assertNotNull(response);
+        CrmTbUserObject restrictionClientDB = generateStaticUserByClient(restrictionClient);
+        insertObjectToDb(CRM_USER_TABLE_NAME, restrictionClientDB);
+        Thread.sleep(5000);
+    }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
@@ -154,8 +173,8 @@ public class InvestigationPageTest extends TestBaseWeb {
     void commentErrorScreenTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient("infinox-424242");
-        investigationPage.mockCommentError("infinox-424242");
+        investigationPage.navigateToClient(restrictionClient.getUcid());
+        investigationPage.mockCommentError(restrictionClient.getUcid());
         investigationPage.openCommentForm();
         investigationPage.fillCommentForm("error test");
         investigationPage.submitCommentFormError();
@@ -170,13 +189,39 @@ public class InvestigationPageTest extends TestBaseWeb {
     void commentTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
-        investigationPage.navigateToClient("infinox-424242");
+        investigationPage.navigateToClient(restrictionClient.getUcid());
         investigationPage.openCommentForm();
         String message = "comment test " + timestamp;
         investigationPage.fillCommentForm(message);
         investigationPage.submitCommentForm();
         auditTrailPage.openAuditTrailTab();
         auditTrailPage.findRecord(message);
+    }
+
+    @Test
+    @AllureId("1869")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(TAG_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @DisplayName("Tab Order Test")
+    void tabsOrderTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(restrictionClient.getUcid());
+        investigationPage.checkTabOrder();
+    }
+
+    @Test
+    @AllureId("1870")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(TAG_AUTOMATED)
+    @Tag(LAYER_WEB)
+    @DisplayName("Default tab Test")
+    void defaultTabTest() {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(restrictionClient.getUcid());
+        investigationPage.checkOpenedTab("audit");
     }
 
 
