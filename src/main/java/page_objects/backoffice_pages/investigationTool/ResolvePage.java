@@ -105,6 +105,7 @@ public class ResolvePage extends AbstractPage {
     private static final String CONFIRMED_FRAUD_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s')]";
     private static final String FRAUD_SUBTYPE_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s__item')]";
     private final Locator cleanRestrictionListButton;
+    private final Locator confirmFinishPaymentInvestigationButton;
 
 
     public ResolvePage(Page page) {
@@ -161,6 +162,7 @@ public class ResolvePage extends AbstractPage {
         this.rejectionReasonItems = page.locator("[data-qa='select-popup'] [role='option']");
 
         this.rejectionDynamicInputs = page.locator(".v-rejection-reason__dynamic-values input, .v-dynamic-attributes input[type='text'], input[data-qa='rejection_dynamic_attribute_input']");
+        this.confirmFinishPaymentInvestigationButton = page.locator("[data-qa='client_payment_resolving_drawer__complete_investigation_button__confirm']");
     }
 
     String bigLorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc facilisis, metus eu mattis suscipit, est felis venenatis nunc, eu rhoncus sapien tortor sed turpis. Integer vitae leo pharetra, pellentesque nisi quis, pharetra arcu. Curabitur nec arcu ac.";
@@ -206,7 +208,7 @@ public class ResolvePage extends AbstractPage {
         }
         isPageLoaded();
         if (successToast.isVisible()) {
-            closeToastButton.click();
+            closeToastButton.click(new Locator.ClickOptions().setForce(true));
         } else {
             page.waitForTimeout(1);
         }
@@ -254,9 +256,29 @@ public class ResolvePage extends AbstractPage {
         successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
+    @Step("Resolve and reject all withdrawals")
+    public void resolveWithdrawalsAllRejectPayment(String reasonTitle, String... dynamicValues) {
+        Locator resolution = page.locator(DRAWER_HEADER_SELECTOR).getByText(RESOLUTION);
+        resolution.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        rejectAllwithdrawalsButton.click();
+        selectRejectionReasonAndFillDynamics(reasonTitle, dynamicValues);
+        commentInput.fill("autotest to withdrawals");
+        completeInvestigationButton.click();
+        clickConfirmFinishPaymentInvestigationButton();
+        successToast.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
     @Step("Resolve without any actions")
     public void resolveNoActions(String comment) {
         fillCommentAndApply(comment);
+        successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    @Step("Resolve without any actions")
+    public void resolveNoActionsPayment(String comment) {
+        Allure.step("Resolve without any actions");
+        fillCommentAndApply(comment);
+        clickConfirmFinishPaymentInvestigationButton();
         successToast.getByText(investigationCompleted).waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
     }
 
@@ -270,6 +292,11 @@ public class ResolvePage extends AbstractPage {
     public void fillCommentAndApply(String comment) {
         commentInput.fill(comment);
         completeInvestigationButton.click();
+    }
+
+    void clickConfirmFinishPaymentInvestigationButton() {
+        confirmFinishPaymentInvestigationButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        confirmFinishPaymentInvestigationButton.click();
     }
 
 
@@ -575,6 +602,15 @@ public class ResolvePage extends AbstractPage {
     @Step("Click add restriction button")
     public void clickAddRestrictionButton() {
         addRestrictionButton.click();
+    }
+
+
+    public void checkSymbolDropdownIsNotVisible() {
+        Allure.step("Check symbol dropdown is not visible");
+        waitForPageToLoad();
+        page.waitForTimeout(200);
+        waitForPageToLoad();
+        symbolDropdown.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
     }
 
     @Step("Get list of available restrictions")

@@ -52,14 +52,14 @@ import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
 @Feature("Client Bulk Search by server and account")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ClientBulkSearchTest extends TestBaseWeb {
-    private static final int SERVER_ID = 115;
-    private static final String SERVER_NAME = "SERVER1";
+    private static final int SERVER_ID = 129;
+    private static final String SERVER_NAME = "SERVER129";
 
     private static final ClientHelper client1 = getRandomVantageClientAllFields();
     private static final ClientHelper client2 = getRandomVantageClientAllFields();
@@ -352,6 +352,7 @@ class ClientBulkSearchTest extends TestBaseWeb {
     @AllureId("1667")
     @DisplayName("Verify all columns in search results table")
     void verifyAllTableColumnsTest() {
+        fail("need to fix data because querry \n" + "WITH [({serverId}, {account})] AS server_acc_list\n" + "SELECT *\n" + "FROM consolidated.bo___account_details_bulk_pv (server_acc_list = server_acc_list);" + "\n returns NaN and Infinite");
         // Clean related data before test
         deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client1.getUcid() + "'");
         deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "ucid ='" + client1.getUcid() + "'");
