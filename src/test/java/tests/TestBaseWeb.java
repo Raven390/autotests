@@ -67,7 +67,7 @@ public class TestBaseWeb {
     public static DecimalFormat decimalFormat = new DecimalFormat("###,###,##0.##");
 
 
-    public Faker faker = new Faker();
+    public static Faker faker = new Faker();
 
     @BeforeAll
     static void setupBrowser() throws IOException {
@@ -128,7 +128,7 @@ public class TestBaseWeb {
 
     @AfterEach
     void closeContext() throws IOException {
-        String traceName = timestamp + n;
+        String traceName = timestamp + "-" + n;
         if (context != null) {
             context.tracing().stop(new Tracing.StopOptions().setPath(Paths.get(PATH_TRACE + traceName + ".zip")));
             n += 1;

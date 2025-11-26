@@ -212,7 +212,7 @@ class GeneralSearchTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @Feature("BMS-938 Global search")
-    @DisplayName("General Search , click by connection search button in card open connection search tab in a new tab")
+    @DisplayName("General Search , click on card open clients base tab in a new tab")
     @AllureId("1099")
     void openClientPageTest() {
         sessionsTab.navigateEnterPage();
@@ -225,7 +225,7 @@ class GeneralSearchTest extends TestBaseWeb {
             generalSearch.clickClientsCard(client1.getUserId(), client1.getBrand());
         });
         GeneralSearchElements newTab = new GeneralSearchElements(newPage);
-        String expectedUrl = client1.getBrand().toLowerCase(Locale.ROOT) + "-" + client1.getUserId() + "/general";
+        String expectedUrl = client1.getBrand().toLowerCase(Locale.ROOT) + "-" + client1.getUserId() + "/audit";
         newTab.checkPageUrl(expectedUrl);
     }
 

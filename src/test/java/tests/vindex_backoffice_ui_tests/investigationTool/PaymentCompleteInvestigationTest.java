@@ -70,8 +70,8 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
 
     private static final ClientHelper client = getRandomVantageClientAllFields();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client);
-    public static final String REASON_NO_PARAMS = "Reason no params";
-    public static final String REASON_WITH_PARAMS = "Reason with params";
+    public static final String REASON_NO_PARAMS = "Trading account inactive";
+    public static final String REASON_WITH_PARAMS = "Use recommended method";
 
     private static MtAccountObject mtAccount1;
     private static MtAccountObject mtAccount2;
@@ -178,7 +178,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.addFraud();
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
 
         //check investigation in db
         List<Investigation> clientsInvestigationsDb = getClientsInvestigationsDb(client.getUcid(), AlertType.PAYMENT);
@@ -219,7 +219,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
 
         //PGS decision check in db
         List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
@@ -250,7 +250,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
@@ -273,7 +273,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
@@ -301,7 +301,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalApprove();
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is FALSE_POSITIVE", dbAlert.getAlertResolution(), is(AlertResolution.FALSE_POSITIVE.getDisplayName()));
@@ -329,7 +329,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
@@ -352,7 +352,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
         resolvePage.addFraud(CHARGEBACK, CONFIRMED);
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
@@ -374,7 +374,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
         resolvePage.clickWithdrawalReject(REASON_NO_PARAMS);
-        resolvePage.resolveNoActions("test comment");
+        resolvePage.resolveNoActionsPayment("test comment");
         //Alert resolution
         Alert dbAlert = getObjectsFromDB(DbName.POSTGRES, BO_ALERT_TABLE_NAME, String.format(ALERT_WHERE, client.getUcid(), AlertType.PAYMENT), Alert.class).getFirst();
         assertThat("Verify alert_resolution is CONFIRMED", dbAlert.getAlertResolution(), is(AlertResolution.CONFIRMED.getDisplayName()));
@@ -395,7 +395,7 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         List<String> withdrawalList = resolvePage.getWithdrawalList();
         assertThat("Verify that withdrawal list is not empty", withdrawalList.size(), is(1));
         assertWithdrawalText(withdrawalList.getFirst());
-        resolvePage.resolveWithdrawalsAllReject(REASON_WITH_PARAMS, "AQA", "AQA", "AQA", "AQA");
+        resolvePage.resolveWithdrawalsAllRejectPayment(REASON_WITH_PARAMS, "AQA");
 
         //PGS decision check in db
         List<PaymentDecisionsObject> decisions = getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id = '%s'", event.getPaymentId().toString()), PaymentDecisionsObject.class);
@@ -415,5 +415,25 @@ class PaymentCompleteInvestigationTest extends TestBaseWeb {
         assertThat("Verify withdrawal item shows USD amount", text, containsString(formatter.format(WD_USD)));
         assertThat("Verify withdrawal item shows EUR amount", text, containsString(formatter.format(WD_EUR)));
         assertThat("Verify withdrawal item shows payment method", text, containsString(PAYMENT_METHOD_CODE));
+    }
+
+    @Test
+    @AllureId("1884")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("Check that resolve screen not have symbol selector on fraud")
+    void paymentResolveNotHaveSymbolSelector() {
+        var nowTimestamp = Timestamp.from(Instant.now());
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_TABLE_NAME, new Abuser(client.getUcid(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, true));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), "CLIENT_STATUS", CONFIRMED.getStatus(), "CLIENT_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, null, null));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, new AbuserFraudType(client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, nowTimestamp, "INTERNAL", null, "Vindex"));
+        insertObjectToDb(DbName.POSTGRES, AR_ABUSER_HISTORY_TABLE_NAME, new AbuserHistory(null, client.getUcid(), HEDGING.getCode(), CONFIRMED.getStatus(), "FRAUD_TYPE_STATUS", "auto-test comment", "AUTOTEST USER", "Vindex BO", nowTimestamp, "INTERNAL", null));
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsPaymentTeamUser();
+        investigationPage.waitForPageToLoad();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        resolvePage.openResolveSuspicious();
+        resolvePage.addFraud(EXCHANGER);
+        resolvePage.checkSymbolDropdownIsNotVisible();
     }
 }
