@@ -51,8 +51,11 @@ class PaymentProfilesListTest extends TestBaseWeb {
         deposit2 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client);
         withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
         deposit.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
+        deposit.setPaymentProfileKey(deposit.getPaymentProfile());
         deposit2.setPaymentProfile("Cryptocurrency " + getRandomIntPositive());
-        withdrawal1.setPaymentProfile("Card");
+        deposit2.setPaymentProfileKey(deposit2.getPaymentProfile());
+        withdrawal1.setPaymentProfile("Card" + getRandomIntPositive());
+        withdrawal1.setPaymentProfileKey("Card" + getRandomIntPositive());
         deposit.setPaymentType("Cryptocurrency");
         deposit2.setPaymentType("Cryptocurrency");
         withdrawal1.setPaymentType("Card");
@@ -96,13 +99,13 @@ class PaymentProfilesListTest extends TestBaseWeb {
         List<PaymentsPage.PaymentFamilyBlock> paymentProfilesList = paymentsPage.getPaymentProfilesList();
         assertThat("Verify payment profiles is not empty", paymentProfilesList.size(), equalTo(2));
         PaymentsPage.PaymentFamilyBlock lbtPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("LBT")).findFirst().get();
-        assertThat("Verify LBT payment family header ", lbtPaymentFamily.header(), equalTo(String.format("LBT%d profile %d USD %.2f USD %d connections", 1, 0, withdrawal1.getAmountUsd(), 0)));
-        assertThat("Verify LBT payment profiles", lbtPaymentFamily.rowDataList().getFirst(), equalTo(String.format("%s%d USDNo deposits%.2f USD1 withdrawal%d clientsConnected", withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd(), 0)));
+        assertThat("Verify LBT payment family header ", lbtPaymentFamily.header(), equalTo(String.format("LBT%d profile %d USD %.2f USD No connections", 1, 0, withdrawal1.getAmountUsd())));
+        assertThat("Verify LBT payment profiles", lbtPaymentFamily.rowDataList().getFirst(), equalTo(String.format("%sNot verified%d USDNo deposits%.2f USD1 withdrawal0 clientsConnected", withdrawal1.getPaymentProfile(), 0, withdrawal1.getAmountUsd())));
 
         PaymentsPage.PaymentFamilyBlock cryptoPaymentFamily = paymentProfilesList.stream().filter(x -> x.header().contains("Crypto")).findFirst().get();
-        assertThat("Verify Crypto payment family header ", cryptoPaymentFamily.header(), equalTo(String.format("Crypto%d profiles %.2f USD 0 USD %d connections", 2, deposit.getAmountUsd().add(deposit2.getAmountUsd()), 2)));
-        assertThat("Verify Crypto payment profiles 1", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit.getPaymentProfile())).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit.getPaymentProfile(), deposit.getAmountUsd(), 1, 1)));
-        assertThat("Verify Crypto payment profiles 2", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit2.getPaymentProfile())).findFirst().get(), equalTo(String.format("%s%.2f USD%d deposit0 USDNo withdrawals%d clientConnected", deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 1)));
+        assertThat("Verify Crypto payment family header ", cryptoPaymentFamily.header(), equalTo(String.format("Crypto%d profiles %.2f USD 0 USD No connections", 2, deposit.getAmountUsd().add(deposit2.getAmountUsd()))));
+        assertThat("Verify Crypto payment profiles 1", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit.getPaymentProfile())).findFirst().get(), equalTo(String.format("%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected", deposit.getPaymentProfile(), deposit.getAmountUsd(), 1, 0)));
+        assertThat("Verify Crypto payment profiles 2", cryptoPaymentFamily.rowDataList().stream().filter(x -> x.contains(deposit2.getPaymentProfile())).findFirst().get(), equalTo(String.format("%sNot verified%.2f USD%d deposit0 USDNo withdrawals%d clientsConnected", deposit2.getPaymentProfile(), deposit2.getAmountUsd(), 1, 0)));
     }
 
 

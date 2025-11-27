@@ -127,6 +127,8 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit3);
         executeQueryToDb(DbName.CLICKHOUSE, String.format("INSERT INTO consolidated.client_payment_info (user_id, brand, regulator, ucid, country, bank_name, bank_address, account_number, beneficiary_name, holder_address, swift, sort_code, bsb_code, bank_account_name, bank_branch_name, bank_city, bank_province, ifsc_code, is_del, last_updated) VALUES(%s, 'Vantage', 'VFSC2', '%s', '', 'Revolut Bank UAB', 'Konstitucijos ave. 21B, 08130, Vilnius, Lithuania', 'LT133250055915934239', 'Lolita Reid', 'Lolita Reid', 'REVOLT21', 'test sort code', 'test bsb code', 'Lolita Reid', '', '', '', 'test ifsc code', 0, '2025-11-04 14:08:55.000');", client.getUserId(), client.getUcid()));
         addFraudForClient(client2, MARKET_MANIPULATION, POTENTIAL, List.of());
+        //add verification status to client2
+        executeQueryToDb(DbName.POSTGRES, String.format("INSERT INTO ve.verification_history (ucid, payment_profile_key, status, \"comment\", changed_by_username, changed_by_system, changed_at) VALUES('%s', '%s', '%s', 'comment', 'username', 'system', '2025-11-18 15:28:56.461');", client2.getUcid(), deposit3.getPaymentProfileKey(), VerificationStatus.VERIFIED));
     }
 
     @AfterAll
@@ -166,7 +168,7 @@ class PaymentProfilesDetailsDrawerTest extends TestBaseWeb {
         List<String> paymentProfileDetailsConnectedClients = paymentsPage.getPaymentProfileDetailsConnectedClients();
         assertThat("Verify connected clients size", paymentProfileDetailsConnectedClients.size(), equalTo(1));
         var user2 = paymentProfileDetailsConnectedClients.stream().filter(x -> x.contains(String.valueOf(crmTbUser2.userId))).findFirst().get();
-        String format = String.format("%s %s%sPotential Market manipulation%s%s%s%s", crmTbUser2.firstName, crmTbUser2.lastName, crmTbUser2.userId, deposit3.getAmountUsd(), "0", VerificationStatus.NOT_VERIFIED.getDisplayName(), LocalDate.now()
+        String format = String.format("%s %s%sPotential Market manipulation%s%s%s%s", crmTbUser2.firstName, crmTbUser2.lastName, crmTbUser2.userId, deposit3.getAmountUsd(), "0", VerificationStatus.VERIFIED.getDisplayName(), LocalDate.now()
         );
         assertThat("Verify connected client", user2, containsString(format));
     }
