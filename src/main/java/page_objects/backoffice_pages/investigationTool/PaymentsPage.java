@@ -115,7 +115,7 @@ public class PaymentsPage extends AbstractPage {
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
-    public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected Clients')]";
+    public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected clients')]";
     public static final String OPEN_VERIFICATION_DRAWER_BUTTON = "//*[@data-qa='payment_profile__view_drawer__change_status']";
 
     public PaymentsPage(Page page) {
