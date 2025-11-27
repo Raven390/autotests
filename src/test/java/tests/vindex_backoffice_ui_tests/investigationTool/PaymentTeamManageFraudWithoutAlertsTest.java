@@ -25,6 +25,7 @@ import static business_objects.db.clickhouse.mt_mt4_trades_coerced.MtMt4TradesCo
 import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.enums.Currency.USD;
+import static helpers.data.enums.FraudSource.*;
 import static helpers.data.enums.FraudType.CHARGEBACK;
 import static helpers.data.enums.FraudTypeStatus.CONFIRMED;
 import static helpers.database.ArHelper.deleteUserFromAbuseRegistry;
@@ -120,6 +121,9 @@ class PaymentTeamManageFraudWithoutAlertsTest extends TestBaseWeb {
         // Verify that "Suggested Deduction" block is NOT displayed
         boolean isSuggestedDeductionVisible = resolvePage.isSuggestedDeductionSectionVisible();
         assertThat("Verify that Suggested Deduction block is NOT displayed", isSuggestedDeductionVisible, is(false));
+
+        resolvePage.checkDisplayedFraudSources(getFraudSourceNames(getPaymentFraudSourcesList()));
+        resolvePage.checkHiddenFraudSources(getFraudSourceNames(getTradingOnlyFraudSourcesList()));
 
         // Verify that comment input is visible
         resolvePage.fillCommentAndApply("Payment fraud management test");
