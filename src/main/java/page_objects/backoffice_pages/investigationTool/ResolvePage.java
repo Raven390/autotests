@@ -294,6 +294,22 @@ public class ResolvePage extends AbstractPage {
         completeInvestigationButton.click();
     }
 
+    public void checkDisplayedFraudSources(List<String> sources) {
+        Allure.step("Check that expected fraud sources is displayed");
+        for (String source : sources) {
+            Locator sourceButton = page.locator(String.format(sourceSelectButtonLocatorPattern, source));
+            sourceButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+        }
+    }
+
+    public void checkHiddenFraudSources(List<String> sources) {
+        Allure.step("Check that some fraud sources is hidden as expected");
+        for (String source : sources) {
+            Locator sourceButton = page.locator(String.format(sourceSelectButtonLocatorPattern, source));
+            sourceButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN));
+        }
+    }
+
     void clickConfirmFinishPaymentInvestigationButton() {
         confirmFinishPaymentInvestigationButton.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
         confirmFinishPaymentInvestigationButton.click();

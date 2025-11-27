@@ -26,6 +26,9 @@ import static helpers.database.AuHelper.cleanClientAudit;
 import static helpers.database.BoHelper.deleteUserBO;
 import static helpers.database.DbHelper.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static page_objects.backoffice_pages.investigationTool.RestrictionPage.cleanUserRestriction;
 import static utils.Constants.*;
@@ -240,5 +243,48 @@ class FraudManagingTest extends TestBaseWeb {
         assertEquals(comment, fraud.getComment());
         Allure.step("Assert that source in ar.abuser_fraud_type have source that you used in upload form");
         assertEquals(source, fraud.getFraudSource());
+    }
+
+    @Test
+    @AllureId("1885")
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @DisplayName("general role can manage Trading fraud type without active alerts - verify UI blocks")
+    void generalRoleManagePaymentFraudWithoutAlerts() throws Exception {
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        investigationPage.navigateToClient(crmTbUser.ucid);
+        investigationPage.clickSelectInvestigationType("Trading");
+        alertsPage.waitForPageToLoad();
+        resolvePage.openReportFraudForm();
+
+        Allure.step("Add PAYMENT fraud type (CHARGEBACK)");
+        resolvePage.reportFraud(CHARGEBACK, CONFIRMED);
+
+        Allure.step("Verify that \"Previously reported\" section is visible");
+        List<String> previouslyReportedFrauds = resolvePage.getPreviouslyReportedFraudItems2();
+        assertThat("Verify that previously reported section is displayed", previouslyReportedFrauds, hasSize(0));
+
+        Allure.step("Verify that \"Detected fraud\" section is visible (selected fraud should be displayed)");
+        String selectedFraud = resolvePage.getSelectedFraud();
+        assertThat("Verify that detected fraud section shows selected fraud", selectedFraud.contains("Chargeback"), is(true));
+
+        Allure.step("Verify that 'Restrictions' section is visible1");
+        List<String> restrictionsList = resolvePage.getRestrictionsList();
+        assertThat("Verify that restrictions section is accessible", restrictionsList.isEmpty(), is(false));
+
+        Allure.step("Verify that 'Suggested Deduction' block is NOT displayed");
+        boolean isSuggestedDeductionVisible = resolvePage.isSuggestedDeductionSectionVisible();
+        assertThat("Verify that Suggested Deduction block is displayed", isSuggestedDeductionVisible, is(true));
+
+        resolvePage.checkDisplayedFraudSources(getFraudSourceNames(getTradingFraudSourcesList()));
+        resolvePage.checkHiddenFraudSources(getFraudSourceNames(getPaymentOnlyFraudSourcesList()));
+
+        Allure.step("Verify that comment input is visible");
+        resolvePage.fillCommentAndApply("Payment fraud management test");
+        List<AbuserFraudType> abuserFraudTypes = getObjectsFromDB(DbName.POSTGRES, AR_ABUSER_FRAUD_TYPE_TABLE_NAME, "ucid = '%s'".formatted(client.getUcid()), AbuserFraudType.class);
+        assertThat(abuserFraudTypes.size(), is(1));
+        AbuserFraudType abuserFraudType = abuserFraudTypes.getFirst();
+        assertThat("Fraud type inserted into AR DB", abuserFraudType.getFraudTypeCode(), is(CHARGEBACK.getCode()));
     }
 }
