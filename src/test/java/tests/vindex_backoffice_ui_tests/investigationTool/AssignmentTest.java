@@ -1,6 +1,6 @@
 package tests.vindex_backoffice_ui_tests.investigationTool;
 
-import business_objects.db.backoffice_db.client.Client;
+import business_objects.db.backoffice_db.Investigation;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.kafka.alerts.RuleAlert;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,8 +49,8 @@ public class AssignmentTest extends TestBaseWeb {
         investigationPage.filterAssignedMe();
         investigationPage.waitForPageToLoad();
         investigationPage.verifyClientCardWithClientIdVisible(String.valueOf(crmTbUser.userId));
-        List<Client> clientList = getObjectsFromDB(DbName.POSTGRES, BO_CLIENT_TABLE_NAME, String.format("ucid = '%s'", crmTbUser.ucid), Client.class);
-        assertThat("Assert that client is assigned to current user in db table", clientList.getFirst().assignedUserId, equalTo(autotestUserOne().getId()));
+        List<Investigation> investigations = getObjectsFromDB(DbName.POSTGRES, BO_INVESTIGATION_TABLE_NAME, String.format("client_ucid = '%s'", crmTbUser.ucid), Investigation.class);
+        assertThat("Assert that client is assigned to current user in db table", investigations.getFirst().getAssignedUserId(), equalTo(autotestUserOne().getId()));
     }
 
     @AfterAll

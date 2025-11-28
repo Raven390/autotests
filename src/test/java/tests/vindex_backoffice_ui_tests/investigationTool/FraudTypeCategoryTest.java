@@ -14,6 +14,7 @@ import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
@@ -35,7 +36,9 @@ import static helpers.database.DbHelper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
+import static utils.Utils.writeLog;
 
+@Slf4j
 @Feature("Display fraud types for managing based on role")
 @Story("Add category to fraud type")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -282,22 +285,46 @@ class FraudTypeCategoryTest extends TestBaseWeb {
     static void teardown() {
         // Cleanup Trading client
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
-        deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+        try {
+            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
+        try {
+            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", tradingCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
         closeAlert(tradingCrmUser.ucid);
         deleteUserBO(tradingCrmUser.ucid);
 
         // Cleanup Payment client
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
-        deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+        try {
+            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
+        try {
+            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", paymentCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
         closeAlert(paymentCrmUser.ucid);
         deleteUserBO(paymentCrmUser.ucid);
 
         // Cleanup Dual client
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
-        deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
-        deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+        try {
+            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
+        try {
+            deleteEntryFromDb(MT_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", dualCrmUser.ucid));
+        } catch (Exception e) {
+            writeLog("Account deletion failed");
+        }
         closeAlert(dualCrmUser.ucid);
         deleteUserBO(dualCrmUser.ucid);
     }
