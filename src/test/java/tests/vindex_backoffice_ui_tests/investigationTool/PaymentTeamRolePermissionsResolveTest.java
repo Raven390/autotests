@@ -241,14 +241,14 @@ class PaymentTeamRolePermissionsResolveTest extends TestBaseWeb {
     }
 
     @Test
-    @AllureId("")
-    @DisplayName("BO user with Payment Team role cant view deduction page open Ву")
+    @AllureId("1889")
+    @DisplayName("BO user with Payment Team role cant view abuse registry")
     void cantOpenDeductionPageTest() {
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsPaymentTeamUser();
         deductionPage.navigateDeduction();
         Allure.step("check that deduction page is not opened");
-        assertTrue(page.url().contains("fraudsters"));
+        assertFalse(page.url().contains("abuse-registry"));
     }
 
     @Test

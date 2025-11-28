@@ -65,22 +65,23 @@ class AuditTrailAlertCounterTest extends TestBaseWeb {
     }
 
     @Test
-    @AllureId("")
-    @DisplayName("BO user with Payment Team role can see counter with the active payment alert and not for trading alerts")
+    @AllureId("1890")
+    @DisplayName("BO user with OPS24 role can see counter with the active payment alert and not for trading alerts")
     void alertCounterTradingTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());
         sendSimplePaymentAlert(client.getUcid());
         sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         investigationPage.navigateEnterPage();
-        keycloackPage.loginAsAFUser();
+        keycloackPage.loginAsOps24User();
         auditTrailPage.navigate(client.getUcid());
+        investigationPage.selectInvestigationTypeSwitchIsHidden();
+        auditTrailPage.checkAuditTrailAlertCounter(1);
+        sendSimpleAlert(client.getUcid(), "MARKET_MANIPULATION");
         auditTrailPage.checkAuditTrailAlertCounter(2);
-        sendSimplePaymentAlert(client.getUcid());
-        auditTrailPage.checkAuditTrailAlertCounter(3);
     }
 
     @Test
-    @AllureId("")
+    @AllureId("1891")
     @DisplayName("BO user with General Role role can see counter with the active payment alert for selected type of alerts")
     void alertCounterGeneralRoleTest() throws Exception {
         sendSimplePaymentAlert(client.getUcid());

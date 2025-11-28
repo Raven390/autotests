@@ -116,9 +116,9 @@ class ManageFraudWithDeductionsFullCalculationTest extends TestBaseWeb {
     }
 
     @Test
+    @AllureId("1892")
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("")
     @DisplayName("Verify calculation of deductions in fraud management")
     void deductionsIllegalProfitCalculationTest() throws Exception {
         investigationPage.navigateEnterPage();
