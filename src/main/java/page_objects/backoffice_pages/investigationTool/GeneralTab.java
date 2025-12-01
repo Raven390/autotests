@@ -11,6 +11,8 @@ import page_objects.backoffice_pages.AbstractPage;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -63,6 +65,16 @@ public class GeneralTab extends AbstractPage {
     private final Locator attemptItem;
     private final Locator ibOverviewButton;
     private final Locator cpaOverviewButton;
+    private final Locator verificationRow;
+    private final Locator verificationRowTitle;
+    private final Locator verificationRowFilesCount;
+    private final Locator verificationDrawerContainer;
+    private final Locator verificationDrawerTitle;
+    private final Locator verificationDrawerSubheader;
+    private final Locator verificationDrawerListItems;
+    private final Locator verificationDrawerListDate;
+    private final Locator verificationDrawerListFileNumber;
+    private final Locator verificationDrawerPreviewGroups;
 
     private static final String LOADING_SPINNER_SELECTOR = ".v-loader";
     private static final String PLACEHOLDER_SELECTOR = ".v-text-with-icon__text";
@@ -92,6 +104,7 @@ public class GeneralTab extends AbstractPage {
     private static final String MANAGER_NAME = "//*[contains(@class,'v-sales-manager-item__name')]";
     private static final String MANAGER_ORGANISATION = "//*[@class='v-sales-manager-item__manager-org-name']//" + VARIANT_BODY_1_SELECTOR;
     private static final String MANAGER_ACCOUNTS = "//*[@class='v-sales-manager-item__manager-accounts-list']//" + VARIANT_BODY_1_SELECTOR;
+    private static final String VERIFICATION_FILES_ITEM_PATTERN = "//*[@data-qa='preview_%s']";
 
     public GeneralTab(Page page) {
         super(page);
@@ -136,6 +149,16 @@ public class GeneralTab extends AbstractPage {
         this.attemptItem = page.locator(".v-investigation-tools-kyc-attempts__item");
         this.ibOverviewButton = page.locator("//div[text()='IB overview']");
         this.cpaOverviewButton = page.locator("//div[text()='CPA overview']");
+        this.verificationRow = page.locator("//*[@data-qa='investigation_tools_kyc__verification_row']");
+        this.verificationRowTitle = verificationRow.locator("//*[@data-qa='investigation_tools_kyc_row__title']");
+        this.verificationRowFilesCount = verificationRow.locator("//*[@data-qa='investigation_tools_kyc_row__attempts']");
+        this.verificationDrawerContainer = page.locator("//div[@data-qa='drawer_container']").last();
+        this.verificationDrawerTitle = verificationDrawerContainer.locator("//div[@class='v-drawer-header__title-container']/div[contains(@class,'g-text')]");
+        this.verificationDrawerSubheader = verificationDrawerContainer.locator("//*[contains(@class,'v-drawer-header__sub-header')]");
+        this.verificationDrawerListItems = page.locator("//*[@class='v-pp-verification-files-drawer-list__item']");
+        this.verificationDrawerListDate = page.locator("//*[@class='v-pp-verification-files-drawer-list__datetime']");
+        this.verificationDrawerListFileNumber = page.locator("//*[@class='v-pp-verification-files-drawer-list__content']/*[contains(@class,'g-label')]");
+        this.verificationDrawerPreviewGroups = page.locator("//*[@data-qa='pp_verification_files_drawer__previews']");
     }
 
     @Step("Open users general tab")
@@ -574,6 +597,50 @@ public class GeneralTab extends AbstractPage {
     public void isGeneralTabVisible() {
         Allure.step("check is general tab visible");
         generalTab.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.VISIBLE));
+    }
+
+    public String getVerificationRowTitle() {
+        return verificationRowTitle.textContent();
+    }
+
+    public String getVerificationRowFilesCount() {
+        return verificationRowFilesCount.textContent();
+    }
+
+    public void clickVerificationFilesRow() {
+        verificationRow.click();
+    }
+
+    public void waitForFilesToLoad() {
+        super.waitForPageToLoad();
+    }
+
+    public String getVerificationDrawerTitle() {
+        return verificationDrawerTitle.textContent();
+    }
+
+    public String getVerificationDrawerSubheader() {
+        return verificationDrawerSubheader.textContent();
+    }
+
+    public List<String> getVerificationDrawerFileDates() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < verificationDrawerListItems.count(); i++) {
+            list.add(verificationDrawerListItems.nth(i).locator(verificationDrawerListDate).textContent());
+        }
+        return list;
+    }
+
+    public List<String> getVerificationDrawerFileNumbers() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < verificationDrawerListItems.count(); i++) {
+            list.add(verificationDrawerListItems.nth(i).locator(verificationDrawerListFileNumber).textContent());
+        }
+        return list;
+    }
+
+    public void clickFilePreviewByGroupAndFileIndex(int groupIndex, int fileIndex) {
+        verificationDrawerPreviewGroups.nth(groupIndex).locator(String.format(VERIFICATION_FILES_ITEM_PATTERN, fileIndex)).click();
     }
 }
 
