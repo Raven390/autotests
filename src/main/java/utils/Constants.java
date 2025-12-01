@@ -193,6 +193,7 @@ public class Constants {
     public static final String CLIENT_PAYMENT_INFO_TABLE_NAME = "consolidated.client_payment_info";
     public static final String CRM_TRANSFERS_TABLE_NAME = "consolidated.crm___tb_transfer";
     public static final String CRM_USER_TABLE_NAME = "consolidated.crm___tb_user";
+    public static final String CRM_FILES_TABLE_NAME = "consolidated.crm___tb_files";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL = "consolidated.crm___tb_withdrawal";
     public static final String CLICKHOUSE_CRM_TB_WITHDRAWAL_TYPE = "consolidated.crm___tb_withdraw_type";
     public static final String DATA_SCIENCE_UCID_MIRROR_SCORE_BYBIT = "data_science.ucid_mirror_score_bybit";
@@ -373,4 +374,6 @@ public class Constants {
     public static final String STATUS_NORMAL = "Normal";
     public static final String STATUS_SUSPICIOUS = "Suspicious";
     public static final String VINDEX_BO_SYSTEM = "Vindex BO";
+    public static final String CRM_FILES_EXAMPLE_NAME = "/other/5b14c35f65cb4eebb7f4e1f375049c85.jpeg";
+    public static final String CRM_FILES_EXAMPLE_NAME_OTHER = "/other/d26364637ea848f0b4d2e363ea761461.png";
 }
