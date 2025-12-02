@@ -1,11 +1,17 @@
 package business_objects.db.payment_gate.payment_events;
 
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@Builder
+@Getter
+@Setter
 public class PaymentEventsObject {
 
     private UUID paymentId;
@@ -35,86 +41,6 @@ public class PaymentEventsObject {
         this.dateDecided = dateDecided;
         this.deliveryStatus = deliveryStatus;
         this.deliveryStatus = details;
-    }
-
-    public UUID getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(UUID paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public String getCrmId() {
-        return crmId;
-    }
-
-    public void setCrmId(String crmId) {
-        this.crmId = crmId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getFinalDecisionId() {
-        return finalDecisionId;
-    }
-
-    public void setFinalDecisionId(Integer finalDecisionId) {
-        this.finalDecisionId = finalDecisionId;
-    }
-
-    public String getUcid() {
-        return ucid;
-    }
-
-    public void setUcid(String ucid) {
-        this.ucid = ucid;
-    }
-
-    public Timestamp getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Timestamp dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Timestamp getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Timestamp dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Timestamp getDateDecided() {
-        return dateDecided;
-    }
-
-    public void setDateDecided(Timestamp dateDecided) {
-        this.dateDecided = dateDecided;
-    }
-
-    public String getDeliveryStatus() {
-        return deliveryStatus;
-    }
-
-    public void setDeliveryStatus(String deliveryStatus) {
-        this.deliveryStatus = deliveryStatus;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package helpers.data.rules.payments.router_rule_crm_payment;
+package helpers.data.rules.payments.router_rule_crm_payment.connection_search;
 
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import helpers.data.ClientHelper;
@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import static business_objects.db.data_science.ucid_general_score.UcidGeneralScoreFactory.generateUcidGeneralScoreObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.data.DataHelper.createClient;
 import static helpers.data.DataHelper.setupData;
@@ -20,13 +19,11 @@ import static utils.Constants.PAYMENT_PROVIDER_FASAPAY;
 import static utils.Utils.getRandomIntPositive;
 import static utils.Utils.getRandomUuidString;
 
-public class WithdrawalIntegrityDataFactory {
-    private static final ClientHelper withdrawalIntegrityRuleClient1 = getRandomVantageClientAllFields();
-    private static final ClientHelper withdrawalIntegrityRuleClient2 = getRandomVantageClientAllFields();
-    private static final ClientHelper withdrawalIntegrityRuleClient3 = getRandomVantageClientAllFields();
+public class ConnectionSearchTradingAbuseDataFactory {
+    private static final ClientHelper connectionSearchRuleClient1 = getRandomVantageClientAllFields();
 
-    @Description("Create data for Withdrawal Integrity check rule")
-    private static DataHelper getWithdrawalIntegrityCheckRuleData(ClientHelper client) {
+    @Description("Create data for Connection search rule")
+    private static DataHelper getConnectionSearchTradingRuleData(ClientHelper client) {
         DataHelper data = new DataHelper();
         createClient(data, client);
 
@@ -34,7 +31,7 @@ public class WithdrawalIntegrityDataFactory {
                 "MT4",                            // accountType
                 Utils.getRandomIntPositive().toString(),      // binNumber
                 data.clientHelper.getBrand().toLowerCase(),   // brand
-                "",                                           // checkName
+                "",                                           // Name
                 data.clientHelper.getUserId(),                // clientId
                 Instant.now().toString(),                  // eventDate (you can format if you need +03:00)
                 "4",                                          // expMonth
@@ -58,34 +55,17 @@ public class WithdrawalIntegrityDataFactory {
         return data;
     }
 
-    private static DataHelper getWithdrawalIntegrityCheckTest1Data() {
-        DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(50_000d);
-        return data;
-    }
-
-    private static DataHelper getWithdrawalIntegrityCheckTest2Data() {
-        DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient2);
-        data.crmWithdrawalEvent.setWithdrawalAmount(100d);
-        data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.91, 0.91);
+    private static DataHelper getConnectionSearchTradingAbuseTest1Data() {
+        DataHelper data = getConnectionSearchTradingRuleData(connectionSearchRuleClient1);
 
         return data;
     }
 
-    private static DataHelper getWithdrawalIntegrityCheckTest3Data() {
-        DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient3);
-        data.crmWithdrawalEvent.setWithdrawalAmount(2000d);
-        data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.8, 0.8);
-        return data;
-    }
-
-    public static Map<String, DataHelper> setupWithdrawalIntegrityCheckRuleData() {
+    public static Map<String, DataHelper> setupConnectionSearchTradingAbuseRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getWithdrawalIntegrityCheckTest1Data());
-        map.put("2", getWithdrawalIntegrityCheckTest2Data());
-        map.put("3", getWithdrawalIntegrityCheckTest3Data());
+        map.put("1", getConnectionSearchTradingAbuseTest1Data());
 
         setupData(map);
 

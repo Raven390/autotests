@@ -1,6 +1,5 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
-import business_objects.api.payment_gate.payments_decisions.PutDecisionsRequestBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
@@ -10,8 +9,10 @@ import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import business_objects.kafka.payment.acknowledgement.Acknowledgement;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
+import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import helpers.data.DataHelper;
-import helpers.data.enums.payment_gate.Decision;
+import helpers.data.enums.Brand;
+import helpers.data.enums.Rule;
 import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
-import static business_objects.api.payment_gate.payments_decisions.DecisionsRequests.putDecisions;
+import static helpers.api.PaymentGateHelper.*;
 import static helpers.data.rules.payments.router_rule_crm_payment.RouterRuleCrmPaymentDataFactory.setupRouterRuleData;
 import static helpers.database.DbHelper.startSshTunnel;
 import static helpers.database.PaymentGateHelper.*;
@@ -60,7 +61,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_end_2", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
 
         Allure.step("Retrieve payment id");
         PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
@@ -112,21 +113,12 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         Allure.step("Retrieve payment id");
-        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
-        Assertions.assertNotNull(paymentEventsObject);
-        UUID paymentId = paymentEventsObject.getPaymentId();
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
-        Allure.step("Send payment rejection");
-        PutDecisionsRequestBody putPaymentDecisionBody1 = new PutDecisionsRequestBody();
-        putPaymentDecisionBody1.setDecisionType(Decision.RISK_APPROVE.getType());
-        putPaymentDecisionBody1.setDecisionCode(Decision.RISK_APPROVE.getCode());
-        putPaymentDecisionBody1.setRejectionCode(0);
-        putPaymentDecisionBody1.setDecidedAt(getRandomDateTimeIsoUtc());
-        putPaymentDecisionBody1.setActor("Auto qa");
-        putDecisions(paymentId.toString(), List.of(putPaymentDecisionBody1));
+        sendRiskApproveDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
@@ -159,22 +151,12 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         Allure.step("Retrieve payment id");
-        PaymentEventsObject paymentEventsObject = getPaymentEvent(data.clientHelper.getUcid());
-        Assertions.assertNotNull(paymentEventsObject);
-        UUID paymentId = paymentEventsObject.getPaymentId();
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
 
-        Allure.step("Send payment rejection");
-        PutDecisionsRequestBody putPaymentDecisionBody1 = new PutDecisionsRequestBody();
-        putPaymentDecisionBody1.setDecisionType(Decision.RISK_REJECT.getType());
-        putPaymentDecisionBody1.setDecisionCode(Decision.RISK_REJECT.getCode());
-        putPaymentDecisionBody1.setRejectionCode(0);
-        putPaymentDecisionBody1.setDecidedAt(getRandomDateTimeIsoUtc());
-        putPaymentDecisionBody1.setActor("Auto qa");
-
-        putDecisions(paymentId.toString(), List.of(putPaymentDecisionBody1));
+        sendRiskRejectDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("send_alert", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
 
         List<PaymentDecisionsObject> paymentDecisionsObject = getPaymentDecisionsByPaymentId(paymentId);
         assertThat("Verify amount of decisions in DB", paymentDecisionsObject.size(), is(1));
@@ -208,18 +190,10 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         List<PaymentEventsObject> events = getUserPaymentEventsFromDb(data.clientHelper);
         UUID paymentId = events.getFirst().getPaymentId();
 
-        Allure.step("Send payment rejection");
-        PutDecisionsRequestBody putPaymentDecisionBody1 = new PutDecisionsRequestBody();
-        putPaymentDecisionBody1.setDecisionType(Decision.RISK_REJECT.getType());
-        putPaymentDecisionBody1.setDecisionCode(Decision.RISK_REJECT.getCode());
-        putPaymentDecisionBody1.setRejectionCode(0);
-        putPaymentDecisionBody1.setDecidedAt(getRandomDateTimeIsoUtc());
-        putPaymentDecisionBody1.setActor("Auto qa");
-
-        putDecisions(paymentId.toString(), List.of(putPaymentDecisionBody1));
+        sendRiskRejectDecision(paymentId);
 
         checkElementId("Event_1gdl5i3", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_1kdk048", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("Event_1kdk048", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
 
         assertThat("Verify amount of payments events in DB", events.size(), is(1));
         assertEquals(data.crmWithdrawalEvent.getWithdrawalId(), Long.valueOf(events.getFirst().getCrmId()));
@@ -253,7 +227,6 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         assertThat("Verify alert ", alerts.getFirst().getUcid(), is(notNullValue()));
         assertThat("Verify alert ", alerts.getFirst().getType(), is(notNullValue()));
 
-
         List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb((events.getFirst().getPaymentId()));
         assertThat("Verify amount of decisions in DB", decision.size(), is(1));
         assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
@@ -272,7 +245,7 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
         checkElementId("Event_end_2", data.crmWithdrawalEvent.getId(), "withdrawal_notification_rr_payment");
-        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("Event_0t14mt3", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
 
         List<RuleAlert> alerts = getUserAlertsFromKafka(data.clientHelper, "withdrawalNotification");
 
@@ -301,5 +274,191 @@ class RouterRuleCrmPaymentTests extends TestBaseRule {
         assertThat("Verify checkName in Kafka topic", approval.getFirst().getCheckName(), is(""));
         assertThat("Verify brand in Kafka topic", approval.getFirst().getBrand(), is("Vantage"));
         assertThat("Verify orderNumber in Kafka topic", approval.getFirst().getOrderNumber(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
+    }
+
+    @Test
+    @AllureId("1859")
+    @DisplayName("Router Rule tests. Manual approve withdrawal after CS rule ElementId: end_102")
+    void routerRuleTest6() throws Exception {
+        DataHelper data = dataMap.get("6");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("end_102", data.crmWithdrawalEvent.getId(), "cs_on_withdrawal");
+        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskApproveDecision(paymentId);
+
+        List<WithdrawalApprovalsV2> withdrawalApprovals = getWithdrawalApprovalsV2FromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        writeLog(withdrawalApprovals);
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getSchemaVersion(), is(data.crmWithdrawalEvent.getSchemaVersion()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getId(), is(data.crmWithdrawalEvent.getId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getBrand(), is(Brand.VANTAGE.getDisplayName()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getClientId(), is(data.crmWithdrawalEvent.getClientId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getType(), is(data.crmWithdrawalEvent.getType()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRegulator(), is(data.crmWithdrawalEvent.getRegulator()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getInternalReason(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getStatus(), is("Approve"));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMerchantOrderId(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getCheckName(), is(data.crmWithdrawalEvent.getCheckName()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRuleName(), is("Router rule"));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReasonCode(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReason(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReasonRecommend(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getUnderManualReview(), is(1));
+    }
+
+    @Test
+    @AllureId("1859")
+    @DisplayName("Router Rule tests. Manual reject withdrawal after CS rule ElementId: end_102")
+    void routerRuleTest7() throws Exception {
+        DataHelper data = dataMap.get("7");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("end_102", data.crmWithdrawalEvent.getId(), Rule.CONNECTION_SEARCH_IN_ROUTER_RULE.getProcessId());
+        checkElementId("Activity_06e7z5l", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("Activity_016fbcu", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskRejectDecision(paymentId);
+
+        List<WithdrawalApprovalsV2> withdrawalApprovals = getWithdrawalApprovalsV2FromKafka(String.valueOf(data.crmWithdrawalEvent.getWithdrawalId()));
+        writeLog(withdrawalApprovals);
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getSchemaVersion(), is(data.crmWithdrawalEvent.getSchemaVersion()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getId(), is(data.crmWithdrawalEvent.getId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTimestamp(), is(notNullValue()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getTransferId(), is(data.crmWithdrawalEvent.getWithdrawalId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getBrand(), is(Brand.VANTAGE.getDisplayName()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getClientId(), is(data.crmWithdrawalEvent.getClientId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getType(), is(data.crmWithdrawalEvent.getType()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRegulator(), is(data.crmWithdrawalEvent.getRegulator()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getInternalReason(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getStatus(), is("Approve"));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getMerchantOrderId(), is(data.crmWithdrawalEvent.getMerchantOrderId()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getCheckName(), is(data.crmWithdrawalEvent.getCheckName()));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRuleName(), is("Router rule"));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReasonCode(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReason(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getRejectionReasonRecommend(), is(""));
+        assertThat("Assert withdrawal.approval message", withdrawalApprovals.getFirst().getUnderManualReview(), is(1));
+    }
+
+    @Disabled
+    @Test
+    @AllureId("1865")
+    @DisplayName("Router Rule tests. Auto reject after CS rule. ElementId: ")
+    void routerRuleTest8() throws Exception {
+
+    }
+
+    @Disabled
+    @Test
+    @AllureId("1866")
+    @DisplayName("Router Rule tests. Auto approve after CS rule. ElementId: ")
+    void routerRuleTest9() throws Exception {
+
+    }
+
+    @Disabled
+    @Test
+    @AllureId("")
+    @DisplayName("Router Rule tests. Two payment rules generates alert")
+    void routerRuleTest10() throws Exception {
+
+    }
+
+    @Disabled
+    @Test
+    @AllureId("")
+    @DisplayName("Router Rule tests. 1 Payment alert and 1 trading alert waits for manual decisions")
+    void routerRuleTest11() throws Exception {
+
+    }
+
+    @Test
+    @AllureId("1878")
+    @DisplayName("Router Rule tests. Risk approve + payment approve = approve")
+    void routerRuleTest12() throws Exception {
+        DataHelper data = dataMap.get("12");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskApproveDecision(paymentId);
+        Thread.sleep(10_000);
+        sendPaymentApproveDecision(paymentId);
+
+        checkElementId("Activity_04gzpdk", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("1877")
+    @DisplayName("Router Rule tests. Risk reject + payment approve = reject")
+    void routerRuleTest13() throws Exception {
+        DataHelper data = dataMap.get("13");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskRejectDecision(paymentId);
+        Thread.sleep(10_000);
+        sendPaymentApproveDecision(paymentId);
+
+        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("1876")
+    @DisplayName("Router Rule tests. trading approve + payment reject = reject")
+    void routerRuleTest14() throws Exception {
+        DataHelper data = dataMap.get("14");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskApproveDecision(paymentId);
+        Thread.sleep(10_000);
+        sendPaymentRejectDecision(paymentId);
+
+        checkElementId("Activity_0hnglsq", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+    }
+
+    @Test
+    @AllureId("1875")
+    @DisplayName("Router Rule tests. trading reject + payment reject = reject")
+    void routerRuleTest15() throws Exception {
+        DataHelper data = dataMap.get("15");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("post_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+        checkElementId("post_payment_pending_decision", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
+
+        UUID paymentId = Objects.requireNonNull(getPaymentEvent(data.clientHelper.getUcid())).getPaymentId();
+
+        sendRiskRejectDecision(paymentId);
+        Thread.sleep(10_000);
+        sendPaymentRejectDecision(paymentId);
+
+        checkElementId("Activity_05p28in", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
     }
 }

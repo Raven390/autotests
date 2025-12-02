@@ -46,6 +46,7 @@ import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.CustomEvent;
+import helpers.data.enums.FraudType;
 import helpers.data.enums.FraudTypeOld;
 import helpers.data.enums.FraudTypeStatus;
 import helpers.database.DbName;
@@ -66,9 +67,9 @@ import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFa
 import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
-import static helpers.data.enums.FraudType.HEDGING;
 import static helpers.database.BoHelper.closeAlert;
 import static helpers.database.DbHelper.*;
 import static helpers.database.CleanTableHelper.*;
@@ -135,6 +136,7 @@ public class DataHelper {
     public MirrorScoreEvent mirrorScoreEvent;
 
     public DataHelper() {
+        this.clientFraudTypes = new ArrayList<>();
     }
 
     public static void setupData(Map<String, DataHelper> map) {
@@ -417,6 +419,7 @@ public class DataHelper {
         dataHelper.crmTbAccountObject = generateAccountByClient(dataHelper.clientHelper, false);
         dataHelper.crmTbAccountForMtObject = generateAccountForMtByClient(dataHelper.clientHelper, false);
         dataHelper.mtAccountObject = generateMtAccountByClient(dataHelper.clientHelper);
+        dataHelper.lnSessionParsedObject = generateLexisNexisDataByClient(dataHelper.clientHelper);
         return dataHelper;
     }
 
@@ -561,12 +564,14 @@ public class DataHelper {
         setupAttrConnectionPayoutId(data, clientTo);
     }
 
-    public static DataHelper addFraudTypeToConnectedUser(DataHelper data, FraudTypeStatus status)
+    public static DataHelper addFraudTypeToConnectedUser(DataHelper data, FraudTypeStatus status, FraudType fraudType)
             throws IOException, InterruptedException {
+        data.clientFraudTypes = new ArrayList<>();
         data.clientFraudTypes.add(createClientFraudTypeCh(data.connectedClientHelpers.getFirst().getUcid(), FraudTypeOld.HEDGING.getKey()));
 
         insertObjectToDb(CRM_USER_TABLE_NAME, data.connectedUsers.getFirst());
-        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(HEDGING), status);
+
+        addFraudsForClient(data.connectedClientHelpers.getFirst(), List.of(fraudType), status);
         return data;
     }
 

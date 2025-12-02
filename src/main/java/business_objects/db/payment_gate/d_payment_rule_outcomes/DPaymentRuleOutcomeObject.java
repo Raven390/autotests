@@ -1,17 +1,23 @@
 package business_objects.db.payment_gate.d_payment_rule_outcomes;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
-
+@Builder
+@Setter
+@Getter
 public class DPaymentRuleOutcomeObject {
 
-    public Integer id;
-    public Integer ruleId;
-    public Integer endId;
-    public String endName;
-    public String endDescription;
-    public String dateCreated;
-    public String dateUpdated;
+    private Integer id;
+    private Integer ruleId;
+    private Integer endId;
+    private String endName;
+    private String endDescription;
+    private String dateCreated;
+    private String dateUpdated;
 
     public DPaymentRuleOutcomeObject() {
     }
@@ -25,62 +31,6 @@ public class DPaymentRuleOutcomeObject {
         this.endName = endName;
         this.endDescription = endDescription;
         this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(Integer ruleId) {
-        this.ruleId = ruleId;
-    }
-
-    public Integer getEndId() {
-        return endId;
-    }
-
-    public void setEndId(Integer endId) {
-        this.endId = endId;
-    }
-
-    public String getEndName() {
-        return endName;
-    }
-
-    public void setEndName(String endName) {
-        this.endName = endName;
-    }
-
-    public String getEndDescription() {
-        return endDescription;
-    }
-
-    public void setEndDescription(String endDescription) {
-        this.endDescription = endDescription;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 

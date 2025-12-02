@@ -1,11 +1,17 @@
 package business_objects.db.payment_gate.payment_rejection_attributes.payment_events;
 
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@Builder
+@Getter
+@Setter
 public class PaymentRejectionAttributesObject {
 
     private UUID paymentId;
@@ -39,62 +45,6 @@ public class PaymentRejectionAttributesObject {
         this.attributeId = attributeId;
         this.attributeValue = attributeValue;
         this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-    }
-
-    public UUID getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(UUID paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public Integer getDecisionId() {
-        return decisionId;
-    }
-
-    public void setDecisionId(Integer decisionId) {
-        this.decisionId = decisionId;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getAttributeId() {
-        return attributeId;
-    }
-
-    public void setAttributeId(Integer attributeId) {
-        this.attributeId = attributeId;
-    }
-
-    public String getAttributeValue() {
-        return attributeValue;
-    }
-
-    public void setAttributeValue(String attributeValue) {
-        this.attributeValue = attributeValue;
-    }
-
-    public Timestamp getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Timestamp dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Timestamp getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Timestamp dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 

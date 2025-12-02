@@ -54,6 +54,7 @@ public class Constants {
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS = "Clickhouse api. Get lexis nexis data by client request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_LEXIS_NEXIS_DATA = "Clickhouse api. Get lexis nexis custom column data request";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_ACCOUNTS_BY_TRADES = "Clickhouse api. Get mirror accounts by trades";
+    public static final String STORY_CLICKHOUSE_API_SERVICE_GET_MIRROR_TRADE_ON_LAST_WITHDRAWAL = "Clickhouse api. Get mirror trade on last withdrawal";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_FEES = "Clickhouse api. Get swap free fees";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SWAP_FREE_VOLUME = "Clickhouse api. Get swap free volume";
     public static final String STORY_CLICKHOUSE_API_SERVICE_GET_SYMBOL_GROUPS = "Clickhouse api. Get symbol groups";
@@ -92,6 +93,7 @@ public class Constants {
     public static final String STORY_RULE_ENGINE_REGISTRATION_RULE = "Registration rule ";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_NOTIFICATION_IN_ROUTER_RULE = "Router rule. Withdrawal notification branch.";
     public static final String STORY_RULE_ENGINE_MIRROR_TRADE_IN_ROUTER_RULE = "Router rule. Mirror trade branch";
+    public static final String STORY_RULE_ENGINE_CONNECTION_SEARCH_IN_ROUTER_RULE = "Router rule. Connection search branch";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_ROUTER_RULE = "Router rule.";
     public static final String STORY_RULE_ENGINE_WITHDRAWAL_INTEGRITY_CHECK_ROUTER_RULE = "Router rule. Withdrawal integrity check ";
     public static final String STORY_RULE_ENGINE_LATENCY_ARBITRAGE_RULE = "Latency arbitrage rule ";
@@ -227,6 +229,7 @@ public class Constants {
     public static final String MT4_TRADES_COERCED_TABLE_NAME = "consolidated.mt___mt4_trades_coerced";
     public static final String MT4_TRADES_TABLE_NAME = "consolidated.mt___mt4_trades";
     public static final String MT5_DEALS_COERCED_TABLE_NAME = "consolidated.mt___mt5_deals_coerced";
+    public static final String MT5_DEALS_COERCED_DD_TABLE_NAME = "consolidated.mt___mt5_deals_coerced_dd";
     public static final String MT5_DEALS_TABLE_NAME = "consolidated.mt___mt5_deals";
     public static final String MT5_DEALS_COERCED_TOXICITY_TABLE_NAME = "consolidated.mt___mt5_deals_coerced_toxicity";
     public static final String MT5_POSITIONS_TABLE_NAME = "consolidated.mt___mt5_positions";

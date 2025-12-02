@@ -1,69 +1,38 @@
 package business_objects.api.payment_gate.rule_executions;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
+@Getter
+@Setter
 public class PostRuleExecutionsBody {
-    private String runId;
+
     private UUID paymentId;
+    private String runId;
     private Integer ruleId;
     private String ruleVersion;
     private String ruleEndId;
-    private String startedAt;
-    private String completedAt;
+    private String dateCreated;
+    private String dateUpdated;
+    private String dateStarted;
+    private String dateCompleted;
 
-    public String getRunId() {
-        return runId;
+    // Explicit setters to avoid any potential Lombok/unicode issues
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public void setRunId(String runId) {
-        this.runId = runId;
+    public void setDateUpdated(String dateUpdated) {
+        this.dateUpdated = dateUpdated;
     }
 
-    public UUID getPaymentId() {
-        return paymentId;
+    public void setDateStarted(String dateStarted) {
+        this.dateStarted = dateStarted;
     }
 
-    public void setPaymentId(UUID paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public Integer getRuleId() {
-        return ruleId;
-    }
-
-    public void setRuleId(Integer ruleId) {
-        this.ruleId = ruleId;
-    }
-
-    public String getRuleVersion() {
-        return ruleVersion;
-    }
-
-    public void setRuleVersion(String ruleVersion) {
-        this.ruleVersion = ruleVersion;
-    }
-
-    public String getRuleEndId() {
-        return ruleEndId;
-    }
-
-    public void setRuleEndId(String ruleEndId) {
-        this.ruleEndId = ruleEndId;
-    }
-
-    public String getStartedAt() {
-        return startedAt;
-    }
-
-    public void setStartedAt(String startedAt) {
-        this.startedAt = startedAt;
-    }
-
-    public String getCompletedAt() {
-        return completedAt;
-    }
-
-    public void setCompletedAt(String completedAt) {
-        this.completedAt = completedAt;
+    public void setDateCompleted(String dateCompleted) {
+        this.dateCompleted = dateCompleted;
     }
 }

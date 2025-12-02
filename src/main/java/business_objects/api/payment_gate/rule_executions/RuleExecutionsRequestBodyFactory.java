@@ -14,11 +14,13 @@ public class RuleExecutionsRequestBodyFactory {
 
         body.setRunId(getRandomIntPositive().toString());
         body.setPaymentId(event.getPaymentId());
-        body.setRuleId(101);
+        body.setRuleId(1);
         body.setRuleVersion("1.0." + getRandomIntPositive());
         body.setRuleEndId("2");
-        body.setStartedAt(Instant.now().toString());
-        body.setCompletedAt(Instant.now().plusSeconds(2).toString());
+        body.setDateCreated(Instant.now().toString());
+        body.setDateUpdated(Instant.now().toString());
+        body.setDateStarted(Instant.now().toString());
+        body.setDateCompleted(Instant.now().toString());
         return body;
     }
 
@@ -27,7 +29,7 @@ public class RuleExecutionsRequestBodyFactory {
 
         body.setRunId(getRandomIntPositive().toString());
         body.setPaymentId(event.getPaymentId());
-        body.setRuleId(101);
+        body.setRuleId(1);
         body.setRuleVersion("1.0." + getRandomIntPositive());
         body.setRuleEndId("2");
         body.setStartedAt(Timestamp.from(Instant.now()));

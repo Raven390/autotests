@@ -62,7 +62,7 @@ public class RouterRuleCrmEventsDataFactory {
 
     private static DataHelper getRouterRuleTest1Data() {
         DataHelper data = getRouterRuleData(routerRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(1);
+        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
         return data;
     }
 
