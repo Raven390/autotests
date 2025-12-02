@@ -1,10 +1,16 @@
 package business_objects.db.payment_gate.payment_decisions;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@Builder
+@Getter
+@Setter
 public class PaymentDecisionsObject {
 
     private Integer id;
@@ -48,86 +54,6 @@ public class PaymentDecisionsObject {
         this.dateCreated = dateCreated;
         this.dateUpdated = dateUpdated;
         this.dateDecided = dateDecided;
-        this.reasonString = reasonString;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public UUID getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(UUID paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public String getDecisionType() {
-        return decisionType;
-    }
-
-    public void setDecisionType(String decisionType) {
-        this.decisionType = decisionType;
-    }
-
-    public Integer getDecisionCode() {
-        return decisionCode;
-    }
-
-    public void setDecisionCode(Integer decisionCode) {
-        this.decisionCode = decisionCode;
-    }
-
-    public Integer getRejectionCode() {
-        return rejectionCode;
-    }
-
-    public void setRejectionCode(Integer rejectionCode) {
-        this.rejectionCode = rejectionCode;
-    }
-
-    public String getActor() {
-        return actor;
-    }
-
-    public void setActor(String actor) {
-        this.actor = actor;
-    }
-
-    public Timestamp getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Timestamp dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Timestamp getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(Timestamp dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Timestamp getDateDecided() {
-        return dateDecided;
-    }
-
-    public void setDateDecided(Timestamp dateDecided) {
-        this.dateDecided = dateDecided;
-    }
-
-    public String getReasonString() {
-        return reasonString;
-    }
-
-    public void setReasonString(String reasonString) {
         this.reasonString = reasonString;
     }
 

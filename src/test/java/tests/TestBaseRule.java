@@ -19,6 +19,7 @@ import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.payment.acknowledgement.Acknowledgement;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
+import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.data.ClientHelper;
@@ -106,7 +107,7 @@ public class TestBaseRule {
                 objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).filter(alert -> alert.rule.name.equals(ruleName)).toList();
     }
 
-    @Step("Get User Alerts from Kafka topic 'alerts'")
+    @Step("Get User Alerts from Kafka topic 'alerts' by rule")
     public static List<RuleAlertV2> getUserAlertsV2FromKafka(ClientHelper client, String ruleName)
             throws InterruptedException,
             JsonProcessingException {
@@ -124,12 +125,46 @@ public class TestBaseRule {
                         }).toList();
     }
 
+    @Step("Get User Alerts from Kafka topic 'alerts' by Rule and reason")
+    public static List<RuleAlertV2> getUserAlertsV2FromKafka(ClientHelper client, String ruleName, String reason)
+            throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(
+                objectMapper.readValue(
+                        kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlertV2[].class)).filter(alert -> {
+                            // Match rule name first
+                            RuleAlertV2.Rule rule = alert.getRule();
+                            String actualRuleName;
+                            if (rule != null) {
+                                actualRuleName = rule.getName();
+                            } else {
+                                actualRuleName = null;
+                            }
+                            boolean ruleMatches = actualRuleName != null && actualRuleName.trim().equalsIgnoreCase(ruleName.trim());
+                            if (!ruleMatches) return false;
+
+                            // If reason filter is provided, match it too (case-insensitive, trimmed)
+                            if (reason == null || reason.isBlank()) return true;
+                            String actualReason = alert.getReason();
+                            return actualReason != null && actualReason.trim().equalsIgnoreCase(reason.trim());
+                        }).toList();
+    }
+
+    @Deprecated
     @Step("Get Withdrawal from Kafka topic 'approvals'")
     public static List<WithdrawalApprovals> getWithdrawalApprovalsFromKafka(String withdrawalId)
             throws InterruptedException,
             JsonProcessingException {
         return Arrays.stream(
                 objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalId).toString(), WithdrawalApprovals[].class)).toList();
+    }
+
+    @Step("Get Withdrawal from Kafka topic 'approvals'")
+    public static List<WithdrawalApprovalsV2> getWithdrawalApprovalsV2FromKafka(String withdrawalId)
+            throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_WITHDRAWAL_APPROVALS, withdrawalId).toString(), WithdrawalApprovalsV2[].class)).toList();
     }
 
     @Step("Get User Alerts from postgres.bo.alert table")

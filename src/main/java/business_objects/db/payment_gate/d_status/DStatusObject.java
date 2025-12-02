@@ -1,15 +1,21 @@
 package business_objects.db.payment_gate.d_status;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
-
+@Builder
+@Getter
+@Setter
 public class DStatusObject {
 
-    public Integer id;
-    public String status;
-    public String description;
-    public String dateCreated;
-    public String dateUpdated;
+    private Integer id;
+    private String status;
+    private String description;
+    private String dateCreated;
+    private String dateUpdated;
 
     public DStatusObject() {
     }
@@ -19,46 +25,6 @@ public class DStatusObject {
         this.status = status;
         this.description = description;
         this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 

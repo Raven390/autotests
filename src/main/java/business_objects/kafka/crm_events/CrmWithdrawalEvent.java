@@ -1,9 +1,13 @@
 package business_objects.kafka.crm_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
+@Getter
+@Setter
 public class CrmWithdrawalEvent {
     @JsonProperty("accountType")
     private String accountType;
@@ -98,6 +102,38 @@ public class CrmWithdrawalEvent {
             String accountType, String binNumber, String brand, String checkName, long clientId, String eventDate,
             String expMonth, String expYear, String fullName, String id, String merchantOrderId, Integer mt4Account,
             String paymentChannelCode, String paymentChannelName, String paymentMethodCode, String platform,
+            String regulator, String schemaVersion, String type, Double withdrawalAmount, Double withdrawalAmountUSD,
+            String withdrawalApplicationTime, String withdrawalCurrency, Long withdrawalId) {
+        this.accountType = accountType;
+        this.binNumber = binNumber;
+        this.brand = brand;
+        this.checkName = checkName;
+        this.clientId = clientId;
+        this.eventDate = eventDate;
+        this.expMonth = expMonth;
+        this.expYear = expYear;
+        this.fullName = fullName;
+        this.id = id;
+        this.merchantOrderId = merchantOrderId;
+        this.mt4Account = mt4Account;
+        this.paymentChannelCode = paymentChannelCode;
+        this.paymentChannelName = paymentChannelName;
+        this.paymentMethodCode = paymentMethodCode;
+        this.platform = platform;
+        this.regulator = regulator;
+        this.schemaVersion = schemaVersion;
+        this.type = type;
+        this.withdrawalAmount = withdrawalAmount;
+        this.withdrawalAmountUSD = withdrawalAmountUSD;
+        this.withdrawalApplicationTime = withdrawalApplicationTime;
+        this.withdrawalCurrency = withdrawalCurrency;
+        this.withdrawalId = withdrawalId;
+    }
+
+    public CrmWithdrawalEvent(
+            String accountType, String binNumber, String brand, String checkName, long clientId, String eventDate,
+            String expMonth, String expYear, String fullName, String id, String merchantOrderId, Integer mt4Account,
+            String paymentChannelCode, String paymentChannelName, String paymentMethodCode, String platform,
             String regulator, String schemaVersion, String type, double withdrawalAmount,
             String withdrawalApplicationTime,
             String withdrawalCurrency, long withdrawalId) {
@@ -123,214 +159,6 @@ public class CrmWithdrawalEvent {
         this.withdrawalAmount = withdrawalAmount;
         this.withdrawalApplicationTime = withdrawalApplicationTime;
         this.withdrawalCurrency = withdrawalCurrency;
-        this.withdrawalId = withdrawalId;
-    }
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
-
-    public String getFundType() {
-        return fundType;
-    }
-
-    public void setFundType(String fundType) {
-        this.fundType = fundType;
-    }
-
-    public void setWithdrawalAmount(Double withdrawalAmount) {
-        this.withdrawalAmount = withdrawalAmount;
-    }
-
-    public void setWithdrawalId(Long withdrawalId) {
-        this.withdrawalId = withdrawalId;
-    }
-
-    public String getAccountCategory() {
-        return accountCategory;
-    }
-
-    public void setAccountCategory(String accountCategory) {
-        this.accountCategory = accountCategory;
-    }
-
-    public String getBinNumber() {
-        return binNumber;
-    }
-
-    public void setBinNumber(String binNumber) {
-        this.binNumber = binNumber;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getCheckName() {
-        return checkName;
-    }
-
-    public void setCheckName(String checkName) {
-        this.checkName = checkName;
-    }
-
-    public long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(long clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getExpMonth() {
-        return expMonth;
-    }
-
-    public void setExpMonth(String expMonth) {
-        this.expMonth = expMonth;
-    }
-
-    public String getExpYear() {
-        return expYear;
-    }
-
-    public void setExpYear(String expYear) {
-        this.expYear = expYear;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMerchantOrderId() {
-        return merchantOrderId;
-    }
-
-    public void setMerchantOrderId(String merchantOrderId) {
-        this.merchantOrderId = merchantOrderId;
-    }
-
-    public Integer getMt4Account() {
-        return mt4Account;
-    }
-
-    public void setMt4Account(Integer mt4Account) {
-        this.mt4Account = mt4Account;
-    }
-
-    public String getPaymentChannelCode() {
-        return paymentChannelCode;
-    }
-
-    public void setPaymentChannelCode(String paymentChannelCode) {
-        this.paymentChannelCode = paymentChannelCode;
-    }
-
-    public String getPaymentChannelName() {
-        return paymentChannelName;
-    }
-
-    public void setPaymentChannelName(String paymentChannelName) {
-        this.paymentChannelName = paymentChannelName;
-    }
-
-    public String getPaymentMethodCode() {
-        return paymentMethodCode;
-    }
-
-    public void setPaymentMethodCode(String paymentMethodCode) {
-        this.paymentMethodCode = paymentMethodCode;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public String getRegulator() {
-        return regulator;
-    }
-
-    public void setRegulator(String regulator) {
-        this.regulator = regulator;
-    }
-
-    public String getSchemaVersion() {
-        return schemaVersion;
-    }
-
-    public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public double getWithdrawalAmount() {
-        return withdrawalAmount;
-    }
-
-    public void setWithdrawalAmount(double withdrawalAmount) {
-        this.withdrawalAmount = withdrawalAmount;
-    }
-
-    public String getWithdrawalApplicationTime() {
-        return withdrawalApplicationTime;
-    }
-
-    public void setWithdrawalApplicationTime(String withdrawalApplicationTime) {
-        this.withdrawalApplicationTime = withdrawalApplicationTime;
-    }
-
-    public String getWithdrawalCurrency() {
-        return withdrawalCurrency;
-    }
-
-    public void setWithdrawalCurrency(String withdrawalCurrency) {
-        this.withdrawalCurrency = withdrawalCurrency;
-    }
-
-    public long getWithdrawalId() {
-        return withdrawalId;
-    }
-
-    public void setWithdrawalId(long withdrawalId) {
         this.withdrawalId = withdrawalId;
     }
 

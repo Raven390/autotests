@@ -112,6 +112,7 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
         assertThat("Assert item.runId present", item.getRunId(), not(paymentRuleExecutionsObject1.getRunId()));
         assertThat("Assert item.paymentId equals response paymentId", item.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId().toString()));
         assertThat("Assert item.ruleId present", item.getRuleId(), is(paymentRuleExecutionsObject1.getRuleId()));
+        assertThat("Assert item.ruleType present", item.getRuleType(), is("payment"));
         assertThat("Assert item.ruleVersion present", item.getRuleVersion(), is(paymentRuleExecutionsObject1.getRuleVersion()));
         assertThat("Assert item.ruleEndId present", item.getRuleEndId(), is(paymentRuleExecutionsObject1.getRuleEndId()));
         assertThat("Assert item.startedAt present", item.getStartedAt(), not(paymentRuleExecutionsObject1.getDateStarted()));
@@ -175,4 +176,39 @@ class GetRuleExecutionsV1Tests extends TestBaseApi {
         assertThat("Assert status present", mappedResponse.getMessage(), is(String.format("paymentId %s is not found", uuid)));
     }
 
+    @Test
+    @AllureId("1871")
+    @DisplayName("Get rule execution V1. Empty result with filter. 200")
+    void GetRuleExecutionsV1Test5() throws Exception {
+
+        Allure.step("send get payment request with valid data");
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("ruleType", "trading");
+        Response response = getRuleExecutionsRequest(postRuleExecutionsBody1.getPaymentId().toString(), paramsMap);
+        assertThat(response.code(), is(200));
+
+        Allure.step("Validate Data in response");
+        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
+        assertThat("Assert paymentId present", mappedResponse.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId()));
+        // Additional asserts based on the sample response structure
+        assertThat("Assert items list empty", mappedResponse.getItems().size(), is(0));
+    }
+
+    @Test
+    @AllureId("1872")
+    @DisplayName("Get rule execution V1. Empty result with filter. 200")
+    void GetRuleExecutionsV1Test6() throws Exception {
+
+        Allure.step("send get payment request with valid data");
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put("ruleType", "payment");
+        Response response = getRuleExecutionsRequest(postRuleExecutionsBody1.getPaymentId().toString(), paramsMap);
+        assertThat(response.code(), is(200));
+
+        Allure.step("Validate Data in response");
+        GetRuleExecutionsResponseBody mappedResponse = objectMapper.readValue(response.body().string(), GetRuleExecutionsResponseBody.class);
+        assertThat("Assert paymentId present", mappedResponse.getPaymentId(), is(paymentRuleExecutionsObject1.getPaymentId()));
+        // Additional asserts based on the sample response structure
+        assertThat("Assert items list empty", mappedResponse.getItems().size(), is(1));
+    }
 }

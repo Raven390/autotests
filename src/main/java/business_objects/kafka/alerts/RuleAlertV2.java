@@ -1,7 +1,17 @@
 package business_objects.kafka.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class RuleAlertV2 {
 
     @JsonProperty("reason")
@@ -55,142 +65,11 @@ public class RuleAlertV2 {
     @JsonProperty("attributes")
     private Attribute attributes;
 
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getAlertId() {
-        return alertId;
-    }
-
-    public void setAlertId(String alertId) {
-        this.alertId = alertId;
-    }
-
-    public Rule getRule() {
-        return rule;
-    }
-
-    public void setRule(Rule rule) {
-        this.rule = rule;
-    }
-
-    public String getTriggerCreatedTime() {
-        return triggerCreatedTime;
-    }
-
-    public void setTriggerCreatedTime(String triggerCreatedTime) {
-        this.triggerCreatedTime = triggerCreatedTime;
-    }
-
-    public String getFraudType() {
-        return fraudType;
-    }
-
-    public void setFraudType(String fraudType) {
-        this.fraudType = fraudType;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
-    }
-
-    public String getUcid() {
-        return ucid;
-    }
-
-    public void setUcid(String ucid) {
-        this.ucid = ucid;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
-    public Double getAmountUsd() {
-        return amountUsd;
-    }
-
-    public void setAmountUsd(Double amountUsd) {
-        this.amountUsd = amountUsd;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getMerchantOrderId() {
-        return merchantOrderId;
-    }
-
-    public void setMerchantOrderId(String merchantOrderId) {
-        this.merchantOrderId = merchantOrderId;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public Integer getAccount() {
-        return account;
-    }
-
-    public void setAccount(Integer account) {
-        this.account = account;
-    }
-
-    public String getPaymentEventId() {
-        return paymentEventId;
-    }
-
-    public void setPaymentEventId(String paymentEventId) {
-        this.paymentEventId = paymentEventId;
-    }
-
-    public Attribute getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Attribute attributes) {
-        this.attributes = attributes;
-    }
-
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Rule {
 
         @JsonProperty("ver")
@@ -199,23 +78,13 @@ public class RuleAlertV2 {
         @JsonProperty("name")
         private String name;
 
-        public String getVer() {
-            return ver;
-        }
-
-        public void setVer(String ver) {
-            this.ver = ver;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Attribute {
 
         @JsonProperty("Platform")
@@ -251,92 +120,26 @@ public class RuleAlertV2 {
         @JsonProperty("UcidScore")
         private Double ucidScore;
 
-        public String getPlatform() {
-            return platform;
-        }
+        @JsonProperty("Profile deposits")
+        private String profileDeposits;
 
-        public void setPlatform(String platform) {
-            this.platform = platform;
-        }
+        @JsonProperty("Profile withdrawals")
+        private String profileWithdrawals;
 
-        public String getCreateTime() {
-            return createTime;
-        }
+        @JsonProperty("Shared payment profile")
+        private String sharedPaymentProfile;
 
-        public void setCreateTime(String createTime) {
-            this.createTime = createTime;
-        }
+        @JsonProperty("Crypto withdrawal > 10k")
+        private Boolean cryptoWithdrawal10k;
 
-        public String getCheck() {
-            return check;
-        }
+        @JsonProperty("Crypto deposit")
+        private String cryptoDeposit;
 
-        public void setCheck(String check) {
-            this.check = check;
-        }
+        @JsonProperty("Crypto withdrawal")
+        private String cryptoWithdrawal;
 
-        public String getDate() {
-            return date;
-        }
+        @JsonProperty("Same data: eWallet & KYC")
+        private String sameDataEwalletKyc;
 
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public Long getWithdrawalId() {
-            return withdrawalId;
-        }
-
-        public void setWithdrawalId(Long withdrawalId) {
-            this.withdrawalId = withdrawalId;
-        }
-
-        public String getRegulator() {
-            return regulator;
-        }
-
-        public void setRegulator(String regulator) {
-            this.regulator = regulator;
-        }
-
-        public String getBrand() {
-            return brand;
-        }
-
-        public void setBrand(String brand) {
-            this.brand = brand;
-        }
-
-        public String getPaymentChannel() {
-            return paymentChannel;
-        }
-
-        public void setPaymentChannel(String paymentChannel) {
-            this.paymentChannel = paymentChannel;
-        }
-
-        public String getDetails() {
-            return details;
-        }
-
-        public void setDetails(String details) {
-            this.details = details;
-        }
-
-        public String getUcid() {
-            return ucid;
-        }
-
-        public void setUcid(String ucid) {
-            this.ucid = ucid;
-        }
-
-        public Double getUcidScore() {
-            return ucidScore;
-        }
-
-        public void setUcidScore(Double ucidScore) {
-            this.ucidScore = ucidScore;
-        }
     }
 }

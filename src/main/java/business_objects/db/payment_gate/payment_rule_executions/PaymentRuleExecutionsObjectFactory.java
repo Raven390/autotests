@@ -14,7 +14,7 @@ public class PaymentRuleExecutionsObjectFactory {
         return new PaymentRuleExecutionsObject(
                 event.getPaymentId(), // paymentId
                 Utils.getRandomIntPositive(),                            // runId
-                Utils.getRandomIntPositive(),                            // ruleId
+                1,                            // ruleId
                 "1",                         // ruleVersion
                 Utils.getRandomIntPositive(),                            // ruleEndId
                 Timestamp.from(Instant.now()),// dateCreated

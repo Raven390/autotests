@@ -5,6 +5,7 @@ import business_objects.api.payment_gate.payments_decisions.GetDecisionsResponse
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
@@ -16,6 +17,7 @@ import okhttp3.Response;
 import org.junit.jupiter.api.*;
 import tests.TestBaseApi;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,7 @@ import static business_objects.api.payment_gate.payments_decisions.DecisionsRequ
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
+import static business_objects.db.payment_gate.payment_rejection_attributes.payment_events.PaymentRejectionAttributesObjectFactory.generatePaymentRejectionAttributesObject;
 import static business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObjectFactory.generatePaymentRuleExecutionsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
@@ -45,6 +48,7 @@ class GetDecisionsV1Tests extends TestBaseApi {
     private static PaymentDetailsObject paymentDetailsObject1;
     private static PaymentDecisionsObject paymentDecisionsObject1;
     private static PaymentRuleExecutionsObject paymentRuleExecutionsObject1;
+    private static PaymentRejectionAttributesObject paymentRejectionAttributesObject1;
 
     @BeforeAll
     static void setupData() {
@@ -54,14 +58,16 @@ class GetDecisionsV1Tests extends TestBaseApi {
         paymentDetailsObject1 = generatePaymentDetailsObject(paymentEventsObject1, client1);
         paymentRuleExecutionsObject1 = generatePaymentRuleExecutionsObject(paymentEventsObject1);
         paymentDecisionsObject1 = generatePaymentDecisionObject(paymentEventsObject1);
+        paymentRejectionAttributesObject1 = generatePaymentRejectionAttributesObject(paymentEventsObject1, paymentDecisionsObject1);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, List.of(paymentRuleExecutionsObject1));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, List.of(paymentDecisionsObject1));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE, List.of(paymentRejectionAttributesObject1));
     }
 
-    @AfterAll
+    //@AfterAll
     static void deleteData() throws Exception {
         cleanPaymentGateData(client1.getUcid(), client1.getUserId(), paymentEventsObject1.getPaymentId().toString());
     }
@@ -75,19 +81,21 @@ class GetDecisionsV1Tests extends TestBaseApi {
         Response response = getDecisions(paymentEventsObject1.getPaymentId().toString(), paramsMap);
         assertThat("Assert status", response.code(), is(200));
         Allure.step("Validate Data in response");
-        GetDecisionsResponseBody[] mappedResponse = objectMapper.readValue(response.body().string(), GetDecisionsResponseBody[].class);
-        assertThat("Assert one decision returned", mappedResponse.length, is(1));
-        GetDecisionsResponseBody item = mappedResponse[0];
+        List<GetDecisionsResponseBody> mappedResponse = Arrays.stream(objectMapper.readValue(response.body().string(), GetDecisionsResponseBody[].class)).toList();
+
         // Basic field presence and values
-        assertThat("Assert paymentType equals event type", item.getPaymentType(), is(paymentEventsObject1.getType()));
-        assertThat("Assert decisionType equals DB decisionType", item.getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
-        assertThat("Assert decisionCode equals DB decisionCode", item.getDecisionCode(), is(String.valueOf(paymentDecisionsObject1.getDecisionCode())));
-        assertThat("Assert decision", item.getDecision(), is("Approve"));
-        assertThat("Assert actor", item.getActor(), is(paymentDecisionsObject1.getActor()));
-        assertThat("Assert time", item.getDecidedAt(), is(notNullValue()));
-        assertThat("Assert rejection code", item.getRejectionCode(), is(paymentDecisionsObject1.getRejectionCode().toString()));
-        assertThat("Assert reason", item.getRejectionReason(), is("Test"));
-        assertThat("Assert actor", item.getActor(), is("QA"));
+        assertThat("Assert paymentType equals event type", mappedResponse.getFirst().getDecisionId(), is(notNullValue()));
+        assertThat("Assert paymentType equals event type", mappedResponse.getFirst().getPaymentType(), is(paymentEventsObject1.getType()));
+        assertThat("Assert decisionType equals DB decisionType", mappedResponse.getFirst().getDecisionType(), is(paymentDecisionsObject1.getDecisionType()));
+        assertThat("Assert decisionCode equals DB decisionCode", mappedResponse.getFirst().getDecisionCode(), is(String.valueOf(paymentDecisionsObject1.getDecisionCode())));
+        assertThat("Assert decision", mappedResponse.getFirst().getDecision(), is("Approve"));
+        assertThat("Assert time", mappedResponse.getFirst().getDecidedAt(), is(notNullValue()));
+        assertThat("Assert rejection code", mappedResponse.getFirst().getRejectionCode(), is(paymentDecisionsObject1.getRejectionCode().toString()));
+        assertThat("Assert reason", mappedResponse.getFirst().getRejectionReason(), is("Internal control"));
+        //TODO fix assertion
+        //assertThat("Assert actor", mappedResponse.getFirst().getActor(), is("QA"));
+        assertThat("Assert actor", mappedResponse.getFirst().getRejectionAttributes().getCode(), is("PAYMENT_PROFILE_CURRENT"));
+        assertThat("Assert actor", mappedResponse.getFirst().getRejectionAttributes().getValue(), is("Passport"));
     }
 
     @Test

@@ -1,14 +1,20 @@
 package business_objects.db.payment_gate.d_payment_types;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
-
+@Builder
+@Getter
+@Setter
 public class DPaymentTypesObject {
 
-    public Integer id;
-    public String type;
-    public String dateCreated;
-    public String dateUpdated;
+    private Integer id;
+    private String type;
+    private String dateCreated;
+    private String dateUpdated;
 
     public DPaymentTypesObject() {
     }
@@ -17,38 +23,6 @@ public class DPaymentTypesObject {
         this.id = id;
         this.type = type;
         this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(String dateUpdated) {
         this.dateUpdated = dateUpdated;
     }
 

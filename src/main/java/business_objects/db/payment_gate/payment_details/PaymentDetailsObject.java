@@ -1,10 +1,16 @@
 package business_objects.db.payment_gate.payment_details;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-
+@Builder
+@Getter
+@Setter
 public class PaymentDetailsObject {
 
     private UUID paymentId;
@@ -42,110 +48,6 @@ public class PaymentDetailsObject {
         this.payload = payload;
         this.sourceSystem = sourceSystem;
         this.sourceEnv = sourceEnv;
-        this.dateCreated = dateCreated;
-    }
-
-    public UUID getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(UUID paymentId) {
-        this.paymentId = paymentId;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getRegulator() {
-        return regulator;
-    }
-
-    public void setRegulator(String regulator) {
-        this.regulator = regulator;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getMerchantOrderId() {
-        return merchantOrderId;
-    }
-
-    public void setMerchantOrderId(String merchantOrderId) {
-        this.merchantOrderId = merchantOrderId;
-    }
-
-    public Timestamp getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(Timestamp eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public String getPayload() {
-        return payload;
-    }
-
-    public void setPayload(String payload) {
-        this.payload = payload;
-    }
-
-    public String getSourceSystem() {
-        return sourceSystem;
-    }
-
-    public void setSourceSystem(String sourceSystem) {
-        this.sourceSystem = sourceSystem;
-    }
-
-    public String getSourceEnv() {
-        return sourceEnv;
-    }
-
-    public void setSourceEnv(String sourceEnv) {
-        this.sourceEnv = sourceEnv;
-    }
-
-    public Timestamp getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
     }
 
