@@ -175,6 +175,9 @@ public class ConfigFactory {
     public static final String ABUSE_REGISTRY_V2_BASE_PATH = CONFIG.abuseRegistryV2BasePath();
     public static final String ABUSE_REGISTRY_POST_FRAUD_TYPES = CONFIG.abuseRegistryPostFraudTypes();
     public static final String ABUSE_REGISTRY_POST_ABUSER_STATUS = CONFIG.abuseRegistryPostAbuserStatus();
+    // Verification service
+    public static final String VERIFICATION_SERVICE_BASE_PATH = CONFIG.verificationServiceBasePath();
+    public static final String VERIFICATION_SERVICE_PUT_PROFILES_STATUS = CONFIG.verificationServicePutProfilesStatus();
     // Lark
     public static final String LARK_BASE_URL = CONFIG.larkBaseUrl();
     public static final String LARK_GET_TENANT_TOKEN_PATH = CONFIG.larkGetTenantTokenPath();
@@ -652,6 +655,12 @@ public class ConfigFactory {
 
         @Key("abuseRegistryPostAbuserStatus")
         String abuseRegistryPostAbuserStatus();
+
+        @Key("verificationServiceBasePath")
+        String verificationServiceBasePath();
+
+        @Key("verificationServicePutProfilesStatus")
+        String verificationServicePutProfilesStatus();
 
         @Key("emailOps24DutyUser")
         String emailOps24DutyUser();
