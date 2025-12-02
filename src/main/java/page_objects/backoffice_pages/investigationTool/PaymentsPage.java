@@ -91,6 +91,7 @@ public class PaymentsPage extends AbstractPage {
     private final Locator transactionDetailsTransactionSection;
     private final Locator transactionDetailsPaymentProfileSection;
     private final Locator transactionDetailsRiskAuditSection;
+    private final Locator paymentProfileDrawerSubheader;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -172,6 +173,7 @@ public class PaymentsPage extends AbstractPage {
         this.updateVerificationStatusButton = page.locator("//button[@data-qa='payment_profile__edit_drawer__submit']");
         this.commentInput = page.locator("//*[@data-qa='payment_profile__edit_drawer__comment_input']//textarea");
         this.successToast = page.locator(".g-toast__container").first();
+        this.paymentProfileDrawerSubheader = page.locator("//div[@class='v-payment-profile-drawer-view-header__subheader']");
 
         this.transactionsButton = page.locator("input[type='radio'][value='TRANSACTIONS']");
         this.transactionsFilterButton = page.locator("button[data-qa='trading_open_positions__controls__filter_button']");
@@ -1193,5 +1195,9 @@ public class PaymentsPage extends AbstractPage {
 
     public void clickPaymentProfileButton() {
         paymentProfileButton.click();
+    }
+
+    public String getPaymentProfileDrawerSubheader() {
+        return paymentProfileDrawerSubheader.innerText();
     }
 }

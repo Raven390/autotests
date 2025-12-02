@@ -37,11 +37,12 @@ public class AuditTrailPage extends AbstractPage {
     private final Locator auditTrailDetailsAttributes;
     private final Locator auditTrailDetailsAttributesNames;
     private final Locator auditTrailDetailsAttributesValues;
+    private final Locator auditTrailAlertCounter;
+    private final Locator auditTrailPaymentProfile;
 
     private static final String AUDIT_TRAIL_TAB_LOADING_ELEMENT = "//div[@class='v-investigation-tools-trail__skeleton-container']";
     private static final String AUDIT_TRAIL_FILTER_ITEM_PATTERN = "//div[@role='option']/descendant::*[text()='%s']";
     private static final String AUDIT_TRAIL_FILTER = "//div[@data-qa='audit_trail__filters__action']";
-    private final Locator auditTrailAlertCounter;
 
     public AuditTrailPage(Page page) {
         super(page);
@@ -51,7 +52,7 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailItemV2 = page.locator("//div[@class='v-audit-trail-v2-item__card']");
         this.auditTrailItemHeader = page.locator("//div[@class='v-investigation-tools-trail-card__header']");
         this.auditTrailItemComment = page.locator("//div[@class='v-investigation-tools-trail-card__comment']");
-        this.auditTrailItemHeaderV2 = page.locator("//span[@class='g-text g-text_variant_subheader-2']");
+        this.auditTrailItemHeaderV2 = page.locator("//*[@class='v-audit-trail-v2-content__header']");
         this.auditTrailItemDetails = page.locator("//div[@class='v-investigation-tools-trail-card__details']/span");
         this.auditTrailItemDetailsV2 = page.locator("//div[@class='v-audit-trail-v2-content__attributes']");
         this.auditTrailItemTime = page.locator("//div[@class='v-timeline-item__time']");
@@ -64,6 +65,7 @@ public class AuditTrailPage extends AbstractPage {
         this.auditTrailDetailsAttributes = page.locator("//*[@class='v-audit-trail-v2-details__attribute']");
         this.auditTrailDetailsAttributesNames = auditTrailDetailsAttributes.locator("//*[contains(@class,'g-color-text_color_secondary')]");
         this.auditTrailDetailsAttributesValues = page.locator("//*[contains(@class,'v-audit-trail-v2-details__attribute-value')]");
+        this.auditTrailPaymentProfile = page.locator("//div[@class='v-audit-trail-v2-content__payment-profile']");
     }
 
     public void navigate(String ucid) {
@@ -116,7 +118,7 @@ public class AuditTrailPage extends AbstractPage {
         List<AuditTrailItemV2> auditTrailItems = new ArrayList<>();
         for (int i = 0; i < auditTrailItemV2.count(); i++) {
             AuditTrailItemV2 item = new AuditTrailItemV2();
-            item.setHeader(auditTrailItemV2.nth(i).locator(auditTrailItemHeaderV2).textContent());
+            item.setHeader(auditTrailItemV2.nth(i).locator(auditTrailItemHeaderV2).innerText());
             if (auditTrailItemV2.nth(i).locator(auditTrailItemDetailsV2).count() > 0) {
                 item.setDetails(auditTrailItemV2.nth(i).locator(auditTrailItemDetailsV2).innerText());
             }
@@ -209,6 +211,11 @@ public class AuditTrailPage extends AbstractPage {
             n++;
         }
         assertEquals(expectedAlertsCount, Integer.valueOf(auditTrailAlertCounter.textContent()));
+    }
+
+    @Step("Click payment profile by name")
+    public void clickPaymentProfileByName(String paymentProfile) {
+        auditTrailPaymentProfile.getByText(paymentProfile).first().click();
     }
 }
 
