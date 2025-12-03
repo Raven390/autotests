@@ -71,8 +71,6 @@ class PaymentProfilesVerificationAuditTest extends TestBaseWeb {
     }
 
     @Test
-    @Tag(TEAM_BACKOFFICE)
-    @Tag(LAYER_WEB)
     @AllureId("1900")
     @DisplayName("Payment profile verification audit test")
     void paymentProfileVerificationAuditTest() throws IOException {
