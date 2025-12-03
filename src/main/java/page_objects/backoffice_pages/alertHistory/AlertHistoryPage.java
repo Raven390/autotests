@@ -3,12 +3,14 @@ package page_objects.backoffice_pages.alertHistory;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.WaitForSelectorState;
+import helpers.data.ClientHelper;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
 import page_objects.backoffice_pages.AbstractPage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +28,10 @@ public class AlertHistoryPage extends AbstractPage {
     private final Locator alertHistoryTableHeaders;
     private final Locator filterButton;
     private final Locator applyFilterButton;
+    private final Locator commentTextArea;
+    private final Locator correctResolutionButton;
+    private final Locator clickableRow;
+    private final Locator drawer;
 
     private static final String ALERT_HISTORY_TABLE = "//div[@class='v-table-body']";
     private static final String ALERT_HISTORY_TABLE_CELL_BY_INDEX = "//div[contains(@class,'v-body-row')]/div[%s]";
@@ -35,10 +41,10 @@ public class AlertHistoryPage extends AbstractPage {
     private static final String CREATION_DATE_FILTER_CONTAINER = String.format(FILTER_CONTAINER_BY_TITLE, "Creation date");
     private static final String RESOLUTION_DATE_FILTER_CONTAINER = String.format(FILTER_CONTAINER_BY_TITLE, "Resolution date");
     private static final String INVESTIGATOR_FILTER_CONTAINER = String.format(FILTER_CONTAINER_BY_TITLE, "Investigator");
-
     private static final String LOADER_ANIMATION = ".v-loader";
-    private final Locator clickableRow;
-    private final Locator drawer;
+    private static final String TABLE_ROW_BY_USER_ID = "//*[contains(@class,'v-client-cell-with-link__crm-id') and text()='%s']/ancestor::div[contains(@class,'v-body-row')]";
+    private static final String QC_CHECK_BUTTON_PATTERN = "//button[@data-qa='buttons_list__item__%s']";
+    private static final String REVIEWER_FILTER_PATTERN = "//*[text()='%s']/ancestor::label[contains(@data-qa,'alert_history_filters__reviewers__item')]/descendant::input";
 
     public AlertHistoryPage(Page page) {
         super(page);
@@ -49,6 +55,8 @@ public class AlertHistoryPage extends AbstractPage {
         this.applyFilterButton = page.locator("//span[text()='Apply']/..");
         this.clickableRow = page.locator(".v-body-row_clickable");
         this.drawer = page.locator("[data-qa=\"drawer_body\"]");
+        this.commentTextArea = page.locator("//textarea[@class='g-text-area__control']");
+        this.correctResolutionButton = page.locator("//*[@data-qa='qc_decision_drawer__correct_resolution_button']");
     }
 
     @Override
@@ -184,6 +192,48 @@ public class AlertHistoryPage extends AbstractPage {
             }
         }
         return list;
+    }
+
+    @Step("Open alert history drawer by user id")
+    public void openAlertHistoryDrawerByClient(ClientHelper client) {
+        page.locator(String.format(TABLE_ROW_BY_USER_ID, client.getUserId())).click();
+    }
+
+    @Step("Fill qa qc comment")
+    public void fillQaQcComment(String text) {
+        commentTextArea.fill(text);
+    }
+
+    @Step("Click correct resolution button")
+    public void clickCorrectResolutionButton() {
+        correctResolutionButton.click();
+    }
+
+    @Step("Select qc check result in filter")
+    public void selectQcCheckResultFilter(String text) {
+        page.locator(String.format(QC_CHECK_BUTTON_PATTERN, text)).click();
+    }
+
+    public List<String> getQcResultValues() {
+        return page.locator(String.format(ALERT_HISTORY_TABLE_CELL_BY_INDEX, 8)).all().stream().map(cell -> {
+            Locator danger = cell.locator("div.g-color-text_color_danger");
+            if (danger.count() > 0) return "Incorrect";
+
+            Locator positive = cell.locator("div.g-color-text_color_positive");
+            if (positive.count() > 0) return "Correct";
+
+            return null; // or "Unknown", up to you
+        }).filter(Objects::nonNull).toList();
+    }
+
+    @Step("Select reviewer in filter")
+    public void selectReviewerFilter(String text) {
+        page.locator(String.format(REVIEWER_FILTER_PATTERN, text)).click();
+    }
+
+    @Step("Get list of reviewer values in alert history table")
+    public List<String> getReviewerValues() {
+        return getCellValuesByColumnIndex(9);
     }
 }
 
