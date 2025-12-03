@@ -16,7 +16,6 @@ import static utils.Constants.MITIGATION_CLIENT_GENERAL_RESTRICTION;
 public class RestrictionsAssertsHelper {
 
     public static void checkManualWithdrawalRestrictionApplied(ClientHelper client, String comment) throws Exception {
-        // Verify restriction
         Allure.step("Get client restrictions");
         List<ClientGeneralRestriction> clientGeneralRestrictions = getObjectsFromDB(
                 DbName.POSTGRES, MITIGATION_CLIENT_GENERAL_RESTRICTION, String.format("ucid = '%s'", client.getUcid()), ClientGeneralRestriction.class, 30);

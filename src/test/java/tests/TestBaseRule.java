@@ -9,6 +9,7 @@ import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.kafka.CustomEvent;
+import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
@@ -70,6 +71,11 @@ public class TestBaseRule {
     @Step("Produce open trade event to mt-events topic")
     public static void produceTradeMessageToKafka(TradeEvent event) throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_MT_EVENTS);
+    }
+
+    @Step("Produce Internal hedge event trade event to mt-events topic")
+    public static void produceInternalHedgeMessageToKafka(InternalHedgeEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS);
     }
 
     @Step("Produce registration event to crm-events topic")

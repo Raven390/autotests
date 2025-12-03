@@ -37,6 +37,7 @@ import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTabl
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
+import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
@@ -134,6 +135,7 @@ public class DataHelper {
     public CrmWithdrawalEvent crmWithdrawalEvent;
     public CustomEvent customEvent;
     public MirrorScoreEvent mirrorScoreEvent;
+    public InternalHedgeEvent internalHedgeEvent;
 
     public DataHelper() {
         this.clientFraudTypes = new ArrayList<>();
