@@ -246,12 +246,12 @@ class ReconciliationTests {
 
     @Test
     @AllureId("1743")
-    @DisplayName("Payment reconciliation test 5. Do nothing if decision code is 0")
+    @DisplayName("Payment reconciliation test 5. Do nothing if final desision code is null")
     void ReconciliationTest5() throws Exception {
         crmTbWithdrawalObject5.setStatus("Risk Audit_");
         crmTbWithdrawalObject5.setStatusId(21);
         paymentEventsObject5.setDeliveryStatus("PENDING");
-        paymentDecisionsObject5.setDecisionCode(0);
+        paymentEventsObject5.setFinalDecisionId(null);
 
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject5));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject5));
