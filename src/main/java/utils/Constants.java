@@ -150,6 +150,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
     public static final String KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE = "payment.acknowledge";
+    public static final String KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS = "ml-mirror-trade-events";
     // TABLES
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "consolidated.account_ib_relation_snapshot";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "consolidated.account_ib_relation";

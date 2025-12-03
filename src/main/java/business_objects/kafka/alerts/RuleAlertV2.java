@@ -57,7 +57,13 @@ public class RuleAlertV2 {
     private String currency;
 
     @JsonProperty("account")
-    private Integer account;
+    private String account;
+
+    @JsonProperty("symbol")
+    private String symbol;
+
+    @JsonProperty("serverId")
+    private String serverId;
 
     @JsonProperty("paymentEventId")
     private String paymentEventId;
@@ -86,6 +92,12 @@ public class RuleAlertV2 {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Attribute {
+
+        @JsonProperty("account")
+        private String account;
+
+        @JsonProperty("serverId")
+        private String serverId;
 
         @JsonProperty("Platform")
         private String platform;
@@ -117,6 +129,9 @@ public class RuleAlertV2 {
         @JsonProperty("Ucid")
         private String ucid;
 
+        @JsonProperty("ucid")
+        private String ucid1;
+
         @JsonProperty("UcidScore")
         private Double ucidScore;
 
@@ -140,6 +155,5 @@ public class RuleAlertV2 {
 
         @JsonProperty("Same data: eWallet & KYC")
         private String sameDataEwalletKyc;
-
     }
 }
