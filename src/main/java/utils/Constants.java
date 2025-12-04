@@ -260,6 +260,7 @@ public class Constants {
     public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
     public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";
     public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE = "postgres.paymentgate.tmp_rule_decisions";
+    public static final String VE_VERIFICATION_HISTORY = "postgres.ve.verification_history";
     public static final String EQUITY_HISTORY_TABLE = "consolidated.mt___equity_history";
     public static final String AUDIT_EVENT_TABLE = "postgres.au.event";
     // UI

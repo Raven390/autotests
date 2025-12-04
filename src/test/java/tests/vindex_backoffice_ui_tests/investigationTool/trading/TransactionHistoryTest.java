@@ -16,9 +16,11 @@ import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.db.verification_service_db.VerificationHistory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import helpers.data.ClientHelper;
+import helpers.data.enums.VerificationStatus;
 import helpers.database.DbName;
 import helpers.kafka.KafkaHelper;
 import io.qameta.allure.AllureId;
@@ -30,6 +32,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObjectFactory.generatePaymentDecisionObject;
@@ -58,6 +61,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
     private static final CrmTbUserObject crmTbUser = generateUserByClient(client1);
     private static final CrmTbAccountObject account1 = generateCrmTbAccountDataForUi(client1);
     private static final CrmTbAccountObject account2 = generateCrmTbAccountDataForUi(client1);
+    private static final ClientHelper client2 = getRandomVantageClientAllFields();
+    private static final CrmTbUserObject crmTbUser2 = generateUserByClient(client2);
+    private static final CrmTbAccountObject account21 = generateCrmTbAccountDataForUi(client2);
+    private static final CrmTbAccountObject account22 = generateCrmTbAccountDataForUi(client2);
     private static final DecimalFormat formatter = new DecimalFormat("#,##0.##");
     private static MtAccountObject mtAccount1;
     private static MtMt4TradesCoercedObject trade1;
@@ -66,11 +73,14 @@ public class TransactionHistoryTest extends TestBaseWeb {
     private static CrmTbDepositEntity deposit1;
     private static CrmTbDepositEntity deposit2;
     private static CrmTbDepositEntity deposit3;
+    private static CrmTbDepositEntity deposit23;
     private static CrmTbWithdrawalEntity withdrawal1;
     private static CrmTbWithdrawalEntity withdrawal2;
     private static CrmTbWithdrawalEntity withdrawal3;
     private static CrmTbCreditCardObject cardObject;
+    private static CrmTbCreditCardObject cardObject2;
     private static CrmTbWithdrawAccountObject crmTbWithdrawAccountObject;
+    private static CrmTbWithdrawAccountObject crmTbWithdrawAccountObject2;
 
     //PGS
     private static PaymentEventsObject paymentEventsObject1;
@@ -99,8 +109,14 @@ public class TransactionHistoryTest extends TestBaseWeb {
 
         insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser));
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account1, account2));
+        insertObjectsToDb(CRM_USER_TABLE_NAME, List.of(crmTbUser2));
+        insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, List.of(account21, account22));
         insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account1), generateAccountForMtByAccount(account2)));
+        insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, List.of(generateAccountForMtByAccount(account21), generateAccountForMtByAccount(account22)));
         insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount1, mtAccount2));
+        var mtAccount21 = generateMtAccountByCrmTbAccount(account1);
+        var mtAccount22 = generateMtAccountByCrmTbAccount(account2);
+        insertObjectsToDb(MT_ACCOUNT_TABLE_NAME, List.of(mtAccount21, mtAccount22));
         insertObjectsToDb(MT4_TRADES_COERCED_TABLE_NAME, List.of(trade1, tradeWithdrawal, trade2, tradeWithdrawal2));
         MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client1);
         insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1));
@@ -111,6 +127,12 @@ public class TransactionHistoryTest extends TestBaseWeb {
         cardObject.cardBeginSixDigits = "454793";
         insertObjectsToDb(CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, List.of(crmTbWithdrawAccountObject));
         insertObjectToDb(CRM_TB_CREDIT_CARD_TABLE_NAME, cardObject);
+
+        crmTbWithdrawAccountObject2 = CrmTbWithdrawAccountObjectFactory.generateByClient(client2);
+        cardObject2 = CrmTbCreditCardObjectFactory.generateByClient(client2, getRandomIntPositive());
+        cardObject2.cardBeginSixDigits = "454793";
+        insertObjectsToDb(CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, List.of(crmTbWithdrawAccountObject2));
+        insertObjectToDb(CRM_TB_CREDIT_CARD_TABLE_NAME, cardObject2);
 
         var prevYear = OffsetDateTime.now().minusYears(1);
         //tb
@@ -139,6 +161,17 @@ public class TransactionHistoryTest extends TestBaseWeb {
         deposit3.setStatusGroup("Fail");
         insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit3);
 
+        deposit23 = CrmTbDepositEntityFactory.generateCrmTbDepositEntityByClient(client2);
+        deposit23.setAccount(BigInteger.valueOf(client1.getTradingAccount2()));
+        deposit23.setCreditCardId((long) cardObject.id);
+        deposit23.setFirstSixDigits(cardObject.cardBeginSixDigits);
+        deposit23.setPaymentFamily("paymentFamily_X");
+        deposit23.setPaymentProfile("paymentProfile_X");
+        deposit23.setPaymentProfileKey("paymentProfile_X");
+        deposit23.setPaymentProfileMasked("paymen****file_X");
+        deposit23.setStatusGroup("Fail");
+        insertObjectToDb(CRM_DEPOSIT_TABLE_NAME, deposit23);
+
         withdrawal1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client1);
         withdrawal1.setCreateTime(prevYear);
         withdrawal1.setCreateTimeUtc(prevYear);
@@ -163,6 +196,8 @@ public class TransactionHistoryTest extends TestBaseWeb {
         withdrawal3.setPaymentProfile("paymentProfile_X");
         withdrawal3.setPaymentProfileKey("paymentProfile_X");
         withdrawal3.setPaymentProfileMasked("paymen****file_X");
+        withdrawal3.setReversedAmount(BigDecimal.valueOf(10d));
+        withdrawal3.setReversedAmountUsd(BigDecimal.valueOf(10d));
         withdrawal3.setStatusGroup("Fail");
         insertObjectToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, withdrawal3);
 
@@ -212,6 +247,10 @@ public class TransactionHistoryTest extends TestBaseWeb {
         alertPayment2.setMerchantOrderId(withdrawal3.getOrderNumber());
         kafka.produceMessage(alertPayment1.getId().toString(), objectMapper.writeValueAsString(alertPayment1), KAFKA_TOPIC_ALERTS);
         kafka.produceMessage(alertPayment2.getId().toString(), objectMapper.writeValueAsString(alertPayment2), KAFKA_TOPIC_ALERTS);
+
+        //ver server
+        var verificationHistory = VerificationHistory.builder().ucid(client1.getUcid()).paymentProfileKey(deposit3.getPaymentProfileKey()).status(VerificationStatus.VERIFIED).comment("comment").changedByUsername("TEST").changedBySystem("TEST").changedAt(OffsetDateTime.of(2025, 11, 18, 15, 28, 56, 461, ZoneOffset.UTC)).build();
+        insertObjectsToDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, List.of(verificationHistory));
     }
 
     @AfterAll
@@ -219,16 +258,21 @@ public class TransactionHistoryTest extends TestBaseWeb {
         deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
         deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
         deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client1.getUcid()));
+        deleteEntryFromDb(CRM_USER_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteEntryFromDb(MT4_TRADES_COERCED_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
+        deleteEntryFromDb(MT5_POSITIONS_TABLE_NAME, String.format("ucid = '%s'", client2.getUcid()));
 
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit1.getTransferId()));
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit2.getTransferId()));
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), deposit3.getTransferId()));
+        deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s' AND transfer_id='%d'", client2.getUcid(), deposit23.getTransferId()));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal1.getTransferId()));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal2.getTransferId()));
         deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, String.format("ucid = '%s' AND transfer_id='%d'", client1.getUcid(), withdrawal3.getTransferId()));
 
         deleteEntryFromDb(CRM_TB_WITHDRAW_ACCOUNT_TABLE_NAME, String.format("source_id_st = %d AND id = %d", crmTbWithdrawAccountObject.sourceIdSt, crmTbWithdrawAccountObject.id));
         deleteEntryFromDb(CRM_TB_CREDIT_CARD_TABLE_NAME, String.format("source_id_st = %d AND user_id = %d AND id = %d", cardObject.sourceIdSt, cardObject.userId, cardObject.id));
+        deleteEntryFromDb(CRM_TB_CREDIT_CARD_TABLE_NAME, String.format("source_id_st = %d AND user_id = %d AND id = %d", cardObject2.sourceIdSt, cardObject2.userId, cardObject2.id));
 
 
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE, String.format("payment_id='%s'", paymentEventsObject1.getPaymentId().toString()));
@@ -247,6 +291,7 @@ public class TransactionHistoryTest extends TestBaseWeb {
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format("ucid = '%s'", client1.getUcid()));
 
         closeAlert(crmTbUser.ucid);
+        deleteEntryFromDb(DbName.POSTGRES, VE_VERIFICATION_HISTORY, String.format("ucid = '%s'", client1.getUcid()));
     }
 
     @Test
@@ -568,6 +613,121 @@ public class TransactionHistoryTest extends TestBaseWeb {
         assertThat(riskAuditDataMap.get("Message"), org.hamcrest.Matchers.is("Test"));
 
         paymentsPage.closeTransactionDetailsDrawer();
+    }
+
+    @Test
+    @AllureId("1904")
+    @DisplayName("Transaction history - transactions filter by payment profile in drawer")
+    void transactions_payment_profiles_drawer_test() {
+        openTransactionPage();
+        paymentsPage.clickTransactionsShowProfilesButton();
+        paymentsPage.clickTransactionPaymentProfile("paymentProfile_X");
+
+        var allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
+
+        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+
+        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+
+        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+
+        paymentsPage.clickTransactionPaymentProfile("paymentProfile");
+
+        allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(6));
+
+        paymentsPage.clickTransactionsProfilesPanelToggleButton();
+        paymentsPage.clickTransactionsFilterButton();
+        paymentsPage.removeTransactionFilterByPaymentProfile("paymentFamily", "paymentProfile");
+        paymentsPage.clickTransactionsFilterButton();
+        paymentsPage.removeTransactionFilterByPaymentProfile("paymentFamily_X", "paymentProfile_X");
+
+        allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(6));
+    }
+
+    @Test
+    @AllureId("1905")
+    @DisplayName("Transaction history - transactions filter by payment family in drawer")
+    void transactions_payment_family_drawer_test() {
+        openTransactionPage();
+        paymentsPage.clickTransactionsShowProfilesButton();
+        paymentsPage.clickTransactionPaymentFamily("paymentFamily_X");
+
+        var allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(2));
+
+        var depositRow3 = paymentsPage.getTransactionByOrderNumber(deposit3.getOrderNumber());
+        var withdrawalRow3 = paymentsPage.getTransactionByOrderNumber(withdrawal3.getOrderNumber());
+
+        assertThat("Deposit 3 type should be DepositFail", depositRow3.type(), org.hamcrest.Matchers.equalTo("DepositFail"));
+        assertThat("Deposit 3 account should match", depositRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat("Deposit 3 submitted amount should match", depositRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("%s %s", formatter.format(deposit3.getAmount()), deposit3.getCurrency())));
+        assertThat("Deposit 3 processed amount should match", depositRow3.processed(), org.hamcrest.Matchers.is(Matchers.emptyString()));
+
+        assertThat("Withdrawal 3 type should be WithdrawalFail", withdrawalRow3.type(), org.hamcrest.Matchers.equalTo("WithdrawalFail"));
+        assertThat("Withdrawal 3 account should match", withdrawalRow3.account(), org.hamcrest.Matchers.equalTo(String.valueOf(account2.account)));
+        assertThat("Withdrawal 3 submitted amount should match", withdrawalRow3.submitted(), org.hamcrest.Matchers.containsString(String.format("-%s %s", formatter.format(withdrawal3.getAmount()), withdrawal3.getCurrency())));
+        assertThat("Withdrawal 3 risk audit shoud be fraud_detection", withdrawalRow3.riskAudit(), org.hamcrest.Matchers.equalTo("fraud_detection"));
+
+        paymentsPage.clickTransactionPaymentFamily("paymentFamily");
+
+        allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(6));
+
+        paymentsPage.clickTransactionsProfilesPanelToggleButton();
+        paymentsPage.clickTransactionsFilterButton();
+        paymentsPage.removeTransactionFilterByPaymentFamily("paymentFamily");
+        paymentsPage.clickTransactionsFilterButton();
+        paymentsPage.removeTransactionFilterByPaymentFamily("paymentFamily_X");
+
+        allTransactions = paymentsPage.getAllTransactions();
+        assertThat(allTransactions.size(), org.hamcrest.Matchers.equalTo(6));
+    }
+
+    @Test
+    @AllureId("1906")
+    @DisplayName("Transaction history - transactions payment profile details drawer")
+    void transactions_payment_profile_details_drawer_test() {
+        openTransactionPage();
+
+        paymentsPage.clickTransactionPaymentProfileLinkByOrderNumber(deposit3.getOrderNumber());
+        assertThat(paymentsPage.getPaymentProfileDrawerName(), org.hamcrest.Matchers.equalTo(deposit3.getPaymentProfile()));
+
+        var deposits = paymentsPage.getPaymentProfileDrawerProfileTotalsDeposits();
+        var withdrawals = paymentsPage.getPaymentProfileDrawerProfileTotalsWithdrawals();
+        var netDeposits = paymentsPage.getPaymentProfileDrawerProfileTotalsNetDeposits();
+        String expectedDeposits = String.format("%s USD1 deposit", decimalFormat.format(deposit3.getAmount()));
+        assertThat(deposits, org.hamcrest.Matchers.equalTo(expectedDeposits));
+
+        var wdAmount = withdrawal3.getAmount().subtract(withdrawal3.getReversedAmount());
+        String expectedWithdrawals = String.format("%s %s1 withdrawal", decimalFormat.format(wdAmount), withdrawal3.getCurrency());
+        assertThat(withdrawals, org.hamcrest.Matchers.equalTo(expectedWithdrawals));
+
+        String expectedNetDeposits = String.format("%s %s", decimalFormat.format(deposit3.getAmount().subtract(wdAmount)), deposit3.getCurrency());
+        assertThat(netDeposits, org.hamcrest.Matchers.equalTo(expectedNetDeposits));
+        var detailsMap = paymentsPage.getPaymentProfileDrawerDetails();
+        assertThat(detailsMap.get("Family"), org.hamcrest.Matchers.equalTo(deposit3.getPaymentFamily()));
+        assertThat(detailsMap.get("Type"), org.hamcrest.Matchers.equalTo(deposit3.getPaymentType()));
+        assertThat(detailsMap.get("System"), org.hamcrest.Matchers.equalTo(deposit3.getPaymentChannel()));
+        var verStatusMap = paymentsPage.getPaymentProfileDrawerVerification();
+        var status = verStatusMap.get("Status");
+        assertThat(status, org.hamcrest.Matchers.equalTo(VerificationStatus.VERIFIED.getDisplayName()));
+
+        paymentsPage.clickPaymentProfileDrawerConnectedClientsTab();
+
+        var crmId = client2.getUcid().split("-")[1];
+        var data = paymentsPage.getConnectedClientRowByCrmId(client2.getUcid().split("-")[1]);
+        assertThat(data.get(0), org.hamcrest.Matchers.equalTo(crmTbUser2.firstName + " " + crmTbUser2.lastName + crmId));
+        paymentsPage.closePaymentProfileDrawer();
     }
 
     void openTransactionPage() {

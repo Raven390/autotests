@@ -9,6 +9,7 @@ import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.net.InetAddress;
@@ -446,7 +447,7 @@ public class DbHelper {
                     // Replace placeholders with actual values for debugging.
                     int questionMarkPos = filledQuery.indexOf("?", placeholderIndex);
                     String replacement;
-                    if (value instanceof String || value instanceof LocalDate || value instanceof LocalDateTime) {
+                    if (value instanceof String || value instanceof LocalDate || value instanceof LocalDateTime || value instanceof Enum || value instanceof OffsetDateTime) {
                         replacement = "'" + value + "'";
                     } else {
                         replacement = value.toString();
@@ -462,6 +463,9 @@ public class DbHelper {
                         statement.setDate(parameterIndex++, Date.valueOf((LocalDate) value));
                     } else if (value instanceof LocalDateTime) {
                         statement.setTimestamp(parameterIndex++, Timestamp.valueOf((LocalDateTime) value));
+                    } else if (value instanceof Enum) {
+                        String enumValue = ((Enum<?>) value).name();
+                        statement.setString(parameterIndex++, enumValue);
                     } else
                         if ("payload".equalsIgnoreCase(columnName) && tableName.toLowerCase().endsWith("payment_details")) {
                             // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
