@@ -92,6 +92,18 @@ public class PaymentsPage extends AbstractPage {
     private final Locator transactionDetailsPaymentProfileSection;
     private final Locator transactionDetailsRiskAuditSection;
     private final Locator paymentProfileDrawerSubheader;
+    private final Locator transactionsShowProfilesButton;
+    private final Locator transactionsProfilesPanelToggleButton;
+    private final Locator paymentProfileDrawerName;
+    private final Locator paymentProfileDrawerOverviewTab;
+    private final Locator paymentProfileDrawerConnectedClientsTab;
+    private final Locator paymentProfileDrawerCloseButton;
+    private final Locator paymentProfileDrawerDetailsRows;
+    private final Locator paymentProfileDrawerVerificationRows;
+    private final Locator paymentProfileDrawerProfileTotalsDeposits;
+    private final Locator paymentProfileDrawerProfileTotalsWithdrawals;
+    private final Locator paymentProfileDrawerProfileTotalsNetDeposits;
+    private final Locator connectedClientsTableRows;
 
     private static final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String FINANCIAL_TRANSACTIONS_SELECTOR = "//div[@class='v-payments-summary__chart']//div[text()='Financial transactions']";
@@ -193,6 +205,18 @@ public class PaymentsPage extends AbstractPage {
         this.transactionDetailsTransactionSection = page.locator("//div[@class='v-transaction-history-details__attributes'][1]");
         this.transactionDetailsPaymentProfileSection = page.locator("//div[@class='v-transaction-history-details__attributes'][2]");
         this.transactionDetailsRiskAuditSection = page.locator("//div[@class='v-transaction-history-details__attributes'][3]");
+        this.transactionsShowProfilesButton = page.locator("//*[@data-qa='trading_open_positions__controls__profiles_button']");
+        this.transactionsProfilesPanelToggleButton = page.locator("//*[@data-qa='transaction_history__profiles_panel_toggle']");
+        this.paymentProfileDrawerName = page.locator(".v-payment-profile-drawer-view-header__subheader .g-text_variant_body-2").first();
+        this.paymentProfileDrawerOverviewTab = page.locator("//div[@role='tab' and @title='Overview']");
+        this.paymentProfileDrawerConnectedClientsTab = page.locator("//div[@role='tab' and @title='Connected clients']");
+        this.paymentProfileDrawerCloseButton = page.locator("//*[@data-qa='drawer_header__close_button']");
+        this.paymentProfileDrawerDetailsRows = page.locator(".v-payment-profile-overview__details").first().locator(".v-payment-profile-overview__detail-row");
+        this.paymentProfileDrawerVerificationRows = page.locator(".v-payment-profile-overview__details").last().locator(".v-payment-profile-overview__detail-row");
+        this.paymentProfileDrawerProfileTotalsDeposits = page.locator("[data-qa='drawer_payment_profile_details_total_deposit']");
+        this.paymentProfileDrawerProfileTotalsWithdrawals = page.locator("[data-qa='drawer_payment_profile_details_total_withdrawals']");
+        this.paymentProfileDrawerProfileTotalsNetDeposits = page.locator("[data-qa='drawer_payment_profile_details_total_net_deposit']");
+        this.connectedClientsTableRows = page.locator(".v-body-row[data-qa*='virtualized_table__rows__']");
     }
 
     @Step("Open users operations tab")
@@ -227,7 +251,134 @@ public class PaymentsPage extends AbstractPage {
     @Step("Click transactions filter button")
     public void clickTransactionsFilterButton() {
         transactionsFilterButton.click();
-        page.waitForTimeout(500);
+    }
+
+    @Step("Click transactions show profiles button")
+    public void clickTransactionsShowProfilesButton() {
+        transactionsShowProfilesButton.click();
+    }
+
+    @Step("Click transactions profiles panel toggle button")
+    public void clickTransactionsProfilesPanelToggleButton() {
+        transactionsProfilesPanelToggleButton.click();
+    }
+
+    @Step("Click transaction payment family: {familyName}")
+    public void clickTransactionPaymentFamily(String familyName) {
+        Locator familyLocator = page.locator(String.format("//*[@data-qa='transaction_history__payment_family__%s']", familyName));
+        familyLocator.scrollIntoViewIfNeeded();
+        familyLocator.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Click transaction payment profile: {profileName}")
+    public void clickTransactionPaymentProfile(String profileName) {
+        Locator profileLocator = page.locator(String.format("//*[@data-qa='transaction_history__payment_profile__%s']", profileName));
+        profileLocator.scrollIntoViewIfNeeded();
+        profileLocator.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Remove transaction filter by payment family: {familyName}")
+    public void removeTransactionFilterByPaymentFamily(String familyName) {
+        String dataQa = String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, familyName);
+        Locator filterLabel = page.locator(String.format("//*[@data-qa='%s']", dataQa));
+        Locator removeButton = filterLabel.locator("button.g-label__addon");
+        removeButton.click();
+        transactionFilterApplyButton.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Remove transaction filter by payment profile: {profileName}")
+    public void removeTransactionFilterByPaymentProfile(String familyName, String profileName) {
+        String dataQa = String.format("transaction_history__filters__attributes__checked_item__%s:%s", familyName, profileName);
+        Locator filterLabel = page.locator(String.format("//*[@data-qa='%s']", dataQa));
+        Locator removeButton = filterLabel.locator("button.g-label__addon");
+        removeButton.click();
+        transactionFilterApplyButton.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Click on transaction payment profile link by order number: {orderNumber}")
+    public void clickTransactionPaymentProfileLinkByOrderNumber(String orderNumber) {
+        Locator methodCell = page.locator(String.format("//*[@data-qa='transaction_history__table__rows__%s__method']", orderNumber));
+        Locator paymentProfileLink = methodCell.locator(".v-transaction-history__payment-profile-link");
+        paymentProfileLink.scrollIntoViewIfNeeded();
+        paymentProfileLink.click();
+        waitForPageToLoad();
+    }
+
+    @Step("Get payment profile drawer name")
+    public String getPaymentProfileDrawerName() {
+        return paymentProfileDrawerName.textContent().trim();
+    }
+
+    @Step("Click payment profile drawer Overview tab")
+    public void clickPaymentProfileDrawerOverviewTab() {
+        paymentProfileDrawerOverviewTab.click();
+    }
+
+    @Step("Click payment profile drawer Connected clients tab")
+    public void clickPaymentProfileDrawerConnectedClientsTab() {
+        paymentProfileDrawerConnectedClientsTab.click();
+    }
+
+    @Step("Close payment profile drawer")
+    public void closePaymentProfileDrawer() {
+        paymentProfileDrawerCloseButton.click();
+    }
+
+    @Step("Get payment profile drawer profile totals deposits")
+    public String getPaymentProfileDrawerProfileTotalsDeposits() {
+        return this.paymentProfileDrawerProfileTotalsDeposits.textContent().trim();
+    }
+
+    @Step("Get payment profile drawer profile totals withdrawals")
+    public String getPaymentProfileDrawerProfileTotalsWithdrawals() {
+        return this.paymentProfileDrawerProfileTotalsWithdrawals.textContent().trim();
+    }
+
+    @Step("Get payment profile drawer profile totals net-deposits")
+    public String getPaymentProfileDrawerProfileTotalsNetDeposits() {
+        return this.paymentProfileDrawerProfileTotalsNetDeposits.textContent().trim();
+    }
+
+    @Step("Get payment profile drawer details")
+    public Map<String, String> getPaymentProfileDrawerDetails() {
+        Map<String, String> details = new LinkedHashMap<>();
+        for (int i = 0; i < paymentProfileDrawerDetailsRows.count(); i++) {
+            Locator row = paymentProfileDrawerDetailsRows.nth(i);
+            String key = row.locator(".g-text_variant_body-1").textContent().trim();
+            String value = row.locator(".v-payment-profile-overview__detail-value").textContent().trim();
+            details.put(key, value);
+        }
+        return details;
+    }
+
+    @Step("Get payment profile drawer verification")
+    public Map<String, String> getPaymentProfileDrawerVerification() {
+        Map<String, String> verification = new LinkedHashMap<>();
+        for (int i = 0; i < paymentProfileDrawerVerificationRows.count(); i++) {
+            Locator row = paymentProfileDrawerVerificationRows.nth(i);
+            String key = row.locator(".g-text_variant_body-1").textContent().trim();
+            String value = row.locator(".v-payment-profile-overview__detail-value").textContent().trim();
+            verification.put(key, value);
+        }
+        return verification;
+    }
+
+    @Step("Get connected client row data by CRM ID: {crmId}")
+    public List<String> getConnectedClientRowByCrmId(String crmId) {
+        List<String> rowData = new ArrayList<>();
+        Locator row = connectedClientsTableRows.filter(new Locator.FilterOptions().setHasText(crmId));
+        row.scrollIntoViewIfNeeded();
+
+        Locator cells = row.locator(".v-body-cell");
+        for (int i = 0; i < cells.count(); i++) {
+            rowData.add(cells.nth(i).textContent().trim());
+        }
+
+        return rowData;
     }
 
     @Step("Filter transactions by date: Today")
