@@ -27,6 +27,16 @@ public class RestrictionHelper {
         assertEquals(200, response.code());
     }
 
+    @Step("Set restriction through API")
+    public static void setRestrictionAPIGeneral(String ucid, String code, String comment) throws IOException {
+        Allure.step("Set restriction through API GENERAL");
+        PostRestrictionRequestBody postRestrictionRequestBody = new PostRestrictionRequestBody(
+                ucid, code, "GENERAL", null, null, comment, new PostRestrictionRequestBody.UpdatedBy("test", "automation")
+        );
+        Response response = postRestriction(postRestrictionRequestBody);
+        assertEquals(200, response.code());
+    }
+
     @Step
     public static void setRestrictionAPITrade(String ucid, int accId, int serverId, String code) throws IOException {
         Allure.step("Set restriction through API TRADE");

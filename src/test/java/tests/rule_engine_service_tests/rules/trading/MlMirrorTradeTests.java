@@ -1,5 +1,6 @@
 package tests.rule_engine_service_tests.rules.trading;
 
+import business_objects.api.mitigation_service.GetRestrictionResponseBody;
 import business_objects.db.backoffice_db.alert.Alert;
 import business_objects.kafka.alerts.RuleAlertV2;
 import helpers.data.DataHelper;
@@ -10,15 +11,19 @@ import org.junit.jupiter.api.*;
 import tests.TestBaseRule;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static business_objects.api.mitigation_service.MitigationServiceRequest.enableCRMEmulator;
+import static business_objects.api.mitigation_service.MitigationServiceRequest.getRestrictionsByUcid;
 import static helpers.asserts.RestrictionsAssertsHelper.checkManualWithdrawalRestrictionApplied;
+import static helpers.data.enums.Restriction.MANUAL_WITHDRAWAL_REVIEW;
 import static helpers.data.rules.trading.MlMirrodTradeRuleDataFactory.setupMlMirrorTradeRuleData;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static utils.Constants.*;
 
 @Feature(FEATURE_RULE_ENGINE_SERVICE)
@@ -48,10 +53,11 @@ class MlMirrorTradeTests extends TestBaseRule {
     void MlMirrorTradeRuleTest1() throws Exception {
         DataHelper data = dbDataMap.get("1");
 
-        produceMirrorScoreMessageToKafka(data.mirrorScoreEvent);
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
         checkElementId("Event_end_3", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
     }
+
 
     @Test
     @AllureId("1755")
@@ -59,29 +65,74 @@ class MlMirrorTradeTests extends TestBaseRule {
     void MlMirrorTradeRuleTest2() throws Exception {
         DataHelper data = dbDataMap.get("2");
 
-        produceMirrorScoreMessageToKafka(data.mirrorScoreEvent);
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
         checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
     }
 
+    @Test
+    @AllureId("")
+    @DisplayName("ML Mirror trade rule. alert and restriction if user has ucidScore > 0.7. ElementId: Event_1flqa1d")
+    void MlMirrorTradeRuleTest5() throws Exception {
+        DataHelper data = dbDataMap.get("5");
+
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
+
+        checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+        checkElementId("WR_MODEL", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
+
+        //Verify alert
+        List<RuleAlertV2> alerts = getUserAlertsV2FromKafka(data.clientHelper, "Mirror Trading");
+        assertThat("Verify amount of user alerts in kafka", alerts.size(), is(1));
+        assertThat("Verify alert", alerts.getFirst().getAlertId(), is(data.mirrorScoreEvent.getId()));
+        assertThat("Verify alert", alerts.getFirst().getTimestamp(), matchesPattern("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"));
+        assertThat("Verify alert", alerts.getFirst().getType(), is("TRADING"));
+        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("ML Mirror Model"));
+        assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), is("123"));
+        assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.mirrorScoreEvent.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().getFraudType(), is("HEDGING"));
+        assertThat("Verify alert", alerts.getFirst().getReason(), is("ML Model suspects the client of Mirror Trading (on ML Model trigger)"));
+        assertThat("Verify alert", alerts.getFirst().getRule().getName(), is("Mirror Trading"));
+        assertThat("Verify alert", alerts.getFirst().getRule().getVer(), notNullValue());
+        assertThat("Verify alert", alerts.getFirst().getAttributes().getUcid(), is(data.mirrorScoreEvent.getUcid()));
+        assertThat("Verify alert", alerts.getFirst().getAttributes().getUcidScore(), is(data.mirrorScoreEvent.getUcidScore()));
+
+        checkManualWithdrawalRestrictionApplied(data.clientHelper, "ML Model suspects the client of Mirror Trading (on ML Model trigger)");
+
+        List<Alert> dbAlerts = getUserAlertsFromDb(data.clientHelper);
+        assertThat("Verify amount of alerts in BO DB", dbAlerts.size(), is(1));
+
+        List<GetRestrictionResponseBody> clientRestrictions = Arrays.asList(
+                objectMapper.readValue(getRestrictionsByUcid(data.clientHelper.getUcid()).body().string(), GetRestrictionResponseBody[].class));
+        assertEquals(1, clientRestrictions.size());
+
+        GetRestrictionResponseBody restriction = clientRestrictions.getFirst();
+        assertEquals(MANUAL_WITHDRAWAL_REVIEW.getCode(), restriction.getCode());
+        assertEquals("APPLIED", restriction.getStatus());
+    }
+
+    @Disabled("flow changed")
+    @Deprecated
     @Test
     @AllureId("1756")
     @DisplayName("ML Mirror trade rule. Exit if user has ucidScore < 0.7. ElementId: Event_09pix7t")
     void MlMirrorTradeRuleTest3() throws Exception {
         DataHelper data = dbDataMap.get("3");
 
-        produceMirrorScoreMessageToKafka(data.mirrorScoreEvent);
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
         checkElementId("Event_09pix7t", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
     }
 
+    @Disabled("flow changed")
+    @Deprecated
     @Test
     @AllureId("1757")
     @DisplayName("ML Mirror trade rule. alert and restriction if user has ucidScore > 0.7. ElementId: Event_1flqa1d")
     void MlMirrorTradeRuleTest4() throws Exception {
         DataHelper data = dbDataMap.get("4");
 
-        produceMirrorScoreMessageToKafka(data.mirrorScoreEvent);
+        produceMlMirrorTradeEventToKafka(data.mirrorScoreEvent);
 
         checkElementId("Event_1flqa1d", data.mirrorScoreEvent.getId(), "ml_mirror_trade");
 
