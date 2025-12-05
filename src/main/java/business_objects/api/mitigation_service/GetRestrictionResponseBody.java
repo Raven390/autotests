@@ -1,9 +1,11 @@
 package business_objects.api.mitigation_service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.util.Objects;
 
+@Data
 public class GetRestrictionResponseBody {
 
     @JsonProperty("id")
@@ -44,6 +46,9 @@ public class GetRestrictionResponseBody {
 
     @JsonProperty("serverId")
     public String serverId;
+
+    @JsonProperty("editable")
+    public String editable;
 
     public GetRestrictionResponseBody() {
     }

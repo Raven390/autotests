@@ -141,6 +141,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_CRM_EVENTS = "crm-events";
     public static final String KAFKA_TOPIC_CUSTOM_EVENTS = "custom-events";
     public static final String KAFKA_TOPIC_UCID_MIRROR_SCORE = "ucid_mirror_score";
+    public static final String KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS = "ml-mirror-trade-events";
     public static final String KAFKA_TOPIC_CRM_PAYMENTS = "crm-payment";
     public static final String KAFKA_TOPIC_MT_4_TRADE_RECORD = "mt4_trade_record";
     public static final String KAFKA_TOPIC_MT_5_DEAL_PERFORM = "mt5_DealPerform";
@@ -150,7 +151,6 @@ public class Constants {
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST = "account.deduction.request";
     public static final String KAFKA_TOPIC_ACCOUNT_DEDUCTION_REQUEST_RESPONSE = "account.deduction.requestResponse";
     public static final String KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE = "payment.acknowledge";
-    public static final String KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS = "ml-mirror-trade-events";
     // TABLES
     public static final String ACCOUNT_IB_RELATION_SNAPSHOT_TABLE_NAME = "consolidated.account_ib_relation_snapshot";
     public static final String ACCOUNT_IB_RELATION_TABLE_NAME = "consolidated.account_ib_relation";

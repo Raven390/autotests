@@ -98,6 +98,11 @@ public class TestBaseRule {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_UCID_MIRROR_SCORE);
     }
 
+    @Step("Produce ")
+    public static void produceMlMirrorTradeEventToKafka(MirrorScoreEvent event) throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS);
+    }
+
     @Step("Get User Alerts from Kafka topic 'alerts'")
     public static List<RuleAlert> getUserAlertsFromKafka(ClientHelper client) throws InterruptedException,
             JsonProcessingException {

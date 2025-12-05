@@ -1,11 +1,11 @@
 package business_objects.kafka;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class InternalHedgeEvent {
 
     // JSON example for reference:

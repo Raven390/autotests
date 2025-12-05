@@ -131,6 +131,7 @@ public class DataHelper {
     public List<BoAlertsObject> boAlertsObjects;
     public List<OzTradesTableEntry> ozTradesTableObjects;
     public UcidGeneralScore ucidGeneralScore;
+    public List<UcidGeneralScore> ucidGeneralScores;
     public List<AppTbFinindexData> AppTbFinindexData;
     public CrmWithdrawalEvent crmWithdrawalEvent;
     public CustomEvent customEvent;
@@ -277,6 +278,9 @@ public class DataHelper {
             if (data.ucidGeneralScore != null) {
                 insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);
             }
+            if (data.ucidGeneralScores != null) {
+                data.ucidGeneralScores.forEach(score -> insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, score));
+            }
             if (data.AppTbFinindexData != null) {
                 insertObjectsToDb(APP_TB_FININDEX_DATA, data.AppTbFinindexData);
             }
@@ -392,6 +396,9 @@ public class DataHelper {
             }
             if (data.ucidGeneralScore != null) {
                 deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", data.ucidGeneralScore.getUcid()));
+            }
+            if (data.ucidGeneralScores != null) {
+                data.ucidGeneralScores.forEach(score -> deleteEntryFromDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, String.format("ucid = '%s'", score.getUcid())));
             }
             cleanUserRestrictionGeneral(data.clientHelper.getUcid());
             closeAlert(data.clientHelper.getUcid());

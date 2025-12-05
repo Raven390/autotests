@@ -27,6 +27,7 @@ public class MlMirrodTradeRuleDataFactory {
     private static final ClientHelper mirrorTradeMLModelClient2 = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradeMLModelClient3 = getRandomVantageClientAllFields();
     private static final ClientHelper mirrorTradeMLModelClient4 = getRandomVantageClientAllFields();
+    private static final ClientHelper mirrorTradeMLModelClient5 = getRandomVantageClientAllFields();
 
     @Step("Create data for Mirror trading rule")
     private static DataHelper getMirrorTradingRuleData(ClientHelper client) {
@@ -78,6 +79,12 @@ public class MlMirrodTradeRuleDataFactory {
         return data;
     }
 
+    private static DataHelper getMirrorTradingMLModelTest5Data() {
+        DataHelper data = getMirrorTradingRuleData(mirrorTradeMLModelClient5);
+        data.mtTbCreditsObjects = List.of(generateCreditsByClient(data.clientHelper));
+        return data;
+    }
+
     public static Map<String, DataHelper> setupMlMirrorTradeRuleData() throws InterruptedException {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
@@ -86,6 +93,7 @@ public class MlMirrodTradeRuleDataFactory {
         map.put("2", getMirrorTradingMLModelTest2Data());
         map.put("3", getMirrorTradingMLModelTest3Data());
         map.put("4", getMirrorTradingMLModelTest4Data());
+        map.put("5", getMirrorTradingMLModelTest5Data());
 
         setupData(map);
 

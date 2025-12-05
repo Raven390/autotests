@@ -35,6 +35,17 @@ public class PaymentGateHelper {
         }
     }
 
+    public static PaymentRuleExecutionsObject getPaymentRuleExecution(String paymentId, String ruleId)
+            throws Exception {
+        List<PaymentRuleExecutionsObject> objects = getObjectsFromDB(POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId) + String.format(" and rule_id ='%s'", ruleId), PaymentRuleExecutionsObject.class, 60);
+        writeLog(objects);
+        if (objects.isEmpty()) {
+            return null;
+        } else {
+            return objects.get(0);
+        }
+    }
+
     public static PaymentEventsObject getPaymentEvent(String ucid) throws Exception {
         List<PaymentEventsObject> objects = getObjectsFromDB(POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, "ucid='%s'".replace("%s", ucid), PaymentEventsObject.class, 60);
         writeLog(objects);
