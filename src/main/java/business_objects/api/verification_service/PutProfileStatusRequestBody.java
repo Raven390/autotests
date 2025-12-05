@@ -15,6 +15,9 @@ public class PutProfileStatusRequestBody {
     @JsonProperty("paymentProfileKey")
     private String paymentProfileKey;
 
+    @JsonProperty("paymentProfile")
+    private String paymentProfileMasked;
+
     @JsonProperty("ucid")
     private String ucid;
 

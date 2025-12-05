@@ -21,8 +21,8 @@ public class VerificationServiceHelper {
     }
 
     public static void putProfileStatus(VerificationStatus verificationStatus, String paymentProfileKey,
-            ClientHelper client) throws IOException {
-        PutProfileStatusRequestBody requestBody = PutProfileStatusRequestBody.builder().status(verificationStatus.toString()).paymentProfileKey(paymentProfileKey).ucid(client.getUcid()).comment(COMMENT).updatedByUsername(ACTOR).updatedBySystem(VINDEX_BO_SYSTEM).build();
+            String paymentProfileMasked, ClientHelper client) throws IOException {
+        PutProfileStatusRequestBody requestBody = PutProfileStatusRequestBody.builder().status(verificationStatus.toString()).paymentProfileKey(paymentProfileKey).paymentProfileMasked(paymentProfileMasked).ucid(client.getUcid()).comment(COMMENT).updatedByUsername(ACTOR).updatedBySystem(VINDEX_BO_SYSTEM).build();
         assertThat("Check that request was successful", putProfilesStatus(requestBody).code(), is(200));
     }
 }
