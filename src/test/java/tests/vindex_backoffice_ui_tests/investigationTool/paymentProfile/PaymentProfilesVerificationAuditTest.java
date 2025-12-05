@@ -43,6 +43,7 @@ class PaymentProfilesVerificationAuditTest extends TestBaseWeb {
 
     private static final String AUDIT_ITEM_HEADER = "Payment profile verification\nAuto Test";
     private static final String PAYMENT_PROFILE = "USDT TM4JDT9QV4W424ztdB4X9EXekFApJTsLG5";
+    private static final String PAYMENT_PROFILE_MASKED = "USDT TM4J***sLG5";
     private static final String AUDIT_ITEM_DETAILS_TEMPLATE = "Set by autotest\n%s\n%s";
 
     @BeforeAll
@@ -54,7 +55,7 @@ class PaymentProfilesVerificationAuditTest extends TestBaseWeb {
         deposit.setStatusId(5);
         deposit.setPaymentChannel("Cryptocurrency-USDT");
         deposit.setPaymentFamily("Crypto");
-        deposit.setPaymentProfileMasked("USDT TM4J***sLG5");
+        deposit.setPaymentProfileMasked(PAYMENT_PROFILE_MASKED);
         deposit.setAmount(BigDecimal.valueOf(100.0));
         deposit.setAmountUsd(BigDecimal.valueOf(101.12));
 
@@ -74,24 +75,24 @@ class PaymentProfilesVerificationAuditTest extends TestBaseWeb {
     @AllureId("1900")
     @DisplayName("Payment profile verification audit test")
     void paymentProfileVerificationAuditTest() throws IOException {
-        putProfileStatus(NOT_VERIFIED, deposit.getPaymentProfileKey(), client);
-        putProfileStatus(VerificationStatus.AWAITING_DOCUMENTS, deposit.getPaymentProfileKey(), client);
-        putProfileStatus(VERIFIED, deposit.getPaymentProfileKey(), client);
-        putProfileStatus(VerificationStatus.REJECTED, deposit.getPaymentProfileKey(), client);
+        putProfileStatus(NOT_VERIFIED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
+        putProfileStatus(VerificationStatus.AWAITING_DOCUMENTS, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
+        putProfileStatus(VERIFIED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
+        putProfileStatus(VerificationStatus.REJECTED, deposit.getPaymentProfileKey(), deposit.getPaymentProfileMasked(), client);
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         investigationPage.navigateToClient(client.getUcid());
         auditTrailPage.openAuditTrailTab();
         AuditTrailItemV2 notVerifiedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE, NOT_VERIFIED.getDisplayName()));
+                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, NOT_VERIFIED.getDisplayName()));
         AuditTrailItemV2 awaitingItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE, AWAITING_DOCUMENTS.getDisplayName()));
+                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, AWAITING_DOCUMENTS.getDisplayName()));
         AuditTrailItemV2 verifiedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE, VERIFIED.getDisplayName()));
+                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, VERIFIED.getDisplayName()));
         AuditTrailItemV2 rejectedItem = new AuditTrailItemV2(
-                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE, REJECTED.getDisplayName()));
+                AUDIT_ITEM_HEADER, String.format(AUDIT_ITEM_DETAILS_TEMPLATE, PAYMENT_PROFILE_MASKED, REJECTED.getDisplayName()));
         assertThat("Verify payment profile verification audit items", auditTrailPage.getAuditTrailItemsV2(), contains(rejectedItem, verifiedItem, awaitingItem, notVerifiedItem));
-        auditTrailPage.clickPaymentProfileByName(PAYMENT_PROFILE);
+        auditTrailPage.clickPaymentProfileByName(PAYMENT_PROFILE_MASKED);
         assertThat("Verify payment profile drawer is opened", paymentsPage.getPaymentProfileDrawerSubheader(), is(String.format("%s%n%s", PAYMENT_PROFILE, REJECTED.getDisplayName())));
     }
 }
