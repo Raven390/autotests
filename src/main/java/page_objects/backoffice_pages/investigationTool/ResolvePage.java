@@ -80,6 +80,8 @@ public class ResolvePage extends AbstractPage {
     private final Locator symbolDropdown;
     private final Locator dropdownOptions;
     private final Locator addRestrictionButton;
+    private final Locator cleanRestrictionListButton;
+    private final Locator confirmFinishPaymentInvestigationButton;
     // Rejection reasons UI
     private final Locator rejectionReasonSelects;
     private final Locator rejectionReasonItems;
@@ -104,8 +106,7 @@ public class ResolvePage extends AbstractPage {
     private static final String DROPDOWN_ITEM_BY_ACCOUNT = "//div[text()='%s']/ancestor::div[@class='v-suggested-deduction-select__item']";
     private static final String CONFIRMED_FRAUD_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s')]";
     private static final String FRAUD_SUBTYPE_BUTTON_BY_FRAUD_TYPE_PATTERN = "//div[contains(@data-qa,'fraud_type_selector__submenu_%s__item')]";
-    private final Locator cleanRestrictionListButton;
-    private final Locator confirmFinishPaymentInvestigationButton;
+    private static final String INFO_ICON_BY_FRAUD_TYPE_PATTERN = "//span[text()='%s']/ancestor::*[@class='v-fraud-type']/descendant::*[@class='v-reported-fraud-type-list__info-icon']";
 
 
     public ResolvePage(Page page) {
@@ -638,5 +639,10 @@ public class ResolvePage extends AbstractPage {
             list.add(dropdownOptions.nth(i).textContent());
         }
         return list;
+    }
+
+    @Step("Is info icon visible for fraud type")
+    public Boolean isInfoIconVisibleForFraudType(String fraudType) {
+        return page.locator(String.format(INFO_ICON_BY_FRAUD_TYPE_PATTERN, fraudType)).isVisible();
     }
 }

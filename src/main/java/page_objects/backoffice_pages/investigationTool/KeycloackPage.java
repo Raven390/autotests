@@ -57,6 +57,11 @@ public class KeycloackPage extends AbstractPage {
         loginWithUser(autotestUserPT());
     }
 
+    @Step("Log in as Payment Senior user")
+    public void loginAsPaymentSeniorUser() {
+        loginWithUser(autotestUserPaymentSenior());
+    }
+
     @Deprecated
     @Step("Log in as core user")
     public void loginAsCoreUser() {

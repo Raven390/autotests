@@ -150,6 +150,8 @@ public class ConfigFactory {
     public static final String USERNAME_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
     public static final String EMAIL_PAYMENT_TEAM_USER = CONFIG.emailPaymentUser();
     public static final String PASSWORD_PAYMENT_TEAM_USER = CONFIG.passwordPaymentUser();
+    public static final String ID_PAYMENT_SENIOR_USER = CONFIG.idPaymentSeniorUser();
+    public static final String USERNAME_PAYMENT_SENIOR_USER = CONFIG.emailPaymentSeniorUser();
     public static final String USERNAME_DEV = CONFIG.usernameDev();
     public static final String PASSWORD_DEV = CONFIG.passwordDev();
     public static final String FIRST_NAME_DEV = CONFIG.firstNameDev();
@@ -565,6 +567,12 @@ public class ConfigFactory {
 
         @Key("idPaymentUser")
         String idPaymentUser();
+
+        @Key("idPaymentSeniorUser")
+        String idPaymentSeniorUser();
+
+        @Key("emailPaymentSeniorUser")
+        String emailPaymentSeniorUser();
 
         @Key("idFirstLogin")
         String idFirstLogin();
