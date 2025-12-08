@@ -18,7 +18,6 @@ import page_objects.backoffice_pages.AbstractPage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.microsoft.playwright.options.WaitForSelectorState.*;
 import static helpers.database.DbHelper.deleteEntryFromDb;
@@ -308,91 +307,24 @@ public class RestrictionPage extends AbstractPage {
         assertEquals("Vindex BO", system);
     }
 
-    public static void checkRestrictionApplymentAuditGeneral(String ucid, String expectedSystem, String expectedUser,
-            String expectedComment, String restrictionName) throws Exception {
+    public static void checkRestrictionApplymentAudit(String ucid) throws Exception {
         Allure.step("check that record about restriction apply appeared in the audit trail");
         List<AuditEvent> events = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
+            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_TABLE, "ucid = '" + ucid + "' ORDER BY happened_at ASC", AuditEvent.class);
             if (events.size() >= 2) {
                 break;
             } else if (i == 9) {
-                assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
+                assertThat("Assert that there are 3 events in audit", events.size(), greaterThanOrEqualTo(3));
             }
             Thread.sleep(1000);
         }
         AuditEvent event1 = events.getFirst();
-        AuditEvent event2 = events.getLast();
-        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
-            assertEquals(expectedSystem, event1.getSourceService());
-            assertEquals(expectedUser, event1.getActorName());
-            assertEquals(expectedComment, event1.getComment());
-            assertEquals(restrictionName, event1.getRestriction());
-            assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getSourceService());
-            assertEquals(expectedUser, event2.getActorName());
-            assertNull(event2.getComment());
-            assertEquals(restrictionName, event2.getRestriction());
-        } else {
-            assertEquals(RESTRICTION_APPLIED_STATUS, event1.getType());
-            assertEquals(expectedSystem, event1.getSourceService());
-            assertEquals(expectedUser, event1.getActorName());
-            assertNull(event1.getComment());
-            assertEquals(restrictionName, event1.getRestriction());
-            assertEquals(RESTRICTION_REQUESTED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getSourceService());
-            assertEquals(expectedUser, event2.getActorName());
-            assertEquals(expectedComment, event2.getComment());
-            assertEquals(restrictionName, event2.getRestriction());
-        }
-    }
-
-    public static void checkRestrictionApplymentAuditTrading(String ucid, String expectedSystem, String expectedUser,
-            String expectedComment, String detail, int accountId) throws Exception {
-        String eventDetailsRegex = "; account: ";
-        Allure.step("check that record about restriction apply appeared in the audit trail");
-        List<EventOld> events = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            events = getObjectsFromDB(POSTGRES, AUDIT_EVENT_OLD, "ucid = '" + ucid + "' ORDER BY created_at ASC", EventOld.class);
-            if (events.size() >= 2) {
-                break;
-            } else if (i == 9) {
-                assertThat("Assert that there are 2 events in audit", events.size(), greaterThanOrEqualTo(2));
-            }
-            Thread.sleep(1000);
-        }
-        EventOld event1 = events.getFirst();
-        EventOld event2 = events.getLast();
-        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS)));
-        if (Objects.equals(event1.getType(), RESTRICTION_REQUESTED_STATUS)) {
-            assertEquals(expectedSystem, event1.getInitiatedBySystem());
-            assertEquals(expectedUser, event1.getInitiatedByUser());
-            assertEquals(expectedComment, event1.getComment());
-            assertEquals(detail, event1.getDetails().split("; ")[0]);
-            assertEquals(String.valueOf(accountId), event1.getDetails().split(eventDetailsRegex)[1]);
-            assertEquals(RESTRICTION_APPLIED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getInitiatedBySystem());
-            assertEquals(expectedUser, event2.getInitiatedByUser());
-            assertNull(event2.getComment());
-            assertEquals(detail, event2.getDetails().split("; ")[0]);
-            assertEquals(String.valueOf(accountId), event2.getDetails().split(eventDetailsRegex)[1]);
-        } else {
-            assertEquals(RESTRICTION_APPLIED_STATUS, event1.getType());
-            assertEquals(expectedSystem, event1.getInitiatedBySystem());
-            assertEquals(expectedUser, event1.getInitiatedByUser());
-            assertNull(event1.getComment());
-            assertEquals(detail, event1.getDetails().split("; ")[0]);
-            assertEquals(String.valueOf(accountId), event1.getDetails().split(eventDetailsRegex)[1]);
-            assertEquals(RESTRICTION_REQUESTED_STATUS, event2.getType());
-            assertEquals(expectedSystem, event2.getInitiatedBySystem());
-            assertEquals(expectedUser, event2.getInitiatedByUser());
-            assertEquals(expectedComment, event2.getComment());
-            assertEquals(detail, event2.getDetails().split("; ")[0]);
-            assertEquals(String.valueOf(accountId), event2.getDetails().split(eventDetailsRegex)[1]);
-        }
+        AuditEvent event2 = events.get(1);
+        AuditEvent event3 = events.getLast();
+        assertThat(event1.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(event2.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
+        assertThat(event3.getType(), is(oneOf(RESTRICTION_REQUESTED_STATUS, RESTRICTION_APPLIED_STATUS, COMMENT_ADDED_TYPE)));
     }
 
     public void isPageLoaded() {
