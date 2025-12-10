@@ -69,11 +69,11 @@ public class PaymentDecisionsObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, paymentId, decisionType, decisionCode, rejectionCode, actor, dateCreated, dateUpdated, dateDecided);
+        return Objects.hash(id, paymentId, decisionType, decisionCode, rejectionCode, actor, dateCreated, dateUpdated, dateDecided, reasonString);
     }
 
     @Override
     public String toString() {
-        return "PaymentDecisionsObject{" + "id=" + id + ", paymentId=" + paymentId + ", decisionType='" + decisionType + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided=" + dateDecided + '}';
+        return "PaymentDecisionsObject{" + "id=" + id + ", paymentId=" + paymentId + ", decisionType='" + decisionType + '\'' + ", decisionCode=" + decisionCode + ", rejectionCode=" + rejectionCode + ", actor='" + actor + '\'' + ", dateCreated=" + dateCreated + ", dateUpdated=" + dateUpdated + ", dateDecided=" + dateDecided + ", reasonString='" + reasonString + '\'' + '}';
     }
 }

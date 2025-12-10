@@ -106,7 +106,8 @@ public class Constants {
     public static final String STORY_PAYMENT_GATE_POST_DECISIONS = "Post decisions request";
     public static final String STORY_PAYMENT_GATE_POST_TEMP_DECISIONS = "Post temp decisions request";
     public static final String STORY_PAYMENT_GATE_POST_PAYMENTS = "Post payments request";
-    public static final String STORY_PAYMENT_GATE_PUT_PAYMENTS = "PUT payments request";
+    public static final String STORY_PAYMENT_GATE_PUT_PAYMENTS_V1 = "PUT payments V1 request";
+    public static final String STORY_PAYMENT_GATE_PUT_PAYMENTS_V2 = "PUT payments V2 request";
     public static final String STORY_PAYMENT_GATE_POST_RULE_EXECUTIONS = "Post rule executions request";
     public static final String STORY_PAYMENT_GATE_GET_RULE_EXECUTIONS = "Get rule executions request";
     public static final String STORY_PAYMENT_GATE_PUT_RULE_EXECUTIONS = "Put rule executions request";
@@ -142,6 +143,7 @@ public class Constants {
     public static final String KAFKA_TOPIC_CUSTOM_EVENTS = "custom-events";
     public static final String KAFKA_TOPIC_UCID_MIRROR_SCORE = "ucid_mirror_score";
     public static final String KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS = "ml-mirror-trade-events";
+    public static final String KAFKA_TOPIC_CRM_ACKNOWLEDGE = "crm-acknowledge";
     public static final String KAFKA_TOPIC_CRM_PAYMENTS = "crm-payment";
     public static final String KAFKA_TOPIC_MT_4_TRADE_RECORD = "mt4_trade_record";
     public static final String KAFKA_TOPIC_MT_5_DEAL_PERFORM = "mt5_DealPerform";
@@ -165,6 +167,7 @@ public class Constants {
     public static final String AR_PENDING_PROCESSING_TABLE_NAME = "postgres.ar.pending_processing";
     public static final String AR_FRAUD_TYPE_CATEGORY_TABLE_NAME = "postgres.ar.fraud_type_category";
     public static final String AUDIT_EVENT_OLD = "postgres.au.event";
+    public static final String AUDIT_EVENT = "postgres.au.audit_event";
     public static final String BO_ALERT_TABLE_NAME = "postgres.bo.alert";
     public static final String PAYMENT_EVENT_TABLE_NAME = "postgres.paymentgate.payment_events";
     public static final String BO_INVESTIGATION_TABLE_NAME = "postgres.bo.investigation";
@@ -254,11 +257,13 @@ public class Constants {
     public static final String REPORTING_DB_ZEEBE_RULE_ELEMENTS = "reporting.zeebe_rules_elements";
     public static final String REPORTING_DB_ZEEBE_RULES_STARTED = "reporting.zeebe_rules_started";
     public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE = "postgres.paymentgate.payment_decisions";
+    public static final String PAYMENT_GATEWAY_PAYMENT_DECISIONS_SENT_TABLE = "postgres.paymentgate.payment_decisions_sent";
     public static final String PAYMENT_GATEWAY_PAYMENT_REJECTION_ATTRIBUTES_TABLE = "postgres.paymentgate.payment_rejection_attributes";
     public static final String PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE = "postgres.paymentgate.payment_details";
     public static final String PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE = "postgres.paymentgate.payment_events";
     public static final String PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE = "postgres.paymentgate.payment_rule_executions";
     public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_TABLE = "postgres.paymentgate.tmp_rule_decisions";
+    public static final String PAYMENT_GATEWAY_TMP_RULE_DECISIONS_SENT_TABLE = "postgres.paymentgate.payment_decisions_sent";
     public static final String VE_VERIFICATION_HISTORY = "postgres.ve.verification_history";
     public static final String EQUITY_HISTORY_TABLE = "consolidated.mt___equity_history";
     public static final String AUDIT_EVENT_TABLE = "postgres.au.audit_event";

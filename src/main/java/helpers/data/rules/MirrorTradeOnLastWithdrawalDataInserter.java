@@ -6,7 +6,6 @@ import helpers.database.DbName;
 import static helpers.database.DbHelper.deleteEntryFromDb;
 import static helpers.database.DbHelper.executeQueryToDb;
 import static utils.Constants.*;
-import static utils.Utils.writeLog;
 
 public class MirrorTradeOnLastWithdrawalDataInserter {
     public static void insertMirrorTradeOnLastWithdrawalData(ClientHelper client) {
@@ -91,14 +90,8 @@ public class MirrorTradeOnLastWithdrawalDataInserter {
     }
 
     public static void deleteData(ClientHelper client) {
-        try {
-            deleteEntryFromDb(CRM_TB_ACCOUNT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        } catch (Exception e) {
-            writeLog(e.getMessage());
-        }
         deleteEntryFromDb(CRM_DEPOSIT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT_BALANCE_ORDERS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
         deleteEntryFromDb(MT_CREDITS_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
-        deleteEntryFromDb(MT5_DEALS_COERCED_DD_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()));
     }
 }

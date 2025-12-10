@@ -440,6 +440,13 @@ public class DbHelper {
             StringBuilder filledQuery = new StringBuilder(insertQuery);
             int placeholderIndex = 0; // Tracks where placeholders ("?") are in the query.
 
+            boolean isPostgres = false;
+            try {
+                DatabaseMetaData md = connection.getMetaData();
+                isPostgres = md != null && md.getDatabaseProductName() != null && md.getDatabaseProductName().toLowerCase().contains("postgres");
+            } catch (SQLException ignore) {
+            }
+
             for (Field field : obj.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 Object value = field.get(obj);
@@ -458,24 +465,45 @@ public class DbHelper {
                     // Determine the mapped column name for this field
                     String columnName = fieldMappings.getOrDefault(field.getName(), camelToSnake(field.getName()));
 
-                    // Set value in the PreparedStatement (with special handling for jsonb)
+                    // Set value in the PreparedStatement (with special handling for json/jsonb)
                     if (value instanceof LocalDate) {
                         statement.setDate(parameterIndex++, Date.valueOf((LocalDate) value));
                     } else if (value instanceof LocalDateTime) {
                         statement.setTimestamp(parameterIndex++, Timestamp.valueOf((LocalDateTime) value));
-                    } else if (value instanceof Enum) {
-                        String enumValue = ((Enum<?>) value).name();
-                        statement.setString(parameterIndex++, enumValue);
-                    } else
-                        if ("payload".equalsIgnoreCase(columnName) && tableName.toLowerCase().endsWith("payment_details")) {
-                            // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
-                            org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
-                            jsonbObject.setType("jsonb");
-                            jsonbObject.setValue(value.toString());
-                            statement.setObject(parameterIndex++, jsonbObject);
-                        } else {
-                            statement.setObject(parameterIndex++, value);
+                    } else {
+                        boolean bound = false;
+                        if (isPostgres) {
+                            String typeName = null;
+                            try {
+                                typeName = getColumnTypeName(connection, tableName, columnName);
+                            } catch (SQLException ignored) {
+                            }
+                            if (typeName != null) {
+                                String tn = typeName.toLowerCase();
+                                if ("jsonb".equals(tn) || "json".equals(tn)) {
+                                    org.postgresql.util.PGobject jsonObject = new org.postgresql.util.PGobject();
+                                    jsonObject.setType(tn);
+                                    jsonObject.setValue(value.toString());
+                                    statement.setObject(parameterIndex++, jsonObject);
+                                    bound = true;
+                                }
+                            }
                         }
+                        if (!bound) {
+                        } else if (value instanceof Enum) {
+                            String enumValue = ((Enum<?>) value).name();
+                            statement.setString(parameterIndex++, enumValue);
+                        } else
+                            if ("payload".equalsIgnoreCase(columnName) && tableName.toLowerCase().endsWith("payment_details")) {
+                                // Bind as jsonb for Postgres to avoid VARCHAR -> JSONB type mismatch
+                                org.postgresql.util.PGobject jsonbObject = new org.postgresql.util.PGobject();
+                                jsonbObject.setType("jsonb");
+                                jsonbObject.setValue(value.toString());
+                                statement.setObject(parameterIndex++, jsonbObject);
+                            } else {
+                                statement.setObject(parameterIndex++, value);
+                            }
+                    }
                 }
             }
 
@@ -533,6 +561,31 @@ public class DbHelper {
             }
         }
         return columnMappings;
+    }
+
+    private static String getColumnTypeName(Connection connection, String tableName, String columnName)
+            throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        String catalog = null;
+        String schema = null;
+        String table;
+        String[] arr = tableName.split("\\.");
+        if (arr.length == 3) {
+            catalog = arr[0];
+            schema = arr[1];
+            table = arr[2];
+        } else if (arr.length == 2) {
+            schema = arr[0];
+            table = arr[1];
+        } else {
+            table = tableName;
+        }
+        try (ResultSet columns = metaData.getColumns(catalog, schema, table, columnName)) {
+            if (columns.next()) {
+                return columns.getString("TYPE_NAME");
+            }
+        }
+        return null;
     }
 
     private static String camelToSnake(String camel) {

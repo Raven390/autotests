@@ -93,11 +93,11 @@ public class RuleAlertV2 {
     @AllArgsConstructor
     public static class Attribute {
 
-        @JsonProperty("account")
-        private String account;
+        @JsonProperty("Account 2nd leg")
+        private String accountNegativeLeg;
 
-        @JsonProperty("serverId")
-        private String serverId;
+        @JsonProperty("Server 2nd leg")
+        private String serverIdNegativeLeg;
 
         @JsonProperty("Platform")
         private String platform;
@@ -129,8 +129,8 @@ public class RuleAlertV2 {
         @JsonProperty("Ucid")
         private String ucid;
 
-        @JsonProperty("ucid")
-        private String ucid1;
+        @JsonProperty("Ucid 2nd leg")
+        private String ucidNegativeLeg;
 
         @JsonProperty("UcidScore")
         private Double ucidScore;

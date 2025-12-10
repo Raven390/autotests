@@ -7,7 +7,7 @@ import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import business_objects.db.payment_gate.payment_rule_executions.PaymentRuleExecutionsObject;
 import business_objects.kafka.alerts.RuleAlert;
-import business_objects.kafka.payment.acknowledgement.Acknowledgement;
+import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import helpers.data.DataHelper;
 import helpers.data.enums.payment_gate.Decision;
@@ -71,7 +71,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         assertThat("Assert payment details", paymentDetailsObject.getPaymentId(), is(paymentId));
         assertThat("Assert payment details", paymentDetailsObject.getPayload(), containsString("\"withdrawalAmountUSD\": 1.1"));
 
-        List<Acknowledgement> acknowledgement = getPaymentAcknowledgementFromKafka(data.crmWithdrawalEvent.getId());
+        List<Acknowledge> acknowledgement = getPaymentAcknowledgementFromKafka(data.crmWithdrawalEvent.getId());
         assertThat("Assert acknowledgement", acknowledgement.getFirst().getPaymentId(), is(paymentId.toString()));
 
         PaymentRuleExecutionsObject paymentRuleExecutionsObject = getPaymentRuleExecution(paymentId.toString());
@@ -232,7 +232,7 @@ class RouterRuleCrmEventsTests extends TestBaseRule {
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.amountUSD, is(instanceOf(Double.class)));
         assertThat("Verify alert attributes", alerts.getFirst().rule.attributes.paymentId, is(paymentId.toString()));
 
-        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb((events.getFirst().getPaymentId()));
+        List<PaymentDecisionsObject> decision = getRuleDecisionByWithdrawalIdFromDb(events.getFirst().getPaymentId(), "risk");
         assertThat("Verify amount of decisions in DB", decision.size(), is(1));
         assertThat("Verify decisions have right decision ", decision.getFirst().getPaymentId(), is(paymentId));
         assertThat("Verify decisions have right decision ", decision.getFirst().getDecisionType(), is("risk"));

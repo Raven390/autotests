@@ -1,8 +1,8 @@
 package tests.payment_gate_service_tests;
 
 
-import business_objects.api.payment_gate.payments.PutPaymentsRequestBody;
 import business_objects.api.payment_gate.payments.PutPaymentsResponseBody;
+import business_objects.api.payment_gate.payments.PutPaymentsV2RequestBody;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
 import helpers.data.ClientHelper;
@@ -19,25 +19,24 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPutPaymentsRequestBody;
-import static business_objects.api.payment_gate.payments.PaymentsRequests.putPayments;
+import static business_objects.api.payment_gate.payments.PaymentsRequestBodyFactory.createPutPaymentsV2RequestBody;
+import static business_objects.api.payment_gate.payments.PaymentsRequests.putPaymentsV2;
 import static business_objects.db.payment_gate.payment_details.PaymentDetailsObjectFactory.generatePaymentDetailsObject;
 import static business_objects.db.payment_gate.payment_events.PaymentEventsObjectFactory.generatePaymentEventsObject;
 import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 import static helpers.database.CleanTableHelper.cleanPaymentGateData;
 import static helpers.database.DbHelper.insertObjectsToDb;
-
 import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static utils.Constants.*;
 
 @Feature(FEATURE_PAYMENT_GATE)
-@Story(STORY_PAYMENT_GATE_PUT_PAYMENTS_V1)
+@Story(STORY_PAYMENT_GATE_PUT_PAYMENTS_V2)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
-class PutPaymentsV1Tests extends TestBaseApi {
+class PutPaymentsV2Tests extends TestBaseApi {
 
     private static ClientHelper client1;
     private static ClientHelper client2;
@@ -52,10 +51,10 @@ class PutPaymentsV1Tests extends TestBaseApi {
     private static PaymentDetailsObject paymentDetailsObject3;
     private static PaymentDetailsObject paymentDetailsObject4;
 
-    private static PutPaymentsRequestBody putPaymentsRequestBody1;
-    private static PutPaymentsRequestBody putPaymentsRequestBody2;
-    private static PutPaymentsRequestBody putPaymentsRequestBody3;
-    private static PutPaymentsRequestBody putPaymentsRequestBody4;
+    private static PutPaymentsV2RequestBody putPaymentsRequestBody1;
+    private static PutPaymentsV2RequestBody putPaymentsRequestBody2;
+    private static PutPaymentsV2RequestBody putPaymentsRequestBody3;
+    private static PutPaymentsV2RequestBody putPaymentsRequestBody4;
 
 
     @BeforeAll
@@ -81,16 +80,17 @@ class PutPaymentsV1Tests extends TestBaseApi {
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject1, paymentEventsObject2, paymentEventsObject3, paymentEventsObject4));
         insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject1, paymentDetailsObject2, paymentDetailsObject3, paymentDetailsObject4));
 
-        putPaymentsRequestBody1 = createPutPaymentsRequestBody(paymentEventsObject1.getPaymentId(), 2);
-        putPaymentsRequestBody2 = createPutPaymentsRequestBody(paymentEventsObject2.getPaymentId(), 2);
+        putPaymentsRequestBody1 = createPutPaymentsV2RequestBody(paymentEventsObject1.getPaymentId(), 2);
+        putPaymentsRequestBody2 = createPutPaymentsV2RequestBody(paymentEventsObject2.getPaymentId(), 2);
         putPaymentsRequestBody3 = null;
-        putPaymentsRequestBody4 = createPutPaymentsRequestBody(paymentEventsObject4.getPaymentId(), 2);
+        putPaymentsRequestBody4 = createPutPaymentsV2RequestBody(paymentEventsObject4.getPaymentId(), 2);
     }
 
-    @AfterAll
+    //@AfterAll
     static void deleteData() throws Exception {
         cleanPaymentGateData(client1.getUcid(), client1.getUserId());
         cleanPaymentGateData(client2.getUcid(), client2.getUserId());
+        cleanPaymentGateData(client3.getUcid(), client2.getUserId());
         cleanPaymentGateData(client4.getUcid(), client4.getUserId());
     }
 
@@ -100,7 +100,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
     void putPaymentTest1() throws Exception {
 
         Allure.step("send put payment request with valid data");
-        Response response = putPayments(putPaymentsRequestBody1);
+        Response response = putPaymentsV2(putPaymentsRequestBody1);
 
         assertThat(response.code(), is(200));
 
@@ -110,7 +110,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
         assertThat("Check response", mappedResponse.getPaymentId(), is(paymentEventsObject1.getPaymentId()));
         assertThat("Check response", mappedResponse.getDecisionId(), is(2));
         assertThat("Check response", mappedResponse.getDecidedAt(), is(notNullValue()));
-        assertThat("Check response", mappedResponse.getLinks().getSelf(), is(String.format("/v1/payments/%s", paymentEventsObject1.getPaymentId())));
+        assertThat("Check response", mappedResponse.getLinks().getSelf(), is(String.format("/v2/payments/%s", paymentEventsObject1.getPaymentId())));
         assertThat("Check id in db", getPaymentEvent(putPaymentsRequestBody1.getPaymentId()).getFinalDecisionId(), is(putPaymentsRequestBody1.getDecisionId()));
     }
 
@@ -120,7 +120,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
     void putPaymentTest2() throws Exception {
 
         Allure.step("send put payment request with valid data");
-        Response response = putPayments(putPaymentsRequestBody3);
+        Response response = putPaymentsV2(putPaymentsRequestBody3);
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
@@ -135,7 +135,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
     void putPaymentTest3() throws Exception {
 
         Allure.step("send put payment request with valid data");
-        Response response = putPayments("{asdad}", 400);
+        Response response = putPaymentsV2("{asdad}", 400);
         assertThat(response.code(), is(400));
 
         Allure.step("Validate Data in response");
@@ -151,7 +151,7 @@ class PutPaymentsV1Tests extends TestBaseApi {
 
         Allure.step("send put payment request with valid data");
         putPaymentsRequestBody4.setPaymentId(UUID.fromString("d6bbcd33-30d5-4459-8aa7-b408732c0c30"));
-        Response response = putPayments(putPaymentsRequestBody4);
+        Response response = putPaymentsV2(putPaymentsRequestBody4);
         assertThat(response.code(), is(404));
 
         Allure.step("Validate Data in response");

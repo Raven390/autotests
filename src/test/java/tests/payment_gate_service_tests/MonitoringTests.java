@@ -5,6 +5,7 @@ import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFac
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_details.PaymentDetailsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.kafka.CrmAcknowledgeEvent;
 import helpers.data.ClientHelper;
 import helpers.database.DbName;
 import helpers.database.PaymentGateHelper;
@@ -12,6 +13,7 @@ import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import org.junit.jupiter.api.*;
+import tests.TestBaseApi;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -24,16 +26,19 @@ import static helpers.data.ClientFactory.getRandomVantageClientAllFields;
 
 import static helpers.database.CleanTableHelper.cleanCrmTbWithdrawalTableByUcid;
 import static helpers.database.DbHelper.insertObjectsToDb;
+import static helpers.database.PaymentGateHelper.getPaymentEvent;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static tests.TestBaseRule.sendCrmAcknowledgeToKafka;
 import static utils.Constants.*;
+import static utils.Utils.getRandomUuid;
 
 @Feature(FEATURE_PAYMENT_GATE)
 @Story(STORY_PAYMENT_GATE_RECONCILIATION)
 @Tag(TEAM_CORE)
 @Tag(LAYER_API)
 @Tag(SUITE_PAYMENT_GATE_TESTS)
-class ReconciliationTests {
+class MonitoringTests extends TestBaseApi {
 
     private static ClientHelper client1;
     private static CrmTbWithdrawalEntity crmTbWithdrawalObject1;
@@ -81,6 +86,11 @@ class ReconciliationTests {
     private static CrmTbWithdrawalEntity crmTbWithdrawalObject8;
     private static PaymentEventsObject paymentEventsObject8;
     private static PaymentDetailsObject paymentDetailsObject8;
+
+    private static ClientHelper client9;
+    private static CrmTbWithdrawalEntity crmTbWithdrawalObject9;
+    private static PaymentEventsObject paymentEventsObject9;
+    private static PaymentDetailsObject paymentDetailsObject9;
 
     @BeforeAll
     static void setupData() throws Exception {
@@ -147,6 +157,13 @@ class ReconciliationTests {
         paymentEventsObject8.setCrmId(crmTbWithdrawalObject8.getTransferId().toString());
         paymentEventsObject8.setDateCreated(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
         paymentDetailsObject8 = generatePaymentDetailsObject(paymentEventsObject8, client8);
+
+        client9 = getRandomVantageClientAllFields();
+        crmTbWithdrawalObject9 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client9);
+        paymentEventsObject9 = generatePaymentEventsObject(client9);
+        paymentEventsObject9.setCrmId(crmTbWithdrawalObject9.getTransferId().toString());
+        paymentEventsObject9.setDateCreated(Timestamp.from(Instant.now().minusMillis(11 * 60 * 1000)));
+        paymentDetailsObject9 = generatePaymentDetailsObject(paymentEventsObject9, client9);
     }
 
     @AfterAll
@@ -208,7 +225,7 @@ class ReconciliationTests {
     @AllureId("1577")
     @DisplayName("Payment reconciliation test 3. Status != Risk audit and id != 21 -> DELIVERED")
     void ReconciliationTest3() throws Exception {
-        crmTbWithdrawalObject3.setStatus("Risk Audit_");
+        crmTbWithdrawalObject3.setStatus("21");
         crmTbWithdrawalObject3.setStatusId(212);
         paymentEventsObject3.setDeliveryStatus("PENDING");
         paymentDecisionsObject3.setDecisionCode(1);
@@ -226,9 +243,9 @@ class ReconciliationTests {
 
     @Test
     @AllureId("1578")
-    @DisplayName("Payment reconciliation test 4. Status = Risk audit_ and id = 21 -> FAILED")
+    @DisplayName("Payment reconciliation test 4. Status = 21 and id = 21 -> FAILED")
     void ReconciliationTest4() throws Exception {
-        crmTbWithdrawalObject4.setStatus("Risk Audit_");
+        crmTbWithdrawalObject4.setStatus("21");
         crmTbWithdrawalObject4.setStatusId(21);
         paymentEventsObject4.setDeliveryStatus("PENDING");
         paymentDecisionsObject4.setDecisionCode(1);
@@ -248,7 +265,7 @@ class ReconciliationTests {
     @AllureId("1743")
     @DisplayName("Payment reconciliation test 5. Do nothing if final desision code is null")
     void ReconciliationTest5() throws Exception {
-        crmTbWithdrawalObject5.setStatus("Risk Audit_");
+        crmTbWithdrawalObject5.setStatus("21");
         crmTbWithdrawalObject5.setStatusId(21);
         paymentEventsObject5.setDeliveryStatus("PENDING");
         paymentEventsObject5.setFinalDecisionId(null);
@@ -272,7 +289,7 @@ class ReconciliationTests {
         crmTbWithdrawalObject6.setStatusId(22);
         paymentEventsObject6.setDeliveryStatus("PENDING");
 
-        crmTbWithdrawalObject7.setStatus("Risk Audit_");
+        crmTbWithdrawalObject7.setStatus("21");
         crmTbWithdrawalObject7.setStatusId(212);
         crmTbWithdrawalObject7.setTransferId(crmTbWithdrawalObject6.getTransferId());
         paymentEventsObject7.setDeliveryStatus("PENDING");
@@ -311,5 +328,32 @@ class ReconciliationTests {
         PaymentEventsObject event = PaymentGateHelper.getPaymentEvent(client8.getUcid());
         assertThat("Check status", event.getDeliveryStatus(), is("FAILED"));
         assertThat("Check status", event.getDetails(), is("Decision not found"));
+    }
+
+    @Test
+    @AllureId("1928")
+    @DisplayName("Receive crm acknowledge")
+    void ReconciliationTest9() throws Exception {
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, List.of(paymentEventsObject9));
+        insertObjectsToDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, List.of(paymentDetailsObject9));
+        insertObjectsToDb(DbName.CLICKHOUSE, CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawalObject9));
+
+        CrmAcknowledgeEvent crmAcknowledgeEvent = new CrmAcknowledgeEvent();
+        crmAcknowledgeEvent.setBrand(client9.getBrand());
+        crmAcknowledgeEvent.setClientId(client9.getUserId().toString());
+        crmAcknowledgeEvent.setId(getRandomUuid().toString());
+        crmAcknowledgeEvent.setMerchantOrderId(paymentDetailsObject9.getMerchantOrderId());
+        crmAcknowledgeEvent.setPaymentId(paymentEventsObject9.getPaymentId().toString());
+        crmAcknowledgeEvent.setRegulator(client9.getRegulator());
+        crmAcknowledgeEvent.setSchemaVersion("1.0");
+        crmAcknowledgeEvent.setSrcAppId("AUBRC052001PWM000000001");
+        crmAcknowledgeEvent.setSubtype("acknowledge");
+        crmAcknowledgeEvent.setTimestamp(Instant.now().toString());
+        crmAcknowledgeEvent.setType("withdrawal");
+        sendCrmAcknowledgeToKafka(crmAcknowledgeEvent);
+
+        Thread.sleep(10_000);
+        PaymentEventsObject paymentEvent = getPaymentEvent(client9.getUcid());
+        assertThat("Assert delivery status", paymentEvent.getDeliveryStatus(), is("DELIVERED"));
     }
 }

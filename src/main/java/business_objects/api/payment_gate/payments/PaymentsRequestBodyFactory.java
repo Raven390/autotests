@@ -68,4 +68,13 @@ public class PaymentsRequestBodyFactory {
         return body;
     }
 
+    public static PutPaymentsV2RequestBody createPutPaymentsV2RequestBody(UUID paymentId, Integer decisionId) {
+        PutPaymentsV2RequestBody body = new PutPaymentsV2RequestBody();
+
+        // Map fields from the provided issue description JSON to the request body via setters
+        body.setPaymentId(paymentId);
+        body.setDecisionId(decisionId);
+        return body;
+    }
+
 }

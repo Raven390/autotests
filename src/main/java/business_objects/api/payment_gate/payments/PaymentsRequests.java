@@ -48,6 +48,23 @@ public class PaymentsRequests {
         return new HttpHelper().sendPutRequest(PAYMENT_GATE_SERVICE_BASE_PATH + PAYMENT_GATE_PAYMENTS_PATH, headers, null, body);
     }
 
+    public static Response putPaymentsV2(PutPaymentsV2RequestBody putPaymentsRequestBody) throws IOException {
+        // Send as JSON with proper headers
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        return new HttpHelper().sendPutRequest(PAYMENT_GATE_SERVICE_BASE_PATH + PAYMENT_GATE_PAYMENTS_V2_PATH, headers, null, putPaymentsRequestBody);
+    }
+
+    public static Response putPaymentsV2(String putPaymentsRequestBody, Integer errorCode) throws IOException {
+        // Send raw body as invalid JSON with appropriate headers to trigger server JSON parsing
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+        headers.put("Accept", "application/json");
+        RequestBody body = RequestBody.create(putPaymentsRequestBody, MediaType.parse("application/json"));
+        return new HttpHelper().sendPutRequest(PAYMENT_GATE_SERVICE_BASE_PATH + PAYMENT_GATE_PAYMENTS_V2_PATH, headers, null, body);
+    }
+
     @Step("Get payments")
     public static Response getPayments(Map<String, Object> paramsMap) throws IOException {
         return new HttpHelper().sendGetRequest(PAYMENT_GATE_SERVICE_BASE_PATH + PAYMENT_GATE_PAYMENTS_PATH, null, paramsMap);

@@ -12,8 +12,8 @@ public class PaymentDecisionsObjectFactory {
 
     public static PaymentDecisionsObject generatePaymentDecisionObject(PaymentEventsObject event) {
         return new PaymentDecisionsObject(
-                Utils.getRandomIntPositiveWithBounds(1, 2_147_483_647), event.getPaymentId(),       // paymentId
-                "final",                                     // decisionType
+                Utils.getRandomIntPositiveWithBounds(1, 2_147_483_647), event.getPaymentId(),                       // paymentId
+                "risk",                                     // decisionType
                 1,                                              // decisionCode
                 0,                                              // rejectionCode
                 "QA",                                      // actor
