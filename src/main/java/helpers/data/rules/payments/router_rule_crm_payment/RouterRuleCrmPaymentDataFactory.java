@@ -40,6 +40,9 @@ public class RouterRuleCrmPaymentDataFactory {
     private static final ClientHelper routerRuleClient13 = getRandomVantageClientAllFields();
     private static final ClientHelper routerRuleClient14 = getRandomVantageClientAllFields();
     private static final ClientHelper routerRuleClient15 = getRandomVantageClientAllFields();
+    private static final ClientHelper routerRuleClient16 = getRandomVantageClientAllFields();
+    private static final ClientHelper routerRuleClient17 = getRandomVantageClientAllFields();
+    private static final ClientHelper routerRuleClient18 = getRandomVantageClientAllFields();
 
     @Description("Create data for Router rule")
     private static DataHelper getRouterRuleData(ClientHelper client) {
@@ -268,25 +271,48 @@ public class RouterRuleCrmPaymentDataFactory {
         return data;
     }
 
+    private static DataHelper getRouterRuleTest16Data() {
+        DataHelper data = getRouterRuleData(routerRuleClient16);
+        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
+        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
+        return data;
+    }
+
+    private static DataHelper getRouterRuleTest17Data() {
+        DataHelper data = getRouterRuleData(routerRuleClient17);
+        data.crmWithdrawalEvent.setCheckName("Crypto_Risk");
+        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
+        return data;
+    }
+
+    private static DataHelper getRouterRuleTest18Data() {
+        DataHelper data = getRouterRuleData(routerRuleClient18);
+        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
+        return data;
+    }
+
     public static Map<String, DataHelper> setupRouterRuleData() {
         startSshTunnel();
         Map<String, DataHelper> map = new HashMap<>();
         // Put all the db data for setup in a map
-        map.put("1", getRouterRuleTest1Data());
-        map.put("2", getRouterRuleTest2Data());
-        map.put("3", getRouterRuleTest3Data());
-        map.put("4", getRouterRuleTest4Data());
-        map.put("5", getRouterRuleTest5Data());
-        map.put("6", getRouterRuleTest6Data());
-        map.put("7", getRouterRuleTest7Data());
-        map.put("8", getRouterRuleTest8Data());
-        map.put("9", getRouterRuleTest9Data());
-        map.put("10", getRouterRuleTest10Data());
-        map.put("11", getRouterRuleTest11Data());
-        map.put("12", getRouterRuleTest12Data());
-        map.put("13", getRouterRuleTest13Data());
-        map.put("14", getRouterRuleTest14Data());
-        map.put("15", getRouterRuleTest15Data());
+//        map.put("1", getRouterRuleTest1Data());
+//        map.put("2", getRouterRuleTest2Data());
+//        map.put("3", getRouterRuleTest3Data());
+//        map.put("4", getRouterRuleTest4Data());
+//        map.put("5", getRouterRuleTest5Data());
+//        map.put("6", getRouterRuleTest6Data());
+//        map.put("7", getRouterRuleTest7Data());
+//        map.put("8", getRouterRuleTest8Data());
+//        map.put("9", getRouterRuleTest9Data());
+//        map.put("10", getRouterRuleTest10Data());
+//        map.put("11", getRouterRuleTest11Data());
+//        map.put("12", getRouterRuleTest12Data());
+//        map.put("13", getRouterRuleTest13Data());
+//        map.put("14", getRouterRuleTest14Data());
+//        map.put("15", getRouterRuleTest15Data());
+        map.put("16", getRouterRuleTest16Data());
+        map.put("17", getRouterRuleTest17Data());
+        map.put("18", getRouterRuleTest18Data());
 
         setupData(map);
 

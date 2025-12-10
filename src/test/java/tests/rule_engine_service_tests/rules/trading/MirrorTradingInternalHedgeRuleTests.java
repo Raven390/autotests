@@ -39,7 +39,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
         dbDataMap = setupMirrorTradingInternalHedgeRuleData();
     }
 
-    //@AfterAll
+    @AfterAll
     static void deleteData() throws Exception {
         DataHelper.deleteData(dbDataMap);
         stopSshTunnel();
@@ -73,7 +73,7 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().getType(), is("TRADING"));
         assertThat("Verify alert", alerts.getFirst().getTriggerCreatedTime(), is(notNullValue()));
         assertThat("Verify alert", alerts.getFirst().getUcid(), is(data.internalHedgeEvent.getPositiveLeg().getUcid()));
-        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("Internal Hedge Model"));
+        assertThat("Verify alert", alerts.getFirst().getTrigger(), is("Close Trade"));
         assertThat("Verify alert", alerts.getFirst().getFraudType(), is("HEDGING"));
         assertThat("Verify alert", alerts.getFirst().getAccount(), is(data.internalHedgeEvent.getPositiveLeg().getTradingAccount().toString()));
         assertThat("Verify alert", alerts.getFirst().getSymbol(), is(data.internalHedgeEvent.getSymbolUnderlying()));
@@ -81,9 +81,9 @@ class MirrorTradingInternalHedgeRuleTests extends TestBaseRule {
         assertThat("Verify alert", alerts.getFirst().getReason(), is("Suspicion of an Internal Hedge"));
         assertThat("Verify alert. rule", alerts.getFirst().getRule().getVer(), is("2.5.0"));
         assertThat("Verify alert. rule", alerts.getFirst().getRule().getName(), is("Mirror Trading"));
-        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getUcid1(), is(data.internalHedgeEvent.getNegativeLeg().getUcid()));
-        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getAccount(), is(data.internalHedgeEvent.getNegativeLeg().getTradingAccount().toString()));
-        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getServerId(), is(data.internalHedgeEvent.getNegativeLeg().getServerId().toString()));
+        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getUcidNegativeLeg(), is(data.internalHedgeEvent.getNegativeLeg().getUcid()));
+        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getAccountNegativeLeg(), is(data.internalHedgeEvent.getNegativeLeg().getTradingAccount().toString()));
+        assertThat("Verify alert. attributes", alerts.getFirst().getAttributes().getServerIdNegativeLeg(), is(data.internalHedgeEvent.getNegativeLeg().getServerId().toString()));
 
         checkManualWithdrawalRestrictionApplied(data.clientHelper, "Suspicion of an Internal Hedge");
     }

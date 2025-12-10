@@ -8,6 +8,7 @@ import business_objects.db.clickhouse.reporting_test.ZeebeRulesStarted;
 import business_objects.db.mitigation_service_db.ClientGeneralRestriction;
 import business_objects.db.payment_gate.payment_decisions.PaymentDecisionsObject;
 import business_objects.db.payment_gate.payment_events.PaymentEventsObject;
+import business_objects.kafka.CrmAcknowledgeEvent;
 import business_objects.kafka.CustomEvent;
 import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
@@ -18,7 +19,7 @@ import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
-import business_objects.kafka.payment.acknowledgement.Acknowledgement;
+import business_objects.kafka.payment.acknowledgement.Acknowledge;
 import business_objects.kafka.restriction_events.WithdrawalApprovals;
 import business_objects.kafka.restriction_events.WithdrawalApprovalsV2;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,6 +31,7 @@ import io.qameta.allure.Step;
 import okhttp3.Response;
 import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.extension.ExtendWith;
+import utils.Constants;
 import utils.TestResultWatcher;
 
 import java.util.Arrays;
@@ -95,7 +97,7 @@ public class TestBaseRule {
 
     @Step("Produce mirrorScore message to ucid_mirror_score topic")
     public static void produceMirrorScoreMessageToKafka(MirrorScoreEvent event) throws JsonProcessingException {
-        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_UCID_MIRROR_SCORE);
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), Constants.KAFKA_TOPIC_ML_MIRROR_TRADE_EVENTS);
     }
 
     @Step("Produce ")
@@ -108,6 +110,19 @@ public class TestBaseRule {
             JsonProcessingException {
         return Arrays.stream(
                 objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, client.getUcid()).toString(), RuleAlert[].class)).toList();
+    }
+
+    @Step("Send crm.acknowledge to kafka'")
+    public static void sendCrmAcknowledgeToKafka(CrmAcknowledgeEvent event) throws InterruptedException,
+            JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_ACKNOWLEDGE);
+    }
+
+    @Step("Get crm.acknowledge from kafka'")
+    public static List<CrmAcknowledgeEvent> getCrmAcknowledgeFromKafka(UUID paymentId) throws InterruptedException,
+            JsonProcessingException {
+        return Arrays.stream(
+                objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_ALERTS, paymentId.toString()).toString(), CrmAcknowledgeEvent[].class)).toList();
     }
 
     @Step("Get User Alerts from Kafka topic 'alerts'")
@@ -195,6 +210,18 @@ public class TestBaseRule {
         return getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId), PaymentDecisionsObject.class);
     }
 
+    @Step("Get Rule Decision from payment gate db with additional filter: {additionalFilter}")
+    public static List<PaymentDecisionsObject> getRuleDecisionByWithdrawalIdFromDb(UUID paymentId, String decisionType)
+            throws Exception {
+        String where = String.format("payment_id='%s'", paymentId);
+        String filter = String.format("decision_type='%s'", decisionType);
+        if (decisionType != null && !filter.isBlank()) {
+            // Caller must pass a valid SQL fragment, e.g. "decision_type='risk'"
+            where = where + " AND " + filter;
+        }
+        return getObjectsFromDB(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, where, PaymentDecisionsObject.class);
+    }
+
     @Step("Get User Payment event from postgres.paymentgate.payment_events table")
     public static List<PaymentEventsObject> getUserPaymentEventsFromDb(ClientHelper client) throws Exception {
         return getObjectsFromDB(DbName.POSTGRES, PAYMENT_EVENT_TABLE_NAME, String.format("ucid = '%s'", client.getUcid()), PaymentEventsObject.class);
@@ -252,8 +279,8 @@ public class TestBaseRule {
         assertThat(elementIdsDb, containsString(elementId));
     }
 
-    public static List<Acknowledgement> getPaymentAcknowledgementFromKafka(String paymentId) throws Exception {
-        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId).toString(), Acknowledgement[].class)).toList();
+    public static List<Acknowledge> getPaymentAcknowledgementFromKafka(String paymentId) throws Exception {
+        return Arrays.stream(objectMapper.readValue(kafka.consumeMessages(KAFKA_TOPIC_PAYMENT_ACKNOWLEDGE, paymentId).toString(), Acknowledge[].class)).toList();
     }
 
     @Step("Check {elementId} NOT presented in rule path")

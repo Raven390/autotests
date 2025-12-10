@@ -1,6 +1,7 @@
 package tests.rule_engine_service_tests.rules.payment.router_rule_crm_payment;
 
 import helpers.data.DataHelper;
+import helpers.data.enums.Rule;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
@@ -32,44 +33,56 @@ class WithdrawalIntegrityCheckTests extends TestBaseRule {
         dataMap = setupWithdrawalIntegrityCheckRuleData();
     }
 
-    @AfterAll
+    //@AfterAll
     static void deleteData() throws Exception {
         DataHelper.deleteData(dataMap);
     }
 
     @Test
-    @AllureId("1753")
-    @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 50000. elementId: end_202")
+    @AllureId("")
+    @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 100. elementId: end_102")
     void WithdrawalIntegrityCheckRuleTest1() throws Exception {
         DataHelper data = dataMap.get("1");
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("end_202", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
-        checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("end_102", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+        checkElementId("put_rule_execution", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 
     @Test
-    @AllureId("1752")
-    @DisplayName("Withdrawal Integrity check in Router rule. general score > 0.9. elementId: end_202")
+    @AllureId("1753")
+    @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal amount <= 50000. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest2() throws Exception {
         DataHelper data = dataMap.get("2");
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("end_203", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
-        checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("end_202", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+        checkElementId("put_rule_execution", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 
     @Test
-    @AllureId("1751")
-    @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal Integrity check. general score < 0.9. elementId: end_202")
+    @AllureId("1752")
+    @DisplayName("Withdrawal Integrity check in Router rule. general score > 0.9. elementId: end_202")
     void WithdrawalIntegrityCheckRuleTest3() throws Exception {
         DataHelper data = dataMap.get("3");
 
         produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
 
-        checkElementId("end_101", data.crmWithdrawalEvent.getId(), "withdrawal_integrity_check");
-        checkElementId("Activity_17jp32n", data.crmWithdrawalEvent.getId(), "router_rule_crm_payment");
+        checkElementId("end_203", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+        checkElementId("put_rule_execution", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+    }
+
+    @Test
+    @AllureId("1751")
+    @DisplayName("Withdrawal Integrity check in Router rule. Withdrawal Integrity check. general score < 0.9. elementId: end_202")
+    void WithdrawalIntegrityCheckRuleTest4() throws Exception {
+        DataHelper data = dataMap.get("4");
+
+        produceWithdrawalMessageToCrmPaymentTopic(data.crmWithdrawalEvent);
+
+        checkElementId("end_101", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
+        checkElementId("put_rule_execution", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE_WITHDRAWAL_INTEGRITY_CHECK.getProcessId());
     }
 }

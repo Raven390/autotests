@@ -1,9 +1,14 @@
 package business_objects.kafka.restriction_events;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
+import java.util.UUID;
 
+@Getter
+@Setter
 public class WithdrawalApprovalsV2 {
 
     @JsonProperty("schemaVersion")
@@ -57,6 +62,10 @@ public class WithdrawalApprovalsV2 {
     @JsonProperty("underManualReview")
     private Integer underManualReview;
 
+    @JsonProperty("paymentId")
+    private UUID paymentId;
+
+
     public WithdrawalApprovalsV2() {
     }
 
@@ -80,142 +89,6 @@ public class WithdrawalApprovalsV2 {
         this.rejectionReasonCode = rejectionReasonCode;
         this.rejectionReason = rejectionReason;
         this.rejectionReasonRecommend = rejectionReasonRecommend;
-        this.underManualReview = underManualReview;
-    }
-
-    public String getSchemaVersion() {
-        return schemaVersion;
-    }
-
-    public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Long getTransferId() {
-        return transferId;
-    }
-
-    public void setTransferId(Long transferId) {
-        this.transferId = transferId;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getRegulator() {
-        return regulator;
-    }
-
-    public void setRegulator(String regulator) {
-        this.regulator = regulator;
-    }
-
-    public String getInternalReason() {
-        return internalReason;
-    }
-
-    public void setInternalReason(String internalReason) {
-        this.internalReason = internalReason;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getMerchantOrderId() {
-        return merchantOrderId;
-    }
-
-    public void setMerchantOrderId(String merchantOrderId) {
-        this.merchantOrderId = merchantOrderId;
-    }
-
-    public String getCheckName() {
-        return checkName;
-    }
-
-    public void setCheckName(String checkName) {
-        this.checkName = checkName;
-    }
-
-    public String getRuleName() {
-        return ruleName;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
-
-    public String getRejectionReasonCode() {
-        return rejectionReasonCode;
-    }
-
-    public void setRejectionReasonCode(String rejectionReasonCode) {
-        this.rejectionReasonCode = rejectionReasonCode;
-    }
-
-    public String getRejectionReason() {
-        return rejectionReason;
-    }
-
-    public void setRejectionReason(String rejectionReason) {
-        this.rejectionReason = rejectionReason;
-    }
-
-    public String getRejectionReasonRecommend() {
-        return rejectionReasonRecommend;
-    }
-
-    public void setRejectionReasonRecommend(String rejectionReasonRecommend) {
-        this.rejectionReasonRecommend = rejectionReasonRecommend;
-    }
-
-    public Integer getUnderManualReview() {
-        return underManualReview;
-    }
-
-    public void setUnderManualReview(Integer underManualReview) {
         this.underManualReview = underManualReview;
     }
 

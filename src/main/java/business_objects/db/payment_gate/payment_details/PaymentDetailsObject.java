@@ -1,6 +1,5 @@
 package business_objects.db.payment_gate.payment_details;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
-@Builder
 @Getter
 @Setter
 public class PaymentDetailsObject {
@@ -26,6 +24,7 @@ public class PaymentDetailsObject {
     private String sourceSystem;
     private String sourceEnv;
     private Timestamp dateCreated;
+    private Double amountUsd;
 
 
     public PaymentDetailsObject() {

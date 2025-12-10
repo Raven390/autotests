@@ -209,6 +209,7 @@ public class CleanTableHelper {
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DECISIONS_TABLE, String.format("payment_id='%s'", paymentId));
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_RULE_EXECUTIONS_TABLE, String.format("payment_id='%s'", paymentId));
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_DETAILS_TABLE, String.format("client_id = '%s'", clientId));
+        deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_TMP_RULE_DECISIONS_SENT_TABLE, String.format("payment_id='%s'", paymentId));
         deleteEntryFromDb(DbName.POSTGRES, PAYMENT_GATEWAY_PAYMENT_EVENTS_TABLE, String.format(WHERE_STATEMENT_BY_UCID, ucid));
     }
 }

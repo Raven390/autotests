@@ -60,19 +60,25 @@ public class WithdrawalIntegrityDataFactory {
 
     private static DataHelper getWithdrawalIntegrityCheckTest1Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
-        data.crmWithdrawalEvent.setWithdrawalAmount(50_000d);
+        data.crmWithdrawalEvent.setWithdrawalAmount(1d);
         return data;
     }
 
     private static DataHelper getWithdrawalIntegrityCheckTest2Data() {
+        DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient1);
+        data.crmWithdrawalEvent.setWithdrawalAmount(50_000d);
+        return data;
+    }
+
+    private static DataHelper getWithdrawalIntegrityCheckTest3Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient2);
-        data.crmWithdrawalEvent.setWithdrawalAmount(100d);
+        data.crmWithdrawalEvent.setWithdrawalAmount(101d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.91, 0.91);
 
         return data;
     }
 
-    private static DataHelper getWithdrawalIntegrityCheckTest3Data() {
+    private static DataHelper getWithdrawalIntegrityCheckTest4Data() {
         DataHelper data = getWithdrawalIntegrityCheckRuleData(withdrawalIntegrityRuleClient3);
         data.crmWithdrawalEvent.setWithdrawalAmount(2000d);
         data.ucidGeneralScore = generateUcidGeneralScoreObject(data.clientHelper, 0.8, 0.8);
@@ -86,6 +92,7 @@ public class WithdrawalIntegrityDataFactory {
         map.put("1", getWithdrawalIntegrityCheckTest1Data());
         map.put("2", getWithdrawalIntegrityCheckTest2Data());
         map.put("3", getWithdrawalIntegrityCheckTest3Data());
+        map.put("4", getWithdrawalIntegrityCheckTest4Data());
 
         setupData(map);
 

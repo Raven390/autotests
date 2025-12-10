@@ -25,7 +25,7 @@ public class CrmWithdrawalEvent {
     private String checkName;
 
     @JsonProperty("clientId")
-    private long clientId;
+    private Long clientId;
 
     @JsonProperty("eventDate")
     private String eventDate;
