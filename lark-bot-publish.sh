@@ -33,8 +33,13 @@ fi
 # 1. GET TEST SUMMARY FROM ALLURE
 # -----------------------------
 
-SUMMARY_JSON=$(curl -s -H "Authorization: Api-Token $ALLURE_TOKEN" \
-  "$ALLURE_ENDPOINT/api/launch/$ALLURE_LAUNCH_ID/statistic")
+# Normalize endpoint: remove ending slash if exists
+NORMALIZED_ENDPOINT="${ALLURE_ENDPOINT%/}"
+
+SUMMARY_JSON=$(wget -q \
+  --header="Authorization: Api-Token $ALLURE_TOKEN" \
+  -O - \
+  "$NORMALIZED_ENDPOINT/api/launch/$ALLURE_LAUNCH_ID/statistic")
 
 # Example:
 # [{"status":"failed","count":49},{"status":"broken","count":98},{"status":"passed","count":141},{"status":"skipped","count":2}]
@@ -51,10 +56,13 @@ fi
 
 extract_count() {
   STATUS="$1"
-  echo "$SUMMARY_JSON" \
-    | grep -o "\"status\":\"$STATUS\"[^\}]*" \
-    | grep -o "\"count\":[0-9]*" \
-    | sed "s/.*://"
+
+  COUNT=$(printf "%s" "$SUMMARY_JSON" \
+    | grep -o "\"status\":\"$STATUS\"[^}]*" \
+    | grep -o "\"count\"[[:space:]]*:[[:space:]]*[0-9]*" \
+    | sed 's/.*://')
+
+  echo "${COUNT:-0}"
 }
 
 FAILED=$(extract_count failed)
@@ -97,7 +105,7 @@ PAYLOAD="{
           {
             \"tag\": \"a\",
             \"text\": \"More details\",
-            \"href\": \"$ALLURE_ENDPOINT/launch/$ALLURE_LAUNCH_ID\"
+            \"href\": \"$NORMALIZED_ENDPOINT/launch/$ALLURE_LAUNCH_ID\"
           }]
         ]
       } 
@@ -108,8 +116,11 @@ PAYLOAD="{
 # -----------------------------
 # 4. SEND MESSAGE TO LARK BOT
 # -----------------------------
-RESPONSE=$(curl -s -H "Content-Type: application/json" \
-  -d "$PAYLOAD" \
+
+RESPONSE=$(wget -q \
+  --header="Content-Type: application/json" \
+  --post-data="$PAYLOAD" \
+  -O - \
   "$LARK_BOT_WEBHOOK_URL")
 
 if echo "$RESPONSE" | grep -q '"code":0'; then
@@ -117,4 +128,3 @@ if echo "$RESPONSE" | grep -q '"code":0'; then
 else
   echo "Lark error: $RESPONSE"
 fi
-

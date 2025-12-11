@@ -230,15 +230,12 @@ job_test_backoffice:
   before_script:
     - wget --output-document=allurectl --quiet https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64
     - chmod +x allurectl
-    - chmod +x ./lark-bot-results-publishing.sh
+    - chmod +x ./run-tests-and-lark-pub.sh
   script:
     - echo "Running tests"
     - ./gradlew installDeps
     - ./gradlew installChromium
-    - ./allurectl watch -- gradle clean testSmokeBackoffice
-    - export $(./allurectl job-run env)
-    - ./lark-bot-results-publishing.sh
-    - echo "TEST SUCCESS"
+    - ./run-tests-and-lark-pub.sh testSmokeBackoffice
   artifacts:
     when: always
     paths:
@@ -267,8 +264,6 @@ job_debug_runner:
     - ./gradlew installDeps
     - ./gradlew installChromium
     - ./allurectl watch -- gradle clean testRunnerDebug
-    - export $(./allurectl job-run env)
-    - ./lark-bot-results-publishing.sh
     - echo "TEST SUCCESS"
   artifacts:
     when: always
