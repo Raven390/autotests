@@ -267,6 +267,8 @@ job_debug_runner:
     - ./gradlew installDeps
     - ./gradlew installChromium
     - ./allurectl watch -- gradle clean testRunnerDebug
+    - export $(./allurectl job-run env)
+    - ./lark-bot-results-publishing.sh
     - echo "TEST SUCCESS"
   artifacts:
     when: always
