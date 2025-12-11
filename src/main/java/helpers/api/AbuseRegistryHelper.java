@@ -35,27 +35,16 @@ public class AbuseRegistryHelper {
     public static void addFraudsForClient(ClientHelper client, List<FraudType> fraudTypes, FraudTypeStatus status)
             throws IOException, InterruptedException {
         assertThat("Check that fraudTypes list is not empty", fraudTypes.size(), greaterThan(0));
-        PostFraudTypesRequestBody requestBody = new PostFraudTypesRequestBody(
-                ACTOR, SYSTEM, COMMENT, fraudTypes.stream().map(fraudType -> new PostFraudTypesRequestBody.FraudTypeWithStatus(status.getStatus(), fraudType.getCode())).toList());
-        int code = -1;
-
-        for (int attempt = 1; attempt <= 5; attempt++) {
-            code = postFraudTypes(client.getUcid(), requestBody).code();
-            if (code == 200) {
-                break; // Success, stop retrying
-            }
-            Thread.sleep(1000); // wait 1 second before next try
+        for (FraudType fraudType : fraudTypes) {
+            addFraudForClient(client, fraudType, null, status, null);
         }
-
-        assertThat("Check that request was successful after retries", code, is(200));
-        writeLog(String.format(FRAUDS_ADDED_SUCCESSFULLY, client.getUcid()));
     }
 
     public static void addFraudForClient(ClientHelper client, FraudType fraudType, FraudSubtype fraudSubtype,
             FraudTypeStatus status, List<String> symbols)
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", fraudSubtype.getCode(), symbols)));
+                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), COMMENT, fraudSubtype != null ? fraudSubtype.getCode() : null, symbols)));
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();
@@ -76,7 +65,7 @@ public class AbuseRegistryHelper {
             FraudTypeStatus status, List<String> symbols)
             throws IOException {
         PostFraudTypesV2RequestBody requestBody = new PostFraudTypesV2RequestBody(
-                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), "Set by autotest", null, symbols)));
+                ACTOR, SYSTEM, COMMENT, List.of(new PostFraudTypesV2RequestBody.FraudType(fraudType.getCode(), status.getStatus(), COMMENT, null, symbols)));
         int code = 0;
         for (int attempt = 1; attempt <= 5; attempt++) {
             code = postFraudTypesV2(client, requestBody).code();
