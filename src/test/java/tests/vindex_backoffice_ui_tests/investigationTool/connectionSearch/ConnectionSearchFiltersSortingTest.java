@@ -99,9 +99,9 @@ public class ConnectionSearchFiltersSortingTest extends TestBaseWeb {
         kafka.produceMessage(connectionAlert1.alertId, objectMapper.writeValueAsString(connectionAlert1), KAFKA_TOPIC_ALERTS);
         RuleAlert connectionAlert2 = generateRuleAlertByUcid(connectedClient6.getUcid());
         kafka.produceMessage(connectionAlert2.alertId, objectMapper.writeValueAsString(connectionAlert2), KAFKA_TOPIC_ALERTS);
+        waitForConnectionSearchToUpdate(client);
         addFraudsForClient(connectedClient1, List.of(REBATE_CHURNING, LATENCY_ARBITRAGE, MARKET_MANIPULATION, PRICING_ERROR), CONFIRMED);
         addFraudsForClient(connectedClient6, List.of(GAP_TRADING, SWAP_ARBITRAGE, NBP_ABUSE, REBATE_CHURNING), CONFIRMED);
-        waitForConnectionSearchToUpdate(client);
     }
 
     @BeforeEach

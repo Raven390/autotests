@@ -107,6 +107,12 @@ public class ConnectionPage extends AbstractPage {
     private final Locator cardAttributeValue;
     private final Locator connectionTableRowData;
     private final Locator successToast;
+    private final Locator fraudTypes;
+    private final Locator addFraudRestrictionsButton;
+    private final Locator addFraudRestrictionsDrawer;
+    private final Locator fraudSelectButton;
+    private final Locator addFraudRestrictionsComment;
+    private final Locator addFraudRestrictionsSubmitButton;
 
     private final String CONNECTION_TABLE_BUTTON_SELECTOR = "input[value='TABLE']";
     private static final String CONNECTION_TABLE_SELECTOR = ".v-connection-search-table-mode-v2__view";
@@ -143,11 +149,7 @@ public class ConnectionPage extends AbstractPage {
     private static final String FRAUD_SELECTION_OPTION_PATTERN = "//*[contains(@class,'v-drop-down-menu-2__content')]/div/div[text()='%s']";
     private static final String STATUS_SELECTION_OPTION_PATTERN = "//*[contains(@class, 'v-dropdown-select-item__sub-menu_isHovered')]//*[@data-qa='connections__report_fraud__fraud_type_selector__dropdown__item__submenu']//*[text()='%s']";
     private static final String FRAUD = "Fraud";
-    private final Locator addFraudRestrictionsButton;
-    private final Locator addFraudRestrictionsDrawer;
-    private final Locator fraudSelectButton;
-    private final Locator addFraudRestrictionsComment;
-    private final Locator addFraudRestrictionsSubmitButton;
+    private static final String CHECKBOX_BY_UCID_PATTERN = "//div[@data-qa='virtualized_table__rows__%s__checkbox']/descendant::input";
 
     public ConnectionPage(Page page) {
         super(page);
@@ -242,6 +244,7 @@ public class ConnectionPage extends AbstractPage {
         this.addFraudRestrictionsSubmitButton = page.locator("//button[@data-qa=\"connections__report_fraud__apply\"]");
         this.fraudSelectButton = page.locator("[data-qa='connection_search_report_fraud_drawer__fraud_type_selector__anchor']");
         this.successToast = page.locator("//*[contains(@class, 'g-toast_theme_success')]");
+        this.fraudTypes = page.locator("//div[@class='v-drop-down-menu-2__content']/descendant::div[contains(@class,'g-text')]");
     }
 
     @Step("Click connections tab")
@@ -1079,5 +1082,21 @@ public class ConnectionPage extends AbstractPage {
 
     public void addFraud(String fraud) {
         addFraud(fraud, "Confirmed", "comment" + getCurrentTimestampSeconds());
+    }
+
+    @Step("Get list of visible fraud types in connection search bulk operations")
+    public List<String> getFraudTypesList() {
+        fraudSelectButton.click();
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < fraudTypes.count(); i++) {
+            list.add(fraudTypes.nth(i).textContent());
+        }
+        fraudSelectButton.click();
+        return list;
+    }
+
+    @Step("Click multiselect checkbox by ucid")
+    public void clickMultiselectCheckboxByUcid(String ucid) {
+        page.locator(String.format(CHECKBOX_BY_UCID_PATTERN, ucid)).click();
     }
 }

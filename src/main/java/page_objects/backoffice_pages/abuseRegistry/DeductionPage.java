@@ -31,6 +31,20 @@ public class DeductionPage extends AbstractPage {
     private final Locator deductionTable;
     private final Locator singleEditButton;
     private final Locator getFileButton;
+    private final Locator illegalProfitInput;
+    private final Locator suggesteedDeductionInput;
+    private final Locator deductionInput;
+    private final Locator cancelButton;
+    private final Locator commentaryInput;
+    private final Locator saveButton;
+    private final Locator deductButton;
+    private final Locator toast;
+    private final Locator batchDeductionButton;
+    private final Locator batchDeductionAccountsListTextarea;
+    private final Locator batchDeductionApproveAllButton;
+    private final Locator batchDeductionConfirmApproveButton;
+    private final Locator batchDeductionValidationItems;
+    private final Locator batchDeductionValidationHeader;
 
     private static final String FILTER_OPTION_BY_TEXT_PATTERN = "//div[@data-qa='select-popup']/descendant::span[text()='%s']";
     private static final String COLUMN_VALUE_BY_ORDER_PATTERN = "//div[contains(@class,'v-body-cell')][%s]/descendant::div[contains(@class,'g-text')]";
@@ -44,14 +58,6 @@ public class DeductionPage extends AbstractPage {
     private static final String DRAWER_SAVE_BUTTON_LOCATOR = "//span[text()='Save']/ancestor::button";
     private static final String DRAWER_DEDUCT_BUTTON_LOCATOR = "//span[text()='Deduct']/ancestor::button";
     private static final String DRAWER_FILE_BUTTON_LOCATOR = "//button[@data-qa='deductions__multiselect_panel__get_file']";
-    private final Locator illegalProfitInput;
-    private final Locator suggesteedDeductionInput;
-    private final Locator deductionInput;
-    private final Locator cancelButton;
-    private final Locator commentaryInput;
-    private final Locator saveButton;
-    private final Locator deductButton;
-    private final Locator toast;
 
     public DeductionPage(Page page) {
         super(page);
@@ -79,6 +85,12 @@ public class DeductionPage extends AbstractPage {
         this.deductButton = page.locator(DRAWER_DEDUCT_BUTTON_LOCATOR);
         this.toast = page.locator(".g-toaster .g-toast__content");
         this.getFileButton = page.locator(DRAWER_FILE_BUTTON_LOCATOR);
+        this.batchDeductionButton = page.locator("//*[text()='Batch deduction']/ancestor::button");
+        this.batchDeductionAccountsListTextarea = page.locator("//*[@class='v-text-area-with-counter']/descendant::textarea");
+        this.batchDeductionApproveAllButton = page.locator("//button[contains(@class,'g-button_view_toned-success')]");
+        this.batchDeductionConfirmApproveButton = page.locator("//button[@data-qa='approve_all_deduction_input_footer_button__confirm']");
+        this.batchDeductionValidationItems = page.locator("//div[@class='v-deduction-butch-failed-item']");
+        this.batchDeductionValidationHeader = page.locator("//div[@data-qa='drawer_header']/descendant::*[text()='Failed validation']");
     }
 
     @Step("Click abuse registry button")
@@ -282,6 +294,36 @@ public class DeductionPage extends AbstractPage {
     public void checkOneDeductionRecalculated() {
         toast.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
         assertEquals("Illegal profit and suggested deduction were recalculated for 1 client due to changes in realized or floating PNL after record creation", toast.textContent());
+    }
+
+    @Step("Click batch deduction button")
+    public void clickBatchDeductionButton() {
+        batchDeductionButton.click();
+    }
+
+    @Step("Fill batch deduction accounts list")
+    public void fillBatchDeductionAccountsList(String accountsList) {
+        batchDeductionAccountsListTextarea.fill(accountsList);
+    }
+
+    @Step("Click batch deduction approve all button")
+    public void clickBatchDeductionApproveAllButton() {
+        batchDeductionApproveAllButton.click();
+    }
+
+    @Step("Click batch deduction confirm approve button")
+    public void clickBatchDeductionConfirmApproveButton() {
+        batchDeductionConfirmApproveButton.click();
+    }
+
+    @Step("Get batch deduction validation items")
+    public List<String> getBatchDeductionValidationItems() {
+        batchDeductionValidationHeader.waitFor(new Locator.WaitForOptions().setState(VISIBLE));
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < batchDeductionValidationItems.count(); i++) {
+            list.add(batchDeductionValidationItems.nth(i).innerText());
+        }
+        return list;
     }
 }
 
