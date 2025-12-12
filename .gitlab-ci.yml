@@ -214,7 +214,7 @@ job_test_core:
 
 #Job for backoffice team nightly tests
 job_test_backoffice:
-  timeout: 3 hours
+  timeout: 4 hours
   stage: test
   needs: ["job_build"]
   image: gradle:8.10.0-jdk22
