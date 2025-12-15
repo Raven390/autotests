@@ -1,6 +1,7 @@
 package page_objects.backoffice_pages.investigationTool;
 
 import com.microsoft.playwright.*;
+import com.microsoft.playwright.options.ElementState;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import helpers.data.enums.DateTimeFormat;
 import helpers.data.enums.VerificationStatus;
@@ -128,8 +129,11 @@ public class PaymentsPage extends AbstractPage {
     private static final String WIDGET_TITLE = "//div[contains(@class,'v-payments-summary-card__title-wrapper')]";
     private static final String WIDGET_VALUE = "//div[contains(@class,'v-payments-summary-card__total')]";
     private static final String WIDGET_COUNTER = "//div[contains(@class,'v-payments-summary-card__count')]";
+    public static final String PAYMENT_SUMMARY_PANEL_TEMPLATE = "//div[@data-qa='payments_summary']//*[contains(@class, 'v-summary-metrics')]//*[text()='%s']/../..";
+    public static final String PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE = "//span[text()='%s']/../span[2]";
     public static final String CONNECTED_CLIENTS_BUTTON = "//div[contains(@title,'Connected clients')]";
     public static final String OPEN_VERIFICATION_DRAWER_BUTTON = "//*[@data-qa='payment_profile__view_drawer__change_status']";
+
 
     public PaymentsPage(Page page) {
         super(page);
@@ -1346,6 +1350,24 @@ public class PaymentsPage extends AbstractPage {
 
     public void clickPaymentProfileButton() {
         paymentProfileButton.click();
+    }
+
+    public void verifyPaymentSummaryPanelValue(String panelName, String metricName, String expectedValue) {
+        Allure.step("check " + metricName + " metric value in panel " + panelName + " of the payment summary panel");
+        String panelLocator = String.format(PAYMENT_SUMMARY_PANEL_TEMPLATE, panelName);
+        page.waitForSelector(panelLocator).waitForElementState(ElementState.VISIBLE);
+        var panel = page.locator(panelLocator);
+        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName)).textContent();
+        assertEquals(expectedValue, metricValue);
+    }
+
+    public void verifyExistingPaymentSummaryPanelValue(String panelName, String metricName) {
+        Allure.step("check " + metricName + " metric value in panel " + panelName + " of the payment summary panel");
+        String panelLocator = String.format(PAYMENT_SUMMARY_PANEL_TEMPLATE, panelName);
+        page.waitForSelector(panelLocator).waitForElementState(ElementState.VISIBLE);
+        var panel = page.locator(panelLocator);
+        var metricValue = panel.locator(String.format(PAYMENT_SUMMARY_PANEL_METRIC_TEMPLATE, metricName)).textContent();
+        assertNotNull(metricValue);
     }
 
     public String getPaymentProfileDrawerSubheader() {

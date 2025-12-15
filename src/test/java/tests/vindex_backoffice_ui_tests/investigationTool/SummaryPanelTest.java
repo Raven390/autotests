@@ -3,28 +3,19 @@ package tests.vindex_backoffice_ui_tests.investigationTool;
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntity;
-import business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory;
 import business_objects.db.clickhouse.mt_account.MtAccountObject;
-import business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObject;
+import business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObject;
 import business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedObject;
-import business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObject;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
 import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import helpers.data.ClientHelper;
 import helpers.data.enums.*;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureId;
 import io.qameta.allure.Feature;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import tests.TestBaseWeb;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
@@ -32,71 +23,69 @@ import java.util.Locale;
 
 import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFactory.generateStaticCrmTbAccountActive;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateStaticUserByClient;
+import static business_objects.db.clickhouse.crm_tb_withdrawal.CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient;
 import static business_objects.db.clickhouse.mt_account.MtAccountObjectFactory.generateMtAccountByCrmTbAccount;
-import static business_objects.db.clickhouse.mt_mt4_trades.MtMt4TradesObjectFactory.generateMt4TradesObject;
+import static business_objects.db.clickhouse.mt_balance_orders_table.MtBalanceOrdersObjectFactory.generateMtBalanceOrder;
 import static business_objects.db.clickhouse.mt_mt5_deals_coerced.Mt5DealsCoercedFactory.generateTradeByClient;
-import static business_objects.db.clickhouse.mt_mt5_positions.MtMt5PositionsObjectFactory.generateMtMt5PositionsObject;
 import static business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsFactory.generateS3FactLoginMetricsClient;
 import static helpers.api.AbuseRegistryHelper.addFraudsForClient;
-import static helpers.data.enums.FraudTypeOld.*;
-import static helpers.database.BoHelper.*;
-import static helpers.database.ChHelper.calculateWithdrawalsValue;
+import static helpers.data.enums.FraudTypeOld.CPA_ABUSE;
+import static helpers.data.enums.FraudTypeOld.MARKET_MANIPULATION;
+import static helpers.database.BoHelper.cleanUserAR;
 import static helpers.database.DbHelper.*;
 import static utils.Constants.*;
 import static utils.Utils.*;
-import static utils.Utils.getRandomRoundedDouble;
 
-public class SummaryPanelTest extends TestBaseWeb {
-    // Format: US format with comma as thousands separator, dot as decimal, ALWAYS 2 decimals
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.US));
+class SummaryPanelTest extends TestBaseWeb {
     private static final ClientHelper client = new ClientHelper(222_201, "d555fa11-3e45-44d3-8070-e28eaff987c7", Brand.INFINOX, Regulator.VFSC2, 222_201_001, 22_201_002, 42);
+    private static final ClientHelper clientBybit = new ClientHelper(222_202, "d555fa11-3e45-44d3-8070-e28eaff987c8", Brand.BYBIT, Regulator.VFSC2, 222_201_003, 22_201_004, 42);
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
+    private static final CrmTbUserObject crmTbUserBybit = generateStaticUserByClient(clientBybit);
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
-
-    static {
-        DECIMAL_FORMAT.setMinimumFractionDigits(2);
-    }
+    private static CrmTbAccountObject accountBybit;
+    private static MtAccountObject mtAccountBybit;
+    private static final String CLIENT_UCID_WHERE = "ucid ='" + client.getUcid() + "'";
+    private static final String CLIENT_BYBIT_UCID_WHERE = "ucid ='" + clientBybit.getUcid() + "'";
 
     @BeforeAll
-    public static void setup() throws ReflectiveOperationException, SQLException, JsonProcessingException,
-            InterruptedException {
-        deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
+    static void setup() {
         insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUser);
+        insertObjectToDb(CRM_USER_TABLE_NAME, crmTbUserBybit);
         account1 = generateStaticCrmTbAccountActive(client);
+        accountBybit = generateStaticCrmTbAccountActive(clientBybit);
+        accountBybit.serverName = "123bybit" + accountBybit.serverName;
         insertCrmAccountsToDb(account1);
+        insertCrmAccountsToDb(accountBybit);
         mtAccount1 = generateMtAccountByCrmTbAccount(account1);
+        mtAccountBybit = generateMtAccountByCrmTbAccount(accountBybit);
+        mtAccountBybit.server = "123bybit" + mtAccountBybit.server;
         insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccount1);
+        insertObjectToDb(MT_ACCOUNT_TABLE_NAME, mtAccountBybit);
+    }
+
+    @AfterAll
+    static void teardown() {
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(CRM_USER_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteEntryFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1022")
-    @Feature("BMS-62 Clients summary panel")
+    @Feature("BMS-2765 Clients summary panel")
     @DisplayName("Clients summary panel PNL")
-    public void clientSummaryPnlTest() {
+    void clientSummaryPnlTest() {
         // Clean ALL related data
-        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(MT4_TRADES_COERCED_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(MT5_POSITIONS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-        deleteObjectFromDb(MT4_TRADES_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
-
-        Allure.step("Generate historical data what not include current date");
-        S3FactLoginMetricsObject historyMetrics1 = generateS3FactLoginMetricsClient(client);
-        historyMetrics1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
-        historyMetrics1.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
-
-        S3FactLoginMetricsObject historyMetrics2 = generateS3FactLoginMetricsClient(client);
-        historyMetrics2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
-        historyMetrics2.setDailyNetClosedPnl(getRandomRoundedDouble(0, 555_555));
-
-        insertObjectsToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, List.of(historyMetrics1, historyMetrics2));
-
-        // Calculate daily_net_closed_pnl_d1_usd (historical PNL)
-        double dailyNetClosedPnlD1 = historyMetrics1.getDailyNetClosedPnl() + historyMetrics2.getDailyNetClosedPnl();
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteObjectFromDb(MT5_DEALS_COERCED_TABLE_NAME, CLIENT_UCID_WHERE);
 
         Allure.step("Generate MT5 closed deals (today_pnl_usd)");
         Mt5DealsCoercedObject deal1 = generateTradeByClient(client);
@@ -114,131 +103,94 @@ public class SummaryPanelTest extends TestBaseWeb {
         insertObjectsToDb(MT5_DEALS_COERCED_TABLE_NAME, List.of(deal1, deal2));
 
         // Calculate today_pnl_usd (today's closed deals: profit + commission + storage)
-        double todayPnlUsd = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
-
-        // realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
-        var realizedPnlUsd = dailyNetClosedPnlD1 + todayPnlUsd;
-
-        Allure.step("Generate MT4 open trades (floating_pnl_mt4)");
-        MtMt4TradesObject mt4Trade1 = generateMt4TradesObject(client);
-        mt4Trade1.setCloseTime("1970-01-01 00:00:00");
-        mt4Trade1.setCmd(0); // Buy order
-        mt4Trade1.setProfitUsd(getRandomRoundedDouble(50, 500));
-        mt4Trade1.setCommissionUsd(getRandomRoundedDouble(5, 50));
-        mt4Trade1.setStorageUsd(getRandomRoundedDouble(2, 20));
-
-        MtMt4TradesObject mt4Trade2 = generateMt4TradesObject(client);
-        mt4Trade2.setCloseTime("1970-01-01 00:00:00");
-        mt4Trade2.setCmd(1); // Sell order
-        mt4Trade2.setProfitUsd(getRandomRoundedDouble(50, 500));
-        mt4Trade2.setCommissionUsd(getRandomRoundedDouble(5, 50));
-        mt4Trade2.setStorageUsd(getRandomRoundedDouble(2, 20));
-
-        insertObjectsToDb(MT4_TRADES_TABLE_NAME, List.of(mt4Trade1, mt4Trade2));
-
-        // Calculate floating_pnl_mt4_usd (profit + storage + commission)
-        double floatingPnlMt4 = (mt4Trade1.getProfitUsd() + mt4Trade1.getCommissionUsd() + mt4Trade1.getStorageUsd()) + (mt4Trade2.getProfitUsd() + mt4Trade2.getCommissionUsd() + mt4Trade2.getStorageUsd());
-
-        Allure.step("Generate MT5 open positions (floating_pnl_mt5)");
-        MtMt5PositionsObject position1 = generateMtMt5PositionsObject(client);
-        position1.setAccount(client.getTradingAccount());
-        position1.setServerId(client.getServerId());
-        position1.setIsDeleted(0);
-        position1.setAction(0); // Buy
-        position1.setProfitUsd(getRandomRoundedDouble(50, 500));
-        position1.setStorageUsd(getRandomRoundedDouble(2, 20));
-
-        MtMt5PositionsObject position2 = generateMtMt5PositionsObject(client);
-        position2.setAccount(client.getTradingAccount());
-        position2.setServerId(client.getServerId());
-        position2.setIsDeleted(0);
-        position2.setAction(1); // Sell
-        position2.setProfitUsd(getRandomRoundedDouble(50, 500));
-        position2.setStorageUsd(getRandomRoundedDouble(2, 20));
-
-        insertObjectsToDb(MT5_POSITIONS_TABLE_NAME, List.of(position1, position2));
-
-        // Calculate floating_pnl_mt5_usd (profit + storage, NO commission for positions)
-        double floatingPnlMt5 = (position1.getProfitUsd() + position1.getStorageUsd()) + (position2.getProfitUsd() + position2.getStorageUsd());
-
-        // trading_client_pnl_usd = realized_pnl_usd + floating_pnl_usd
-        // where: realized_pnl_usd = daily_net_closed_pnl_d1_usd + today_pnl_usd
-        //        floating_pnl_usd = floating_pnl_mt4_usd + floating_pnl_mt5_usd
-        var expectedPnl = realizedPnlUsd + floatingPnlMt4 + floatingPnlMt5;
+        double realizedPnl = (deal1.getProfitUsd() + deal1.getCommissionUsd() + deal1.getStorageUsd()) + (deal2.getProfitUsd() + deal2.getCommissionUsd() + deal2.getStorageUsd());
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
 
-        String formattedExpectedPnl = DECIMAL_FORMAT.format(roundDouble(expectedPnl, 2));
+        String formattedExpectedPnl = decimalFormat.format(roundDouble(realizedPnl + mtAccount1.floatingPnlUsd, 2));
         generalTab.checkSummaryPanelValue("Trading PNL", formattedExpectedPnl);
     }
 
     @Test
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
-    @AllureId("1027")
-    @Feature("BMS-62 Clients summary panel")
-    @DisplayName("Clients summary panel Withdrawals")
-    public void clientSummaryWithdrawalsTest() {
-        deleteObjectFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, "ucid ='" + client.getUcid() + "'");
+    @AllureId("1849")
+    @Feature("BMS-2765 Clients summary panel")
+    @DisplayName("Clients summary panel Deposits")
+    void clientSummaryDepositsTest() {
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
+
         Allure.step("Prepare DB data for test user");
-        CrmTbWithdrawalEntity withdrawalObject1 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount1 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject1.setAmountUsd(amount1);
-        withdrawalObject1.setReversedAmountUsd(amount1.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject1.setStatusId(3);
-
-        CrmTbWithdrawalEntity withdrawalObject2 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount2 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject2.setAmountUsd(amount2);
-        withdrawalObject2.setReversedAmountUsd(amount2.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject2.setStatusId(5);
-
-        CrmTbWithdrawalEntity withdrawalObject3 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount3 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject3.setAmountUsd(amount3);
-        withdrawalObject3.setReversedAmountUsd(amount3.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject3.setStatusId(7);
-
-        CrmTbWithdrawalEntity withdrawalObject4 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount4 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject4.setAmountUsd(amount4);
-        withdrawalObject4.setReversedAmountUsd(amount4.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject4.setStatusId(9);
-
-        CrmTbWithdrawalEntity withdrawalObject5 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount5 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject5.setAmountUsd(amount5);
-        withdrawalObject5.setReversedAmountUsd(amount5.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject5.setStatusId(16);
-
-        CrmTbWithdrawalEntity withdrawalObject6 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount6 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject6.setAmountUsd(amount6);
-        withdrawalObject6.setReversedAmountUsd(amount6.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject6.setStatusId(17);
-
-        CrmTbWithdrawalEntity withdrawalObject7 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount7 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject7.setAmountUsd(amount7);
-        withdrawalObject7.setReversedAmountUsd(amount7.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject7.setStatusId(61);
-        withdrawalObject7.setStatus("1");
-
-        CrmTbWithdrawalEntity withdrawalObject8 = CrmTbWithdrawalEntityFactory.generateCrmTbWithdrawalEntityByClient(client);
-        BigDecimal amount8 = BigDecimal.valueOf(getRandomRoundedDouble(0.00, 500_000));
-        withdrawalObject8.setAmountUsd(amount8);
-        withdrawalObject8.setReversedAmountUsd(amount8.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP));
-        withdrawalObject8.setStatusId(61);
-        withdrawalObject8.setStatus("2");
-
-        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7, withdrawalObject8));
+        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        deposit1.setComment("123 deposit 456");
+        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        deposit2.setComment("123 deposit 456");
+        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(client, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        deposit3.setComment("123 pam 456");
+        insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
-        generalTab.checkSummaryPanelValue("Withdrawals", DECIMAL_FORMAT.format(calculateWithdrawalsValue(withdrawalObject1, withdrawalObject2, withdrawalObject3, withdrawalObject4, withdrawalObject5, withdrawalObject6, withdrawalObject7)));
+
+        //we don't count deposits with comment containing '%pam%'
+        String formattedExpectedPnl = decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
+        generalTab.checkSummaryPanelValue("Deposits", formattedExpectedPnl);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1850")
+    @Feature("BMS-2765 Clients summary panel")
+    @DisplayName("Clients summary panel Deposits Bybit")
+    void clientSummaryDepositsBybitTest() {
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_BYBIT_UCID_WHERE);
+
+        Allure.step("Prepare DB data for test user");
+        MtBalanceOrdersObject deposit1 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        deposit1.setServerName("123bybit" + deposit1.serverName);
+        MtBalanceOrdersObject deposit2 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(0.01, 99_999.99), getRandomRoundedDouble(0.01, 99_999.99), getCurrentTimestampDbFormat());
+        deposit2.setServerName("123bybit" + deposit2.serverName);
+        MtBalanceOrdersObject deposit3 = generateMtBalanceOrder(clientBybit, getRandomRoundedDouble(-99_999.99, -0.01), getRandomRoundedDouble(-99_999.99, -0.01), getCurrentTimestampDbFormat());
+        deposit3.setServerName("123bybit" + deposit3.serverName);
+        insertObjectsToDb(MT_BALANCE_ORDERS_TABLE_NAME, List.of(deposit1, deposit2, deposit3));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalTab.navigateGeneralTab(clientBybit.getUcid());
+
+        //we don't count negative deposits
+        String formattedExpectedPnl = decimalFormat.format(roundDouble(deposit1.amountUsd + deposit2.amountUsd, 2)) + " USD";
+        generalTab.checkSummaryPanelValue("Deposits", formattedExpectedPnl);
+    }
+
+    @Test
+    @Tag(TEAM_BACKOFFICE)
+    @Tag(LAYER_WEB)
+    @AllureId("1027")
+    @Feature("BMS-2765 Clients summary panel")
+    @DisplayName("Clients summary panel Withdrawals")
+    void clientSummaryWithdrawalsTest() {
+        deleteObjectFromDb(MT_BALANCE_ORDERS_TABLE_NAME, CLIENT_UCID_WHERE);
+        deleteEntryFromDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, CLIENT_UCID_WHERE);
+
+        CrmTbWithdrawalEntity crmTbWithdrawal1 = generateCrmTbWithdrawalEntityByClient(client);
+        crmTbWithdrawal1.setStatusId(16);
+        crmTbWithdrawal1.setStatusGroup("Success");
+        CrmTbWithdrawalEntity crmTbWithdrawal2 = generateCrmTbWithdrawalEntityByClient(client);
+        crmTbWithdrawal2.setStatusId(16);
+        crmTbWithdrawal2.setStatusGroup("Success");
+        insertObjectsToDb(CLICKHOUSE_CRM_TB_WITHDRAWAL, List.of(crmTbWithdrawal1, crmTbWithdrawal2));
+
+        investigationPage.navigateEnterPage();
+        keycloackPage.loginAsAutotestUser();
+        generalTab.navigateGeneralTab(client.getUcid());
+
+        String formattedExpectedWithdrawals = decimalFormat.format(Math.abs(roundDouble(crmTbWithdrawal1.getAmountUsd().doubleValue() + crmTbWithdrawal2.getAmountUsd().doubleValue(), 2)));
+        generalTab.checkSummaryPanelValue("Withdrawals", formattedExpectedWithdrawals);
     }
 
     @Test
@@ -247,7 +199,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @AllureId("1024")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Segment test")
-    public void clientSummarySegmentTest() {
+    void clientSummarySegmentTest() {
         Allure.step("Prepare DB data for test user");
         SegmentationTableObject segment1 = new SegmentationTableObject();
         segment1.setUcid(client.getUcid());
@@ -272,7 +224,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @AllureId("1025")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud, no frauds")
-    public void clientSummaryFraudEmptyTest() throws Exception {
+    void clientSummaryFraudEmptyTest() throws Exception {
         cleanUserAR(client.getUcid());
         Allure.step("Prepare DB data for test user");
 
@@ -288,7 +240,7 @@ public class SummaryPanelTest extends TestBaseWeb {
     @AllureId("1026")
     @Feature("BMS-62 Clients summary panel")
     @DisplayName("Clients summary panel Fraud")
-    public void clientSummaryFraudTest() throws Exception {
+    void clientSummaryFraudTest() throws Exception {
         cleanUserAR(client.getUcid());
         addFraudsForClient(client, List.of(FraudType.CPA_ABUSE), FraudTypeStatus.CONFIRMED);
         addFraudsForClient(client, List.of(FraudType.MARKET_MANIPULATION), FraudTypeStatus.POTENTIAL);
@@ -303,33 +255,41 @@ public class SummaryPanelTest extends TestBaseWeb {
     @Tag(TEAM_BACKOFFICE)
     @Tag(LAYER_WEB)
     @AllureId("1055")
-    @Feature("BMS-976 [FE] Implement the version of layout with Revenue")
+    @Feature("BMS-2765 Clients summary panel Revenue section test")
     @DisplayName("Clients summary panel Revenue section test")
-    public void clientSummaryRevenueTest() {
-        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
+    void clientSummaryRevenueTest() {
+        deleteObjectFromDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, CLIENT_UCID_WHERE);
+
         Allure.step("Prepare DB data for test user");
         S3FactLoginMetricsObject revenue = generateS3FactLoginMetricsClient(client);
-        revenue.setDailyCoreSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
-        revenue.setDailyTakerSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
-        revenue.setDailyLpSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
-        revenue.setDailyVbSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
-        revenue.setDailyAppliedMinSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
-        revenue.setDailyAppliedMaxSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyCoreSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyCoreSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyTakerSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyTakerSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyLpSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyLpSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyVbSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyVbSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyAppliedMinSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMinSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyAppliedMaxSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyAppliedMaxSpreadRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyMakerSpreadRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+
+        revenue.setDailyClientSlippageRevenueOz(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setDailyClientSlippageRevenuePe(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailyCommissionRevenue(getRandomRoundedDouble(0.0, 999_999_999.99));
         revenue.setDailySwapsRevenue(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setIbCommission(getRandomRoundedDouble(0.0, 999_999_999.99));
+        revenue.setSalesCommission(getRandomRoundedDouble(0.0, 999_999_999.99));
+
         insertObjectToDb(S3_FACT_LOGIN_METRICS_TABLE_NAME, revenue);
 
         investigationPage.navigateEnterPage();
         keycloackPage.loginAsAutotestUser();
         generalTab.navigateGeneralTab(client.getUcid());
         generalTab.checkSummaryPanelValue(
-                "Company RFR", DECIMAL_FORMAT.format(generalTab.calculateRevenue(revenue))
+                "Company RFR", decimalFormat.format(generalTab.calculateRevenue(revenue))
         );
     }
 }
