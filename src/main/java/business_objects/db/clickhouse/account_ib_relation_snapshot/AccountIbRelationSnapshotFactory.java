@@ -1,5 +1,6 @@
 package business_objects.db.clickhouse.account_ib_relation_snapshot;
 
+import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import helpers.data.ClientHelper;
 import helpers.data.enums.DateTimeFormat;
 
@@ -23,6 +24,31 @@ public class AccountIbRelationSnapshotFactory {
         relation.setLastUpdated(getCurrentTimestampDbFormat());
         relation.setIsRebateAccount(1);
         relation.setIsDel(0);
+        return relation;
+    }
+
+    public static AccountIbRelationSnapshotObject generateAccountIbRelationSnapshotObjectByAccounts(
+            CrmTbAccountObject account, CrmTbAccountObject accountIb) {
+        AccountIbRelationSnapshotObject relation = new AccountIbRelationSnapshotObject();
+        relation.setUserId(account.userId);
+        relation.setBrand(account.brand);
+        relation.setRegulator(account.regulator);
+        relation.setUcid(account.ucid);
+        relation.setAccount(Long.valueOf(account.account));
+        relation.setServerId(account.serverIdSt);
+        relation.setServerName(account.serverName);
+        relation.setDirectIb(accountIb.userId);
+        relation.setDirectIbLevel(1);
+        relation.setDirectIbRebateAccount(accountIb.account);
+        relation.setMasterIb(0);
+        relation.setMasterIbRebateAccount(0);
+        relation.setRecordEffectiveStartDate("2020-01-01");
+        relation.setRecordEffectiveEndDate("2040-12-31");
+        relation.setRecordActiveFlag(true);
+        relation.setIsDel(0);
+        relation.setRecordDeletedFlag("N");
+        relation.setLastUpdated(getCurrentTimestampDbFormat());
+        relation.setIsRebateAccount(1);
         return relation;
     }
 }

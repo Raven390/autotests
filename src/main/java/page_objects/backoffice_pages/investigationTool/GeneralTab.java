@@ -582,7 +582,7 @@ public class GeneralTab extends AbstractPage {
     }
 
     public Double calculateRevenue(S3FactLoginMetricsObject revenue) {
-        return revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyCommissionRevenue() + revenue.getDailySwapsRevenue();
+        return revenue.getDailyCoreSpreadRevenueOz() + revenue.getDailyCoreSpreadRevenuePe() + revenue.getDailyTakerSpreadRevenueOz() + revenue.getDailyTakerSpreadRevenuePe() + revenue.getDailyLpSpreadRevenueOz() + revenue.getDailyLpSpreadRevenuePe() + revenue.getDailyVbSpreadRevenueOz() + revenue.getDailyVbSpreadRevenuePe() + revenue.getDailyAppliedMinSpreadRevenueOz() + revenue.getDailyAppliedMinSpreadRevenuePe() + revenue.getDailyAppliedMaxSpreadRevenueOz() + revenue.getDailyAppliedMaxSpreadRevenuePe() + revenue.getDailyMakerSpreadRevenueOz() - revenue.getDailyClientSlippageRevenueOz() - revenue.getDailyClientSlippageRevenuePe() - revenue.getDailyCommissionRevenue() - revenue.getDailySwapsRevenue() - revenue.getIbCommission() - revenue.getSalesCommission();
     }
 
     public void clickCpaOverviewButton() {

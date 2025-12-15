@@ -1,4 +1,4 @@
-package tests.vindex_backoffice_ui_tests.investigationTool.paymentsTab;
+package tests.vindex_backoffice_ui_tests.investigationTool.paymentsTab.summarySubTab;
 
 import business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
