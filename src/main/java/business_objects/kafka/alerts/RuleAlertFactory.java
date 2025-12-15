@@ -30,6 +30,23 @@ public class RuleAlertFactory {
         return alert;
     }
 
+    @Step("Generate rule alert for client with ucid '{ucid}' and trigger")
+    public static RuleAlert generateRuleAlertByUcid(String ucid, String trigger) {
+        RuleAlert alert = new RuleAlert();
+        alert.alertId = getRandomUuidString();
+        alert.timestamp = Instant.now().toString();
+        alert.ucid = ucid;
+        alert.rule = new RuleAlert.Rule();
+        alert.rule.code = 11;
+        alert.rule.ver = "01";
+        alert.rule.name = "Registration";
+        alert.rule.trigger = trigger;
+        alert.rule.fraudType = "MARKET_MANIPULATION";
+        alert.rule.attributes = new RuleAlert.Rule.Attribute();
+        alert.rule.attributes.stepName = "Linked market manipulator abuser";
+        return alert;
+    }
+
     @Step("Generate rule alert for client with ucid '{ucid}'")
     public static RuleAlert generateRuleAlertByUcid(ClientHelper client) {
         RuleAlert alert = new RuleAlert();
