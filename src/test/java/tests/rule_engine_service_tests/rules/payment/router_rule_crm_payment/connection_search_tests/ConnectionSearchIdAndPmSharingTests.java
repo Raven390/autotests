@@ -81,7 +81,6 @@ class ConnectionSearchIdAndPmSharingTests extends TestBaseRule {
         checkElementId("Activity_0prj79b", data.crmWithdrawalEvent.getId(), Rule.ROUTER_RULE.getProcessId());
     }
 
-    @Disabled
     @Test
     @AllureId("1837")
     @DisplayName("Connection Search in router rule. All connected by payout are connected by NAME_BIRTH or DOCUMENT = false. ElementId: Event_1i416tj")

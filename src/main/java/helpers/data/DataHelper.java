@@ -17,6 +17,7 @@ import business_objects.db.clickhouse.crm_tb_bonus_table.CrmTbBonusObject;
 import business_objects.db.clickhouse.crm_tb_deposit_table.CrmTbDepositEntity;
 import business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObject;
 import business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntry;
+import business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntry;
 import business_objects.db.clickhouse.dict_account_to_ucid.DictAccountToUcidObject;
 import business_objects.db.clickhouse.dict_active_trading_days_by_ucid.dict_is_test.DictActiveTradingDaysByUcidObject;
 import business_objects.db.clickhouse.dict_is_test.DictIsTestObject;
@@ -66,6 +67,7 @@ import static business_objects.db.clickhouse.crm_tb_account.CrmTbAccountObjectFa
 import static business_objects.db.clickhouse.crm_tb_account_for_mt.crm_tb_account.CrmTbAccountForMtObjectFactory.generateAccountForMtByClient;
 import static business_objects.db.clickhouse.crm_tb_user_table.CrmTbUserObjectFactory.generateUserByClient;
 import static business_objects.db.clickhouse.data_science_test.device_id_table.DeviceIdTableEntryFactory.deviceIdTableEntryForConnectionSearch;
+import static business_objects.db.clickhouse.data_science_test.document_table.DocumentTableEntryFactory.documentTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.email_table.EmailTableEntryFactory.emailTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntryFactory.phoneTableEntryForConnectionSearch;
 import static business_objects.db.clickhouse.ln_session_parsed.LnSessionParsedObjectFactory.generateLexisNexisDataByClient;
@@ -118,6 +120,7 @@ public class DataHelper {
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
     public List<PhoneTableEntry> phoneTableEntries;
+    public List<DocumentTableEntry> documentTableEntries;
     public List<IpTableEntry> ipTableEntries;
     public List<DeviceIdTableEntry> deviceIdTableEntries;
     public CloseTradeMtEvent closeTradeMtEvent;
@@ -241,6 +244,9 @@ public class DataHelper {
             }
             if (data.mtBalanceOrdersObjects != null) {
                 data.mtBalanceOrdersObjects.forEach(deal -> insertObjectToDb(MT_BALANCE_ORDERS_TABLE_NAME, deal));
+            }
+            if (data.documentTableEntries != null) {
+                data.documentTableEntries.forEach(document -> insertObjectToDb(DOCUMENT_TABLE_NAME, document));
             }
             if (data.mirrorLoginObjects != null) {
                 data.mirrorLoginObjects.forEach(deal -> insertObjectToDb(MIRROR_LOGIN_TABLE_NAME, deal));
@@ -432,6 +438,45 @@ public class DataHelper {
         return dataHelper;
     }
 
+    protected static void setupAttrConnectionPayoutIdAndNameBirthWithMaxScore(
+            DataHelper data,
+            ClientHelper connectedClient) {
+
+
+        if (data.connections == null) {
+            data.connections = new ArrayList<>();
+        }
+        if (data.deviceIdTableEntries == null) {
+            data.deviceIdTableEntries = new ArrayList<>();
+        }
+        if (data.documentTableEntries == null) {
+            data.documentTableEntries = new ArrayList<>();
+        }
+
+        connectedClient.setDeviceId(data.clientHelper.getDeviceId());
+        //add connection with connected client
+        ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
+        ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo1.connectionAttributeName = "payout";
+        connectionInfo1.connectionAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.sourceAttributeValue = data.clientHelper.getDeviceId();
+        connectionInfo1.relationType = "exact";
+
+        ConnectionTableEntry.ConnectionInfo connectionInfo2 = new ConnectionTableEntry.ConnectionInfo();
+        connectionInfo2.connectionAttributeName = "document";
+        connectionInfo2.connectionAttributeValue = "1";
+        connectionInfo2.sourceAttributeValue = "1";
+        connectionInfo2.relationType = "exact";
+
+        connection.connectionInfo = connectionInfoToString(List.of(connectionInfo1, connectionInfo2));
+        connection.connectionScore = 1d;
+        data.connections.add(connection);
+
+        data.lnSessionParsedObject.setDeviceId(data.clientHelper.getDeviceId());
+        data.documentTableEntries.add(documentTableEntryForConnectionSearch(data.clientHelper));
+        data.documentTableEntries.add(documentTableEntryForConnectionSearch(connectedClient));
+    }
+
     protected static void setupAttrConnectionEmailPhoneWithCustomScore(
             DataHelper data,
             ClientHelper connectedClient, Double score) {
@@ -534,7 +579,7 @@ public class DataHelper {
         //add connection with connected client
         ConnectionTableEntry connection = getConnection(data.clientHelper, connectedClient);
         ConnectionTableEntry.ConnectionInfo connectionInfo1 = new ConnectionTableEntry.ConnectionInfo();
-        connectionInfo1.connectionAttributeName = "payoutId";
+        connectionInfo1.connectionAttributeName = "payout";
         connectionInfo1.connectionAttributeValue = data.clientHelper.getDeviceId();
         connectionInfo1.sourceAttributeValue = data.clientHelper.getDeviceId();
         connectionInfo1.relationType = "exact";
@@ -571,6 +616,18 @@ public class DataHelper {
         data.connectedUsers.add(generateUserByClient(clientTo));
         data.connectedClientHelpers.add(clientTo);
         setupAttrConnectionPayoutId(data, clientTo);
+    }
+
+    public static void addConnectionByPayoutAndNameBirthAttribute(DataHelper data, ClientHelper clientTo) {
+        if (data.connectedUsers == null) {
+            data.connectedUsers = new ArrayList<>();
+        }
+        if (data.connectedClientHelpers == null) {
+            data.connectedClientHelpers = new ArrayList<>();
+        }
+        data.connectedUsers.add(generateUserByClient(clientTo));
+        data.connectedClientHelpers.add(clientTo);
+        setupAttrConnectionPayoutIdAndNameBirthWithMaxScore(data, clientTo);
     }
 
     public static DataHelper addFraudTypeToConnectedUser(DataHelper data, FraudTypeStatus status, FraudType fraudType)

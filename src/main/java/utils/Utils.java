@@ -485,7 +485,7 @@ public class Utils {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("clientId", ucid);
         boolean updated = false;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 90; i++) {
             Response response = getConnectionsByClientId(queryParams);
             GetConnectionsResponse[] responseBody = objectMapper.readValue(
                     response.body().string(), GetConnectionsResponse[].class
