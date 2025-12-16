@@ -201,14 +201,9 @@ class SummaryPanelTest extends TestBaseWeb {
     @DisplayName("Clients summary panel Segment test")
     void clientSummarySegmentTest() {
         Allure.step("Prepare DB data for test user");
-        SegmentationTableObject segment1 = new SegmentationTableObject();
-        segment1.setUcid(client.getUcid());
-        segment1.setSegment("Low");
-        segment1.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0));
-        SegmentationTableObject segment2 = new SegmentationTableObject();
-        segment2.setUcid(client.getUcid());
-        segment2.setSegment("Medium");
-        segment2.setDate(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0));
+        SegmentationTableObject segment1 = SegmentationTableObject.builder().ucid(client.getUcid()).segment("Low").date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 2, 0, 0)).build();
+        SegmentationTableObject segment2 = SegmentationTableObject.builder().ucid(client.getUcid()).segment("Medium").date(getCurrentTimestampMinusOffsetFormatted(DateTimeFormat.DATE, 0, 0, 1, 0, 0)).build();
+
         insertObjectsToDb(SEGMENTATION_TABLE_NAME, List.of(segment1, segment2));
 
         investigationPage.navigateEnterPage();

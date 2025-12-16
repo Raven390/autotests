@@ -537,4 +537,20 @@ public class Utils {
         insertObjectsToDb(CRM_TB_ACCOUNT_TABLE_NAME, Arrays.stream(crmTbAccounts).toList());
         insertObjectsToDb(CRM_TB_ACCOUNT_FOR_MT_TABLE_NAME, Arrays.stream(crmTbAccounts).map(CrmTbAccountForMtObjectFactory::generateAccountForMtByAccount).toList());
     }
+
+    public static String getRandomCardMaskedNumber() {
+        int first6 = new SecureRandom().nextInt(1_000_000);
+        String firstPart = String.format("%06d", first6);
+        int last4 = new SecureRandom().nextInt(10_000);
+        String lastPart = String.format("%04d", last4);
+        return String.format("%s******%s", firstPart, lastPart);
+    }
+
+    public static String getPaymentProfileCard(String cardNumber, String expiry) {
+        String cardBin = cardNumber.substring(0, 6);
+        String cardLastFourDigits = cardNumber.substring(cardNumber.length() - 4);
+        String expiryMonth = expiry.substring(0, 2);
+        String expiryYear = expiry.substring(2);
+        return String.format(cardBin + "***" + cardLastFourDigits + "_" + expiryMonth + "/20" + expiryYear);
+    }
 }

@@ -155,5 +155,41 @@ public class RuleAlertV2 {
 
         @JsonProperty("Same data: eWallet & KYC")
         private String sameDataEwalletKyc;
+
+        @JsonProperty("Open trades")
+        private String openTrades;
+
+        @JsonProperty("High-value multi-card")
+        private String highValueMultiCard;
+
+        @JsonProperty("Same name: Card & KYC")
+        private String sameNameCardKyc;
+
+        @JsonProperty("1st deposit and no open trades")
+        private String firstDepositNoOpenTrades;
+
+        @JsonProperty("Fraud score")
+        private Integer fraudScore;
+
+        @JsonProperty("Shared card across UIDs")
+        private String sharedCardAcrossUids;
+
+        @JsonProperty("Multiple unique cards")
+        private String multipleUniqueCards;
+
+        @JsonProperty("Failed attempts")
+        private String failedAttempts;
+
+        @JsonProperty("Payment profile")
+        private String paymentProfile;
+
+        @JsonProperty("Is there a fraud decline")
+        private String isThereAFraudDecline;
+
+        @JsonProperty("3DS")
+        private String threeDs;
+
+        @JsonProperty("Card used by known fraudster")
+        private String cardUsedByKnownFraudster;
     }
 }

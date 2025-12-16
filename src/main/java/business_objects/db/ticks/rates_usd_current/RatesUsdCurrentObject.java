@@ -1,14 +1,16 @@
 package business_objects.db.ticks.rates_usd_current;
 
+import lombok.Builder;
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
+@Builder
 public class RatesUsdCurrentObject {
     private String currency;
     private String ts;
     private Double rate;
-
-    public RatesUsdCurrentObject() {
-    };
 
     @Override
     public String toString() {
