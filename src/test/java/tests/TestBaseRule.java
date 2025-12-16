@@ -14,6 +14,7 @@ import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
 import business_objects.kafka.alerts.RuleAlertV2;
+import business_objects.kafka.crm_events.CallbackEvent.CallbackEvent;
 import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
@@ -62,6 +63,12 @@ public class TestBaseRule {
 
     @Step("Produce withdrawal event to crm-events topic")
     public static void produceWithdrawalMessageToCrmPaymentTopic(CrmWithdrawalEvent event)
+            throws JsonProcessingException {
+        kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
+    }
+
+    @Step("Produce callback event to crm-payments topic")
+    public static void produceCallbackMessageToCrmPaymentTopic(CallbackEvent event)
             throws JsonProcessingException {
         kafka.produceMessage(KAFKA_MESSAGE_KEY, objectMapper.writeValueAsString(event), KAFKA_TOPIC_CRM_PAYMENTS);
     }

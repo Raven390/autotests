@@ -14,7 +14,7 @@ import static utils.Utils.*;
 public class CrmTbUserObjectFactory {
     @Step("Generate user object by Client")
     public static CrmTbUserObject generateUserByClient(ClientHelper client) {
-        return new CrmTbUserObject(client.getUserId(), client.getUcid(), client.getBrand(), client.getRegulator(), client.getBrand() + "Group", getCurrentDate(), getCurrentDate(), "Test", "User", "1", "1961-02-01", client.getCountry(), client.getCountryCode(), client.getCountryCode(), "en", "RUS", ENCODED_EMAIL, ENCODED_PHONE, "357", "1", "2FA", "2", "1", "2", client.getIbId(), client.getCpaId(), client.getReferrerId(), "PARTIAL_KYC_ID_PASS", getCurrentTimestampDbFormat(), "2025-01-30 14:56:59.000", "2025-01-30 14:56:59.000", "23456", "2015-11-29 09:55:01");
+        return new CrmTbUserObject(client.getUserId(), client.getUcid(), client.getBrand(), client.getRegulator(), client.getBrand() + "Group", getCurrentDate(), getCurrentDate(), client.getFirstName(), client.getLastName(), "1", "1961-02-01", client.getCountry(), client.getCountryCode(), client.getCountryCode(), "en", "RUS", ENCODED_EMAIL, ENCODED_PHONE, "357", "1", "2FA", "2", "1", "2", client.getIbId(), client.getCpaId(), client.getReferrerId(), "PARTIAL_KYC_ID_PASS", getCurrentTimestampDbFormat(), "2025-01-30 14:56:59.000", "2025-01-30 14:56:59.000", "23456", "2015-11-29 09:55:01");
     }
 
     @Step("Generate user objects by Client")

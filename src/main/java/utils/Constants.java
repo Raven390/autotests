@@ -179,6 +179,7 @@ public class Constants {
     public static final String CLICKHOUSE_OZ_TRADES_TABLE_NAME = "consolidated.oz___trades";
     public static final String BO_BACKOFFICE_USER_TABLE_NAME = "postgres.bo.backoffice_user";
     public static final String BO_CLIENT_FRAUD_TYPES_TABLE_NAME = "consolidated.client_fraud_types";
+    public static final String CLIENT_CARDS_TABLE_NAME = "consolidated.client_cards";
     public static final String BO_CLIENT_TABLE_NAME = "postgres.bo.client";
     public static final String BO_CLIENTS_FRAUD_TYPES_TABLE_NAME = "postgres.bo.clients_fraud_types";
     public static final String BO_USER_ACTION_AUDIT_TABLE_NAME = "postgres.bo.user_action_audit";
@@ -249,6 +250,7 @@ public class Constants {
     public static final String S3_DIM_CLIENT = "consolidated.s3___dim_client";
     public static final String S3_FACT_CPA_COMMISSIONS = "consolidated.s3___fact_cpa_commissions";
     public static final String S3_FACT_IB_SALES_COMMISSIONS = "consolidated.s3___fact_ib_sales_commissions";
+    public static final String CALLBACKS_TABLE_NAME = "consolidated.crm___bp_callbacks";
     public static final String S3_FACT_LOGIN_METRICS_TABLE_NAME = "consolidated.s3___fact_login_metrics";
     public static final String SEGMENTATION_TABLE_NAME = "data_science.segmentation_table";
     public static final String SESSION_ID_TABLE_NAME = "data_science.session_id";

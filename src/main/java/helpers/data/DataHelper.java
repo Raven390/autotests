@@ -5,7 +5,9 @@ import business_objects.db.clickhouse.aggr_floating_trades_group_by.AggrFloating
 import business_objects.db.clickhouse.aggr_mirror_accounts_by_trades.MirrorLoginObject;
 import business_objects.db.clickhouse.app_tb_finindex_data.AppTbFinindexData;
 import business_objects.db.clickhouse.bo_alerts.BoAlertsObject;
+import business_objects.db.clickhouse.client_cards.ClientCardsObject;
 import business_objects.db.clickhouse.client_fraud_types.ClientFraudTypes;
+import business_objects.db.clickhouse.crm_bp_callbacks.CrmBpCallbacksObject;
 import business_objects.db.clickhouse.crm_tb_deposit_channel.CrmTbDepositChannelObject;
 import business_objects.db.clickhouse.crm_tb_deposit_type.CrmTbDepositTypeObject;
 import business_objects.db.clickhouse.crm_tb_withdrawal_type.CrmTbWithdrawalTypeObject;
@@ -36,8 +38,10 @@ import business_objects.db.clickhouse.data_science_test.phone.PhoneTableEntry;
 import business_objects.db.clickhouse.s3_fact_ib_sales_commissions.S3FactIbSalesCommissionsObject;
 import business_objects.db.clickhouse.data_science_test.session_id.SessionIdTableEntry;
 import business_objects.db.clickhouse.s3_fact_login_metrics.S3FactLoginMetricsObject;
+import business_objects.db.clickhouse.segmentation_table.SegmentationTableObject;
 import business_objects.db.data_science.ucid_general_score.UcidGeneralScore;
 import business_objects.db.data_science.ucid_mirror_score_python.UcidMirrorScorePython;
+import business_objects.db.ticks.rates_usd_current.RatesUsdCurrentObject;
 import business_objects.kafka.InternalHedgeEvent;
 import business_objects.kafka.MirrorScoreEvent;
 import business_objects.kafka.alerts.RuleAlert;
@@ -45,6 +49,8 @@ import business_objects.kafka.crm_events.CrmWithdrawalEvent;
 import business_objects.kafka.crm_events.LoginEvent;
 import business_objects.kafka.crm_events.RegistrationEvent;
 import business_objects.kafka.crm_events.TransferToWaEvent;
+import business_objects.kafka.crm_events.*;
+import business_objects.kafka.crm_events.CallbackEvent.CallbackEvent;
 import business_objects.kafka.mt_events.CloseTradeMtEvent;
 import business_objects.kafka.mt_events.TradeEvent;
 import business_objects.kafka.CustomEvent;
@@ -93,6 +99,9 @@ public class DataHelper {
     public CloseTradeMtEvent closeTradeEvent;
     public TradeEvent tradeEvent;
     public List<ClientFraudTypes> clientFraudTypes;
+    public List<ClientCardsObject> clientCards;
+    public List<SegmentationTableObject> segmentObjects;
+    public List<CrmBpCallbacksObject> callbacksObjects;
     public CrmTbAccountObject crmTbAccountObject;
     public CrmTbAccountForMtObject crmTbAccountForMtObject;
     public List<CrmTbAccountObject> crmTbAccountObjectConnections;
@@ -104,6 +113,7 @@ public class DataHelper {
     public List<CrmTbDepositEntity> crmTbDepositObjects;
     public List<CrmTbBonusObject> crmTbBonusObjects;
     public List<Mt5DealsCoercedObject> mt5DealsCoercedObjects;
+    public List<RatesUsdCurrentObject> ratesUsdCurrentObjects;
     public AggrCreditEquityRateObject aggrCreditEquityRate;
     public MirrorLoginObject aggrMirrorAccountsByTrades;
     public List<MtBalanceOrdersObject> mtBalanceOrdersObjects;
@@ -116,6 +126,7 @@ public class DataHelper {
     public List<MtMt5PositionsObject> mtMt5PositionsObjects;
     public LnSessionParsedObject lnSessionParsedObject;
     public RegistrationEvent registrationEvent;
+    public CallbackEvent callbackEvent;
     public LoginEvent loginEvent;
     public List<SessionIdTableEntry> sessionIdTableEntries;
     public List<EmailTableEntry> emailTableEntries;
@@ -185,6 +196,9 @@ public class DataHelper {
             if (data.clientFraudTypes != null) {
                 data.clientFraudTypes.forEach(fraud -> insertObjectToDb(BO_CLIENT_FRAUD_TYPES_TABLE_NAME, fraud));
             }
+            if (data.clientCards != null) {
+                data.clientCards.forEach(card -> insertObjectToDb(CLIENT_CARDS_TABLE_NAME, card));
+            }
             if (data.crmTbAccountObject != null) {
                 insertObjectToDb(CRM_TB_ACCOUNT_TABLE_NAME, data.crmTbAccountObject);
             }
@@ -203,8 +217,14 @@ public class DataHelper {
             if (data.sessionIdTableEntries != null) {
                 data.sessionIdTableEntries.forEach(sessionIdTableEntry -> insertObjectToDb(SESSION_ID_TABLE_NAME, sessionIdTableEntry));
             }
+            if (data.callbacksObjects != null) {
+                data.callbacksObjects.forEach(callbacksObject -> insertObjectToDb(CALLBACKS_TABLE_NAME, callbacksObject));
+            }
             if (data.emailTableEntries != null) {
                 data.emailTableEntries.forEach(emailTableEntry -> insertObjectToDb(EMAIL_TABLE_NAME, emailTableEntry));
+            }
+            if (data.segmentObjects != null) {
+                data.segmentObjects.forEach(s -> insertObjectToDb(SEGMENTATION_TABLE_NAME, s));
             }
             if (data.ipTableEntries != null) {
                 data.ipTableEntries.forEach(ipTableEntry -> insertObjectToDb(IP_TABLE_NAME, ipTableEntry));
@@ -281,6 +301,9 @@ public class DataHelper {
             if (data.ozTradesTableObjects != null) {
                 data.ozTradesTableObjects.forEach(ozTrade -> insertObjectToDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, ozTrade));
             }
+            if (data.ratesUsdCurrentObjects != null) {
+                data.ratesUsdCurrentObjects.forEach(rate -> insertObjectToDb(RATES_USD_CURRENT, rate));
+            }
             if (data.ucidGeneralScore != null) {
                 insertObjectToDb(DATA_SCIENCE_UCID_GENERAL_SCORE_TABLE_NAME, data.ucidGeneralScore);
             }
@@ -312,6 +335,9 @@ public class DataHelper {
             }
             if (data.lnSessionParsedObjectLogin != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObjectLogin.getUserId()));
+            }
+            if (data.callbacksObjects != null) {
+                data.callbacksObjects.forEach(callbacksObject -> deleteEntryFromDb(CALLBACKS_TABLE_NAME, String.format("ucid = '%s'", callbacksObject.getUcid())));
             }
             if (data.lnSessionParsedObject != null) {
                 deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, String.format("user_id = %s", data.lnSessionParsedObject.getUserId()));
@@ -393,6 +419,9 @@ public class DataHelper {
             }
             if (data.boAlertsObjects != null) {
                 data.boAlertsObjects.forEach(alert -> deleteEntryFromDb(CLICKHOUSE_BO_ALERTS_TABLE_NAME, String.format("alert_id = '%s'", alert.getAlertId())));
+            }
+            if (data.clientCards != null) {
+                deleteEntryFromDb(CLIENT_CARDS_TABLE_NAME, String.format("ucid = '%s'", data.clientHelper.getUcid()));
             }
             if (data.ozTradesTableObjects != null) {
                 data.ozTradesTableObjects.forEach(ozTrade -> deleteEntryFromDb(CLICKHOUSE_OZ_TRADES_TABLE_NAME, String.format("ucid = '%s'", ozTrade.getUcid())));

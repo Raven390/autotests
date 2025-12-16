@@ -124,6 +124,8 @@ public class EnoughTradesDataFactory {
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setSourceIdSt(sourceId));
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setPaymentTypeId(wdTypeId));
         data.crmTbWithdrawalObjects.forEach(wd -> wd.setAmountUsd(BigDecimal.valueOf(200.0)));
+
+        //set deposits
         CrmTbDepositEntity deposit1 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit2 = generateCrmTbDepositEntityByClient(data.clientHelper);
         CrmTbDepositEntity deposit3 = generateCrmTbDepositEntityByClient(data.clientHelper);
