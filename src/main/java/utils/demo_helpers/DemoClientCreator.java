@@ -100,9 +100,7 @@ public class DemoClientCreator {
         file.fileTypeId = 27;
         insertObjectToDb(KYC_FILES_TABLE_NAME, file);
         insertObjectToDb(ID_PROOF_TABLE_NAME, idProofObject);
-
-
-        ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
+        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";

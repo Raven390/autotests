@@ -30,9 +30,10 @@ import static utils.Utils.*;
 @Tag(TEAM_BACKOFFICE)
 @Tag(LAYER_WEB)
 public class TradingSummaryPnlByDuration extends TestBaseWeb {
-
-
-    private static ClientHelper client = new ClientHelper(202_001, "e5880ca5-8578-4a1e-969d-7a64716ca40f", Brand.INFINOX, Regulator.FCA, 202_001_001, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(202_001).uid("e5880ca5-8578-4a1e-969d-7a64716ca40f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_001_001).serverId(42).build();
+    }
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
 

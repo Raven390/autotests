@@ -29,9 +29,10 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 public class TradingSummaryHoldingTimeTest extends TestBaseWeb {
-
-
-    private static ClientHelper client = new ClientHelper(202_006, "e5880ca5-8578-4a1e-969d-7a64716ca50f", Brand.INFINOX, Regulator.FCA, 202_006_001, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(202_006).uid("e5880ca5-8578-4a1e-969d-7a64716ca50f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_006_001).serverId(42).build();
+    }
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static MtAccountObject mtAccount = generateMtAccountByCrmTbAccount(account1);

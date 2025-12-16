@@ -46,8 +46,10 @@ import static utils.Utils.*;
 
 class PaymentsTabTest extends TestBaseWeb {
     private static final DateTimeFormatter clickhouseDateTimeStringFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    private static ClientHelper client = new ClientHelper(313_102, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.INFINOX, Regulator.FCA, 313_102_001, 313_102_002, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(313_102).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(313_102_001).tradingAccount2(313_102_002).serverId(42).build();
+    }
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);

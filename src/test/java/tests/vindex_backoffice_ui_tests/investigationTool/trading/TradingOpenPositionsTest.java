@@ -31,7 +31,10 @@ import static utils.Utils.insertCrmAccountsToDb;
 
 class TradingOpenPositionsTest extends TestBaseWeb {
 
-    static ClientHelper client = new ClientHelper(242_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 242_401_001, 242_401_002, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(242_401).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(242_401_001).tradingAccount2(242_401_002).serverId(42).build();
+    }
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static CrmTbAccountObject account2;

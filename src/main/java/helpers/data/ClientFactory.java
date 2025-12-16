@@ -15,21 +15,15 @@ import static utils.Utils.getRandomUuidString;
 public class ClientFactory {
 
     public static ClientHelper getRandomClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), randomEnum(Brand.class), getRandomIntPositive(), 4);
-        client.setRegulator(Regulator.VFSC);
-        return client;
+        return ClientHelper.builder().userId(getRandomIntPositive()).uid(getRandomUuidString()).brand(randomEnum(Brand.class)).regulator(Regulator.VFSC).tradingAccount(getRandomIntPositive()).serverId(4).build();
     }
 
     public static ClientHelper getRandomVantageClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.VANTAGE, getRandomIntPositive(), 4);
-        client.setRegulator(Regulator.VFSC);
-        return client;
+        return ClientHelper.builder().userId(getRandomIntPositive()).uid(getRandomUuidString()).brand(Brand.VANTAGE).regulator(Regulator.VFSC).tradingAccount(getRandomIntPositive()).serverId(4).build();
     }
 
     public static ClientHelper getRandomBybitClient() {
-        ClientHelper client = new ClientHelper(getRandomIntPositive(), getRandomUuidString(), Brand.BYBIT, getRandomIntPositive(), 64);
-        client.setRegulator(Regulator.VFSC);
-        return client;
+        return ClientHelper.builder().userId(getRandomIntPositive()).uid(getRandomUuidString()).brand(Brand.BYBIT).regulator(Regulator.VFSC).tradingAccount(getRandomIntPositive()).serverId(64).build();
     }
 
     public static ClientHelper getRandomVantageClientAllFields() {

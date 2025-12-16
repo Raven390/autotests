@@ -36,7 +36,10 @@ public class SessionsTabTest extends TestBaseWeb {
         deleteEntryFromDb(LEXIS_NEXIS_TABLE_NAME, "user_id=" + client.getUserId() + " AND brand='" + client.getBrand() + "'");
     }
 
-    static ClientHelper activityClient = new ClientHelper(181_801, Brand.INFINOX, Regulator.FCA);
+    static ClientHelper activityClient;
+    static {
+        activityClient = ClientHelper.builder().userId(181_801).brand(Brand.INFINOX).regulator(Regulator.FCA).build();
+    }
 
     @BeforeAll
     static void setup() throws ReflectiveOperationException, SQLException {
