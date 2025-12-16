@@ -20,7 +20,10 @@ import java.io.IOException;
 
 public class InvestigationPageTest extends TestBaseWeb {
 
-    static ClientHelper restrictionClient = new ClientHelper(424_343, "062cde3b-ea8d-48b5-8e2c-98f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 424_343_101, 42);
+    static ClientHelper restrictionClient;
+    static {
+        restrictionClient = ClientHelper.builder().userId(424_343).uid("062cde3b-ea8d-48b5-8e2c-98f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(424_343_101).serverId(42).build();
+    }
 
     @BeforeAll
     static void setup() throws IOException, InterruptedException {

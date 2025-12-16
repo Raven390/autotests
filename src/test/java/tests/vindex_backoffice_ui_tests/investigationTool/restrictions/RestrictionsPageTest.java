@@ -36,10 +36,15 @@ import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RestrictionsPageTest extends TestBaseWeb {
+class RestrictionsPageTest extends TestBaseWeb {
 
-    static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
-    static ClientHelper labelClient = new ClientHelper(141_403, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_103, 42);
+    private static final ClientHelper restrictionClient;
+    private static final ClientHelper labelClient;
+    static {
+        restrictionClient = ClientHelper.builder().userId(141_401).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(14_140_101).serverId(42).build();
+
+        labelClient = ClientHelper.builder().userId(141_403).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(14_140_103).serverId(42).build();
+    }
 
     private static final String RESTRICTION_COMMENT = "test reason";
     private static final User user = autotestUserOne();

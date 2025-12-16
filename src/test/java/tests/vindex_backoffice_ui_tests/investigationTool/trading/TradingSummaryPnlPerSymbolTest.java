@@ -32,7 +32,10 @@ import static utils.Utils.getCurrentTimestampMinusOffsetFormatted;
 public class TradingSummaryPnlPerSymbolTest extends TestBaseWeb {
 
 
-    private static ClientHelper client = new ClientHelper(202_002, "e5880ca5-8578-4a1e-969d-7a64716ca40f", Brand.INFINOX, Regulator.FCA, 202_002_001, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(202_002).uid("e5880ca5-8578-4a1e-969d-7a64716ca40f").brand(Brand.INFINOX).regulator(Regulator.FCA).tradingAccount(202_002_001).serverId(42).build();
+    }
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
 

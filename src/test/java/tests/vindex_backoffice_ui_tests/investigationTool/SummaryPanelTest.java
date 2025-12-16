@@ -37,8 +37,13 @@ import static utils.Constants.*;
 import static utils.Utils.*;
 
 class SummaryPanelTest extends TestBaseWeb {
-    private static final ClientHelper client = new ClientHelper(222_201, "d555fa11-3e45-44d3-8070-e28eaff987c7", Brand.INFINOX, Regulator.VFSC2, 222_201_001, 22_201_002, 42);
-    private static final ClientHelper clientBybit = new ClientHelper(222_202, "d555fa11-3e45-44d3-8070-e28eaff987c8", Brand.BYBIT, Regulator.VFSC2, 222_201_003, 22_201_004, 42);
+    private static final ClientHelper client;
+    private static final ClientHelper clientBybit;
+    static {
+        client = ClientHelper.builder().userId(222_201).uid("d555fa11-3e45-44d3-8070-e28eaff987c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(222_201_001).tradingAccount2(22_201_002).serverId(42).build();
+
+        clientBybit = ClientHelper.builder().userId(222_202).uid("d555fa11-3e45-44d3-8070-e28eaff987c8").brand(Brand.BYBIT).regulator(Regulator.VFSC2).tradingAccount(222_201_003).tradingAccount2(22_201_004).serverId(42).build();
+    }
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static final CrmTbUserObject crmTbUserBybit = generateStaticUserByClient(clientBybit);
     private static final DecimalFormat decimalFormat = new DecimalFormat("#,##0.##", new DecimalFormatSymbols(Locale.US));

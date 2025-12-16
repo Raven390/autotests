@@ -31,16 +31,20 @@ import static utils.Constants.*;
 import static utils.Utils.insertCrmAccountsToDb;
 
 class GeneralSearchTest extends TestBaseWeb {
-
-
-    private static ClientHelper client1 = new ClientHelper(161_605, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.VANTAGE, Regulator.VFSC2, 161_605_001, 161_605_002, 42);
+    private static final ClientHelper client1;
+    static {
+        client1 = ClientHelper.builder().userId(161_605).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(161_605_001).tradingAccount2(161_605_002).serverId(42).build();
+    }
     private static CrmTbUserObject crmTbUser1 = generateStaticUserByClient(client1);
     private static CrmTbAccountObject account11 = generateStaticCrmTbAccountActive(client1);
     private static CrmTbAccountObject account12 = generateAdditionalStaticCrmTbAccountActive(client1);
     private static MtAccountObject mtAccount11 = generateMtAccountByCrmTbAccount(account11);
     private static MtAccountObject mtAccount12 = generateMtAccountByCrmTbAccount(account12);
 
-    private static ClientHelper client2 = new ClientHelper(161_605, "e5880ca5-8578-4a1e-969d-7a64716ca41f", Brand.VJP, Regulator.VFSC2, 161_605_001, 161_605_002, 24);
+    private static final ClientHelper client2;
+    static {
+        client2 = ClientHelper.builder().userId(161_605).uid("e5880ca5-8578-4a1e-969d-7a64716ca41f").brand(Brand.VJP).regulator(Regulator.VFSC2).tradingAccount(161_605_001).tradingAccount2(161_605_002).serverId(24).build();
+    }
     private static CrmTbUserObject crmTbUser2 = generateStaticUserByClient(client2);
     private static CrmTbAccountObject account21 = generateStaticCrmTbAccountActive(client2);
     private static CrmTbAccountObject account22 = generateAdditionalStaticCrmTbAccountActive(client2);

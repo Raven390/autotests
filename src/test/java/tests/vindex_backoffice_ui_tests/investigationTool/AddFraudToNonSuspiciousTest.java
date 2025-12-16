@@ -38,7 +38,10 @@ import static utils.Constants.*;
 @Tag(TAG_MANUAL)
 public class AddFraudToNonSuspiciousTest extends TestBaseWeb {
 
-    static ClientHelper innocentClient = new ClientHelper(191_901, Brand.VANTAGE, Regulator.FCA);
+    static ClientHelper innocentClient;
+    static {
+        innocentClient = ClientHelper.builder().userId(191_901).brand(Brand.VANTAGE).regulator(Regulator.FCA).build();
+    }
     private static final String WHERE_STATEMENT = "ucid = '%s'";
     private static final String UPDATE_FRAUD_TIME_QUERY = "UPDATE %s SET updated_at = '%s', created_at = '%s' WHERE ucid = '%s' AND fraud_type_code = '%s'";
 

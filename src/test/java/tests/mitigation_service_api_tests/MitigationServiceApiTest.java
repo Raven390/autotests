@@ -53,7 +53,10 @@ import static utils.Utils.*;
 @Tag(SUITE_MITIGATION_SERVICE)
 class MitigationServiceApiTest extends TestBaseApi {
 
-    static ClientHelper restrictionClient = new ClientHelper(141_401, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 14_140_101, 42);
+    static ClientHelper restrictionClient;
+    static {
+        restrictionClient = ClientHelper.builder().userId(141_401).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(14_140_101).serverId(42).build();
+    }
     static ClientHelper byBitClient = getRandomBybitClient();
     static CrmTbUserObject byBitUser = generateUserByClient(byBitClient);
     static CrmTbAccountObject activeByBit = generateStaticCrmTbAccountActive(byBitClient);

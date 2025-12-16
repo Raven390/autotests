@@ -46,13 +46,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static utils.Constants.*;
 import static utils.Utils.*;
 
-public class GeneralInfoTabTest extends TestBaseWeb {
+class GeneralInfoTabTest extends TestBaseWeb {
 
     private static final KafkaHelper kafka = new KafkaHelper();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final CrmTbUserObject crmTbUser = generateUserByClient(getRandomVantageClientAllFields());
 
-    static ClientHelper client = new ClientHelper(232_301, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_301_001, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(232_301).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_301_001).serverId(42).build();
+    }
     private static final CrmTbUserObject crmTbClient = generateUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;
@@ -117,7 +120,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Feature("BMS-827 Modify displaying CPA/IB/referrer in general")
     @DisplayName("General Tab. User can see IB account in clients general info info more than one account")
     public void IBtest() {
-        ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
+        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -165,7 +168,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     public void ibSeparateTest() {
         deleteObjectFromDb(ACCOUNT_IB_RELATION_TABLE_NAME, "ucid ='" + client.getUcid() + "'");
         deleteObjectFromDb(S3_FACT_IB_SALES_COMMISSIONS, "ucid ='" + client.getUcid() + "'");
-        ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
+        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";
@@ -337,8 +340,7 @@ public class GeneralInfoTabTest extends TestBaseWeb {
     @Feature("BMS-1194 Sales person whom belongs client")
     @DisplayName("")
     public void SalesPersonDisplayedTest() throws InterruptedException {
-
-        ClientHelper referral = new ClientHelper(232_303, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 232_303_001, 232_303_002, 42);
+        ClientHelper referral = ClientHelper.builder().userId(232_303).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(232_303_001).tradingAccount2(232_303_002).serverId(42).build();
         CrmTbUserObject crmTbReferral = generateStaticUserByClient(referral);
 
         crmTbReferral.firstName = "Relation";

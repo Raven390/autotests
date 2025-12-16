@@ -29,7 +29,10 @@ import static utils.Utils.insertCrmAccountsToDb;
 
 public class TradingAccountsTest extends TestBaseWeb {
 
-    private static final ClientHelper client = new ClientHelper(212_101, "d555fa11-3e45-44d3-8070-e28eaff997c7", Brand.INFINOX, Regulator.VFSC2, 212_101_001, 42);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(212_101).uid("d555fa11-3e45-44d3-8070-e28eaff997c7").brand(Brand.INFINOX).regulator(Regulator.VFSC2).tradingAccount(212_101_001).serverId(42).build();
+    }
     private static final CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1;
     private static MtAccountObject mtAccount1;

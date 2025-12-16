@@ -32,7 +32,10 @@ import static utils.Utils.getCurrentDateMonthDay;
 import static utils.Utils.insertCrmAccountsToDb;
 
 public class TransactionsGraphTest extends TestBaseWeb {
-    private static ClientHelper client = new ClientHelper(63_350_541, "e5880ca5-8578-4a1e-969d-7a64716ca411", Brand.VANTAGE, Regulator.FCA, 322_322_322, 322_322_321, 228);
+    private static final ClientHelper client;
+    static {
+        client = ClientHelper.builder().userId(63_350_541).uid("e5880ca5-8578-4a1e-969d-7a64716ca411").brand(Brand.VANTAGE).regulator(Regulator.FCA).tradingAccount(322_322_322).tradingAccount2(322_322_321).serverId(228).build();
+    }
     private static CrmTbUserObject crmTbUser = generateStaticUserByClient(client);
     private static CrmTbAccountObject account1 = generateStaticCrmTbAccountActive(client);
     private static CrmTbAccountObject account2 = generateAdditionalStaticCrmTbAccountActive(client);

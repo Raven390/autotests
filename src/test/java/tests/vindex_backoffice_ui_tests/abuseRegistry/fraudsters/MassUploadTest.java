@@ -32,9 +32,16 @@ import static utils.Utils.getCurrentTimestampSeconds;
 @Tag(ABUSE_REGISTRY)
 class MassUploadTest extends TestBaseWeb {
 
-    static ClientHelper client1 = new ClientHelper(313_101, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_101_001, 42);
-    static ClientHelper client2 = new ClientHelper(313_102, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_102_001, 42);
-    static ClientHelper client3 = new ClientHelper(313_103, "063cde3b-ea9d-48b5-8e2c-99f3d5f67999", Brand.VANTAGE, Regulator.VFSC2, 313_103_001, 42);
+    static ClientHelper client1;
+    static ClientHelper client2;
+    static ClientHelper client3;
+    static {
+        client1 = ClientHelper.builder().userId(313_101).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_101_001).serverId(42).build();
+
+        client2 = ClientHelper.builder().userId(313_102).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_102_001).serverId(42).build();
+
+        client3 = ClientHelper.builder().userId(313_103).uid("063cde3b-ea9d-48b5-8e2c-99f3d5f67999").brand(Brand.VANTAGE).regulator(Regulator.VFSC2).tradingAccount(313_103_001).serverId(42).build();
+    }
 
     @BeforeAll
     static void setup() throws Exception {

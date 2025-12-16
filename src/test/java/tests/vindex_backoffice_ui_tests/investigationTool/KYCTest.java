@@ -28,7 +28,10 @@ public class KYCTest extends TestBaseWeb {
 
     static Faker faker = new Faker();
 
-    static ClientHelper pofClient = new ClientHelper(525_210, VANTAGE, VFSC2);
+    static ClientHelper pofClient;
+    static {
+        pofClient = ClientHelper.builder().userId(525_210).brand(VANTAGE).regulator(VFSC2).build();
+    }
 
     @BeforeAll
     public static void setup() throws ReflectiveOperationException, SQLException {
